@@ -1,0 +1,27 @@
+<Project>
+	<PropertyGroup>
+		<Authors>Doomsday32</Authors>
+		<Description>A modern cloud service architecture blueprint and reference implementation</Description>
+		<Product>Naos</Product>
+		<Copyright>Copyright 2018 (c) Doomsday32. All rights reserved.</Copyright>
+    <LangVersion>7.1</LangVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Include="..\..\GlobalSuppressions.cs" Link="GlobalSuppressions.cs" />
+	</ItemGroup>
+
+	<PropertyGroup>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<WarningsAsErrors></WarningsAsErrors>
+		<CodeAnalysisRuleSet></CodeAnalysisRuleSet>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="EnsureThatCore" Version="1.0.0" />
+		<PackageReference Include="StyleCop.Analyzers" Version="1.0.2">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+</Project>

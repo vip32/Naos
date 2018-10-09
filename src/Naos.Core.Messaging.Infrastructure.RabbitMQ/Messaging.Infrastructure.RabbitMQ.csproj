@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Naos.Core.Messaging.Infrastructure.RabbitMQ</AssemblyName>
+    <RootNamespace>Naos.Core.Messaging.Infrastructure.RabbitMQ</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Naos.Core.Messaging\Messaging.csproj" />
+  </ItemGroup>
+
+</Project>

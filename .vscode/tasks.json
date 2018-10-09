@@ -1,0 +1,46 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build",
+      "command": "dotnet build",
+      "type": "shell",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always"
+      },
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "test core",
+      "command": "dotnet test ./tests/Core.UnitTests/Core.UnitTests.csproj",
+      "type": "shell",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always"
+      },
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "test reference",
+      "command": "dotnet test ./tests/Reference.UnitTests/Reference.UnitTests.csproj",
+      "type": "shell",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always"
+      },
+      "problemMatcher": "$msCompile"
+    }
+  ]
+}

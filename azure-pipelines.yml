@@ -1,0 +1,55 @@
+variables:
+  solution: "**/*.sln"
+  buildConfiguration: "Release"
+
+steps:
+  - task: gittools.gitversion.gitversion-task.GitVersion@3
+    displayName: GitVersion
+
+  - task: DotNetCoreCLI@2
+    displayName: "dotnet restore"
+    inputs:
+      command: restore
+      projects: "**/*.csproj"
+      verbosityRestore: Normal
+
+  - task: DotNetCoreCLI@2
+    displayName: "dotnet build"
+    inputs:
+      projects: "$(solution)"
+      arguments: "--configuration $(buildConfiguration) /p:AssemblyVersion=$(GitVersion.AssemblySemVer);FileVersion=$(GitVersion.AssemblySemVer);InformationalVersion=$(GitVersion.InformationalVersion)"
+
+  - task: DotNetCoreCLI@2
+    displayName: "dotnet test"
+    inputs:
+      command: test
+      projects: "**/*[Tt]ests/*UnitTests.csproj"
+      arguments: "--configuration $(buildConfiguration)"
+
+  - task: DotNetCoreCLI@2
+    displayName: "dotnet publish"
+    inputs:
+      command: publish
+      publishWebProjects: True
+      arguments: "--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)"
+      zipAfterPublish: True
+    enabled: false
+
+  - task: DotNetCoreCLI@2
+    displayName: "dotnet nuget pack"
+    inputs:
+      command: pack
+      buildProperties: "Version=$(GitVersion.NuGetVersion)"
+      verbosityPack: Normal
+
+  - task: DotNetCoreCLI@2
+    displayName: "dotnet nuget push"
+    inputs:
+      command: push
+    enabled: false
+    continueOnError: true
+
+  - task: PublishBuildArtifacts@1
+    displayName: "publish artifacts"
+    inputs:
+      PathtoPublish: "$(build.artifactstagingdirectory)"
