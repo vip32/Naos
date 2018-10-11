@@ -1,6 +1,5 @@
 namespace Naos.Core.Domain
 {
-    using Naos.Core.Domain;
     using Xunit;
 
     public class UnitTest1

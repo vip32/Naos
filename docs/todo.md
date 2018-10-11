@@ -1,4 +1,5 @@
 api 404s https://www.strathweb.com/2018/10/convert-null-valued-results-to-404-in-asp-net-core-mvc/
+secrets https://social.technet.microsoft.com/wiki/contents/articles/51871.net-core-2-managing-secrets-in-web-apps.aspx
 
 http://localhost:15672/ (rabbitmq)
 https://localhost:44347/api/values (billing)
