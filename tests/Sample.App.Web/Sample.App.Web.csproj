@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <AssemblyName>Naos.Sample.App.Web</AssemblyName>
-    <RootNamespace>Naos.Sample.App.Web</RootNamespace>
+    <AssemblyName>Naos.Core.Sample.App.Web</AssemblyName>
+    <RootNamespace>Naos.Core.Sample.App.Web</RootNamespace>
     <DockerTargetOS>Linux</DockerTargetOS>
     <UserSecretsId>a85e9636-5997-4ba0-a4cf-c4a75285c94c</UserSecretsId>
   </PropertyGroup>
@@ -11,7 +11,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.0.1916590" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.0.2073426" />
   </ItemGroup>
 
 </Project>
