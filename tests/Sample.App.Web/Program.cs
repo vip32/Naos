@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.App.Web
+﻿namespace Naos.Core.Sample.App.Web
 {
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;

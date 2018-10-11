@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.App.Web.Controllers
+﻿namespace Naos.Core.Sample.App.Web.Controllers
 {
     using System.Collections.Generic;
     using Microsoft.AspNetCore.Mvc;
