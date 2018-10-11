@@ -33,7 +33,6 @@ steps:
       publishWebProjects: True
       arguments: "--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)"
       zipAfterPublish: True
-    enabled: false
 
   - task: DotNetCoreCLI@2
     displayName: "dotnet nuget pack"
