@@ -4,12 +4,68 @@
 
 [![Build Status](https://dev.azure.com/doomsday32/Naos/_apis/build/status/vip32.Naos)](https://dev.azure.com/doomsday32/Naos/_build/latest?definitionId=1)
 
+# concepts
 - arch style: hexagonal/onion
 - pattern: cqs https://www.dotnetcurry.com/patterns-practices/1461/command-query-separation-cqs
 - pattern: domainevents
 - pattern: integrationevents
 - pattern: repositories
 - pattern: specifications
+
+# setup
+- Create a key vault [^](https://docs.microsoft.com/en-us/azure/key-vault/key-vault-get-started)
+- Store key vault name in an environment variable
+  - `naos:secrets:vault:name`
+- Register an application with Azure Active Directory [^](https://docs.microsoft.com/en-us/azure/key-vault/key-vault-get-started)
+- Store application clientId (ApplicationId) and clientSecret (Key) in environment variables
+  - `naos:secrets:vault:clientId` & `naos:secrets:vault:clientSecret`
+- Authorize the application to use the key or secret [^](https://docs.microsoft.com/en-us/azure/key-vault/key-vault-get-started)
+
+*or* use the following [json configuration](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-2.1#file-configuration-provider).
+```
+{
+  "naos": {
+    "secrets": {
+      "vault": {
+        "name": "[VAULT_NAME]",
+        "clientId": "[AAD_APPLICATION_ID]",
+        "clientSecret": "[AAD_APPLICATION_KEY]"
+      }
+    },
+    "messaging": {
+      "serviceBus": {
+        "enabled":  true,
+        "connectionString": "",
+        "subscriptionId": "",
+        "resourceGroup": "naos",
+        "namespaceName": "naos",
+        "tenantId":  "",
+        "clientId": "",
+        "clientSecret": "",
+      },
+      "rabbitMQ": {
+      }
+    }
+  }
+}
+```
+
+*or* use a multitude of the usual [netcore configuration providers](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-2.1#providers) to store the settings
+
+**NOTE**:
+Naos:Messaging needs to administer the Azure ServiceBus by using the [Azure Resource Manager](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-overview) API. To use this API some [extra setup](https://tomasherceg.com/blog/post/azure-servicebus-in-net-core-managing-topics-queues-and-subscriptions-from-the-code) has to be
+done.
+
+
+# core components
+- Naos:App
+- Naos:App.Web
+- Naos:Common
+- Naos:Domain
+- Naos:Infrastructure
+- Naos:Messaging
+- Naos:Commands
+- Naos:...
 
 projects:
 

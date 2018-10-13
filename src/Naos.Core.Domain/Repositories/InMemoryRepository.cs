@@ -13,7 +13,7 @@
     /// </summary>
     /// <typeparam name="TEntity">Type or the Entity stored</typeparam>
     /// <typeparam name="TId">The type of the Entity identifier.</typeparam>
-    /// <seealso cref="Naos.Core.Domain.IRepository{T, TId}" />
+    /// <seealso cref="Domain.IRepository{TEntity, TId}" />
     public class InMemoryRepository<TEntity, TId> : IRepository<TEntity, TId>
         where TEntity : Entity<TId>, IAggregateRoot
     {

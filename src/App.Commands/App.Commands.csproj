@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Naos.Core.App.Commands</AssemblyName>
+    <RootNamespace>Naos.Core.App.Commands</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="8.0.100" />
+    <PackageReference Include="MediatR" Version="5.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Naos.Core.App\App.csproj" />
+    <ProjectReference Include="..\Naos.Core.Domain\Domain.csproj" />
+  </ItemGroup>
+
+</Project>

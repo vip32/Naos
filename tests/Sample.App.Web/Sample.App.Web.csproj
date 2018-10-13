@@ -5,7 +5,6 @@
     <AssemblyName>Naos.Core.Sample.App.Web</AssemblyName>
     <RootNamespace>Naos.Core.Sample.App.Web</RootNamespace>
     <DockerTargetOS>Linux</DockerTargetOS>
-    <UserSecretsId>a85e9636-5997-4ba0-a4cf-c4a75285c94c</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Naos.Core.Common.Extensions\Common.Extensions.csproj" />
     <ProjectReference Include="..\Naos.Core.Common\Common.csproj" />
   </ItemGroup>
 

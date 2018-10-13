@@ -6,7 +6,7 @@
     /// A base entity for all tenant related entities
     /// </summary>
     /// <typeparam name="TId">The type of the identifier.</typeparam>
-    /// <seealso cref="Naos.Core.Domain.Entity{TId}" />
+    /// <seealso cref="Domain.Entity{TId}" />
     public abstract class TenantEntity<TId> : Entity<TId>
     {
         [JsonProperty(PropertyName = "tenantId")]

@@ -19,7 +19,6 @@
             TId id,
             string tenantId)
             where TEntity : TenantEntity<TId>, IAggregateRoot
-            where TId : class
         {
             EnsureArg.IsNotNullOrEmpty(tenantId);
 
