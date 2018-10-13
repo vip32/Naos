@@ -68,7 +68,7 @@
 
             if (!this.map.Exists<TMessage>())
             {
-                this.logger.LogInformation("subscribe (name={MessageName}, service={Service}, filterScope={FlterScope}, handler={MessageHandlerType})", messageName, this.messageScope, this.filterScope, typeof(THandler).Name);
+                this.logger.LogInformation("subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType})", messageName, this.messageScope, this.filterScope, typeof(THandler).Name);
 
                 try
                 {
@@ -110,7 +110,7 @@
 
                 var messageName = /*message.Name*/ message.GetType().GetFriendlyTypeName();
 
-                this.logger.LogInformation("publish message (id={MessageId}, service={Service}, name={MessageName})", message.Id, this.messageScope, messageName);
+                this.logger.LogInformation("publish message (name={MessageName}, service={Service}, id={MessageId})", messageName, this.messageScope, message.Id);
                 //if (messageName.Contains("<")) // correct for generic types
                 //{
                 //    messageName = message.GetType().Name;
@@ -143,7 +143,7 @@
             var messageName = typeof(TMessage).GetFriendlyTypeName();
             string ruleName = this.GetRuleName(messageName);
 
-            this.logger.LogInformation("unsubscribe (service={Service}, name={MessageName}, filterScope={FilterScope}, handler={MessageHandlerType})", this.messageScope, messageName, this.filterScope, typeof(THandler).Name);
+            this.logger.LogInformation("unsubscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType})", messageName, this.messageScope, this.filterScope, typeof(THandler).Name);
 
             try
             {
@@ -222,8 +222,8 @@
                     //{
                         var messageOrigin = serviceBusMessage.UserProperties.ContainsKey("Origin") ? serviceBusMessage.UserProperties["Origin"] as string : string.Empty;
 
-                        this.logger.LogInformation("process message (id={MessageId}, service={Service}, name={MessageName}, origin={MessageOrigin})",
-                            jsonMessage.AsJToken().GetStringPropertyByToken("id"), this.messageScope, serviceBusMessage.Label, messageOrigin);
+                        this.logger.LogInformation("process message (name={MessageName}, service={Service}, id={MessageId}, origin={MessageOrigin})",
+                            serviceBusMessage.Label, this.messageScope, jsonMessage.AsJToken().GetStringPropertyByToken("id"), messageOrigin);
 
                         // map some message properties to the typed message
                         var message = jsonMessage as Domain.Model.Message;
@@ -244,8 +244,8 @@
                         }
                         else
                         {
-                            this.logger.LogWarning("process message failed, message handler could not be created. is the handler registered in the service provider? (service={Service}, id={MessageId}, name={MessageName}, origin={MessageOrigin})",
-                                this.messageScope, jsonMessage.AsJToken().GetStringPropertyByToken("id"), serviceBusMessage.Label, messageOrigin);
+                            this.logger.LogWarning("process message failed, message handler could not be created. is the handler registered in the service provider? (name={MessageName}, service={Service}, id={MessageId}, origin={MessageOrigin})",
+                                serviceBusMessage.Label, this.messageScope, jsonMessage.AsJToken().GetStringPropertyByToken("id"), messageOrigin);
                         }
 
                     //}
