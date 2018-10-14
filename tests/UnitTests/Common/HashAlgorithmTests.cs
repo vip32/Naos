@@ -4,10 +4,10 @@
     using Naos.Core.Common;
     using Xunit;
 
-    public class HashHelperTests
+    public class HashAlgorithmTests
     {
         [Fact]
-        public void ComputeHash()
+        public void ComputeHash_AsExpected()
         {
             var sut1 = HashAlgorithm.ComputeHash("abcdefghij");
             var sut2 = HashAlgorithm.ComputeHash("abcdefghij");
@@ -21,7 +21,7 @@
         }
 
         [Fact]
-        public void ComputeGuid()
+        public void ComputeGuid_AsExpected()
         {
             var sut1 = HashAlgorithm.ComputeGuid("abcdefghij");
             var sut2 = HashAlgorithm.ComputeGuid("abcdefghij");
