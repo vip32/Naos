@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\App.Commands\App.Commands.csproj" />
     <ProjectReference Include="..\..\src\Naos.Core.App.Web\App.Web.csproj" />
     <ProjectReference Include="..\..\src\Naos.Core.App\App.csproj" />
     <ProjectReference Include="..\..\src\Naos.Core.Common.Web.Extensions\Common.Web.Extensions.csproj" />
@@ -35,7 +36,6 @@
     <Folder Include="Messaging\" />
     <Folder Include="App\" />
     <Folder Include="App.Web\" />
-    <Folder Include="App.Commands\" />
     <Folder Include="Infrastructure.CosmosDb\" />
   </ItemGroup>
 
