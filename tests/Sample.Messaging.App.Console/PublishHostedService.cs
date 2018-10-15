@@ -57,7 +57,7 @@
             System.Console.WriteLine("start publish");
 
             // publish
-            for (int i = 1; i <= 20000; i++)
+            for (int i = 1; i <= 2; i++)
             {
                 //Thread.Sleep(500);
                 this.eventBus.Publish(new TestMessage { Data = $"{i.ToString()}-{RandomGenerator.GenerateString(3, false).ToUpper()}" });

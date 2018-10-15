@@ -6,6 +6,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Naos.Core.Common;
+    using Naos.Core.Infrastructure.Azure.KeyVault;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.Infrastructure.Azure;
     using Serilog;
@@ -46,11 +47,9 @@
                             config.AddAzureKeyVault(
                                 $"https://{builtConfig["naos:secrets:vault:name"]}.vault.azure.net/",
                                 builtConfig["naos:secrets:vault:clientId"],
-                                builtConfig["naos:secrets:vault:clientSecret"]);
+                                builtConfig["naos:secrets:vault:clientSecret"],
+                                new EnvironmentPrefixKeyVaultSecretManager());
                         }
-
-                        builtConfig = config.Build();
-                        var a = builtConfig["naos:messaging:serviceBus:tenantId"];
                     })
                     .ConfigureServices((context, services) =>
                     {

@@ -46,6 +46,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Commands", "src\App.Com
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.Infrastructure.Azure", "src\Naos.Core.Messaging.Infrastructure.Azure\Messaging.Infrastructure.Azure.csproj", "{BD63E3F7-598B-470E-B33D-1EF4D446DF6B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Azure.KeyVault", "src\Infrastructure.Azure.KeyVault\Infrastructure.Azure.KeyVault.csproj", "{DBA9758B-BED6-45E3-BB95-D95F4CBADCFB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -236,6 +238,18 @@ Global
 		{BD63E3F7-598B-470E-B33D-1EF4D446DF6B}.Release|x64.Build.0 = Release|Any CPU
 		{BD63E3F7-598B-470E-B33D-1EF4D446DF6B}.Release|x86.ActiveCfg = Release|Any CPU
 		{BD63E3F7-598B-470E-B33D-1EF4D446DF6B}.Release|x86.Build.0 = Release|Any CPU
+		{DBA9758B-BED6-45E3-BB95-D95F4CBADCFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBA9758B-BED6-45E3-BB95-D95F4CBADCFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBA9758B-BED6-45E3-BB95-D95F4CBADCFB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DBA9758B-BED6-45E3-BB95-D95F4CBADCFB}.Debug|x64.Build.0 = Debug|Any CPU
+		{DBA9758B-BED6-45E3-BB95-D95F4CBADCFB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DBA9758B-BED6-45E3-BB95-D95F4CBADCFB}.Debug|x86.Build.0 = Debug|Any CPU
+		{DBA9758B-BED6-45E3-BB95-D95F4CBADCFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBA9758B-BED6-45E3-BB95-D95F4CBADCFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBA9758B-BED6-45E3-BB95-D95F4CBADCFB}.Release|x64.ActiveCfg = Release|Any CPU
+		{DBA9758B-BED6-45E3-BB95-D95F4CBADCFB}.Release|x64.Build.0 = Release|Any CPU
+		{DBA9758B-BED6-45E3-BB95-D95F4CBADCFB}.Release|x86.ActiveCfg = Release|Any CPU
+		{DBA9758B-BED6-45E3-BB95-D95F4CBADCFB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -256,6 +270,7 @@ Global
 		{633DD43F-BB9B-4DB3-8D77-9C63B96FC352} = {D54F7975-DC18-481A-824F-DF0FD37370C3}
 		{D199A34D-6FE9-48A7-BDEE-3F01572BF3D4} = {09D80029-71E3-4B4D-AA1A-CD153787AED0}
 		{BD63E3F7-598B-470E-B33D-1EF4D446DF6B} = {09D80029-71E3-4B4D-AA1A-CD153787AED0}
+		{DBA9758B-BED6-45E3-BB95-D95F4CBADCFB} = {09D80029-71E3-4B4D-AA1A-CD153787AED0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BD699E0F-4BC9-41A9-93D5-E89FDDA8FC17}
