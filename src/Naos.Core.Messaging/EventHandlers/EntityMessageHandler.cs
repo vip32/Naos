@@ -21,12 +21,12 @@
         /// <returns></returns>
         public virtual Task Handle(EntityMessage<TEntity> message)
         {
-            //using (LogContext.PushProperty("CorrelationId", @event.CorrelationId))
-            //{
+            using (this.logger.BeginScope("{CorrelationId}", message.CorrelationId))
+            {
                 this.logger.LogInformation("handle  message (id={MessageId}, origin={MessageOrigin}) " + message.Entity.GetType().Name, message.Id, message.Origin);
 
                 return Task.CompletedTask;
-            //}
+            }
         }
     }
 }

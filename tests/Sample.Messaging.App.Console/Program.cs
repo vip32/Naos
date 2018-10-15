@@ -22,7 +22,7 @@
                 .Enrich.FromLogContext()
                 .Enrich.WithProperty("Service", AppDomain.CurrentDomain.FriendlyName)
                 .WriteTo.Debug()
-                .WriteTo.LiterateConsole()
+                .WriteTo.LiterateConsole(/*outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss}|{Level} => {CorrelationId} => {Service}::{SourceContext}{NewLine}    {Message}{NewLine}{Exception}"*/)
                 .CreateLogger();
 
             try
@@ -78,25 +78,5 @@
                 Log.CloseAndFlush();
             }
         }
-
-        //public static IHostBuilder CreateHostBuilder(string[] args)
-        //{
-        //    string[] capabilities = { $"{AppDomain.CurrentDomain.FriendlyName}-A", $"{AppDomain.CurrentDomain.FriendlyName}-B", $"{AppDomain.CurrentDomain.FriendlyName}-C" };
-
-        //    var a = ConfigurationFactory.CreateConfigurationBuilder().Build()["test"];
-
-        //    return new HostBuilder()
-        //        .ConfigureAppConfiguration(builder => ConfigurationFactory.Configure(builder))
-        //        .ConfigureServices(services =>
-        //        {
-        //            services.AddNaosMessaging(subscriptionName: capabilities[new Random().Next(0, capabilities.Length)]);
-        //            services.AddSingleton<IHostedService, PublishHostedService>();
-        //            // we only need to register the generic handlers, IMPORTANT!
-        //            services.AddScoped(typeof(TestMessageHandler));
-        //            services.AddScoped(typeof(EntityMessageHandler<>));
-        //            services.AddScoped(typeof(StubEntityMessageHandler));
-        //        })
-        //        .UseSerilog();
-        //}
     }
 }

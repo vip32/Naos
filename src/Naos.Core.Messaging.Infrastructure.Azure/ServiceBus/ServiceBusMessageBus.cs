@@ -100,8 +100,8 @@
                 message.CorrelationId = Guid.NewGuid().ToString();
             }
 
-            //using (LogContext.PushProperty("CorrelationId", message.CorrelationId))
-            //{
+            using (this.logger.BeginScope("{CorrelationId}", message.CorrelationId))
+            {
                 if (message.Id.IsNullOrEmpty())
                 {
                     message.Id = Guid.NewGuid().ToString();
@@ -128,7 +128,7 @@
                 serviceBusMessage.UserProperties.AddOrUpdate("Origin", this.messageScope);
 
                 this.provider.CreateModel().SendAsync(serviceBusMessage).GetAwaiter().GetResult();
-            //}
+            }
         }
 
         /// <summary>
@@ -218,8 +218,8 @@
                     }
 
                     var jsonMessage = JsonConvert.DeserializeObject(messageBody, messageType);
-                    //using (LogContext.PushProperty("CorrelationId", @message.AsJToken().GetStringPropertyByToken("CorrelationId")))
-                    //{
+                    using (this.logger.BeginScope("{CorrelationId}", serviceBusMessage.CorrelationId))
+                    {
                         var messageOrigin = serviceBusMessage.UserProperties.ContainsKey("Origin") ? serviceBusMessage.UserProperties["Origin"] as string : string.Empty;
 
                         this.logger.LogInformation("process message (name={MessageName}, service={Service}, id={MessageId}, origin={MessageOrigin})",
@@ -229,7 +229,7 @@
                         var message = jsonMessage as Domain.Model.Message;
                         if (message != null)
                         {
-                            message.CorrelationId = jsonMessage.AsJToken().GetStringPropertyByToken("CorrelationId");
+                            //message.CorrelationId = jsonMessage.AsJToken().GetStringPropertyByToken("CorrelationId");
                             message.Origin = messageOrigin;
                         }
 
@@ -247,8 +247,7 @@
                             this.logger.LogWarning("process message failed, message handler could not be created. is the handler registered in the service provider? (name={MessageName}, service={Service}, id={MessageId}, origin={MessageOrigin})",
                                 serviceBusMessage.Label, this.messageScope, jsonMessage.AsJToken().GetStringPropertyByToken("id"), messageOrigin);
                         }
-
-                    //}
+                    }
                 }
 
                 processed = true;

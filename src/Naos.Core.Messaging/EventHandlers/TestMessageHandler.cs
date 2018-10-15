@@ -19,12 +19,12 @@
         /// <returns></returns>
         public virtual Task Handle(TestMessage message)
         {
-            //using (LogContext.PushProperty("CorrelationId", message.CorrelationId))
-            //{
+            using (this.logger.BeginScope("{CorrelationId}", message.CorrelationId))
+            {
                 this.logger.LogInformation("handle  message (id={MessageId}, origin={MessageOrigin}) " + message.Data, message.Id, message.Origin);
 
                 return Task.CompletedTask;
-            //}
+            }
         }
     }
 
@@ -46,12 +46,12 @@
         /// <returns></returns>
         public virtual Task Handle(DummyMessage message)
         {
-            //using (LogContext.PushProperty("CorrelationId", message.CorrelationId))
-            //{
+            using (this.logger.BeginScope("{CorrelationId}", message.CorrelationId))
+            {
                 this.logger.LogInformation("handle  message (id={MessageId}, origin={MessageOrigin}) " + message.Data, message.Id, message.Origin);
 
                 return Task.CompletedTask;
-            //}
+            }
         }
     }
 }
