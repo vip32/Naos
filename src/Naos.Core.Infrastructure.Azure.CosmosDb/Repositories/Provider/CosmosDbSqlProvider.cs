@@ -26,12 +26,15 @@
         private readonly Action<TEntity, string> setEtagAction;
         private readonly Action<TEntity, DateTime?> setTimestampAction;
         private readonly bool useMultiCollection;
-        private AsyncLazy<DocumentCollection> collection;
+        private readonly bool isPartitioned;
+        private AsyncLazy<DocumentCollection> documentCollection;
 
         public CosmosDbSqlProvider(
             IDocumentClient client,
             string databaseId,
             Func<string> collectionNameFactory = null,
+            string collectionPartitionKey = null,
+            int collectionOfferThroughput = 400,
             Expression<Func<TEntity, object>> idNameFactory = null,
             Expression<Func<TEntity, string>> etagExpression = null,
             Expression<Func<TEntity, DateTime?>> timestampExpression = null,
@@ -42,7 +45,6 @@
 
             this.client = client;
             this.databaseId = databaseId;
-
             this.database = new AsyncLazy<Database>(async () => await this.GetOrCreateDatabaseAsync().ConfigureAwait(false));
 
             this.useMultiCollection = useMultiCollection;
@@ -55,7 +57,11 @@
                 this.collectionName = useMultiCollection ? "master" : typeof(TEntity).Name;
             }
 
-            this.collection = new AsyncLazy<DocumentCollection>(() => this.GetOrCreateCollectionAsync());
+            this.documentCollection = new AsyncLazy<DocumentCollection>(async () => await this.GetOrCreateCollectionAsync(collectionPartitionKey, collectionOfferThroughput).ConfigureAwait(false));
+            if (this.documentCollection.Value.Result?.PartitionKey?.Paths?.Any() == true)
+            {
+                this.isPartitioned = true;
+            }
 
             if (idNameFactory != null)
             {
@@ -77,7 +83,7 @@
 
         public async Task<string> GetCollectionUriAsync()
         {
-            return (await this.collection).DocumentsLink;
+            return (await this.documentCollection).DocumentsLink;
         }
 
         /// <summary>
@@ -88,11 +94,11 @@
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task<bool> DeleteAllAsync()
         {
-            var result = await this.client.DeleteDocumentCollectionAsync((await this.collection).SelfLink).ConfigureAwait(false);
+            var result = await this.client.DeleteDocumentCollectionAsync((await this.documentCollection).SelfLink).ConfigureAwait(false);
 
             bool isSuccess = result.StatusCode == HttpStatusCode.NoContent;
 
-            this.collection = new AsyncLazy<DocumentCollection>(async () => await this.GetOrCreateCollectionAsync().ConfigureAwait(false));
+            this.documentCollection = new AsyncLazy<DocumentCollection>(async () => await this.GetOrCreateCollectionAsync().ConfigureAwait(false));
 
             return isSuccess;
         }
@@ -129,7 +135,7 @@
 
         public async Task<TEntity> AddOrUpdateAsync(TEntity entity)
         {
-            var doc = await this.client.UpsertDocumentAsync((await this.collection).SelfLink, entity).ConfigureAwait(false);
+            var doc = await this.client.UpsertDocumentAsync((await this.documentCollection).SelfLink, entity).ConfigureAwait(false);
 
             var retVal = JsonConvert.DeserializeObject<TEntity>(doc.Resource.ToString());
             if (retVal != null)
@@ -145,7 +151,7 @@
         {
             stream.Position = 0;
 
-            var doc = await this.client.UpsertDocumentAsync((await this.collection).SelfLink, entity).ConfigureAwait(false);
+            var doc = await this.client.UpsertDocumentAsync((await this.documentCollection).SelfLink, entity).ConfigureAwait(false);
             await this.client.UpsertAttachmentAsync(doc.Resource.SelfLink, stream, new MediaOptions { ContentType = contentType, Slug = attachmentId }).ConfigureAwait(false);
 
             var retVal = JsonConvert.DeserializeObject<TEntity>(doc.Resource.ToString());
@@ -170,7 +176,7 @@
 
         public async Task<IEnumerable<TEntity>> GetAllAsync(int maxItemCount = -1)
         {
-            return this.client.CreateDocumentQuery<Document>((await this.collection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount })
+            return this.client.CreateDocumentQuery<Document>((await this.documentCollection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount, EnableCrossPartitionQuery = this.isPartitioned })
                 .AsEnumerable()
                 .Select(doc => new {doc, retVal = (TEntity)(dynamic)doc })
                 .ForEach(e =>
@@ -185,7 +191,7 @@
         {
             var query = this.client.CreateDocumentQuery<Document>(
                 this.GetCollectionUriAsync().Result,
-                new FeedOptions { MaxItemCount = pageSize })
+                new FeedOptions { MaxItemCount = pageSize, EnableCrossPartitionQuery = this.isPartitioned })
                 .AsDocumentQuery();
             while (query.HasMoreResults)
             {
@@ -209,7 +215,7 @@
             var query = this.client.CreateDocumentQuery<Document>(
                 this.GetCollectionUriAsync().Result,
                 new SqlQuerySpec("SELECT VALUE c.id FROM c"),
-                new FeedOptions { MaxItemCount = pageSize })
+                new FeedOptions { MaxItemCount = pageSize, EnableCrossPartitionQuery = this.isPartitioned })
                 .AsDocumentQuery();
 
             while (query.HasMoreResults)
@@ -226,7 +232,7 @@
             var query = this.client.CreateDocumentQuery<Document>(
                 this.GetCollectionUriAsync().Result,
                 new SqlQuerySpec("SELECT VALUE c._self FROM c"),
-                new FeedOptions { MaxItemCount = pageSize })
+                new FeedOptions { MaxItemCount = pageSize, EnableCrossPartitionQuery = this.isPartitioned })
                 .AsDocumentQuery();
 
             while (query.HasMoreResults)
@@ -318,7 +324,9 @@
 
         public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> expression = null) // FAST
         {
-            return this.client.CreateDocumentQuery<TEntity>(await this.GetCollectionUriAsync().ConfigureAwait(false))
+            return this.client.CreateDocumentQuery<TEntity>(
+                await this.GetCollectionUriAsync().ConfigureAwait(false),
+                new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned })
                 .WhereExpression(expression)
                 .WhereExpressionIf(this.useMultiCollection, e => e.EntityType == typeof(TEntity).FullName)
                 .AsEnumerable()
@@ -327,7 +335,9 @@
 
         public async Task<TEntity> LastOrDefaultAsync(Expression<Func<TEntity, bool>> expression = null) // FAST
         {
-            return this.client.CreateDocumentQuery<TEntity>(await this.GetCollectionUriAsync().ConfigureAwait(false))
+            return this.client.CreateDocumentQuery<TEntity>(
+                await this.GetCollectionUriAsync().ConfigureAwait(false),
+                new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned })
                 .WhereExpression(expression)
                 .WhereExpressionIf(this.useMultiCollection, e => e.EntityType == typeof(TEntity).FullName)
                 .AsEnumerable()
@@ -338,12 +348,16 @@
         {
             if (!this.useMultiCollection)
             {
-                return this.client.CreateDocumentQuery<TEntity>(await this.GetCollectionUriAsync().ConfigureAwait(false))
+                return this.client.CreateDocumentQuery<TEntity>(
+                    await this.GetCollectionUriAsync().ConfigureAwait(false),
+                    new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned })
                     .WhereExpression(expression)
                     .AsEnumerable();
             }
 
-            return this.client.CreateDocumentQuery<TEntity>(await this.GetCollectionUriAsync().ConfigureAwait(false))
+            return this.client.CreateDocumentQuery<TEntity>(
+                await this.GetCollectionUriAsync().ConfigureAwait(false),
+                    new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned })
                 .WhereExpression(expression)
                 .WhereExpression(e => e.EntityType == typeof(TEntity).FullName)
                 .AsEnumerable();
@@ -358,7 +372,7 @@
         {
             if (desc)
             {
-                return this.client.CreateDocumentQuery<TEntity>((await this.collection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount })
+                return this.client.CreateDocumentQuery<TEntity>((await this.documentCollection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount, EnableCrossPartitionQuery = this.isPartitioned })
                     .WhereExpression(expression)
                     .WhereExpressions(expressions)
                     .WhereExpressionIf(this.useMultiCollection, e => e.EntityType == typeof(TEntity).FullName)
@@ -366,7 +380,7 @@
                     .AsEnumerable();
             }
 
-            return this.client.CreateDocumentQuery<TEntity>((await this.collection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount })
+            return this.client.CreateDocumentQuery<TEntity>((await this.documentCollection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount, EnableCrossPartitionQuery = this.isPartitioned })
                     .WhereExpression(expression)
                     .WhereExpressions(expressions)
                     .WhereExpressionIf(this.useMultiCollection, e => e.EntityType == typeof(TEntity).FullName)
@@ -380,7 +394,7 @@
             int maxItemCount = 100,
             Expression<Func<TEntity, TKey>> orderExpression = null)
         {
-            return this.client.CreateDocumentQuery<TEntity>((await this.collection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount })
+            return this.client.CreateDocumentQuery<TEntity>((await this.documentCollection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount, EnableCrossPartitionQuery = this.isPartitioned })
                 .WhereExpression(expression)
                 .WhereExpressionIf(this.useMultiCollection, e => e.EntityType == typeof(TEntity).FullName)
                 .Select(selector)
@@ -390,7 +404,7 @@
 
         public async Task<IQueryable<TEntity>> QueryAsync(int maxItemCount = 100)
         {
-            return this.client.CreateDocumentQuery<TEntity>((await this.collection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount })
+            return this.client.CreateDocumentQuery<TEntity>((await this.documentCollection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount, EnableCrossPartitionQuery = this.isPartitioned })
                 .WhereExpressionIf(this.useMultiCollection, e => e.EntityType == typeof(TEntity).FullName);
         }
 
@@ -398,7 +412,8 @@
         {
             return this.client.CreateDocumentQuery<TEntity>(
                 await this.GetCollectionUriAsync().ConfigureAwait(false),
-                new SqlQuerySpec(query));
+                new SqlQuerySpec(query),
+                new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned });
         }
 
         private string TryGetIdProperty(Expression<Func<TEntity, object>> idNameFactory)
@@ -453,17 +468,17 @@
 
         private async Task<Document> GetDocumentByIdAsync(object id)
         {
-            return this.client.CreateDocumentQuery<Document>((await this.collection).SelfLink)
+            return this.client.CreateDocumentQuery<Document>((await this.documentCollection).SelfLink, new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned })
                 .WhereExpression(d => d.Id == id.ToString()).AsEnumerable().FirstOrDefault();
         }
 
         private async Task<Document> GetDocumentByEtagAsync(string etag)
         {
-            return this.client.CreateDocumentQuery<Document>((await this.collection).SelfLink)
+            return this.client.CreateDocumentQuery<Document>((await this.documentCollection).SelfLink, new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned })
                 .WhereExpression(d => d.ETag == etag).AsEnumerable().FirstOrDefault();
         }
 
-        private async Task<DocumentCollection> GetOrCreateCollectionAsync()
+        private async Task<DocumentCollection> GetOrCreateCollectionAsync(string collectionPartitionKey = null, int collectionOfferThroughput = 400)
         {
             var documentCollection = this.client.CreateDocumentCollectionQuery((await this.database).SelfLink)
                 .WhereExpression(c => c.Id == this.collectionName).AsEnumerable().FirstOrDefault();
@@ -471,7 +486,17 @@
             if (documentCollection == null)
             {
                 documentCollection = new DocumentCollection { Id = this.collectionName };
-                documentCollection = await this.client.CreateDocumentCollectionAsync((await this.database).SelfLink, documentCollection).ConfigureAwait(false);
+                if (!string.IsNullOrEmpty(collectionPartitionKey))
+                {
+                    documentCollection.PartitionKey.Paths.Add(string.Format("/{0}", collectionPartitionKey));
+                }
+
+                var requestOptions = new RequestOptions
+                {
+                    OfferThroughput = collectionOfferThroughput,
+                };
+
+                documentCollection = await this.client.CreateDocumentCollectionAsync((await this.database).SelfLink, documentCollection, requestOptions).ConfigureAwait(false);
             }
 
             return documentCollection;
