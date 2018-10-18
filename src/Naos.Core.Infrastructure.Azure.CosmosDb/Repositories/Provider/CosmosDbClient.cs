@@ -14,7 +14,8 @@
             CosmosDbSqlConnectionPolicy connectionPolicy = null,
             JsonSerializerSettings jsonSettings = null)
         {
-            ValidateArguments(serviceEndpointUri, authKeyOrResourceToken);
+            EnsureThat.EnsureArg.IsNotNullOrEmpty(serviceEndpointUri, nameof(serviceEndpointUri));
+            EnsureThat.EnsureArg.IsNotNullOrEmpty(authKeyOrResourceToken, nameof(authKeyOrResourceToken));
             jsonSettings = EnsureJsonSettings(jsonSettings);
 
             var defaultPolicy = new ConnectionPolicy
@@ -34,19 +35,6 @@
                         ConnectionProtocol = (Protocol) Enum.Parse(typeof(Protocol), connectionPolicy.ConnectionProtocol.ToString())
                     }
                     : defaultPolicy);
-        }
-
-        private static void ValidateArguments(string endpointUrl, string authorizationKey)
-        {
-            if (string.IsNullOrWhiteSpace(endpointUrl))
-            {
-                throw new ArgumentNullException(nameof(endpointUrl));
-            }
-
-            if (string.IsNullOrWhiteSpace(authorizationKey))
-            {
-                throw new ArgumentNullException(nameof(authorizationKey));
-            }
         }
 
         private static JsonSerializerSettings EnsureJsonSettings(JsonSerializerSettings jsonSettings)

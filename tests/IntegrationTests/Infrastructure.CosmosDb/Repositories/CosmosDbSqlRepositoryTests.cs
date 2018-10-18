@@ -6,17 +6,17 @@
     using System.Linq.Expressions;
     using System.Threading.Tasks;
     using MediatR;
-    using Microsoft.Extensions.Configuration;
     using Moq;
     using Naos.Core.App.Configuration;
     using Naos.Core.Common;
     using Naos.Core.Domain;
     using Naos.Core.Infrastructure.Azure.CosmosDb;
+    using Naos.Core.Sample.App;
     using Xunit;
 
     public class CosmosDbSqlRepositoryTests
     {
-        private readonly NaosConfiguration configuration = new NaosConfiguration();
+        private readonly NaosAppconfiguration configuration = new NaosAppconfiguration();
         private readonly StubCosmosDbSqlRepository repository;
         private readonly string tenantId = "naos_test";
 

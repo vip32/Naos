@@ -7,11 +7,11 @@
 
     public static class NaosConfigurationFactory
     {
-        public static NaosConfiguration Bind(NaosConfiguration instance, string basePath = null, string[] args = null)
+        public static NaosCoreConfiguration Bind(NaosCoreConfiguration instance, string basePath = null, string[] args = null)
         {
             if(instance == null)
             {
-                instance = new NaosConfiguration();
+                instance = new NaosCoreConfiguration();
             }
 
             CreateRoot(basePath, args)

@@ -2,9 +2,9 @@
 {
     using Naos.Core.App.Configuration;
 
-    public class SampleAppconfiguration : NaosConfiguration
+    public class AppConfiguration
     {
-        public string AppName { get; set; }
+        public string Name { get; set; }
 
         public CosmosDbConfiguration CosmosDb { get; set; }
     }

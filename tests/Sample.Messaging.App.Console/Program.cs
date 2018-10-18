@@ -2,12 +2,9 @@
 {
     using System;
     using System.Threading.Tasks;
-    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Naos.Core.App.Configuration;
-    using Naos.Core.Common;
-    using Naos.Core.Infrastructure.Azure.KeyVault;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.Infrastructure.Azure;
     using Serilog;
