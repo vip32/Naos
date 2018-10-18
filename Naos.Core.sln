@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{FCBA001C-2
 	ProjectSection(SolutionItems) = preProject
 		azure-pipelines.yml = azure-pipelines.yml
 		docs\Containerized Workflow.png = docs\Containerized Workflow.png
+		Directory.Build.props = Directory.Build.props
 		docs\Naos - Service Communication Overview.vsdx = docs\Naos - Service Communication Overview.vsdx
 		README.md = README.md
 		docs\todo.md = docs\todo.md
@@ -46,7 +47,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Commands", "src\App.Com
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.Infrastructure.Azure", "src\Naos.Core.Messaging.Infrastructure.Azure\Messaging.Infrastructure.Azure.csproj", "{BD63E3F7-598B-470E-B33D-1EF4D446DF6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Azure.KeyVault", "src\Infrastructure.Azure.KeyVault\Infrastructure.Azure.KeyVault.csproj", "{DBA9758B-BED6-45E3-BB95-D95F4CBADCFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Azure.KeyVault", "src\Infrastructure.Azure.KeyVault\Infrastructure.Azure.KeyVault.csproj", "{DBA9758B-BED6-45E3-BB95-D95F4CBADCFB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

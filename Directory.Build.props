@@ -1,13 +1,17 @@
 <Project>
 	<PropertyGroup>
+    <LangVersion>7.1</LangVersion>
+    <!--package-->
 		<Authors>Doomsday32</Authors>
 		<Description>A modern cloud service architecture blueprint and reference implementation</Description>
 		<Product>Naos</Product>
 		<Copyright>Copyright 2018 (c) Doomsday32. All rights reserved.</Copyright>
-    <LangVersion>7.1</LangVersion>
+    <!--sourcelink https://github.com/dotnet/sourcelink -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
 	</PropertyGroup>
 
-	<ItemGroup>
+  <ItemGroup>
 		<Compile Include="..\..\GlobalSuppressions.cs" Link="GlobalSuppressions.cs" />
 	</ItemGroup>
 
@@ -23,5 +27,6 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 		</PackageReference>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63127-02" PrivateAssets="All"/>
 	</ItemGroup>
 </Project>
