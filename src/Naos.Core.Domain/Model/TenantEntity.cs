@@ -9,7 +9,7 @@
     /// <seealso cref="Domain.Entity{TId}" />
     public abstract class TenantEntity<TId> : Entity<TId>
     {
-        [JsonProperty(PropertyName = "tenantId")]
+        [JsonProperty(PropertyName = "_tid")]
         public string TenantId { get; set; }
 
         public override string ToString() => $"{this.EntityType} [Id={this.Id}, Tentant={this.TenantId}]";

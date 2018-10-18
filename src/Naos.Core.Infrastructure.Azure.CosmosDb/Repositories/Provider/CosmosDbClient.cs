@@ -9,12 +9,13 @@
     public static class CosmosDbClient
     {
         public static IDocumentClient Create(
-            string endpointUrl,
-            string authorizationKey,
-            CosmosDbSqlConnectionPolicy connectionPolicy = null)
+            string serviceEndpointUri,
+            string authKeyOrResourceToken,
+            CosmosDbSqlConnectionPolicy connectionPolicy = null,
+            JsonSerializerSettings jsonSettings = null)
         {
-            ValidateArguments(endpointUrl, authorizationKey);
-            InitializeJsonSettings(null);
+            ValidateArguments(serviceEndpointUri, authKeyOrResourceToken);
+            jsonSettings = EnsureJsonSettings(jsonSettings);
 
             var defaultPolicy = new ConnectionPolicy
             {
@@ -23,8 +24,9 @@
             };
 
             return new DocumentClient(
-                new Uri(endpointUrl),
-                authorizationKey,
+                new Uri(serviceEndpointUri),
+                authKeyOrResourceToken,
+                jsonSettings,
                 connectionPolicy != null ?
                     new ConnectionPolicy
                     {
@@ -47,16 +49,14 @@
             }
         }
 
-        private static void InitializeJsonSettings(JsonSerializerSettings jsonSettings)
+        private static JsonSerializerSettings EnsureJsonSettings(JsonSerializerSettings jsonSettings)
         {
-            if (jsonSettings != null)
-            {
-                JsonConvert.DefaultSettings = () => jsonSettings;
-            }
-            else
-            {
-                JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            return jsonSettings != null
+                ? jsonSettings
+                : new JsonSerializerSettings
                 {
+                    // disabled, camel case does not work in linq queries
+                    //ContractResolver = new CamelCasePropertyNamesContractResolver(),
                     ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
                     NullValueHandling = NullValueHandling.Ignore,
                     Converters = new JsonConverter[]
@@ -65,7 +65,6 @@
                         new IsoDateTimeConverter()
                     }
                 };
-            }
         }
     }
 }

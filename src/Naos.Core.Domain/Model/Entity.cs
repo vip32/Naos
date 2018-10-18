@@ -33,7 +33,7 @@
         /// <value>
         /// The type of the entity.
         /// </value>
-        [JsonProperty(PropertyName = "et")]
+        [JsonProperty(PropertyName = "_et")]
         public string EntityType => this.GetType().FullName;
 
 #pragma warning disable S3875 // "operator==" should not be overloaded on reference types

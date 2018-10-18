@@ -5,6 +5,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using Naos.Core.App.Configuration;
     using Naos.Core.Common;
     using Naos.Core.Infrastructure.Azure.KeyVault;
     using Naos.Core.Messaging;
@@ -32,24 +33,7 @@
                 var builder = new HostBuilder()
                     .ConfigureAppConfiguration((context, config) =>
                     {
-                        config.AddJsonFile("appsettings.json", optional: true);
-                        config.AddEnvironmentVariables();
-                        if (args != null)
-                        {
-                            config.AddCommandLine(args);
-                        }
-
-                        var builtConfig = config.Build();
-
-                        if (builtConfig["naos:secrets:vault:enabled"].ToBool(true)
-                            && !string.IsNullOrEmpty(builtConfig["naos:secrets:vault:name"]))
-                        {
-                            config.AddAzureKeyVault(
-                                $"https://{builtConfig["naos:secrets:vault:name"]}.vault.azure.net/",
-                                builtConfig["naos:secrets:vault:clientId"],
-                                builtConfig["naos:secrets:vault:clientSecret"],
-                                new EnvironmentPrefixKeyVaultSecretManager());
-                        }
+                        NaosConfigurationFactory.Extend(config);
                     })
                     .ConfigureServices((context, services) =>
                     {

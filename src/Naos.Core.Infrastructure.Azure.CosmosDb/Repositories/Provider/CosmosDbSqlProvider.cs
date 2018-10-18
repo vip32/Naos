@@ -25,7 +25,7 @@
         private readonly string defaultIdentityPropertyName = "id";
         private readonly Action<TEntity, string> setEtagAction;
         private readonly Action<TEntity, DateTime?> setTimestampAction;
-        private readonly bool useMultiCollection;
+        private readonly bool isMasterCollection;
         private readonly bool isPartitioned;
         private AsyncLazy<DocumentCollection> documentCollection;
 
@@ -38,7 +38,7 @@
             Expression<Func<TEntity, object>> idNameFactory = null,
             Expression<Func<TEntity, string>> etagExpression = null,
             Expression<Func<TEntity, DateTime?>> timestampExpression = null,
-            bool useMultiCollection = false)
+            bool isMasterCollection = false)
         {
             EnsureArg.IsNotNull(client, nameof(client));
             EnsureArg.IsNotNullOrEmpty(databaseId, nameof(databaseId));
@@ -47,14 +47,14 @@
             this.databaseId = databaseId;
             this.database = new AsyncLazy<Database>(async () => await this.GetOrCreateDatabaseAsync().ConfigureAwait(false));
 
-            this.useMultiCollection = useMultiCollection;
+            this.isMasterCollection = isMasterCollection;
             if (collectionNameFactory != null)
             {
                 this.collectionName = collectionNameFactory();
             }
             else
             {
-                this.collectionName = useMultiCollection ? "master" : typeof(TEntity).Name;
+                this.collectionName = isMasterCollection ? "master" : typeof(TEntity).Name;
             }
 
             this.documentCollection = new AsyncLazy<DocumentCollection>(async () => await this.GetOrCreateCollectionAsync(collectionPartitionKey, collectionOfferThroughput).ConfigureAwait(false));
@@ -328,7 +328,7 @@
                 await this.GetCollectionUriAsync().ConfigureAwait(false),
                 new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned })
                 .WhereExpression(expression)
-                .WhereExpressionIf(this.useMultiCollection, e => e.EntityType == typeof(TEntity).FullName)
+                .WhereExpressionIf(this.isMasterCollection, e => e.EntityType == typeof(TEntity).FullName)
                 .AsEnumerable()
                 .FirstOrDefault();
         }
@@ -339,14 +339,14 @@
                 await this.GetCollectionUriAsync().ConfigureAwait(false),
                 new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned })
                 .WhereExpression(expression)
-                .WhereExpressionIf(this.useMultiCollection, e => e.EntityType == typeof(TEntity).FullName)
+                .WhereExpressionIf(this.isMasterCollection, e => e.EntityType == typeof(TEntity).FullName)
                 .AsEnumerable()
                 .LastOrDefault();
         }
 
         public async Task<IEnumerable<TEntity>> WhereAsync(Expression<Func<TEntity, bool>> expression) // TODO: shouldn't this return IEnumerable<T>?
         {
-            if (!this.useMultiCollection)
+            if (!this.isMasterCollection)
             {
                 return this.client.CreateDocumentQuery<TEntity>(
                     await this.GetCollectionUriAsync().ConfigureAwait(false),
@@ -375,7 +375,7 @@
                 return this.client.CreateDocumentQuery<TEntity>((await this.documentCollection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount, EnableCrossPartitionQuery = this.isPartitioned })
                     .WhereExpression(expression)
                     .WhereExpressions(expressions)
-                    .WhereExpressionIf(this.useMultiCollection, e => e.EntityType == typeof(TEntity).FullName)
+                    .WhereExpressionIf(this.isMasterCollection, e => e.EntityType == typeof(TEntity).FullName)
                     .OrderByDescending(orderExpression)
                     .AsEnumerable();
             }
@@ -383,7 +383,7 @@
             return this.client.CreateDocumentQuery<TEntity>((await this.documentCollection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount, EnableCrossPartitionQuery = this.isPartitioned })
                     .WhereExpression(expression)
                     .WhereExpressions(expressions)
-                    .WhereExpressionIf(this.useMultiCollection, e => e.EntityType == typeof(TEntity).FullName)
+                    .WhereExpressionIf(this.isMasterCollection, e => e.EntityType == typeof(TEntity).FullName)
                     .OrderBy(orderExpression)
                     .AsEnumerable();
         }
@@ -396,7 +396,7 @@
         {
             return this.client.CreateDocumentQuery<TEntity>((await this.documentCollection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount, EnableCrossPartitionQuery = this.isPartitioned })
                 .WhereExpression(expression)
-                .WhereExpressionIf(this.useMultiCollection, e => e.EntityType == typeof(TEntity).FullName)
+                .WhereExpressionIf(this.isMasterCollection, e => e.EntityType == typeof(TEntity).FullName)
                 .Select(selector)
                 .OrderBy(orderExpression)
                 .AsEnumerable();
@@ -405,7 +405,7 @@
         public async Task<IQueryable<TEntity>> QueryAsync(int maxItemCount = 100)
         {
             return this.client.CreateDocumentQuery<TEntity>((await this.documentCollection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount, EnableCrossPartitionQuery = this.isPartitioned })
-                .WhereExpressionIf(this.useMultiCollection, e => e.EntityType == typeof(TEntity).FullName);
+                .WhereExpressionIf(this.isMasterCollection, e => e.EntityType == typeof(TEntity).FullName);
         }
 
         public async Task<IEnumerable<TEntity>> QueryAsync(string query)
@@ -488,7 +488,7 @@
                 documentCollection = new DocumentCollection { Id = this.collectionName };
                 if (!string.IsNullOrEmpty(collectionPartitionKey))
                 {
-                    documentCollection.PartitionKey.Paths.Add(string.Format("/{0}", collectionPartitionKey));
+                    documentCollection.PartitionKey.Paths.Add(string.Format("/{0}", collectionPartitionKey.Replace(".", "/")));
                 }
 
                 var requestOptions = new RequestOptions
