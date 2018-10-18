@@ -1,10 +1,7 @@
 ﻿namespace Naos.Core.App.Configuration
 {
-    public partial class NaosConfiguration
+    public class NaosSecretsConfiguration
     {
-        public class NaosSecretsConfiguration
-        {
-            public VaultConfiguration Vault { get; set; }
-        }
+        public VaultConfiguration Vault { get; set; }
     }
 }

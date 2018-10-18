@@ -7,4 +7,8 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\App.Configuration\App.Configuration.csproj" />
+  </ItemGroup>
+
 </Project>
