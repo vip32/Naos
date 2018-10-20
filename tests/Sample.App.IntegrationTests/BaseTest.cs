@@ -3,9 +3,7 @@
     using System;
     using Naos.Sample.App;
 
-#pragma warning disable RCS1102 // Make class static.
-    public class BaseTest
-#pragma warning restore RCS1102 // Make class static.
+    public abstract class BaseTest
     {
         public static AppConfiguration AppConfiguration = new AppConfiguration();
 
