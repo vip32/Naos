@@ -19,7 +19,7 @@
         //[JsonProperty(PropertyName = "id")]
         public TId Id { get; set; }
 
-        //[JsonProperty(PropertyName = "id")]
+        [JsonProperty(PropertyName = "id")]
         object IEntity.Id
         {
             get { return this.Id; }
