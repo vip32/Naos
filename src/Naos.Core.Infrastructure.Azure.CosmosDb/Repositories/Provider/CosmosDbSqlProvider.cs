@@ -23,8 +23,8 @@
         private readonly AsyncLazy<Database> database;
         private readonly string collectionName;
         private readonly string defaultIdentityPropertyName = "id";
-        private readonly Action<TEntity, string> setEtagAction;
-        private readonly Action<TEntity, DateTime?> setTimestampAction;
+        //private readonly Action<TEntity, string> setEtagAction;
+        //private readonly Action<TEntity, DateTime?> setTimestampAction;
         private readonly bool isMasterCollection;
         private readonly bool isPartitioned;
         private AsyncLazy<DocumentCollection> documentCollection;
@@ -35,9 +35,9 @@
             Func<string> collectionNameFactory = null,
             string collectionPartitionKey = null,
             int collectionOfferThroughput = 400,
-            Expression<Func<TEntity, object>> idNameFactory = null,
-            Expression<Func<TEntity, string>> etagExpression = null,
-            Expression<Func<TEntity, DateTime?>> timestampExpression = null,
+            //Expression<Func<TEntity, object>> idNameFactory = null,
+            //Expression<Func<TEntity, string>> etagExpression = null,
+            //Expression<Func<TEntity, DateTime?>> timestampExpression = null,
             bool isMasterCollection = false)
         {
             EnsureArg.IsNotNull(client, nameof(client));
@@ -63,22 +63,22 @@
                 this.isPartitioned = true;
             }
 
-            if (idNameFactory != null)
-            {
-                this.TryGetIdProperty(idNameFactory);
-            }
+            //if (idNameFactory != null)
+            //{
+            //    this.TryGetIdProperty(idNameFactory);
+            //}
 
-            if (etagExpression != null)
-            {
-                etagExpression.Compile();
-                this.setEtagAction = etagExpression.ToSetAction();
-            }
+            //if (etagExpression != null)
+            //{
+            //    etagExpression.Compile();
+            //    this.setEtagAction = etagExpression.ToSetAction();
+            //}
 
-            if (timestampExpression != null)
-            {
-                timestampExpression.Compile();
-                this.setTimestampAction = timestampExpression.ToSetAction();
-            }
+            //if (timestampExpression != null)
+            //{
+            //    timestampExpression.Compile();
+            //    this.setTimestampAction = timestampExpression.ToSetAction();
+            //}
         }
 
         public async Task<string> GetCollectionUriAsync()
@@ -138,11 +138,11 @@
             var doc = await this.client.UpsertDocumentAsync((await this.documentCollection).SelfLink, entity).ConfigureAwait(false);
 
             var retVal = JsonConvert.DeserializeObject<TEntity>(doc.Resource.ToString());
-            if (retVal != null)
-            {
-                this.setEtagAction?.Invoke(retVal, doc.Resource.ETag);
-                this.setTimestampAction?.Invoke(retVal, doc.Resource.Timestamp);
-            }
+            //if (retVal != null)
+            //{
+            //    this.setEtagAction?.Invoke(retVal, doc.Resource.ETag);
+            //    this.setTimestampAction?.Invoke(retVal, doc.Resource.Timestamp);
+            //}
 
             return retVal;
         }
@@ -155,11 +155,11 @@
             await this.client.UpsertAttachmentAsync(doc.Resource.SelfLink, stream, new MediaOptions { ContentType = contentType, Slug = attachmentId }).ConfigureAwait(false);
 
             var retVal = JsonConvert.DeserializeObject<TEntity>(doc.Resource.ToString());
-            if (retVal != null)
-            {
-                this.setEtagAction?.Invoke(retVal, doc.Resource.ETag);
-                this.setTimestampAction?.Invoke(retVal, doc.Resource.Timestamp);
-            }
+            //if (retVal != null)
+            //{
+            //    this.setEtagAction?.Invoke(retVal, doc.Resource.ETag);
+            //    this.setTimestampAction?.Invoke(retVal, doc.Resource.Timestamp);
+            //}
 
             return retVal;
         }
@@ -179,11 +179,11 @@
             return this.client.CreateDocumentQuery<Document>((await this.documentCollection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount, EnableCrossPartitionQuery = this.isPartitioned })
                 .AsEnumerable()
                 .Select(doc => new {doc, retVal = (TEntity)(dynamic)doc })
-                .ForEach(e =>
-                {
-                    this.setEtagAction?.Invoke(e.retVal, e.doc.ETag);
-                    this.setTimestampAction?.Invoke(e.retVal, e.doc.Timestamp);
-                })
+                //.ForEach(e =>
+                //{
+                //    this.setEtagAction?.Invoke(e.retVal, e.doc.ETag);
+                //    this.setTimestampAction?.Invoke(e.retVal, e.doc.Timestamp);
+                //})
                 .Select(e => e.retVal);
         }
 
@@ -198,11 +198,11 @@
                 var docs = query.ExecuteNextAsync().Result;
 
                 foreach (var retVal in docs.Select(doc => new { doc, retVal = (TEntity)doc })
-                        .ForEach(e =>
-                        {
-                            this.setEtagAction?.Invoke(e.retVal, e.doc._etag);
-                            this.setTimestampAction?.Invoke(e.retVal, this.TimeStampToDateTime(e.doc._ts));
-                        })
+                        //.ForEach(e =>
+                        //{
+                        //    this.setEtagAction?.Invoke(e.retVal, e.doc._etag);
+                        //    this.setTimestampAction?.Invoke(e.retVal, this.TimeStampToDateTime(e.doc._ts));
+                        //})
                     .Select(e => e.retVal))
                 {
                     yield return retVal;
@@ -248,11 +248,11 @@
         {
             var doc = await this.GetDocumentByIdAsync(id).ConfigureAwait(false);
             var retVal = (TEntity)(dynamic)doc;
-            if (doc != null)
-            {
-                this.setEtagAction?.Invoke(retVal, doc.ETag);
-                this.setTimestampAction?.Invoke(retVal, doc.Timestamp);
-            }
+            //if (doc != null)
+            //{
+            //    this.setEtagAction?.Invoke(retVal, doc.ETag);
+            //    this.setTimestampAction?.Invoke(retVal, doc.Timestamp);
+            //}
 
             return retVal;
         }
@@ -261,11 +261,11 @@
         {
             var doc = await this.GetDocumentByEtagAsync(etag).ConfigureAwait(false);
             var retVal = (TEntity)(dynamic)doc;
-            if (doc != null)
-            {
-                this.setEtagAction?.Invoke(retVal, doc.ETag);
-                this.setTimestampAction?.Invoke(retVal, doc.Timestamp);
-            }
+            //if (doc != null)
+            //{
+            //    this.setEtagAction?.Invoke(retVal, doc.ETag);
+            //    this.setTimestampAction?.Invoke(retVal, doc.Timestamp);
+            //}
 
             return retVal;
         }
@@ -416,42 +416,42 @@
                 new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned });
         }
 
-        private string TryGetIdProperty(Expression<Func<TEntity, object>> idNameFactory)
-        {
-            Type entityType = typeof(TEntity);
-            var properties = entityType.GetProperties();
+        //private string TryGetIdProperty(Expression<Func<TEntity, object>> idNameFactory)
+        //{
+        //    Type entityType = typeof(TEntity);
+        //    var properties = entityType.GetProperties();
 
-            if (idNameFactory != null)
-            {
-                var expr = this.GetMemberExpression(idNameFactory);
-                var customPropertyInfo = expr.Member;
+        //    if (idNameFactory != null)
+        //    {
+        //        var expr = this.GetMemberExpression(idNameFactory);
+        //        var customPropertyInfo = expr.Member;
 
-                this.EnsurePropertyHasJsonAttributeWithCorrectPropertyName(customPropertyInfo);
+        //        this.EnsurePropertyHasJsonAttributeWithCorrectPropertyName(customPropertyInfo);
 
-                return customPropertyInfo.Name;
-            }
+        //        return customPropertyInfo.Name;
+        //    }
 
-            // search for id property in entity
-            var idProperty = properties.SingleOrDefault(p => p.Name == this.defaultIdentityPropertyName);
+        //    // search for id property in entity
+        //    var idProperty = properties.SingleOrDefault(p => p.Name == this.defaultIdentityPropertyName);
 
-            if (idProperty != null)
-            {
-                return idProperty.Name;
-            }
+        //    if (idProperty != null)
+        //    {
+        //        return idProperty.Name;
+        //    }
 
-            // search for Id property in entity
-            idProperty = properties.SingleOrDefault(p => p.Name == "Id");
+        //    // search for Id property in entity
+        //    idProperty = properties.SingleOrDefault(p => p.Name == "Id");
 
-            if (idProperty != null)
-            {
-                this.EnsurePropertyHasJsonAttributeWithCorrectPropertyName(idProperty);
+        //    if (idProperty != null)
+        //    {
+        //        this.EnsurePropertyHasJsonAttributeWithCorrectPropertyName(idProperty);
 
-                return idProperty.Name;
-            }
+        //        return idProperty.Name;
+        //    }
 
-            // identity property not found
-            throw new ArgumentException("Unique identity property not found. Create \"id\" property for your entity or use different property name with JsonAttribute with PropertyName set to \"id\"");
-        }
+        //    // identity property not found
+        //    throw new ArgumentException("Unique identity property not found. Create \"id\" property for your entity or use different property name with JsonAttribute with PropertyName set to \"id\"");
+        //}
 
         private void EnsurePropertyHasJsonAttributeWithCorrectPropertyName(MemberInfo idProperty)
         {
