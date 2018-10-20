@@ -10,10 +10,10 @@
 
         public string CollectionName { get; set; }
 
-        public bool IsMasterCollection { get; set; }
+        public bool IsMasterCollection { get; set; } = true;
 
         public string CollectionPartitionKey { get; set; }
 
-        public int CollectionOfferThroughput { get; set; }
+        public int CollectionOfferThroughput { get; set; } = 400;
     }
 }

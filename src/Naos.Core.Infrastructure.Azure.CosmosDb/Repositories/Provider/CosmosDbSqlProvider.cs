@@ -38,7 +38,7 @@
             //Expression<Func<TEntity, object>> idNameFactory = null,
             //Expression<Func<TEntity, string>> etagExpression = null,
             //Expression<Func<TEntity, DateTime?>> timestampExpression = null,
-            bool isMasterCollection = false)
+            bool isMasterCollection = true)
         {
             EnsureArg.IsNotNull(client, nameof(client));
             EnsureArg.IsNotNullOrEmpty(databaseId, nameof(databaseId));
@@ -52,7 +52,8 @@
             {
                 this.collectionName = collectionNameFactory();
             }
-            else
+
+            if(string.IsNullOrEmpty(this.collectionName))
             {
                 this.collectionName = isMasterCollection ? "master" : typeof(TEntity).Name;
             }
@@ -173,6 +174,12 @@
 
             return retVal;
         }
+
+        //public async Task<TEntity> GetByIdAsync(object id)
+        //{
+        //    return this.client.CreateDocumentQuery<TEntity>((await this.documentCollection).SelfLink, new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned })
+        //        .WhereExpression(d => d.Id == id).AsEnumerable().FirstOrDefault();
+        //}
 
         public async Task<IEnumerable<TEntity>> GetAllAsync(int maxItemCount = -1)
         {

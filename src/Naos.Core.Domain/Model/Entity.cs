@@ -9,21 +9,25 @@
     public abstract class Entity<TId> : IEntity<TId>
     {
         /// <summary>
-        ///     Gets or sets the entity id.
+        /// Gets or sets the entity id.
         /// </summary>
         /// <remarks>
         ///     <para>
         ///         The id may be of type <c>string</c>, <c>int</c>, or another value type.
         ///     </para>
         /// </remarks>
-        //[JsonProperty(PropertyName = "id")]
         public TId Id { get; set; }
 
+        /// <summary>
+        /// Gets the identifier value.
+        /// </summary>
+        /// <value>
+        /// The identifier.
+        /// </value>
         [JsonProperty(PropertyName = "id")]
         object IEntity.Id
         {
             get { return this.Id; }
-            //set { this.Id = value as TId; } // TODO: how to pass value to Id (TId)
         }
 
         /// <summary>

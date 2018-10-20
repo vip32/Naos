@@ -142,13 +142,14 @@
             string[] regions = { "East", "West" };
             for (int i = 1; i < 21; i++)
             {
-                var result = await sut.AddOrUpdateAsync(new StubEntity
-                {
-                    Id = $"Id{i}",
-                    Name = $"Name{i}",
-                    Region = regions[new Random().Next(0, regions.Length)],
-                    TenantId = this.tenantId
-                }).ConfigureAwait(false);
+                var result = await sut.AddOrUpdateAsync(
+                    new StubEntity
+                    {
+                        Id = $"Id{i}",
+                        Name = $"Name{i}",
+                        Region = regions[new Random().Next(0, regions.Length)],
+                        TenantId = this.tenantId
+                    }).ConfigureAwait(false);
 
                 // assert
                 Assert.NotNull(result);
