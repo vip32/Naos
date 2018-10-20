@@ -35,7 +35,7 @@ namespace Naos.Core.UnitTests.Domain
         {
             // arrange
             var mediatorMock = new Mock<IMediator>();
-            var sut = InMemoryRepositoryFactory.CreateForStringId(mediatorMock.Object, this.entities);
+            var sut = new InMemoryRepository<StubEntityString>(mediatorMock.Object, this.entities);
 
             // act
             var result = await sut.FindAllAsync().ConfigureAwait(false);
@@ -51,7 +51,7 @@ namespace Naos.Core.UnitTests.Domain
         {
             // arrange
             var mediatorMock = new Mock<IMediator>();
-            var sut = InMemoryRepositoryFactory.CreateForStringId(mediatorMock.Object, this.entities);
+            var sut = new InMemoryRepository<StubEntityString>(mediatorMock.Object, this.entities);
 
             // act/assert
             var result = await sut.FindAllAsync(new StubEntityHasNameSpecification("FirstName1")).ConfigureAwait(false);
@@ -66,7 +66,7 @@ namespace Naos.Core.UnitTests.Domain
             Assert.False(stubEntities.IsNullOrEmpty());
             Assert.True(stubEntities.Length == 20);
 
-            result = await sut.FindAllAsync(new HasTenantSpecification<StubEntityString, string>(this.tenantId)).ConfigureAwait(false);
+            result = await sut.FindAllAsync(new HasTenantSpecification<StubEntityString>(this.tenantId)).ConfigureAwait(false);
 
             stubEntities = result as StubEntityString[] ?? result.ToArray();
             Assert.False(stubEntities.IsNullOrEmpty());
@@ -84,7 +84,7 @@ namespace Naos.Core.UnitTests.Domain
         {
             // arrange
             var mediatorMock = new Mock<IMediator>();
-            var sut = InMemoryRepositoryFactory.CreateForStringId(mediatorMock.Object, this.entities);
+            var sut = new InMemoryRepository<StubEntityString>(mediatorMock.Object, this.entities);
 
             // act/assert
             var result = await sut.FindAllAsync(
@@ -113,7 +113,7 @@ namespace Naos.Core.UnitTests.Domain
         {
             // arrange
             var mediatorMock = new Mock<IMediator>();
-            var sut = InMemoryRepositoryFactory.CreateForStringId(mediatorMock.Object, this.entities);
+            var sut = new InMemoryRepository<StubEntityString>(mediatorMock.Object, this.entities);
 
             // act/assert
             var result = await sut.FindByIdAsync("Id1").ConfigureAwait(false);
@@ -132,7 +132,7 @@ namespace Naos.Core.UnitTests.Domain
         {
             // arrange
             var mediatorMock = new Mock<IMediator>();
-            var sut = InMemoryRepositoryFactory.CreateForGuidId(mediatorMock.Object, this.guidEntities);
+            var sut = new InMemoryRepository<StubEntityGuid>(mediatorMock.Object, this.guidEntities);
 
             // act/assert
             var result = await sut.FindByIdAsync(this.guidEntities.First().Id).ConfigureAwait(false);
@@ -147,11 +147,11 @@ namespace Naos.Core.UnitTests.Domain
         }
 
         [Fact]
-        public async Task AddOrUpdateEntity_Test()
+        public async Task AddNewEntityWithId_EntityIsAdded()
         {
             // arrange
             var mediatorMock = new Mock<IMediator>();
-            var sut = InMemoryRepositoryFactory.CreateForStringId(mediatorMock.Object, this.entities);
+            var sut = new InMemoryRepository<StubEntityString>(mediatorMock.Object, this.entities);
 
             // act
             var entity = await sut.AddOrUpdateAsync(new StubEntityString
@@ -168,11 +168,31 @@ namespace Naos.Core.UnitTests.Domain
         }
 
         [Fact]
+        public async Task AddNewEntityWithoutId_EntityIsAddedWithGeneratedId()
+        {
+            // arrange
+            var mediatorMock = new Mock<IMediator>();
+            var sut = new InMemoryRepository<StubEntityString>(mediatorMock.Object, this.entities);
+
+            // act
+            var entity = await sut.AddOrUpdateAsync(new StubEntityString
+            {
+                FirstName = "FirstName88",
+                TenantId = this.tenantId
+            }).ConfigureAwait(false);
+
+            // assert
+            Assert.NotNull(entity);
+            Assert.False(entity.Id.IsNullOrEmpty());
+            Assert.Equal("FirstName88", entity.FirstName);
+        }
+
+        [Fact]
         public async Task DeleteEntityById_Test()
         {
             // arrange
             var mediatorMock = new Mock<IMediator>();
-            var sut = InMemoryRepositoryFactory.CreateForStringId(mediatorMock.Object, this.entities);
+            var sut = new InMemoryRepository<StubEntityString>(mediatorMock.Object, this.entities);
 
             // act
             await sut.DeleteAsync("Id1").ConfigureAwait(false);
@@ -187,7 +207,7 @@ namespace Naos.Core.UnitTests.Domain
         {
             // arrange
             var mediatorMock = new Mock<IMediator>();
-            var sut = InMemoryRepositoryFactory.CreateForStringId(mediatorMock.Object, this.entities);
+            var sut = new InMemoryRepository<StubEntityString>(mediatorMock.Object, this.entities);
 
             // act
             var entity = this.entities.FirstOrDefault(e => e.FirstName == "FirstName1");
@@ -235,7 +255,7 @@ namespace Naos.Core.UnitTests.Domain
         }
     }
 
-    public class StubEntityHasTenantSpecification : HasTenantSpecification<StubEntityString, string> // TODO: this should be mocked
+    public class StubEntityHasTenantSpecification : HasTenantSpecification<StubEntityString> // TODO: this should be mocked
     {
         public StubEntityHasTenantSpecification(string tenantId)
             : base(tenantId)
@@ -260,7 +280,7 @@ namespace Naos.Core.UnitTests.Domain
         }
     }
 
-    public class StubEntityGuidHasTenantSpecification : HasTenantSpecification<StubEntityGuid, Guid> // TODO: this should be mocked
+    public class StubEntityGuidHasTenantSpecification : HasTenantSpecification<StubEntityGuid> // TODO: this should be mocked
     {
         public StubEntityGuidHasTenantSpecification(string tenantId)
             : base(tenantId)

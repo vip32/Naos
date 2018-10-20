@@ -7,26 +7,24 @@
 
     public static class NaosConfigurationFactory
     {
-        public static NaosCoreConfiguration Bind(NaosCoreConfiguration instance, string basePath = null, string[] args = null)
-        {
-            if(instance == null)
-            {
-                instance = new NaosCoreConfiguration();
-            }
+        //public static void Bind<T>(T instance, string section, string basePath = null, string[] args = null)
+        //{
+        //    if (instance == null || section.IsNullOrEmpty())
+        //    {
+        //        return;
+        //    }
 
-            CreateRoot(basePath, args)
-                .GetSection("naos")
-                .Bind(instance);
-
-            return instance;
-        }
+        //    CreateRoot(basePath, args)
+        //        .GetSection(section)
+        //        .Bind(instance);
+        //}
 
         public static IConfigurationBuilder Extend(IConfigurationBuilder config, string basePath = null, string[] args = null)
         {
             return CreateBuilder(basePath, args, config);
         }
 
-        private static IConfigurationRoot CreateRoot(string basePath = null, string[] args = null)
+        public static IConfigurationRoot CreateRoot(string basePath = null, string[] args = null)
         {
             return CreateBuilder(basePath, args).Build();
         }

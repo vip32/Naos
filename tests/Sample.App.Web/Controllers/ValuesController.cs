@@ -1,17 +1,28 @@
-﻿namespace Naos.Core.Sample.App.Web.Controllers
+﻿namespace Naos.Sample.App.Web.Controllers
 {
     using System.Collections.Generic;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Options;
 
     [Route("api/[controller]")]
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private readonly AppConfiguration configuration;
+
+        public ValuesController(IOptions<AppConfiguration> configuration)
+        {
+            EnsureThat.EnsureArg.IsNotNull(configuration, nameof(configuration));
+            EnsureThat.EnsureArg.IsNotNull(configuration.Value, nameof(configuration.Value));
+
+            this.configuration = configuration.Value;
+        }
+
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            return new string[] { "sample value1", "sample value2" };
+            return new string[] { $"{this.configuration.Name} 1", $"{this.configuration.Name} 2" };
         }
 
         // GET api/values/5

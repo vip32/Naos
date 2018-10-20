@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Naos.Core.Infrastructure.Azure.Arm</AssemblyName>
+    <RootNamespace>Naos.Core.Infrastructure.Azure.Arm</RootNamespace>
+  </PropertyGroup>
+
+</Project>

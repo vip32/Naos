@@ -10,7 +10,7 @@
     using Naos.Core.Domain;
 
     public interface ICosmosDbSqlProvider<TEntity>
-        where TEntity : Entity<string>
+        where TEntity : class, IEntity
     {
         Task<TEntity> AddOrUpdateAsync(TEntity entity);
 

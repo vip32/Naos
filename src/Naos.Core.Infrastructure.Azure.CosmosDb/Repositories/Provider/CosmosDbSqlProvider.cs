@@ -16,7 +16,7 @@
     using Newtonsoft.Json;
 
     public class CosmosDbSqlProvider<TEntity> : ICosmosDbSqlProvider<TEntity>
-        where TEntity : Entity<string>
+        where TEntity : class, IEntity
     {
         private readonly IDocumentClient client;
         private readonly string databaseId;

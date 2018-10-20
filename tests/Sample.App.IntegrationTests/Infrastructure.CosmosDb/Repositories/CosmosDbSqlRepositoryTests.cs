@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.IntegrationTests.Infrastructure.CosmosDb
+﻿namespace Naos.Sample.App.IntegrationTests.Infrastructure.CosmosDb
 {
     using System;
     using System.Collections.Generic;
@@ -7,32 +7,27 @@
     using System.Threading.Tasks;
     using MediatR;
     using Moq;
-    using Naos.Core.App.Configuration;
     using Naos.Core.Common;
     using Naos.Core.Domain;
     using Naos.Core.Infrastructure.Azure.CosmosDb;
-    using Naos.Core.Sample.App;
     using Xunit;
 
-    public class CosmosDbSqlRepositoryTests
+    public class CosmosDbSqlRepositoryTests : BaseTest
     {
-        private readonly NaosAppconfiguration configuration = new NaosAppconfiguration();
         private readonly StubCosmosDbSqlRepository repository;
         private readonly string tenantId = "naos_test";
 
         public CosmosDbSqlRepositoryTests()
         {
-            NaosConfigurationFactory.Bind(this.configuration);
-
             this.repository = new StubCosmosDbSqlRepository(
                 new Mock<IMediator>().Object,
                 new CosmosDbSqlProvider<StubEntity>(// kv >> development-naos--app--cosmosDb--serviceEndpointUri    development-naos--app--cosmosDb--authKeyOrResourceToken
-                        client: CosmosDbClient.Create(this.configuration.App.CosmosDb.ServiceEndpointUri, this.configuration.App.CosmosDb.AuthKeyOrResourceToken),
-                        databaseId: this.configuration.App.CosmosDb.DatabaseId,
-                        collectionNameFactory: () => this.configuration.App.CosmosDb.CollectionName,
-                        collectionOfferThroughput: this.configuration.App.CosmosDb.CollectionOfferThroughput,
-                        collectionPartitionKey: this.configuration.App.CosmosDb.CollectionPartitionKey,
-                        isMasterCollection: this.configuration.App.CosmosDb.IsMasterCollection));
+                        client: CosmosDbClient.Create(this.AppConfiguration.CosmosDb.ServiceEndpointUri, this.AppConfiguration.CosmosDb.AuthKeyOrResourceToken),
+                        databaseId: this.AppConfiguration.CosmosDb.DatabaseId,
+                        collectionNameFactory: () => this.AppConfiguration.CosmosDb.CollectionName,
+                        collectionOfferThroughput: this.AppConfiguration.CosmosDb.CollectionOfferThroughput,
+                        collectionPartitionKey: this.AppConfiguration.CosmosDb.CollectionPartitionKey,
+                        isMasterCollection: this.AppConfiguration.CosmosDb.IsMasterCollection));
         }
 
         [Fact]
@@ -76,7 +71,7 @@
             Assert.False(findResultsArray.IsNullOrEmpty());
             Assert.True(findResultsArray.Length == 20);
 
-            findResults = await sut.FindAllAsync(new HasTenantSpecification<StubEntity, string>(this.tenantId)).ConfigureAwait(false);
+            findResults = await sut.FindAllAsync(new HasTenantSpecification<StubEntity>(this.tenantId)).ConfigureAwait(false);
 
             findResultsArray = findResults as StubEntity[] ?? findResults.ToArray();
             Assert.False(findResultsArray.IsNullOrEmpty());
@@ -215,7 +210,7 @@
         }
     }
 
-    public class StubHasTenantSpecification : HasTenantSpecification<StubEntity, string>
+    public class StubHasTenantSpecification : HasTenantSpecification<StubEntity>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="StubHasTenantSpecification"/> class.

@@ -1,8 +1,14 @@
-﻿namespace Naos.Core.App.Configuration
+﻿namespace Naos.Core.Infrastructure.ServiceBus
 {
-    public class ServiceBusconfiguration
+    public class ServiceBusConfiguration
     {
         public bool Enabled { get; set; }
+
+        public string ConnectionString { get; set; }
+
+        public string EntityPath { get; set; }
+
+        // TODO: move below to Infra.Arm
 
         public string ResourceGroup { get; set; }
 
@@ -15,9 +21,5 @@
         public string SubscriptionId { get; set; }
 
         public string TenantId { get; set; }
-
-        public string ConnectionString { get; set; }
-
-        public string EntityPath { get; internal set; }
     }
 }

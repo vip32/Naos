@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.App.Configuration
+﻿namespace Naos.Core.Infrastructure.Azure.CosmosDb
 {
     public class CosmosDbConfiguration
     {

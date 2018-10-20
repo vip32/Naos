@@ -1,7 +1,7 @@
 ﻿namespace Naos.Core.Domain
 {
-    public class EntityUpdatedDomainEvent<TEntity, TId> : IDomainEvent
-        where TEntity : Entity<TId>, IAggregateRoot
+    public class EntityUpdatedDomainEvent<TEntity> : IDomainEvent
+        where TEntity : class, IEntity, IAggregateRoot
     {
         public EntityUpdatedDomainEvent(TEntity entity)
         {

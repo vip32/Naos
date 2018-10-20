@@ -6,7 +6,7 @@
     using Microsoft.Extensions.Hosting;
     using Naos.Core.App.Configuration;
     using Naos.Core.Messaging;
-    using Naos.Core.Messaging.Infrastructure.Azure;
+    using Naos.Core.Messaging.Infrastructure.Azure.ServiceBus;
     using Serilog;
     using Serilog.Events;
 
@@ -37,7 +37,6 @@
                         string[] capabilities = { $"{AppDomain.CurrentDomain.FriendlyName}-A", $"{AppDomain.CurrentDomain.FriendlyName}-B", $"{AppDomain.CurrentDomain.FriendlyName}-C" };
 
                         services.AddOptions();
-                        //services.Configure<AppConfig>(hostContext.Configuration.GetSection("AppConfig"));
                         services.AddSingleton<IHostedService, PublishHostedService>();
                         services.AddNaosMessaging(context.Configuration, subscriptionName: capabilities[new Random().Next(0, capabilities.Length)]);
                         // register all message handlers

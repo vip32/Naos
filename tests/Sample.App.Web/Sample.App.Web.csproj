@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <AssemblyName>Naos.Core.Sample.App.Web</AssemblyName>
-    <RootNamespace>Naos.Core.Sample.App.Web</RootNamespace>
+    <AssemblyName>Naos.Sample.App.Web</AssemblyName>
+    <RootNamespace>Naos.Sample.App.Web</RootNamespace>
     <DockerTargetOS>Linux</DockerTargetOS>
   </PropertyGroup>
 

@@ -1,6 +1,6 @@
-﻿namespace Naos.Core.Messaging.Infrastructure.Azure
+﻿namespace Naos.Core.Messaging.Infrastructure.Azure.ServiceBus
 {
-    public class AzureUserCredentials
+    public class AzureUserCredentials // TODO: move to infra.arm
     {
         public string ClientId { get; internal set; }
 

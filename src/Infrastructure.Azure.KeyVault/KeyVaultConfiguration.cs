@@ -1,6 +1,6 @@
-﻿namespace Naos.Core.App.Configuration
+﻿namespace Naos.Core.Infrastructure.Azure.KeyVault
 {
-    public class VaultConfiguration
+    public class KeyVaultConfiguration
     {
         public bool Enabled { get; set; }
 

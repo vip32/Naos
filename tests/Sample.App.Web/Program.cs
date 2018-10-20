@@ -1,7 +1,8 @@
-﻿namespace Naos.Core.Sample.App.Web
+﻿namespace Naos.Sample.App.Web
 {
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
+    using Naos.Core.App.Configuration;
 
     public static class Program
     {
@@ -12,6 +13,10 @@
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((context, config) =>
+                {
+                    NaosConfigurationFactory.Extend(config);
+                })
                 .UseStartup<Startup>();
     }
 }

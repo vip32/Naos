@@ -8,8 +8,8 @@
     using Naos.Core.Common;
     using Naos.Core.Domain;
 
-    public class CosmosDbSqlRepository<TEntity> : IRepository<TEntity, string>
-        where TEntity : Entity<string>, IAggregateRoot
+    public class CosmosDbSqlRepository<TEntity> : IRepository<TEntity>
+        where TEntity : class, IEntity, IAggregateRoot
     {
         private readonly IMediator mediator;
         private readonly ICosmosDbSqlProvider<TEntity> provider;
@@ -30,71 +30,87 @@
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, int count = -1)
         {
-            EnsureArg.IsNotNull(specification);
-
             return await this.provider.WhereAsync<TEntity>(
-                expression: specification.Expression(),
+                expression: specification?.Expression(),
                 maxItemCount: count).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, int count = -1)
         {
             var specificationsArray = specifications as ISpecification<TEntity>[] ?? specifications.ToArray();
-            EnsureArg.IsNotNull(specificationsArray);
-            EnsureArg.IsTrue(specificationsArray.Any());
+            //EnsureArg.IsNotNull(specificationsArray);
+            //EnsureArg.IsTrue(specificationsArray.Any());
 
-            var expressions = specificationsArray.Select(s => s.Expression());
+            var expressions = specificationsArray.NullToEmpty().Select(s => s.Expression());
             return await this.provider.WhereAsync<TEntity>(
                 expressions: expressions,
                 maxItemCount: count).ConfigureAwait(false);
         }
 
-        public async Task<TEntity> FindByIdAsync(string id)
+        public async Task<TEntity> FindByIdAsync(object id)
         {
-            EnsureArg.IsNotNullOrEmpty(id);
+            if (id.IsDefault())
+            {
+                return null;
+            }
 
             return await this.provider.FirstOrDefaultAsync(o => o.Id == id).ConfigureAwait(false);
         }
 
-        public async Task<bool> ExistsAsync(string id)
+        public async Task<bool> ExistsAsync(object id)
         {
+            if (id.IsDefault())
+            {
+                return false;
+            }
+
             return await this.FindByIdAsync(id) != null;
         }
 
         public async Task<TEntity> AddOrUpdateAsync(TEntity entity)
         {
-            bool isNew = entity.Id.IsNullOrEmpty();
+            if (entity == null)
+            {
+                return null;
+            }
+
+            bool isNew = entity.Id.IsDefault();
 
             var result = await this.provider.AddOrUpdateAsync(entity).ConfigureAwait(false);
 
             if (isNew)
             {
-                await this.mediator.Publish(new EntityAddedDomainEvent<TEntity, string>(entity)).ConfigureAwait(false);
+                await this.mediator.Publish(new EntityAddedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
             }
             else
             {
-                await this.mediator.Publish(new EntityUpdatedDomainEvent<TEntity, string>(entity)).ConfigureAwait(false);
+                await this.mediator.Publish(new EntityUpdatedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
             }
 
             return result;
         }
 
-        public async Task DeleteAsync(string id)
+        public async Task DeleteAsync(object id)
         {
-            EnsureArg.IsNotNullOrEmpty(id);
+            if (id.IsDefault())
+            {
+                return;
+            }
 
             var entity = await this.FindByIdAsync(id).ConfigureAwait(false);
             if (entity != null)
             {
-                await this.provider.DeleteAsync(id).ConfigureAwait(false);
-                await this.mediator.Publish(new EntityDeletedDomainEvent<TEntity, string>(entity)).ConfigureAwait(false);
+                await this.provider.DeleteAsync(id as string).ConfigureAwait(false);
+                await this.mediator.Publish(new EntityDeletedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
             }
         }
 
         public async Task DeleteAsync(TEntity entity)
         {
-            EnsureArg.IsNotNull(entity);
-            EnsureArg.IsNotNullOrEmpty(entity.Id);
+            if (entity == null || entity.Id.IsDefault())
+            {
+                return;
+            }
 
             await this.DeleteAsync(entity.Id).ConfigureAwait(false);
         }

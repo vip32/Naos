@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Messaging.Infrastructure.Azure
+﻿namespace Naos.Core.Messaging.Infrastructure.Azure.ServiceBus
 {
     using System.Linq;
     using System.Threading.Tasks;
@@ -8,8 +8,9 @@
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
+    using Naos.Core.Infrastructure.ServiceBus;
 
-    public class ServiceBusProvider : IServiceBusProvider
+    public class ServiceBusProvider : IServiceBusProvider // TODO: move to infra.sb
     {
         private readonly ILogger<ServiceBusProvider> logger;
         private readonly IServiceBusNamespace serviceBusNamespace;
@@ -20,29 +21,29 @@
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="credentials">The credentials.</param>
-        /// <param name="settings">The configuration.</param>
+        /// <param name="configuration">The configuration.</param>
         public ServiceBusProvider(
             ILogger<ServiceBusProvider> logger,
             AzureCredentials credentials,
-            IOptions<ServiceBusSettings> settings)
+            IOptions<ServiceBusConfiguration> configuration)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(credentials, nameof(credentials));
-            EnsureArg.IsNotNull(settings, nameof(settings));
-            EnsureArg.IsNotNull(settings.Value, nameof(settings.Value));
-            EnsureArg.IsNotNullOrEmpty(settings.Value.SubscriptionId, nameof(settings.Value.SubscriptionId));
-            EnsureArg.IsNotNullOrEmpty(settings.Value.ConnectionString, nameof(settings.Value.ConnectionString));
-            EnsureArg.IsNotNullOrEmpty(settings.Value.ResourceGroup, nameof(settings.Value.ResourceGroup));
-            EnsureArg.IsNotNullOrEmpty(settings.Value.NamespaceName, nameof(settings.Value.NamespaceName));
-            EnsureArg.IsNotNullOrEmpty(settings.Value.EntityPath, nameof(settings.Value.EntityPath));
+            EnsureArg.IsNotNull(configuration, nameof(configuration));
+            EnsureArg.IsNotNull(configuration.Value, nameof(configuration.Value));
+            EnsureArg.IsNotNullOrEmpty(configuration.Value.SubscriptionId, nameof(configuration.Value.SubscriptionId));
+            EnsureArg.IsNotNullOrEmpty(configuration.Value.ConnectionString, nameof(configuration.Value.ConnectionString));
+            EnsureArg.IsNotNullOrEmpty(configuration.Value.ResourceGroup, nameof(configuration.Value.ResourceGroup));
+            EnsureArg.IsNotNullOrEmpty(configuration.Value.NamespaceName, nameof(configuration.Value.NamespaceName));
+            EnsureArg.IsNotNullOrEmpty(configuration.Value.EntityPath, nameof(configuration.Value.EntityPath));
 
             this.logger = logger;
-            this.ConnectionStringBuilder = new ServiceBusConnectionStringBuilder(settings.Value.ConnectionString)
+            this.ConnectionStringBuilder = new ServiceBusConnectionStringBuilder(configuration.Value.ConnectionString)
             {
-                EntityPath = settings.Value.EntityPath
+                EntityPath = configuration.Value.EntityPath
             };
-            var serviceBusManager = ServiceBusManager.Authenticate(credentials, settings.Value.SubscriptionId);
-            this.serviceBusNamespace = serviceBusManager.Namespaces.GetByResourceGroup(settings.Value.ResourceGroup, settings.Value.NamespaceName);
+            var serviceBusManager = ServiceBusManager.Authenticate(credentials, configuration.Value.SubscriptionId);
+            this.serviceBusNamespace = serviceBusManager.Namespaces.GetByResourceGroup(configuration.Value.ResourceGroup, configuration.Value.NamespaceName);
         }
 
         /// <summary>

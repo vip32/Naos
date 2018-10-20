@@ -12,28 +12,25 @@
     /// Represents an InMemoryRepository
     /// </summary>
     /// <typeparam name="TEntity">Type or the Entity stored</typeparam>
-    /// <typeparam name="TId">The type of the Entity identifier.</typeparam>
     /// <seealso cref="Domain.IRepository{TEntity, TId}" />
-    public class InMemoryRepository<TEntity, TId> : IRepository<TEntity, TId>
-        where TEntity : Entity<TId>, IAggregateRoot
+    public class InMemoryRepository<TEntity> : IRepository<TEntity>
+        where TEntity : class, IEntity, IAggregateRoot
     {
         protected IEnumerable<TEntity> entities;
         private readonly IMediator mediator;
-        private readonly Func<IEnumerable<TEntity>, TId> idFactory;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InMemoryRepository{T, TId}"/> class.
+        /// Initializes a new instance of the <see cref="InMemoryRepository{TEntity}"/> class.
         /// </summary>
         /// <param name="mediator">The mediator.</param>
         /// <param name="entities">The entities.</param>
         /// <param name="idFactory">Method that generates a new Id if needed</param>
-        public InMemoryRepository(IMediator mediator, IEnumerable<TEntity> entities = null, Func<IEnumerable<TEntity>, TId> idFactory = null)
+        public InMemoryRepository(IMediator mediator, IEnumerable<TEntity> entities = null)
         {
             EnsureArg.IsNotNull(mediator, nameof(mediator));
 
             this.mediator = mediator;
             this.entities = entities.NullToEmpty();
-            this.idFactory = idFactory;
         }
 
         /// <summary>
@@ -54,7 +51,10 @@
         /// <returns></returns>
         public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, int count = -1)
         {
-            EnsureArg.IsNotNull(specification);
+            if(specification == null)
+            {
+                return await this.FindAllAsync(count).ConfigureAwait(false);
+            }
 
             return await Task.FromResult(this.entities.Where(specification.ToPredicate())).ConfigureAwait(false);
         }
@@ -68,12 +68,9 @@
         public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, int count = -1)
         {
             var specsArray = specifications as ISpecification<TEntity>[] ?? specifications.ToArray();
-            EnsureArg.IsNotNull(specsArray);
-            EnsureArg.IsTrue(specsArray.Length > 0);
-
             var result = this.entities;
 
-            foreach (var specification in specsArray)
+            foreach (var specification in specsArray.NullToEmpty())
             {
                 result = result.Where(specification.ToPredicate());
             }
@@ -87,11 +84,11 @@
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException">id</exception>
-        public async Task<TEntity> FindByIdAsync(TId id)
+        public async Task<TEntity> FindByIdAsync(object id)
         {
             if (id.IsDefault())
             {
-                throw new ArgumentOutOfRangeException(nameof(id));
+                return null;
             }
 
             return await Task.FromResult(this.entities.FirstOrDefault(x => x.Id.Equals(id)));
@@ -102,8 +99,13 @@
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        public async Task<bool> ExistsAsync(TId id)
+        public async Task<bool> ExistsAsync(object id)
         {
+            if (id.IsDefault())
+            {
+                return false;
+            }
+
             return await this.FindByIdAsync(id) != null;
         }
 
@@ -115,17 +117,32 @@
         /// <exception cref="Exception">Method for generating new Ids not provided</exception>
         public async Task<TEntity> AddOrUpdateAsync(TEntity entity)
         {
-            EnsureArg.IsNotNull(entity);
+            if (entity == null)
+            {
+                return null;
+            }
 
             bool isNew = false;
             if (entity.Id.IsDefault())
             {
-                if (this.idFactory == null)
+                if (entity is IEntity<int>)
                 {
-                    throw new Exception("id generator not available");
+                    (entity as IEntity<int>).Id = this.entities.Count() + 1;
+                }
+                else if (entity is IEntity<string>)
+                {
+                    (entity as IEntity<string>).Id = Guid.NewGuid().ToString();
+                }
+                else if (entity is IEntity<Guid>)
+                {
+                    (entity as IEntity<Guid>).Id = Guid.NewGuid();
+                }
+                else
+                {
+                    throw new NotSupportedException($"Entity Id type {entity.Id.GetType().Name}");
+                    // TODO: or just set Id to null?
                 }
 
-                entity.Id = this.idFactory(this.entities);
                 isNew = true;
             }
 
@@ -133,11 +150,11 @@
 
             if (isNew)
             {
-                await this.mediator.Publish(new EntityAddedDomainEvent<TEntity, TId>(entity)).ConfigureAwait(false);
+                await this.mediator.Publish(new EntityAddedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
             }
             else
             {
-                await this.mediator.Publish(new EntityUpdatedDomainEvent<TEntity, TId>(entity)).ConfigureAwait(false);
+                await this.mediator.Publish(new EntityUpdatedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
             }
 
             return entity;
@@ -149,18 +166,18 @@
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException">id</exception>
-        public async Task DeleteAsync(TId id)
+        public async Task DeleteAsync(object id)
         {
             if (id.IsDefault())
             {
-                throw new ArgumentOutOfRangeException(nameof(id));
+                return;
             }
 
             var entity = this.entities.FirstOrDefault(x => x.Id.Equals(id));
             if (entity != null)
             {
                 this.entities = this.entities.Where(x => !x.Id.Equals(entity.Id));
-                await this.mediator.Publish(new EntityDeletedDomainEvent<TEntity, TId>(entity)).ConfigureAwait(false);
+                await this.mediator.Publish(new EntityDeletedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
             }
         }
 
@@ -172,14 +189,13 @@
         /// <exception cref="ArgumentOutOfRangeException">Id</exception>
         public async Task DeleteAsync(TEntity entity)
         {
-            EnsureArg.IsNotNull(entity);
-            if (entity.Id.IsDefault())
+            if (entity == null || entity.Id.IsDefault())
             {
-                throw new ArgumentOutOfRangeException(nameof(entity.Id));
+                return;
             }
 
             this.entities = this.entities.Where(x => !x.Id.Equals(entity.Id));
-            await this.mediator.Publish(new EntityDeletedDomainEvent<TEntity, TId>(entity)).ConfigureAwait(false);
+            await this.mediator.Publish(new EntityDeletedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
         }
     }
 }

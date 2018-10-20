@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <AssemblyName>Naos.Core.IntegrationTests</AssemblyName>
-    <RootNamespace>Naos.Core.IntegrationTests</RootNamespace>
+    <AssemblyName>Naos.Sample.App.IntegrationTests</AssemblyName>
+    <RootNamespace>Naos.Sample.App.IntegrationTests</RootNamespace>
     <IsPackable>false</IsPackable>
     <LangVersion>7.1</LangVersion>
   </PropertyGroup>

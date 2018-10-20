@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Messaging.Infrastructure.Azure
+﻿namespace Naos.Core.Messaging.Infrastructure.Azure.ServiceBus
 {
     using System;
     using System.Text;

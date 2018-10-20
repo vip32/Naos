@@ -3,7 +3,7 @@
     using Model;
     using Naos.Core.Domain;
 
-    public interface IMessageRepository : IRepository<Message, string>
+    public interface IMessageRepository : IRepository<Message>
     {
     }
 }
