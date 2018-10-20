@@ -3,16 +3,18 @@
     using System;
     using Naos.Sample.App;
 
+#pragma warning disable RCS1102 // Make class static.
     public class BaseTest
+#pragma warning restore RCS1102 // Make class static.
     {
-        public readonly AppConfiguration AppConfiguration = new AppConfiguration();
+        public static AppConfiguration AppConfiguration = new AppConfiguration();
 
-        public BaseTest()
+        static BaseTest()
         {
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
             Environment.SetEnvironmentVariable("ASPNETCORE_ISLOCAL", "True");
 
-            this.AppConfiguration.Bind("naos:app:sample");
+            AppConfiguration.Bind("naos:app:sample");
         }
     }
 }

@@ -21,13 +21,13 @@
         {
             this.repository = new StubCosmosDbSqlRepository(
                 new Mock<IMediator>().Object,
-                new CosmosDbSqlProvider<StubEntity>(// kv >> development-naos--app--cosmosDb--serviceEndpointUri    development-naos--app--cosmosDb--authKeyOrResourceToken
-                        client: CosmosDbClient.Create(this.AppConfiguration.CosmosDb.ServiceEndpointUri, this.AppConfiguration.CosmosDb.AuthKeyOrResourceToken),
-                        databaseId: this.AppConfiguration.CosmosDb.DatabaseId,
-                        collectionNameFactory: () => this.AppConfiguration.CosmosDb.CollectionName,
-                        collectionOfferThroughput: this.AppConfiguration.CosmosDb.CollectionOfferThroughput,
-                        collectionPartitionKey: this.AppConfiguration.CosmosDb.CollectionPartitionKey,
-                        isMasterCollection: this.AppConfiguration.CosmosDb.IsMasterCollection));
+                new CosmosDbSqlProvider<StubEntity>(
+                        client: CosmosDbClient.Create(AppConfiguration.CosmosDb.ServiceEndpointUri, AppConfiguration.CosmosDb.AuthKeyOrResourceToken),
+                        databaseId: AppConfiguration.CosmosDb.DatabaseId,
+                        collectionNameFactory: () => AppConfiguration.CosmosDb.CollectionName,
+                        collectionOfferThroughput: AppConfiguration.CosmosDb.CollectionOfferThroughput,
+                        collectionPartitionKey: AppConfiguration.CosmosDb.CollectionPartitionKey,
+                        isMasterCollection: AppConfiguration.CosmosDb.IsMasterCollection));
         }
 
         [Fact]
