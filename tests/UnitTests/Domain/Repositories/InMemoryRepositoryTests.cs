@@ -127,6 +127,26 @@ namespace Naos.Core.UnitTests.Domain
         }
 
         [Fact]
+        public async Task FindAllWithOrSpecification_Test()
+        {
+            // arrange
+            var mediatorMock = new Mock<IMediator>();
+            var sut = new InMemoryRepository<StubEntityString>(mediatorMock.Object, this.entities);
+
+            // act
+            var findResults = await sut.FindAllAsync(
+                new StubHasNameSpecification("FirstName1")
+                .Or(new StubHasNameSpecification("FirstName2"))).ConfigureAwait(false);
+
+            // assert
+            var findResultsArray = findResults as StubEntityString[] ?? findResults.ToArray();
+            Assert.False(findResultsArray.IsNullOrEmpty());
+            Assert.True(findResultsArray.Count() == 2);
+            Assert.Contains(findResultsArray, f => f.FirstName == "FirstName1");
+            Assert.Contains(findResultsArray, f => f.FirstName == "FirstName2");
+        }
+
+        [Fact]
         public async Task FindAllWithNotSpecification_Test()
         {
             // arrange

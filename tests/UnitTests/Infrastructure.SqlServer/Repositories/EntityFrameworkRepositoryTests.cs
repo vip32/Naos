@@ -44,9 +44,9 @@
                 var sut = new EntityFrameworkRepository<StubEntity>(mediatorMock.Object, context);
 
                 // act
-                var findResultsWithSpecification = sut.FindAllAsync(new StubEntityHasTenantSpecification("TestTenant")).Result;
-                var findResultsWithSpecifications = sut.FindAllAsync(new[] { new StubEntityHasTenantSpecification("TestTenant") }).Result;
-                var findResultsWithTenantSpecfication = sut.FindAllAsync(new StubEntityHasTenantSpecification("TestTenant"), 5).Result;
+                var findResultsWithSpecification = sut.FindAllAsync(new StubHasTenantSpecification("TestTenant")).Result;
+                var findResultsWithSpecifications = sut.FindAllAsync(new[] { new StubHasTenantSpecification("TestTenant") }).Result;
+                var findResultsWithTenantSpecfication = sut.FindAllAsync(new StubHasTenantSpecification("TestTenant"), 5).Result;
 
                 // assert
                 Assert.NotNull(findResultsWithSpecification);
@@ -72,12 +72,35 @@
 
                 // act
                 var findResults = sut.FindAllAsync(
-                    new StubEntityHasTenantSpecification("TestTenant")
-                    .And(new StubEntityHasNameSpecification("FirstName1"))).Result;
+                    new StubHasTenantSpecification("TestTenant")
+                    .And(new StubHasNameSpecification("FirstName1"))).Result;
 
                 // assert
                 Assert.NotNull(findResults);
                 Assert.True(findResults.Count() == 1);
+            }
+        }
+
+        [Fact]
+        public void FindAll_WithOrSpecification_Test()
+        {
+            using (var context = new StubDbContext(this.DbOptions()))
+            {
+                // arrange
+                this.SeedData(context);
+                var mediatorMock = new Mock<IMediator>();
+                var sut = new EntityFrameworkRepository<StubEntity>(mediatorMock.Object, context);
+
+                // act
+                var findResults = sut.FindAllAsync(
+                    new StubHasNameSpecification("FirstName1")
+                    .Or(new StubHasNameSpecification("FirstName2"))).Result;
+
+                // assert
+                Assert.NotNull(findResults);
+                Assert.True(findResults.Count() == 2);
+                Assert.Contains(findResults, f => f.FirstName == "FirstName1");
+                Assert.Contains(findResults, f => f.FirstName == "FirstName2");
             }
         }
 
@@ -93,8 +116,8 @@
 
                 // act
                 var findResults = sut.FindAllAsync(
-                    new StubEntityHasTenantSpecification("TestTenant")
-                    .And(new StubEntityHasNameSpecification("FirstName1")
+                    new StubHasTenantSpecification("TestTenant")
+                    .And(new StubHasNameSpecification("FirstName1")
                         .Not())).Result;
 
                 // assert
@@ -212,11 +235,11 @@
         public int Age { get; set; }
     }
 
-    public class StubEntityHasNameSpecification : Specification<StubEntity> // TODO: this should be mocked
+    public class StubHasNameSpecification : Specification<StubEntity> // TODO: this should be mocked
     {
         private readonly string firstName;
 
-        public StubEntityHasNameSpecification(string firstName)
+        public StubHasNameSpecification(string firstName)
         {
             EnsureArg.IsNotNull(firstName);
 
@@ -229,9 +252,9 @@
         }
     }
 
-    public class StubEntityHasTenantSpecification : HasTenantSpecification<StubEntity> // TODO: this should be mocked
+    public class StubHasTenantSpecification : HasTenantSpecification<StubEntity> // TODO: this should be mocked
     {
-        public StubEntityHasTenantSpecification(string tenantId)
+        public StubHasTenantSpecification(string tenantId)
             : base(tenantId)
         {
         }

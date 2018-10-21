@@ -102,6 +102,25 @@
         }
 
         [Fact]
+        public async Task FindAllWithOrSpecification_Test()
+        {
+            // arrange
+            var sut = this.repository;
+
+            // act
+            var findResults = await sut.FindAllAsync(
+                new StubHasNameSpecification("Name1")
+                .Or(new StubHasNameSpecification("Name2"))).ConfigureAwait(false);
+
+            // assert
+            var findResultsArray = findResults as StubEntity[] ?? findResults.ToArray();
+            Assert.False(findResultsArray.IsNullOrEmpty());
+            Assert.True(findResultsArray.Count() == 2);
+            Assert.Contains(findResultsArray, f => f.Name == "Name1");
+            Assert.Contains(findResultsArray, f => f.Name == "Name2");
+        }
+
+        [Fact]
         public async Task FindAllWithNotSpecification_Test()
         {
             // arrange
