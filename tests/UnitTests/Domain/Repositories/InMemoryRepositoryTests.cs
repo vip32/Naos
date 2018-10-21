@@ -117,12 +117,32 @@ namespace Naos.Core.UnitTests.Domain
 
             // act
             var findResults = await sut.FindAllAsync(
-                new StubHasNameSpecification("FirstName1").And(new StubHasTenantSpecification(this.tenantId))).ConfigureAwait(false);
+                new StubHasNameSpecification("FirstName1")
+                .And(new StubHasTenantSpecification(this.tenantId))).ConfigureAwait(false);
 
             // assert
             var findResultsArray = findResults as StubEntityString[] ?? findResults.ToArray();
             Assert.False(findResultsArray.IsNullOrEmpty());
             Assert.Equal("FirstName1", findResultsArray.FirstOrDefault()?.FirstName);
+        }
+
+        [Fact]
+        public async Task FindAllWithNotSpecification_Test()
+        {
+            // arrange
+            var mediatorMock = new Mock<IMediator>();
+            var sut = new InMemoryRepository<StubEntityString>(mediatorMock.Object, this.entities);
+
+            // act
+            var findResults = await sut.FindAllAsync(
+                new StubHasTenantSpecification(this.tenantId)
+                .And(new StubHasNameSpecification("FirstName1")
+                    .Not())).ConfigureAwait(false);
+
+            // assert
+            var findResultsArray = findResults as StubEntityString[] ?? findResults.ToArray();
+            Assert.False(findResultsArray.IsNullOrEmpty());
+            Assert.DoesNotContain(findResultsArray, f => f.FirstName == "FirstName1");
         }
 
         [Fact]

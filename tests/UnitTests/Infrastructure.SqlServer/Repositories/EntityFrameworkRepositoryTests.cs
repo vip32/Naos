@@ -82,6 +82,29 @@
         }
 
         [Fact]
+        public void FindAll_WithNotSpecification_Test()
+        {
+            using (var context = new StubDbContext(this.DbOptions()))
+            {
+                // arrange
+                this.SeedData(context);
+                var mediatorMock = new Mock<IMediator>();
+                var sut = new EntityFrameworkRepository<StubEntity>(mediatorMock.Object, context);
+
+                // act
+                var findResults = sut.FindAllAsync(
+                    new StubEntityHasTenantSpecification("TestTenant")
+                    .And(new StubEntityHasNameSpecification("FirstName1")
+                        .Not())).Result;
+
+                // assert
+                Assert.NotNull(findResults);
+                Assert.True(findResults.Count() >= 1);
+                Assert.DoesNotContain(findResults, f => f.FirstName == "FirstName1");
+            }
+        }
+
+        [Fact]
         public void FindById_Test()
         {
             using (var context = new StubDbContext(this.DbOptions()))
