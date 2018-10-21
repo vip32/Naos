@@ -1,13 +1,13 @@
 ﻿namespace Naos.Core.Domain
 {
-    public class EntityDeletedDomainEvent<TEntity> : IDomainEvent
-        where TEntity : class, IEntity, IAggregateRoot
+    public class EntityDeletedDomainEvent<T> : IDomainEvent
+        where T : class, IEntity, IAggregateRoot
     {
-        public EntityDeletedDomainEvent(TEntity entity)
+        public EntityDeletedDomainEvent(T entity)
         {
             this.Entity = entity;
         }
 
-        public TEntity Entity { get; set; }
+        public T Entity { get; set; }
     }
 }

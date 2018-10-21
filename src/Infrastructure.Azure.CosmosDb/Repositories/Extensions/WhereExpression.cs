@@ -7,9 +7,9 @@
 
     public static partial class Extensions
     {
-        public static IQueryable<TSource> WhereExpression<TSource>(
-            this IQueryable<TSource> source,
-            Expression<Func<TSource, bool>> expression)
+        public static IQueryable<T> WhereExpression<T>(
+            this IQueryable<T> source,
+            Expression<Func<T, bool>> expression)
         {
             if (expression != null)
             {
@@ -19,9 +19,9 @@
             return source;
         }
 
-        public static IQueryable<TSource> WhereExpressions<TSource>(
-            this IQueryable<TSource> source,
-            IEnumerable<Expression<Func<TSource, bool>>> expressions)
+        public static IQueryable<T> WhereExpressions<T>(
+            this IQueryable<T> source,
+            IEnumerable<Expression<Func<T, bool>>> expressions)
         {
             if (expressions?.Any() == true)
             {

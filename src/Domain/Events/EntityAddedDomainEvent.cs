@@ -1,13 +1,13 @@
 ﻿namespace Naos.Core.Domain
 {
-    public class EntityAddedDomainEvent<TEntity> : IDomainEvent
-        where TEntity : class, IEntity, IAggregateRoot
+    public class EntityAddedDomainEvent<T> : IDomainEvent
+        where T : class, IEntity, IAggregateRoot
     {
-        public EntityAddedDomainEvent(TEntity entity)
+        public EntityAddedDomainEvent(T entity)
         {
             this.Entity = entity;
         }
 
-        public TEntity Entity { get; set; }
+        public T Entity { get; set; }
     }
 }

@@ -8,21 +8,21 @@
         /// <summary>
         /// Finds the entity by identifier and tenant.
         /// </summary>
-        /// <typeparam name="TEntity">Type of the result</typeparam>
+        /// <typeparam name="T">Type of the result</typeparam>
         /// <param name="source">The source.</param>
         /// <param name="id">The identifier.</param>
         /// <param name="tenantId">The tenant identifier.</param>
         /// <returns></returns>
-        public static async Task<TEntity> FindAsync<TEntity>(
-            this IRepository<TEntity> source,
+        public static async Task<T> FindAsync<T>(
+            this IRepository<T> source,
             object id,
             string tenantId)
-            where TEntity : class, ITenantEntity, IAggregateRoot
+            where T : class, ITenantEntity, IAggregateRoot
         {
             EnsureArg.IsNotNullOrEmpty(tenantId);
 
             var entity = await source.FindOneAsync(id).ConfigureAwait(false);
-            if(entity != null && new HasTenantSpecification<TEntity>(tenantId).IsSatisfiedBy(entity))
+            if(entity != null && new HasTenantSpecification<T>(tenantId).IsSatisfiedBy(entity))
             {
                 return entity;
             }

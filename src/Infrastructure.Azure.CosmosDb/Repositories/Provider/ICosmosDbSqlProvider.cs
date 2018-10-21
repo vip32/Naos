@@ -9,22 +9,22 @@
     using Microsoft.Azure.Documents;
     using Naos.Core.Domain;
 
-    public interface ICosmosDbSqlProvider<TEntity>
-        where TEntity : class, IEntity
+    public interface ICosmosDbSqlProvider<T>
+        where T : class, IEntity
     {
-        Task<TEntity> AddOrUpdateAsync(TEntity entity);
+        Task<T> AddOrUpdateAsync(T entity);
 
-        Task<TEntity> AddOrUpdateAttachmentAsync(TEntity entity, string attachmentId, string contentType, Stream stream);
+        Task<T> AddOrUpdateAttachmentAsync(T entity, string attachmentId, string contentType, Stream stream);
 
         Task<int> CountAsync();
 
-        Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> expression = null);
+        Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> expression = null);
 
-        Task<IEnumerable<TEntity>> GetAllAsync(int maxItemCount = -1);
+        Task<IEnumerable<T>> GetAllAsync(int maxItemCount = -1);
 
         IEnumerable<string> GetAllIdsPaged(int pageSize = 100);
 
-        IEnumerable<TEntity> GetAllPaged(int pageSize = 100);
+        IEnumerable<T> GetAllPaged(int pageSize = 100);
 
         IEnumerable<string> GetAllUrisPaged(int pageSize = 100);
 
@@ -36,26 +36,26 @@
 
         Task<Stream> GetAttachmentStreamByIdAsync(string id, string attachmentId);
 
-        Task<TEntity> GetByEtagAsync(string etag);
+        Task<T> GetByEtagAsync(string etag);
 
-        Task<TEntity> GetByIdAsync(string id);
+        Task<T> GetByIdAsync(string id);
 
         Task<string> GetCollectionUriAsync();
 
-        Task<TEntity> LastOrDefaultAsync(Expression<Func<TEntity, bool>> expression = null);
+        Task<T> LastOrDefaultAsync(Expression<Func<T, bool>> expression = null);
 
-        Task<IQueryable<TEntity>> QueryAsync(int maxItemCount = 100);
+        Task<IQueryable<T>> QueryAsync(int maxItemCount = 100);
 
-        Task<IEnumerable<TEntity>> QueryAsync(string query);
+        Task<IEnumerable<T>> QueryAsync(string query);
 
         Task<bool> DeleteAllAsync();
 
         Task<bool> DeleteAsync(string idOrUri);
 
-        Task<IEnumerable<TEntity>> WhereAsync(Expression<Func<TEntity, bool>> expression);
+        Task<IEnumerable<T>> WhereAsync(Expression<Func<T, bool>> expression);
 
-        Task<IEnumerable<TEntity>> WhereAsync<TKey>(Expression<Func<TEntity, bool>> expression = null, IEnumerable<Expression<Func<TEntity, bool>>> expressions = null, int maxItemCount = 100, Expression<Func<TEntity, TKey>> orderExpression = null, bool desc = false);
+        Task<IEnumerable<T>> WhereAsync<TKey>(Expression<Func<T, bool>> expression = null, IEnumerable<Expression<Func<T, bool>>> expressions = null, int maxItemCount = 100, Expression<Func<T, TKey>> orderExpression = null, bool desc = false);
 
-        Task<IEnumerable<TEntity>> WhereAsync<TKey>(Expression<Func<TEntity, bool>> expression, Expression<Func<TEntity, TEntity>> selector, int maxItemCount = 100, Expression<Func<TEntity, TKey>> orderExpression = null);
+        Task<IEnumerable<T>> WhereAsync<TKey>(Expression<Func<T, bool>> expression, Expression<Func<T, T>> selector, int maxItemCount = 100, Expression<Func<T, TKey>> orderExpression = null);
     }
 }

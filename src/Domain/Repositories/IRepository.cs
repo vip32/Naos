@@ -14,7 +14,7 @@
 
         Task<T> FindOneAsync(object id);
 
-        //Task<TEntity> FindOneAsync(ISpecification<TEntity> specification);
+        //Task<T> FindOneAsync(ISpecification<T> specification);
 
         Task<bool> ExistsAsync(object id);
 

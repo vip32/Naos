@@ -8,10 +8,10 @@
         /// <summary>
         /// Converts the Get expression to a Set expression
         /// </summary>
-        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="source">The source expression.</param>
         /// <returns></returns>
-        public static Action<TEntity, string> ToSetAction<TEntity>(this Expression<Func<TEntity, string>> source)
+        public static Action<T, string> ToSetAction<T>(this Expression<Func<T, string>> source)
         {
             if (source == null)
             {
@@ -20,7 +20,7 @@
 
             var member = (MemberExpression)source.Body;
             var param = Expression.Parameter(typeof(string), "value");
-            var set = Expression.Lambda<Action<TEntity, string>>(
+            var set = Expression.Lambda<Action<T, string>>(
                 Expression.Assign(member, param), source.Parameters[0], param);
             return set.Compile();
         }
@@ -28,10 +28,10 @@
         /// <summary>
         /// Converts the Get expression to a Set expression
         /// </summary>
-        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="source">The source expression.</param>
         /// <returns></returns>
-        public static Action<TEntity, int> ToSetAction<TEntity>(this Expression<Func<TEntity, int>> source)
+        public static Action<T, int> ToSetAction<T>(this Expression<Func<T, int>> source)
         {
             if (source == null)
             {
@@ -40,7 +40,7 @@
 
             var member = (MemberExpression)source.Body;
             var param = Expression.Parameter(typeof(int), "value");
-            var set = Expression.Lambda<Action<TEntity, int>>(
+            var set = Expression.Lambda<Action<T, int>>(
                 Expression.Assign(member, param), source.Parameters[0], param);
             return set.Compile();
         }
@@ -48,10 +48,10 @@
         /// <summary>
         /// Converts the Get expression to a Set expression
         /// </summary>
-        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="source">The source expression.</param>
         /// <returns></returns>
-        public static Action<TEntity, DateTime?> ToSetAction<TEntity>(this Expression<Func<TEntity, DateTime?>> source)
+        public static Action<T, DateTime?> ToSetAction<T>(this Expression<Func<T, DateTime?>> source)
         {
             if (source == null)
             {
@@ -60,7 +60,7 @@
 
             var member = (MemberExpression)source.Body;
             var param = Expression.Parameter(typeof(DateTime?), "value");
-            var set = Expression.Lambda<Action<TEntity, DateTime?>>(
+            var set = Expression.Lambda<Action<T, DateTime?>>(
                 Expression.Assign(member, param), source.Parameters[0], param);
             return set.Compile();
         }

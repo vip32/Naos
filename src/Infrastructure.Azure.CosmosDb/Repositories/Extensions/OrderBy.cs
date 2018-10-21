@@ -6,9 +6,9 @@
 
     public static partial class Extensions
     {
-        public static IQueryable<TSource> OrderBy<TSource, TKey>(
-            this IQueryable<TSource> source,
-            Expression<Func<TSource, TKey>> expression)
+        public static IQueryable<T> OrderBy<T, TKey>(
+            this IQueryable<T> source,
+            Expression<Func<T, TKey>> expression)
         {
             if (expression != null)
             {

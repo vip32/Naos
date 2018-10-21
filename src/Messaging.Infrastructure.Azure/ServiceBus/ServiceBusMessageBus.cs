@@ -234,7 +234,7 @@
                         }
 
                         // construct the handler by using the DI container
-                        var handler = this.handlerFactory.Create(subscription.HandlerType); // should not be null, did you forget to register your generic handler (EntityMessageHandler<TEntity>)
+                        var handler = this.handlerFactory.Create(subscription.HandlerType); // should not be null, did you forget to register your generic handler (EntityMessageHandler<T>)
                         var concreteType = typeof(IMessageHandler<>).MakeGenericType(messageType);
 
                         var method = concreteType.GetMethod("Handle");

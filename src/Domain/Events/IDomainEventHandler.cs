@@ -2,8 +2,8 @@
 {
     using MediatR;
 
-    public interface IDomainEventHandler<in TDomainEvent> : INotificationHandler<TDomainEvent>
-        where TDomainEvent : IDomainEvent
+    public interface IDomainEventHandler<in T> : INotificationHandler<T>
+        where T : IDomainEvent
     {
     }
 }

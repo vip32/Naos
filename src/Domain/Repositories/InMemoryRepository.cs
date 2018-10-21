@@ -20,7 +20,7 @@
         private readonly IMediator mediator;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InMemoryRepository{TEntity}"/> class.
+        /// Initializes a new instance of the <see cref="InMemoryRepository{T}"/> class.
         /// </summary>
         /// <param name="mediator">The mediator.</param>
         /// <param name="entities">The entities.</param>

@@ -10,48 +10,48 @@
         /// <summary>
         /// Finds all asynchronous.
         /// </summary>
-        /// <typeparam name="TEntity">Type of the result</typeparam>
+        /// <typeparam name="T">Type of the result</typeparam>
         /// <param name="source">The source.</param>
         /// <param name="tenantId">The tenant identifier.</param>
         /// <param name="maxItemCount">The maximum item count.</param>
         /// <returns></returns>
-        public static async Task<IEnumerable<TEntity>> FindAllAsync<TEntity>(
-            this IRepository<TEntity> source,
+        public static async Task<IEnumerable<T>> FindAllAsync<T>(
+            this IRepository<T> source,
             string tenantId,
             int maxItemCount = -1)
-            where TEntity : class, ITenantEntity, IAggregateRoot
+            where T : class, ITenantEntity, IAggregateRoot
         {
             EnsureArg.IsNotNullOrEmpty(tenantId);
 
             return await source.FindAllAsync(
-                HasTenantSpecification<TEntity>.Factory.Create(tenantId),
+                HasTenantSpecification<T>.Factory.Create(tenantId),
                 maxItemCount).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Finds all asynchronous.
         /// </summary>
-        /// <typeparam name="TEntity">Type of the result</typeparam>
+        /// <typeparam name="T">Type of the result</typeparam>
         /// <param name="source">The source.</param>
         /// <param name="tenantId">The tenant identifier.</param>
         /// <param name="specification">The specification.</param>
         /// <param name="maxItemCount">The maximum item count.</param>
         /// <returns></returns>
-        public static async Task<IEnumerable<TEntity>> FindAllAsync<TEntity>(
-            this IRepository<TEntity> source,
+        public static async Task<IEnumerable<T>> FindAllAsync<T>(
+            this IRepository<T> source,
             string tenantId,
-            Specification<TEntity> specification,
+            Specification<T> specification,
             int maxItemCount = -1)
-            where TEntity : class, ITenantEntity, IAggregateRoot
+            where T : class, ITenantEntity, IAggregateRoot
         {
             EnsureArg.IsNotNullOrEmpty(tenantId);
             EnsureArg.IsNotNull(specification);
 
             return await source.FindAllAsync(
-                new List<Specification<TEntity>>
+                new List<Specification<T>>
                 {
                     specification,
-                    HasTenantSpecification<TEntity>.Factory.Create(tenantId)
+                    HasTenantSpecification<T>.Factory.Create(tenantId)
                 },
                 maxItemCount).ConfigureAwait(false);
         }
@@ -59,28 +59,28 @@
         /// <summary>
         /// Finds all asynchronous.
         /// </summary>
-        /// <typeparam name="TEntity">Type of the result</typeparam>
+        /// <typeparam name="T">Type of the result</typeparam>
         /// <param name="source">The source.</param>
         /// <param name="tenantId">The tenant identifier.</param>
         /// <param name="specifications">The specifications.</param>
         /// <param name="maxItemCount">The maximum item count.</param>
         /// <returns></returns>
-        public static async Task<IEnumerable<TEntity>> FindAllAsync<TEntity>(
-            this IRepository<TEntity> source,
+        public static async Task<IEnumerable<T>> FindAllAsync<T>(
+            this IRepository<T> source,
             string tenantId,
-            IEnumerable<Specification<TEntity>> specifications,
+            IEnumerable<Specification<T>> specifications,
             int maxItemCount = -1)
-            where TEntity : class, ITenantEntity, IAggregateRoot
+            where T : class, ITenantEntity, IAggregateRoot
         {
             EnsureArg.IsNotNullOrEmpty(tenantId);
-            var specificationsArray = specifications as Specification<TEntity>[] ?? specifications.ToArray();
+            var specificationsArray = specifications as Specification<T>[] ?? specifications.ToArray();
             EnsureArg.IsNotNull(specificationsArray);
             EnsureArg.IsTrue(specificationsArray.Any());
 
             return await source.FindAllAsync(
-                new List<Specification<TEntity>>(specificationsArray)
+                new List<Specification<T>>(specificationsArray)
                 {
-                    HasTenantSpecification<TEntity>.Factory.Create(tenantId)
+                    HasTenantSpecification<T>.Factory.Create(tenantId)
                 },
                 maxItemCount).ConfigureAwait(false);
         }

@@ -4,8 +4,8 @@
     using System.Linq.Expressions;
     using EnsureThat;
 
-    public class HasTenantSpecification<TEntity> : Specification<TEntity>
-        where TEntity : ITenantEntity
+    public class HasTenantSpecification<T> : Specification<T>
+        where T : ITenantEntity
     {
         protected readonly string tenantId;
 
@@ -16,16 +16,16 @@
             this.tenantId = tenantId;
         }
 
-        public override Expression<Func<TEntity, bool>> ToExpression()
+        public override Expression<Func<T, bool>> ToExpression()
         {
             return t => t.TenantId == this.tenantId;
         }
 
         public static class Factory
         {
-            public static HasTenantSpecification<TEntity> Create(string tenantId)
+            public static HasTenantSpecification<T> Create(string tenantId)
             {
-                return new HasTenantSpecification<TEntity>(tenantId);
+                return new HasTenantSpecification<T>(tenantId);
             }
         }
     }
