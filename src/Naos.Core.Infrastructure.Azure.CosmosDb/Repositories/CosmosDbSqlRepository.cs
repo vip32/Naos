@@ -31,7 +31,7 @@
         public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, int count = -1)
         {
             return await this.provider.WhereAsync<TEntity>(
-                expression: specification?.Expression(),
+                expression: specification?.ToExpression(),
                 maxItemCount: count).ConfigureAwait(false);
         }
 
@@ -41,13 +41,13 @@
             //EnsureArg.IsNotNull(specificationsArray);
             //EnsureArg.IsTrue(specificationsArray.Any());
 
-            var expressions = specificationsArray.NullToEmpty().Select(s => s.Expression());
+            var expressions = specificationsArray.NullToEmpty().Select(s => s.ToExpression());
             return await this.provider.WhereAsync<TEntity>(
                 expressions: expressions,
                 maxItemCount: count).ConfigureAwait(false);
         }
 
-        public async Task<TEntity> FindAsync(object id)
+        public async Task<TEntity> FindOneAsync(object id)
         {
             if (id.IsDefault())
             {
@@ -64,7 +64,7 @@
                 return false;
             }
 
-            return await this.FindAsync(id) != null;
+            return await this.FindOneAsync(id) != null;
         }
 
         public async Task<TEntity> AddOrUpdateAsync(TEntity entity)
@@ -97,7 +97,7 @@
                 return;
             }
 
-            var entity = await this.FindAsync(id).ConfigureAwait(false);
+            var entity = await this.FindOneAsync(id).ConfigureAwait(false);
             if (entity != null)
             {
                 await this.provider.DeleteAsync(id as string).ConfigureAwait(false);

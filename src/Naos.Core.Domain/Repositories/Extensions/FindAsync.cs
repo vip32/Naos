@@ -21,7 +21,7 @@
         {
             EnsureArg.IsNotNullOrEmpty(tenantId);
 
-            var entity = await source.FindAsync(id).ConfigureAwait(false);
+            var entity = await source.FindOneAsync(id).ConfigureAwait(false);
             if(entity != null && new HasTenantSpecification<TEntity>(tenantId).IsSatisfiedBy(entity))
             {
                 return entity;

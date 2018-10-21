@@ -12,7 +12,9 @@
 
         Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, int count = -1); // TODO: count should be part of specification
 
-        Task<TEntity> FindAsync(object id);
+        Task<TEntity> FindOneAsync(object id);
+
+        //Task<TEntity> FindOneAsync(ISpecification<TEntity> specification);
 
         Task<bool> ExistsAsync(object id);
 

@@ -84,7 +84,7 @@
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException">id</exception>
-        public async Task<TEntity> FindAsync(object id)
+        public async Task<TEntity> FindOneAsync(object id)
         {
             if (id.IsDefault())
             {
@@ -106,7 +106,7 @@
                 return false;
             }
 
-            return await this.FindAsync(id) != null;
+            return await this.FindOneAsync(id) != null;
         }
 
         /// <summary>

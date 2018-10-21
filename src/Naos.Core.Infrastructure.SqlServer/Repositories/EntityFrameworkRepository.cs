@@ -34,7 +34,7 @@
         {
             return await Task.FromResult(
                 this.context.Set<TEntity>()
-                            .WhereExpression(specification?.Expression())
+                            .WhereExpression(specification?.ToExpression())
                             .TakeIf(count));
         }
 
@@ -44,14 +44,14 @@
             //EnsureArg.IsNotNull(specificationsArray);
             //EnsureArg.IsTrue(specificationsArray.Length > 0);
 
-            var expressions = specificationsArray.NullToEmpty().Select(s => s.Expression());
+            var expressions = specificationsArray.NullToEmpty().Select(s => s.ToExpression());
             return await Task.FromResult(
                 this.context.Set<TEntity>()
                             .WhereExpressions(expressions)
                             .TakeIf(count));
         }
 
-        public async Task<TEntity> FindAsync(object id)
+        public async Task<TEntity> FindOneAsync(object id)
         {
             if (id.IsDefault())
             {
@@ -68,7 +68,7 @@
                 return false;
             }
 
-            return await this.FindAsync(id) != null;
+            return await this.FindOneAsync(id) != null;
         }
 
         public async Task<TEntity> AddOrUpdateAsync(TEntity entity)

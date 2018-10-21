@@ -61,6 +61,27 @@
         }
 
         [Fact]
+        public void FindAll_WithAndSpecification_Test()
+        {
+            using (var context = new StubDbContext(this.DbOptions()))
+            {
+                // arrange
+                this.SeedData(context);
+                var mediatorMock = new Mock<IMediator>();
+                var sut = new EntityFrameworkRepository<StubEntity>(mediatorMock.Object, context);
+
+                // act
+                var findResults = sut.FindAllAsync(
+                    new StubEntityHasTenantSpecification("TestTenant")
+                    .And(new StubEntityHasNameSpecification("FirstName1"))).Result;
+
+                // assert
+                Assert.NotNull(findResults);
+                Assert.True(findResults.Count() == 1);
+            }
+        }
+
+        [Fact]
         public void FindById_Test()
         {
             using (var context = new StubDbContext(this.DbOptions()))
@@ -71,8 +92,8 @@
                 var sut = new EntityFrameworkRepository<StubEntity>(mediatorMock.Object, context);
 
                 // act
-                var findResult = sut.FindAsync(new Guid("00000000-0000-0000-0000-000000000001")).Result;
-                var findResultUnknownId = sut.FindAsync(new Guid("00000000-0000-0000-0000-000000000050")).Result;
+                var findResult = sut.FindOneAsync(new Guid("00000000-0000-0000-0000-000000000001")).Result;
+                var findResultUnknownId = sut.FindOneAsync(new Guid("00000000-0000-0000-0000-000000000050")).Result;
 
                 // assert
                 Assert.NotNull(findResult);
@@ -103,7 +124,7 @@
 
                 // act
                 var result = sut.AddOrUpdateAsync(entity).Result;
-                var findResult = sut.FindAsync(entity.Id).Result;
+                var findResult = sut.FindOneAsync(entity.Id).Result;
 
                 // assert
                 Assert.NotNull(result);
@@ -179,7 +200,7 @@
             this.firstName = firstName;
         }
 
-        public override Expression<Func<StubEntity, bool>> Expression()
+        public override Expression<Func<StubEntity, bool>> ToExpression()
         {
             return p => p.FirstName == this.firstName;
         }

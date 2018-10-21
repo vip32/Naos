@@ -16,7 +16,7 @@
             this.tenantId = tenantId;
         }
 
-        public override Expression<Func<TEntity, bool>> Expression()
+        public override Expression<Func<TEntity, bool>> ToExpression()
         {
             return t => t.TenantId == this.tenantId;
         }

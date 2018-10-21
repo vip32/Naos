@@ -85,6 +85,23 @@
         }
 
         [Fact]
+        public async Task FindAllWithAndSpecification_Test()
+        {
+            // arrange
+            var sut = this.repository;
+
+            // act
+            var findResults = await sut.FindAllAsync(
+                new StubHasNameSpecification("Name1")
+                .And(new StubHasTenantSpecification(this.tenantId))).ConfigureAwait(false);
+
+            // assert
+            var findResultsArray = findResults as StubEntity[] ?? findResults.ToArray();
+            Assert.False(findResultsArray.IsNullOrEmpty());
+            Assert.Equal("Name1", findResultsArray.FirstOrDefault()?.Name);
+        }
+
+        [Fact]
         public async Task FindAllWithSpecifications_Test()
         {
             // arrange
@@ -120,7 +137,7 @@
             var sut = this.repository;
 
             // act
-            var findResult = await sut.FindAsync("Id1").ConfigureAwait(false);
+            var findResult = await sut.FindOneAsync("Id1").ConfigureAwait(false);
 
             // assert
             Assert.NotNull(findResult);
@@ -197,7 +214,7 @@
             this.name = name;
         }
 
-        public override Expression<Func<StubEntity, bool>> Expression()
+        public override Expression<Func<StubEntity, bool>> ToExpression()
         {
             return t => t.Name == this.name;
         }

@@ -34,7 +34,6 @@
 
   <ItemGroup>
     <Folder Include="Domain\Model\" />
-    <Folder Include="Domain\Specifications\" />
     <Folder Include="Messaging\" />
     <Folder Include="App\" />
     <Folder Include="App.Web\" />
