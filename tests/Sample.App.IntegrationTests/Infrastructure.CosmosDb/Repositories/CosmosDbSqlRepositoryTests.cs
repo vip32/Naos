@@ -75,7 +75,7 @@
 
             findResultsArray = findResults as StubEntity[] ?? findResults.ToArray();
             Assert.False(findResultsArray.IsNullOrEmpty());
-            Assert.True(findResultsArray.Length == 5);
+            Assert.True(findResultsArray.Length == 5); // FAILS at the moment due to not supported skip/take in cosmosdb // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
 
             findResults = await sut.FindAllAsync(this.tenantId).ConfigureAwait(false); // tenant extension method
 

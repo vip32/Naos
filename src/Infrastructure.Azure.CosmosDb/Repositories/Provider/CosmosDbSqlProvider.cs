@@ -377,9 +377,11 @@
             Expression<Func<T, TKey>> orderExpression = null,
             bool desc = false)
         {
+            // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
             if (desc)
             {
-                return this.client.CreateDocumentQuery<T>((await this.documentCollection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount, EnableCrossPartitionQuery = this.isPartitioned })
+                return this.client.CreateDocumentQuery<T>(
+                    (await this.documentCollection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount, EnableCrossPartitionQuery = this.isPartitioned })
                     .WhereExpression(expression)
                     .WhereExpressions(expressions)
                     .WhereExpressionIf(this.isMasterCollection, e => e.EntityType == typeof(T).FullName)
@@ -387,7 +389,8 @@
                     .AsEnumerable();
             }
 
-            return this.client.CreateDocumentQuery<T>((await this.documentCollection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount, EnableCrossPartitionQuery = this.isPartitioned })
+            return this.client.CreateDocumentQuery<T>(
+                (await this.documentCollection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount, EnableCrossPartitionQuery = this.isPartitioned })
                     .WhereExpression(expression)
                     .WhereExpressions(expressions)
                     .WhereExpressionIf(this.isMasterCollection, e => e.EntityType == typeof(T).FullName)
@@ -401,7 +404,8 @@
             int maxItemCount = 100,
             Expression<Func<T, TKey>> orderExpression = null)
         {
-            return this.client.CreateDocumentQuery<T>((await this.documentCollection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount, EnableCrossPartitionQuery = this.isPartitioned })
+            return this.client.CreateDocumentQuery<T>(
+                (await this.documentCollection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount, EnableCrossPartitionQuery = this.isPartitioned })
                 .WhereExpression(expression)
                 .WhereExpressionIf(this.isMasterCollection, e => e.EntityType == typeof(T).FullName)
                 .Select(selector)
