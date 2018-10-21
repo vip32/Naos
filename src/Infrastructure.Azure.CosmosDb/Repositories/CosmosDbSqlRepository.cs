@@ -23,25 +23,25 @@
             this.provider = provider;
         }
 
-        public async Task<IEnumerable<T>> FindAllAsync(int count = -1)
+        public async Task<IEnumerable<T>> FindAllAsync(int? skip = null, int? take = null)
         {
-            return await this.provider.WhereAsync<T>(maxItemCount: count).ConfigureAwait(false);
+            return await this.provider.WhereAsync<T>(maxItemCount: take ?? -1).ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<T>> FindAllAsync(ISpecification<T> specification, int count = -1)
+        public async Task<IEnumerable<T>> FindAllAsync(ISpecification<T> specification, int? skip = null, int? take = null)
         {
             return await this.provider.WhereAsync<T>(
                 expression: specification?.ToExpression().Expand(),
-                maxItemCount: count).ConfigureAwait(false);
+                maxItemCount: take ?? -1).ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<T>> FindAllAsync(IEnumerable<ISpecification<T>> specifications, int count = -1)
+        public async Task<IEnumerable<T>> FindAllAsync(IEnumerable<ISpecification<T>> specifications, int? skip = null, int? take = null)
         {
             var specificationsArray = specifications as ISpecification<T>[] ?? specifications.ToArray();
 
             return await this.provider.WhereAsync<T>(
                 expressions: specificationsArray.NullToEmpty().Select(s => s.ToExpression().Expand()),
-                maxItemCount: count).ConfigureAwait(false);
+                maxItemCount: take ?? -1).ConfigureAwait(false);
         }
 
         public async Task<T> FindOneAsync(object id)

@@ -6,11 +6,11 @@
     public interface IRepository<T>
         where T : class, IEntity, IAggregateRoot
     {
-        Task<IEnumerable<T>> FindAllAsync(int count = -1);
+        Task<IEnumerable<T>> FindAllAsync(int? skip = null, int? take = null);
 
-        Task<IEnumerable<T>> FindAllAsync(ISpecification<T> specification, int count = -1); // TODO: count should be part of specification
+        Task<IEnumerable<T>> FindAllAsync(ISpecification<T> specification, int? skip = null, int? take = null);
 
-        Task<IEnumerable<T>> FindAllAsync(IEnumerable<ISpecification<T>> specifications, int count = -1); // TODO: count should be part of specification
+        Task<IEnumerable<T>> FindAllAsync(IEnumerable<ISpecification<T>> specifications, int? skip = null, int? take = null);
 
         Task<T> FindOneAsync(object id);
 

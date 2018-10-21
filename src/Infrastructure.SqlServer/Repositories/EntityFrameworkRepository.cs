@@ -24,31 +24,31 @@
             this.context = context;
         }
 
-        public async Task<IEnumerable<T>> FindAllAsync(int count = -1)
+        public async Task<IEnumerable<T>> FindAllAsync(int? skip = null, int? take = null)
         {
             return await Task.FromResult(
-                    this.context.Set<T>().TakeIf(count).AsEnumerable());
+                    this.context.Set<T>().TakeIf(take).AsEnumerable());
         }
 
-        public async Task<IEnumerable<T>> FindAllAsync(ISpecification<T> specification, int count = -1)
+        public async Task<IEnumerable<T>> FindAllAsync(ISpecification<T> specification, int? skip = null, int? take = null)
         {
             return await Task.FromResult(
                 this.context.Set<T>()
                             .WhereExpression(specification?.ToExpression())
-                            .TakeIf(count));
+                            .SkipIf(skip)
+                            .TakeIf(take));
         }
 
-        public async Task<IEnumerable<T>> FindAllAsync(IEnumerable<ISpecification<T>> specifications, int count = -1)
+        public async Task<IEnumerable<T>> FindAllAsync(IEnumerable<ISpecification<T>> specifications, int? skip = null, int? take = null)
         {
             var specificationsArray = specifications as ISpecification<T>[] ?? specifications.ToArray();
-            //EnsureArg.IsNotNull(specificationsArray);
-            //EnsureArg.IsTrue(specificationsArray.Length > 0);
-
             var expressions = specificationsArray.NullToEmpty().Select(s => s.ToExpression());
+
             return await Task.FromResult(
                 this.context.Set<T>()
                             .WhereExpressions(expressions)
-                            .TakeIf(count));
+                            .SkipIf(skip)
+                            .TakeIf(take));
         }
 
         public async Task<T> FindOneAsync(object id)

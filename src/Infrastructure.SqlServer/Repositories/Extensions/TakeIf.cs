@@ -5,12 +5,12 @@
 
     public static partial class Extensions
     {
-        public static IQueryable<TSource> TakeIf<TSource>(
-            this IQueryable<TSource> source, int maxItemCount)
-            => maxItemCount > 0 ? source.Take(maxItemCount) : source;
+        public static IQueryable<T> TakeIf<T>(
+            this IQueryable<T> source, int? take)
+            => take.HasValue && take.Value > 0 ? source.Take(take.Value) : source;
 
-        public static IEnumerable<TSource> TakeIf<TSource>(
-            this IEnumerable<TSource> source, int maxItemCount)
-            => maxItemCount > 0 ? source.Take(maxItemCount) : source;
+        public static IEnumerable<T> TakeIf<T>(
+            this IEnumerable<T> source, int? take)
+            => take.HasValue && take.Value > 0 ? source.Take(take.Value) : source;
     }
 }
