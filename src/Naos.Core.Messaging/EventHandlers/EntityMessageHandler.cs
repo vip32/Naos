@@ -4,12 +4,12 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Domain;
 
-    public class EntityMessageHandler<TEntity> : IMessageHandler<EntityMessage<TEntity>>
-        where TEntity : Entity<string>
+    public class EntityMessageHandler<T> : IMessageHandler<EntityMessage<T>>
+        where T : Entity<string>
     {
-        protected readonly ILogger<EntityMessageHandler<TEntity>> logger;
+        protected readonly ILogger<EntityMessageHandler<T>> logger;
 
-        public EntityMessageHandler(ILogger<EntityMessageHandler<TEntity>> logger)
+        public EntityMessageHandler(ILogger<EntityMessageHandler<T>> logger)
         {
             this.logger = logger;
         }
@@ -19,7 +19,7 @@
         /// </summary>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public virtual Task Handle(EntityMessage<TEntity> message)
+        public virtual Task Handle(EntityMessage<T> message)
         {
             using (this.logger.BeginScope("{CorrelationId}", message.CorrelationId))
             {

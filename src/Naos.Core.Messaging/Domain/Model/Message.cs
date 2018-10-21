@@ -3,7 +3,7 @@
     using System;
     using Naos.Core.Domain;
 
-    public class Message : Entity<string>, IAggregateRoot // TODO: this should not be an Entity/IAggregateRoot (=less coupling)
+    public class Message : IEntity<string>, IAggregateRoot // TODO: this should not be an IEntity/IAggregateRoot (=less coupling)
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Message"/> class.
@@ -12,6 +12,21 @@
         {
             this.Id = Guid.NewGuid().ToString();
         }
+
+        /// <summary>
+        /// Gets or sets the identifier of this message.
+        /// </summary>
+        /// <value>
+        /// The message identifier.
+        /// </value>
+        public string Id { get; set; }
+
+        object IEntity.Id
+        {
+            get { return this.Id; }
+        }
+
+        public string EntityType => this.GetType().FullName;
 
         /// <summary>
         /// Gets or sets the correlation identifier.

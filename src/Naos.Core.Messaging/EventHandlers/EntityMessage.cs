@@ -3,8 +3,8 @@
     using Domain.Model;
     using Naos.Core.Domain;
 
-    public class EntityMessage<TEntity> : Message
-        where TEntity : Entity<string>
+    public class EntityMessage<T> : Message
+        where T : Entity<string>
     {
         /// <summary>
         /// Gets or sets the domain entity (based on string id).
@@ -12,6 +12,6 @@
         /// <value>
         /// The entity.
         /// </value>
-        public TEntity Entity { get; set; }
+        public T Entity { get; set; }
     }
 }

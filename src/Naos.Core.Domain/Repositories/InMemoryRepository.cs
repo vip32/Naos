@@ -11,12 +11,12 @@
     /// <summary>
     /// Represents an InMemoryRepository
     /// </summary>
-    /// <typeparam name="TEntity">Type or the Entity stored</typeparam>
-    /// <seealso cref="Domain.IRepository{TEntity, TId}" />
-    public class InMemoryRepository<TEntity> : IRepository<TEntity>
-        where TEntity : class, IEntity, IAggregateRoot
+    /// <typeparam name="T">Type or the Entity stored</typeparam>
+    /// <seealso cref="Domain.IRepository{T, TId}" />
+    public class InMemoryRepository<T> : IRepository<T>
+        where T : class, IEntity, IAggregateRoot
     {
-        protected IEnumerable<TEntity> entities;
+        protected IEnumerable<T> entities;
         private readonly IMediator mediator;
 
         /// <summary>
@@ -25,7 +25,7 @@
         /// <param name="mediator">The mediator.</param>
         /// <param name="entities">The entities.</param>
         /// <param name="idFactory">Method that generates a new Id if needed</param>
-        public InMemoryRepository(IMediator mediator, IEnumerable<TEntity> entities = null)
+        public InMemoryRepository(IMediator mediator, IEnumerable<T> entities = null)
         {
             EnsureArg.IsNotNull(mediator, nameof(mediator));
 
@@ -38,7 +38,7 @@
         /// </summary>
         /// <param name="count">The count.</param>
         /// <returns></returns>
-        public async Task<IEnumerable<TEntity>> FindAllAsync(int count = -1)
+        public async Task<IEnumerable<T>> FindAllAsync(int count = -1)
         {
             return await Task.FromResult(this.entities).ConfigureAwait(false);
         }
@@ -49,7 +49,7 @@
         /// <param name="specification">The specification.</param>
         /// <param name="count">The count.</param>
         /// <returns></returns>
-        public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, int count = -1)
+        public async Task<IEnumerable<T>> FindAllAsync(ISpecification<T> specification, int count = -1)
         {
             if(specification == null)
             {
@@ -65,9 +65,9 @@
         /// <param name="specifications">The specifications.</param>
         /// <param name="count">The count.</param>
         /// <returns></returns>
-        public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, int count = -1)
+        public async Task<IEnumerable<T>> FindAllAsync(IEnumerable<ISpecification<T>> specifications, int count = -1)
         {
-            var specsArray = specifications as ISpecification<TEntity>[] ?? specifications.ToArray();
+            var specsArray = specifications as ISpecification<T>[] ?? specifications.ToArray();
             var result = this.entities;
 
             foreach (var specification in specsArray.NullToEmpty())
@@ -84,7 +84,7 @@
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException">id</exception>
-        public async Task<TEntity> FindOneAsync(object id)
+        public async Task<T> FindOneAsync(object id)
         {
             if (id.IsDefault())
             {
@@ -115,7 +115,7 @@
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
         /// <exception cref="Exception">Method for generating new Ids not provided</exception>
-        public async Task<TEntity> AddOrUpdateAsync(TEntity entity)
+        public async Task<T> AddOrUpdateAsync(T entity)
         {
             if (entity == null)
             {
@@ -150,11 +150,11 @@
 
             if (isNew)
             {
-                await this.mediator.Publish(new EntityAddedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
+                await this.mediator.Publish(new EntityAddedDomainEvent<T>(entity)).ConfigureAwait(false);
             }
             else
             {
-                await this.mediator.Publish(new EntityUpdatedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
+                await this.mediator.Publish(new EntityUpdatedDomainEvent<T>(entity)).ConfigureAwait(false);
             }
 
             return entity;
@@ -177,7 +177,7 @@
             if (entity != null)
             {
                 this.entities = this.entities.Where(x => !x.Id.Equals(entity.Id));
-                await this.mediator.Publish(new EntityDeletedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
+                await this.mediator.Publish(new EntityDeletedDomainEvent<T>(entity)).ConfigureAwait(false);
             }
         }
 
@@ -187,7 +187,7 @@
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException">Id</exception>
-        public async Task DeleteAsync(TEntity entity)
+        public async Task DeleteAsync(T entity)
         {
             if (entity == null || entity.Id.IsDefault())
             {
@@ -195,7 +195,7 @@
             }
 
             this.entities = this.entities.Where(x => !x.Id.Equals(entity.Id));
-            await this.mediator.Publish(new EntityDeletedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
+            await this.mediator.Publish(new EntityDeletedDomainEvent<T>(entity)).ConfigureAwait(false);
         }
     }
 }

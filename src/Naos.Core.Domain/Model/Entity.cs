@@ -31,14 +31,6 @@
         }
 
         /// <summary>
-        /// Gets or sets the state for this instance.
-        /// </summary>
-        /// <value>
-        /// The state.
-        /// </value>
-        public EntityState State { get; set; } = new EntityState();
-
-        /// <summary>
         /// Gets the type of the entity (discriminator).
         /// </summary>
         /// <value>
@@ -46,6 +38,14 @@
         /// </value>
         //[JsonProperty(PropertyName = "_et")]
         public string EntityType => this.GetType().FullName;
+
+        /// <summary>
+        /// Gets or sets the state for this instance.
+        /// </summary>
+        /// <value>
+        /// The state.
+        /// </value>
+        public EntityState State { get; set; } = new EntityState();
 
 #pragma warning disable S3875 // "operator==" should not be overloaded on reference types
         /// <summary>

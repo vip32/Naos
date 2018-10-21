@@ -3,25 +3,25 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public interface IRepository<TEntity>
-        where TEntity : class, IEntity, IAggregateRoot
+    public interface IRepository<T>
+        where T : class, IEntity, IAggregateRoot
     {
-        Task<IEnumerable<TEntity>> FindAllAsync(int count = -1);
+        Task<IEnumerable<T>> FindAllAsync(int count = -1);
 
-        Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, int count = -1); // TODO: count should be part of specification
+        Task<IEnumerable<T>> FindAllAsync(ISpecification<T> specification, int count = -1); // TODO: count should be part of specification
 
-        Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, int count = -1); // TODO: count should be part of specification
+        Task<IEnumerable<T>> FindAllAsync(IEnumerable<ISpecification<T>> specifications, int count = -1); // TODO: count should be part of specification
 
-        Task<TEntity> FindOneAsync(object id);
+        Task<T> FindOneAsync(object id);
 
         //Task<TEntity> FindOneAsync(ISpecification<TEntity> specification);
 
         Task<bool> ExistsAsync(object id);
 
-        Task<TEntity> AddOrUpdateAsync(TEntity entity);
+        Task<T> AddOrUpdateAsync(T entity);
 
         Task DeleteAsync(object id);
 
-        Task DeleteAsync(TEntity entity);
+        Task DeleteAsync(T entity);
     }
 }

@@ -9,8 +9,8 @@
     using Microsoft.EntityFrameworkCore;
     using Naos.Core.Common;
 
-    public class EntityFrameworkRepository<TEntity> : IRepository<TEntity>
-        where TEntity : class, IEntity, IAggregateRoot
+    public class EntityFrameworkRepository<T> : IRepository<T>
+        where T : class, IEntity, IAggregateRoot
     {
         private readonly IMediator mediator;
         private readonly DbContext context;
@@ -24,41 +24,41 @@
             this.context = context;
         }
 
-        public async Task<IEnumerable<TEntity>> FindAllAsync(int count = -1)
+        public async Task<IEnumerable<T>> FindAllAsync(int count = -1)
         {
             return await Task.FromResult(
-                    this.context.Set<TEntity>().TakeIf(count).AsEnumerable());
+                    this.context.Set<T>().TakeIf(count).AsEnumerable());
         }
 
-        public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, int count = -1)
+        public async Task<IEnumerable<T>> FindAllAsync(ISpecification<T> specification, int count = -1)
         {
             return await Task.FromResult(
-                this.context.Set<TEntity>()
+                this.context.Set<T>()
                             .WhereExpression(specification?.ToExpression())
                             .TakeIf(count));
         }
 
-        public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, int count = -1)
+        public async Task<IEnumerable<T>> FindAllAsync(IEnumerable<ISpecification<T>> specifications, int count = -1)
         {
-            var specificationsArray = specifications as ISpecification<TEntity>[] ?? specifications.ToArray();
+            var specificationsArray = specifications as ISpecification<T>[] ?? specifications.ToArray();
             //EnsureArg.IsNotNull(specificationsArray);
             //EnsureArg.IsTrue(specificationsArray.Length > 0);
 
             var expressions = specificationsArray.NullToEmpty().Select(s => s.ToExpression());
             return await Task.FromResult(
-                this.context.Set<TEntity>()
+                this.context.Set<T>()
                             .WhereExpressions(expressions)
                             .TakeIf(count));
         }
 
-        public async Task<TEntity> FindOneAsync(object id)
+        public async Task<T> FindOneAsync(object id)
         {
             if (id.IsDefault())
             {
                 return null;
             }
 
-            return await this.context.Set<TEntity>().FindAsync(id).ConfigureAwait(false);
+            return await this.context.Set<T>().FindAsync(id).ConfigureAwait(false);
         }
 
         public async Task<bool> ExistsAsync(object id)
@@ -71,7 +71,7 @@
             return await this.FindOneAsync(id) != null;
         }
 
-        public async Task<TEntity> AddOrUpdateAsync(TEntity entity)
+        public async Task<T> AddOrUpdateAsync(T entity)
         {
             if (entity == null)
             {
@@ -80,16 +80,16 @@
 
             bool isNew = entity.Id.IsDefault(); // todo: add .IsTransient to Entity class
 
-            this.context.Set<TEntity>().Add(entity);
+            this.context.Set<T>().Add(entity);
             await this.context.SaveChangesAsync().ConfigureAwait(false);
 
             if (isNew)
             {
-                await this.mediator.Publish(new EntityAddedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
+                await this.mediator.Publish(new EntityAddedDomainEvent<T>(entity)).ConfigureAwait(false);
             }
             else
             {
-                await this.mediator.Publish(new EntityUpdatedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
+                await this.mediator.Publish(new EntityUpdatedDomainEvent<T>(entity)).ConfigureAwait(false);
             }
 
             return entity;
@@ -102,13 +102,13 @@
                 return;
             }
 
-            var entity = await this.context.Set<TEntity>().FindAsync(id).ConfigureAwait(false);
+            var entity = await this.context.Set<T>().FindAsync(id).ConfigureAwait(false);
             this.context.Remove(entity);
             await this.context.SaveChangesAsync();
-            await this.mediator.Publish(new EntityDeletedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
+            await this.mediator.Publish(new EntityDeletedDomainEvent<T>(entity)).ConfigureAwait(false);
         }
 
-        public async Task DeleteAsync(TEntity entity)
+        public async Task DeleteAsync(T entity)
         {
             if (entity == null || entity.Id.IsDefault())
             {

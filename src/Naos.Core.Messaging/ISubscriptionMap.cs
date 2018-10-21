@@ -22,28 +22,28 @@
         /// <summary>
         /// Adds this instance.
         /// </summary>
-        /// <typeparam name="TMessage"></typeparam>
-        /// <typeparam name="THandler">The type of the h.</typeparam>
-        void Add<TMessage, THandler>()
-           where TMessage : Message
-           where THandler : IMessageHandler<TMessage>;
+        /// <typeparam name="TM"></typeparam>
+        /// <typeparam name="TH">The type of the h.</typeparam>
+        void Add<TM, TH>()
+           where TM : Message
+           where TH : IMessageHandler<TM>;
 
         /// <summary>
         /// Removes this instance.
         /// </summary>
-        /// <typeparam name="TMessage"></typeparam>
-        /// <typeparam name="THandler">The type of the h.</typeparam>
-        void Remove<TMessage, THandler>()
-             where TMessage : Message
-             where THandler : IMessageHandler<TMessage>;
+        /// <typeparam name="TM"></typeparam>
+        /// <typeparam name="TH">The type of the h.</typeparam>
+        void Remove<TM, TH>()
+             where TM : Message
+             where TH : IMessageHandler<TM>;
 
         /// <summary>
         /// Does this instance exist in the map.
         /// </summary>
-        /// <typeparam name="TMessage"></typeparam>
+        /// <typeparam name="TM"></typeparam>
         /// <returns></returns>
-        bool Exists<TMessage>()
-            where TMessage : Message;
+        bool Exists<TM>()
+            where TM : Message;
 
         /// <summary>
         /// Does the specified message name exist in the map.
@@ -67,10 +67,10 @@
         /// <summary>
         /// Gets all subscription details.
         /// </summary>
-        /// <typeparam name="TMessage"></typeparam>
+        /// <typeparam name="TM"></typeparam>
         /// <returns></returns>
-        IEnumerable<SubscriptionDetails> GetAll<TMessage>()
-            where TMessage : Message;
+        IEnumerable<SubscriptionDetails> GetAll<TM>()
+            where TM : Message;
 
         /// <summary>
         /// Gets specific subscription details.
@@ -82,8 +82,8 @@
         /// <summary>
         /// Gets the key.
         /// </summary>
-        /// <typeparam name="TMessage"></typeparam>
+        /// <typeparam name="TM"></typeparam>
         /// <returns></returns>
-        string GetKey<TMessage>();
+        string GetKey<TM>();
     }
 }

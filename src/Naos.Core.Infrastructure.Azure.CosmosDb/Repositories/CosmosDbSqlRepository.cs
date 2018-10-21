@@ -8,13 +8,13 @@
     using Naos.Core.Common;
     using Naos.Core.Domain;
 
-    public class CosmosDbSqlRepository<TEntity> : IRepository<TEntity>
-        where TEntity : class, IEntity, IAggregateRoot
+    public class CosmosDbSqlRepository<T> : IRepository<T>
+        where T : class, IEntity, IAggregateRoot
     {
         private readonly IMediator mediator;
-        private readonly ICosmosDbSqlProvider<TEntity> provider;
+        private readonly ICosmosDbSqlProvider<T> provider;
 
-        public CosmosDbSqlRepository(IMediator mediator, ICosmosDbSqlProvider<TEntity> provider)
+        public CosmosDbSqlRepository(IMediator mediator, ICosmosDbSqlProvider<T> provider)
         {
             EnsureArg.IsNotNull(mediator, nameof(mediator));
             EnsureArg.IsNotNull(provider, nameof(provider));
@@ -23,31 +23,31 @@
             this.provider = provider;
         }
 
-        public async Task<IEnumerable<TEntity>> FindAllAsync(int count = -1)
+        public async Task<IEnumerable<T>> FindAllAsync(int count = -1)
         {
-            return await this.provider.WhereAsync<TEntity>(maxItemCount: count).ConfigureAwait(false);
+            return await this.provider.WhereAsync<T>(maxItemCount: count).ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, int count = -1)
+        public async Task<IEnumerable<T>> FindAllAsync(ISpecification<T> specification, int count = -1)
         {
-            return await this.provider.WhereAsync<TEntity>(
+            return await this.provider.WhereAsync<T>(
                 expression: specification?.ToExpression(),
                 maxItemCount: count).ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, int count = -1)
+        public async Task<IEnumerable<T>> FindAllAsync(IEnumerable<ISpecification<T>> specifications, int count = -1)
         {
-            var specificationsArray = specifications as ISpecification<TEntity>[] ?? specifications.ToArray();
+            var specificationsArray = specifications as ISpecification<T>[] ?? specifications.ToArray();
             //EnsureArg.IsNotNull(specificationsArray);
             //EnsureArg.IsTrue(specificationsArray.Any());
 
             var expressions = specificationsArray.NullToEmpty().Select(s => s.ToExpression());
-            return await this.provider.WhereAsync<TEntity>(
+            return await this.provider.WhereAsync<T>(
                 expressions: expressions,
                 maxItemCount: count).ConfigureAwait(false);
         }
 
-        public async Task<TEntity> FindOneAsync(object id)
+        public async Task<T> FindOneAsync(object id)
         {
             if (id.IsDefault())
             {
@@ -67,7 +67,7 @@
             return await this.FindOneAsync(id) != null;
         }
 
-        public async Task<TEntity> AddOrUpdateAsync(TEntity entity)
+        public async Task<T> AddOrUpdateAsync(T entity)
         {
             if (entity == null)
             {
@@ -80,11 +80,11 @@
 
             if (isNew)
             {
-                await this.mediator.Publish(new EntityAddedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
+                await this.mediator.Publish(new EntityAddedDomainEvent<T>(entity)).ConfigureAwait(false);
             }
             else
             {
-                await this.mediator.Publish(new EntityUpdatedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
+                await this.mediator.Publish(new EntityUpdatedDomainEvent<T>(entity)).ConfigureAwait(false);
             }
 
             return result;
@@ -101,11 +101,11 @@
             if (entity != null)
             {
                 await this.provider.DeleteAsync(id as string).ConfigureAwait(false);
-                await this.mediator.Publish(new EntityDeletedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
+                await this.mediator.Publish(new EntityDeletedDomainEvent<T>(entity)).ConfigureAwait(false);
             }
         }
 
-        public async Task DeleteAsync(TEntity entity)
+        public async Task DeleteAsync(T entity)
         {
             if (entity == null || entity.Id.IsDefault())
             {
