@@ -22,14 +22,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\App.Commands\App.Commands.csproj" />
-    <ProjectReference Include="..\..\src\Naos.Core.App.Web\App.Web.csproj" />
-    <ProjectReference Include="..\..\src\Naos.Core.App\App.csproj" />
-    <ProjectReference Include="..\..\src\Naos.Core.Common.Web.Extensions\Common.Web.Extensions.csproj" />
-    <ProjectReference Include="..\..\src\Naos.Core.Common.Web\Common.Web.csproj" />
-    <ProjectReference Include="..\..\src\Naos.Core.Common\Common.csproj" />
-    <ProjectReference Include="..\..\src\Naos.Core.Domain\Domain.csproj" />
-    <ProjectReference Include="..\..\src\Naos.Core.Infrastructure.Azure.Cosmosdb\Infrastructure.Azure.CosmosDb.csproj" />
-    <ProjectReference Include="..\..\src\Naos.Core.Infrastructure.SqlServer\Infrastructure.SqlServer.csproj" />
+    <ProjectReference Include="..\..\src\App.Web\App.Web.csproj" />
+    <ProjectReference Include="..\..\src\App\App.csproj" />
+    <ProjectReference Include="..\..\src\Common.Web.Extensions\Common.Web.Extensions.csproj" />
+    <ProjectReference Include="..\..\src\Common.Web\Common.Web.csproj" />
+    <ProjectReference Include="..\..\src\Common\Common.csproj" />
+    <ProjectReference Include="..\..\src\Domain\Domain.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure.Azure.Cosmosdb\Infrastructure.Azure.CosmosDb.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure.SqlServer\Infrastructure.SqlServer.csproj" />
   </ItemGroup>
 
   <ItemGroup>

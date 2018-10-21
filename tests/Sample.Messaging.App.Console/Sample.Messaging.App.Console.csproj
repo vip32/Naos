@@ -30,9 +30,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\App.Configuration\App.Configuration.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure.Azure.KeyVault\Infrastructure.Azure.KeyVault.csproj" />
-    <ProjectReference Include="..\..\src\Naos.Core.App\App.csproj" />
-    <ProjectReference Include="..\..\src\Naos.Core.Messaging.Infrastructure.Azure\Messaging.Infrastructure.Azure.csproj" />
-    <ProjectReference Include="..\..\src\Naos.Core.Messaging\Messaging.csproj" />
+    <ProjectReference Include="..\..\src\App\App.csproj" />
+    <ProjectReference Include="..\..\src\Messaging.Infrastructure.Azure\Messaging.Infrastructure.Azure.csproj" />
+    <ProjectReference Include="..\..\src\Messaging\Messaging.csproj" />
   </ItemGroup>
 
 </Project>

@@ -17,25 +17,25 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{FCBA001C-2
 		docs\todo.md = docs\todo.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Web", "src\Naos.Core.Common.Web\Common.Web.csproj", "{D2A2D706-F821-4BAC-892F-B5F1FEAB82B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Web", "src\Common.Web\Common.Web.csproj", "{D2A2D706-F821-4BAC-892F-B5F1FEAB82B5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Web.Extensions", "src\Naos.Core.Common.Web.Extensions\Common.Web.Extensions.csproj", "{38F37EE8-D81B-49C3-8044-B48C48713B30}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Web.Extensions", "src\Common.Web.Extensions\Common.Web.Extensions.csproj", "{38F37EE8-D81B-49C3-8044-B48C48713B30}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "src\Naos.Core.Domain\Domain.csproj", "{635C5135-B567-4DE0-8CCA-76FA97C2F540}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "src\Domain\Domain.csproj", "{635C5135-B567-4DE0-8CCA-76FA97C2F540}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Azure.CosmosDb", "src\Naos.Core.Infrastructure.Azure.CosmosDb\Infrastructure.Azure.CosmosDb.csproj", "{B5FC5E1B-B108-43EF-80FF-99DF8C490F72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Azure.CosmosDb", "src\Infrastructure.Azure.CosmosDb\Infrastructure.Azure.CosmosDb.csproj", "{B5FC5E1B-B108-43EF-80FF-99DF8C490F72}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.SqlServer", "src\Naos.Core.Infrastructure.SqlServer\Infrastructure.SqlServer.csproj", "{0165E95D-DD49-48F0-A5E5-80AC7CB04397}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.SqlServer", "src\Infrastructure.SqlServer\Infrastructure.SqlServer.csproj", "{0165E95D-DD49-48F0-A5E5-80AC7CB04397}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App", "src\Naos.Core.App\App.csproj", "{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App", "src\App\App.csproj", "{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Web", "src\Naos.Core.App.Web\App.Web.csproj", "{7060ED4B-CD75-43CB-AA37-408D7FCA937E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Web", "src\App.Web\App.Web.csproj", "{7060ED4B-CD75-43CB-AA37-408D7FCA937E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "src\Naos.Core.Common\Common.csproj", "{06FE900A-CD37-42D5-A18E-DFCFF7796A40}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "src\Common\Common.csproj", "{06FE900A-CD37-42D5-A18E-DFCFF7796A40}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging", "src\Naos.Core.Messaging\Messaging.csproj", "{B86418EA-FEE2-42E1-B03E-CAAA43D3DBA5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging", "src\Messaging\Messaging.csproj", "{B86418EA-FEE2-42E1-B03E-CAAA43D3DBA5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.Infrastructure.RabbitMQ", "src\Naos.Core.Messaging.Infrastructure.RabbitMQ\Messaging.Infrastructure.RabbitMQ.csproj", "{D409507E-9055-4185-801F-4F66445183BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.Infrastructure.RabbitMQ", "src\Messaging.Infrastructure.RabbitMQ\Messaging.Infrastructure.RabbitMQ.csproj", "{D409507E-9055-4185-801F-4F66445183BC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "tests\UnitTests\UnitTests.csproj", "{2515C160-1A6A-4E8A-9853-D25A5D08BDCC}"
 EndProject
@@ -45,7 +45,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Messaging.App.Consol
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Commands", "src\App.Commands\App.Commands.csproj", "{D199A34D-6FE9-48A7-BDEE-3F01572BF3D4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.Infrastructure.Azure", "src\Naos.Core.Messaging.Infrastructure.Azure\Messaging.Infrastructure.Azure.csproj", "{BD63E3F7-598B-470E-B33D-1EF4D446DF6B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.Infrastructure.Azure", "src\Messaging.Infrastructure.Azure\Messaging.Infrastructure.Azure.csproj", "{BD63E3F7-598B-470E-B33D-1EF4D446DF6B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Azure.KeyVault", "src\Infrastructure.Azure.KeyVault\Infrastructure.Azure.KeyVault.csproj", "{DBA9758B-BED6-45E3-BB95-D95F4CBADCFB}"
 EndProject

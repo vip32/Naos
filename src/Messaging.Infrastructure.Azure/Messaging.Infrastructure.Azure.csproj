@@ -20,8 +20,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Infrastructure.Azure.ServiceBus\Infrastructure.Azure.ServiceBus.csproj" />
-    <ProjectReference Include="..\Naos.Core.Infrastructure.Azure.CosmosDb\Infrastructure.Azure.CosmosDb.csproj" />
-    <ProjectReference Include="..\Naos.Core.Messaging\Messaging.csproj" />
+    <ProjectReference Include="..\Infrastructure.Azure.CosmosDb\Infrastructure.Azure.CosmosDb.csproj" />
+    <ProjectReference Include="..\Messaging\Messaging.csproj" />
   </ItemGroup>
 
 </Project>

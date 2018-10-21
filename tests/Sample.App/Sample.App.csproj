@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\App.Configuration\App.Configuration.csproj" />
-    <ProjectReference Include="..\..\src\Naos.Core.Infrastructure.Azure.CosmosDb\Infrastructure.Azure.CosmosDb.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure.Azure.CosmosDb\Infrastructure.Azure.CosmosDb.csproj" />
   </ItemGroup>
 
 </Project>

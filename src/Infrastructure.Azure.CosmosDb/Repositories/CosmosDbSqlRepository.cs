@@ -31,19 +31,16 @@
         public async Task<IEnumerable<T>> FindAllAsync(ISpecification<T> specification, int count = -1)
         {
             return await this.provider.WhereAsync<T>(
-                expression: specification?.ToExpression(),
+                expression: specification?.ToExpression().Expand(),
                 maxItemCount: count).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<T>> FindAllAsync(IEnumerable<ISpecification<T>> specifications, int count = -1)
         {
             var specificationsArray = specifications as ISpecification<T>[] ?? specifications.ToArray();
-            //EnsureArg.IsNotNull(specificationsArray);
-            //EnsureArg.IsTrue(specificationsArray.Any());
 
-            var expressions = specificationsArray.NullToEmpty().Select(s => s.ToExpression());
             return await this.provider.WhereAsync<T>(
-                expressions: expressions,
+                expressions: specificationsArray.NullToEmpty().Select(s => s.ToExpression().Expand()),
                 maxItemCount: count).ConfigureAwait(false);
         }
 
