@@ -51,7 +51,7 @@
                             .TakeIf(count));
         }
 
-        public async Task<TEntity> FindByIdAsync(object id)
+        public async Task<TEntity> FindAsync(object id)
         {
             if (id.IsDefault())
             {
@@ -68,7 +68,7 @@
                 return false;
             }
 
-            return await this.FindByIdAsync(id) != null;
+            return await this.FindAsync(id) != null;
         }
 
         public async Task<TEntity> AddOrUpdateAsync(TEntity entity)

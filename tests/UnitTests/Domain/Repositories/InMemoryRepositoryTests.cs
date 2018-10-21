@@ -116,12 +116,12 @@ namespace Naos.Core.UnitTests.Domain
             var sut = new InMemoryRepository<StubEntityString>(mediatorMock.Object, this.entities);
 
             // act/assert
-            var result = await sut.FindByIdAsync("Id1").ConfigureAwait(false);
+            var result = await sut.FindAsync("Id1").ConfigureAwait(false);
 
             Assert.NotNull(result);
             Assert.Equal("FirstName1", result.FirstName);
 
-            result = await sut.FindByIdAsync("Id1", this.tenantId).ConfigureAwait(false);
+            result = await sut.FindAsync("Id1", this.tenantId).ConfigureAwait(false);
 
             Assert.NotNull(result);
             Assert.Equal("FirstName1", result.FirstName);
@@ -135,12 +135,12 @@ namespace Naos.Core.UnitTests.Domain
             var sut = new InMemoryRepository<StubEntityGuid>(mediatorMock.Object, this.guidEntities);
 
             // act/assert
-            var result = await sut.FindByIdAsync(this.guidEntities.First().Id).ConfigureAwait(false);
+            var result = await sut.FindAsync(this.guidEntities.First().Id).ConfigureAwait(false);
 
             Assert.NotNull(result);
             Assert.Equal("FirstName1", result.FirstName);
 
-            result = await sut.FindByIdAsync(this.guidEntities.First().Id, this.tenantId).ConfigureAwait(false);
+            result = await sut.FindAsync(this.guidEntities.First().Id, this.tenantId).ConfigureAwait(false);
 
             Assert.NotNull(result);
             Assert.Equal("FirstName1", result.FirstName);
@@ -196,7 +196,7 @@ namespace Naos.Core.UnitTests.Domain
 
             // act
             await sut.DeleteAsync("Id1").ConfigureAwait(false);
-            var entity = await sut.FindByIdAsync("Id1").ConfigureAwait(false);
+            var entity = await sut.FindAsync("Id1").ConfigureAwait(false);
 
             // assert
             Assert.Null(entity);
@@ -212,7 +212,7 @@ namespace Naos.Core.UnitTests.Domain
             // act
             var entity = this.entities.FirstOrDefault(e => e.FirstName == "FirstName1");
             await sut.DeleteAsync(entity).ConfigureAwait(false);
-            entity = await sut.FindByIdAsync("Id1").ConfigureAwait(false);
+            entity = await sut.FindAsync("Id1").ConfigureAwait(false);
 
             // assert
             Assert.Null(entity);

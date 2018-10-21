@@ -114,19 +114,19 @@
         }
 
         [Fact]
-        public async Task FindById_Test()
+        public async Task Find_Test()
         {
             // arrange
             var sut = this.repository;
 
             // act
-            var findResult = await sut.FindByIdAsync("Id1").ConfigureAwait(false);
+            var findResult = await sut.FindAsync("Id1").ConfigureAwait(false);
 
             // assert
             Assert.NotNull(findResult);
             Assert.Equal("Name1", findResult.Name);
 
-            findResult = await sut.FindByIdAsync("Id1", this.tenantId).ConfigureAwait(false);
+            findResult = await sut.FindAsync("Id1", this.tenantId).ConfigureAwait(false);
 
             Assert.NotNull(findResult);
             Assert.Equal("Name1", findResult.Name);

@@ -13,7 +13,7 @@
         /// <param name="id">The identifier.</param>
         /// <param name="tenantId">The tenant identifier.</param>
         /// <returns></returns>
-        public static async Task<TEntity> FindByIdAsync<TEntity>(
+        public static async Task<TEntity> FindAsync<TEntity>(
             this IRepository<TEntity> source,
             object id,
             string tenantId)
@@ -21,7 +21,7 @@
         {
             EnsureArg.IsNotNullOrEmpty(tenantId);
 
-            var entity = await source.FindByIdAsync(id).ConfigureAwait(false);
+            var entity = await source.FindAsync(id).ConfigureAwait(false);
             if(entity != null && new HasTenantSpecification<TEntity>(tenantId).IsSatisfiedBy(entity))
             {
                 return entity;

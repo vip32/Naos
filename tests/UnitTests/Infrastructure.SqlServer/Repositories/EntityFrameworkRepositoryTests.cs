@@ -71,8 +71,8 @@
                 var sut = new EntityFrameworkRepository<StubEntity>(mediatorMock.Object, context);
 
                 // act
-                var findResult = sut.FindByIdAsync(new Guid("00000000-0000-0000-0000-000000000001")).Result;
-                var findResultUnknownId = sut.FindByIdAsync(new Guid("00000000-0000-0000-0000-000000000050")).Result;
+                var findResult = sut.FindAsync(new Guid("00000000-0000-0000-0000-000000000001")).Result;
+                var findResultUnknownId = sut.FindAsync(new Guid("00000000-0000-0000-0000-000000000050")).Result;
 
                 // assert
                 Assert.NotNull(findResult);
@@ -103,7 +103,7 @@
 
                 // act
                 var result = sut.AddOrUpdateAsync(entity).Result;
-                var findResult = sut.FindByIdAsync(entity.Id).Result;
+                var findResult = sut.FindAsync(entity.Id).Result;
 
                 // assert
                 Assert.NotNull(result);

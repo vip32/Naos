@@ -47,7 +47,7 @@
                 maxItemCount: count).ConfigureAwait(false);
         }
 
-        public async Task<TEntity> FindByIdAsync(object id)
+        public async Task<TEntity> FindAsync(object id)
         {
             if (id.IsDefault())
             {
@@ -64,7 +64,7 @@
                 return false;
             }
 
-            return await this.FindByIdAsync(id) != null;
+            return await this.FindAsync(id) != null;
         }
 
         public async Task<TEntity> AddOrUpdateAsync(TEntity entity)
@@ -97,7 +97,7 @@
                 return;
             }
 
-            var entity = await this.FindByIdAsync(id).ConfigureAwait(false);
+            var entity = await this.FindAsync(id).ConfigureAwait(false);
             if (entity != null)
             {
                 await this.provider.DeleteAsync(id as string).ConfigureAwait(false);
