@@ -13,19 +13,19 @@
         /// <typeparam name="T">Type of the result</typeparam>
         /// <param name="source">The source.</param>
         /// <param name="tenantId">The tenant identifier.</param>
-        /// <param name="maxItemCount">The maximum item count.</param>
+        /// <param name="take">The maximum item count.</param>
         /// <returns></returns>
         public static async Task<IEnumerable<T>> FindAllAsync<T>(
             this IRepository<T> source,
             string tenantId,
-            int maxItemCount = -1)
+            int? take)
             where T : class, ITenantEntity, IAggregateRoot
         {
             EnsureArg.IsNotNullOrEmpty(tenantId);
 
             return await source.FindAllAsync(
                 HasTenantSpecification<T>.Factory.Create(tenantId),
-                maxItemCount).ConfigureAwait(false);
+                take).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -35,13 +35,13 @@
         /// <param name="source">The source.</param>
         /// <param name="tenantId">The tenant identifier.</param>
         /// <param name="specification">The specification.</param>
-        /// <param name="maxItemCount">The maximum item count.</param>
+        /// <param name="take">The maximum item count.</param>
         /// <returns></returns>
         public static async Task<IEnumerable<T>> FindAllAsync<T>(
             this IRepository<T> source,
             string tenantId,
             Specification<T> specification,
-            int maxItemCount = -1)
+            int? take)
             where T : class, ITenantEntity, IAggregateRoot
         {
             EnsureArg.IsNotNullOrEmpty(tenantId);
@@ -53,7 +53,7 @@
                     specification,
                     HasTenantSpecification<T>.Factory.Create(tenantId)
                 },
-                maxItemCount).ConfigureAwait(false);
+                take).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -63,13 +63,13 @@
         /// <param name="source">The source.</param>
         /// <param name="tenantId">The tenant identifier.</param>
         /// <param name="specifications">The specifications.</param>
-        /// <param name="maxItemCount">The maximum item count.</param>
+        /// <param name="take">The maximum item count.</param>
         /// <returns></returns>
         public static async Task<IEnumerable<T>> FindAllAsync<T>(
             this IRepository<T> source,
             string tenantId,
             IEnumerable<Specification<T>> specifications,
-            int maxItemCount = -1)
+            int? take)
             where T : class, ITenantEntity, IAggregateRoot
         {
             EnsureArg.IsNotNullOrEmpty(tenantId);
@@ -82,7 +82,7 @@
                 {
                     HasTenantSpecification<T>.Factory.Create(tenantId)
                 },
-                maxItemCount).ConfigureAwait(false);
+                take).ConfigureAwait(false);
         }
     }
 }

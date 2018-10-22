@@ -72,7 +72,7 @@ namespace Naos.Core.UnitTests.Domain
             Assert.False(stubEntities.IsNullOrEmpty());
             Assert.True(stubEntities.Length == 5);
 
-            result = await sut.FindAllAsync(this.tenantId).ConfigureAwait(false); // tenant extension method
+            result = await sut.FindAllAsync(this.tenantId, default).ConfigureAwait(false); // tenant extension method
 
             stubEntities = result as StubEntityString[] ?? result.ToArray();
             Assert.False(stubEntities.IsNullOrEmpty());
