@@ -68,7 +68,7 @@ namespace Naos.Core.UnitTests.Domain
 
             result = await sut.FindAllAsync(
                 new HasTenantSpecification<StubEntityString>(this.tenantId),
-                new FindOptions(take: 5)).ConfigureAwait(false);
+                new FindOptions<StubEntityString>(take: 5)).ConfigureAwait(false);
 
             stubEntities = result as StubEntityString[] ?? result.ToArray();
             Assert.False(stubEntities.IsNullOrEmpty());

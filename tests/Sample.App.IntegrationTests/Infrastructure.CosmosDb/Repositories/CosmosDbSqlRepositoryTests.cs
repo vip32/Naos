@@ -73,7 +73,7 @@
 
             findResults = await sut.FindAllAsync(
                 new HasTenantSpecification<StubEntity>(this.tenantId),
-                new FindOptions(take: 5)).ConfigureAwait(false);
+                new FindOptions<StubEntity>(take: 5)).ConfigureAwait(false);
 
             //findResultsArray = findResults as StubEntity[] ?? findResults.ToArray();
             //Assert.False(findResultsArray.IsNullOrEmpty());

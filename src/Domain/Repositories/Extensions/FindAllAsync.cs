@@ -18,7 +18,7 @@
         public static async Task<IEnumerable<T>> FindAllAsync<T>(
             this IRepository<T> source,
             string tenantId,
-            IFindOptions options = null)
+            IFindOptions<T> options = null)
             where T : class, ITenantEntity, IAggregateRoot
         {
             EnsureArg.IsNotNullOrEmpty(tenantId);
@@ -41,7 +41,7 @@
             this IRepository<T> source,
             string tenantId,
             Specification<T> specification,
-            IFindOptions options = null)
+            IFindOptions<T> options = null)
             where T : class, ITenantEntity, IAggregateRoot
         {
             EnsureArg.IsNotNullOrEmpty(tenantId);
@@ -69,7 +69,7 @@
             this IRepository<T> source,
             string tenantId,
             IEnumerable<Specification<T>> specifications,
-            IFindOptions options = null)
+            IFindOptions<T> options = null)
             where T : class, ITenantEntity, IAggregateRoot
         {
             EnsureArg.IsNotNullOrEmpty(tenantId);

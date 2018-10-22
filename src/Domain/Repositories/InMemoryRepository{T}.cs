@@ -52,7 +52,7 @@
         /// </summary>
         /// <param name="options">The options.</param>
         /// <returns></returns>
-        public async Task<IEnumerable<T>> FindAllAsync(IFindOptions options = null)
+        public async Task<IEnumerable<T>> FindAllAsync(IFindOptions<T> options = null)
         {
             return await Task.FromResult(this.FindAll(this.entities, options));
         }
@@ -63,7 +63,7 @@
         /// <param name="specification">The specification.</param>
         /// <param name="options">The options.</param>
         /// <returns></returns>
-        public async Task<IEnumerable<T>> FindAllAsync(ISpecification<T> specification, IFindOptions options = null)
+        public async Task<IEnumerable<T>> FindAllAsync(ISpecification<T> specification, IFindOptions<T> options = null)
         {
             if (specification == null)
             {
@@ -81,7 +81,7 @@
         /// <param name="specifications">The specifications.</param>
         /// <param name="options">The options.</param>
         /// <returns></returns>
-        public async Task<IEnumerable<T>> FindAllAsync(IEnumerable<ISpecification<T>> specifications, IFindOptions options = null)
+        public async Task<IEnumerable<T>> FindAllAsync(IEnumerable<ISpecification<T>> specifications, IFindOptions<T> options = null)
         {
             var specsArray = specifications as ISpecification<T>[] ?? specifications.ToArray();
             var result = this.entities;
@@ -233,7 +233,7 @@
             }
         }
 
-        protected virtual IEnumerable<T> FindAll(IEnumerable<T> entities, IFindOptions options = null)
+        protected virtual IEnumerable<T> FindAll(IEnumerable<T> entities, IFindOptions<T> options = null)
         {
             var result = entities;
 

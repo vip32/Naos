@@ -33,13 +33,13 @@
 
         protected IRepositoryOptions Options { get; }
 
-        public async Task<IEnumerable<T>> FindAllAsync(IFindOptions options = null)
+        public async Task<IEnumerable<T>> FindAllAsync(IFindOptions<T> options = null)
         {
             // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
             return await this.provider.WhereAsync<T>(maxItemCount: options?.Take ?? -1).ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<T>> FindAllAsync(ISpecification<T> specification, IFindOptions options = null)
+        public async Task<IEnumerable<T>> FindAllAsync(ISpecification<T> specification, IFindOptions<T> options = null)
         {
             // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
             return await this.provider.WhereAsync<T>(
@@ -47,7 +47,7 @@
                 maxItemCount: options?.Take ?? -1).ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<T>> FindAllAsync(IEnumerable<ISpecification<T>> specifications, IFindOptions options = null)
+        public async Task<IEnumerable<T>> FindAllAsync(IEnumerable<ISpecification<T>> specifications, IFindOptions<T> options = null)
         {
             // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
             var specificationsArray = specifications as ISpecification<T>[] ?? specifications.ToArray();

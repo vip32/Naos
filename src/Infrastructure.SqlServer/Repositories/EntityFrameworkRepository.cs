@@ -34,13 +34,13 @@
 
         protected IRepositoryOptions Options { get; }
 
-        public async Task<IEnumerable<T>> FindAllAsync(IFindOptions options = null)
+        public async Task<IEnumerable<T>> FindAllAsync(IFindOptions<T> options = null)
         {
             return await Task.FromResult(
                     this.dbContext.Set<T>().TakeIf(options?.Take).AsEnumerable());
         }
 
-        public async Task<IEnumerable<T>> FindAllAsync(ISpecification<T> specification, IFindOptions options = null)
+        public async Task<IEnumerable<T>> FindAllAsync(ISpecification<T> specification, IFindOptions<T> options = null)
         {
             return await Task.FromResult(
                 this.dbContext.Set<T>()
@@ -49,7 +49,7 @@
                             .TakeIf(options?.Take));
         }
 
-        public async Task<IEnumerable<T>> FindAllAsync(IEnumerable<ISpecification<T>> specifications, IFindOptions options = null)
+        public async Task<IEnumerable<T>> FindAllAsync(IEnumerable<ISpecification<T>> specifications, IFindOptions<T> options = null)
         {
             var specificationsArray = specifications as ISpecification<T>[] ?? specifications.ToArray();
             var expressions = specificationsArray.NullToEmpty().Select(s => s.ToExpression());

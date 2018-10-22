@@ -25,7 +25,7 @@
             this.entities = entities.NullToEmpty();
         }
 
-        protected override IEnumerable<T> FindAll(IEnumerable<T> entities, IFindOptions options = null)
+        protected override IEnumerable<T> FindAll(IEnumerable<T> entities, IFindOptions<T> options = null)
         {
             var result = this.entities;
 
