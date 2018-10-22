@@ -162,6 +162,7 @@
             bool isNew = false;
             if (entity.Id.IsDefault())
             {
+                // TODO: move this to seperate class (IdentityGenerator)
                 if (entity is IEntity<int>)
                 {
                     (entity as IEntity<int>).Id = this.entities.Count() + 1;
