@@ -10,6 +10,6 @@
         bool PublishEvents { get; set; }
 
         // VALIDATIONS?
-        // DEFAULT SPECIFICATIONS
+        // DEFAULT SPECIFICATIONS/filters?
     }
 }

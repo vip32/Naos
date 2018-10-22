@@ -91,6 +91,18 @@
 
             bool isTransient = entity.Id.IsDefault(); // todo: add .IsTransient to Entity class
 
+            if (isTransient && entity is IStateEntity)
+            {
+                // TODO: do this in an notification handler (EntityAddDomainEvent)
+                entity.As<IStateEntity>().State.CreatedDate = new DateTimeEpoch();
+            }
+
+            if (!isTransient && entity is IStateEntity)
+            {
+                // TODO: do this in an notification handler (EntityUpdateDomainEvent)
+                entity.As<IStateEntity>().State.UpdatedDate = new DateTimeEpoch();
+            }
+
             this.dbContext.Set<T>().Add(entity);
             await this.dbContext.SaveChangesAsync().ConfigureAwait(false);
 

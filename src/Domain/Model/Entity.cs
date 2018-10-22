@@ -7,7 +7,7 @@
     /// A base class for  all entities
     /// </summary>
     /// <typeparam name="TId">The type of the identifier.</typeparam>
-    public abstract class Entity<TId> : IEntity<TId>
+    public abstract class Entity<TId> : IEntity<TId>, IStateEntity
     {
         /// <summary>
         /// Gets or sets the entity id.
@@ -46,7 +46,7 @@
         /// <value>
         /// The state.
         /// </value>
-        public EntityState State { get; set; } = new EntityState();
+        public EntityState State { get; } = new EntityState();
 
 #pragma warning disable S3875 // "operator==" should not be overloaded on reference types
         /// <summary>

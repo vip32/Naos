@@ -170,6 +170,18 @@
                 isTransient = true;
             }
 
+            if (isTransient && entity is IStateEntity)
+            {
+                // TODO: do this in an notification handler (EntityAddDomainEvent), the handler has access to the requestcontext and can set the created user (State.CreatedBy)
+                entity.As<IStateEntity>().State.CreatedDate = new DateTimeEpoch();
+            }
+
+            if (!isTransient && entity is IStateEntity)
+            {
+                // TODO: do this in an notification handler (EntityUpdateDomainEvent)
+                entity.As<IStateEntity>().State.UpdatedDate = new DateTimeEpoch();
+            }
+
             // TODO: map to destination
             this.entities = this.entities.Concat(new[] { entity }.AsEnumerable());
 
