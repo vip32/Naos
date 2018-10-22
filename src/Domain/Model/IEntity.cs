@@ -11,9 +11,4 @@
     {
         new TId Id { get; set; }
     }
-
-    public interface ITenantEntity : IEntity
-    {
-        string TenantId { get; set; }
-    }
 }
