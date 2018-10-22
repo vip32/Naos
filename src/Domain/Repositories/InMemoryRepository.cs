@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using AutoMapper;
     using EnsureThat;
     using MediatR;
     using Naos.Core.Common;
@@ -20,18 +21,21 @@
         private readonly IMediator mediator;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InMemoryRepository{T}"/> class.
+        /// Initializes a new instance of the <see cref="InMemoryRepository{T}" /> class.
         /// </summary>
         /// <param name="mediator">The mediator.</param>
         /// <param name="entities">The entities.</param>
-        /// <param name="idFactory">Method that generates a new Id if needed</param>
-        public InMemoryRepository(IMediator mediator, IEnumerable<T> entities = null)
+        /// <param name="options">The options.</param>
+        public InMemoryRepository(IMediator mediator, IEnumerable<T> entities = null, IRepositoryOptions options = null)
         {
             EnsureArg.IsNotNull(mediator, nameof(mediator));
 
             this.mediator = mediator;
             this.entities = entities.NullToEmpty();
+            this.Options = options;
         }
+
+        protected IRepositoryOptions Options { get; }
 
         /// <summary>
         /// Finds all asynchronous.
@@ -156,7 +160,7 @@
                 return null;
             }
 
-            bool isNew = false;
+            bool isTransient = false;
             if (entity.Id.IsDefault())
             {
                 // TODO: move this to seperate class (IdentityGenerator)
@@ -178,18 +182,21 @@
                     // TODO: or just set Id to null?
                 }
 
-                isNew = true;
+                isTransient = true;
             }
 
             this.entities = this.entities.Concat(new[] { entity }.AsEnumerable());
 
-            if (isNew)
+            if (this.Options?.PublishEvents == true)
             {
-                await this.mediator.Publish(new EntityAddedDomainEvent<T>(entity)).ConfigureAwait(false);
-            }
-            else
-            {
-                await this.mediator.Publish(new EntityUpdatedDomainEvent<T>(entity)).ConfigureAwait(false);
+                if (isTransient)
+                {
+                    await this.mediator.Publish(new EntityAddedDomainEvent<T>(entity)).ConfigureAwait(false);
+                }
+                else
+                {
+                    await this.mediator.Publish(new EntityUpdatedDomainEvent<T>(entity)).ConfigureAwait(false);
+                }
             }
 
             return entity;
@@ -212,7 +219,11 @@
             if (entity != null)
             {
                 this.entities = this.entities.Where(x => !x.Id.Equals(entity.Id));
-                await this.mediator.Publish(new EntityDeletedDomainEvent<T>(entity)).ConfigureAwait(false);
+
+                if (this.Options?.PublishEvents == true)
+                {
+                    await this.mediator.Publish(new EntityDeletedDomainEvent<T>(entity)).ConfigureAwait(false);
+                }
             }
         }
 
@@ -230,7 +241,10 @@
             }
 
             this.entities = this.entities.Where(x => !x.Id.Equals(entity.Id));
-            await this.mediator.Publish(new EntityDeletedDomainEvent<T>(entity)).ConfigureAwait(false);
+            if (this.Options?.PublishEvents == true)
+            {
+                await this.mediator.Publish(new EntityDeletedDomainEvent<T>(entity)).ConfigureAwait(false);
+            }
         }
     }
 }

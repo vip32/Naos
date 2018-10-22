@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using AutoMapper;
     using Domain;
     using EnsureThat;
     using MediatR;
@@ -13,27 +14,36 @@
         where T : class, IEntity, IAggregateRoot
     {
         private readonly IMediator mediator;
-        private readonly DbContext context;
+        private readonly DbContext dbContext;
 
-        public EntityFrameworkRepository(IMediator mediator, DbContext context)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EntityFrameworkRepository{T}" /> class.
+        /// </summary>
+        /// <param name="mediator">The mediator.</param>
+        /// <param name="dbContext">The EF database context.</param>
+        /// <param name="options">The options.</param>
+        public EntityFrameworkRepository(IMediator mediator, DbContext dbContext, IRepositoryOptions options = null)
         {
             EnsureArg.IsNotNull(mediator);
-            EnsureArg.IsNotNull(context);
+            EnsureArg.IsNotNull(dbContext);
 
             this.mediator = mediator;
-            this.context = context;
+            this.dbContext = dbContext;
+            this.Options = options;
         }
+
+        protected IRepositoryOptions Options { get; }
 
         public async Task<IEnumerable<T>> FindAllAsync(IFindOptions options = null)
         {
             return await Task.FromResult(
-                    this.context.Set<T>().TakeIf(options?.Take).AsEnumerable());
+                    this.dbContext.Set<T>().TakeIf(options?.Take).AsEnumerable());
         }
 
         public async Task<IEnumerable<T>> FindAllAsync(ISpecification<T> specification, IFindOptions options = null)
         {
             return await Task.FromResult(
-                this.context.Set<T>()
+                this.dbContext.Set<T>()
                             .WhereExpression(specification?.ToExpression())
                             .SkipIf(options?.Skip)
                             .TakeIf(options?.Take));
@@ -45,7 +55,7 @@
             var expressions = specificationsArray.NullToEmpty().Select(s => s.ToExpression());
 
             return await Task.FromResult(
-                this.context.Set<T>()
+                this.dbContext.Set<T>()
                             .WhereExpressions(expressions)
                             .SkipIf(options?.Skip)
                             .TakeIf(options?.Take));
@@ -58,7 +68,7 @@
                 return null;
             }
 
-            return await this.context.Set<T>().FindAsync(id).ConfigureAwait(false);
+            return await this.dbContext.Set<T>().FindAsync(id).ConfigureAwait(false);
         }
 
         public async Task<bool> ExistsAsync(object id)
@@ -78,18 +88,21 @@
                 return null;
             }
 
-            bool isNew = entity.Id.IsDefault(); // todo: add .IsTransient to Entity class
+            bool isTransient = entity.Id.IsDefault(); // todo: add .IsTransient to Entity class
 
-            this.context.Set<T>().Add(entity);
-            await this.context.SaveChangesAsync().ConfigureAwait(false);
+            this.dbContext.Set<T>().Add(entity);
+            await this.dbContext.SaveChangesAsync().ConfigureAwait(false);
 
-            if (isNew)
+            if (this.Options?.PublishEvents == true)
             {
-                await this.mediator.Publish(new EntityAddedDomainEvent<T>(entity)).ConfigureAwait(false);
-            }
-            else
-            {
-                await this.mediator.Publish(new EntityUpdatedDomainEvent<T>(entity)).ConfigureAwait(false);
+                if (isTransient)
+                {
+                    await this.mediator.Publish(new EntityAddedDomainEvent<T>(entity)).ConfigureAwait(false);
+                }
+                else
+                {
+                    await this.mediator.Publish(new EntityUpdatedDomainEvent<T>(entity)).ConfigureAwait(false);
+                }
             }
 
             return entity;
@@ -102,10 +115,14 @@
                 return;
             }
 
-            var entity = await this.context.Set<T>().FindAsync(id).ConfigureAwait(false);
-            this.context.Remove(entity);
-            await this.context.SaveChangesAsync();
-            await this.mediator.Publish(new EntityDeletedDomainEvent<T>(entity)).ConfigureAwait(false);
+            var entity = await this.dbContext.Set<T>().FindAsync(id).ConfigureAwait(false);
+            this.dbContext.Remove(entity);
+            await this.dbContext.SaveChangesAsync();
+
+            if (this.Options?.PublishEvents == true)
+            {
+                await this.mediator.Publish(new EntityDeletedDomainEvent<T>(entity)).ConfigureAwait(false);
+            }
         }
 
         public async Task DeleteAsync(T entity)

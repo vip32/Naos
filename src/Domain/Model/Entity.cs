@@ -1,5 +1,6 @@
 ﻿namespace Naos.Core.Domain
 {
+    using Naos.Core.Common;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -120,6 +121,14 @@
         /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
         /// </returns>
         public override int GetHashCode() => this.GetType().GetHashCode() ^ this.Id.GetHashCode();
+
+        /// <summary>
+        /// Determines whether this instance is transient (not persisted).
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> if this instance is transient; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsTransient() => this.Id.IsDefault();
 
         /// <summary>
         /// Returns a <see cref="string" /> that represents this instance.

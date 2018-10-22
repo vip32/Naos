@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using AutoMapper;
     using EnsureThat;
     using MediatR;
     using Naos.Core.Common;
@@ -14,14 +15,23 @@
         private readonly IMediator mediator;
         private readonly ICosmosDbSqlProvider<T> provider;
 
-        public CosmosDbSqlRepository(IMediator mediator, ICosmosDbSqlProvider<T> provider)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CosmosDbSqlRepository{T}" /> class.
+        /// </summary>
+        /// <param name="mediator">The mediator.</param>
+        /// <param name="provider">The provider.</param>
+        /// <param name="options">The options.</param>
+        public CosmosDbSqlRepository(IMediator mediator, ICosmosDbSqlProvider<T> provider, IRepositoryOptions options = null)
         {
             EnsureArg.IsNotNull(mediator, nameof(mediator));
             EnsureArg.IsNotNull(provider, nameof(provider));
 
             this.mediator = mediator;
             this.provider = provider;
+            this.Options = options;
         }
+
+        protected IRepositoryOptions Options { get; }
 
         public async Task<IEnumerable<T>> FindAllAsync(IFindOptions options = null)
         {
@@ -74,17 +84,20 @@
                 return null;
             }
 
-            bool isNew = entity.Id.IsDefault();
+            bool isTransient = entity.Id.IsDefault();
 
             var result = await this.provider.AddOrUpdateAsync(entity).ConfigureAwait(false);
 
-            if (isNew)
+            if (this.Options?.PublishEvents == true)
             {
-                await this.mediator.Publish(new EntityAddedDomainEvent<T>(entity)).ConfigureAwait(false);
-            }
-            else
-            {
-                await this.mediator.Publish(new EntityUpdatedDomainEvent<T>(entity)).ConfigureAwait(false);
+                if (isTransient)
+                {
+                    await this.mediator.Publish(new EntityAddedDomainEvent<T>(entity)).ConfigureAwait(false);
+                }
+                else
+                {
+                    await this.mediator.Publish(new EntityUpdatedDomainEvent<T>(entity)).ConfigureAwait(false);
+                }
             }
 
             return result;
@@ -101,7 +114,10 @@
             if (entity != null)
             {
                 await this.provider.DeleteAsync(id as string).ConfigureAwait(false);
-                await this.mediator.Publish(new EntityDeletedDomainEvent<T>(entity)).ConfigureAwait(false);
+                if (this.Options?.PublishEvents == true)
+                {
+                    await this.mediator.Publish(new EntityDeletedDomainEvent<T>(entity)).ConfigureAwait(false);
+                }
             }
         }
 
