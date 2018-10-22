@@ -1,13 +1,11 @@
-﻿namespace Naos.Core.Domain
+﻿namespace Naos.Core.Domain.Repositories
 {
-    using AutoMapper;
-
     /// <summary>
     /// Various options for the <see cref="IRepository{T}"/>
     /// </summary>
     public interface IRepositoryOptions
     {
-        IMapper Mapper { get; set; }
+        IEntityMapper Mapper { get; set; }
 
         bool PublishEvents { get; set; }
 

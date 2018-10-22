@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Domain
+﻿namespace Naos.Core.Domain.Specifications
 {
     using System;
     using System.Linq.Expressions;

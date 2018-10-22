@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="7.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.1.4" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
     <PackageReference Include="Moq" Version="4.10.0" />
@@ -27,6 +28,7 @@
     <ProjectReference Include="..\..\src\Common.Web.Extensions\Common.Web.Extensions.csproj" />
     <ProjectReference Include="..\..\src\Common.Web\Common.Web.csproj" />
     <ProjectReference Include="..\..\src\Common\Common.csproj" />
+    <ProjectReference Include="..\..\src\Domain.Repositories.AutoMapper\Domain.Repositories.AutoMapper.csproj" />
     <ProjectReference Include="..\..\src\Domain\Domain.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure.Azure.Cosmosdb\Infrastructure.Azure.CosmosDb.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure.SqlServer\Infrastructure.SqlServer.csproj" />

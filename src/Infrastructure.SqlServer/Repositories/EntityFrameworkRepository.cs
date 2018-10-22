@@ -3,12 +3,13 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using AutoMapper;
     using Domain;
     using EnsureThat;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Naos.Core.Common;
+    using Naos.Core.Domain.Repositories;
+    using Naos.Core.Domain.Specifications;
 
     public class EntityFrameworkRepository<T> : IRepository<T>
         where T : class, IEntity, IAggregateRoot

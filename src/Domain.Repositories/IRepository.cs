@@ -1,7 +1,8 @@
-﻿namespace Naos.Core.Domain
+﻿namespace Naos.Core.Domain.Repositories
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Naos.Core.Domain.Specifications;
 
     public interface IRepository<T>
         where T : class, IEntity, IAggregateRoot

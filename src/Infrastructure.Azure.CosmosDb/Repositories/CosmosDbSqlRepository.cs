@@ -3,11 +3,12 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using AutoMapper;
     using EnsureThat;
     using MediatR;
     using Naos.Core.Common;
     using Naos.Core.Domain;
+    using Naos.Core.Domain.Repositories;
+    using Naos.Core.Domain.Specifications;
 
     public class CosmosDbSqlRepository<T> : IRepository<T>
         where T : class, IEntity, IAggregateRoot

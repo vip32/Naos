@@ -1,9 +1,8 @@
 ﻿namespace Naos.Core.App.Commands
 {
-    using System;
     using System.Collections.Generic;
     using MediatR;
-    using Naos.Core.Domain;
+    using Naos.Core.Domain.Repositories;
 
     public class CommandEntityInMemoryRepository : InMemoryRepository<CommandEntity>, ICommandRequestRepository
     {

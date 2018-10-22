@@ -12,6 +12,9 @@ namespace Naos.Core.UnitTests.Domain
     using Moq;
     using Naos.Core.Common;
     using Naos.Core.Domain;
+    using Naos.Core.Domain.Repositories;
+    using Naos.Core.Domain.Repositories.AutoMapper;
+    using Naos.Core.Domain.Specifications;
     using Xunit;
 
     public class InMemoryRepository2Tests
@@ -33,7 +36,8 @@ namespace Naos.Core.UnitTests.Domain
             var sut = new InMemoryRepository<StubEntity, StubDto>(
                 mediatorMock.Object,
                 this.entities,
-                new RepositoryOptions(StubEntityMapperConfiguration.Create()));
+                new RepositoryOptions(
+                    new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())));
 
             // act
             var result = await sut.FindAllAsync().ConfigureAwait(false);

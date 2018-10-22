@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Domain
+﻿namespace Naos.Core.Domain.Repositories
 {
     using System;
     using System.Collections.Generic;

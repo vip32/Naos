@@ -1,13 +1,13 @@
-﻿namespace Naos.Core.Domain
+﻿namespace Naos.Core.Domain.Repositories
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using AutoMapper;
     using EnsureThat;
     using MediatR;
     using Naos.Core.Common;
+    using Naos.Core.Domain.Specifications;
 
     /// <summary>
     /// Represents an InMemoryRepository

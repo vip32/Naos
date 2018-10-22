@@ -1,7 +1,5 @@
 ﻿namespace Naos.Core.Domain
 {
-    using Newtonsoft.Json;
-
     /// <summary>
     /// A base entity for all tenant related entities
     /// </summary>

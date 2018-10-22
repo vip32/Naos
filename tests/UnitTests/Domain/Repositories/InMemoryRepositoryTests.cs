@@ -11,6 +11,8 @@ namespace Naos.Core.UnitTests.Domain
     using Moq;
     using Naos.Core.Common;
     using Naos.Core.Domain;
+    using Naos.Core.Domain.Repositories;
+    using Naos.Core.Domain.Specifications;
     using Xunit;
 
     public class InMemoryRepositoryTests
