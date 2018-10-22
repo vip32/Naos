@@ -45,7 +45,7 @@
                         subscriptionName: subscriptionName ?? AppDomain.CurrentDomain.FriendlyName, // PRODUCT.CAPABILITY
                         filterScope: Environment.GetEnvironmentVariable("ASPNETCORE_ISLOCAL").ToBool()
                             ? Environment.MachineName.Humanize().Dehumanize().ToLower()
-                            : string.Empty); // scope the messagebus messages to the local machine, so local events are handled locally.
+                            : string.Empty); // scope the messagebus messages to the local machine, so local events are handled locally
                 });
         }
     }
