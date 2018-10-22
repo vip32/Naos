@@ -36,21 +36,20 @@
         /// <summary>
         /// Finds all asynchronous.
         /// </summary>
-        /// <param name="skip">The skip.</param>
-        /// <param name="take">The take.</param>
+        /// <param name="options">The options.</param>
         /// <returns></returns>
-        public async Task<IEnumerable<T>> FindAllAsync(int? skip = null, int? take = null)
+        public async Task<IEnumerable<T>> FindAllAsync(IFindOptions options = null)
         {
             var result = this.entities;
 
-            if (skip.HasValue && skip.Value > 0)
+            if (options?.Skip.HasValue == true && options.Skip.Value > 0)
             {
-                result = result.Skip(skip.Value);
+                result = result.Skip(options.Skip.Value);
             }
 
-            if (take.HasValue && take.Value > 0)
+            if (options?.Take.HasValue == true && options.Take.Value > 0)
             {
-                result = result.Take(take.Value);
+                result = result.Take(options.Take.Value);
             }
 
             return await Task.FromResult(result);
@@ -60,26 +59,25 @@
         /// Finds all asynchronous.
         /// </summary>
         /// <param name="specification">The specification.</param>
-        /// <param name="skip">The skip.</param>
-        /// <param name="take">The take.</param>
+        /// <param name="options">The options.</param>
         /// <returns></returns>
-        public async Task<IEnumerable<T>> FindAllAsync(ISpecification<T> specification, int? skip = null, int? take = null)
+        public async Task<IEnumerable<T>> FindAllAsync(ISpecification<T> specification, IFindOptions options = null)
         {
             if (specification == null)
             {
-                return await this.FindAllAsync(skip, take).ConfigureAwait(false);
+                return await this.FindAllAsync(options).ConfigureAwait(false);
             }
 
             var result = this.entities.Where(specification.ToPredicate());
 
-            if (skip.HasValue && skip.Value > 0)
+            if (options?.Skip.HasValue == true && options.Skip.Value > 0)
             {
-                result = result.Skip(skip.Value);
+                result = result.Skip(options.Skip.Value);
             }
 
-            if (take.HasValue && take.Value > 0)
+            if (options?.Take.HasValue == true && options.Take.Value > 0)
             {
-                result = result.Take(take.Value);
+                result = result.Take(options.Take.Value);
             }
 
             return await Task.FromResult(result);
@@ -89,10 +87,9 @@
         /// Finds all asynchronous.
         /// </summary>
         /// <param name="specifications">The specifications.</param>
-        /// <param name="skip">The skip.</param>
-        /// <param name="take">The take.</param>
+        /// <param name="options">The options.</param>
         /// <returns></returns>
-        public async Task<IEnumerable<T>> FindAllAsync(IEnumerable<ISpecification<T>> specifications, int? skip = null, int? take = null)
+        public async Task<IEnumerable<T>> FindAllAsync(IEnumerable<ISpecification<T>> specifications, IFindOptions options = null)
         {
             var specsArray = specifications as ISpecification<T>[] ?? specifications.ToArray();
             var result = this.entities;
@@ -102,14 +99,14 @@
                 result = result.Where(specification.ToPredicate());
             }
 
-            if(skip.HasValue && skip.Value > 0)
+            if(options?.Skip.HasValue == true && options.Skip.Value > 0)
             {
-                result = result.Skip(skip.Value);
+                result = result.Skip(options.Skip.Value);
             }
 
-            if (take.HasValue && take.Value > 0)
+            if (options?.Take.HasValue == true && options.Take.Value > 0)
             {
-                result = result.Take(take.Value);
+                result = result.Take(options.Take.Value);
             }
 
             return await Task.FromResult(result);

@@ -71,7 +71,9 @@
             Assert.False(findResultsArray.IsNullOrEmpty());
             Assert.True(findResultsArray.Length == 20);
 
-            findResults = await sut.FindAllAsync(new HasTenantSpecification<StubEntity>(this.tenantId), take: 5).ConfigureAwait(false);
+            findResults = await sut.FindAllAsync(
+                new HasTenantSpecification<StubEntity>(this.tenantId),
+                new FindOptions(take: 5)).ConfigureAwait(false);
 
             //findResultsArray = findResults as StubEntity[] ?? findResults.ToArray();
             //Assert.False(findResultsArray.IsNullOrEmpty());

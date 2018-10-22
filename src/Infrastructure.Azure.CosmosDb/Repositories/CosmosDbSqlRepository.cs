@@ -23,28 +23,28 @@
             this.provider = provider;
         }
 
-        public async Task<IEnumerable<T>> FindAllAsync(int? skip = null, int? take = null)
+        public async Task<IEnumerable<T>> FindAllAsync(IFindOptions options = null)
         {
             // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
-            return await this.provider.WhereAsync<T>(maxItemCount: take ?? -1).ConfigureAwait(false);
+            return await this.provider.WhereAsync<T>(maxItemCount: options?.Take ?? -1).ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<T>> FindAllAsync(ISpecification<T> specification, int? skip = null, int? take = null)
+        public async Task<IEnumerable<T>> FindAllAsync(ISpecification<T> specification, IFindOptions options = null)
         {
             // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
             return await this.provider.WhereAsync<T>(
                 expression: specification?.ToExpression().Expand(),
-                maxItemCount: take ?? -1).ConfigureAwait(false);
+                maxItemCount: options?.Take ?? -1).ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<T>> FindAllAsync(IEnumerable<ISpecification<T>> specifications, int? skip = null, int? take = null)
+        public async Task<IEnumerable<T>> FindAllAsync(IEnumerable<ISpecification<T>> specifications, IFindOptions options = null)
         {
             // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
             var specificationsArray = specifications as ISpecification<T>[] ?? specifications.ToArray();
 
             return await this.provider.WhereAsync<T>(
                 expressions: specificationsArray.NullToEmpty().Select(s => s.ToExpression().Expand()),
-                maxItemCount: take ?? -1).ConfigureAwait(false);
+                maxItemCount: options?.Take ?? -1).ConfigureAwait(false);
         }
 
         public async Task<T> FindOneAsync(object id)

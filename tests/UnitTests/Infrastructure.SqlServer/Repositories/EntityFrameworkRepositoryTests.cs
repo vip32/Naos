@@ -46,7 +46,9 @@
                 // act
                 var findResultsWithSpecification = sut.FindAllAsync(new StubHasTenantSpecification("TestTenant")).Result;
                 var findResultsWithSpecifications = sut.FindAllAsync(new[] { new StubHasTenantSpecification("TestTenant") }).Result;
-                var findResultsWithTenantSpecfication = sut.FindAllAsync(new StubHasTenantSpecification("TestTenant"), take: 5).Result;
+                var findResultsWithTenantSpecfication = sut.FindAllAsync(
+                    new StubHasTenantSpecification("TestTenant"),
+                    new FindOptions(take: 5)).Result;
 
                 // assert
                 Assert.NotNull(findResultsWithSpecification);
