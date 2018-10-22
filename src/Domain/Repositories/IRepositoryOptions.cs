@@ -12,5 +12,6 @@
         bool PublishEvents { get; set; }
 
         // VALIDATIONS?
+        // DEFAULT SPECIFICATIONS
     }
 }

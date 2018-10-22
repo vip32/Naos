@@ -12,13 +12,23 @@
     /// <summary>
     /// Represents an InMemoryRepository
     /// </summary>
-    /// <typeparam name="T">Type or the Entity stored</typeparam>
+    /// <typeparam name="T">The type of the domain entity</typeparam>
     /// <seealso cref="Domain.IRepository{T, TId}" />
     public class InMemoryRepository<T> : IRepository<T>
         where T : class, IEntity, IAggregateRoot
     {
         protected IEnumerable<T> entities;
         private readonly IMediator mediator;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InMemoryRepository{T}" /> class.
+        /// </summary>
+        /// <param name="mediator">The mediator.</param>
+        /// <param name="options">The options.</param>
+        public InMemoryRepository(IMediator mediator, IRepositoryOptions options = null)
+            : this(mediator, null, options)
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InMemoryRepository{T}" /> class.
@@ -44,19 +54,7 @@
         /// <returns></returns>
         public async Task<IEnumerable<T>> FindAllAsync(IFindOptions options = null)
         {
-            var result = this.entities;
-
-            if (options?.Skip.HasValue == true && options.Skip.Value > 0)
-            {
-                result = result.Skip(options.Skip.Value);
-            }
-
-            if (options?.Take.HasValue == true && options.Take.Value > 0)
-            {
-                result = result.Take(options.Take.Value);
-            }
-
-            return await Task.FromResult(result);
+            return await Task.FromResult(this.FindAll(this.entities, options));
         }
 
         /// <summary>
@@ -74,17 +72,7 @@
 
             var result = this.entities.Where(specification.ToPredicate());
 
-            if (options?.Skip.HasValue == true && options.Skip.Value > 0)
-            {
-                result = result.Skip(options.Skip.Value);
-            }
-
-            if (options?.Take.HasValue == true && options.Take.Value > 0)
-            {
-                result = result.Take(options.Take.Value);
-            }
-
-            return await Task.FromResult(result);
+            return await Task.FromResult(this.FindAll(result, options));
         }
 
         /// <summary>
@@ -103,17 +91,7 @@
                 result = result.Where(specification.ToPredicate());
             }
 
-            if(options?.Skip.HasValue == true && options.Skip.Value > 0)
-            {
-                result = result.Skip(options.Skip.Value);
-            }
-
-            if (options?.Take.HasValue == true && options.Take.Value > 0)
-            {
-                result = result.Take(options.Take.Value);
-            }
-
-            return await Task.FromResult(result);
+            return await Task.FromResult(this.FindAll(result, options));
         }
 
         /// <summary>
@@ -129,7 +107,14 @@
                 return null;
             }
 
-            return await Task.FromResult(this.entities.FirstOrDefault(x => x.Id.Equals(id)));
+            var result = this.entities.FirstOrDefault(x => x.Id.Equals(id));
+
+            if (this.Options?.Mapper != null && result != null)
+            {
+                return this.Options.Mapper.Map<T>(result);
+            }
+
+            return await Task.FromResult(result);
         }
 
         /// <summary>
@@ -185,6 +170,7 @@
                 isTransient = true;
             }
 
+            // TODO: map to destination
             this.entities = this.entities.Concat(new[] { entity }.AsEnumerable());
 
             if (this.Options?.PublishEvents == true)
@@ -245,6 +231,28 @@
             {
                 await this.mediator.Publish(new EntityDeletedDomainEvent<T>(entity)).ConfigureAwait(false);
             }
+        }
+
+        protected virtual IEnumerable<T> FindAll(IEnumerable<T> entities, IFindOptions options = null)
+        {
+            var result = entities;
+
+            if (options?.Skip.HasValue == true && options.Skip.Value > 0)
+            {
+                result = result.Skip(options.Skip.Value);
+            }
+
+            if (options?.Take.HasValue == true && options.Take.Value > 0)
+            {
+                result = result.Take(options.Take.Value);
+            }
+
+            if (this.Options?.Mapper != null && result != null)
+            {
+                return result.Select(r => this.Options.Mapper.Map<T>(r));
+            }
+
+            return result;
         }
     }
 }

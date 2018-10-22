@@ -276,75 +276,73 @@ namespace Naos.Core.UnitTests.Domain
             // assert
             Assert.Null(entity);
         }
-    }
 
-#pragma warning disable SA1402 // File may only contain a single class
-    public class StubEntityString : TenantEntity<string>, IAggregateRoot
-    {
-        public string FirstName { get; set; }
-
-        public string LastName { get; set; }
-
-        public int Age { get; set; }
-    }
-
-    public class StubEntityGuid : TenantEntity<Guid>, IAggregateRoot
-    {
-        public string FirstName { get; set; }
-
-        public string LastName { get; set; }
-
-        public int Age { get; set; }
-    }
-
-    public class StubHasNameSpecification : Specification<StubEntityString> // TODO: this should be mocked
-    {
-        private readonly string firstName;
-
-        public StubHasNameSpecification(string firstName)
+        public class StubEntityString : TenantEntity<string>, IAggregateRoot
         {
-            EnsureArg.IsNotNull(firstName);
+            public string FirstName { get; set; }
 
-            this.firstName = firstName;
+            public string LastName { get; set; }
+
+            public int Age { get; set; }
         }
 
-        public override Expression<Func<StubEntityString, bool>> ToExpression()
+        public class StubEntityGuid : TenantEntity<Guid>, IAggregateRoot
         {
-            return p => p.FirstName == this.firstName;
+            public string FirstName { get; set; }
+
+            public string LastName { get; set; }
+
+            public int Age { get; set; }
+        }
+
+        public class StubHasNameSpecification : Specification<StubEntityString> // TODO: this should be mocked
+        {
+            private readonly string firstName;
+
+            public StubHasNameSpecification(string firstName)
+            {
+                EnsureArg.IsNotNull(firstName);
+
+                this.firstName = firstName;
+            }
+
+            public override Expression<Func<StubEntityString, bool>> ToExpression()
+            {
+                return p => p.FirstName == this.firstName;
+            }
+        }
+
+        public class StubHasTenantSpecification : HasTenantSpecification<StubEntityString> // TODO: this should be mocked
+        {
+            public StubHasTenantSpecification(string tenantId)
+                : base(tenantId)
+            {
+            }
+        }
+
+        public class StubEntityGuidHasNameSpecification : Specification<StubEntityGuid> // TODO: this should be mocked
+        {
+            private readonly string firstName;
+
+            public StubEntityGuidHasNameSpecification(string firstName)
+            {
+                EnsureArg.IsNotNull(firstName);
+
+                this.firstName = firstName;
+            }
+
+            public override Expression<Func<StubEntityGuid, bool>> ToExpression()
+            {
+                return p => p.FirstName == this.firstName;
+            }
+        }
+
+        public class StubEntityGuidHasTenantSpecification : HasTenantSpecification<StubEntityGuid> // TODO: this should be mocked
+        {
+            public StubEntityGuidHasTenantSpecification(string tenantId)
+                : base(tenantId)
+            {
+            }
         }
     }
-
-    public class StubHasTenantSpecification : HasTenantSpecification<StubEntityString> // TODO: this should be mocked
-    {
-        public StubHasTenantSpecification(string tenantId)
-            : base(tenantId)
-        {
-        }
-    }
-
-    public class StubEntityGuidHasNameSpecification : Specification<StubEntityGuid> // TODO: this should be mocked
-    {
-        private readonly string firstName;
-
-        public StubEntityGuidHasNameSpecification(string firstName)
-        {
-            EnsureArg.IsNotNull(firstName);
-
-            this.firstName = firstName;
-        }
-
-        public override Expression<Func<StubEntityGuid, bool>> ToExpression()
-        {
-            return p => p.FirstName == this.firstName;
-        }
-    }
-
-    public class StubEntityGuidHasTenantSpecification : HasTenantSpecification<StubEntityGuid> // TODO: this should be mocked
-    {
-        public StubEntityGuidHasTenantSpecification(string tenantId)
-            : base(tenantId)
-        {
-        }
-    }
-#pragma warning restore SA1402 // File may only contain a single class
 }
