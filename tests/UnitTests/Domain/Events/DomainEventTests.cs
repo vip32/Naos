@@ -37,7 +37,7 @@
         {
             // arrange
             var serviceProvider = new ServiceCollection()
-                .AddScoped<INotificationHandler<EntityCreateDomainEvent2<IEntity>>, EntityCreateDomainEventDomainEvent2Handler>()
+                //.AddScoped<INotificationHandler<EntityCreateDomainEvent2<IEntity>>, EntityCreateDomainEventDomainEvent2Handler>()
                 .AddMediatR(typeof(IEntity).Assembly).BuildServiceProvider();
             var sut = serviceProvider.GetService<IMediator>();
             var notification = new EntityCreateDomainEvent2<StubEntity>(new StubEntity { FirstName = "FirstName1", LastName = "LastName1" });
