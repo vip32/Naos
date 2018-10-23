@@ -11,7 +11,23 @@
         public static T As<T>(this object source)
             where T : class
         {
+            if (source == null)
+            {
+                return null;
+            }
+
             return (T)source;
+        }
+
+        public static bool Is<T>(this object source)
+            where T : class
+        {
+            if(source == null)
+            {
+                return false;
+            }
+
+            return source is T;
         }
     }
 }

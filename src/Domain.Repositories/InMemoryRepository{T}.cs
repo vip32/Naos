@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Threading.Tasks;
     using EnsureThat;
     using MediatR;
@@ -25,7 +26,9 @@
         /// </summary>
         /// <param name="mediator">The mediator.</param>
         /// <param name="options">The options.</param>
-        public InMemoryRepository(IMediator mediator, IRepositoryOptions options = null)
+        public InMemoryRepository(
+            IMediator mediator,
+            IRepositoryOptions options = null)
             : this(mediator, null, options)
         {
         }
@@ -54,7 +57,7 @@
         /// <returns></returns>
         public async Task<IEnumerable<T>> FindAllAsync(IFindOptions<T> options = null)
         {
-            return await Task.FromResult(this.FindAll(this.entities, options));
+            return await this.FindAllAsync(specifications: null, options: options);
         }
 
         /// <summary>
@@ -65,14 +68,9 @@
         /// <returns></returns>
         public async Task<IEnumerable<T>> FindAllAsync(ISpecification<T> specification, IFindOptions<T> options = null)
         {
-            if (specification == null)
-            {
-                return await this.FindAllAsync(options).ConfigureAwait(false);
-            }
-
-            var result = this.entities.Where(specification.ToPredicate());
-
-            return await Task.FromResult(this.FindAll(result, options));
+            return specification == null
+                ? await this.FindAllAsync(specifications: null, options: options)
+                : await this.FindAllAsync(new[] { specification }, options);
         }
 
         /// <summary>
@@ -81,14 +79,13 @@
         /// <param name="specifications">The specifications.</param>
         /// <param name="options">The options.</param>
         /// <returns></returns>
-        public async Task<IEnumerable<T>> FindAllAsync(IEnumerable<ISpecification<T>> specifications, IFindOptions<T> options = null)
+        public virtual async Task<IEnumerable<T>> FindAllAsync(IEnumerable<ISpecification<T>> specifications, IFindOptions<T> options = null)
         {
-            var specsArray = specifications as ISpecification<T>[] ?? specifications.ToArray();
             var result = this.entities;
 
-            foreach (var specification in specsArray.NullToEmpty())
+            foreach (var specification in specifications.NullToEmpty())
             {
-                result = result.Where(specification.ToPredicate());
+                result = result.Where(this.EnsurePredicate(specification));
             }
 
             return await Task.FromResult(this.FindAll(result, options));
@@ -243,6 +240,11 @@
             {
                 await this.mediator.Publish(new EntityDeletedDomainEvent<T>(entity)).ConfigureAwait(false);
             }
+        }
+
+        protected virtual Func<T, bool> EnsurePredicate(ISpecification<T> specification)
+        {
+            return specification.ToPredicate();
         }
 
         protected virtual IEnumerable<T> FindAll(IEnumerable<T> entities, IFindOptions<T> options = null)
