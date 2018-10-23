@@ -151,7 +151,7 @@
         /// </summary>
         public void UpdateVersionIdentifier()
         {
-            this.VersionIdentifier = HashAlgorithm.ComputeHash(this.Dump());
+            this.VersionIdentifier = HashAlgorithm.ComputeHash(this);
         }
     }
 }

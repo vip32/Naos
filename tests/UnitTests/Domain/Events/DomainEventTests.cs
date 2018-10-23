@@ -1,50 +1,55 @@
 ﻿namespace Naos.Core.UnitTests.Domain.Events
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
     using MediatR;
-    using Microsoft.Extensions.DependencyInjection;
     using Naos.Core.Common;
+    using Naos.Core.Common.Dependency.SimpleInjector;
     using Naos.Core.Domain;
+    using SimpleInjector;
     using Xunit;
 
     public class DomainEventTests
     {
+        // TODO: make this more like a real unit tests
         [Fact]
-        public async Task SingleDomainEventIsHandledByAllApplicableHandlersTest()
+        public async Task DomainEventIsHandledByDomainEventHandlersTest()
         {
             // arrange
-            var serviceProvider = new ServiceCollection()
-                .AddMediatR(typeof(StubDomainEvent).Assembly).BuildServiceProvider();
-            var sut = serviceProvider.GetService<IMediator>();
-            var notification = new StubDomainEvent { Name = "Name1" };
-            var notification3 = new StubDomainEvent3<StubEntity>
-            {
-                Name = "Name1", Entity = new StubEntity { FirstName = "FirstName1", LastName = "LastName1" }
-            };
+            var container = new Container();
+            container.BuildMediator(new[] { typeof(IEntity).Assembly, typeof(DomainEventTests).Assembly });
+            var mediator = container.GetInstance<IMediator>();
 
-            await sut.Publish(notification).ConfigureAwait(false);
-            await sut.Publish(notification3).ConfigureAwait(false);
+            var domainEvent = new StubDomainEvent { Name = "Name1" };
+            var entity = new StubEntity { FirstName = "FirstName1", LastName = "LastName1" };
+            entity.State.CreatedDate = null;
+            entity.State.UpdatedDate = null;
+            var createEvent = new EntityCreateDomainEvent<IEntity>(entity);
+            var createdEvent = new EntityCreatedDomainEvent<IEntity>(entity);
+            var updateEvent = new EntityUpdateDomainEvent<IEntity>(entity);
+            var updatedEvent = new EntityUpdatedDomainEvent<IEntity>(entity);
 
-            Assert.True(notification.Properties.ContainsKey(typeof(FirstStubDomainEventHandler).Name));
-            Assert.True(notification.Properties.ContainsKey(typeof(SecondStubDomainEventHandler).Name));
-            Assert.True(notification3.Properties.ContainsKey(typeof(ThirdStubDomainEventHandler).Name));
-        }
+            // act/assert
+            await mediator.Publish(domainEvent).ConfigureAwait(false);
+            Assert.True(domainEvent.Properties.ContainsKey(typeof(FirstStubDomainEventHandler).Name));
+            Assert.True(domainEvent.Properties.ContainsKey(typeof(SecondStubDomainEventHandler).Name));
 
-        [Fact]
-        public async Task SingleDomainEventIsHandledByAllApplicableHandlersTest2()
-        {
-            // arrange
-            var serviceProvider = new ServiceCollection()
-                //.AddScoped<INotificationHandler<EntityCreateDomainEvent2<IEntity>>, EntityCreateDomainEventDomainEvent2Handler>()
-                .AddMediatR(typeof(IEntity).Assembly).BuildServiceProvider();
-            var sut = serviceProvider.GetService<IMediator>();
-            var notification = new EntityCreateDomainEvent<StubEntity>(new StubEntity { FirstName = "FirstName1", LastName = "LastName1" });
+            await mediator.Publish(createEvent).ConfigureAwait(false);
+            Assert.NotNull(entity.VersionIdentifier);
+            Assert.True(entity.State.CreatedDate != null);
+            var version = entity.VersionIdentifier;
+            Assert.NotNull(entity.VersionIdentifier);
 
-            await sut.Publish(notification).ConfigureAwait(false);
+            await mediator.Publish(createdEvent).ConfigureAwait(false);
 
-            //Assert.True(notification.Properties.ContainsKey(typeof(EntityCreateDomainEventDomainEventHandler<StubEntity>).Name));
+            Thread.Sleep(1000);
+            await mediator.Publish(updateEvent).ConfigureAwait(false);
+            Assert.True(entity.State.UpdatedDate != null);
+            Assert.True(entity.State.CreatedDate != entity.State.UpdatedDate);
+            Assert.NotNull(entity.VersionIdentifier);
+            Assert.NotEqual(version, entity.VersionIdentifier);
         }
 
         public class StubDomainEvent : IDomainEvent
@@ -54,16 +59,7 @@
             public IDictionary<string, object> Properties { get; set; } = new Dictionary<string, object>();
         }
 
-        public class StubDomainEvent3<T> : IDomainEvent
-        {
-            public string Name { get; set; }
-
-            public T Entity { get; set; }
-
-            public IDictionary<string, object> Properties { get; set; } = new Dictionary<string, object>();
-        }
-
-        public class StubEntity : Entity<string>, IEntity
+        public class StubEntity : Entity<string>
         {
             public string FirstName { get; set; }
 
@@ -82,15 +78,6 @@
         public class SecondStubDomainEventHandler : IDomainEventHandler<StubDomainEvent>
         {
             public Task Handle(StubDomainEvent notification, CancellationToken cancellationToken)
-            {
-                notification.Properties.AddOrUpdate(this.GetType().Name, true);
-                return Task.CompletedTask;
-            }
-        }
-
-        public class ThirdStubDomainEventHandler : IDomainEventHandler<StubDomainEvent3<StubEntity>>
-        {
-            public Task Handle(StubDomainEvent3<StubEntity> notification, CancellationToken cancellationToken)
             {
                 notification.Properties.AddOrUpdate(this.GetType().Name, true);
                 return Task.CompletedTask;

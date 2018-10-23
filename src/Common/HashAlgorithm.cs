@@ -6,6 +6,27 @@
 
     public static class HashAlgorithm
     {
+        /// <summary>
+        /// Computes the string based hash for an instance.
+        /// </summary>
+        /// <param name="instance">The instance.</param>
+        /// <returns></returns>
+        public static string ComputeHash(object instance)
+        {
+            if (instance == null)
+            {
+                return null;
+            }
+
+            using (var md5 = new MD5CryptoServiceProvider())
+            {
+                return BitConverter.ToString(
+                    md5.ComputeHash(
+                        SerializationHelper.BsonByteSerialize(instance)))
+                   .Replace("-", string.Empty);
+            }
+        }
+
         public static string ComputeHash(string value, bool removeDashes = true)
         {
             if (value == null)

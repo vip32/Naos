@@ -3,7 +3,7 @@
 
 # Naos
 
-# A modern cloud service architecture blueprint & reference implementation
+# A mildly opiniated modern cloud service architecture blueprint & reference implementation
 
 # concepts
 - arch style: hexagonal/onion

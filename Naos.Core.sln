@@ -59,11 +59,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Azure.Arm", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.App.IntegrationTests", "tests\Sample.App.IntegrationTests\Sample.App.IntegrationTests.csproj", "{67FC16FB-7B11-4B17-85B7-607784DC0729}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.Repositories", "src\Domain.Repositories\Domain.Repositories.csproj", "{31977D83-B6D2-4AEE-B340-8F0C366AD180}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Repositories", "src\Domain.Repositories\Domain.Repositories.csproj", "{31977D83-B6D2-4AEE-B340-8F0C366AD180}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.Specifications", "src\Domain.Specifications\Domain.Specifications.csproj", "{2E8FA2A7-7EDA-4DFF-8741-F3B06FCF386E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Specifications", "src\Domain.Specifications\Domain.Specifications.csproj", "{2E8FA2A7-7EDA-4DFF-8741-F3B06FCF386E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Repositories.AutoMapper", "src\Domain.Repositories.AutoMapper\Domain.Repositories.AutoMapper.csproj", "{F9EB6C35-7301-4121-940D-4060F6B127FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Dependency.SimpleInjector", "src\Common.Dependency.SimpleInjector\Common.Dependency.SimpleInjector.csproj", "{BA3EF951-968F-44C2-BBA0-EAE8F89D5E85}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -363,6 +365,18 @@ Global
 		{F9EB6C35-7301-4121-940D-4060F6B127FE}.Release|x64.Build.0 = Release|Any CPU
 		{F9EB6C35-7301-4121-940D-4060F6B127FE}.Release|x86.ActiveCfg = Release|Any CPU
 		{F9EB6C35-7301-4121-940D-4060F6B127FE}.Release|x86.Build.0 = Release|Any CPU
+		{BA3EF951-968F-44C2-BBA0-EAE8F89D5E85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA3EF951-968F-44C2-BBA0-EAE8F89D5E85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA3EF951-968F-44C2-BBA0-EAE8F89D5E85}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BA3EF951-968F-44C2-BBA0-EAE8F89D5E85}.Debug|x64.Build.0 = Debug|Any CPU
+		{BA3EF951-968F-44C2-BBA0-EAE8F89D5E85}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BA3EF951-968F-44C2-BBA0-EAE8F89D5E85}.Debug|x86.Build.0 = Debug|Any CPU
+		{BA3EF951-968F-44C2-BBA0-EAE8F89D5E85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA3EF951-968F-44C2-BBA0-EAE8F89D5E85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA3EF951-968F-44C2-BBA0-EAE8F89D5E85}.Release|x64.ActiveCfg = Release|Any CPU
+		{BA3EF951-968F-44C2-BBA0-EAE8F89D5E85}.Release|x64.Build.0 = Release|Any CPU
+		{BA3EF951-968F-44C2-BBA0-EAE8F89D5E85}.Release|x86.ActiveCfg = Release|Any CPU
+		{BA3EF951-968F-44C2-BBA0-EAE8F89D5E85}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -392,6 +406,7 @@ Global
 		{31977D83-B6D2-4AEE-B340-8F0C366AD180} = {09D80029-71E3-4B4D-AA1A-CD153787AED0}
 		{2E8FA2A7-7EDA-4DFF-8741-F3B06FCF386E} = {09D80029-71E3-4B4D-AA1A-CD153787AED0}
 		{F9EB6C35-7301-4121-940D-4060F6B127FE} = {09D80029-71E3-4B4D-AA1A-CD153787AED0}
+		{BA3EF951-968F-44C2-BBA0-EAE8F89D5E85} = {09D80029-71E3-4B4D-AA1A-CD153787AED0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BD699E0F-4BC9-41A9-93D5-E89FDDA8FC17}

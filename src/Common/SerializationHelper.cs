@@ -4,6 +4,7 @@
     using System.IO;
     using System.Text;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Bson;
 
     public static class SerializationHelper
     {
@@ -126,41 +127,39 @@
         //    }
         //}
 
-        //        public static byte[] BsonByteSerialize<T>(T data)
-        //            where T : class
-        //        {
-        //            if (data == null)
-        //            {
-        //                return null;
-        //            }
+        public static byte[] BsonByteSerialize<T>(T data)
+            where T : class
+        {
+            if (data == null)
+            {
+                return null;
+            }
 
-        //            var ms = new MemoryStream();
-        //#pragma warning disable CS0618 // Type or member is obsolete
-        //            using (var writer = new Newtonsoft.Json.Bson.BsonWriter(ms))
-        //#pragma warning restore CS0618 // Type or member is obsolete
-        //            {
-        //                var serializer = new JsonSerializer();
-        //                serializer.Serialize(writer, data);
-        //            }
+            var ms = new MemoryStream();
+            using (var writer = new BsonDataWriter(ms))
+            {
+                var serializer = new JsonSerializer();
+                serializer.Serialize(writer, data);
+            }
 
-        //            return ms.ToArray();
-        //        }
+            return ms.ToArray();
+        }
 
-        //public static T BsonByteDeserialize<T>(byte[] data)
-        //    where T : class
-        //{
-        //    if (data == null)
-        //    {
-        //        return null;
-        //    }
+        public static T BsonByteDeserialize<T>(byte[] data)
+            where T : class
+        {
+            if (data == null)
+            {
+                return null;
+            }
 
-        //    var ms = new MemoryStream(data);
-        //    using (var reader = new Newtonsoft.Json.Bson.BsonReader(ms))
-        //    {
-        //        var serializer = new JsonSerializer();
-        //        return serializer.Deserialize<T>(reader);
-        //    }
-        //}
+            var ms = new MemoryStream(data);
+            using (var reader = new BsonDataReader(ms))
+            {
+                var serializer = new JsonSerializer();
+                return serializer.Deserialize<T>(reader);
+            }
+        }
 
         public static string FromStream(Stream stream)
         {

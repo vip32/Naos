@@ -4,21 +4,23 @@
     using System.Threading.Tasks;
     using Naos.Core.Common;
 
-    public class EntityUpdateDomainEventDomainEventHandler<T> : IDomainEventHandler<EntityUpdateDomainEvent<IEntity>>
+    public class EntityUpdateDomainEventDomainEventHandler
+        : IDomainEventHandler<EntityUpdateDomainEvent<IEntity>>
     {
-        public Task Handle(EntityUpdateDomainEvent<IEntity> notification, CancellationToken cancellationToken)
+        public async Task Handle(EntityUpdateDomainEvent<IEntity> notification, CancellationToken cancellationToken)
         {
-            if (notification.Is<IStateEntity>())
+            await Task.Run(() =>
             {
-                notification.As<IStateEntity>().State.UpdatedDate = new DateTimeEpoch();
-            }
+                if (notification?.Entity.Is<IStateEntity>() == true)
+                {
+                    notification.Entity.As<IStateEntity>().State.SetUpdated("[IDENTITY]", "domainevent");
+                }
 
-            if (notification.Is<IVersionIdentified>())
-            {
-                notification.As<IVersionIdentified>().UpdateVersionIdentifier();
-            }
-
-            return null;
+                if (notification?.Entity.Is<IVersionIdentified>() == true)
+                {
+                    notification.Entity.As<IVersionIdentified>().UpdateVersionIdentifier();
+                }
+            });
         }
     }
 }

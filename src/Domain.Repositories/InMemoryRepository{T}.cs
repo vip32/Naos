@@ -247,7 +247,7 @@
         /// <exception cref="ArgumentOutOfRangeException">Id</exception>
         public async Task DeleteAsync(T entity)
         {
-            if (entity == null || entity.Id.IsDefault())
+            if (entity?.Id.IsDefault() != false)
             {
                 return;
             }

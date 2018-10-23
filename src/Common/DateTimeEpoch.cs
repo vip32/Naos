@@ -7,7 +7,7 @@
     /// This entity represents a datetime based on the epoch value
     /// </summary>
     /// <seealso cref="IComparable" />
-    public class DateTimeEpoch : IComparable
+    public class DateTimeEpoch : IComparable // valueobject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DateTimeEpoch"/> class.

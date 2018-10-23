@@ -118,8 +118,6 @@
             this.CreatedDate = new DateTimeEpoch();
             this.CreatedBy = by;
             this.CreatedDescription = description;
-
-            this.SetUpdated(by);
         }
 
         /// <summary>
@@ -143,9 +141,9 @@
             }
 
             this.UpdatedReasons = this.UpdatedReasons.Concat(new[]
-                {
-                    $"{by}: ({this.UpdatedDate.DateTime.ToString(CultureInfo.InvariantCulture)}) {reason}".Trim()
-                });
+            {
+                $"{by}: ({this.UpdatedDate.DateTime.ToString(CultureInfo.InvariantCulture)}) {reason}".Trim()
+            });
         }
 
         /// <summary>
