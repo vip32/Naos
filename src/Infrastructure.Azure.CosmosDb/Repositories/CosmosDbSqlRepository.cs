@@ -99,13 +99,25 @@
                 entity.As<IStateEntity>().State.UpdatedDate = new DateTimeEpoch();
             }
 
+            if (this.Options?.PublishEvents == true)
+            {
+                if (isTransient)
+                {
+                    await this.mediator.Publish(new EntityCreateDomainEvent<T>(entity)).ConfigureAwait(false);
+                }
+                else
+                {
+                    await this.mediator.Publish(new EntityUpdateDomainEvent<T>(entity)).ConfigureAwait(false);
+                }
+            }
+
             var result = await this.provider.AddOrUpdateAsync(entity).ConfigureAwait(false);
 
             if (this.Options?.PublishEvents == true)
             {
                 if (isTransient)
                 {
-                    await this.mediator.Publish(new EntityAddedDomainEvent<T>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityCreatedDomainEvent<T>(entity)).ConfigureAwait(false);
                 }
                 else
                 {
@@ -126,7 +138,13 @@
             var entity = await this.FindOneAsync(id).ConfigureAwait(false);
             if (entity != null)
             {
+                if (this.Options?.PublishEvents == true)
+                {
+                    await this.mediator.Publish(new EntityDeleteDomainEvent<T>(entity)).ConfigureAwait(false);
+                }
+
                 await this.provider.DeleteAsync(id as string).ConfigureAwait(false);
+
                 if (this.Options?.PublishEvents == true)
                 {
                     await this.mediator.Publish(new EntityDeletedDomainEvent<T>(entity)).ConfigureAwait(false);

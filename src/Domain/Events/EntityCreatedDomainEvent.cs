@@ -1,9 +1,9 @@
 ﻿namespace Naos.Core.Domain
 {
-    public class EntityUpdatedDomainEvent<T> : IDomainEvent
+    public class EntityCreatedDomainEvent<T> : IDomainEvent
         where T : class, IEntity
     {
-        public EntityUpdatedDomainEvent(T entity)
+        public EntityCreatedDomainEvent(T entity)
         {
             this.Entity = entity;
         }

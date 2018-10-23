@@ -7,7 +7,7 @@
     /// A base class for all domain entities (layer supertype)
     /// </summary>
     /// <typeparam name="TId">The type of the identifier.</typeparam>
-    public abstract class Entity<TId> : IEntity<TId>, IStateEntity, IDiscriminatedEntity
+    public abstract class Entity<TId> : IEntity<TId>, IStateEntity, IDiscriminatedEntity, IVersionIdentified
     {
         /// <summary>
         /// Gets or sets the entity id.
@@ -47,6 +47,14 @@
         /// The state.
         /// </value>
         public EntityState State { get; } = new EntityState();
+
+        /// <summary>
+        /// Gets the identifier for a specific version. Can be used as an ETag
+        /// </summary>
+        /// <value>
+        /// The version.
+        /// </value>
+        public string VersionIdentifier { get; internal set; }
 
 #pragma warning disable S3875 // "operator==" should not be overloaded on reference types
         /// <summary>
@@ -137,5 +145,13 @@
         /// A <see cref="string" /> that represents this instance.
         /// </returns>
         public override string ToString() => $"{this.Discriminator} [Id={this.Id}]";
+
+        /// <summary>
+        /// Updates the version identifier to the current instance state
+        /// </summary>
+        public void UpdateVersionIdentifier()
+        {
+            this.VersionIdentifier = HashAlgorithm.ComputeHash(this.Dump());
+        }
     }
 }

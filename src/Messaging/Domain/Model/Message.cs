@@ -1,9 +1,8 @@
 ﻿namespace Naos.Core.Messaging.Domain.Model
 {
     using System;
-    using Naos.Core.Domain;
 
-    public class Message : IEntity<string>, IAggregateRoot // TODO: this should not be an IEntity/IAggregateRoot (=less coupling)
+    public class Message
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Message"/> class.
@@ -20,11 +19,6 @@
         /// The message identifier.
         /// </value>
         public string Id { get; set; }
-
-        object IEntity.Id
-        {
-            get { return this.Id; }
-        }
 
         public string EntityType => this.GetType().FullName;
 

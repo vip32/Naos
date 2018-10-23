@@ -104,13 +104,26 @@
             }
 
             this.dbContext.Set<T>().Add(entity);
+
+            if (this.Options?.PublishEvents == true)
+            {
+                if (isTransient)
+                {
+                    await this.mediator.Publish(new EntityCreateDomainEvent<T>(entity)).ConfigureAwait(false);
+                }
+                else
+                {
+                    await this.mediator.Publish(new EntityUpdateDomainEvent<T>(entity)).ConfigureAwait(false);
+                }
+            }
+
             await this.dbContext.SaveChangesAsync().ConfigureAwait(false);
 
             if (this.Options?.PublishEvents == true)
             {
                 if (isTransient)
                 {
-                    await this.mediator.Publish(new EntityAddedDomainEvent<T>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityCreatedDomainEvent<T>(entity)).ConfigureAwait(false);
                 }
                 else
                 {
@@ -130,6 +143,12 @@
 
             var entity = await this.dbContext.Set<T>().FindAsync(id).ConfigureAwait(false);
             this.dbContext.Remove(entity);
+
+            if (this.Options?.PublishEvents == true)
+            {
+                await this.mediator.Publish(new EntityDeleteDomainEvent<T>(entity)).ConfigureAwait(false);
+            }
+
             await this.dbContext.SaveChangesAsync();
 
             if (this.Options?.PublishEvents == true)
