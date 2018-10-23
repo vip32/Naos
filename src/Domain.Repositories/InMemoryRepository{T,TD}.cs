@@ -54,15 +54,15 @@
 
         protected new Func<TD, bool> EnsurePredicate(ISpecification<T> specification)
         {
-            foreach(var sp in this.specificationTranslators)
+            foreach(var translator in this.specificationTranslators.NullToEmpty())
             {
-                if (sp.CanHandle(specification))
+                if (translator.CanHandle(specification))
                 {
-                    return sp.Translate(specification);
+                    return translator.Translate(specification);
                 }
             }
 
-            return null;
+            throw new NaosException($"no applicable specification translator found for {specification.GetType().PrettyName()}");
         }
 
         protected IEnumerable<T> FindAll(IEnumerable<TD> entities, IFindOptions<T> options = null)

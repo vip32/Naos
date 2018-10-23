@@ -105,9 +105,9 @@
         /// <typeparam name="TM"></typeparam>
         /// <returns></returns>
         //public string GetKey<TMessage>() => typeof(TMessage).Name;
-        public string GetKey<TM>() => typeof(TM).GetFriendlyTypeName();
+        public string GetKey<TM>() => typeof(TM).PrettyName();
 
-        private string GetKey(Type t) => t.GetFriendlyTypeName();
+        private string GetKey(Type t) => t.PrettyName();
 
         private void RaiseOnRemoved(string messageName)
         {

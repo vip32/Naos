@@ -63,7 +63,7 @@
             where TMessage : Domain.Model.Message
             where THandler : IMessageHandler<TMessage>
         {
-            var messageName = typeof(TMessage).GetFriendlyTypeName();
+            var messageName = typeof(TMessage).PrettyName();
             string ruleName = this.GetRuleName(messageName);
 
             if (!this.map.Exists<TMessage>())
@@ -108,7 +108,7 @@
                     this.logger.LogDebug($"set messageId (id={message.Id})");
                 }
 
-                var messageName = /*message.Name*/ message.GetType().GetFriendlyTypeName();
+                var messageName = /*message.Name*/ message.GetType().PrettyName();
 
                 this.logger.LogInformation("publish message (name={MessageName}, service={Service}, id={MessageId})", messageName, this.messageScope, message.Id);
                 //if (messageName.Contains("<")) // correct for generic types
@@ -140,7 +140,7 @@
             where TMessage : Domain.Model.Message
             where THandler : IMessageHandler<TMessage>
         {
-            var messageName = typeof(TMessage).GetFriendlyTypeName();
+            var messageName = typeof(TMessage).PrettyName();
             string ruleName = this.GetRuleName(messageName);
 
             this.logger.LogInformation("unsubscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType})", messageName, this.messageScope, this.filterScope, typeof(THandler).Name);

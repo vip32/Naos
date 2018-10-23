@@ -25,12 +25,12 @@
             return source.GetType() != targetType;
         }
 
-        public static string GetFriendlyTypeName(this Type source)
+        public static string PrettyName(this Type source)
         {
             if (source.IsGenericType)
             {
                 var name = source.Name.Substring(0, source.Name.IndexOf('`'));
-                var types = string.Join(",", source.GetGenericArguments().Select(t => t.GetFriendlyTypeName()));
+                var types = string.Join(",", source.GetGenericArguments().Select(t => t.PrettyName()));
                 return $"{name}<{types}>";
             }
 

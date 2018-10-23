@@ -40,8 +40,7 @@ namespace Naos.Core.UnitTests.Domain
                 mediatorMock.Object,
                 this.entities,
                 new RepositoryOptions(
-                    new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
-                new[] { new StubHasNameSpecificationTranslator() });
+                    new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())));
 
             // act
             var result = await sut.FindAllAsync().ConfigureAwait(false);
@@ -62,11 +61,11 @@ namespace Naos.Core.UnitTests.Domain
                 this.entities,
                 new RepositoryOptions(
                     new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
-                new[] { new StubHasNameSpecificationTranslator() });
+                new[] { new StubHasNameSpecificationTranslator() }); // infrastructure layer
 
             // act
             var result = await sut.FindAllAsync(
-                new StubHasNameSpecification("John", "Doe")).ConfigureAwait(false);
+                new StubHasNameSpecification("John", "Doe")).ConfigureAwait(false); // domain layer
 
             // assert
             Assert.NotNull(result);

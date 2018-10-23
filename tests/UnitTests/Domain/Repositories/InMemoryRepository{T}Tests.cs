@@ -47,7 +47,7 @@ namespace Naos.Core.UnitTests.Domain
             // assert
             var stubEntities = result as StubEntityString[] ?? result.ToArray();
             Assert.False(stubEntities.IsNullOrEmpty());
-            Assert.Equal("FirstName1", stubEntities.FirstOrDefault()?.FirstName);
+            Assert.Equal(this.entities.First().FirstName, stubEntities.FirstOrDefault()?.FirstName);
         }
 
         [Fact]
@@ -58,11 +58,11 @@ namespace Naos.Core.UnitTests.Domain
             var sut = new InMemoryRepository<StubEntityString>(mediatorMock.Object, this.entities);
 
             // act/assert
-            var result = await sut.FindAllAsync(new StubHasNameSpecification("FirstName1")).ConfigureAwait(false);
+            var result = await sut.FindAllAsync(new StubHasNameSpecification(this.entities.First().FirstName)).ConfigureAwait(false);
 
             var stubEntities = result as StubEntityString[] ?? result.ToArray();
             Assert.False(stubEntities.IsNullOrEmpty());
-            Assert.Equal("FirstName1", stubEntities.FirstOrDefault()?.FirstName);
+            Assert.Equal(this.entities.First().FirstName, stubEntities.FirstOrDefault()?.FirstName);
 
             result = await sut.FindAllAsync(new StubHasTenantSpecification(this.tenantId)).ConfigureAwait(false);
 
@@ -96,7 +96,7 @@ namespace Naos.Core.UnitTests.Domain
             var result = await sut.FindAllAsync(
                 new List<ISpecification<StubEntityString>>
                 {
-                    new StubHasNameSpecification("FirstName1"), // And
+                    new StubHasNameSpecification(this.entities.First().FirstName), // And
                     new StubHasTenantSpecification(this.tenantId)
                 }).ConfigureAwait(false);
 
@@ -107,7 +107,7 @@ namespace Naos.Core.UnitTests.Domain
             result = await sut.FindAllAsync(
                 new List<ISpecification<StubEntityString>>
                 {
-                    new StubHasNameSpecification("FirstName1"), // And
+                    new StubHasNameSpecification(this.entities.First().FirstName), // And
                     new StubHasNameSpecification("Unknown")
                 }).ConfigureAwait(false);
 
@@ -123,13 +123,13 @@ namespace Naos.Core.UnitTests.Domain
 
             // act
             var findResults = await sut.FindAllAsync(
-                new StubHasNameSpecification("FirstName1")
+                new StubHasNameSpecification(this.entities.First().FirstName)
                 .And(new StubHasTenantSpecification(this.tenantId))).ConfigureAwait(false);
 
             // assert
             var findResultsArray = findResults as StubEntityString[] ?? findResults.ToArray();
             Assert.False(findResultsArray.IsNullOrEmpty());
-            Assert.Equal("FirstName1", findResultsArray.FirstOrDefault()?.FirstName);
+            Assert.Equal(this.entities.First().FirstName, findResultsArray.FirstOrDefault()?.FirstName);
         }
 
         [Fact]
@@ -162,13 +162,13 @@ namespace Naos.Core.UnitTests.Domain
             // act
             var findResults = await sut.FindAllAsync(
                 new StubHasTenantSpecification(this.tenantId)
-                .And(new StubHasNameSpecification("FirstName1")
+                .And(new StubHasNameSpecification(this.entities.First().FirstName)
                     .Not())).ConfigureAwait(false);
 
             // assert
             var findResultsArray = findResults as StubEntityString[] ?? findResults.ToArray();
             Assert.False(findResultsArray.IsNullOrEmpty());
-            Assert.DoesNotContain(findResultsArray, f => f.FirstName == "FirstName1");
+            Assert.DoesNotContain(findResultsArray, f => f.FirstName == this.entities.First().FirstName);
         }
 
         [Fact]
@@ -179,15 +179,16 @@ namespace Naos.Core.UnitTests.Domain
             var sut = new InMemoryRepository<StubEntityString>(mediatorMock.Object, this.entities);
 
             // act/assert
-            var result = await sut.FindOneAsync("Id1").ConfigureAwait(false);
+            var id = this.entities.First().Id;
+            var result = await sut.FindOneAsync(id).ConfigureAwait(false);
 
             Assert.NotNull(result);
-            Assert.Equal("FirstName1", result.FirstName);
+            Assert.Equal(this.entities.First().FirstName, result.FirstName);
 
-            result = await sut.FindAsync("Id1", this.tenantId).ConfigureAwait(false);
+            result = await sut.FindAsync(this.entities.First().Id, this.tenantId).ConfigureAwait(false);
 
             Assert.NotNull(result);
-            Assert.Equal("FirstName1", result.FirstName);
+            Assert.Equal(this.entities.First().FirstName, result.FirstName);
         }
 
         [Fact]
@@ -201,12 +202,12 @@ namespace Naos.Core.UnitTests.Domain
             var result = await sut.FindOneAsync(this.guidEntities.First().Id).ConfigureAwait(false);
 
             Assert.NotNull(result);
-            Assert.Equal("FirstName1", result.FirstName);
+            Assert.Equal(this.entities.First().FirstName, result.FirstName);
 
             result = await sut.FindAsync(this.guidEntities.First().Id, this.tenantId).ConfigureAwait(false);
 
             Assert.NotNull(result);
-            Assert.Equal("FirstName1", result.FirstName);
+            Assert.Equal(this.entities.First().FirstName, result.FirstName);
         }
 
         [Fact]
@@ -258,8 +259,9 @@ namespace Naos.Core.UnitTests.Domain
             var sut = new InMemoryRepository<StubEntityString>(mediatorMock.Object, this.entities);
 
             // act
-            await sut.DeleteAsync("Id1").ConfigureAwait(false);
-            var entity = await sut.FindOneAsync("Id1").ConfigureAwait(false);
+            var id = this.entities.First().Id;
+            await sut.DeleteAsync(id).ConfigureAwait(false);
+            var entity = await sut.FindOneAsync(id).ConfigureAwait(false);
 
             // assert
             Assert.Null(entity);
@@ -273,9 +275,9 @@ namespace Naos.Core.UnitTests.Domain
             var sut = new InMemoryRepository<StubEntityString>(mediatorMock.Object, this.entities);
 
             // act
-            var entity = this.entities.FirstOrDefault(e => e.FirstName == "FirstName1");
+            var entity = this.entities.FirstOrDefault(e => e.FirstName == this.entities.First().FirstName);
             await sut.DeleteAsync(entity).ConfigureAwait(false);
-            entity = await sut.FindOneAsync("Id1").ConfigureAwait(false);
+            entity = await sut.FindOneAsync(entity.Id).ConfigureAwait(false);
 
             // assert
             Assert.Null(entity);
