@@ -17,11 +17,13 @@ namespace Naos.Core.UnitTests.Domain
     using Naos.Core.Domain.Specifications;
     using Xunit;
 
-    public class InMemoryRepository2Tests
+#pragma warning disable SA1649 // File name must match first type name
+    public class InMemoryRepositoryDtoTests
+#pragma warning restore SA1649 // File name must match first type name
     {
         private readonly IEnumerable<StubDto> entities;
 
-        public InMemoryRepository2Tests()
+        public InMemoryRepositoryDtoTests()
         {
             this.entities = Builder<StubDto>
                 .CreateListOfSize(20).All()
@@ -87,7 +89,7 @@ namespace Naos.Core.UnitTests.Domain
 
             public string FullName { get; set; }
 
-            public int AgeInYears { get; set; }
+            public int YearOfBirth { get; set; }
         }
 
         public class StubHasNameSpecification : Specification<StubEntity> // TODO: this should be mocked
@@ -138,13 +140,13 @@ namespace Naos.Core.UnitTests.Domain
                     c.CreateMap<StubEntity, StubDto>()
                         .ForMember(d => d.Identifier, o => o.MapFrom(s => s.Id))
                         .ForMember(d => d.FullName, o => o.MapFrom(s => $"{s.FirstName} {s.LastName}"))
-                        .ForMember(d => d.AgeInYears, o => o.MapFrom(s => s.Age));
+                        .ForMember(d => d.YearOfBirth, o => o.MapFrom(s => DateTime.UtcNow.Year - s.Age));
 
                     c.CreateMap<StubDto, StubEntity>()
                         .ForMember(d => d.Id, o => o.MapFrom(s => s.Identifier))
                         .ForMember(d => d.FirstName, o => o.MapFrom(s => s.FullName.Split(' ', StringSplitOptions.None).FirstOrDefault()))
                         .ForMember(d => d.LastName, o => o.MapFrom(s => s.FullName.Split(' ', StringSplitOptions.None).LastOrDefault()))
-                        .ForMember(d => d.Age, o => o.MapFrom(s => s.AgeInYears));
+                        .ForMember(d => d.Age, o => o.MapFrom(s => DateTime.UtcNow.Year - s.YearOfBirth));
                 }).CreateMapper();
             }
         }

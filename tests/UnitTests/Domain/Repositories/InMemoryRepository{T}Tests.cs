@@ -15,7 +15,9 @@ namespace Naos.Core.UnitTests.Domain
     using Naos.Core.Domain.Specifications;
     using Xunit;
 
+#pragma warning disable SA1649 // File name must match first type name
     public class InMemoryRepositoryTests
+#pragma warning restore SA1649 // File name must match first type name
     {
         private readonly string tenantId = "TestTenant";
         private readonly IEnumerable<StubEntityString> entities;
@@ -139,15 +141,15 @@ namespace Naos.Core.UnitTests.Domain
 
             // act
             var findResults = await sut.FindAllAsync(
-                new StubHasNameSpecification("FirstName1")
-                .Or(new StubHasNameSpecification("FirstName2"))).ConfigureAwait(false);
+                new StubHasNameSpecification(this.entities.First().FirstName)
+                .Or(new StubHasNameSpecification(this.entities.Last().FirstName))).ConfigureAwait(false);
 
             // assert
             var findResultsArray = findResults as StubEntityString[] ?? findResults.ToArray();
             Assert.False(findResultsArray.IsNullOrEmpty());
             Assert.True(findResultsArray.Count() == 2);
-            Assert.Contains(findResultsArray, f => f.FirstName == "FirstName1");
-            Assert.Contains(findResultsArray, f => f.FirstName == "FirstName2");
+            Assert.Contains(findResultsArray, f => f.FirstName == this.entities.First().FirstName);
+            Assert.Contains(findResultsArray, f => f.FirstName == this.entities.Last().FirstName);
         }
 
         [Fact]
