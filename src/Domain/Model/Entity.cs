@@ -4,10 +4,10 @@
     using Newtonsoft.Json;
 
     /// <summary>
-    /// A base class for  all entities
+    /// A base class for all domain entities (layer supertype)
     /// </summary>
     /// <typeparam name="TId">The type of the identifier.</typeparam>
-    public abstract class Entity<TId> : IEntity<TId>, IStateEntity
+    public abstract class Entity<TId> : IEntity<TId>, IStateEntity, IDiscriminatedEntity
     {
         /// <summary>
         /// Gets or sets the entity id.
@@ -38,7 +38,7 @@
         /// The type of the entity.
         /// </value>
         //[JsonProperty(PropertyName = "_et")]
-        public string EntityType => this.GetType().FullName;
+        public string Discriminator => this.GetType().FullName;
 
         /// <summary>
         /// Gets or sets the state for this instance.
@@ -136,6 +136,6 @@
         /// <returns>
         /// A <see cref="string" /> that represents this instance.
         /// </returns>
-        public override string ToString() => $"{this.EntityType} [Id={this.Id}]";
+        public override string ToString() => $"{this.Discriminator} [Id={this.Id}]";
     }
 }

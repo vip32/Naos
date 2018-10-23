@@ -16,7 +16,7 @@
     using Newtonsoft.Json;
 
     public class CosmosDbSqlProvider<T> : ICosmosDbSqlProvider<T>
-        where T : class, IEntity
+        where T : class, IEntity, IDiscriminatedEntity
     {
         private readonly IDocumentClient client;
         private readonly string databaseId;
@@ -335,7 +335,7 @@
                 await this.GetCollectionUriAsync().ConfigureAwait(false),
                 new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned })
                 .WhereExpression(expression)
-                .WhereExpressionIf(this.isMasterCollection, e => e.EntityType == typeof(T).FullName)
+                .WhereExpressionIf(this.isMasterCollection, e => e.Discriminator == typeof(T).FullName)
                 .AsEnumerable()
                 .FirstOrDefault();
         }
@@ -346,7 +346,7 @@
                 await this.GetCollectionUriAsync().ConfigureAwait(false),
                 new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned })
                 .WhereExpression(expression)
-                .WhereExpressionIf(this.isMasterCollection, e => e.EntityType == typeof(T).FullName)
+                .WhereExpressionIf(this.isMasterCollection, e => e.Discriminator == typeof(T).FullName)
                 .AsEnumerable()
                 .LastOrDefault();
         }
@@ -366,7 +366,7 @@
                 await this.GetCollectionUriAsync().ConfigureAwait(false),
                     new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned })
                 .WhereExpression(expression)
-                .WhereExpression(e => e.EntityType == typeof(T).FullName)
+                .WhereExpression(e => e.Discriminator == typeof(T).FullName)
                 .AsEnumerable();
         }
 
@@ -384,7 +384,7 @@
                     (await this.documentCollection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount, EnableCrossPartitionQuery = this.isPartitioned })
                     .WhereExpression(expression)
                     .WhereExpressions(expressions)
-                    .WhereExpressionIf(this.isMasterCollection, e => e.EntityType == typeof(T).FullName)
+                    .WhereExpressionIf(this.isMasterCollection, e => e.Discriminator == typeof(T).FullName)
                     .OrderByDescending(orderExpression)
                     .AsEnumerable();
             }
@@ -393,7 +393,7 @@
                 (await this.documentCollection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount, EnableCrossPartitionQuery = this.isPartitioned })
                     .WhereExpression(expression)
                     .WhereExpressions(expressions)
-                    .WhereExpressionIf(this.isMasterCollection, e => e.EntityType == typeof(T).FullName)
+                    .WhereExpressionIf(this.isMasterCollection, e => e.Discriminator == typeof(T).FullName)
                     .OrderBy(orderExpression)
                     .AsEnumerable();
         }
@@ -407,7 +407,7 @@
             return this.client.CreateDocumentQuery<T>(
                 (await this.documentCollection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount, EnableCrossPartitionQuery = this.isPartitioned })
                 .WhereExpression(expression)
-                .WhereExpressionIf(this.isMasterCollection, e => e.EntityType == typeof(T).FullName)
+                .WhereExpressionIf(this.isMasterCollection, e => e.Discriminator == typeof(T).FullName)
                 .Select(selector)
                 .OrderBy(orderExpression)
                 .AsEnumerable();
@@ -416,7 +416,7 @@
         public async Task<IQueryable<T>> QueryAsync(int maxItemCount = 100)
         {
             return this.client.CreateDocumentQuery<T>((await this.documentCollection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount, EnableCrossPartitionQuery = this.isPartitioned })
-                .WhereExpressionIf(this.isMasterCollection, e => e.EntityType == typeof(T).FullName);
+                .WhereExpressionIf(this.isMasterCollection, e => e.Discriminator == typeof(T).FullName);
         }
 
         public async Task<IEnumerable<T>> QueryAsync(string query)

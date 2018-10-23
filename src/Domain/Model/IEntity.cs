@@ -4,7 +4,7 @@
     {
         object Id { get; }
 
-        string EntityType { get; }
+        //string EntityType { get; }
     }
 
     public interface IEntity<TId> : IEntity

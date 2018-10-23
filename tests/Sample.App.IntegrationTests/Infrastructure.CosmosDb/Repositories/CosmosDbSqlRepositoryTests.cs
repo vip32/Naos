@@ -27,8 +27,8 @@
                         client: CosmosDbClient.Create(AppConfiguration.CosmosDb.ServiceEndpointUri, AppConfiguration.CosmosDb.AuthKeyOrResourceToken),
                         databaseId: AppConfiguration.CosmosDb.DatabaseId,
                         collectionNameFactory: () => AppConfiguration.CosmosDb.CollectionName,
-                        collectionOfferThroughput: AppConfiguration.CosmosDb.CollectionOfferThroughput,
                         collectionPartitionKey: AppConfiguration.CosmosDb.CollectionPartitionKey,
+                        collectionOfferThroughput: AppConfiguration.CosmosDb.CollectionOfferThroughput,
                         isMasterCollection: AppConfiguration.CosmosDb.IsMasterCollection));
         }
 
