@@ -18,14 +18,14 @@
 
         public static async Task Main(string[] args)
         {
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Information()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-                .Enrich.FromLogContext()
-                .Enrich.WithProperty("Service", AppDomain.CurrentDomain.FriendlyName)
-                .WriteTo.Debug()
-                .WriteTo.LiterateConsole(/*outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss}|{Level} => {CorrelationId} => {Service}::{SourceContext}{NewLine}    {Message}{NewLine}{Exception}"*/)
-                .CreateLogger();
+            //Log.Logger = new LoggerConfiguration()
+            //    .MinimumLevel.Information()
+            //    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+            //    .Enrich.FromLogContext()
+            //    .Enrich.WithProperty("Service", AppDomain.CurrentDomain.FriendlyName)
+            //    .WriteTo.Debug()
+            //    .WriteTo.LiterateConsole(/*outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss}|{Level} => {CorrelationId} => {Service}::{SourceContext}{NewLine}    {Message}{NewLine}{Exception}"*/)
+            //    .CreateLogger();
 
             try
             {
@@ -38,7 +38,7 @@
                     })
                     .ConfigureServices((context, services) =>
                     {
-                        string[] capabilities = { $"{AppDomain.CurrentDomain.FriendlyName}-A", $"{AppDomain.CurrentDomain.FriendlyName}-B", $"{AppDomain.CurrentDomain.FriendlyName}-C" };
+                        //string[] capabilities = { $"{AppDomain.CurrentDomain.FriendlyName}-A", $"{AppDomain.CurrentDomain.FriendlyName}-B", $"{AppDomain.CurrentDomain.FriendlyName}-C" };
 
                         //services.AddOptions();
                         services.AddSingleton<IHostedService, PublishHostedService>();
@@ -48,16 +48,17 @@
                         //services.AddScoped(typeof(EntityMessageHandler<>));
                         //services.AddScoped(typeof(StubEntityMessageHandler));
 
-                        container
-                            .BuildNaosOperations()
-                            .BuildNaosMessaging(
-                                context.Configuration,
-                                subscriptionName: capabilities[new Random().Next(0, capabilities.Length)],
-                                assemblies: new[] { typeof(StubEntityMessageHandler).Assembly });
+                        //container
+                        //    .BuildNaosOperations()
+                        //    .BuildNaosMessaging(
+                        //        context.Configuration,
+                        //        subscriptionName: capabilities[new Random().Next(0, capabilities.Length)],
+                        //        assemblies: new[] { typeof(StubEntityMessageHandler).Assembly })
+                        //    .Register<IHostedService, PublishHostedService>();
 
-                        services.EnableSimpleInjectorCrossWiring(container);
-                    })
-                    .UseSerilog();
+                        //services.EnableSimpleInjectorCrossWiring(container);
+                    });
+                    //.UseSerilog();
 
                 await builder.RunConsoleAsync();
             }
