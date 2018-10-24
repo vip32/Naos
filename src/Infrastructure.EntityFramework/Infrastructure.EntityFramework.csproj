@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.Infrastructure.SqlServer</AssemblyName>
-    <RootNamespace>Naos.Core.Infrastructure.SqlServer</RootNamespace>
+    <AssemblyName>Naos.Core.Infrastructure.EntityFramework</AssemblyName>
+    <RootNamespace>Naos.Core.Infrastructure.EntityFramework</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

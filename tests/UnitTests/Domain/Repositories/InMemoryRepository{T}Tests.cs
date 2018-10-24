@@ -1,4 +1,4 @@
-namespace Naos.Core.UnitTests.Domain
+namespace Naos.Core.UnitTests.Domain.Repositories
 {
     using System;
     using System.Collections.Generic;

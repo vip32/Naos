@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Infrastructure.SqlServer
+﻿namespace Naos.Core.Infrastructure.EntityFramework
 {
     using System.Collections.Generic;
     using System.Linq;

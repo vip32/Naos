@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.App.IntegrationTests.Infrastructure.CosmosDb
+﻿namespace Naos.Sample.App.IntegrationTests.Infrastructure.Azure.CosmosDb
 {
     using System;
     using System.Collections.Generic;

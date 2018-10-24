@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.UnitTests.Infrastructure.SqlServer.Repositories
+﻿namespace Naos.Core.UnitTests.Infrastructure.EntityFramework
 {
     using System;
     using System.Linq;
@@ -11,7 +11,7 @@
     using Naos.Core.Domain;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Domain.Specifications;
-    using Naos.Core.Infrastructure.SqlServer;
+    using Naos.Core.Infrastructure.EntityFramework;
     using Xunit;
 
     public class EntityFrameworkRepositoryTests

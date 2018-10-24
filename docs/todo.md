@@ -5,6 +5,7 @@ log scopes https://www.initpals.com/net-core/scoped-logging-using-microsoft-logg
 xunit configuration https://weblog.west-wind.com/posts/2018/Feb/18/Accessing-Configuration-in-NET-Core-Test-Projects
 criteria > linq https://blogs.msdn.microsoft.com/mattwar/2007/07/31/linq-building-an-iqueryable-provider-part-ii/
 validation : entity.Validate(handler)
+ef sqlite + inmemory : https://www.thereformedprogrammer.net/using-in-memory-databases-for-unit-testing-ef-core-applications/
 
 http://localhost:15672/ (rabbitmq)
 https://localhost:44347/api/values (billing)

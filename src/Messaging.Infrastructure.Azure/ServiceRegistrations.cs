@@ -34,7 +34,7 @@
                     }
 
                     // TODO: otherwise register rabittmq
-                    throw new NotImplementedException("no message bus implementation is registered");
+                    throw new NaosException("no message bus implementation is registered");
                 })
                 .AddSingleton<IMessageBus, ServiceBusMessageBus>(sp =>
                 {

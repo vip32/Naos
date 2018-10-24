@@ -25,6 +25,35 @@
         public ServiceBusProvider(
             ILogger<ServiceBusProvider> logger,
             AzureCredentials credentials,
+            ServiceBusConfiguration configuration)
+        {
+            EnsureArg.IsNotNull(logger, nameof(logger));
+            EnsureArg.IsNotNull(credentials, nameof(credentials));
+            EnsureArg.IsNotNull(configuration, nameof(configuration));
+            EnsureArg.IsNotNullOrEmpty(configuration.SubscriptionId, nameof(configuration.SubscriptionId));
+            EnsureArg.IsNotNullOrEmpty(configuration.ConnectionString, nameof(configuration.ConnectionString));
+            EnsureArg.IsNotNullOrEmpty(configuration.ResourceGroup, nameof(configuration.ResourceGroup));
+            EnsureArg.IsNotNullOrEmpty(configuration.NamespaceName, nameof(configuration.NamespaceName));
+            EnsureArg.IsNotNullOrEmpty(configuration.EntityPath, nameof(configuration.EntityPath));
+
+            this.logger = logger;
+            this.ConnectionStringBuilder = new ServiceBusConnectionStringBuilder(configuration.ConnectionString)
+            {
+                EntityPath = configuration.EntityPath
+            };
+            var serviceBusManager = ServiceBusManager.Authenticate(credentials, configuration.SubscriptionId);
+            this.serviceBusNamespace = serviceBusManager.Namespaces.GetByResourceGroup(configuration.ResourceGroup, configuration.NamespaceName);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ServiceBusProvider" /> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="credentials">The credentials.</param>
+        /// <param name="configuration">The configuration.</param>
+        public ServiceBusProvider(
+            ILogger<ServiceBusProvider> logger,
+            AzureCredentials credentials,
             IOptions<ServiceBusConfiguration> configuration)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
