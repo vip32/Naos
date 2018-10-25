@@ -14,7 +14,7 @@
 
     public static class ContainerExtension
     {
-        public static Container BuildNaosMessaging(
+        public static Container AddNaosMessaging(
             this Container container,
             IConfiguration configuration,
             string topicName = null,

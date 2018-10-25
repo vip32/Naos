@@ -110,11 +110,7 @@
 
                 var messageName = /*message.Name*/ message.GetType().PrettyName();
 
-                this.logger.LogInformation("publish message (name={MessageName}, service={Service}, id={MessageId})", messageName, this.messageScope, message.Id);
-                //if (messageName.Contains("<")) // correct for generic types
-                //{
-                //    messageName = message.GetType().Name;
-                //}
+                this.logger.LogInformation("publish message (name={MessageName}, id={MessageId}, service={Service})", messageName, message.Id, this.messageScope);
 
                 // TODO: really need non-async Result?
                 var serviceBusMessage = new Microsoft.Azure.ServiceBus.Message
@@ -222,9 +218,6 @@
                     {
                         var messageOrigin = serviceBusMessage.UserProperties.ContainsKey("Origin") ? serviceBusMessage.UserProperties["Origin"] as string : string.Empty;
 
-                        this.logger.LogInformation("process message (name={MessageName}, service={Service}, id={MessageId}, origin={MessageOrigin})",
-                            serviceBusMessage.Label, this.messageScope, jsonMessage.AsJToken().GetStringPropertyByToken("id"), messageOrigin);
-
                         // map some message properties to the typed message
                         var message = jsonMessage as Domain.Model.Message;
                         if (message != null)
@@ -232,6 +225,9 @@
                             //message.CorrelationId = jsonMessage.AsJToken().GetStringPropertyByToken("CorrelationId");
                             message.Origin = messageOrigin;
                         }
+
+                        this.logger.LogInformation("process message (name={MessageName}, id={MessageId}, service={Service}, origin={MessageOrigin})",
+                            serviceBusMessage.Label, message?.Id, this.messageScope, messageOrigin);
 
                         // construct the handler by using the DI container
                         var handler = this.handlerFactory.Create(subscription.HandlerType); // should not be null, did you forget to register your generic handler (EntityMessageHandler<T>)

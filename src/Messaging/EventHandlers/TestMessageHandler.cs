@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
 
     public class TestMessageHandler : IMessageHandler<TestMessage>
     {
@@ -21,7 +22,7 @@
         {
             using (this.logger.BeginScope("{CorrelationId}", message.CorrelationId))
             {
-                this.logger.LogInformation("handle  message (id={MessageId}, origin={MessageOrigin}) " + message.Data, message.Id, message.Origin);
+                this.logger.LogInformation("handle  message (name={MessageName}, id={MessageId}, origin={MessageOrigin}) " + message.Data, message.GetType().PrettyName(), message.Id, message.Origin);
 
                 return Task.CompletedTask;
             }
@@ -48,7 +49,7 @@
         {
             using (this.logger.BeginScope("{CorrelationId}", message.CorrelationId))
             {
-                this.logger.LogInformation("handle  message (id={MessageId}, origin={MessageOrigin}) " + message.Data, message.Id, message.Origin);
+                this.logger.LogInformation("handle  message (name={MessageName}, id={MessageId}, origin={MessageOrigin}) " + message.Data, message.GetType().PrettyName(), message.Id, message.Origin);
 
                 return Task.CompletedTask;
             }

@@ -8,7 +8,7 @@
 
     public static class ContainerExtension
     {
-        public static Container BuildNaosOperations(this Container container)
+        public static Container AddNaosOperations(this Container container)
         {
             container.Register(ConfigureLogger, Lifestyle.Singleton);
             container.Register(typeof(ILogger<>), typeof(LoggingAdapter<>));

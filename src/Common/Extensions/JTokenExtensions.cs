@@ -32,7 +32,7 @@
                 TypeNameHandling = TypeNameHandling.All,
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
                 NullValueHandling = NullValueHandling.Ignore,
-                ContractResolver = new DefaultContractResolver
+                ContractResolver = new CamelCasePropertyNamesContractResolver
                 {
                     IgnoreSerializableInterface = false,
                     IgnoreSerializableAttribute = false

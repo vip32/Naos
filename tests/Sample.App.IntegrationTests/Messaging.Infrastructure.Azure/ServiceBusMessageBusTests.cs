@@ -16,12 +16,12 @@
         public ServiceBusMessageBusTests()
         {
             this.container = new Container()
-                .BuildNaosOperations()
-                .BuildNaosMessaging(
+                .AddNaosOperations()
+                .AddNaosMessaging(
                     NaosConfigurationFactory.CreateRoot(),
                     AppDomain.CurrentDomain.FriendlyName,
                     assemblies: new[] { typeof(IMessageBus).Assembly, typeof(ServiceBusMessageBusTests).Assembly });
-            //this.container.Verify();
+            this.container.Verify();
         }
 
         [Fact]

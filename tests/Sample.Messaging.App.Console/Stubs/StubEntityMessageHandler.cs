@@ -2,8 +2,8 @@
 {
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
     using Naos.Core.Messaging;
-    using Serilog.Context;
 
     public class StubEntityMessageHandler : EntityMessageHandler<StubEntity>
     {
@@ -12,11 +12,11 @@
         {
         }
 
-        public override Task Handle(EntityMessage<StubEntity> @event)
+        public override Task Handle(EntityMessage<StubEntity> message)
         {
-            using (LogContext.PushProperty("CorrelationId", @event.CorrelationId))
+            using (this.logger.BeginScope("{CorrelationId}", message.CorrelationId))
             {
-                this.logger.LogInformation("handle  message (id={EventId}, origin={EventOrigin}) " + $"{@event.Entity.FirstName} {@event.Entity.LastName}", @event.Id, @event.Origin);
+                this.logger.LogInformation("handle  message (name={MessageName}, id={EventId}, origin={EventOrigin}) " + $"{message.Entity.FirstName} {message.Entity.LastName}", message.GetType().PrettyName(), message.Id, message.Origin);
 
                 return Task.CompletedTask;
             }

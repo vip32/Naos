@@ -1,7 +1,6 @@
 ﻿namespace Naos.Core.Domain.Specifications
 {
     using System;
-    using System.Linq.Expressions;
 
     public interface ISpecificationTranslator<T, TD>
     {

@@ -2,10 +2,11 @@
 {
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
     using Naos.Core.Domain;
 
     public class EntityMessageHandler<T> : IMessageHandler<EntityMessage<T>>
-        where T : Entity<string>
+        where T : class, IEntity
     {
         protected readonly ILogger<EntityMessageHandler<T>> logger;
 
@@ -23,7 +24,7 @@
         {
             using (this.logger.BeginScope("{CorrelationId}", message.CorrelationId))
             {
-                this.logger.LogInformation("handle  message (id={MessageId}, origin={MessageOrigin}) " + message.Entity.GetType().Name, message.Id, message.Origin);
+                this.logger.LogInformation("handle  message (name={MessageName}, id={MessageId}, origin={MessageOrigin}) " + message.Entity.GetType().Name, message.GetType().PrettyName(), message.Id, message.Origin);
 
                 return Task.CompletedTask;
             }

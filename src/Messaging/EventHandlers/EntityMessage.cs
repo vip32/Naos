@@ -4,7 +4,7 @@
     using Naos.Core.Domain;
 
     public class EntityMessage<T> : Message
-        where T : Entity<string>
+        where T : class, IEntity
     {
         /// <summary>
         /// Gets or sets the domain entity (based on string id).
