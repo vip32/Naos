@@ -21,15 +21,11 @@
                 allAssemblies.AddRange(assemblies);
             }
 
-            var rabitMQConfiguration = configuration.GetSection(section).Get<RabbitMQConfiguration>();
-
-            container.RegisterInstance(rabitMQConfiguration);
             container.Register(typeof(IMessageHandler<>), allAssemblies.DistinctBy(a => a.FullName)); // register all message handlers
-
             container.RegisterSingleton<IMessageBus>(() =>
                 new RabbitMQMessageBus(
                         container.GetInstance<ILogger<RabbitMQMessageBus>>(),
-                        rabitMQConfiguration,
+                        configuration.GetSection(section).Get<RabbitMQConfiguration>(),
                         new SimpleInjectorMessageHandlerFactory(container)));
 
             return container;

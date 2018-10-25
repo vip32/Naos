@@ -5,7 +5,8 @@
     using Naos.Core.Domain;
     using Newtonsoft.Json;
 
-    public class Message : IEntity<string>, IDiscriminatedEntity
+    public class Message
+        : IEntity<string>, IDiscriminatedEntity, IAggregateRoot
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Message"/> class.

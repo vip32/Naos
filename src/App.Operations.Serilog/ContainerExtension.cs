@@ -8,19 +8,35 @@
 
     public static class ContainerExtension
     {
-        public static Container AddNaosOperations(this Container container)
+        private static LoggerConfiguration internalLoggerConfiguration;
+
+        public static Container AddNaosLogging(this Container container, LoggerConfiguration loggerConfiguration = null)
         {
-            container.Register(ConfigureLogger, Lifestyle.Singleton);
+            internalLoggerConfiguration = loggerConfiguration;
+            container.Register(CreateLoggerFactory, Lifestyle.Singleton);
             container.Register(typeof(ILogger<>), typeof(LoggingAdapter<>));
 
             return container;
         }
 
-        private static ILoggerFactory ConfigureLogger()
+        private static ILoggerFactory CreateLoggerFactory()
         {
-            LoggerFactory factory = new LoggerFactory();
+            if (internalLoggerConfiguration == null)
+            {
+                ConfigureLogger();
+            }
+            else
+            {
+                Log.Logger = internalLoggerConfiguration.CreateLogger();
+            }
 
-            // serilog provider configuration
+            var factory = new LoggerFactory();
+            factory.AddSerilog(Log.Logger);
+            return factory;
+        }
+
+        private static void ConfigureLogger()
+        {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
@@ -28,11 +44,15 @@
                 .Enrich.WithProperty("Service", AppDomain.CurrentDomain.FriendlyName)
                 .WriteTo.Debug()
                 .WriteTo.LiterateConsole(/*outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss}|{Level} => {CorrelationId} => {Service}::{SourceContext}{NewLine}    {Message}{NewLine}{Exception}"*/)
+                //.WriteTo.AzureDocumentDB(
+                //    uri,
+                //    authkey,
+                //    dbname,
+                //    restrictedToMinimumLevel: LogEventLevel.Debug,
+                //    storeTimestampInUtc: true,
+                //    collectionName: "LogEvent",
+                //    timeToLive: ttl)
                 .CreateLogger();
-
-            factory.AddSerilog(Log.Logger);
-
-            return factory;
         }
     }
 }

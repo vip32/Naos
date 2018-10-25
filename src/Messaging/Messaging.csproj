@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Domain\Specifications\" />
+  </ItemGroup>
+
 </Project>

@@ -16,7 +16,7 @@
         public ServiceBusMessageBusTests()
         {
             this.container = new Container()
-                .AddNaosOperations()
+                .AddNaosLogging()
                 .AddNaosMessaging(
                     NaosConfigurationFactory.CreateRoot(),
                     AppDomain.CurrentDomain.FriendlyName,

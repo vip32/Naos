@@ -23,7 +23,7 @@
             var configuration = NaosConfigurationFactory.CreateRoot();
             string[] capabilities = { $"{AppDomain.CurrentDomain.FriendlyName}-A", $"{AppDomain.CurrentDomain.FriendlyName}-B", $"{AppDomain.CurrentDomain.FriendlyName}-C" };
             this.container
-                .AddNaosOperations()
+                .AddNaosLogging()
                 .AddNaosMessaging(
                     configuration,
                     subscriptionName: capabilities[new Random().Next(0, capabilities.Length)],

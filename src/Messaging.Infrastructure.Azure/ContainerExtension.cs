@@ -28,13 +28,12 @@
                 allAssemblies.AddRange(assemblies);
             }
 
-            var serviceBusConfiguration = configuration.GetSection(section).Get<ServiceBusConfiguration>();
-            serviceBusConfiguration.EntityPath = topicName ?? $"{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}-Naos.Messaging";
-
-            container.RegisterInstance(serviceBusConfiguration);
             container.Register(typeof(IMessageHandler<>), allAssemblies.DistinctBy(a => a.FullName)); // register all message handlers
             container.RegisterSingleton<IServiceBusProvider>(() =>
             {
+                var serviceBusConfiguration = configuration.GetSection(section).Get<ServiceBusConfiguration>();
+                serviceBusConfiguration.EntityPath = topicName ?? $"{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}-Naos.Messaging";
+
                 if (serviceBusConfiguration?.Enabled == true)
                 {
                     return new ServiceBusProvider(
