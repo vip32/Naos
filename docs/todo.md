@@ -21,3 +21,18 @@ ENV-naos-billing
 ENV-naos-billing-db
 ENV-naos-ordering
 ENV-naos-ordering-db
+
+=== MODULES === Operations
+
+
+Operations.App 
+ \Domain (Logevents, Repo, ContainerExtension)
+Operations.App.Serilog (serilog log setup + loggerfactory for .netcore ILogger)
+Operations.App.Web (ApiController + html dashboard)
+Operations.Infrastructure.Azure.CosmosDb
+ \Repositories (logevents repo)
+
+=== MODULES === Messaging
+Messaging
+Messaging.Infrastructure.Azure
+Messaging.Infrastructure.RabitMQ

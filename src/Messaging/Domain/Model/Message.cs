@@ -1,8 +1,11 @@
 ﻿namespace Naos.Core.Messaging.Domain.Model
 {
     using System;
+    using Naos.Core.Common;
+    using Naos.Core.Domain;
+    using Newtonsoft.Json;
 
-    public class Message
+    public class Message : IEntity<string>, IDiscriminatedEntity
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Message"/> class.
@@ -20,7 +23,19 @@
         /// </value>
         public string Id { get; set; }
 
-        public string EntityType => this.GetType().FullName;
+        [JsonProperty(PropertyName = "id")]
+        object IEntity.Id
+        {
+            get { return this.Id; }
+        }
+
+        /// <summary>
+        /// Gets the type of the entity (discriminator).
+        /// </summary>
+        /// <value>
+        /// The type of the entity.
+        /// </value>
+        public string Discriminator => this.GetType().FullName;
 
         /// <summary>
         /// Gets or sets the correlation identifier.
@@ -45,5 +60,13 @@
         /// The status.
         /// </value>
         public MessageStatus Status { get; set; }
+
+        /// <summary>
+        /// Determines whether this instance is transient (not persisted).
+        /// </summary>
+        /// <returns>
+        /// <c>true</c> if this instance is transient; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsTransient() => this.Id.IsDefault();
     }
 }
