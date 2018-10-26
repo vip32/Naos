@@ -7,11 +7,11 @@
     using FizzWare.NBuilder;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
-    using Moq;
     using Naos.Core.Domain;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Domain.Specifications;
     using Naos.Core.Infrastructure.EntityFramework;
+    using NSubstitute;
     using Xunit;
 
     public class EntityFrameworkRepositoryTests
@@ -23,8 +23,8 @@
             {
                 // arrange
                 this.SeedData(context);
-                var mediatorMock = new Mock<IMediator>();
-                var sut = new EntityFrameworkRepository<StubEntity>(mediatorMock.Object, context);
+                var mediator = Substitute.For<IMediator>();
+                var sut = new EntityFrameworkRepository<StubEntity>(mediator, context);
 
                 // act
                 var findResults = sut.FindAllAsync().Result;
@@ -42,8 +42,8 @@
             {
                 // arrange
                 this.SeedData(context);
-                var mediatorMock = new Mock<IMediator>();
-                var sut = new EntityFrameworkRepository<StubEntity>(mediatorMock.Object, context);
+                var mediator = Substitute.For<IMediator>();
+                var sut = new EntityFrameworkRepository<StubEntity>(mediator, context);
 
                 // act
                 var findResultsWithSpecification = sut.FindAllAsync(new StubHasTenantSpecification("TestTenant")).Result;
@@ -71,8 +71,8 @@
             {
                 // arrange
                 this.SeedData(context);
-                var mediatorMock = new Mock<IMediator>();
-                var sut = new EntityFrameworkRepository<StubEntity>(mediatorMock.Object, context);
+                var mediator = Substitute.For<IMediator>();
+                var sut = new EntityFrameworkRepository<StubEntity>(mediator, context);
 
                 // act
                 var findResults = sut.FindAllAsync(
@@ -92,8 +92,8 @@
             {
                 // arrange
                 this.SeedData(context);
-                var mediatorMock = new Mock<IMediator>();
-                var sut = new EntityFrameworkRepository<StubEntity>(mediatorMock.Object, context);
+                var mediator = Substitute.For<IMediator>();
+                var sut = new EntityFrameworkRepository<StubEntity>(mediator, context);
 
                 // act
                 var findResults = sut.FindAllAsync(
@@ -115,8 +115,8 @@
             {
                 // arrange
                 this.SeedData(context);
-                var mediatorMock = new Mock<IMediator>();
-                var sut = new EntityFrameworkRepository<StubEntity>(mediatorMock.Object, context);
+                var mediator = Substitute.For<IMediator>();
+                var sut = new EntityFrameworkRepository<StubEntity>(mediator, context);
 
                 // act
                 var findResults = sut.FindAllAsync(
@@ -138,8 +138,8 @@
             {
                 // arrange
                 this.SeedData(context);
-                var mediatorMock = new Mock<IMediator>();
-                var sut = new EntityFrameworkRepository<StubEntity>(mediatorMock.Object, context);
+                var mediator = Substitute.For<IMediator>();
+                var sut = new EntityFrameworkRepository<StubEntity>(mediator, context);
 
                 // act
                 var findResult = sut.FindOneAsync(new Guid("00000000-0000-0000-0000-000000000001")).Result;
@@ -160,8 +160,8 @@
             {
                 // arrange
                 this.SeedData(context);
-                var mediatorMock = new Mock<IMediator>();
-                var sut = new EntityFrameworkRepository<StubEntity>(mediatorMock.Object, context);
+                var mediator = Substitute.For<IMediator>();
+                var sut = new EntityFrameworkRepository<StubEntity>(mediator, context);
 
                 var entity = new StubEntity
                 {
@@ -190,8 +190,8 @@
             {
                 // arrange
                 this.SeedData(context);
-                var mediatorMock = new Mock<IMediator>();
-                var sut = new EntityFrameworkRepository<StubEntity>(mediatorMock.Object, context);
+                var mediator = Substitute.For<IMediator>();
+                var sut = new EntityFrameworkRepository<StubEntity>(mediator, context);
 
                 // act
                 sut.DeleteAsync(new Guid("00000000-0000-0000-0000-000000000001")).Wait();

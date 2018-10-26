@@ -9,12 +9,12 @@ namespace Naos.Core.UnitTests.Domain.Repositories
     using EnsureThat;
     using FizzWare.NBuilder;
     using MediatR;
-    using Moq;
     using Naos.Core.Common;
     using Naos.Core.Domain;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Domain.Repositories.AutoMapper;
     using Naos.Core.Domain.Specifications;
+    using NSubstitute;
     using Xunit;
 
 #pragma warning disable SA1649 // File name must match first type name
@@ -35,9 +35,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task FindMappedEntities_Test()
         {
             // arrange
-            var mediatorMock = new Mock<IMediator>();
+            var mediator = Substitute.For<IMediator>();
             var sut = new InMemoryRepository<StubEntity, StubDto>(
-                mediatorMock.Object,
+                mediator,
                 this.entities,
                 new RepositoryOptions(
                     new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())));
@@ -55,9 +55,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task FindMappedEntitiesWithSpecification_Test()
         {
             // arrange
-            var mediatorMock = new Mock<IMediator>();
+            var mediator = Substitute.For<IMediator>();
             var sut = new InMemoryRepository<StubEntity, StubDto>(
-                mediatorMock.Object,
+                mediator,
                 this.entities,
                 new RepositoryOptions(
                     new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),

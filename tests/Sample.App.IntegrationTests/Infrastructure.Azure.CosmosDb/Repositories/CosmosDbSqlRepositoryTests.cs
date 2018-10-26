@@ -6,12 +6,12 @@
     using System.Linq.Expressions;
     using System.Threading.Tasks;
     using MediatR;
-    using Moq;
     using Naos.Core.Common;
     using Naos.Core.Domain;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Domain.Specifications;
     using Naos.Core.Infrastructure.Azure.CosmosDb;
+    using NSubstitute;
     using Xunit;
 
     public class CosmosDbSqlRepositoryTests : BaseTest
@@ -22,7 +22,7 @@
         public CosmosDbSqlRepositoryTests()
         {
             this.repository = new StubCosmosDbSqlRepository(
-                new Mock<IMediator>().Object,
+                Substitute.For<IMediator>(),
                 new CosmosDbSqlProvider<StubEntity>(
                         client: CosmosDbClient.Create(AppConfiguration.CosmosDb.ServiceEndpointUri, AppConfiguration.CosmosDb.AuthKeyOrResourceToken),
                         databaseId: AppConfiguration.CosmosDb.DatabaseId,
