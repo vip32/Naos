@@ -5,7 +5,7 @@
 
 # A mildly opiniated modern cloud service architecture blueprint & reference implementation
 
-# concepts
+# architectural concepts
 - arch style: hexagonal/onion
 - pattern: cqs https://www.dotnetcurry.com/patterns-practices/1461/command-query-separation-cqs
 - pattern: domainevents
@@ -13,7 +13,10 @@
 - pattern: repositories
 - pattern: specifications
 
-# setup
+# dev stack
+C#, .Net Core 2.x, EnsureThat, Serilog, SimpleInjector, Mediator, FluentValidation, AutoMapper, XUnit, Shouldly, NSubstitute
+
+# global setup
 - Create a key vault [^](https://docs.microsoft.com/en-us/azure/key-vault/key-vault-get-started)
 - Store key vault name in an environment variable
   - `naos:secrets:vault:name`
