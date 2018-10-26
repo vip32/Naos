@@ -3,8 +3,6 @@
 
 ![Alt text](/docs/logo.png?raw=true "Naos")
 
-# Naos
-
 # A mildly opiniated modern cloud service architecture blueprint & reference implementation
 
 # concepts
