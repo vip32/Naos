@@ -3,7 +3,7 @@
 
 ![Alt text](/docs/logo.png?raw=true "Naos")
 
-<p align="center"># A mildly opiniated modern cloud service architecture blueprint & reference implementation</p>
+<p align="center"><h2>A mildly opiniated modern cloud service architecture blueprint & reference implementation</h2></p>
 
 # architectural concepts
 - arch style: hexagonal/onion
