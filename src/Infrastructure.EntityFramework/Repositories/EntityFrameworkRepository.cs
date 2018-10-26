@@ -105,7 +105,7 @@
 
             this.dbContext.Set<T>().Add(entity);
 
-            if (this.Options?.PublishEvents == true)
+            if (this.Options?.PublishEvents != false)
             {
                 if (isTransient)
                 {
@@ -119,7 +119,7 @@
 
             await this.dbContext.SaveChangesAsync().ConfigureAwait(false);
 
-            if (this.Options?.PublishEvents == true)
+            if (this.Options?.PublishEvents != false)
             {
                 if (isTransient)
                 {
@@ -144,14 +144,14 @@
             var entity = await this.dbContext.Set<T>().FindAsync(id).ConfigureAwait(false);
             this.dbContext.Remove(entity);
 
-            if (this.Options?.PublishEvents == true)
+            if (this.Options?.PublishEvents != false)
             {
                 await this.mediator.Publish(new EntityDeleteDomainEvent<T>(entity)).ConfigureAwait(false);
             }
 
             await this.dbContext.SaveChangesAsync();
 
-            if (this.Options?.PublishEvents == true)
+            if (this.Options?.PublishEvents != false)
             {
                 await this.mediator.Publish(new EntityDeletedDomainEvent<T>(entity)).ConfigureAwait(false);
             }

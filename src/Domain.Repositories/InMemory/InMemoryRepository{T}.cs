@@ -178,7 +178,7 @@
                 entity.As<IStateEntity>().State.UpdatedDate = new DateTimeEpoch();
             }
 
-            if (this.Options?.PublishEvents == true)
+            if (this.Options?.PublishEvents != false)
             {
                 if (isTransient)
                 {
@@ -193,7 +193,7 @@
             // TODO: map to destination
             this.entities = this.entities.Concat(new[] { entity }.AsEnumerable());
 
-            if (this.Options?.PublishEvents == true)
+            if (this.Options?.PublishEvents != false)
             {
                 if (isTransient)
                 {
@@ -224,14 +224,14 @@
             var entity = this.entities.FirstOrDefault(x => x.Id.Equals(id));
             if (entity != null)
             {
-                if (this.Options?.PublishEvents == true)
+                if (this.Options?.PublishEvents != false)
                 {
                     await this.mediator.Publish(new EntityDeleteDomainEvent<T>(entity)).ConfigureAwait(false);
                 }
 
                 this.entities = this.entities.Where(x => !x.Id.Equals(entity.Id));
 
-                if (this.Options?.PublishEvents == true)
+                if (this.Options?.PublishEvents != false)
                 {
                     await this.mediator.Publish(new EntityDeletedDomainEvent<T>(entity)).ConfigureAwait(false);
                 }
@@ -252,7 +252,7 @@
             }
 
             this.entities = this.entities.Where(x => !x.Id.Equals(entity.Id));
-            if (this.Options?.PublishEvents == true)
+            if (this.Options?.PublishEvents != false)
             {
                 await this.mediator.Publish(new EntityDeletedDomainEvent<T>(entity)).ConfigureAwait(false);
             }

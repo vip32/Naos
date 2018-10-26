@@ -4,6 +4,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
     using FizzWare.NBuilder;
@@ -229,6 +230,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             Assert.NotNull(entity);
             Assert.False(entity.Id.IsNullOrEmpty());
             Assert.Equal("FirstName99", entity.FirstName);
+            await mediator.Received().Publish(Arg.Any<IDomainEvent>());
         }
 
         [Fact]
@@ -249,6 +251,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             Assert.NotNull(entity);
             Assert.False(entity.Id.IsNullOrEmpty());
             Assert.Equal("FirstName88", entity.FirstName);
+            await mediator.Received().Publish(Arg.Any<IDomainEvent>());
         }
 
         [Fact]
@@ -265,6 +268,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
 
             // assert
             Assert.Null(entity);
+            await mediator.Received().Publish(Arg.Any<IDomainEvent>());
         }
 
         [Fact]
@@ -281,6 +285,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
 
             // assert
             Assert.Null(entity);
+            await mediator.Received().Publish(Arg.Any<IDomainEvent>());
         }
 
         public class StubEntityString : TenantEntity<string>, IAggregateRoot

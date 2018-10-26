@@ -6,7 +6,7 @@
     using Naos.Core.Domain;
     using Newtonsoft.Json;
 
-    public class Command
+    public class Command // actually a wrapped CommandRequest<TResponse>, only for persistency
         : IEntity<string>, IAggregateRoot
     {
         /// <summary>
@@ -25,7 +25,7 @@
 
         public string CorrelationId { get; set; }
 
-        public IBaseRequest Request { get; set; }
+        public IBaseRequest Request { get; set; } // TODO: should be CommandRequest<TResponse>
 
         public DateTime CreatedDate { get; set; }
 

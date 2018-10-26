@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Threading.Tasks;
     using EnsureThat;
     using FizzWare.NBuilder;
     using MediatR;
@@ -17,7 +18,7 @@
     public class EntityFrameworkRepositoryTests
     {
         [Fact]
-        public void FindAll_Test()
+        public async Task FindAll_Test()
         {
             using (var context = new StubDbContext(this.DbOptions()))
             {
@@ -27,7 +28,7 @@
                 var sut = new EntityFrameworkRepository<StubEntity>(mediator, context);
 
                 // act
-                var findResults = sut.FindAllAsync().Result;
+                var findResults = await sut.FindAllAsync();
 
                 // assert
                 Assert.NotNull(findResults);
@@ -36,7 +37,7 @@
         }
 
         [Fact]
-        public void FindAll_WithSpecifications_Test()
+        public async Task FindAll_WithSpecifications_Test()
         {
             using (var context = new StubDbContext(this.DbOptions()))
             {
@@ -46,11 +47,11 @@
                 var sut = new EntityFrameworkRepository<StubEntity>(mediator, context);
 
                 // act
-                var findResultsWithSpecification = sut.FindAllAsync(new StubHasTenantSpecification("TestTenant")).Result;
-                var findResultsWithSpecifications = sut.FindAllAsync(new[] { new StubHasTenantSpecification("TestTenant") }).Result;
-                var findResultsWithTenantSpecfication = sut.FindAllAsync(
+                var findResultsWithSpecification = await sut.FindAllAsync(new StubHasTenantSpecification("TestTenant"));
+                var findResultsWithSpecifications = await sut.FindAllAsync(new[] { new StubHasTenantSpecification("TestTenant") });
+                var findResultsWithTenantSpecfication = await sut.FindAllAsync(
                     new StubHasTenantSpecification("TestTenant"),
-                    new FindOptions<StubEntity>(take: 5)).Result;
+                    new FindOptions<StubEntity>(take: 5));
 
                 // assert
                 Assert.NotNull(findResultsWithSpecification);
@@ -65,7 +66,7 @@
         }
 
         [Fact]
-        public void FindAll_WithAndSpecification_Test()
+        public async Task FindAll_WithAndSpecification_Test()
         {
             using (var context = new StubDbContext(this.DbOptions()))
             {
@@ -75,9 +76,9 @@
                 var sut = new EntityFrameworkRepository<StubEntity>(mediator, context);
 
                 // act
-                var findResults = sut.FindAllAsync(
+                var findResults = await sut.FindAllAsync(
                     new StubHasTenantSpecification("TestTenant")
-                    .And(new StubHasNameSpecification("FirstName1"))).Result;
+                    .And(new StubHasNameSpecification("FirstName1")));
 
                 // assert
                 Assert.NotNull(findResults);
@@ -86,7 +87,7 @@
         }
 
         [Fact]
-        public void FindAll_WithOrSpecification_Test()
+        public async Task FindAll_WithOrSpecification_Test()
         {
             using (var context = new StubDbContext(this.DbOptions()))
             {
@@ -96,9 +97,9 @@
                 var sut = new EntityFrameworkRepository<StubEntity>(mediator, context);
 
                 // act
-                var findResults = sut.FindAllAsync(
+                var findResults = await sut.FindAllAsync(
                     new StubHasNameSpecification("FirstName1")
-                    .Or(new StubHasNameSpecification("FirstName2"))).Result;
+                    .Or(new StubHasNameSpecification("FirstName2")));
 
                 // assert
                 Assert.NotNull(findResults);
@@ -109,7 +110,7 @@
         }
 
         [Fact]
-        public void FindAll_WithNotSpecification_Test()
+        public async Task FindAll_WithNotSpecification_Test()
         {
             using (var context = new StubDbContext(this.DbOptions()))
             {
@@ -119,10 +120,10 @@
                 var sut = new EntityFrameworkRepository<StubEntity>(mediator, context);
 
                 // act
-                var findResults = sut.FindAllAsync(
+                var findResults = await sut.FindAllAsync(
                     new StubHasTenantSpecification("TestTenant")
                     .And(new StubHasNameSpecification("FirstName1")
-                        .Not())).Result;
+                        .Not()));
 
                 // assert
                 Assert.NotNull(findResults);
@@ -132,7 +133,7 @@
         }
 
         [Fact]
-        public void FindById_Test()
+        public async Task FindById_Test()
         {
             using (var context = new StubDbContext(this.DbOptions()))
             {
@@ -142,19 +143,18 @@
                 var sut = new EntityFrameworkRepository<StubEntity>(mediator, context);
 
                 // act
-                var findResult = sut.FindOneAsync(new Guid("00000000-0000-0000-0000-000000000001")).Result;
-                var findResultUnknownId = sut.FindOneAsync(new Guid("00000000-0000-0000-0000-000000000050")).Result;
+                var findResult = await sut.FindOneAsync(new Guid("00000000-0000-0000-0000-000000000001"));
+                var findResultUnknownId = await sut.FindOneAsync(new Guid("00000000-0000-0000-0000-000000000050"));
 
                 // assert
                 Assert.NotNull(findResult);
                 Assert.True(findResult.FirstName == "FirstName1");
-
                 Assert.Null(findResultUnknownId);
             }
         }
 
         [Fact]
-        public void AddOrUpdate_Test()
+        public async Task AddOrUpdate_Test()
         {
             using (var context = new StubDbContext(this.DbOptions()))
             {
@@ -173,18 +173,19 @@
                 };
 
                 // act
-                var result = sut.AddOrUpdateAsync(entity).Result;
-                var findResult = sut.FindOneAsync(entity.Id).Result;
+                var result = await sut.AddOrUpdateAsync(entity);
+                var findResult = await sut.FindOneAsync(entity.Id);
 
                 // assert
                 Assert.NotNull(result);
                 Assert.NotNull(findResult);
                 Assert.True(findResult.FirstName == "FirstName20");
+                await mediator.Received().Publish(Arg.Any<IDomainEvent>());
             }
         }
 
         [Fact]
-        public void Delete_Test()
+        public async Task Delete_Test()
         {
             using (var context = new StubDbContext(this.DbOptions()))
             {
@@ -201,6 +202,7 @@
                 // assert
                 Assert.NotNull(findResults);
                 Assert.True(findResults.Count() == 18);
+                await mediator.Received().Publish(Arg.Any<IDomainEvent>());
             }
         }
 

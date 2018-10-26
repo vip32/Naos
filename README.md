@@ -3,9 +3,9 @@
 
 ![Alt text](/docs/logo.png?raw=true "Naos")
 
-<p align="center"><h2>A mildly opiniated modern cloud service architecture blueprint & reference implementation</h2></p>
+<p align="center"><h1>A mildly opiniated modern cloud service architecture blueprint & reference implementation</h1></p>
 
-# architectural concepts
+## architectural concepts
 - arch style: hexagonal/onion
 - pattern: cqs https://www.dotnetcurry.com/patterns-practices/1461/command-query-separation-cqs
 - pattern: domainevents
@@ -13,10 +13,10 @@
 - pattern: repositories
 - pattern: specifications
 
-# dev stack
+## dev stack
 C#, .Net Core 2.x, EnsureThat, Serilog, SimpleInjector, Mediator, FluentValidation, AutoMapper, XUnit, Shouldly, NSubstitute
 
-# global setup
+## global setup
 - Create a key vault [^](https://docs.microsoft.com/en-us/azure/key-vault/key-vault-get-started)
 - Store key vault name in an environment variable
   - `naos:secrets:vault:name`
@@ -61,7 +61,7 @@ Naos:Messaging needs to administer the Azure ServiceBus by using the [Azure Reso
 done.
 
 
-# core components
+### core components
 - Naos:App
 - Naos:App.Web
 - Naos:Common

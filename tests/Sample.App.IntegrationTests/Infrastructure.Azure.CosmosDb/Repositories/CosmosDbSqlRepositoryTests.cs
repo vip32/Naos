@@ -17,12 +17,13 @@
     public class CosmosDbSqlRepositoryTests : BaseTest
     {
         private readonly StubCosmosDbSqlRepository repository;
+        private readonly IMediator mediator = Substitute.For<IMediator>();
         private readonly string tenantId = "naos_test";
 
         public CosmosDbSqlRepositoryTests()
         {
             this.repository = new StubCosmosDbSqlRepository(
-                Substitute.For<IMediator>(),
+                this.mediator,
                 new CosmosDbSqlProvider<StubEntity>(
                         client: CosmosDbClient.Create(AppConfiguration.CosmosDb.ServiceEndpointUri, AppConfiguration.CosmosDb.AuthKeyOrResourceToken),
                         databaseId: AppConfiguration.CosmosDb.DatabaseId,
@@ -212,6 +213,8 @@
                 // assert
                 Assert.NotNull(result);
             }
+
+            await this.mediator.Received().Publish(Arg.Any<IDomainEvent>());
         }
     }
 
