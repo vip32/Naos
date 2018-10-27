@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq.Expressions;
+    using EnsureThat;
     using global::AutoMapper;
     using global::AutoMapper.Extensions.ExpressionMapping;
     using Naos.Core.Domain.Specifications;
@@ -12,6 +13,8 @@
 
         public AutoMapperSpecificationTranslator(IMapper mapper)
         {
+            EnsureArg.IsNotNull(mapper, typeof(mapper));
+
             this.mapper = mapper;
         }
 
