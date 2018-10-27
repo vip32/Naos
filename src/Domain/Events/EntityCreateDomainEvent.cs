@@ -1,26 +1,23 @@
 ﻿namespace Naos.Core.Domain
 {
-    public class EntityCreateDomainEvent<T> : IDomainEvent
-        where T : class, IEntity
+    public class EntityCreateDomainEvent<TEntity> : IDomainEvent
+        where TEntity : class, IEntity
     {
-        public EntityCreateDomainEvent(T entity)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EntityCreateDomainEvent{TEntity}"/> class.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        public EntityCreateDomainEvent(TEntity entity)
         {
             this.Entity = entity;
         }
 
-        public T Entity { get; set; }
+        /// <summary>
+        /// Gets or sets the entity.
+        /// </summary>
+        /// <value>
+        /// The entity.
+        /// </value>
+        public TEntity Entity { get; set; }
     }
-
-//#pragma warning disable SA1402 // File may only contain a single class
-//    public class EntityCreateDomainEvent2<T> : MediatR.INotification
-//#pragma warning restore SA1402 // File may only contain a single class
-//        where T : class, IEntity
-//    {
-//        public EntityCreateDomainEvent2(T entity)
-//        {
-//            this.Entity = entity;
-//        }
-
-//        public T Entity { get; set; }
-//    }
 }

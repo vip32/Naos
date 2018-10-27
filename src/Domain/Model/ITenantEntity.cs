@@ -1,6 +1,6 @@
 ﻿namespace Naos.Core.Domain
 {
-    public interface ITenantEntity : IEntity
+    public interface ITenantEntity
     {
         string TenantId { get; set; }
     }

@@ -4,25 +4,25 @@
     using System.Threading.Tasks;
     using Naos.Core.Domain.Specifications;
 
-    public interface IRepository<T>
-        where T : class, IEntity, IAggregateRoot
+    public interface IRepository<TEntity>
+        where TEntity : class, IEntity, IAggregateRoot
     {
-        Task<IEnumerable<T>> FindAllAsync(IFindOptions<T> options = null);
+        Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null);
 
-        Task<IEnumerable<T>> FindAllAsync(ISpecification<T> specification, IFindOptions<T> options = null);
+        Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null);
 
-        Task<IEnumerable<T>> FindAllAsync(IEnumerable<ISpecification<T>> specifications, IFindOptions<T> options = null);
+        Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null);
 
-        Task<T> FindOneAsync(object id);
+        Task<TEntity> FindOneAsync(object id);
 
         //Task<T> FindOneAsync(ISpecification<T> specification);
 
         Task<bool> ExistsAsync(object id);
 
-        Task<T> AddOrUpdateAsync(T entity);
+        Task<TEntity> AddOrUpdateAsync(TEntity entity);
 
         Task DeleteAsync(object id);
 
-        Task DeleteAsync(T entity);
+        Task DeleteAsync(TEntity entity);
     }
 }

@@ -3,7 +3,7 @@
     /// <summary>
     /// Various options for the <see cref="IRepository{T}"/>
     /// </summary>
-    /// <seealso cref="Naos.Core.Domain.IRepositoryOptions" />
+    /// <seealso cref="Domain.IRepositoryOptions" />
     public class RepositoryOptions : IRepositoryOptions
     {
         /// <summary>

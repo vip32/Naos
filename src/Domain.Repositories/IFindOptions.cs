@@ -5,15 +5,17 @@
     using System.Linq.Expressions;
 
     /// <summary>
-    /// Various options to specify the <see cref="IRepository{T}"/> find operations
+    /// Various options to specify the <see cref="IRepository{TEntity}"/> find operations
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public interface IFindOptions<T>
+    /// <typeparam name="TEntity"></typeparam>
+    public interface IFindOptions<TEntity> // TODO: add WHERE T = IEntity?
     {
         int? Skip { get; set; }
 
         int? Take { get; set; }
 
-        IEnumerable<Expression<Func<T, object>>> Includes { get; }
+        IEnumerable<Expression<Func<TEntity, object>>> Includes { get; set; }
+
+        Expression<Func<TEntity, object>> OrderBy { get; set; }
     }
 }

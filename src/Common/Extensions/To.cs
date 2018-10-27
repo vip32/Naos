@@ -7,7 +7,7 @@
     public static partial class Extensions
     {
         /// <summary>
-        /// Converts an object to a value type using <see cref="Convert.ChangeType(object,System.TypeCode)" /></summary>
+        /// Converts an object to a value type using <see cref="Convert.ChangeType(object,TypeCode)" /></summary>
         /// <typeparam name="T">The target object type</typeparam>
         /// <param name="source">The object to be converted</param>
         /// <param name="throws">if set to <c>true</c> throws exceptions when conversion fails.</param>

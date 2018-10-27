@@ -5,7 +5,7 @@
 
     public class LoggingAdapter<T> : ILogger<T>
     {
-        private readonly Microsoft.Extensions.Logging.ILogger adaptee;
+        private readonly ILogger adaptee;
 
         public LoggingAdapter(ILoggerFactory factory)
         {

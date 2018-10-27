@@ -12,12 +12,12 @@
     /// <summary>
     /// Represents an InMemoryRepository
     /// </summary>
-    /// <typeparam name="T">The type of the domain entity</typeparam>
+    /// <typeparam name="TEntity">The type of the domain entity</typeparam>
     /// <seealso cref="Domain.IRepository{T, TId}" />
-    public class InMemoryRepository<T> : IRepository<T>
-        where T : class, IEntity, IAggregateRoot
+    public class InMemoryRepository<TEntity> : IRepository<TEntity>
+        where TEntity : class, IEntity, IAggregateRoot
     {
-        protected IEnumerable<T> entities;
+        protected IEnumerable<TEntity> entities;
         private readonly IMediator mediator;
 
         /// <summary>
@@ -38,7 +38,7 @@
         /// <param name="mediator">The mediator.</param>
         /// <param name="entities">The entities.</param>
         /// <param name="options">The options.</param>
-        public InMemoryRepository(IMediator mediator, IEnumerable<T> entities = null, IRepositoryOptions options = null)
+        public InMemoryRepository(IMediator mediator, IEnumerable<TEntity> entities = null, IRepositoryOptions options = null)
         {
             EnsureArg.IsNotNull(mediator, nameof(mediator));
 
@@ -54,7 +54,7 @@
         /// </summary>
         /// <param name="options">The options.</param>
         /// <returns></returns>
-        public async Task<IEnumerable<T>> FindAllAsync(IFindOptions<T> options = null)
+        public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null)
         {
             return await this.FindAllAsync(specifications: null, options: options);
         }
@@ -65,7 +65,7 @@
         /// <param name="specification">The specification.</param>
         /// <param name="options">The options.</param>
         /// <returns></returns>
-        public async Task<IEnumerable<T>> FindAllAsync(ISpecification<T> specification, IFindOptions<T> options = null)
+        public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null)
         {
             return specification == null
                 ? await this.FindAllAsync(specifications: null, options: options)
@@ -78,7 +78,7 @@
         /// <param name="specifications">The specifications.</param>
         /// <param name="options">The options.</param>
         /// <returns></returns>
-        public virtual async Task<IEnumerable<T>> FindAllAsync(IEnumerable<ISpecification<T>> specifications, IFindOptions<T> options = null)
+        public virtual async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null)
         {
             var result = this.entities;
 
@@ -96,7 +96,7 @@
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException">id</exception>
-        public async Task<T> FindOneAsync(object id)
+        public async Task<TEntity> FindOneAsync(object id)
         {
             if (id.IsDefault())
             {
@@ -107,7 +107,7 @@
 
             if (this.Options?.Mapper != null && result != null)
             {
-                return this.Options.Mapper.Map<T>(result);
+                return this.Options.Mapper.Map<TEntity>(result);
             }
 
             return await Task.FromResult(result);
@@ -134,7 +134,7 @@
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
         /// <exception cref="Exception">Method for generating new Ids not provided</exception>
-        public async Task<T> AddOrUpdateAsync(T entity)
+        public async Task<TEntity> AddOrUpdateAsync(TEntity entity)
         {
             if (entity == null)
             {
@@ -182,11 +182,11 @@
             {
                 if (isTransient)
                 {
-                    await this.mediator.Publish(new EntityCreateDomainEvent<T>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityCreateDomainEvent<TEntity>(entity)).ConfigureAwait(false);
                 }
                 else
                 {
-                    await this.mediator.Publish(new EntityUpdateDomainEvent<T>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityUpdateDomainEvent<TEntity>(entity)).ConfigureAwait(false);
                 }
             }
 
@@ -197,11 +197,11 @@
             {
                 if (isTransient)
                 {
-                    await this.mediator.Publish(new EntityCreatedDomainEvent<T>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityCreatedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
                 }
                 else
                 {
-                    await this.mediator.Publish(new EntityUpdatedDomainEvent<T>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityUpdatedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
                 }
             }
 
@@ -226,14 +226,14 @@
             {
                 if (this.Options?.PublishEvents != false)
                 {
-                    await this.mediator.Publish(new EntityDeleteDomainEvent<T>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityDeleteDomainEvent<TEntity>(entity)).ConfigureAwait(false);
                 }
 
                 this.entities = this.entities.Where(x => !x.Id.Equals(entity.Id));
 
                 if (this.Options?.PublishEvents != false)
                 {
-                    await this.mediator.Publish(new EntityDeletedDomainEvent<T>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityDeletedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
                 }
             }
         }
@@ -244,7 +244,7 @@
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException">Id</exception>
-        public async Task DeleteAsync(T entity)
+        public async Task DeleteAsync(TEntity entity)
         {
             if (entity?.Id.IsDefault() != false)
             {
@@ -254,16 +254,16 @@
             this.entities = this.entities.Where(x => !x.Id.Equals(entity.Id));
             if (this.Options?.PublishEvents != false)
             {
-                await this.mediator.Publish(new EntityDeletedDomainEvent<T>(entity)).ConfigureAwait(false);
+                await this.mediator.Publish(new EntityDeletedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
             }
         }
 
-        protected virtual Func<T, bool> EnsurePredicate(ISpecification<T> specification)
+        protected virtual Func<TEntity, bool> EnsurePredicate(ISpecification<TEntity> specification)
         {
             return specification.ToPredicate();
         }
 
-        protected virtual IEnumerable<T> FindAll(IEnumerable<T> entities, IFindOptions<T> options = null)
+        protected virtual IEnumerable<TEntity> FindAll(IEnumerable<TEntity> entities, IFindOptions<TEntity> options = null)
         {
             var result = entities;
 
@@ -277,9 +277,14 @@
                 result = result.Take(options.Take.Value);
             }
 
+            if (options?.OrderBy != null)
+            {
+                result = result.OrderBy(options.OrderBy.Compile());
+            }
+
             if (this.Options?.Mapper != null && result != null)
             {
-                return result.Select(r => this.Options.Mapper.Map<T>(r));
+                return result.Select(r => this.Options.Mapper.Map<TEntity>(r));
             }
 
             return result;

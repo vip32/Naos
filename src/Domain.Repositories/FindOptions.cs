@@ -5,10 +5,10 @@
     using System.Linq.Expressions;
 
     /// <summary>
-    /// Various options to specify the <see cref="IRepository{T}" /> find operations
+    /// Various options to specify the <see cref="IRepository{TEntity}" /> find operations
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    /// <seealso cref="Naos.Core.Domain.IFindOptions{T}" />
+    /// <seealso cref="Domain.IFindOptions{TEntity}" />
     public class FindOptions<T> : IFindOptions<T>
     {
         /// <summary>
@@ -26,6 +26,8 @@
 
         public int? Skip { get; set; }
 
-        public IEnumerable<Expression<Func<T, object>>> Includes { get; }
+        public IEnumerable<Expression<Func<T, object>>> Includes { get; set; }
+
+        public Expression<Func<T, object>> OrderBy { get; set; }
     }
 }

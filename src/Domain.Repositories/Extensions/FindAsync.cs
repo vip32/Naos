@@ -18,7 +18,7 @@
             this IRepository<T> source,
             object id,
             string tenantId)
-            where T : class, ITenantEntity, IAggregateRoot
+            where T : class, IEntity, ITenantEntity, IAggregateRoot
         {
             EnsureArg.IsNotNullOrEmpty(tenantId);
 

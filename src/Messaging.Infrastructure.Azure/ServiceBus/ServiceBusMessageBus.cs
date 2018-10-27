@@ -113,7 +113,7 @@
                 this.logger.LogInformation("publish message (name={MessageName}, id={MessageId}, service={Service})", messageName, message.Id, this.messageScope);
 
                 // TODO: really need non-async Result?
-                var serviceBusMessage = new Microsoft.Azure.ServiceBus.Message
+                var serviceBusMessage = new Message
                 {
                     Label = messageName,
                     MessageId = message.Id,
@@ -197,7 +197,7 @@
         /// </summary>
         /// <param name="serviceBusMessage">The servicebus message.</param>
         /// <returns></returns>
-        private async Task<bool> ProcessMessage(Microsoft.Azure.ServiceBus.Message serviceBusMessage)
+        private async Task<bool> ProcessMessage(Message serviceBusMessage)
         {
             var processed = false;
             var messageName = serviceBusMessage.Label;

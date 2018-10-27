@@ -20,7 +20,7 @@
             this IRepository<T> source,
             string tenantId,
             IFindOptions<T> options = null)
-            where T : class, ITenantEntity, IAggregateRoot
+            where T : class, IEntity, ITenantEntity, IAggregateRoot
         {
             EnsureArg.IsNotNullOrEmpty(tenantId);
 
@@ -43,7 +43,7 @@
             string tenantId,
             Specification<T> specification,
             IFindOptions<T> options = null)
-            where T : class, ITenantEntity, IAggregateRoot
+            where T : class, IEntity, ITenantEntity, IAggregateRoot
         {
             EnsureArg.IsNotNullOrEmpty(tenantId);
             EnsureArg.IsNotNull(specification);
@@ -71,7 +71,7 @@
             string tenantId,
             IEnumerable<Specification<T>> specifications,
             IFindOptions<T> options = null)
-            where T : class, ITenantEntity, IAggregateRoot
+            where T : class, IEntity, ITenantEntity, IAggregateRoot
         {
             EnsureArg.IsNotNullOrEmpty(tenantId);
             var specificationsArray = specifications as Specification<T>[] ?? specifications.ToArray();

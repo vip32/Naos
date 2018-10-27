@@ -16,9 +16,9 @@
                     notification.Entity.As<IStateEntity>().State.SetUpdated("[IDENTITY]", "domainevent");
                 }
 
-                if (notification?.Entity.Is<IVersionIdentified>() == true)
+                if (notification?.Entity.Is<IVersionedEntity>() == true)
                 {
-                    notification.Entity.As<IVersionIdentified>().UpdateVersionIdentifier();
+                    notification.Entity.As<IVersionedEntity>().UpdateVersionIdentifier();
                 }
             });
         }

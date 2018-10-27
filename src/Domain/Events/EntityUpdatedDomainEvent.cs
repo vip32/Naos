@@ -1,13 +1,23 @@
 ﻿namespace Naos.Core.Domain
 {
-    public class EntityUpdatedDomainEvent<T> : IDomainEvent
-        where T : class, IEntity
+    public class EntityUpdatedDomainEvent<TEntity> : IDomainEvent
+        where TEntity : class, IEntity
     {
-        public EntityUpdatedDomainEvent(T entity)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EntityUpdatedDomainEvent{TEntity}"/> class.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        public EntityUpdatedDomainEvent(TEntity entity)
         {
             this.Entity = entity;
         }
 
-        public T Entity { get; set; }
+        /// <summary>
+        /// Gets or sets the entity.
+        /// </summary>
+        /// <value>
+        /// The entity.
+        /// </value>
+        public TEntity Entity { get; set; }
     }
 }

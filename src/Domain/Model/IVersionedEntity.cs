@@ -1,6 +1,6 @@
 ﻿namespace Naos.Core.Domain
 {
-    public interface IVersionIdentified
+    public interface IVersionedEntity
     {
         /// <summary>
         /// Gets the identifier for a specific version. Can be used as an ETag

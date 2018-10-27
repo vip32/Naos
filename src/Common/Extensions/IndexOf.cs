@@ -14,7 +14,7 @@
         /// <returns>
         /// The index of the first matching item, or -1 if no items match.
         /// </returns>
-        /// <exception cref="System.ArgumentNullException">
+        /// <exception cref="ArgumentNullException">
         /// items
         /// or
         /// predicate
