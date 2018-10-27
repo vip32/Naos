@@ -1,5 +1,7 @@
 ﻿namespace Naos.Core.Domain.Repositories
 {
+    using System.Linq.Expressions;
+
     /// <summary>
     /// Defines the interface to map objects
     /// </summary>
@@ -24,5 +26,8 @@
         /// Returns the same <see cref="destination" /> object after the mapping
         /// </returns>
         TDestination Map<TSource, TDestination>(TSource source, TDestination destination = default(TDestination));
+
+        TDestination MapExpression<TDestination>(LambdaExpression source)
+            where TDestination : LambdaExpression;
     }
 }

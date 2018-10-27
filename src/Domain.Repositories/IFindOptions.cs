@@ -16,6 +16,6 @@
 
         IEnumerable<Expression<Func<TEntity, object>>> Includes { get; set; }
 
-        Expression<Func<TEntity, object>> OrderBy { get; set; }
+        Func<TEntity, object> OrderBy { get; set; } // https://stackoverflow.com/questions/41244/dynamic-linq-orderby-on-ienumerablet?rq=1
     }
 }

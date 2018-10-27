@@ -96,7 +96,7 @@
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException">id</exception>
-        public async Task<TEntity> FindOneAsync(object id)
+        public virtual async Task<TEntity> FindOneAsync(object id)
         {
             if (id.IsDefault())
             {
@@ -279,7 +279,7 @@
 
             if (options?.OrderBy != null)
             {
-                result = result.OrderBy(options.OrderBy.Compile());
+                result = result.OrderBy(options.OrderBy);
             }
 
             if (this.Options?.Mapper != null && result != null)

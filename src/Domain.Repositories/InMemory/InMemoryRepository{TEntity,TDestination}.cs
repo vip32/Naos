@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Threading.Tasks;
     using EnsureThat;
     using MediatR;
@@ -53,6 +54,33 @@
             return await Task.FromResult(this.FindAll(result, options));
         }
 
+        /// <summary>
+        /// Finds the by identifier asynchronous.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException">id</exception>
+        public override async Task<TEntity> FindOneAsync(object id)
+        {
+            if (id.IsDefault())
+            {
+                return null;
+            }
+
+            // TODO: translate IEntity.Id expression to TDestination with automapper expression mapping
+            //var result = this.entities.FirstOrDefault(e => e.Id.Equals(id));
+            var spec = new HasIdSpecification<TEntity>(id);
+            var pred = this.EnsurePredicate(spec);
+            var result = this.entities.FirstOrDefault(pred);
+
+            if (this.Options?.Mapper != null && result != null)
+            {
+                return await Task.FromResult(this.Options.Mapper.Map<TEntity>(result));
+            }
+
+            return null;
+        }
+
         protected new Func<TDestination, bool> EnsurePredicate(ISpecification<TEntity> specification)
         {
             foreach(var translator in this.specificationTranslators.NullToEmpty())
@@ -83,7 +111,7 @@
             // TODO
             //if (options?.OrderBy != null)
             //{
-            //    result = result.OrderBy(options.OrderBy.Compile());
+            //    result = result.OrderBy(options.OrderBy);
             //}
 
             if (this.Options?.Mapper != null && result != null)

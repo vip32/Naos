@@ -1,6 +1,8 @@
 ﻿namespace Naos.Core.Domain.Repositories.AutoMapper
 {
+    using System.Linq.Expressions;
     using global::AutoMapper;
+    using global::AutoMapper.Extensions.ExpressionMapping;
     using Naos.Core.Domain.Repositories;
 
     public class AutoMapperEntityMapper : IEntityMapper
@@ -23,6 +25,12 @@
         public TDestination Map<TSource, TDestination>(TSource source, TDestination destination)
         {
             return this.mapper.Map(source, destination);
+        }
+
+        public TDestination MapExpression<TDestination>(LambdaExpression source)
+            where TDestination : LambdaExpression
+        {
+            return this.mapper.MapExpression<TDestination>(source);
         }
     }
 }

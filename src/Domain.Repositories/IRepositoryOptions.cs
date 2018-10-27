@@ -1,5 +1,8 @@
 ﻿namespace Naos.Core.Domain.Repositories
 {
+    using System;
+    using System.Linq.Expressions;
+
     /// <summary>
     /// Various options for the <see cref="IRepository{T}"/>
     /// </summary>

@@ -75,7 +75,51 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             Assert.True(result.Count() == 1);
             Assert.NotNull(result.FirstOrDefault()?.Id);
             Assert.NotNull(result.FirstOrDefault(e => !e.FirstName.IsNullOrEmpty() && !e.LastName.IsNullOrEmpty()));
+        }
+
+        [Fact]
+        public async Task FindMappedEntitiesWithIdSpecification_Test()
+        {
+            // arrange
+            var mediator = Substitute.For<IMediator>();
+            var sut = new InMemoryRepository<StubEntity, StubDto>(
+                mediator,
+                this.entities,
+                new RepositoryOptions(
+                    new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
+                new List<ISpecificationTranslator<StubEntity, StubDto>> { /*new StubHasNameSpecificationTranslator(),*/ new AutoMapperSpecificationTranslator<StubEntity, StubDto>(StubEntityMapperConfiguration.Create()) }); // infrastructure layer
+
+            // act
+            var result = await sut.FindAllAsync(
+                new HasIdSpecification<StubEntity>("Identifier99")).ConfigureAwait(false); // domain layer
+                //new StubHasIdSpecification("Identifier99")).ConfigureAwait(false); // domain layer
+
+            // assert
+            Assert.NotNull(result);
+            Assert.True(result.Count() == 1);
+            Assert.NotNull(result.FirstOrDefault()?.Id);
             Assert.NotNull(result.FirstOrDefault(e => !e.FirstName.IsNullOrEmpty() && !e.LastName.IsNullOrEmpty()));
+        }
+
+        [Fact]
+        public async Task FindMappedEntityOne_Test()
+        {
+            // arrange
+            var mediator = Substitute.For<IMediator>();
+            var sut = new InMemoryRepository<StubEntity, StubDto>(
+                mediator,
+                this.entities,
+                new RepositoryOptions(
+                    new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
+                new List<ISpecificationTranslator<StubEntity, StubDto>> { /*new StubHasNameSpecificationTranslator(),*/ new AutoMapperSpecificationTranslator<StubEntity, StubDto>(StubEntityMapperConfiguration.Create()) }); // infrastructure layer
+
+            // act
+            var result = await sut.FindOneAsync("Identifier99").ConfigureAwait(false);
+
+            // assert
+            Assert.NotNull(result);
+            Assert.True(!result.Id.IsNullOrEmpty() && !result.FirstName.IsNullOrEmpty() && !result.LastName.IsNullOrEmpty());
+            Assert.True(result.Id == "Identifier99" && result.FirstName == "John" && result.LastName == "Doe");
         }
 
         public class StubEntity : Entity<string>, IAggregateRoot
