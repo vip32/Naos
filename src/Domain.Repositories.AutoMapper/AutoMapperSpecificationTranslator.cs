@@ -6,11 +6,11 @@
     using global::AutoMapper.Extensions.ExpressionMapping;
     using Naos.Core.Domain.Specifications;
 
-    public class AutoMapperGenericSpecificationTranslator<TEntity, TDestination> : ISpecificationTranslator<TEntity, TDestination>
+    public class AutoMapperSpecificationTranslator<TEntity, TDestination> : ISpecificationTranslator<TEntity, TDestination>
     {
         private readonly IMapper mapper;
 
-        public AutoMapperGenericSpecificationTranslator(IMapper mapper)
+        public AutoMapperSpecificationTranslator(IMapper mapper)
         {
             this.mapper = mapper;
         }
