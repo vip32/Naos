@@ -6,6 +6,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
     using System.Linq.Expressions;
     using System.Threading.Tasks;
     using AutoMapper;
+    using AutoMapper.Extensions.ExpressionMapping;
     using EnsureThat;
     using FizzWare.NBuilder;
     using MediatR;
@@ -28,7 +29,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             this.entities = Builder<StubDto>
                 .CreateListOfSize(20).All()
                 .With(x => x.FullName, $"John {Core.Common.RandomGenerator.GenerateString(5)}").Build()
-                .Concat(new List<StubDto> { new StubDto { FullName = "John Doe" } });
+                .Concat(new List<StubDto> { new StubDto { Identifier = "Identifier99", FullName = "John Doe", YearOfBirth = 1980 } });
         }
 
         [Fact]
@@ -47,7 +48,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
 
             // assert
             Assert.NotNull(result);
-            Assert.True(result.All(e => !e.FirstName.IsNullOrEmpty() && !e.LastName.IsNullOrEmpty()));
+            Assert.True(result.All(e => !e.Id.IsNullOrEmpty() && !e.FirstName.IsNullOrEmpty() && !e.LastName.IsNullOrEmpty()));
             Assert.NotNull(result.FirstOrDefault(e => e.FirstName == "John" && e.LastName == "Doe"));
         }
 
@@ -61,15 +62,19 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                 this.entities,
                 new RepositoryOptions(
                     new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
-                new[] { new StubHasNameSpecificationTranslator() }); // infrastructure layer
+                new List<ISpecificationTranslator<StubEntity, StubDto>> { /*new StubHasNameSpecificationTranslator(),*/ new StubGenericTranslator(StubEntityMapperConfiguration.Create()) }); // infrastructure layer
 
             // act
             var result = await sut.FindAllAsync(
                 new StubHasNameSpecification("John", "Doe")).ConfigureAwait(false); // domain layer
+            //var result = await sut.FindAllAsync(
+            //    new StubHasIdSpecification("Identifier99")).ConfigureAwait(false); // domain layer
 
             // assert
             Assert.NotNull(result);
             Assert.True(result.Count() == 1);
+            Assert.NotNull(result.FirstOrDefault()?.Id);
+            Assert.NotNull(result.FirstOrDefault(e => !e.FirstName.IsNullOrEmpty() && !e.LastName.IsNullOrEmpty()));
             Assert.NotNull(result.FirstOrDefault(e => !e.FirstName.IsNullOrEmpty() && !e.LastName.IsNullOrEmpty()));
         }
 
@@ -112,6 +117,23 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             }
         }
 
+        public class StubHasIdSpecification : Specification<StubEntity> // TODO: this should be mocked
+        {
+            public StubHasIdSpecification(string id)
+            {
+                EnsureArg.IsNotNull(id);
+
+                this.Id = id;
+            }
+
+            public string Id { get; }
+
+            public override Expression<Func<StubEntity, bool>> ToExpression()
+            {
+                return p => p.Id == this.Id;
+            }
+        }
+
         public class StubHasNameSpecificationTranslator : ISpecificationTranslator<StubEntity, StubDto>
         {
             public bool CanHandle(ISpecification<StubEntity> specification)
@@ -126,27 +148,96 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             }
         }
 
+        public class StubGenericTranslator : ISpecificationTranslator<StubEntity, StubDto>
+        {
+            private readonly IMapper mapper;
+
+            public StubGenericTranslator(IMapper mapper)
+            {
+                this.mapper = mapper;
+            }
+
+            public bool CanHandle(ISpecification<StubEntity> specification)
+            {
+                return true;
+            }
+
+            public Func<StubDto, bool> Translate(ISpecification<StubEntity> specification)
+            {
+                var expression = this.mapper
+                    .MapExpression<Expression<Func<StubDto, bool>>>(specification.ToExpression());
+                return expression.Compile();
+            }
+        }
+
 #pragma warning disable SA1204 // Static elements must appear before instance elements
         public static class StubEntityMapperConfiguration
 #pragma warning restore SA1204 // Static elements must appear before instance elements
         {
             public static IMapper Create()
             {
-                return new MapperConfiguration(c =>
+                var mapper = new MapperConfiguration(c =>
                 {
                     //c.IgnoreUnmapped();
-
+                    //c.AllowNullCollections = true;
                     c.CreateMap<StubEntity, StubDto>()
                         .ForMember(d => d.Identifier, o => o.MapFrom(s => s.Id))
+                        //.ForMember(d => d.FullName, o => o.ResolveUsing(new FullNameResolver()))
                         .ForMember(d => d.FullName, o => o.MapFrom(s => $"{s.FirstName} {s.LastName}"))
-                        .ForMember(d => d.YearOfBirth, o => o.MapFrom(s => DateTime.UtcNow.Year - s.Age));
+                        .ForMember(d => d.YearOfBirth, o => o.ResolveUsing(new YearOfBirthResolver()));
 
                     c.CreateMap<StubDto, StubEntity>()
                         .ForMember(d => d.Id, o => o.MapFrom(s => s.Identifier))
+                        //.ForMember(d => d.FirstName, o => o.ResolveUsing(new FirstNameResolver()))
                         .ForMember(d => d.FirstName, o => o.MapFrom(s => s.FullName.Split(' ', StringSplitOptions.None).FirstOrDefault()))
+                        //.ForMember(d => d.LastName, o => o.ResolveUsing(new LastNameResolver()))
                         .ForMember(d => d.LastName, o => o.MapFrom(s => s.FullName.Split(' ', StringSplitOptions.None).LastOrDefault()))
-                        .ForMember(d => d.Age, o => o.MapFrom(s => DateTime.UtcNow.Year - s.YearOfBirth));
-                }).CreateMapper();
+                        .ForMember(d => d.Age, o => o.ResolveUsing(new AgeResolver()))
+                        .ForMember(d => d.VersionIdentifier, o => o.Ignore());
+                });
+
+                mapper.AssertConfigurationIsValid();
+                return mapper.CreateMapper();
+            }
+
+            //private class FullNameResolver : IValueResolver<StubEntity, StubDto, string>
+            //{
+            //    public string Resolve(StubEntity source, StubDto destination, string destMember, ResolutionContext context)
+            //    {
+            //        return $"{source.FirstName} {source.LastName}";
+            //    }
+            //}
+
+            private class YearOfBirthResolver : IValueResolver<StubEntity, StubDto, int>
+            {
+                public int Resolve(StubEntity source, StubDto destination, int destMember, ResolutionContext context)
+                {
+                    return DateTime.UtcNow.Year - source.Age;
+                }
+            }
+
+            //private class FirstNameResolver : IValueResolver<StubDto, StubEntity, string>
+            //{
+            //    public string Resolve(StubDto source, StubEntity destination, string destMember, ResolutionContext context)
+            //    {
+            //        return source.FullName.NullToEmpty().Split(' ').FirstOrDefault();
+            //    }
+            //}
+
+            //private class LastNameResolver : IValueResolver<StubDto, StubEntity, string>
+            //{
+            //    public string Resolve(StubDto source, StubEntity destination, string destMember, ResolutionContext context)
+            //    {
+            //        return source.FullName.NullToEmpty().Split(' ').LastOrDefault();
+            //    }
+            //}
+
+            private class AgeResolver : IValueResolver<StubDto, StubEntity, int>
+            {
+                public int Resolve(StubDto source, StubEntity destination, int destMember, ResolutionContext context)
+                {
+                    return DateTime.UtcNow.Year - source.YearOfBirth;
+                }
             }
         }
     }

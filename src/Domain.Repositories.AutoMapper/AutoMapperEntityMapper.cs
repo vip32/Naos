@@ -5,6 +5,7 @@
 
     public class AutoMapperEntityMapper : IEntityMapper
     {
+        // TODO: an alternative mapper is FluentInjectorEntityMapper, or hand coded
         private readonly IMapper mapper;
 
         public AutoMapperEntityMapper(IMapper mapper)
