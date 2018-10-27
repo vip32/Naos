@@ -13,7 +13,7 @@
 
         public AutoMapperSpecificationTranslator(IMapper mapper)
         {
-            EnsureArg.IsNotNull(mapper, typeof(mapper));
+            EnsureArg.IsNotNull(mapper, nameof(mapper));
 
             this.mapper = mapper;
         }
