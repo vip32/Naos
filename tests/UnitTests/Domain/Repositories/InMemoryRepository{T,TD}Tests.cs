@@ -62,7 +62,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                 this.entities,
                 new RepositoryOptions(
                     new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
-                new List<ISpecificationTranslator<StubEntity, StubDto>> { /*new StubHasNameSpecificationTranslator(),*/ new StubGenericTranslator(StubEntityMapperConfiguration.Create()) }); // infrastructure layer
+                new List<ISpecificationTranslator<StubEntity, StubDto>> { /*new StubHasNameSpecificationTranslator(),*/ new AutoMapperGenericSpecificationTranslator<StubEntity, StubDto>(StubEntityMapperConfiguration.Create()) }); // infrastructure layer
 
             // act
             var result = await sut.FindAllAsync(
@@ -145,28 +145,6 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             {
                 var s = specification.As<StubHasNameSpecification>();
                 return td => td.FullName == $"{s.FirstName} {s.LastName}";
-            }
-        }
-
-        public class StubGenericTranslator : ISpecificationTranslator<StubEntity, StubDto>
-        {
-            private readonly IMapper mapper;
-
-            public StubGenericTranslator(IMapper mapper)
-            {
-                this.mapper = mapper;
-            }
-
-            public bool CanHandle(ISpecification<StubEntity> specification)
-            {
-                return true;
-            }
-
-            public Func<StubDto, bool> Translate(ISpecification<StubEntity> specification)
-            {
-                var expression = this.mapper
-                    .MapExpression<Expression<Func<StubDto, bool>>>(specification.ToExpression());
-                return expression.Compile();
             }
         }
 
