@@ -36,3 +36,13 @@ Operations.Infrastructure.Azure.CosmosDb
 Messaging
 Messaging.Infrastructure.Azure
 Messaging.Infrastructure.RabitMQ
+
+=== MODULES === Journaling
+Journaling
+Journaling.Domain (journal entity, wraps entity)
+Journaling.Domain.Events.Handlers (journaling event handlers)
+Journaling.Messaging (imessagebus decorator: publish/subscribe/process)
+Journaling.Infrastructure.Azure.CosmosDb
+\Repositories (irepositopry decorator + journal for journal entity)
+
+
