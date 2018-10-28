@@ -21,12 +21,14 @@
     {
         protected new IEnumerable<TDestination> entities;
         private readonly IEnumerable<ISpecificationTranslator<TEntity, TDestination>> specificationTranslators;
+        private readonly Func<TDestination, object> idSelector;
 
         public InMemoryRepository(
             IMediator mediator,
             IEnumerable<TDestination> entities = null,
             IRepositoryOptions options = null,
-            IEnumerable<ISpecificationTranslator<TEntity, TDestination>> specificationTranslators = null)
+            IEnumerable<ISpecificationTranslator<TEntity, TDestination>> specificationTranslators = null,
+            Func<TDestination, object> idSelector = null)
             : base(mediator, options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
@@ -34,6 +36,7 @@
 
             this.entities = entities.NullToEmpty();
             this.specificationTranslators = specificationTranslators;
+            this.idSelector = idSelector;
         }
 
         /// <summary>
@@ -67,11 +70,7 @@
                 return null;
             }
 
-            // TODO: translate IEntity.Id expression to TDestination with automapper expression mapping
-            //var result = this.entities.FirstOrDefault(e => e.Id.Equals(id));
-            var spec = new HasIdSpecification<TEntity>(id);
-            var pred = this.EnsurePredicate(spec);
-            var result = this.entities.FirstOrDefault(pred);
+            var result = this.entities.SingleOrDefault(e => this.idSelector(e) == id);
 
             if (this.Options?.Mapper != null && result != null)
             {

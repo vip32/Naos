@@ -111,7 +111,8 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                 this.entities,
                 new RepositoryOptions(
                     new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
-                new List<ISpecificationTranslator<StubEntity, StubDto>> { /*new StubHasNameSpecificationTranslator(),*/ new AutoMapperSpecificationTranslator<StubEntity, StubDto>(StubEntityMapperConfiguration.Create()) }); // infrastructure layer
+                new List<ISpecificationTranslator<StubEntity, StubDto>> { /*new StubHasNameSpecificationTranslator(),*/ new AutoMapperSpecificationTranslator<StubEntity, StubDto>(StubEntityMapperConfiguration.Create()) },
+                e => e.Identifier); // infrastructure layer
 
             // act
             var result = await sut.FindOneAsync("Identifier99").ConfigureAwait(false);

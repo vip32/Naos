@@ -27,7 +27,7 @@
         /// </returns>
         TDestination Map<TSource, TDestination>(TSource source, TDestination destination = default(TDestination));
 
-        TDestination MapExpression<TDestination>(LambdaExpression source)
-            where TDestination : LambdaExpression;
+        //TDestination MapExpression<TDestination>(LambdaExpression source)
+        //    where TDestination : LambdaExpression;
     }
 }

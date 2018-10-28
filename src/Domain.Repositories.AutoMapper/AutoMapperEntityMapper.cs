@@ -27,10 +27,10 @@
             return this.mapper.Map(source, destination);
         }
 
-        public TDestination MapExpression<TDestination>(LambdaExpression source)
-            where TDestination : LambdaExpression
-        {
-            return this.mapper.MapExpression<TDestination>(source);
-        }
+        //public TDestination MapExpression<TDestination>(LambdaExpression source)
+        //    where TDestination : LambdaExpression
+        //{
+        //    return this.mapper.MapExpression<TDestination>(source);
+        //}
     }
 }
