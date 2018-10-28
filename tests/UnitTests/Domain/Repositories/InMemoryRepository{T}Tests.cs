@@ -28,11 +28,13 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         {
             this.entities = Builder<StubEntityString>
                 .CreateListOfSize(20).All()
-                .With(x => x.TenantId, this.tenantId).Build();
+                .With(x => x.TenantId, this.tenantId)
+                .With(x => x.Country, "USA").Build();
 
             this.guidEntities = Builder<StubEntityGuid>
                 .CreateListOfSize(20).All()
-                .With(x => x.TenantId, this.tenantId).Build();
+                .With(x => x.TenantId, this.tenantId)
+                .With(x => x.Country, "USA").Build();
         }
 
         [Fact]
@@ -73,7 +75,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
 
             result = await sut.FindAllAsync(
                 new HasTenantSpecification<StubEntityString>(this.tenantId),
-                new FindOptions<StubEntityString>(take: 5)).ConfigureAwait(false);
+                new FindOptions<StubEntityString>(take: 5) { OrderBy = e => e.Country}).ConfigureAwait(false);
 
             stubEntities = result as StubEntityString[] ?? result.ToArray();
             Assert.False(stubEntities.IsNullOrEmpty());
@@ -290,6 +292,8 @@ namespace Naos.Core.UnitTests.Domain.Repositories
 
         public class StubEntityString : TenantEntity<string>, IAggregateRoot
         {
+            public string Country { get; set; }
+
             public string FirstName { get; set; }
 
             public string LastName { get; set; }
@@ -299,6 +303,8 @@ namespace Naos.Core.UnitTests.Domain.Repositories
 
         public class StubEntityGuid : TenantEntity<Guid>, IAggregateRoot
         {
+            public string Country { get; set; }
+
             public string FirstName { get; set; }
 
             public string LastName { get; set; }

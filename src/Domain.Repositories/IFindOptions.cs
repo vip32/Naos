@@ -8,14 +8,14 @@
     /// Various options to specify the <see cref="IRepository{TEntity}"/> find operations
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public interface IFindOptions<TEntity> // TODO: add WHERE T = IEntity?
+    public interface IFindOptions<TEntity>
     {
         int? Skip { get; set; }
 
         int? Take { get; set; }
 
-        IEnumerable<Expression<Func<TEntity, object>>> Includes { get; set; }
+        Expression<Func<TEntity, object>> OrderBy { get; set; }
 
-        Func<TEntity, object> OrderBy { get; set; } // https://stackoverflow.com/questions/41244/dynamic-linq-orderby-on-ienumerablet?rq=1
+        IEnumerable<Expression<Func<TEntity, object>>> Includes { get; set; }
     }
 }

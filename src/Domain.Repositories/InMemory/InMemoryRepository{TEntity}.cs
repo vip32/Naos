@@ -279,7 +279,7 @@
 
             if (options?.OrderBy != null)
             {
-                result = result.OrderBy(options.OrderBy);
+                result = result.OrderBy(options.OrderBy.Compile());
             }
 
             if (this.Options?.Mapper != null && result != null)

@@ -107,11 +107,11 @@
                 result = result.Take(options.Take.Value);
             }
 
-            // TODO
-            //if (options?.OrderBy != null)
-            //{
-            //    result = result.OrderBy(options.OrderBy);
-            //}
+            if (options?.OrderBy != null)
+            {
+                result = result.OrderBy(
+                    this.Options.Mapper.MapExpression<Expression<Func<TDestination, object>>>(options.OrderBy).Compile());
+            }
 
             if (this.Options?.Mapper != null && result != null)
             {
