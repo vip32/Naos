@@ -2,10 +2,10 @@
 {
     using System;
 
-    public interface ISpecificationTranslator<TEntity, TDestination>
+    public interface ISpecificationMapper<TEntity, TDestination>
     {
         /// <summary>
-        /// Determines whether this instance can translate the specified T specification.
+        /// Determines whether this instance can map to the specified TD type.
         /// </summary>
         /// <param name="specification">The specification.</param>
         /// <returns>
@@ -14,10 +14,10 @@
         bool CanHandle(ISpecification<TEntity> specification);
 
         /// <summary>
-        /// Translates the specified T specification to an expression for TD types.
+        /// Maps the specified T specification to an expression for TD types.
         /// </summary>
         /// <param name="specification">The specification.</param>
         /// <returns></returns>
-        Func<TDestination, bool> Translate(ISpecification<TEntity> specification);
+        Func<TDestination, bool> Map(ISpecification<TEntity> specification);
     }
 }

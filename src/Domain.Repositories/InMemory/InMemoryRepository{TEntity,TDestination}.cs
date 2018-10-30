@@ -20,14 +20,14 @@
         where TEntity : class, IEntity, IAggregateRoot
     {
         protected new IEnumerable<TDestination> entities;
-        private readonly IEnumerable<ISpecificationTranslator<TEntity, TDestination>> specificationTranslators;
+        private readonly IEnumerable<ISpecificationMapper<TEntity, TDestination>> specificationMappers;
         private readonly Func<TDestination, object> idSelector;
 
         public InMemoryRepository(
             IMediator mediator,
             IEnumerable<TDestination> entities = null,
             IRepositoryOptions options = null,
-            IEnumerable<ISpecificationTranslator<TEntity, TDestination>> specificationTranslators = null,
+            IEnumerable<ISpecificationMapper<TEntity, TDestination>> specificationMappers = null,
             Func<TDestination, object> idSelector = null)
             : base(mediator, options)
         {
@@ -35,7 +35,7 @@
             EnsureArg.IsNotNull(options.Mapper, nameof(options.Mapper));
 
             this.entities = entities.NullToEmpty();
-            this.specificationTranslators = specificationTranslators;
+            this.specificationMappers = specificationMappers;
             this.idSelector = idSelector;
         }
 
@@ -82,15 +82,15 @@
 
         protected new Func<TDestination, bool> EnsurePredicate(ISpecification<TEntity> specification)
         {
-            foreach(var translator in this.specificationTranslators.NullToEmpty())
+            foreach(var specificationMapper in this.specificationMappers.NullToEmpty())
             {
-                if (translator.CanHandle(specification))
+                if (specificationMapper.CanHandle(specification))
                 {
-                    return translator.Translate(specification);
+                    return specificationMapper.Map(specification);
                 }
             }
 
-            throw new NaosException($"no applicable specification translator found for {specification.GetType().PrettyName()}");
+            throw new NaosException($"no applicable specification mapper found for {specification.GetType().PrettyName()}");
         }
 
         protected IEnumerable<TEntity> FindAll(IEnumerable<TDestination> entities, IFindOptions<TEntity> options = null)

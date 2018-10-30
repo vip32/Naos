@@ -78,7 +78,7 @@
             return await this.FindOneAsync(id) != null;
         }
 
-        public async Task<TEntity> AddOrUpdateAsync(TEntity entity)
+        public async Task<TEntity> UpsertAsync(TEntity entity)
         {
             if (entity == null)
             {

@@ -221,7 +221,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             var sut = new InMemoryRepository<StubEntityString>(mediator, this.entities);
 
             // act
-            var entity = await sut.AddOrUpdateAsync(new StubEntityString
+            var entity = await sut.UpsertAsync(new StubEntityString
             {
                 FirstName = "FirstName99",
                 Id = "Id99",
@@ -243,7 +243,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             var sut = new InMemoryRepository<StubEntityString>(mediator, this.entities);
 
             // act
-            var entity = await sut.AddOrUpdateAsync(new StubEntityString
+            var entity = await sut.UpsertAsync(new StubEntityString
             {
                 FirstName = "FirstName88",
                 TenantId = this.tenantId

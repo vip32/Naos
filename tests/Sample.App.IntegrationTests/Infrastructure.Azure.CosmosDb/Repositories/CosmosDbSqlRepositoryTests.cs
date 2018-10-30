@@ -201,7 +201,7 @@
             string[] regions = { "East", "West" };
             for (int i = 1; i < 21; i++)
             {
-                var result = await sut.AddOrUpdateAsync(
+                var result = await sut.UpsertAsync(
                     new StubEntity
                     {
                         Id = $"Id{i}",

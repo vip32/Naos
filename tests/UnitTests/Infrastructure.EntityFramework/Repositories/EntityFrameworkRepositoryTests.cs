@@ -173,7 +173,7 @@
                 };
 
                 // act
-                var result = await sut.AddOrUpdateAsync(entity);
+                var result = await sut.UpsertAsync(entity);
                 var findResult = await sut.FindOneAsync(entity.Id);
 
                 // assert

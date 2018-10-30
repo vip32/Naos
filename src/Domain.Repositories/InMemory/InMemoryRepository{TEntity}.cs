@@ -38,7 +38,10 @@
         /// <param name="mediator">The mediator.</param>
         /// <param name="entities">The entities.</param>
         /// <param name="options">The options.</param>
-        public InMemoryRepository(IMediator mediator, IEnumerable<TEntity> entities = null, IRepositoryOptions options = null)
+        public InMemoryRepository(
+            IMediator mediator,
+            IEnumerable<TEntity> entities = null,
+            IRepositoryOptions options = null)
         {
             EnsureArg.IsNotNull(mediator, nameof(mediator));
 
@@ -134,7 +137,7 @@
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
         /// <exception cref="Exception">Method for generating new Ids not provided</exception>
-        public async Task<TEntity> AddOrUpdateAsync(TEntity entity)
+        public async Task<TEntity> UpsertAsync(TEntity entity)
         {
             if (entity == null)
             {

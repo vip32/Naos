@@ -63,7 +63,11 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                 this.entities,
                 new RepositoryOptions(
                     new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
-                new List<ISpecificationTranslator<StubEntity, StubDto>> { /*new StubHasNameSpecificationTranslator(),*/ new AutoMapperSpecificationTranslator<StubEntity, StubDto>(StubEntityMapperConfiguration.Create()) }); // infrastructure layer
+                new List<ISpecificationMapper<StubEntity, StubDto>>
+                {
+                    /*new StubHasNameSpecificationMapper(),*/
+                    new AutoMapperSpecificationMapper<StubEntity, StubDto>(StubEntityMapperConfiguration.Create())
+                }); // infrastructure layer
 
             // act
             var result = await sut.FindAllAsync(
@@ -89,7 +93,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         //        this.entities,
         //        new RepositoryOptions(
         //            new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
-        //        new List<ISpecificationTranslator<StubEntity, StubDto>> { /*new StubHasNameSpecificationTranslator(),*/ new AutoMapperSpecificationTranslator<StubEntity, StubDto>(StubEntityMapperConfiguration.Create()) }); // infrastructure layer
+        //        new List<ISpecificationMapper<StubEntity, StubDto>> { /*new StubHasNameSpecificationMapper(),*/ new AutoMapperSpecificationMapper<StubEntity, StubDto>(StubEntityMapperConfiguration.Create()) }); // infrastructure layer
 
         //    // act
         //    var result = await sut.FindAllAsync(
@@ -114,7 +118,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                 this.entities,
                 new RepositoryOptions(
                     new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
-                new List<ISpecificationTranslator<StubEntity, StubDto>> { /*new StubHasNameSpecificationTranslator(),*/ new AutoMapperSpecificationTranslator<StubEntity, StubDto>(StubEntityMapperConfiguration.Create()) },
+                new List<ISpecificationMapper<StubEntity, StubDto>> { /*new StubHasNameSpecificationMapper(),*/ new AutoMapperSpecificationMapper<StubEntity, StubDto>(StubEntityMapperConfiguration.Create()) },
                 e => e.Identifier); // infrastructure layer
 
             // act
@@ -186,14 +190,14 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             }
         }
 
-        public class StubHasNameSpecificationTranslator : ISpecificationTranslator<StubEntity, StubDto>
+        public class StubHasNameSpecificationMapper : ISpecificationMapper<StubEntity, StubDto>
         {
             public bool CanHandle(ISpecification<StubEntity> specification)
             {
                 return specification.Is<StubHasNameSpecification>();
             }
 
-            public Func<StubDto, bool> Translate(ISpecification<StubEntity> specification)
+            public Func<StubDto, bool> Map(ISpecification<StubEntity> specification)
             {
                 var s = specification.As<StubHasNameSpecification>();
                 return td => td.FullName == $"{s.FirstName} {s.LastName}";
@@ -225,7 +229,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                         //.ForMember(d => d.LastName, o => o.ResolveUsing(new LastNameResolver()))
                         .ForMember(d => d.LastName, o => o.MapFrom(s => s.FullName.Split(' ', StringSplitOptions.None).LastOrDefault()))
                         .ForMember(d => d.Age, o => o.ResolveUsing(new AgeResolver()))
-                        .ForMember(d => d.VersionIdentifier, o => o.Ignore());
+                        .ForMember(d => d.State, o => o.Ignore());
                 });
 
                 mapper.AssertConfigurationIsValid();

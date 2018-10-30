@@ -36,10 +36,10 @@
             Assert.True(domainEvent.Properties.ContainsKey(typeof(SecondStubDomainEventHandler).Name));
 
             await mediator.Publish(createEvent).ConfigureAwait(false);
-            Assert.NotNull(entity.VersionIdentifier);
+            Assert.NotNull(entity.State.IdentifierHash);
             Assert.True(entity.State.CreatedDate != null);
-            var version = entity.VersionIdentifier;
-            Assert.NotNull(entity.VersionIdentifier);
+            var hash = entity.State.IdentifierHash;
+            Assert.NotNull(entity.State.IdentifierHash);
 
             await mediator.Publish(createdEvent).ConfigureAwait(false);
 
@@ -47,8 +47,8 @@
             await mediator.Publish(updateEvent).ConfigureAwait(false);
             Assert.True(entity.State.UpdatedDate != null);
             Assert.True(entity.State.CreatedDate != entity.State.UpdatedDate);
-            Assert.NotNull(entity.VersionIdentifier);
-            Assert.NotEqual(version, entity.VersionIdentifier);
+            Assert.NotNull(entity.State.IdentifierHash);
+            Assert.NotEqual(hash, entity.State.IdentifierHash);
         }
 
         public class StubDomainEvent : IDomainEvent

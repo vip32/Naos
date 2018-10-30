@@ -23,7 +23,10 @@
         /// <param name="mediator">The mediator.</param>
         /// <param name="dbContext">The EF database context.</param>
         /// <param name="options">The options.</param>
-        public EntityFrameworkRepository(IMediator mediator, DbContext dbContext, IRepositoryOptions options = null)
+        public EntityFrameworkRepository(
+            IMediator mediator,
+            DbContext dbContext,
+            IRepositoryOptions options = null)
         {
             EnsureArg.IsNotNull(mediator);
             EnsureArg.IsNotNull(dbContext);
@@ -82,7 +85,7 @@
             return await this.FindOneAsync(id) != null;
         }
 
-        public async Task<TEntity> AddOrUpdateAsync(TEntity entity)
+        public async Task<TEntity> UpsertAsync(TEntity entity)
         {
             if (entity == null)
             {

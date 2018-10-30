@@ -13,12 +13,9 @@
             {
                 if (notification?.Entity.Is<IStateEntity>() == true)
                 {
-                    notification.Entity.As<IStateEntity>().State.SetCreated("[IDENTITY]", "domainevent");
-                }
-
-                if (notification?.Entity.Is<IVersionedEntity>() == true)
-                {
-                    notification.Entity.As<IVersionedEntity>().UpdateVersionIdentifier();
+                    var entity = notification.Entity.As<IStateEntity>();
+                    entity.State?.SetCreated("[IDENTITY]", "domainevent"); // TODO
+                    entity.State?.UpdateIdentifierHash(notification.Entity);
                 }
             });
         }
