@@ -170,24 +170,7 @@
 
             if (isTransient)
             {
-                // TODO: move this to seperate class (IdentityGenerator)
-                if (entity is IEntity<int>)
-                {
-                    (entity as IEntity<int>).Id = this.entities.Count() + 1;
-                }
-                else if (entity is IEntity<string>)
-                {
-                    (entity as IEntity<string>).Id = Guid.NewGuid().ToString();
-                }
-                else if (entity is IEntity<Guid>)
-                {
-                    (entity as IEntity<Guid>).Id = Guid.NewGuid();
-                }
-                else
-                {
-                    throw new NotSupportedException($"entity id type {entity.Id.GetType().Name} not supported");
-                    // TODO: or just set Id to null?
-                }
+                this.EnsureId(entity);
             }
 
             if (this.Options?.PublishEvents != false)
@@ -302,6 +285,27 @@
             }
 
             return result;
+        }
+
+        private void EnsureId(TEntity entity) // TODO: move this to seperate class (IdentityGenerator)
+        {
+            if (entity is IEntity<int>)
+            {
+                (entity as IEntity<int>).Id = this.entities.Count() + 1;
+            }
+            else if (entity is IEntity<string>)
+            {
+                (entity as IEntity<string>).Id = Guid.NewGuid().ToString();
+            }
+            else if (entity is IEntity<Guid>)
+            {
+                (entity as IEntity<Guid>).Id = Guid.NewGuid();
+            }
+            else
+            {
+                throw new NotSupportedException($"entity id type {entity.Id.GetType().Name} not supported");
+                // TODO: or just set Id to null?
+            }
         }
     }
 }
