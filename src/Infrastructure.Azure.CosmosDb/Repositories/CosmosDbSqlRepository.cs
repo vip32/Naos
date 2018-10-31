@@ -112,11 +112,11 @@
                 return (null, UpsertAction.None);
             }
 
-            bool isTransient = entity.Id.IsDefault();
+            bool isNew = entity.Id.IsDefault() || !await this.ExistsAsync(entity.Id).ConfigureAwait(false);
 
             if (this.Options?.PublishEvents != false)
             {
-                if (isTransient)
+                if (isNew)
                 {
                     await this.mediator.Publish(new EntityInsertDomainEvent<TEntity>(entity)).ConfigureAwait(false);
                 }
@@ -126,11 +126,11 @@
                 }
             }
 
-            var result = await this.provider.AddOrUpdateAsync(entity).ConfigureAwait(false);
+            var result = await this.provider.UpsertAsync(entity).ConfigureAwait(false);
 
             if (this.Options?.PublishEvents != false)
             {
-                if (isTransient)
+                if (isNew)
                 {
                     await this.mediator.Publish(new EntityInsertedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
                 }
@@ -141,7 +141,7 @@
             }
 
 #pragma warning disable SA1008 // Opening parenthesis must be spaced correctly
-            return isTransient ? (entity, UpsertAction.Inserted) : (entity, UpsertAction.Updated);
+            return isNew ? (entity, UpsertAction.Inserted) : (entity, UpsertAction.Updated);
 #pragma warning restore SA1008 // Opening parenthesis must be spaced correctly
         }
 

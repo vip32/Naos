@@ -165,8 +165,10 @@
                 return (null, UpsertAction.None);
             }
 
-            bool isTransient = false;
-            if (entity.Id.IsDefault())
+            bool isTransient = entity.Id.IsDefault();
+            bool isNew = isTransient || !await this.ExistsAsync(entity.Id).ConfigureAwait(false);
+
+            if (isTransient)
             {
                 // TODO: move this to seperate class (IdentityGenerator)
                 if (entity is IEntity<int>)
@@ -183,28 +185,14 @@
                 }
                 else
                 {
-                    throw new NotSupportedException($"Entity Id type {entity.Id.GetType().Name}");
+                    throw new NotSupportedException($"entity id type {entity.Id.GetType().Name} not supported");
                     // TODO: or just set Id to null?
                 }
-
-                isTransient = true;
-            }
-
-            if (isTransient && entity is IStateEntity)
-            {
-                // TODO: do this in an notification handler (EntityAddDomainEvent), the handler has access to the requestcontext and can set the created user (State.CreatedBy)
-                entity.As<IStateEntity>().State.CreatedDate = new DateTimeEpoch();
-            }
-
-            if (!isTransient && entity is IStateEntity)
-            {
-                // TODO: do this in an notification handler (EntityUpdateDomainEvent)
-                entity.As<IStateEntity>().State.UpdatedDate = new DateTimeEpoch();
             }
 
             if (this.Options?.PublishEvents != false)
             {
-                if (isTransient)
+                if (isNew)
                 {
                     await this.mediator.Publish(new EntityInsertDomainEvent<TEntity>(entity)).ConfigureAwait(false);
                 }
@@ -215,11 +203,11 @@
             }
 
             // TODO: map to destination
-            this.entities = this.entities.Concat(new[] { entity }.AsEnumerable());
+            this.entities = this.entities.Where(e => !e.Id.Equals(entity.Id)).Concat(new[] { entity }).ToList();
 
             if (this.Options?.PublishEvents != false)
             {
-                if (isTransient)
+                if (isNew)
                 {
                     await this.mediator.Publish(new EntityInsertedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
                 }
@@ -230,7 +218,7 @@
             }
 
 #pragma warning disable SA1008 // Opening parenthesis must be spaced correctly
-            return isTransient ? (entity, UpsertAction.Inserted) : (entity, UpsertAction.Updated);
+            return isNew ? (entity, UpsertAction.Inserted) : (entity, UpsertAction.Updated);
 #pragma warning restore SA1008 // Opening parenthesis must be spaced correctly
         }
 

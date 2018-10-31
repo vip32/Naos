@@ -214,7 +214,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         }
 
         [Fact]
-        public async Task AddNewEntityWithId_EntityIsAdded()
+        public async Task InsertNewEntityWithId_EntityIsAdded()
         {
             // arrange
             var mediator = Substitute.For<IMediator>();
@@ -228,15 +228,20 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                 TenantId = this.tenantId
             }).ConfigureAwait(false);
 
+            var findResult = await sut.FindOneAsync("Id99").ConfigureAwait(false);
+
             // assert
-            Assert.NotNull(result.entity);
+            Assert.Equal(UpsertAction.Inserted, result.action);
             Assert.False(result.entity.Id.IsNullOrEmpty());
-            Assert.Equal("FirstName99", result.entity.FirstName);
+            Assert.False(result.entity.Id.IsDefault());
+            Assert.Equal("Id99", result.entity.Id);
+            Assert.NotNull(findResult);
+            Assert.Equal("FirstName99", findResult.FirstName);
             await mediator.Received().Publish(Arg.Any<IDomainEvent>());
         }
 
         [Fact]
-        public async Task AddNewEntityWithoutId_EntityIsAddedWithGeneratedId()
+        public async Task InsertNewEntityWithoutId_EntityIsAddedWithGeneratedId()
         {
             // arrange
             var mediator = Substitute.For<IMediator>();
@@ -249,10 +254,46 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                 TenantId = this.tenantId
             }).ConfigureAwait(false);
 
+            var findResult = await sut.FindOneAsync(result.entity.Id).ConfigureAwait(false);
+
             // assert
+            Assert.Equal(UpsertAction.Inserted, result.action);
             Assert.NotNull(result.entity);
             Assert.False(result.entity.Id.IsNullOrEmpty());
-            Assert.Equal("FirstName88", result.entity.FirstName);
+            Assert.False(result.entity.Id.IsDefault());
+            Assert.NotNull(findResult);
+            Assert.Equal(findResult.Id, result.entity.Id);
+            Assert.Equal("FirstName88", findResult.FirstName);
+            await mediator.Received().Publish(Arg.Any<IDomainEvent>());
+        }
+
+        [Fact]
+        public async Task UpdateExistingEntityWithId_EntityIsUpdated()
+        {
+            // arrange
+            var mediator = Substitute.For<IMediator>();
+            var sut = new InMemoryRepository<StubEntityString>(mediator, this.entities);
+
+            // act
+            var result = await sut.UpsertAsync(new StubEntityString
+            {
+                Id = "Id1",
+                FirstName = "FirstName77",
+                LastName = "LastName77",
+                TenantId = this.tenantId
+            }).ConfigureAwait(false);
+
+            var findResult = await sut.FindOneAsync("Id1").ConfigureAwait(false);
+
+            // assert
+            Assert.Equal(UpsertAction.Updated, result.action);
+            Assert.NotNull(result.entity);
+            Assert.False(result.entity.Id.IsNullOrEmpty());
+            Assert.False(result.entity.Id.IsDefault());
+            Assert.Equal("Id1", result.entity.Id);
+            Assert.NotNull(findResult);
+            Assert.Equal(findResult.Id, result.entity.Id);
+            Assert.Equal("FirstName77", findResult.FirstName);
             await mediator.Received().Publish(Arg.Any<IDomainEvent>());
         }
 
