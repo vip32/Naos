@@ -5,11 +5,26 @@
     public interface IRepository<TEntity> : IReadOnlyRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
-        //Task<TEntity> InsertAsync(TEntity entity);
+        /// <summary>
+        /// Inserts the provided entity.
+        /// </summary>
+        /// <param name="entity">The entity to insert.</param>
+        /// <returns></returns>
+        Task<TEntity> InsertAsync(TEntity entity);
 
-        //Task<TEntity> UpdateAsync(TEntity entity);
+        /// <summary>
+        /// Updates the provided entity.
+        /// </summary>
+        /// <param name="entity">The entity to update.</param>
+        /// <returns></returns>
+        Task<TEntity> UpdateAsync(TEntity entity);
 
-        Task<TEntity> UpsertAsync(TEntity entity);
+        /// <summary>
+        /// Insert or updates the provided entity.
+        /// </summary>
+        /// <param name="entity">The entity to insert or update.</param>
+        /// <returns></returns>
+        Task<(TEntity entity, UpsertAction action)> UpsertAsync(TEntity entity);
 
         Task DeleteAsync(object id);
 

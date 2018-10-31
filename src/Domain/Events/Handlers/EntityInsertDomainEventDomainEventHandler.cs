@@ -4,10 +4,10 @@
     using System.Threading.Tasks;
     using Naos.Core.Common;
 
-    public class EntityCreateDomainEventDomainEventHandler
-        : IDomainEventHandler<EntityCreateDomainEvent<IEntity>>
+    public class EntityInsertDomainEventDomainEventHandler
+        : IDomainEventHandler<EntityInsertDomainEvent<IEntity>>
     {
-        public async Task Handle(EntityCreateDomainEvent<IEntity> notification, CancellationToken cancellationToken)
+        public async Task Handle(EntityInsertDomainEvent<IEntity> notification, CancellationToken cancellationToken)
         {
             await Task.Run(() =>
             {

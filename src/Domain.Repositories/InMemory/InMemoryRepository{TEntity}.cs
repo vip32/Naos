@@ -132,16 +132,37 @@
         }
 
         /// <summary>
-        /// Adds or updates asynchronous.
+        /// Inserts the provided entity.
         /// </summary>
-        /// <param name="entity">The entity.</param>
+        /// <param name="entity">The entity to insert.</param>
         /// <returns></returns>
-        /// <exception cref="Exception">Method for generating new Ids not provided</exception>
-        public async Task<TEntity> UpsertAsync(TEntity entity)
+        public async Task<TEntity> InsertAsync(TEntity entity)
+        {
+            var result = await this.UpsertAsync(entity).ConfigureAwait(false);
+            return result.entity;
+        }
+
+        /// <summary>
+        /// Updates the provided entity.
+        /// </summary>
+        /// <param name="entity">The entity to update.</param>
+        /// <returns></returns>
+        public async Task<TEntity> UpdateAsync(TEntity entity)
+        {
+            var result = await this.UpsertAsync(entity).ConfigureAwait(false);
+            return result.entity;
+        }
+
+        /// <summary>
+        /// Insert or updates the entity.
+        /// </summary>
+        /// <param name="entity">The entity to insert or update.</param>
+        /// <returns></returns>
+        public async Task<(TEntity entity, UpsertAction action)> UpsertAsync(TEntity entity)
         {
             if (entity == null)
             {
-                return null;
+                return (null, UpsertAction.None);
             }
 
             bool isTransient = false;
@@ -185,7 +206,7 @@
             {
                 if (isTransient)
                 {
-                    await this.mediator.Publish(new EntityCreateDomainEvent<TEntity>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityInsertDomainEvent<TEntity>(entity)).ConfigureAwait(false);
                 }
                 else
                 {
@@ -200,7 +221,7 @@
             {
                 if (isTransient)
                 {
-                    await this.mediator.Publish(new EntityCreatedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityInsertedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
                 }
                 else
                 {
@@ -208,7 +229,9 @@
                 }
             }
 
-            return entity;
+#pragma warning disable SA1008 // Opening parenthesis must be spaced correctly
+            return isTransient ? (entity, UpsertAction.Inserted) : (entity, UpsertAction.Updated);
+#pragma warning restore SA1008 // Opening parenthesis must be spaced correctly
         }
 
         /// <summary>

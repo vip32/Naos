@@ -25,8 +25,8 @@
             var entity = new StubEntity { FirstName = "FirstName1", LastName = "LastName1" };
             entity.State.CreatedDate = null;
             entity.State.UpdatedDate = null;
-            var createEvent = new EntityCreateDomainEvent<IEntity>(entity);
-            var createdEvent = new EntityCreatedDomainEvent<IEntity>(entity);
+            var createEvent = new EntityInsertDomainEvent<IEntity>(entity);
+            var createdEvent = new EntityInsertedDomainEvent<IEntity>(entity);
             var updateEvent = new EntityUpdateDomainEvent<IEntity>(entity);
             var updatedEvent = new EntityUpdatedDomainEvent<IEntity>(entity);
 

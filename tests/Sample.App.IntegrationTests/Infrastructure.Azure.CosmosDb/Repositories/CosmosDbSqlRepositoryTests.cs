@@ -211,7 +211,7 @@
                     }).ConfigureAwait(false);
 
                 // assert
-                Assert.NotNull(result);
+                Assert.NotNull(result.entity);
             }
 
             await this.mediator.Received().Publish(Arg.Any<IDomainEvent>());

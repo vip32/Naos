@@ -221,7 +221,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             var sut = new InMemoryRepository<StubEntityString>(mediator, this.entities);
 
             // act
-            var entity = await sut.UpsertAsync(new StubEntityString
+            var result = await sut.UpsertAsync(new StubEntityString
             {
                 FirstName = "FirstName99",
                 Id = "Id99",
@@ -229,9 +229,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             }).ConfigureAwait(false);
 
             // assert
-            Assert.NotNull(entity);
-            Assert.False(entity.Id.IsNullOrEmpty());
-            Assert.Equal("FirstName99", entity.FirstName);
+            Assert.NotNull(result.entity);
+            Assert.False(result.entity.Id.IsNullOrEmpty());
+            Assert.Equal("FirstName99", result.entity.FirstName);
             await mediator.Received().Publish(Arg.Any<IDomainEvent>());
         }
 
@@ -243,16 +243,16 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             var sut = new InMemoryRepository<StubEntityString>(mediator, this.entities);
 
             // act
-            var entity = await sut.UpsertAsync(new StubEntityString
+            var result = await sut.UpsertAsync(new StubEntityString
             {
                 FirstName = "FirstName88",
                 TenantId = this.tenantId
             }).ConfigureAwait(false);
 
             // assert
-            Assert.NotNull(entity);
-            Assert.False(entity.Id.IsNullOrEmpty());
-            Assert.Equal("FirstName88", entity.FirstName);
+            Assert.NotNull(result.entity);
+            Assert.False(result.entity.Id.IsNullOrEmpty());
+            Assert.Equal("FirstName88", result.entity.FirstName);
             await mediator.Received().Publish(Arg.Any<IDomainEvent>());
         }
 

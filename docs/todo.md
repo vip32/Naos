@@ -7,8 +7,9 @@ criteria > linq https://blogs.msdn.microsoft.com/mattwar/2007/07/31/linq-buildin
 validation : entity.Validate(handler)
 ef sqlite + inmemory : https://www.thereformedprogrammer.net/using-in-memory-databases-for-unit-testing-ef-core-applications/
 webapi test + jwt https://www.domstamand.com/testing-a-webapi-in-net-core-with-integration-tests/
-litedb repo http://www.litedb.org/
+litedb repo https://github.com/mbdavid/LiteDB/wiki/Repository-Pattern
 file repo https://github.com/selmaohneh/Repository/tree/master/Repository.FileRepository
+properties https://github.com/schotime/NPoco/blob/master/src/NPoco/PocoExpando.cs
 
 repo insert/update
 repo return status when upsert (insert or update) > + entity = tuple
