@@ -5,7 +5,7 @@
     using Naos.Core.Domain.Specifications;
 
     public interface IReadOnlyRepository<TEntity>
-        where TEntity : class, IEntity, IAggregateRoot
+        //where TEntity : class, IEntity, IAggregateRoot
     {
         Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null);
 

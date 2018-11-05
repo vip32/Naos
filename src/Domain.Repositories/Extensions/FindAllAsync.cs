@@ -11,48 +11,48 @@
         /// <summary>
         /// Finds all asynchronous.
         /// </summary>
-        /// <typeparam name="T">Type of the result</typeparam>
+        /// <typeparam name="TEntity">Type of the result</typeparam>
         /// <param name="source">The source.</param>
         /// <param name="tenantId">The tenant identifier.</param>
         /// <param name="options">The options.</param>
         /// <returns></returns>
-        public static async Task<IEnumerable<T>> FindAllAsync<T>(
-            this IRepository<T> source,
+        public static async Task<IEnumerable<TEntity>> FindAllAsync<TEntity>(
+            this IRepository<TEntity> source,
             string tenantId,
-            IFindOptions<T> options = null)
-            where T : class, IEntity, ITenantEntity, IAggregateRoot
+            IFindOptions<TEntity> options = null)
+            where TEntity : class, IEntity, ITenantEntity, IAggregateRoot
         {
             EnsureArg.IsNotNullOrEmpty(tenantId);
 
             return await source.FindAllAsync(
-                HasTenantSpecification<T>.Factory.Create(tenantId),
+                HasTenantSpecification<TEntity>.Factory.Create(tenantId),
                 options).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Finds all asynchronous.
         /// </summary>
-        /// <typeparam name="T">Type of the result</typeparam>
+        /// <typeparam name="TEnitty">Type of the result</typeparam>
         /// <param name="source">The source.</param>
         /// <param name="tenantId">The tenant identifier.</param>
         /// <param name="specification">The specification.</param>
         /// <param name="options">The options.</param>
         /// <returns></returns>
-        public static async Task<IEnumerable<T>> FindAllAsync<T>(
-            this IRepository<T> source,
+        public static async Task<IEnumerable<TEnitty>> FindAllAsync<TEnitty>(
+            this IRepository<TEnitty> source,
             string tenantId,
-            Specification<T> specification,
-            IFindOptions<T> options = null)
-            where T : class, IEntity, ITenantEntity, IAggregateRoot
+            Specification<TEnitty> specification,
+            IFindOptions<TEnitty> options = null)
+            where TEnitty : class, IEntity, ITenantEntity, IAggregateRoot
         {
             EnsureArg.IsNotNullOrEmpty(tenantId);
             EnsureArg.IsNotNull(specification);
 
             return await source.FindAllAsync(
-                new List<Specification<T>>
+                new List<ISpecification<TEnitty>>
                 {
                     specification,
-                    HasTenantSpecification<T>.Factory.Create(tenantId)
+                    HasTenantSpecification<TEnitty>.Factory.Create(tenantId)
                 },
                 options).ConfigureAwait(false);
         }
@@ -60,28 +60,28 @@
         /// <summary>
         /// Finds all asynchronous.
         /// </summary>
-        /// <typeparam name="T">Type of the result</typeparam>
+        /// <typeparam name="TEntity">Type of the result</typeparam>
         /// <param name="source">The source.</param>
         /// <param name="tenantId">The tenant identifier.</param>
         /// <param name="specifications">The specifications.</param>
         /// <param name="options">The options.</param>
         /// <returns></returns>
-        public static async Task<IEnumerable<T>> FindAllAsync<T>(
-            this IRepository<T> source,
+        public static async Task<IEnumerable<TEntity>> FindAllAsync<TEntity>(
+            this IRepository<TEntity> source,
             string tenantId,
-            IEnumerable<Specification<T>> specifications,
-            IFindOptions<T> options = null)
-            where T : class, IEntity, ITenantEntity, IAggregateRoot
+            IEnumerable<Specification<TEntity>> specifications,
+            IFindOptions<TEntity> options = null)
+            where TEntity : class, IEntity, ITenantEntity, IAggregateRoot
         {
             EnsureArg.IsNotNullOrEmpty(tenantId);
-            var specificationsArray = specifications as Specification<T>[] ?? specifications.ToArray();
+            var specificationsArray = specifications as Specification<TEntity>[] ?? specifications.ToArray();
             EnsureArg.IsNotNull(specificationsArray);
             EnsureArg.IsTrue(specificationsArray.Any());
 
             return await source.FindAllAsync(
-                new List<Specification<T>>(specificationsArray)
+                new List<Specification<TEntity>>(specificationsArray)
                 {
-                    HasTenantSpecification<T>.Factory.Create(tenantId)
+                    HasTenantSpecification<TEntity>.Factory.Create(tenantId)
                 },
                 options).ConfigureAwait(false);
         }

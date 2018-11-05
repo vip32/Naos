@@ -6,6 +6,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
     using System.Linq.Expressions;
     using System.Threading.Tasks;
     using AutoMapper;
+    using AutoMapper.Extensions.ExpressionMapping;
     using EnsureThat;
     using FizzWare.NBuilder;
     using MediatR;
@@ -77,6 +78,26 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             // assert
             Assert.False(result.IsNullOrEmpty());
             Assert.Equal(20, result.Count());
+        }
+
+        [Fact]
+        public void TenantSpecificationExpressionMap_Test() // TODO: move to own test class + mocks
+        {
+            // arrange
+            var spec = new HasTenantSpecification2<StubEntity>(this.tenantId);
+            var expression = spec.ToExpression();
+
+            // act
+            var dtoExpression = StubEntityMapperConfiguration.Create()
+                .MapExpression<Expression<Func<StubDto, bool>>>(expression);
+            var result = this.entities.Where(dtoExpression.Compile());
+
+            // assert
+            Assert.NotNull(dtoExpression);
+            Assert.NotNull(result);
+            Assert.NotNull(result.FirstOrDefault()?.Identifier);
+            Assert.NotNull(result.FirstOrDefault()?.ExtTenantId);
+            Assert.Equal(this.tenantId, result.FirstOrDefault()?.ExtTenantId);
         }
 
         [Fact]
@@ -306,6 +327,13 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                         .ForMember(d => d.FullName, o => o.MapFrom(s => $"{s.FirstName} {s.LastName}"))
                         .ForMember(d => d.YearOfBirth, o => o.ResolveUsing(new YearOfBirthResolver()));
 
+                    c.CreateMap<ITenantEntity, StubDto>()
+                        .ForMember(d => d.ExtTenantId, o => o.MapFrom(s => s.TenantId))
+                        .ForMember(d => d.Identifier, o => o.Ignore())
+                        .ForMember(d => d.Country, o => o.Ignore())
+                        .ForMember(d => d.FullName, o => o.Ignore())
+                        .ForMember(d => d.YearOfBirth, o => o.Ignore());
+
                     c.CreateMap<StubDto, StubEntity>()
                         .ForMember(d => d.TenantId, o => o.MapFrom(s => s.ExtTenantId))
                         .ForMember(d => d.Id, o => o.MapFrom(s => s.Identifier))
@@ -316,6 +344,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                         .ForMember(d => d.LastName, o => o.MapFrom(s => s.FullName.Split(' ', StringSplitOptions.None).LastOrDefault()))
                         .ForMember(d => d.Age, o => o.ResolveUsing(new AgeResolver()))
                         .ForMember(d => d.State, o => o.Ignore());
+
+                    c.CreateMap<StubDto, ITenantEntity>()
+                        .ForMember(d => d.TenantId, o => o.MapFrom(s => s.ExtTenantId));
                 });
 
                 mapper.AssertConfigurationIsValid();

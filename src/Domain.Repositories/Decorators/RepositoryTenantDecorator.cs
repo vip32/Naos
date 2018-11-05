@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Naos.Core.Common;
     using Naos.Core.Domain.Specifications;
 
     public class RepositoryTenantDecorator<TEntity> : IRepository<TEntity>
@@ -47,7 +48,7 @@
         public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null)
         {
             return await this.decoratee.FindAllAsync(
-                new[] { new HasTenantSpecification<TEntity>(this.tenantId) }.Concat(specifications),
+                new[] { HasTenantSpecification<TEntity>.Factory.Create(this.tenantId) }.Concat(specifications.NullToEmpty()),
                 options).ConfigureAwait(false);
         }
 

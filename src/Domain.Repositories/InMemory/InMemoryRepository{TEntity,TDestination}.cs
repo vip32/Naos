@@ -115,7 +115,7 @@
 
             if (this.Options?.Mapper != null && result != null)
             {
-                return result.Select(r => this.Options.Mapper.Map<TEntity>(r));
+                return result.Select(d => this.Options.Mapper.Map<TEntity>(d));
             }
 
             return null;

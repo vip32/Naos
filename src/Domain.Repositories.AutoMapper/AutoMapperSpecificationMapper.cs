@@ -7,8 +7,8 @@
     using global::AutoMapper.Extensions.ExpressionMapping;
     using Naos.Core.Domain.Specifications;
 
-    public class AutoMapperSpecificationMapper<TEntity, TDestination>
-        : ISpecificationMapper<TEntity, TDestination>
+    public class AutoMapperSpecificationMapper<T, TDestination>
+        : ISpecificationMapper<T, TDestination>
     {
         private readonly IMapper mapper;
 
@@ -19,12 +19,12 @@
             this.mapper = mapper;
         }
 
-        public bool CanHandle(ISpecification<TEntity> specification)
+        public bool CanHandle(ISpecification<T> specification)
         {
             return true;
         }
 
-        public Func<TDestination, bool> Map(ISpecification<TEntity> specification)
+        public Func<TDestination, bool> Map(ISpecification<T> specification)
         {
             var expression = this.mapper
                 .MapExpression<Expression<Func<TDestination, bool>>>(specification.ToExpression());

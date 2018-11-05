@@ -31,7 +31,7 @@
     }
 
 #pragma warning disable SA1402 // File may only contain a single class
-    public class HasTenantSpecification2 : Specification<ITenantEntity>
+    public class HasTenantSpecification2<T> : Specification<ITenantEntity>
 #pragma warning restore SA1402 // File may only contain a single class
     {
         protected readonly string tenantId;
@@ -50,9 +50,9 @@
 
         public static class Factory
         {
-            public static HasTenantSpecification<ITenantEntity> Create(string tenantId)
+            public static HasTenantSpecification2<T> Create(string tenantId)
             {
-                return new HasTenantSpecification<ITenantEntity>(tenantId);
+                return new HasTenantSpecification2<T>(tenantId);
             }
         }
     }
