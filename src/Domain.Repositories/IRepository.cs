@@ -1,25 +1,30 @@
 ﻿namespace Naos.Core.Domain.Repositories
 {
-    using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Naos.Core.Domain.Specifications;
 
-    public interface IRepository<TEntity>
+    public interface IRepository<TEntity> : IReadOnlyRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
-        Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null);
+        /// <summary>
+        /// Inserts the provided entity.
+        /// </summary>
+        /// <param name="entity">The entity to insert.</param>
+        /// <returns></returns>
+        Task<TEntity> InsertAsync(TEntity entity);
 
-        Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null);
+        /// <summary>
+        /// Updates the provided entity.
+        /// </summary>
+        /// <param name="entity">The entity to update.</param>
+        /// <returns></returns>
+        Task<TEntity> UpdateAsync(TEntity entity);
 
-        Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null);
-
-        Task<TEntity> FindOneAsync(object id);
-
-        //Task<T> FindOneAsync(ISpecification<T> specification);
-
-        Task<bool> ExistsAsync(object id);
-
-        Task<TEntity> AddOrUpdateAsync(TEntity entity);
+        /// <summary>
+        /// Insert or updates the provided entity.
+        /// </summary>
+        /// <param name="entity">The entity to insert or update.</param>
+        /// <returns></returns>
+        Task<(TEntity entity, UpsertAction action)> UpsertAsync(TEntity entity);
 
         Task DeleteAsync(object id);
 

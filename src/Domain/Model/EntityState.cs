@@ -7,6 +7,8 @@
 
     public class EntityState
     {
+        public string IdentifierHash { get; private set; }
+
         public string CreatedBy { get; set; }
 
         public DateTimeEpoch CreatedDate { get; set; } = new DateTimeEpoch();
@@ -79,6 +81,16 @@
         public virtual bool IsDeleted
         {
             get { return (this.Deleted != null && (bool)this.Deleted) || !this.DeletedReason.IsNullOrEmpty(); }
+        }
+
+        /// <summary>
+        /// Updates the version identifier to the current instance state
+        /// </summary>
+        /// <param name="entity">The entity to calculate the hash for.</param>
+        public virtual void UpdateIdentifierHash(IEntity entity)
+        {
+            // TODO: omit .State from the hashcode generation
+            this.IdentifierHash = HashAlgorithm.ComputeHash(entity);
         }
 
         /// <summary>

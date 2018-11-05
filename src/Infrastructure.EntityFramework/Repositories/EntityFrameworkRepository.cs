@@ -23,7 +23,10 @@
         /// <param name="mediator">The mediator.</param>
         /// <param name="dbContext">The EF database context.</param>
         /// <param name="options">The options.</param>
-        public EntityFrameworkRepository(IMediator mediator, DbContext dbContext, IRepositoryOptions options = null)
+        public EntityFrameworkRepository(
+            IMediator mediator,
+            DbContext dbContext,
+            IRepositoryOptions options = null)
         {
             EnsureArg.IsNotNull(mediator);
             EnsureArg.IsNotNull(dbContext);
@@ -82,34 +85,47 @@
             return await this.FindOneAsync(id) != null;
         }
 
-        public async Task<TEntity> AddOrUpdateAsync(TEntity entity)
+        /// <summary>
+        /// Inserts the provided entity.
+        /// </summary>
+        /// <param name="entity">The entity to insert.</param>
+        /// <returns></returns>
+        public async Task<TEntity> InsertAsync(TEntity entity)
+        {
+            var result = await this.UpsertAsync(entity).ConfigureAwait(false);
+            return result.entity;
+        }
+
+        /// <summary>
+        /// Updates the provided entity.
+        /// </summary>
+        /// <param name="entity">The entity to update.</param>
+        /// <returns></returns>
+        public async Task<TEntity> UpdateAsync(TEntity entity)
+        {
+            var result = await this.UpsertAsync(entity).ConfigureAwait(false);
+            return result.entity;
+        }
+
+        /// <summary>
+        /// Insert or updates the provided entity.
+        /// </summary>
+        /// <param name="entity">The entity to insert or update.</param>
+        /// <returns></returns>
+        public async Task<(TEntity entity, UpsertAction action)> UpsertAsync(TEntity entity)
         {
             if (entity == null)
             {
-                return null;
+                return (null, UpsertAction.None);
             }
 
-            bool isTransient = entity.Id.IsDefault(); // todo: add .IsTransient to Entity class
-
-            if (isTransient && entity is IStateEntity)
-            {
-                // TODO: do this in an notification handler (EntityAddDomainEvent)
-                entity.As<IStateEntity>().State.CreatedDate = new DateTimeEpoch();
-            }
-
-            if (!isTransient && entity is IStateEntity)
-            {
-                // TODO: do this in an notification handler (EntityUpdateDomainEvent)
-                entity.As<IStateEntity>().State.UpdatedDate = new DateTimeEpoch();
-            }
-
-            this.dbContext.Set<TEntity>().Add(entity);
+            bool isNew = entity.Id.IsDefault() || !await this.ExistsAsync(entity.Id).ConfigureAwait(false);
 
             if (this.Options?.PublishEvents != false)
             {
-                if (isTransient)
+                if (isNew)
                 {
-                    await this.mediator.Publish(new EntityCreateDomainEvent<TEntity>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityInsertDomainEvent<TEntity>(entity)).ConfigureAwait(false);
                 }
                 else
                 {
@@ -117,13 +133,14 @@
                 }
             }
 
+            this.dbContext.Set<TEntity>().Add(entity);
             await this.dbContext.SaveChangesAsync().ConfigureAwait(false);
 
             if (this.Options?.PublishEvents != false)
             {
-                if (isTransient)
+                if (isNew)
                 {
-                    await this.mediator.Publish(new EntityCreatedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityInsertedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
                 }
                 else
                 {
@@ -131,7 +148,9 @@
                 }
             }
 
-            return entity;
+#pragma warning disable SA1008 // Opening parenthesis must be spaced correctly
+            return isNew ? (entity, UpsertAction.Inserted) : (entity, UpsertAction.Updated);
+#pragma warning restore SA1008 // Opening parenthesis must be spaced correctly
         }
 
         public async Task DeleteAsync(object id)

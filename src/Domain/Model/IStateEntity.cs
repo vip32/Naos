@@ -9,5 +9,10 @@
         /// The current state.
         /// </value>
         EntityState State { get; }
+
+        /// <summary>
+        /// Updates the state hash for an entity.
+        /// </summary>
+        void UpdateIdentifierHash();
     }
 }

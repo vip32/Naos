@@ -1,13 +1,13 @@
 ﻿namespace Naos.Core.Domain
 {
-    public class EntityCreateDomainEvent<TEntity> : IDomainEvent
+    public class EntityInsertedDomainEvent<TEntity> : IDomainEvent
         where TEntity : class, IEntity
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="EntityCreateDomainEvent{TEntity}"/> class.
+        /// Initializes a new instance of the <see cref="EntityInsertedDomainEvent{TEntity}"/> class.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        public EntityCreateDomainEvent(TEntity entity)
+        public EntityInsertedDomainEvent(TEntity entity)
         {
             this.Entity = entity;
         }

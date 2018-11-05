@@ -173,11 +173,11 @@
                 };
 
                 // act
-                var result = await sut.AddOrUpdateAsync(entity);
+                var result = await sut.UpsertAsync(entity);
                 var findResult = await sut.FindOneAsync(entity.Id);
 
                 // assert
-                Assert.NotNull(result);
+                Assert.NotNull(result.entity);
                 Assert.NotNull(findResult);
                 Assert.True(findResult.FirstName == "FirstName20");
                 await mediator.Received().Publish(Arg.Any<IDomainEvent>());

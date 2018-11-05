@@ -12,7 +12,7 @@
     public interface ICosmosDbSqlProvider<T>
         where T : class, IEntity
     {
-        Task<T> AddOrUpdateAsync(T entity);
+        Task<T> UpsertAsync(T entity);
 
         Task<T> AddOrUpdateAttachmentAsync(T entity, string attachmentId, string contentType, Stream stream);
 
