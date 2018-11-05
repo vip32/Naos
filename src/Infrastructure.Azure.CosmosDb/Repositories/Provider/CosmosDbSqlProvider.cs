@@ -134,7 +134,7 @@
             return isSuccess;
         }
 
-        public async Task<T> AddOrUpdateAsync(T entity)
+        public async Task<T> UpsertAsync(T entity)
         {
             var doc = await this.client.UpsertDocumentAsync((await this.documentCollection).SelfLink, entity).ConfigureAwait(false);
 

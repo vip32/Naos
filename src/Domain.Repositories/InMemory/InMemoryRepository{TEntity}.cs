@@ -165,46 +165,17 @@
                 return (null, UpsertAction.None);
             }
 
-            bool isTransient = false;
-            if (entity.Id.IsDefault())
-            {
-                // TODO: move this to seperate class (IdentityGenerator)
-                if (entity is IEntity<int>)
-                {
-                    (entity as IEntity<int>).Id = this.entities.Count() + 1;
-                }
-                else if (entity is IEntity<string>)
-                {
-                    (entity as IEntity<string>).Id = Guid.NewGuid().ToString();
-                }
-                else if (entity is IEntity<Guid>)
-                {
-                    (entity as IEntity<Guid>).Id = Guid.NewGuid();
-                }
-                else
-                {
-                    throw new NotSupportedException($"Entity Id type {entity.Id.GetType().Name}");
-                    // TODO: or just set Id to null?
-                }
+            bool isTransient = entity.Id.IsDefault();
+            bool isNew = isTransient || !await this.ExistsAsync(entity.Id).ConfigureAwait(false);
 
-                isTransient = true;
-            }
-
-            if (isTransient && entity is IStateEntity)
+            if (isTransient)
             {
-                // TODO: do this in an notification handler (EntityAddDomainEvent), the handler has access to the requestcontext and can set the created user (State.CreatedBy)
-                entity.As<IStateEntity>().State.CreatedDate = new DateTimeEpoch();
-            }
-
-            if (!isTransient && entity is IStateEntity)
-            {
-                // TODO: do this in an notification handler (EntityUpdateDomainEvent)
-                entity.As<IStateEntity>().State.UpdatedDate = new DateTimeEpoch();
+                this.EnsureId(entity);
             }
 
             if (this.Options?.PublishEvents != false)
             {
-                if (isTransient)
+                if (isNew)
                 {
                     await this.mediator.Publish(new EntityInsertDomainEvent<TEntity>(entity)).ConfigureAwait(false);
                 }
@@ -215,11 +186,11 @@
             }
 
             // TODO: map to destination
-            this.entities = this.entities.Concat(new[] { entity }.AsEnumerable());
+            this.entities = this.entities.Where(e => !e.Id.Equals(entity.Id)).Concat(new[] { entity }).ToList();
 
             if (this.Options?.PublishEvents != false)
             {
-                if (isTransient)
+                if (isNew)
                 {
                     await this.mediator.Publish(new EntityInsertedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
                 }
@@ -230,7 +201,7 @@
             }
 
 #pragma warning disable SA1008 // Opening parenthesis must be spaced correctly
-            return isTransient ? (entity, UpsertAction.Inserted) : (entity, UpsertAction.Updated);
+            return isNew ? (entity, UpsertAction.Inserted) : (entity, UpsertAction.Updated);
 #pragma warning restore SA1008 // Opening parenthesis must be spaced correctly
         }
 
@@ -314,6 +285,27 @@
             }
 
             return result;
+        }
+
+        private void EnsureId(TEntity entity) // TODO: move this to seperate class (IdentityGenerator)
+        {
+            if (entity is IEntity<int>)
+            {
+                (entity as IEntity<int>).Id = this.entities.Count() + 1;
+            }
+            else if (entity is IEntity<string>)
+            {
+                (entity as IEntity<string>).Id = Guid.NewGuid().ToString();
+            }
+            else if (entity is IEntity<Guid>)
+            {
+                (entity as IEntity<Guid>).Id = Guid.NewGuid();
+            }
+            else
+            {
+                throw new NotSupportedException($"entity id type {entity.Id.GetType().Name} not supported");
+                // TODO: or just set Id to null?
+            }
         }
     }
 }
