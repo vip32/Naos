@@ -70,7 +70,7 @@
                 return null;
             }
 
-            var result = this.entities.SingleOrDefault(e => this.idSelector(e) == id);
+            var result = this.entities.SingleOrDefault(e => this.idSelector(e) == id); // TODO: use HasIdSpecification + MapExpression
 
             if (this.Options?.Mapper != null && result != null)
             {
