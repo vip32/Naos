@@ -32,27 +32,27 @@
         /// <summary>
         /// Finds all asynchronous.
         /// </summary>
-        /// <typeparam name="TEnitty">Type of the result</typeparam>
+        /// <typeparam name="TEntity">Type of the result</typeparam>
         /// <param name="source">The source.</param>
         /// <param name="tenantId">The tenant identifier.</param>
         /// <param name="specification">The specification.</param>
         /// <param name="options">The options.</param>
         /// <returns></returns>
-        public static async Task<IEnumerable<TEnitty>> FindAllAsync<TEnitty>(
-            this IRepository<TEnitty> source,
+        public static async Task<IEnumerable<TEntity>> FindAllAsync<TEntity>(
+            this IRepository<TEntity> source,
             string tenantId,
-            Specification<TEnitty> specification,
-            IFindOptions<TEnitty> options = null)
-            where TEnitty : class, IEntity, ITenantEntity, IAggregateRoot
+            Specification<TEntity> specification,
+            IFindOptions<TEntity> options = null)
+            where TEntity : class, IEntity, ITenantEntity, IAggregateRoot
         {
             EnsureArg.IsNotNullOrEmpty(tenantId);
             EnsureArg.IsNotNull(specification);
 
             return await source.FindAllAsync(
-                new List<ISpecification<TEnitty>>
+                new List<ISpecification<TEntity>>
                 {
                     specification,
-                    HasTenantSpecification<TEnitty>.Factory.Create(tenantId)
+                    HasTenantSpecification<TEntity>.Factory.Create(tenantId)
                 },
                 options).ConfigureAwait(false);
         }

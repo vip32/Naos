@@ -60,6 +60,31 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         {
             // arrange
             var mediator = Substitute.For<IMediator>();
+            var sut = new RepositorySpecificationDecorator<StubEntity>(
+                new InMemoryRepository<StubEntity, StubDto>( // decoratee
+                    mediator,
+                    this.entities,
+                    new RepositoryOptions(
+                        new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
+                    new[]
+                    {
+                        new AutoMapperSpecificationMapper<StubEntity, StubDto>(StubEntityMapperConfiguration.Create())
+                    }),
+                new Specification<StubEntity>(t => t.TenantId == this.tenantId));
+
+            // act
+            var result = await sut.FindAllAsync().ConfigureAwait(false);
+
+            // assert
+            Assert.False(result.IsNullOrEmpty());
+            Assert.Equal(20, result.Count());
+        }
+
+        [Fact]
+        public async Task FindAllTenantEntities2_Test() // TODO: move to own test class + mocks
+        {
+            // arrange
+            var mediator = Substitute.For<IMediator>();
             var sut = new RepositoryTenantDecorator<StubEntity>(
                 new InMemoryRepository<StubEntity, StubDto>( // decoratee
                     mediator,
@@ -84,13 +109,16 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public void TenantSpecificationExpressionMap_Test() // TODO: move to own test class + mocks
         {
             // arrange
-            var spec = new HasTenantSpecification2<StubEntity>(this.tenantId);
+            var spec = new Specification<StubEntity>(t => t.TenantId == this.tenantId);
             var expression = spec.ToExpression();
 
             // act
             var dtoExpression = StubEntityMapperConfiguration.Create()
                 .MapExpression<Expression<Func<StubDto, bool>>>(expression);
             var result = this.entities.Where(dtoExpression.Compile());
+
+            //var mapped = StubEntityMapperConfiguration.Create().Map<Expression<Func<StubEntity, bool>>, Expression<Func<StubDto, bool>>>(expression);
+            //var result = this.entities.AsQueryable().Where(mapped);
 
             // assert
             Assert.NotNull(dtoExpression);
@@ -126,37 +154,6 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             // assert
             Assert.NotNull(result);
             Assert.Single(result);
-            Assert.NotNull(result.FirstOrDefault()?.Id);
-            Assert.NotNull(result.FirstOrDefault(e => !e.FirstName.IsNullOrEmpty() && !e.LastName.IsNullOrEmpty()));
-        }
-
-        [Fact]
-        public async Task FindMappedEntitiesWithSpecification2_Test()
-        {
-            // arrange
-            var mediator = Substitute.For<IMediator>();
-            var sut = new InMemoryRepository<StubEntity, StubDto>(
-                mediator,
-                this.entities,
-                new RepositoryOptions(
-                    new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
-                new[]
-                {
-                    /*new StubHasNameSpecificationMapper(),*/
-                    new AutoMapperSpecificationMapper<StubEntity, StubDto>(StubEntityMapperConfiguration.Create())
-                }); // infrastructure layer
-
-            // act
-            var result = await sut.FindAllAsync(
-                new StubHasTenantSpecification2(this.tenantId),
-                //new HasTenantSpecification<StubEntity>(this.tenantId),
-                new FindOptions<StubEntity> { OrderBy = e => e.Country }).ConfigureAwait(false); // domain layer
-            //var result = await sut.FindAllAsync(
-            //    new StubHasIdSpecification("Identifier99")).ConfigureAwait(false); // domain layer
-
-            // assert
-            Assert.NotNull(result);
-            Assert.Equal(20, result.Count());
             Assert.NotNull(result.FirstOrDefault()?.Id);
             Assert.NotNull(result.FirstOrDefault(e => !e.FirstName.IsNullOrEmpty() && !e.LastName.IsNullOrEmpty()));
         }
@@ -263,18 +260,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
 
         public class StubHasTenantSpecification : Specification<StubEntity> // TODO: this should be mocked
         {
-            protected readonly string tenantId;
-
             public StubHasTenantSpecification(string tenantId)
+                : base(t => t.TenantId == tenantId)
             {
-                EnsureArg.IsNotNull(tenantId);
-
-                this.tenantId = tenantId;
-            }
-
-            public override Expression<Func<StubEntity, bool>> ToExpression()
-            {
-                return t => t.TenantId == this.tenantId;
             }
         }
 
@@ -317,6 +305,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             {
                 var mapper = new MapperConfiguration(c =>
                 {
+                    //c.AddExpressionMapping();
                     //c.IgnoreUnmapped();
                     //c.AllowNullCollections = true;
                     c.CreateMap<StubEntity, StubDto>()
@@ -327,12 +316,12 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                         .ForMember(d => d.FullName, o => o.MapFrom(s => $"{s.FirstName} {s.LastName}"))
                         .ForMember(d => d.YearOfBirth, o => o.ResolveUsing(new YearOfBirthResolver()));
 
-                    c.CreateMap<ITenantEntity, StubDto>()
-                        .ForMember(d => d.ExtTenantId, o => o.MapFrom(s => s.TenantId))
-                        .ForMember(d => d.Identifier, o => o.Ignore())
-                        .ForMember(d => d.Country, o => o.Ignore())
-                        .ForMember(d => d.FullName, o => o.Ignore())
-                        .ForMember(d => d.YearOfBirth, o => o.Ignore());
+                    //c.CreateMap<ITenantEntity, StubDto>()
+                    //    .ForMember(d => d.ExtTenantId, o => o.MapFrom(s => s.TenantId))
+                    //    .ForMember(d => d.Identifier, o => o.Ignore())
+                    //    .ForMember(d => d.Country, o => o.Ignore())
+                    //    .ForMember(d => d.FullName, o => o.Ignore())
+                    //    .ForMember(d => d.YearOfBirth, o => o.Ignore());
 
                     c.CreateMap<StubDto, StubEntity>()
                         .ForMember(d => d.TenantId, o => o.MapFrom(s => s.ExtTenantId))
@@ -345,8 +334,8 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                         .ForMember(d => d.Age, o => o.ResolveUsing(new AgeResolver()))
                         .ForMember(d => d.State, o => o.Ignore());
 
-                    c.CreateMap<StubDto, ITenantEntity>()
-                        .ForMember(d => d.TenantId, o => o.MapFrom(s => s.ExtTenantId));
+                    //c.CreateMap<StubDto, ITenantEntity>()
+                    //    .ForMember(d => d.TenantId, o => o.MapFrom(s => s.ExtTenantId));
                 });
 
                 mapper.AssertConfigurationIsValid();

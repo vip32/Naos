@@ -7,8 +7,8 @@
     using global::AutoMapper.Extensions.ExpressionMapping;
     using Naos.Core.Domain.Specifications;
 
-    public class AutoMapperSpecificationMapper<T, TDestination>
-        : ISpecificationMapper<T, TDestination>
+    public class AutoMapperSpecificationMapper<T, TDestination> : ISpecificationMapper<T, TDestination>
+        where T : class
     {
         private readonly IMapper mapper;
 

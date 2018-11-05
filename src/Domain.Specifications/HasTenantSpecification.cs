@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.Domain.Specifications
 {
     using System;
+    using System.Linq;
     using System.Linq.Expressions;
     using EnsureThat;
 
@@ -31,7 +32,8 @@
     }
 
 #pragma warning disable SA1402 // File may only contain a single class
-    public class HasTenantSpecification2<T> : Specification<ITenantEntity>
+    public class HasTenantSpecification2 : Specification<ITenantEntity> // ITenantEntity
+    //where T : class
 #pragma warning restore SA1402 // File may only contain a single class
     {
         protected readonly string tenantId;
@@ -48,12 +50,12 @@
             return t => t.TenantId == this.tenantId;
         }
 
-        public static class Factory
-        {
-            public static HasTenantSpecification2<T> Create(string tenantId)
-            {
-                return new HasTenantSpecification2<T>(tenantId);
-            }
-        }
+        //public static class Factory
+        //{
+        //    public static ISpecification<T> Create(string tenantId)
+        //    {
+        //        return new HasTenantSpecification2<T>(tenantId);
+        //    }
+        //}
     }
 }

@@ -10,6 +10,8 @@ webapi test + jwt https://www.domstamand.com/testing-a-webapi-in-net-core-with-i
 litedb repo https://github.com/mbdavid/LiteDB/wiki/Repository-Pattern
 file repo https://github.com/selmaohneh/Repository/tree/master/Repository.FileRepository
 properties https://github.com/schotime/NPoco/blob/master/src/NPoco/PocoExpando.cs
+spec mapping with visitor https://fabiomarreco.github.io/blog/2018/specificationpattern-with-entityframework/
+tenant resolver https://stackoverflow.com/questions/41820206/c-sharp-architecture-pattern-for-tenant-specific-business-logic
 
 repo insert/update
 repo return status when upsert (insert or update) > + entity = tuple

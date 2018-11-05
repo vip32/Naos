@@ -16,7 +16,7 @@
         /// <returns></returns>
         public static Expression<T> Expand<T>(this Expression<T> expression)
         {
-            // source: http://www.albahari.com/nutshell/predicatebuilder.aspx
+            // source: http://www.albahari.com/nutshell/predicatebuilder.aspx & http://www.albahari.com/nutshell/linqkit.aspx
             return (Expression<T>)new ExpressionExpander().Visit(expression);
         }
 
@@ -56,7 +56,7 @@
                 var target = invocationExpression.Expression;
                 if (target is MemberExpression)
                 {
-                    target = this.TransformExpr((MemberExpression)target);
+                    target = this.TransformExpression((MemberExpression)target);
                 }
 
                 if (target is ConstantExpression)
@@ -98,7 +98,7 @@
                     var target = expression.Arguments[0];
                     if (target is MemberExpression)
                     {
-                        target = this.TransformExpr((MemberExpression)target);
+                        target = this.TransformExpression((MemberExpression)target);
                     }
 
                     if (target is ConstantExpression)
@@ -137,7 +137,7 @@
                 if (expression.Method.Name == "Compile" && expression.Object is MemberExpression)
                 {
                     var me = (MemberExpression)expression.Object;
-                    var newExpr = this.TransformExpr(me);
+                    var newExpr = this.TransformExpression(me);
                     if (newExpr != me)
                     {
                         return newExpr;
@@ -158,13 +158,13 @@
                 // Strip out any references to expressions captured by outer variables - LINQ to SQL can't handle these:
                 if (expression.Member.DeclaringType.Name.StartsWith("<>"))
                 {
-                    return this.TransformExpr(expression);
+                    return this.TransformExpression(expression);
                 }
 
                 return base.VisitMemberAccess(expression);
             }
 
-            protected Expression TransformExpr(MemberExpression input)
+            protected Expression TransformExpression(MemberExpression input)
             {
                 // Collapse captured outer variables
                 if (input == null

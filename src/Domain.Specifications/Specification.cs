@@ -3,11 +3,24 @@
     using System;
     using System.Linq.Expressions;
 
-    public abstract class Specification<T> : ISpecification<T>
+    public /*abstract*/ class Specification<T> : ISpecification<T>
     {
         public static readonly ISpecification<T> All = new IdentitySpecification<T>();
+        private readonly Expression<Func<T, bool>> expression;
 
-        public abstract Expression<Func<T, bool>> ToExpression();
+        public Specification()
+        {
+        }
+
+        public Specification(Expression<Func<T, bool>> expression)
+        {
+            this.expression = expression;
+        }
+
+        public virtual Expression<Func<T, bool>> ToExpression()
+        {
+            return this.expression;
+        }
 
         public Func<T, bool> ToPredicate()
         {

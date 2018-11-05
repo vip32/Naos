@@ -56,8 +56,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         {
             // arrange
             var mediator = Substitute.For<IMediator>();
-            var sut = new RepositoryTenantDecorator<StubEntityString>(
-                new InMemoryRepository<StubEntityString>(mediator, this.entities), this.tenantId); // = decoratee
+            var sut = new RepositorySpecificationDecorator<StubEntityString>(
+                new InMemoryRepository<StubEntityString>(mediator, this.entities),
+                new Specification<StubEntityString>(t => t.TenantId == this.tenantId)); // = decoratee
 
             // act
             var result = await sut.FindAllAsync().ConfigureAwait(false);
