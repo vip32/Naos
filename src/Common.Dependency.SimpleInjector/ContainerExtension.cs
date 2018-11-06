@@ -10,7 +10,7 @@
 
     public static class ContainerExtension
     {
-        public static Container BuildMediator(this Container container, params Assembly[] assemblies)
+        public static Container AddNaosMediator(this Container container, params Assembly[] assemblies)
         {
             return BuildMediator(container, (IEnumerable<Assembly>)assemblies);
         }
@@ -45,7 +45,7 @@
 
             container.Register(() => new ServiceFactory(container.GetInstance), Lifestyle.Singleton);
 
-            container.Verify();
+            //container.Verify();
 
             return container;
         }

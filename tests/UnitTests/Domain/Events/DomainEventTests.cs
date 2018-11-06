@@ -18,7 +18,7 @@
         {
             // arrange
             var container = new Container();
-            container.BuildMediator(new[] { typeof(IEntity).Assembly, typeof(DomainEventTests).Assembly });
+            container.AddNaosMediator(new[] { typeof(IEntity).Assembly, typeof(DomainEventTests).Assembly });
             var mediator = container.GetInstance<IMediator>();
 
             var domainEvent = new StubDomainEvent { Name = "Name1" };

@@ -29,6 +29,7 @@
         object IEntity.Id
         {
             get { return this.Id; }
+            set { this.Id = (TId)value; } // TODO ?? should not be settable
         }
 
         /// <summary>

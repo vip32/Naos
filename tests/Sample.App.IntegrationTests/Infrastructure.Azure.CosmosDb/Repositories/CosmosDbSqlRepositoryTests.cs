@@ -6,6 +6,7 @@
     using System.Linq.Expressions;
     using System.Threading.Tasks;
     using MediatR;
+    using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Domain;
     using Naos.Core.Domain.Repositories;
@@ -23,6 +24,7 @@
         public CosmosDbSqlRepositoryTests()
         {
             this.repository = new StubCosmosDbSqlRepository(
+                Substitute.For<ILogger<StubCosmosDbSqlRepository>>(),
                 this.mediator,
                 new CosmosDbSqlProvider<StubEntity>(
                         client: CosmosDbClient.Create(AppConfiguration.CosmosDb.ServiceEndpointUri, AppConfiguration.CosmosDb.AuthKeyOrResourceToken),
@@ -224,10 +226,11 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="StubCosmosDbSqlRepository" /> class.
         /// </summary>
+        /// <param name="logger">The logger.</param>
         /// <param name="mediator">The mediator.</param>
         /// <param name="provider">The provider.</param>
-        public StubCosmosDbSqlRepository(IMediator mediator, ICosmosDbSqlProvider<StubEntity> provider)
-            : base(mediator, provider)
+        public StubCosmosDbSqlRepository(ILogger<StubCosmosDbSqlRepository> logger, IMediator mediator, ICosmosDbSqlProvider<StubEntity> provider)
+            : base(logger, mediator, provider)
         {
         }
 

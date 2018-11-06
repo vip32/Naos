@@ -21,6 +21,7 @@
         object IEntity.Id
         {
             get { return this.Id; }
+            set { this.Id = (string)value; }
         }
 
         public string CorrelationId { get; set; }

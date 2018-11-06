@@ -8,6 +8,7 @@
     using FizzWare.NBuilder;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Logging;
     using Naos.Core.Domain;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Domain.Specifications;
@@ -25,7 +26,8 @@
                 // arrange
                 this.SeedData(context);
                 var mediator = Substitute.For<IMediator>();
-                var sut = new EntityFrameworkRepository<StubEntity>(mediator, context);
+                var logger = Substitute.For<ILogger<EntityFrameworkRepository<StubEntity>>>();
+                var sut = new EntityFrameworkRepository<StubEntity>(logger, mediator, context);
 
                 // act
                 var findResults = await sut.FindAllAsync();
@@ -44,7 +46,8 @@
                 // arrange
                 this.SeedData(context);
                 var mediator = Substitute.For<IMediator>();
-                var sut = new EntityFrameworkRepository<StubEntity>(mediator, context);
+                var logger = Substitute.For<ILogger<EntityFrameworkRepository<StubEntity>>>();
+                var sut = new EntityFrameworkRepository<StubEntity>(logger, mediator, context);
 
                 // act
                 var findResultsWithSpecification = await sut.FindAllAsync(new StubHasTenantSpecification("TestTenant"));
@@ -73,7 +76,8 @@
                 // arrange
                 this.SeedData(context);
                 var mediator = Substitute.For<IMediator>();
-                var sut = new EntityFrameworkRepository<StubEntity>(mediator, context);
+                var logger = Substitute.For<ILogger<EntityFrameworkRepository<StubEntity>>>();
+                var sut = new EntityFrameworkRepository<StubEntity>(logger, mediator, context);
 
                 // act
                 var findResults = await sut.FindAllAsync(
@@ -94,7 +98,8 @@
                 // arrange
                 this.SeedData(context);
                 var mediator = Substitute.For<IMediator>();
-                var sut = new EntityFrameworkRepository<StubEntity>(mediator, context);
+                var logger = Substitute.For<ILogger<EntityFrameworkRepository<StubEntity>>>();
+                var sut = new EntityFrameworkRepository<StubEntity>(logger, mediator, context);
 
                 // act
                 var findResults = await sut.FindAllAsync(
@@ -117,7 +122,8 @@
                 // arrange
                 this.SeedData(context);
                 var mediator = Substitute.For<IMediator>();
-                var sut = new EntityFrameworkRepository<StubEntity>(mediator, context);
+                var logger = Substitute.For<ILogger<EntityFrameworkRepository<StubEntity>>>();
+                var sut = new EntityFrameworkRepository<StubEntity>(logger, mediator, context);
 
                 // act
                 var findResults = await sut.FindAllAsync(
@@ -140,7 +146,8 @@
                 // arrange
                 this.SeedData(context);
                 var mediator = Substitute.For<IMediator>();
-                var sut = new EntityFrameworkRepository<StubEntity>(mediator, context);
+                var logger = Substitute.For<ILogger<EntityFrameworkRepository<StubEntity>>>();
+                var sut = new EntityFrameworkRepository<StubEntity>(logger, mediator, context);
 
                 // act
                 var findResult = await sut.FindOneAsync(new Guid("00000000-0000-0000-0000-000000000001"));
@@ -161,7 +168,8 @@
                 // arrange
                 this.SeedData(context);
                 var mediator = Substitute.For<IMediator>();
-                var sut = new EntityFrameworkRepository<StubEntity>(mediator, context);
+                var logger = Substitute.For<ILogger<EntityFrameworkRepository<StubEntity>>>();
+                var sut = new EntityFrameworkRepository<StubEntity>(logger, mediator, context);
 
                 var entity = new StubEntity
                 {
@@ -192,7 +200,8 @@
                 // arrange
                 this.SeedData(context);
                 var mediator = Substitute.For<IMediator>();
-                var sut = new EntityFrameworkRepository<StubEntity>(mediator, context);
+                var logger = Substitute.For<ILogger<EntityFrameworkRepository<StubEntity>>>();
+                var sut = new EntityFrameworkRepository<StubEntity>(logger, mediator, context);
 
                 // act
                 sut.DeleteAsync(new Guid("00000000-0000-0000-0000-000000000001")).Wait();

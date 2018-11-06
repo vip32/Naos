@@ -8,7 +8,7 @@
         /// <value>
         /// The identifier.
         /// </value>
-        object Id { get; }
+        object Id { get; set; }
     }
 
     public interface IEntity<TId> : IEntity

@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using MediatR;
+    using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Domain;
     using Naos.Core.Domain.Repositories;
@@ -13,20 +14,28 @@
     public class CosmosDbSqlRepository<TEntity> : IRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
+        private readonly ILogger<CosmosDbSqlRepository<TEntity>> logger;
         private readonly IMediator mediator;
         private readonly ICosmosDbSqlProvider<TEntity> provider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CosmosDbSqlRepository{T}" /> class.
         /// </summary>
+        /// <param name="logger">The logger.</param>
         /// <param name="mediator">The mediator.</param>
         /// <param name="provider">The provider.</param>
         /// <param name="options">The options.</param>
-        public CosmosDbSqlRepository(IMediator mediator, ICosmosDbSqlProvider<TEntity> provider, IRepositoryOptions options = null)
+        public CosmosDbSqlRepository(
+            ILogger<CosmosDbSqlRepository<TEntity>> logger,
+            IMediator mediator,
+            ICosmosDbSqlProvider<TEntity> provider,
+            IRepositoryOptions options = null)
         {
+            EnsureArg.IsNotNull(logger, nameof(mediator));
             EnsureArg.IsNotNull(mediator, nameof(mediator));
             EnsureArg.IsNotNull(provider, nameof(provider));
 
+            this.logger = logger;
             this.mediator = mediator;
             this.provider = provider;
             this.Options = options;
@@ -132,16 +141,16 @@
             {
                 if (isNew)
                 {
-                    await this.mediator.Publish(new EntityInsertedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityInsertedDomainEvent<TEntity>(result)).ConfigureAwait(false);
                 }
                 else
                 {
-                    await this.mediator.Publish(new EntityUpdatedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityUpdatedDomainEvent<TEntity>(result)).ConfigureAwait(false);
                 }
             }
 
 #pragma warning disable SA1008 // Opening parenthesis must be spaced correctly
-            return isNew ? (entity, UpsertAction.Inserted) : (entity, UpsertAction.Updated);
+            return isNew ? (result, UpsertAction.Inserted) : (result, UpsertAction.Updated);
 #pragma warning restore SA1008 // Opening parenthesis must be spaced correctly
         }
 

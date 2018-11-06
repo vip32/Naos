@@ -7,6 +7,7 @@
     using EnsureThat;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Domain.Specifications;
@@ -14,23 +15,28 @@
     public class EntityFrameworkRepository<TEntity> : IRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
+        private readonly ILogger<EntityFrameworkRepository<TEntity>> logger;
         private readonly IMediator mediator;
         private readonly DbContext dbContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EntityFrameworkRepository{T}" /> class.
         /// </summary>
+        /// <param name="logger">The logger.</param>
         /// <param name="mediator">The mediator.</param>
         /// <param name="dbContext">The EF database context.</param>
         /// <param name="options">The options.</param>
         public EntityFrameworkRepository(
+            ILogger<EntityFrameworkRepository<TEntity>> logger,
             IMediator mediator,
             DbContext dbContext,
             IRepositoryOptions options = null)
         {
-            EnsureArg.IsNotNull(mediator);
-            EnsureArg.IsNotNull(dbContext);
+            EnsureArg.IsNotNull(logger, nameof(logger));
+            EnsureArg.IsNotNull(mediator, nameof(mediator));
+            EnsureArg.IsNotNull(dbContext, nameof(dbContext));
 
+            this.logger = logger;
             this.mediator = mediator;
             this.dbContext = dbContext;
             this.Options = options;

@@ -90,6 +90,7 @@
         public virtual void UpdateIdentifierHash(IEntity entity)
         {
             // TODO: omit .State from the hashcode generation
+            this.IdentifierHash = null;
             this.IdentifierHash = HashAlgorithm.ComputeHash(entity);
         }
 

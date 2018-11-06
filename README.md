@@ -16,7 +16,7 @@
 ## dev stack
 C#, .Net Core 2.x, EnsureThat, Serilog, SimpleInjector, Mediator, FluentValidation, AutoMapper, XUnit, Shouldly, NSubstitute
 
-## global setup
+## secrets setup (Azure Key Vault)
 - Create a key vault [^](https://docs.microsoft.com/en-us/azure/key-vault/key-vault-get-started)
 - Store key vault name in an environment variable
   - `naos:secrets:vault:name`
@@ -41,8 +41,8 @@ C#, .Net Core 2.x, EnsureThat, Serilog, SimpleInjector, Mediator, FluentValidati
         "enabled":  true,
         "connectionString": "",
         "subscriptionId": "",
-        "resourceGroup": "naos",
-        "namespaceName": "naos",
+        "resourceGroup": "",
+        "namespaceName": "",
         "tenantId":  "",
         "clientId": "",
         "clientSecret": "",
@@ -56,9 +56,30 @@ C#, .Net Core 2.x, EnsureThat, Serilog, SimpleInjector, Mediator, FluentValidati
 
 *or* use a multitude of the usual [netcore configuration providers](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-2.1#providers) to store the settings
 
+
+## messaging setup (Azure ServiceBus)
+
 **NOTE**:
 Naos:Messaging needs to administer the Azure ServiceBus by using the [Azure Resource Manager](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-overview) API. To use this API some [extra setup](https://tomasherceg.com/blog/post/azure-servicebus-in-net-core-managing-topics-queues-and-subscriptions-from-the-code) has to be
 done.
+
+- create a servicebus (standard pricing)
+- `Get-AzureRmSubscription` (=subscriptionId/tenantId)
+- `$p = ConvertTo-SecureString -asplaintext -string "PRINCIPAL_PASSWORD" -force` (=clientSecret)
+- `$sp = New-AzureRmADServicePrincipal -DisplayName "PRINCIPAL_NAME" -Password $p`
+- `Write-Host "clientid:" $sp.ApplicationId` (=clientId)
+- `New-AzureRmRoleAssignment -ServicePrincipalName $sp.ApplicationId -ResourceGroupName RESOURCE_GROUP -ResourceName RESOURCE_NAME -RoleDefinitionName Contributor -ResourceType Microsoft.ServiceBus/namespaces`
+
+key vault keys: (or use the json configuration above)
+- `development-naos--messaging--serviceBus--subscriptionId`
+- `development-naos--messaging--serviceBus--tenantId`
+- `development-naos--messaging--serviceBus--connectionString`
+- `development-naos--messaging--serviceBus--resourceGroup` (=RESOURCE_GROUP)
+- `development-naos--messaging--serviceBus--namespaceName` (=RESOURCE_NAME)
+- `development-naos--messaging--serviceBus--clientId`
+- `development-naos--messaging--serviceBus--clientSecret`
+
+
 
 
 ### core components
