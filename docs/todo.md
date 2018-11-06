@@ -20,7 +20,6 @@ http://localhost:15672/ (rabbitmq)
 https://localhost:44347/api/values (billing)
 https://localhost:44377/api/values (ordering)
 
-
 azure resource group: Naos
 keyvault
 sevicebus
