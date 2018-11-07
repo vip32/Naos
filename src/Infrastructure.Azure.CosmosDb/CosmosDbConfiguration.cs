@@ -8,7 +8,7 @@
 
         public string AuthKeyOrResourceToken { get; set; }
 
-        public string CollectionName { get; set; }
+        public string CollectionId { get; set; }
 
         public bool IsMasterCollection { get; set; } = true;
 

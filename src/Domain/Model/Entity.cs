@@ -10,13 +10,11 @@
     public abstract class Entity<TId> : IEntity<TId>, IStateEntity, IDiscriminatedEntity
     {
         /// <summary>
-        /// Gets or sets the entity id.
+        /// Gets or sets the entity identifier.
         /// </summary>
-        /// <remarks>
-        ///     <para>
-        ///         The id may be of type <c>string</c>, <c>int</c>, or another value type.
-        ///     </para>
-        /// </remarks>
+        /// <value>
+        /// The identifier.
+        /// </value>
         public TId Id { get; set; }
 
         /// <summary>
@@ -29,7 +27,7 @@
         object IEntity.Id
         {
             get { return this.Id; }
-            set { this.Id = (TId)value; } // TODO ?? should not be settable
+            set { this.Id = (TId)value; }
         }
 
         /// <summary>

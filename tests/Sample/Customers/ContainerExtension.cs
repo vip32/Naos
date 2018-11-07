@@ -27,7 +27,7 @@
                          new CosmosDbSqlProvider<Customer>(
                             client: CosmosDbClient.Create(cosmosDbConfiguration.ServiceEndpointUri, cosmosDbConfiguration.AuthKeyOrResourceToken),
                             databaseId: cosmosDbConfiguration.DatabaseId,
-                            collectionNameFactory: () => cosmosDbConfiguration.CollectionName,
+                            collectionIdFactory: () => cosmosDbConfiguration.CollectionId,
                             collectionPartitionKey: cosmosDbConfiguration.CollectionPartitionKey,
                             collectionOfferThroughput: cosmosDbConfiguration.CollectionOfferThroughput,
                             isMasterCollection: cosmosDbConfiguration.IsMasterCollection)),

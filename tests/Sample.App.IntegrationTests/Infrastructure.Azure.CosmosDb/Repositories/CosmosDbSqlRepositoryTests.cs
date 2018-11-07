@@ -1,13 +1,11 @@
 ﻿namespace Naos.Sample.App.IntegrationTests.Infrastructure.Azure.CosmosDb
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading.Tasks;
     using MediatR;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
     using Naos.Core.Domain;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Domain.Specifications;
@@ -29,7 +27,7 @@
                 new CosmosDbSqlProvider<StubEntity>(
                         client: CosmosDbClient.Create(AppConfiguration.CosmosDb.ServiceEndpointUri, AppConfiguration.CosmosDb.AuthKeyOrResourceToken),
                         databaseId: AppConfiguration.CosmosDb.DatabaseId,
-                        collectionNameFactory: () => AppConfiguration.CosmosDb.CollectionName,
+                        collectionIdFactory: () => AppConfiguration.CosmosDb.CollectionId,
                         collectionPartitionKey: AppConfiguration.CosmosDb.CollectionPartitionKey,
                         collectionOfferThroughput: AppConfiguration.CosmosDb.CollectionOfferThroughput,
                         isMasterCollection: AppConfiguration.CosmosDb.IsMasterCollection));

@@ -9,8 +9,8 @@
     {
         public static IQueryable<T> WhereExpressionIf<T>(
             this IQueryable<T> source,
-            bool condition,
-            Expression<Func<T, bool>> expression)
+            Expression<Func<T, bool>> expression,
+            bool condition)
         {
             if (condition && expression != null)
             {
@@ -22,8 +22,8 @@
 
         public static IQueryable<T> WhereExpressionsIf<T>(
             this IQueryable<T> source,
-            bool condition,
-            IEnumerable<Expression<Func<T, bool>>> expressions)
+            IEnumerable<Expression<Func<T, bool>>> expressions,
+            bool condition)
         {
             if (condition && expressions?.Any() == true)
             {

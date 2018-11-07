@@ -46,7 +46,7 @@
         public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null)
         {
             // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
-            return await this.provider.WhereAsync<TEntity>(maxItemCount: options?.Take ?? -1).ConfigureAwait(false);
+            return await this.provider.WhereAsync<TEntity>(count: options?.Take ?? -1).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null)
@@ -54,7 +54,7 @@
             // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
             return await this.provider.WhereAsync<TEntity>(
                 expression: specification?.ToExpression().Expand(),
-                maxItemCount: options?.Take ?? -1).ConfigureAwait(false);
+                count: options?.Take ?? -1).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null)
@@ -64,7 +64,7 @@
 
             return await this.provider.WhereAsync<TEntity>(
                 expressions: specificationsArray.NullToEmpty().Select(s => s.ToExpression().Expand()),
-                maxItemCount: options?.Take ?? -1).ConfigureAwait(false);
+                count: options?.Take ?? -1).ConfigureAwait(false);
         }
 
         public async Task<TEntity> FindOneAsync(object id)
@@ -74,7 +74,8 @@
                 return null;
             }
 
-            return await this.provider.FirstOrDefaultAsync(o => o.Id == id).ConfigureAwait(false);
+            return await this.provider.GetByIdAsync(id as string);
+            //return await this.provider.FirstOrDefaultAsync(o => o.Id == id).ConfigureAwait(false);
         }
 
         public async Task<bool> ExistsAsync(object id)
@@ -169,7 +170,7 @@
                     await this.mediator.Publish(new EntityDeleteDomainEvent<TEntity>(entity)).ConfigureAwait(false);
                 }
 
-                await this.provider.DeleteAsync(id as string).ConfigureAwait(false);
+                await this.provider.DeleteByIdAsync(id as string).ConfigureAwait(false);
 
                 if (this.Options?.PublishEvents != false)
                 {

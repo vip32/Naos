@@ -1,5 +1,6 @@
 ﻿namespace Naos.Sample.IntegrationTests.Customers.Infrastructure
 {
+    using System.Linq;
     using System.Threading.Tasks;
     using Bogus;
     using MediatR;
@@ -38,6 +39,18 @@
             // assert
             result.ShouldNotBeNull();
             result.ShouldNotBeEmpty();
+        }
+
+        [Fact]
+        public async Task FindAllAsync_WithOptions_Test()
+        {
+            // arrange/act
+            var result = await this.sut.FindAllAsync(new FindOptions<Customer>(take: 3)).ConfigureAwait(false);
+
+            // assert
+            result.ShouldNotBeNull();
+            result.ShouldNotBeEmpty();
+            result.Count().ShouldBe(3);
         }
 
         [Fact]
@@ -130,12 +143,15 @@
         [Fact]
         public async Task FindOneAsync_Test()
         {
-            // arrange/act
-            var result = await this.sut.FindOneAsync("40e028af-c0ba-4e07-87d0-b1c028849551").ConfigureAwait(false);
+            // arrange
+            var entities = await this.sut.FindAllAsync(new FindOptions<Customer>(take: 1)).ConfigureAwait(false);
+
+            // act
+            var result = await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).ConfigureAwait(false);
 
             // assert
             result.ShouldNotBeNull();
-            result.Id.ShouldBe("40e028af-c0ba-4e07-87d0-b1c028849551");
+            result.Id.ShouldBe(entities.FirstOrDefault()?.Id);
         }
 
         [Fact]

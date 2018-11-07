@@ -1,7 +1,6 @@
 ﻿namespace Naos.Core.Domain.Specifications
 {
     using System;
-    using System.Linq;
     using System.Linq.Expressions;
     using EnsureThat;
 

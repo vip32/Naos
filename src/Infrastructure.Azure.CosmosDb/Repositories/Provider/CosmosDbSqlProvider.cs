@@ -6,7 +6,6 @@
     using System.Linq;
     using System.Linq.Expressions;
     using System.Net;
-    using System.Reflection;
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Azure.Documents;
@@ -15,16 +14,14 @@
     using Naos.Core.Domain;
     using Newtonsoft.Json;
 
-    public class CosmosDbSqlProvider<T> : ICosmosDbSqlProvider<T>
-        where T : class, IEntity, IDiscriminatedEntity
+    public class CosmosDbSqlProvider<TEntity> : ICosmosDbSqlProvider<TEntity>
+        where TEntity : class, IEntity, IDiscriminatedEntity
     {
         private readonly IDocumentClient client;
         private readonly string databaseId;
         private readonly AsyncLazy<Database> database;
-        private readonly string collectionName;
-        private readonly string defaultIdentityPropertyName = "id";
-        //private readonly Action<T, string> setEtagAction;
-        //private readonly Action<T, DateTime?> setTimestampAction;
+        private readonly string collectionId;
+        //private readonly string defaultIdentityPropertyName = "id";
         private readonly bool isMasterCollection;
         private readonly bool isPartitioned;
         private AsyncLazy<DocumentCollection> documentCollection;
@@ -32,12 +29,10 @@
         public CosmosDbSqlProvider(
             IDocumentClient client,
             string databaseId,
-            Func<string> collectionNameFactory = null,
+            Func<string> collectionIdFactory = null,
             string collectionPartitionKey = null,
             int collectionOfferThroughput = 400,
             //Expression<Func<T, object>> idNameFactory = null,
-            //Expression<Func<T, string>> etagExpression = null,
-            //Expression<Func<T, DateTime?>> timestampExpression = null,
             bool isMasterCollection = true)
         {
             EnsureArg.IsNotNull(client, nameof(client));
@@ -48,14 +43,14 @@
             this.database = new AsyncLazy<Database>(async () => await this.GetOrCreateDatabaseAsync().ConfigureAwait(false));
 
             this.isMasterCollection = isMasterCollection;
-            if (collectionNameFactory != null)
+            if (collectionIdFactory != null)
             {
-                this.collectionName = collectionNameFactory();
+                this.collectionId = collectionIdFactory();
             }
 
-            if(string.IsNullOrEmpty(this.collectionName))
+            if (string.IsNullOrEmpty(this.collectionId))
             {
-                this.collectionName = isMasterCollection ? "master" : typeof(T).Name;
+                this.collectionId = isMasterCollection ? "master" : typeof(TEntity).Name;
             }
 
             this.documentCollection = new AsyncLazy<DocumentCollection>(async () => await this.GetOrCreateCollectionAsync(collectionPartitionKey, collectionOfferThroughput).ConfigureAwait(false));
@@ -68,23 +63,6 @@
             //{
             //    this.TryGetIdProperty(idNameFactory);
             //}
-
-            //if (etagExpression != null)
-            //{
-            //    etagExpression.Compile();
-            //    this.setEtagAction = etagExpression.ToSetAction();
-            //}
-
-            //if (timestampExpression != null)
-            //{
-            //    timestampExpression.Compile();
-            //    this.setTimestampAction = timestampExpression.ToSetAction();
-            //}
-        }
-
-        public async Task<string> GetCollectionUriAsync()
-        {
-            return (await this.documentCollection).DocumentsLink;
         }
 
         /// <summary>
@@ -95,122 +73,83 @@
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task<bool> DeleteAllAsync()
         {
-            var result = await this.client.DeleteDocumentCollectionAsync((await this.documentCollection).SelfLink).ConfigureAwait(false);
+            // TODO: this does not make sense when using a master collection
+            if (!this.isMasterCollection)
+            {
+                var result = await this.client.DeleteDocumentCollectionAsync((await this.documentCollection).SelfLink).ConfigureAwait(false);
 
-            bool isSuccess = result.StatusCode == HttpStatusCode.NoContent;
+                bool isSuccess = result.StatusCode == HttpStatusCode.NoContent;
 
-            this.documentCollection = new AsyncLazy<DocumentCollection>(async () => await this.GetOrCreateCollectionAsync().ConfigureAwait(false));
+                this.documentCollection = new AsyncLazy<DocumentCollection>(async () => await this.GetOrCreateCollectionAsync().ConfigureAwait(false));
 
-            return isSuccess;
+                return isSuccess;
+            }
+
+            return false;
         }
 
-        public async Task<bool> DeleteAsync(string idOrUri)
+        public async Task<bool> DeleteByIdAsync(string id)
         {
-            if (string.IsNullOrEmpty(idOrUri))
+            if (string.IsNullOrEmpty(id))
             {
                 return false;
             }
 
-            bool isSuccess;
-            var selfLink = idOrUri;
+            var result = await this.client.DeleteDocumentAsync(
+                UriFactory.CreateDocumentUri(this.databaseId, this.collectionId, id)).ConfigureAwait(false);
 
-            if (!idOrUri.StartsWith("dbs/", StringComparison.OrdinalIgnoreCase))
-            {
-                var doc = await this.GetDocumentByIdAsync(idOrUri).ConfigureAwait(false);
-                if (doc != null)
-                {
-                    selfLink = doc.SelfLink;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
-            var result = await this.client.DeleteDocumentAsync(selfLink).ConfigureAwait(false);
-
-            isSuccess = result.StatusCode == HttpStatusCode.NoContent;
-
-            return isSuccess;
+            return result.StatusCode == HttpStatusCode.NoContent;
         }
 
-        public async Task<T> UpsertAsync(T entity)
+        public async Task<TEntity> UpsertAsync(TEntity entity)
         {
             var doc = await this.client.UpsertDocumentAsync((await this.documentCollection).SelfLink, entity).ConfigureAwait(false);
-
-            var retVal = JsonConvert.DeserializeObject<T>(doc.Resource.ToString());
-            //if (retVal != null)
-            //{
-            //    this.setEtagAction?.Invoke(retVal, doc.Resource.ETag);
-            //    this.setTimestampAction?.Invoke(retVal, doc.Resource.Timestamp);
-            //}
-
-            return retVal;
+            return JsonConvert.DeserializeObject<TEntity>(doc.Resource.ToString());
         }
 
-        public async Task<T> AddOrUpdateAttachmentAsync(T entity, string attachmentId, string contentType, Stream stream)
+        public async Task<TEntity> AddOrUpdateAttachmentAsync(TEntity entity, string attachmentId, string contentType, Stream stream)
         {
             stream.Position = 0;
 
             var doc = await this.client.UpsertDocumentAsync((await this.documentCollection).SelfLink, entity).ConfigureAwait(false);
             await this.client.UpsertAttachmentAsync(doc.Resource.SelfLink, stream, new MediaOptions { ContentType = contentType, Slug = attachmentId }).ConfigureAwait(false);
-
-            var retVal = JsonConvert.DeserializeObject<T>(doc.Resource.ToString());
-            //if (retVal != null)
-            //{
-            //    this.setEtagAction?.Invoke(retVal, doc.Resource.ETag);
-            //    this.setTimestampAction?.Invoke(retVal, doc.Resource.Timestamp);
-            //}
-
-            return retVal;
+            return JsonConvert.DeserializeObject<TEntity>(doc.Resource.ToString());
         }
 
         public async Task<int> CountAsync()
         {
-            var retVal = this.client.CreateDocumentQuery<int>(
-                await this.GetCollectionUriAsync().ConfigureAwait(false),
-                "SELECT VALUE COUNT(c) from c")
-                .AsEnumerable().First();
-
-            return retVal;
+            return await Task.FromResult(
+                this.client.CreateDocumentQuery<int>(
+                    UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
+                    "SELECT VALUE COUNT(c) from c")
+                    .AsEnumerable().First());
         }
 
-        //public async Task<T> GetByIdAsync(object id)
-        //{
-        //    return this.client.CreateDocumentQuery<T>((await this.documentCollection).SelfLink, new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned })
-        //        .WhereExpression(d => d.Id == id).AsEnumerable().FirstOrDefault();
-        //}
-
-        public async Task<IEnumerable<T>> GetAllAsync(int maxItemCount = -1)
+        public async Task<IEnumerable<TEntity>> GetAllAsync(int count = -1)
         {
-            return this.client.CreateDocumentQuery<Document>((await this.documentCollection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount, EnableCrossPartitionQuery = this.isPartitioned })
-                .AsEnumerable()
-                .Select(doc => new {doc, retVal = (T)(dynamic)doc })
-                //.ForEach(e =>
-                //{
-                //    this.setEtagAction?.Invoke(e.retVal, e.doc.ETag);
-                //    this.setTimestampAction?.Invoke(e.retVal, e.doc.Timestamp);
-                //})
-                .Select(e => e.retVal);
+            return await Task.FromResult(
+                this.client.CreateDocumentQuery<Document>(
+                    UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
+                    new FeedOptions { MaxItemCount = count, EnableCrossPartitionQuery = this.isPartitioned })
+                    .TakeIf(count)
+                    .AsEnumerable()
+                    .Select(doc => new { doc, retVal = (TEntity)(dynamic)doc })
+                    .Select(e => e.retVal));
         }
 
-        public IEnumerable<T> GetAllPaged(int pageSize = 100)
+        public IEnumerable<TEntity> GetAllPaged(int pageSize = 100)
         {
             var query = this.client.CreateDocumentQuery<Document>(
-                this.GetCollectionUriAsync().Result,
+                UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
                 new FeedOptions { MaxItemCount = pageSize, EnableCrossPartitionQuery = this.isPartitioned })
+                .TakeIf(pageSize)
                 .AsDocumentQuery();
             while (query.HasMoreResults)
             {
                 var docs = query.ExecuteNextAsync().Result;
 
-                foreach (var retVal in docs.Select(doc => new { doc, retVal = (T)doc })
-                        //.ForEach(e =>
-                        //{
-                        //    this.setEtagAction?.Invoke(e.retVal, e.doc._etag);
-                        //    this.setTimestampAction?.Invoke(e.retVal, this.TimeStampToDateTime(e.doc._ts));
-                        //})
-                    .Select(e => e.retVal))
+                foreach (var retVal in docs
+                    .Select(doc => new { doc, retVal = (TEntity)doc }).Select(e => e.retVal))
                 {
                     yield return retVal;
                 }
@@ -220,8 +159,9 @@
         public IEnumerable<string> GetAllIdsPaged(int pageSize = 100)
         {
             var query = this.client.CreateDocumentQuery<Document>(
-                this.GetCollectionUriAsync().Result,
+                UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
                 new SqlQuerySpec("SELECT VALUE c.id FROM c"),
+                // TODO: use TOP if pagesize > 0
                 new FeedOptions { MaxItemCount = pageSize, EnableCrossPartitionQuery = this.isPartitioned })
                 .AsDocumentQuery();
 
@@ -237,8 +177,9 @@
         public IEnumerable<string> GetAllUrisPaged(int pageSize = 100)
         {
             var query = this.client.CreateDocumentQuery<Document>(
-                this.GetCollectionUriAsync().Result,
+                UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
                 new SqlQuerySpec("SELECT VALUE c._self FROM c"),
+                // TODO: use TOP if pagesize > 0
                 new FeedOptions { MaxItemCount = pageSize, EnableCrossPartitionQuery = this.isPartitioned })
                 .AsDocumentQuery();
 
@@ -251,30 +192,16 @@
             }
         }
 
-        public async Task<T> GetByIdAsync(string id)
+        public async Task<TEntity> GetByIdAsync(string id)
         {
-            var doc = await this.GetDocumentByIdAsync(id).ConfigureAwait(false);
-            var retVal = (T)(dynamic)doc;
-            //if (doc != null)
-            //{
-            //    this.setEtagAction?.Invoke(retVal, doc.ETag);
-            //    this.setTimestampAction?.Invoke(retVal, doc.Timestamp);
-            //}
+            if (string.IsNullOrEmpty(id))
+            {
+                return null;
+            }
 
-            return retVal;
-        }
-
-        public async Task<T> GetByEtagAsync(string etag)
-        {
-            var doc = await this.GetDocumentByEtagAsync(etag).ConfigureAwait(false);
-            var retVal = (T)(dynamic)doc;
-            //if (doc != null)
-            //{
-            //    this.setEtagAction?.Invoke(retVal, doc.ETag);
-            //    this.setTimestampAction?.Invoke(retVal, doc.Timestamp);
-            //}
-
-            return retVal;
+            return await this.client.ReadDocumentAsync<TEntity>(
+                UriFactory.CreateDocumentUri(this.databaseId, this.collectionId, id),
+                new RequestOptions());
         }
 
         public IEnumerable<string> GetAttachmentIds(string id)
@@ -326,106 +253,180 @@
             }
 
             var media = await this.client.ReadMediaAsync(attachment.MediaLink).ConfigureAwait(false);
-            return media != null ? media.Media : null;
+            return media?.Media;
         }
 
-        public async Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> expression = null) // FAST
+        public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> expression = null) // FAST
         {
-            return this.client.CreateDocumentQuery<T>(
-                await this.GetCollectionUriAsync().ConfigureAwait(false),
-                new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned })
-                .WhereExpression(expression)
-                .WhereExpressionIf(this.isMasterCollection, e => e.Discriminator == typeof(T).FullName)
-                .AsEnumerable()
-                .FirstOrDefault();
+            return await Task.FromResult(
+                this.client.CreateDocumentQuery<TEntity>(
+                    UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
+                    new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned })
+                    .WhereExpression(expression)
+                    .WhereExpressionIf(e => e.Discriminator == typeof(TEntity).FullName, this.isMasterCollection)
+                    .AsEnumerable()
+                    .FirstOrDefault());
         }
 
-        public async Task<T> LastOrDefaultAsync(Expression<Func<T, bool>> expression = null) // FAST
+        public async Task<TEntity> LastOrDefaultAsync(Expression<Func<TEntity, bool>> expression = null) // FAST
         {
-            return this.client.CreateDocumentQuery<T>(
-                await this.GetCollectionUriAsync().ConfigureAwait(false),
-                new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned })
-                .WhereExpression(expression)
-                .WhereExpressionIf(this.isMasterCollection, e => e.Discriminator == typeof(T).FullName)
-                .AsEnumerable()
-                .LastOrDefault();
+            return await Task.FromResult(
+                this.client.CreateDocumentQuery<TEntity>(
+                    UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
+                    new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned })
+                    .WhereExpression(expression)
+                    .WhereExpressionIf(e => e.Discriminator == typeof(TEntity).FullName, this.isMasterCollection)
+                    .AsEnumerable()
+                    .LastOrDefault());
         }
 
-        public async Task<IEnumerable<T>> WhereAsync(Expression<Func<T, bool>> expression) // TODO: shouldn't this return IEnumerable<T>?
+        public async Task<IEnumerable<TEntity>> WhereAsync(Expression<Func<TEntity, bool>> expression) // TODO: shouldn't this return IEnumerable<T>?
         {
             if (!this.isMasterCollection)
             {
-                return this.client.CreateDocumentQuery<T>(
-                    await this.GetCollectionUriAsync().ConfigureAwait(false),
-                    new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned })
-                    .WhereExpression(expression)
-                    .AsEnumerable();
+                return await Task.FromResult(
+                    this.client.CreateDocumentQuery<TEntity>(
+                        UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
+                        new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned })
+                        .WhereExpression(expression)
+                        .AsEnumerable());
             }
 
-            return this.client.CreateDocumentQuery<T>(
-                await this.GetCollectionUriAsync().ConfigureAwait(false),
+            return await Task.FromResult(
+                this.client.CreateDocumentQuery<TEntity>(
+                    UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
                     new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned })
-                .WhereExpression(expression)
-                .WhereExpression(e => e.Discriminator == typeof(T).FullName)
-                .AsEnumerable();
+                    .WhereExpression(expression)
+                    .WhereExpression(e => e.Discriminator == typeof(TEntity).FullName)
+                    .AsEnumerable());
         }
 
-        public async Task<IEnumerable<T>> WhereAsync<TKey>(
-            Expression<Func<T, bool>> expression = null,
-            IEnumerable<Expression<Func<T, bool>>> expressions = null,
-            int maxItemCount = 100,
-            Expression<Func<T, TKey>> orderExpression = null,
+        public async Task<IEnumerable<TEntity>> WhereAsync<TKey>(
+            Expression<Func<TEntity, bool>> expression = null,
+            IEnumerable<Expression<Func<TEntity, bool>>> expressions = null,
+            int count = 100,
+            Expression<Func<TEntity, TKey>> orderExpression = null,
             bool desc = false)
         {
             // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
             if (desc)
             {
-                return this.client.CreateDocumentQuery<T>(
-                    (await this.documentCollection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount, EnableCrossPartitionQuery = this.isPartitioned })
-                    .WhereExpression(expression)
-                    .WhereExpressions(expressions)
-                    .WhereExpressionIf(this.isMasterCollection, e => e.Discriminator == typeof(T).FullName)
-                    .OrderByDescending(orderExpression)
-                    .AsEnumerable();
+                return await Task.FromResult(
+                    this.client.CreateDocumentQuery<TEntity>(
+                        UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
+                        new FeedOptions { MaxItemCount = count, EnableCrossPartitionQuery = this.isPartitioned })
+                        .WhereExpression(expression)
+                        .WhereExpressions(expressions)
+                        .WhereExpressionIf(e => e.Discriminator == typeof(TEntity).FullName, this.isMasterCollection)
+                        .TakeIf(count)
+                        .OrderByDescending(orderExpression)
+                        .AsEnumerable());
             }
 
-            return this.client.CreateDocumentQuery<T>(
-                (await this.documentCollection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount, EnableCrossPartitionQuery = this.isPartitioned })
+            return await Task.FromResult(
+                this.client.CreateDocumentQuery<TEntity>(
+                    UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
+                    new FeedOptions { MaxItemCount = count, EnableCrossPartitionQuery = this.isPartitioned })
                     .WhereExpression(expression)
                     .WhereExpressions(expressions)
-                    .WhereExpressionIf(this.isMasterCollection, e => e.Discriminator == typeof(T).FullName)
+                    .WhereExpressionIf(e => e.Discriminator == typeof(TEntity).FullName, this.isMasterCollection)
+                    .TakeIf(count)
                     .OrderBy(orderExpression)
-                    .AsEnumerable();
+                    .AsEnumerable());
         }
 
-        public async Task<IEnumerable<T>> WhereAsync<TKey>(
-            Expression<Func<T, bool>> expression,
-            Expression<Func<T, T>> selector,
-            int maxItemCount = 100,
-            Expression<Func<T, TKey>> orderExpression = null)
+        public async Task<IEnumerable<TEntity>> WhereAsync<TKey>(
+            Expression<Func<TEntity, bool>> expression,
+            Expression<Func<TEntity, TEntity>> selector,
+            int count = 100,
+            Expression<Func<TEntity, TKey>> orderExpression = null)
         {
-            return this.client.CreateDocumentQuery<T>(
-                (await this.documentCollection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount, EnableCrossPartitionQuery = this.isPartitioned })
-                .WhereExpression(expression)
-                .WhereExpressionIf(this.isMasterCollection, e => e.Discriminator == typeof(T).FullName)
-                .Select(selector)
-                .OrderBy(orderExpression)
-                .AsEnumerable();
+            return await Task.FromResult(
+                this.client.CreateDocumentQuery<TEntity>(
+                    UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
+                    new FeedOptions { MaxItemCount = count, EnableCrossPartitionQuery = this.isPartitioned })
+                    .WhereExpression(expression)
+                    .WhereExpressionIf(e => e.Discriminator == typeof(TEntity).FullName, this.isMasterCollection)
+                    .Select(selector)
+                    .TakeIf(count)
+                    .OrderBy(orderExpression)
+                    .AsEnumerable());
         }
 
-        public async Task<IQueryable<T>> QueryAsync(int maxItemCount = 100)
+        public async Task<IQueryable<TEntity>> QueryAsync(int count = 100)
         {
-            return this.client.CreateDocumentQuery<T>((await this.documentCollection).SelfLink, new FeedOptions { MaxItemCount = maxItemCount, EnableCrossPartitionQuery = this.isPartitioned })
-                .WhereExpressionIf(this.isMasterCollection, e => e.Discriminator == typeof(T).FullName);
+            return await Task.FromResult(
+                this.client.CreateDocumentQuery<TEntity>(
+                    UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
+                    new FeedOptions { MaxItemCount = count, EnableCrossPartitionQuery = this.isPartitioned })
+                    .WhereExpressionIf(e => e.Discriminator == typeof(TEntity).FullName, this.isMasterCollection)
+                    .TakeIf(count));
         }
 
-        public async Task<IEnumerable<T>> QueryAsync(string query)
+        public async Task<IEnumerable<TEntity>> QueryAsync(string query)
         {
-            return this.client.CreateDocumentQuery<T>(
-                await this.GetCollectionUriAsync().ConfigureAwait(false),
-                new SqlQuerySpec(query),
-                new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned });
+            return await Task.FromResult(
+                this.client.CreateDocumentQuery<TEntity>(
+                    UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
+                    new SqlQuerySpec(query),
+                    new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned }));
         }
+
+        private async Task<Document> GetDocumentByIdAsync(object id)
+        {
+            return await Task.FromResult(
+                this.client.CreateDocumentQuery<Document>(
+                    UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
+                    new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned })
+                    .WhereExpression(d => d.Id == id.ToString()).AsEnumerable().FirstOrDefault());
+        }
+
+        private async Task<DocumentCollection> GetOrCreateCollectionAsync(string collectionPartitionKey = null, int collectionOfferThroughput = 400)
+        {
+            var documentCollection = this.client.CreateDocumentCollectionQuery(
+                UriFactory.CreateDatabaseUri(this.databaseId).ToString())
+                .WhereExpression(c => c.Id == this.collectionId).AsEnumerable().FirstOrDefault();
+
+            if (documentCollection == null)
+            {
+                documentCollection = new DocumentCollection { Id = this.collectionId };
+                if (!string.IsNullOrEmpty(collectionPartitionKey))
+                {
+                    documentCollection.PartitionKey.Paths.Add(string.Format("/{0}", collectionPartitionKey.Replace(".", "/")));
+                }
+
+                var requestOptions = new RequestOptions
+                {
+                    OfferThroughput = collectionOfferThroughput,
+                };
+
+                documentCollection = await this.client.CreateDocumentCollectionAsync(
+                    UriFactory.CreateDatabaseUri(this.databaseId).ToString(),
+                    documentCollection,
+                    requestOptions).ConfigureAwait(false);
+            }
+
+            return documentCollection;
+        }
+
+        private async Task<Database> GetOrCreateDatabaseAsync()
+        {
+            var result = this.client.CreateDatabaseQuery()
+                .WhereExpression(db => db.Id == this.databaseId).AsEnumerable().FirstOrDefault();
+            if (result == null)
+            {
+                result = await this.client.CreateDatabaseAsync(
+                    new Database { Id = this.databaseId }).ConfigureAwait(false);
+            }
+
+            return result;
+        }
+
+        //private async Task<string> GetCollectionUriAsync()
+        //{
+        //    return (await this.documentCollection).DocumentsLink;
+        //    // TODO: instead use UriFactory.CreateCollectionUri(this.databaseId, this.collectionId);
+        //}
 
         //private string TryGetIdProperty(Expression<Func<T, object>> idNameFactory)
         //{
@@ -464,77 +465,28 @@
         //    throw new ArgumentException("Unique identity property not found. Create \"id\" property for your entity or use different property name with JsonAttribute with PropertyName set to \"id\"");
         //}
 
-        private void EnsurePropertyHasJsonAttributeWithCorrectPropertyName(MemberInfo idProperty)
-        {
-            var attributes = idProperty.GetCustomAttributes(typeof(JsonPropertyAttribute), true);
-            if (!(attributes.Length == 1
-                && ((JsonPropertyAttribute)attributes[0]).PropertyName == this.defaultIdentityPropertyName))
-            {
-                throw new ArgumentException(
-                        string.Format(
-                            "\"{0}\" property needs to be decorated with JsonAttirbute with PropertyName set to \"id\"",
-                            idProperty.Name));
-            }
-        }
+        //private void EnsurePropertyHasJsonAttributeWithCorrectPropertyName(MemberInfo idProperty)
+        //{
+        //    var attributes = idProperty.GetCustomAttributes(typeof(JsonPropertyAttribute), true);
+        //    if (!(attributes.Length == 1
+        //        && ((JsonPropertyAttribute)attributes[0]).PropertyName == this.defaultIdentityPropertyName))
+        //    {
+        //        throw new ArgumentException(
+        //                string.Format(
+        //                    "\"{0}\" property needs to be decorated with JsonAttirbute with PropertyName set to \"id\"",
+        //                    idProperty.Name));
+        //    }
+        //}
 
-        private async Task<Document> GetDocumentByIdAsync(object id)
-        {
-            return this.client.CreateDocumentQuery<Document>((await this.documentCollection).SelfLink, new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned })
-                .WhereExpression(d => d.Id == id.ToString()).AsEnumerable().FirstOrDefault();
-        }
+        //private MemberExpression GetMemberExpression(Expression<Func<TEntity, object>> expr)
+        //{
+        //    var member = expr.Body as MemberExpression;
+        //    var unary = expr.Body as UnaryExpression;
+        //    return member ?? (unary != null ? unary.Operand as MemberExpression : null);
+        //}
 
-        private async Task<Document> GetDocumentByEtagAsync(string etag)
-        {
-            return this.client.CreateDocumentQuery<Document>((await this.documentCollection).SelfLink, new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned })
-                .WhereExpression(d => d.ETag == etag).AsEnumerable().FirstOrDefault();
-        }
-
-        private async Task<DocumentCollection> GetOrCreateCollectionAsync(string collectionPartitionKey = null, int collectionOfferThroughput = 400)
-        {
-            var documentCollection = this.client.CreateDocumentCollectionQuery((await this.database).SelfLink)
-                .WhereExpression(c => c.Id == this.collectionName).AsEnumerable().FirstOrDefault();
-
-            if (documentCollection == null)
-            {
-                documentCollection = new DocumentCollection { Id = this.collectionName };
-                if (!string.IsNullOrEmpty(collectionPartitionKey))
-                {
-                    documentCollection.PartitionKey.Paths.Add(string.Format("/{0}", collectionPartitionKey.Replace(".", "/")));
-                }
-
-                var requestOptions = new RequestOptions
-                {
-                    OfferThroughput = collectionOfferThroughput,
-                };
-
-                documentCollection = await this.client.CreateDocumentCollectionAsync((await this.database).SelfLink, documentCollection, requestOptions).ConfigureAwait(false);
-            }
-
-            return documentCollection;
-        }
-
-        private async Task<Database> GetOrCreateDatabaseAsync()
-        {
-            var result = this.client.CreateDatabaseQuery()
-                .WhereExpression(db => db.Id == this.databaseId).AsEnumerable().FirstOrDefault();
-            if (result == null)
-            {
-                result = await this.client.CreateDatabaseAsync(
-                    new Database { Id = this.databaseId }).ConfigureAwait(false);
-            }
-
-            return result;
-        }
-
-        private MemberExpression GetMemberExpression(Expression<Func<T, object>> expr)
-        {
-            var member = expr.Body as MemberExpression;
-            var unary = expr.Body as UnaryExpression;
-            return member ?? (unary != null ? unary.Operand as MemberExpression : null);
-        }
-
-        private DateTime TimeStampToDateTime(double ts)
-            => new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                .AddSeconds(ts).ToLocalTime();
+        //private DateTime TimeStampToDateTime(double ts)
+        //    => new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
+        //        .AddSeconds(ts).ToLocalTime();
     }
 }
