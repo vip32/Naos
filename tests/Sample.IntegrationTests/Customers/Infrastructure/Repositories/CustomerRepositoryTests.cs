@@ -12,6 +12,7 @@
 
     public class CustomerRepositoryTests : BaseTest
     {
+        // https://xunit.github.io/docs/shared-context.html
         private readonly IMediator mediator;
         private readonly ICustomerRepository sut;
         private readonly Faker<Customer> entityFaker;
@@ -22,6 +23,7 @@
             this.mediator = this.container.GetInstance<IMediator>();
             this.sut = this.container.GetInstance<ICustomerRepository>();
             this.entityFaker = new Faker<Customer>() //https://github.com/bchavez/Bogus
+                .RuleFor(u => u.CustomerNumber, f => f.Random.Replace("??-#####"))
                 .RuleFor(u => u.Gender, f => f.PickRandom(new[] { "Male", "Female" }))
                 .RuleFor(u => u.FirstName, (f, u) => f.Name.FirstName())
                 .RuleFor(u => u.LastName, (f, u) => f.Name.LastName())
@@ -45,7 +47,8 @@
         public async Task FindAllAsync_WithOptions_Test()
         {
             // arrange/act
-            var result = await this.sut.FindAllAsync(new FindOptions<Customer>(take: 3)).ConfigureAwait(false);
+            var result = await this.sut.FindAllAsync(
+                new FindOptions<Customer>(take: 3)).ConfigureAwait(false);
 
             // assert
             result.ShouldNotBeNull();
@@ -144,7 +147,8 @@
         public async Task FindOneAsync_Test()
         {
             // arrange
-            var entities = await this.sut.FindAllAsync(new FindOptions<Customer>(take: 1)).ConfigureAwait(false);
+            var entities = await this.sut.FindAllAsync(
+                new FindOptions<Customer>(take: 1)).ConfigureAwait(false);
 
             // act
             var result = await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).ConfigureAwait(false);
@@ -178,6 +182,21 @@
                 result.entity.ShouldNotBeNull();
                 result.entity.Id.ShouldNotBeNull();
             }
+        }
+
+        [Fact]
+        public async Task DeleteAsync_Test()
+        {
+            // arrange
+            var entities = await this.sut.FindAllAsync(
+                new FindOptions<Customer>(take: 1)).ConfigureAwait(false);
+
+            // act
+            await this.sut.DeleteAsync(entities.FirstOrDefault()).ConfigureAwait(false);
+            var result = await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).ConfigureAwait(false);
+
+            // assert
+            result.ShouldBeNull();
         }
     }
 }

@@ -39,10 +39,11 @@
   <ItemGroup>
     <Folder Include="Customers\App.Web\" />
     <Folder Include="Customers\App\" />
-    <Folder Include="Customers\Domain\Events\Handlers\" />
     <Folder Include="Customers\Domain\Model\" />
     <Folder Include="Customers\Domain\Repositories\" />
     <Folder Include="Customers\Domain\Specifications\" />
+    <Folder Include="Customers\App.Commands\" />
+    <Folder Include="UserAccounts\App.Commands\" />
     <Folder Include="UserAccounts\App.Web\" />
     <Folder Include="UserAccounts\App\" />
     <Folder Include="UserAccounts\Domain\Events\Handlers\" />

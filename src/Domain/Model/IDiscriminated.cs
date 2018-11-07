@@ -1,6 +1,6 @@
 ﻿namespace Naos.Core.Domain
 {
-    public interface IDiscriminatedEntity
+    public interface IDiscriminated
     {
         /// <summary>
         /// Gets the type of the entity (discriminator).

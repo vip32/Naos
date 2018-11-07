@@ -59,7 +59,7 @@
         /// <returns></returns>
         public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null)
         {
-            return await this.FindAllAsync(specifications: null, options: options);
+            return await this.FindAllAsync(specifications: null, options: options).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -71,8 +71,8 @@
         public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null)
         {
             return specification == null
-                ? await this.FindAllAsync(specifications: null, options: options)
-                : await this.FindAllAsync(new[] { specification }, options);
+                ? await this.FindAllAsync(specifications: null, options: options).ConfigureAwait(false)
+                : await this.FindAllAsync(new[] { specification }, options).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@
                 result = result.Where(this.EnsurePredicate(specification));
             }
 
-            return await Task.FromResult(this.FindAll(result, options));
+            return await Task.FromResult(this.FindAll(result, options).ToList()).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -177,11 +177,11 @@
             {
                 if (isNew)
                 {
-                    await this.mediator.Publish(new EntityInsertDomainEvent<TEntity>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityInsertDomainEvent<IEntity>(entity)).ConfigureAwait(false);
                 }
                 else
                 {
-                    await this.mediator.Publish(new EntityUpdateDomainEvent<TEntity>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityUpdateDomainEvent<IEntity>(entity)).ConfigureAwait(false);
                 }
             }
 
@@ -192,11 +192,11 @@
             {
                 if (isNew)
                 {
-                    await this.mediator.Publish(new EntityInsertedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityInsertedDomainEvent<IEntity>(entity)).ConfigureAwait(false);
                 }
                 else
                 {
-                    await this.mediator.Publish(new EntityUpdatedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityUpdatedDomainEvent<IEntity>(entity)).ConfigureAwait(false);
                 }
             }
 
@@ -223,14 +223,14 @@
             {
                 if (this.Options?.PublishEvents != false)
                 {
-                    await this.mediator.Publish(new EntityDeleteDomainEvent<TEntity>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityDeleteDomainEvent<IEntity>(entity)).ConfigureAwait(false);
                 }
 
                 this.entities = this.entities.Where(x => !x.Id.Equals(entity.Id));
 
                 if (this.Options?.PublishEvents != false)
                 {
-                    await this.mediator.Publish(new EntityDeletedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityDeletedDomainEvent<IEntity>(entity)).ConfigureAwait(false);
                 }
             }
         }
@@ -251,7 +251,7 @@
             this.entities = this.entities.Where(x => !x.Id.Equals(entity.Id));
             if (this.Options?.PublishEvents != false)
             {
-                await this.mediator.Publish(new EntityDeletedDomainEvent<TEntity>(entity)).ConfigureAwait(false);
+                await this.mediator.Publish(new EntityDeletedDomainEvent<IEntity>(entity)).ConfigureAwait(false);
             }
         }
 

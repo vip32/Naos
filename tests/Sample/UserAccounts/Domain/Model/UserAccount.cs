@@ -3,7 +3,7 @@
     using Naos.Core.Common;
     using Naos.Core.Domain;
 
-    public class UserAccount : Entity<string>, IAggregateRoot
+    public class UserAccount : Entity<string>
     {
         public string Email { get; set; }
 

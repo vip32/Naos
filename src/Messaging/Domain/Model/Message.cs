@@ -6,7 +6,7 @@
     using Newtonsoft.Json;
 
     public class Message
-        : IEntity<string>, IDiscriminatedEntity, IAggregateRoot
+        : IEntity<string>, IDiscriminated, IAggregateRoot
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Message"/> class.

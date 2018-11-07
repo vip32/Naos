@@ -1,9 +1,13 @@
 ﻿namespace Naos.Sample.Customers.Domain
 {
+    using System;
+    using Naos.Core.Common;
     using Naos.Core.Domain;
 
-    public class Customer : Entity<string>, ITenantEntity, IAggregateRoot
+    public class Customer : Entity<string>, ITenantEntity
     {
+        public string CustomerNumber { get; set; }
+
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
@@ -19,5 +23,13 @@
         public Address Address { get; set; }
 
         public string TenantId { get; set; }
+
+        public void SetCustomerNumber()
+        {
+            if (this.CustomerNumber.IsNullOrEmpty())
+            {
+                this.CustomerNumber = $"{RandomGenerator.GenerateString(2)}-{DateTime.UtcNow.Ticks}";
+            }
+        }
     }
 }

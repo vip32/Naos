@@ -7,7 +7,7 @@
     /// A base class for all domain entities (layer supertype)
     /// </summary>
     /// <typeparam name="TId">The type of the identifier.</typeparam>
-    public abstract class Entity<TId> : IEntity<TId>, IStateEntity, IDiscriminatedEntity
+    public abstract class Entity<TId> : IEntity<TId>, IStateEntity, IDiscriminated, IAggregateRoot
     {
         /// <summary>
         /// Gets or sets the entity identifier.

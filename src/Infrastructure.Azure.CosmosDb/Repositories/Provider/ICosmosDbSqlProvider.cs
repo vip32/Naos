@@ -7,14 +7,13 @@
     using System.Linq.Expressions;
     using System.Threading.Tasks;
     using Microsoft.Azure.Documents;
-    using Naos.Core.Domain;
 
     public interface ICosmosDbSqlProvider<T>
-        where T : class, IEntity
+        where T : class
     {
         Task<T> UpsertAsync(T entity);
 
-        Task<T> AddOrUpdateAttachmentAsync(T entity, string attachmentId, string contentType, Stream stream);
+        Task<T> UpsertAttachmentAsync(T entity, string attachmentId, string contentType, Stream stream);
 
         Task<int> CountAsync();
 
@@ -22,17 +21,15 @@
 
         Task<IEnumerable<T>> GetAllAsync(int count = -1);
 
-        IEnumerable<string> GetAllIdsPaged(int pageSize = 100);
+        IEnumerable<string> GetAllIdsBatched(int count = 100);
 
-        IEnumerable<T> GetAllPaged(int pageSize = 100);
+        IEnumerable<T> GetAllBatched(int count = 100);
 
-        IEnumerable<string> GetAllUrisPaged(int pageSize = 100);
+        Task<Attachment> GetAttachmentByIdAsync(string id, string attachmentId);
 
-        Attachment GetAttachmentById(string id, string attachmentId);
+        Task<IEnumerable<string>> GetAttachmentIdsAsync(string id);
 
-        IEnumerable<string> GetAttachmentIds(string id);
-
-        IEnumerable<Attachment> GetAttachments(string id);
+        Task<IEnumerable<Attachment>> GetAttachmentsAsync(string id);
 
         Task<Stream> GetAttachmentStreamByIdAsync(string id, string attachmentId);
 

@@ -54,6 +54,7 @@
 
   <ItemGroup>
     <Folder Include="Domain.Repositories\InMemory\" />
+    <Folder Include="Domain\Events\" />
     <Folder Include="Domain\Model\" />
     <Folder Include="Domain\Repositories\Extensions\" />
     <Folder Include="Domain\Repositories\Decorators\" />

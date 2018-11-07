@@ -2,16 +2,21 @@
 {
     using System.Threading;
     using System.Threading.Tasks;
+    using Naos.Core.Common;
     using Naos.Core.Domain;
 
     public class CustomerInsertedDomainEventHandler
-        : IDomainEventHandler<EntityInsertedDomainEvent<Customer>>
+        : IDomainEventHandler<EntityInsertedDomainEvent<IEntity>>
     {
-        public async Task Handle(EntityInsertedDomainEvent<Customer> notification, CancellationToken cancellationToken)
+        public async Task Handle(EntityInsertedDomainEvent<IEntity> notification, CancellationToken cancellationToken)
         {
             await Task.Run(() =>
             {
-                // TODO: do something, trigger message (integration)
+                if (notification?.Entity.Is<Customer>() == true)
+                {
+                    var entity = notification.Entity.As<Customer>();
+                    // TODO: do something, trigger message (integration)
+                }
             });
         }
     }
