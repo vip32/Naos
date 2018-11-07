@@ -72,6 +72,46 @@
         }
 
         [Fact]
+        public async Task FindAllAsync_WithAndSpecification_Test()
+        {
+            // arrange/act
+            var result = await this.sut.FindAllAsync(
+                    new HasEastRegionSpecification()
+                    .And(new Specification<Customer>(e => e.Gender == "Male"))).ConfigureAwait(false);
+
+            // assert
+            result.ShouldNotBeNull();
+            result.ShouldNotBeEmpty();
+        }
+
+        [Fact]
+        public async Task FindAllAsync_WithOrSpecification_Test()
+        {
+            // arrange/act
+            var result = await this.sut.FindAllAsync(
+                    new HasEastRegionSpecification()
+                    .Or(new Specification<Customer>(e => e.Gender == "Male"))).ConfigureAwait(false);
+
+            // assert
+            result.ShouldNotBeNull();
+            result.ShouldNotBeEmpty();
+        }
+
+        [Fact]
+        public async Task FindAllAsync_WithNotSpecification_Test()
+        {
+            // arrange/act
+            var result = await this.sut.FindAllAsync(
+                    new HasEastRegionSpecification()
+                    .And(new Specification<Customer>(e => e.Gender == "Male")
+                    .Not())).ConfigureAwait(false);
+
+            // assert
+            result.ShouldNotBeNull();
+            result.ShouldNotBeEmpty();
+        }
+
+        [Fact]
         public async Task FindAllAsync_WithSpecifications_Test()
         {
             // arrange/act
@@ -85,15 +125,17 @@
             // assert
             result.ShouldNotBeNull();
             result.ShouldNotBeEmpty();
+        }
 
+        [Fact]
+        public async Task FindOneAsync_Test()
+        {
             // arrange/act
-            result = await this.sut.FindAllAsync(
-                    new HasEastRegionSpecification()
-                    .And(new Specification<Customer>(e => e.Gender == "Male"))).ConfigureAwait(false);
+            var result = await this.sut.FindOneAsync("40e028af-c0ba-4e07-87d0-b1c028849551").ConfigureAwait(false);
 
             // assert
             result.ShouldNotBeNull();
-            result.ShouldNotBeEmpty();
+            result.Id.ShouldBe("40e028af-c0ba-4e07-87d0-b1c028849551");
         }
 
         [Fact]
