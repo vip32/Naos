@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.UserAccounts.Infrastructure
+﻿namespace Naos.Sample.UserAccounts.EntityFramework
 {
     using Microsoft.EntityFrameworkCore;
     using Naos.Sample.UserAccounts.Domain;
