@@ -23,18 +23,20 @@
             container.RegisterSingleton<ICustomerRepository>(() =>
             {
                 return new CustomerRepository(
-                    new RepositoryTenantDecorator<Customer>(
-                        "naos_sample_test",
-                        new CosmosDbSqlRepository<Customer>(
-                            container.GetInstance<ILogger<CosmosDbSqlRepository<Customer>>>(),
-                            container.GetInstance<IMediator>(),
-                            new CosmosDbSqlProvider<Customer>(
-                                client: CosmosDbClient.Create(cosmosDbConfiguration.ServiceEndpointUri, cosmosDbConfiguration.AuthKeyOrResourceToken),
-                                databaseId: cosmosDbConfiguration.DatabaseId,
-                                collectionIdFactory: () => cosmosDbConfiguration.CollectionId,
-                                collectionPartitionKey: cosmosDbConfiguration.CollectionPartitionKey,
-                                collectionOfferThroughput: cosmosDbConfiguration.CollectionOfferThroughput,
-                                isMasterCollection: cosmosDbConfiguration.IsMasterCollection))));
+                    new RepositoryLoggingDecorator<Customer>(
+                        container.GetInstance<ILogger<CustomerRepository>>(),
+                        new RepositoryTenantDecorator<Customer>(
+                            "naos_sample_test",
+                            new CosmosDbSqlRepository<Customer>(
+                                container.GetInstance<ILogger<CustomerRepository>>(), // TODO: obsolete
+                                container.GetInstance<IMediator>(),
+                                new CosmosDbSqlProvider<Customer>(
+                                    client: CosmosDbClient.Create(cosmosDbConfiguration.ServiceEndpointUri, cosmosDbConfiguration.AuthKeyOrResourceToken),
+                                    databaseId: cosmosDbConfiguration.DatabaseId,
+                                    collectionIdFactory: () => cosmosDbConfiguration.CollectionId,
+                                    collectionPartitionKey: cosmosDbConfiguration.CollectionPartitionKey,
+                                    collectionOfferThroughput: cosmosDbConfiguration.CollectionOfferThroughput,
+                                    isMasterCollection: cosmosDbConfiguration.IsMasterCollection)))));
             });
 
             return container;

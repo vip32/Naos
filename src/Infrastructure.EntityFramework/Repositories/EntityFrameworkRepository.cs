@@ -15,7 +15,7 @@
     public class EntityFrameworkRepository<TEntity> : IRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
-        private readonly ILogger<EntityFrameworkRepository<TEntity>> logger;
+        private readonly ILogger<IRepository<TEntity>> logger;
         private readonly IMediator mediator;
         private readonly DbContext dbContext;
 
@@ -27,7 +27,7 @@
         /// <param name="dbContext">The EF database context.</param>
         /// <param name="options">The options.</param>
         public EntityFrameworkRepository(
-            ILogger<EntityFrameworkRepository<TEntity>> logger,
+            ILogger<IRepository<TEntity>> logger,
             IMediator mediator,
             DbContext dbContext,
             IRepositoryOptions options = null)

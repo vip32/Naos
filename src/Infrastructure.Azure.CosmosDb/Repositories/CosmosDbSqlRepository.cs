@@ -14,7 +14,7 @@
     public class CosmosDbSqlRepository<TEntity> : IRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot //, IDiscriminated
     {
-        private readonly ILogger<CosmosDbSqlRepository<TEntity>> logger;
+        private readonly ILogger<IRepository<TEntity>> logger;
         private readonly IMediator mediator;
         private readonly ICosmosDbSqlProvider<TEntity> provider;
 
@@ -26,7 +26,7 @@
         /// <param name="provider">The provider.</param>
         /// <param name="options">The options.</param>
         public CosmosDbSqlRepository(
-            ILogger<CosmosDbSqlRepository<TEntity>> logger,
+            ILogger<IRepository<TEntity>> logger,
             IMediator mediator,
             ICosmosDbSqlProvider<TEntity> provider,
             IRepositoryOptions options = null)

@@ -5,6 +5,7 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Domain.Repositories;
     using Naos.Core.Infrastructure.EntityFramework;
     using Naos.Sample.UserAccounts.Domain;
     using Naos.Sample.UserAccounts.Infrastructure;
@@ -21,13 +22,20 @@
             Ensure.That(entityFrameworkConfiguration).IsNotNull();
 
             container.RegisterSingleton<IUserAccountRepository>(() =>
-                new UserAccountRepository(
-                    container.GetInstance<ILogger<UserAccountRepository>>(),
-                    container.GetInstance<IMediator>(),
-                    new UserAccountContext(
-                        new DbContextOptionsBuilder<UserAccountContext>()
-                            .UseSqlServer(entityFrameworkConfiguration.ConnectionString)
-                            .Options))); // "Server=(localdb)\\mssqllocaldb;Database=naos;Trusted_Connection=true;"
+            {
+                return new UserAccountRepository(
+                    new RepositoryLoggingDecorator<UserAccount>(
+                        container.GetInstance<ILogger<UserAccountRepository>>(),
+                        new RepositoryTenantDecorator<UserAccount>(
+                            "naos_sample_test",
+                            new EntityFrameworkRepository<UserAccount>(
+                                container.GetInstance<ILogger<UserAccountRepository>>(), // TODO: obsolete
+                                container.GetInstance<IMediator>(),
+                                new UserAccountContext(
+                                    new DbContextOptionsBuilder<UserAccountContext>()
+                                        .UseSqlServer(entityFrameworkConfiguration.ConnectionString)
+                                        .Options)))));
+            });
 
             return container;
         }
