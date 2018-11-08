@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Messaging.Infrastructure.Azure.ServiceBus
+﻿namespace Naos.Core.Infrastructure.Azure.ServiceBus
 {
     using System.Threading.Tasks;
     using Microsoft.Azure.Management.ServiceBus.Fluent;

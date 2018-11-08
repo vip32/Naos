@@ -8,7 +8,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
-    using Naos.Core.Infrastructure.ServiceBus;
+    using Naos.Core.Infrastructure.Azure.ServiceBus;
     using Naos.Core.Messaging.Infrastructure.Azure.ServiceBus;
     using SimpleInjector;
 

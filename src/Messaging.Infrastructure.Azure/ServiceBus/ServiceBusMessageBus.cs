@@ -7,6 +7,7 @@
     using EnsureThat;
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Infrastructure.Azure.ServiceBus;
     using Newtonsoft.Json;
 
     public class ServiceBusMessageBus : IMessageBus

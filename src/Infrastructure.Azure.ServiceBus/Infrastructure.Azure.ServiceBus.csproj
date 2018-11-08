@@ -6,4 +6,12 @@
     <RootNamespace>Naos.Core.Infrastructure.Azure.ServiceBus</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Humanizer.Core" Version="2.5.1" />
+    <PackageReference Include="Microsoft.Azure.Management.ServiceBus" Version="2.0.1" />
+    <PackageReference Include="Microsoft.Azure.Management.ServiceBus.Fluent" Version="1.17.0" />
+    <PackageReference Include="Microsoft.Azure.ServiceBus" Version="3.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.1" />
+  </ItemGroup>
+
 </Project>

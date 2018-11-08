@@ -15,10 +15,11 @@
 
         public ServiceBusMessageBusTests()
         {
+            var configuration = NaosConfigurationFactory.CreateRoot();
             this.container = new Container()
-                .AddNaosLogging()
+                .AddNaosLogging(configuration)
                 .AddNaosMessaging(
-                    NaosConfigurationFactory.CreateRoot(),
+                    configuration,
                     AppDomain.CurrentDomain.FriendlyName,
                     assemblies: new[] { typeof(IMessageBus).Assembly, typeof(ServiceBusMessageBusTests).Assembly });
             this.container.Verify();

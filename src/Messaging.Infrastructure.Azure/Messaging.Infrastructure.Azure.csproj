@@ -8,8 +8,6 @@
 
   <ItemGroup>
     <PackageReference Include="Humanizer.Core" Version="2.5.1" />
-    <PackageReference Include="Microsoft.Azure.Management.ServiceBus" Version="2.0.1" />
-    <PackageReference Include="Microsoft.Azure.Management.ServiceBus.Fluent" Version="1.17.0" />
     <PackageReference Include="Microsoft.Azure.ServiceBus" Version="3.1.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="2.1.1" />
@@ -19,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Infrastructure.Azure.ServiceBus\Infrastructure.Azure.ServiceBus.csproj" />
     <ProjectReference Include="..\Infrastructure.Azure.CosmosDb\Infrastructure.Azure.CosmosDb.csproj" />
+    <ProjectReference Include="..\Infrastructure.Azure.ServiceBus\Infrastructure.Azure.ServiceBus.csproj" />
     <ProjectReference Include="..\Messaging\Messaging.csproj" />
   </ItemGroup>
 

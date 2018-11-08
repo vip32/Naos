@@ -12,6 +12,8 @@ file repo https://github.com/selmaohneh/Repository/tree/master/Repository.FileRe
 properties https://github.com/schotime/NPoco/blob/master/src/NPoco/PocoExpando.cs
 spec mapping with visitor https://fabiomarreco.github.io/blog/2018/specificationpattern-with-entityframework/
 tenant resolver https://stackoverflow.com/questions/41820206/c-sharp-architecture-pattern-for-tenant-specific-business-logic
+serilog app insight https://github.com/serilog/serilog-sinks-applicationinsights/issues/37
+configuration validation https://www.stevejgordon.co.uk/asp-net-core-2-2-options-validation
 
 repo insert/update
 repo return status when upsert (insert or update) > + entity = tuple

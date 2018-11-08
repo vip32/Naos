@@ -41,7 +41,6 @@
     <ProjectReference Include="..\..\src\Infrastructure.Azure.Arm\Infrastructure.Azure.Arm.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure.Azure.Cosmosdb\Infrastructure.Azure.CosmosDb.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure.Azure.KeyVault\Infrastructure.Azure.KeyVault.csproj" />
-    <ProjectReference Include="..\..\src\Infrastructure.Azure.ServiceBus\Infrastructure.Azure.ServiceBus.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure.EntityFramework\Infrastructure.EntityFramework.csproj" />
     <ProjectReference Include="..\..\src\Messaging.Infrastructure.Azure\Messaging.Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\..\src\Messaging.Infrastructure.RabbitMQ\Messaging.Infrastructure.RabbitMQ.csproj" />

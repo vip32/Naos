@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Messaging.Infrastructure.Azure.ServiceBus
+﻿namespace Naos.Core.Infrastructure.Azure.ServiceBus
 {
     public class AzureUserCredentials // TODO: move to infra.arm
     {

@@ -27,7 +27,7 @@
             // naos core registrations
             this.container
                 .AddNaosMediator(new[] { typeof(IEntity).Assembly, typeof(BaseTest).Assembly, typeof(Customer).Assembly })
-                .AddNaosLogging()
+                .AddNaosLogging(configuration)
                 .AddNaosAppCommands(new[] { typeof(Customer).Assembly })
                 .AddNaosMessaging(
                     configuration,

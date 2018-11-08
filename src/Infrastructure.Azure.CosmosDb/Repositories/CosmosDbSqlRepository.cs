@@ -137,6 +137,7 @@
                 }
             }
 
+            this.logger.LogInformation($"upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}");
             var result = await this.provider.UpsertAsync(entity).ConfigureAwait(false);
             entity = result;
 
@@ -152,6 +153,7 @@
                 }
             }
 
+            this.logger.LogInformation($"upserted entity: {result.GetType().PrettyName()}, id: {result.Id}, isNew: {isNew}");
 #pragma warning disable SA1008 // Opening parenthesis must be spaced correctly
             return isNew ? (result, UpsertAction.Inserted) : (result, UpsertAction.Updated);
 #pragma warning restore SA1008 // Opening parenthesis must be spaced correctly

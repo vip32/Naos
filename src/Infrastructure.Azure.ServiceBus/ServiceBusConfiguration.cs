@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Infrastructure.ServiceBus
+﻿namespace Naos.Core.Infrastructure.Azure.ServiceBus
 {
     public class ServiceBusConfiguration
     {
