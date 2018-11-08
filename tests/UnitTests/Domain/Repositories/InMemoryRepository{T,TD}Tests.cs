@@ -305,6 +305,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             {
                 var mapper = new MapperConfiguration(c =>
                 {
+                    // TODO: try reversemap https://stackoverflow.com/questions/13490456/automapper-bidirectional-mapping-with-reversemap-and-formember
                     //c.AddExpressionMapping();
                     //c.IgnoreUnmapped();
                     //c.AllowNullCollections = true;
