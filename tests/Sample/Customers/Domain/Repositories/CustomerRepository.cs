@@ -5,7 +5,7 @@
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Domain.Specifications;
 
-    public class CustomerRepository : BaseRepository<Customer>, ICustomerRepository
+    public class CustomerRepository : Repository<Customer>, ICustomerRepository
     {
         public CustomerRepository(IRepository<Customer> decoratee)
             : base(decoratee)

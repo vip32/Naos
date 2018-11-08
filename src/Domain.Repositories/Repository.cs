@@ -5,12 +5,12 @@
     using EnsureThat;
     using Naos.Core.Domain.Specifications;
 
-    public abstract class BaseRepository<TEntity> : IRepository<TEntity>
+    public abstract class Repository<TEntity> : IRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
         private readonly IRepository<TEntity> decoratee;
 
-        protected BaseRepository(IRepository<TEntity> decoratee)
+        protected Repository(IRepository<TEntity> decoratee)
         {
             EnsureArg.IsNotNull(decoratee, nameof(decoratee));
 
