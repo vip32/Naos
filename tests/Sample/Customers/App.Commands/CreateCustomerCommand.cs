@@ -7,7 +7,12 @@
 
     public class CreateCustomerCommand : CommandRequest<string>
     {
-        public Customer Customer { get; set; }
+        public CreateCustomerCommand(Customer entity)
+        {
+            this.Customer = entity;
+        }
+
+        public Customer Customer { get; set; } // TODO: should be immutable
 
         public override ValidationResult Validate() => new Validator().Validate(this);
 

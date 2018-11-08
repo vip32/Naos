@@ -1,6 +1,7 @@
 ﻿namespace Naos.Sample.IntegrationTests
 {
     using System;
+    using Naos.Core.App.Commands;
     using Naos.Core.App.Configuration;
     using Naos.Core.App.Operations.Serilog;
     using Naos.Core.Common.Dependency.SimpleInjector;
@@ -27,6 +28,7 @@
             this.container
                 .AddNaosMediator(new[] { typeof(IEntity).Assembly, typeof(BaseTest).Assembly, typeof(Customer).Assembly })
                 .AddNaosLogging()
+                .AddNaosAppCommands(new[] { typeof(Customer).Assembly })
                 .AddNaosMessaging(
                     configuration,
                     AppDomain.CurrentDomain.FriendlyName,

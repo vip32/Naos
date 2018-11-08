@@ -138,6 +138,7 @@
             }
 
             var result = await this.provider.UpsertAsync(entity).ConfigureAwait(false);
+            entity = result;
 
             if (this.Options?.PublishEvents != false)
             {

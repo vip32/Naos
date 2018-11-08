@@ -4,7 +4,6 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using MediatR;
-    using Naos.Core.Domain;
 
     /// <summary>
     /// A base implementation for handling application commands
@@ -48,16 +47,16 @@
         /// <returns></returns>
         public abstract Task<CommandResponse<TResponse>> HandleRequest(TRequest request, CancellationToken cancellationToken);
 
-        /// <summary>
-        /// Publishes the domain event so a domain event handler can handle it.
-        /// </summary>
-        /// <param name="domainEvent">The domain event.</param>
-        /// <returns></returns>
-        public async Task PublishDomainEvent(IDomainEvent domainEvent)
-        {
-            EnsureArg.IsNotNull(domainEvent, nameof(domainEvent));
+        ///// <summary>
+        ///// Publishes the domain event so a domain event handler can handle it.
+        ///// </summary>
+        ///// <param name="domainEvent">The domain event.</param>
+        ///// <returns></returns>
+        //public async Task PublishDomainEvent(IDomainEvent domainEvent)
+        //{
+        //    EnsureArg.IsNotNull(domainEvent, nameof(domainEvent));
 
-            await this.mediator.Publish(domainEvent).ConfigureAwait(false);
-        }
+        //    await this.mediator.Publish(domainEvent).ConfigureAwait(false);
+        //}
     }
 }

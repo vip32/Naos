@@ -42,7 +42,6 @@
     <Folder Include="Customers\Domain\Model\" />
     <Folder Include="Customers\Domain\Repositories\" />
     <Folder Include="Customers\Domain\Specifications\" />
-    <Folder Include="Customers\App.Commands\" />
     <Folder Include="UserAccounts\App.Commands\" />
     <Folder Include="UserAccounts\App.Web\" />
     <Folder Include="UserAccounts\App\" />

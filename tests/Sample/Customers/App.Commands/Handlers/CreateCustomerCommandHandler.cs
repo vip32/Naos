@@ -11,31 +11,31 @@
 
     public class CreateCustomerCommandHandler : BehaviorCommandHandler<CreateCustomerCommand, string>
     {
-        private readonly ICustomerRepository customerRepository;
+        private readonly ICustomerRepository repository;
 
-        public CreateCustomerCommandHandler(IMediator mediator, IEnumerable<ICommandBehavior> behaviors, ICustomerRepository customerRepository)
+        public CreateCustomerCommandHandler(IMediator mediator, IEnumerable<ICommandBehavior> behaviors, ICustomerRepository repository)
             : base(mediator, behaviors)
         {
-            EnsureArg.IsNotNull(customerRepository);
+            EnsureArg.IsNotNull(repository);
 
-            this.customerRepository = customerRepository;
+            this.repository = repository;
         }
 
         public override async Task<CommandResponse<string>> HandleRequest(CreateCustomerCommand request, CancellationToken cancellationToken)
         {
+            request.Properties.AddOrUpdate(this.GetType().Name, true);
+
             if(!request.Customer.Region.EqualsAny(new[] { "East", "West" }))
             {
                 return new CommandResponse<string>("cannot accept customers outside regular regions");
             }
 
             request.Customer.SetCustomerNumber();
-            var entity = await this.customerRepository.InsertAsync(request.Customer).ConfigureAwait(false);
-
-            request.Properties.AddOrUpdate(this.GetType().Name, true);
+            request.Customer = await this.repository.InsertAsync(request.Customer).ConfigureAwait(false);
 
             return new CommandResponse<string>
             {
-                Result = entity.Id
+                Result = request.Customer.Id
             };
         }
     }
