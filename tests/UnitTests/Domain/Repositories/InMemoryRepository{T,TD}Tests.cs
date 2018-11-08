@@ -86,6 +86,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             // arrange
             var mediator = Substitute.For<IMediator>();
             var sut = new RepositoryTenantDecorator<StubEntity>(
+                this.tenantId,
                 new InMemoryRepository<StubEntity, StubDto>( // decoratee
                     mediator,
                     this.entities,
@@ -94,8 +95,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                     new[]
                     {
                         new AutoMapperSpecificationMapper<StubEntity, StubDto>(StubEntityMapperConfiguration.Create())
-                    }),
-                this.tenantId);
+                    }));
 
             // act
             var result = await sut.FindAllAsync().ConfigureAwait(false);

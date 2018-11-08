@@ -24,6 +24,7 @@
             {
                 return new CustomerRepository(
                     new RepositoryTenantDecorator<Customer>(
+                        "naos_sample_test",
                         new CosmosDbSqlRepository<Customer>(
                             container.GetInstance<ILogger<CosmosDbSqlRepository<Customer>>>(),
                             container.GetInstance<IMediator>(),
@@ -33,8 +34,7 @@
                                 collectionIdFactory: () => cosmosDbConfiguration.CollectionId,
                                 collectionPartitionKey: cosmosDbConfiguration.CollectionPartitionKey,
                                 collectionOfferThroughput: cosmosDbConfiguration.CollectionOfferThroughput,
-                                isMasterCollection: cosmosDbConfiguration.IsMasterCollection)),
-                        "naos_sample_test"));
+                                isMasterCollection: cosmosDbConfiguration.IsMasterCollection))));
             });
 
             return container;
