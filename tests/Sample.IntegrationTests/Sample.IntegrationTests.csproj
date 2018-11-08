@@ -37,11 +37,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Countries\App.Commands\Handlers\" />
+    <Folder Include="Countries\App.Web\" />
+    <Folder Include="Countries\App\" />
+    <Folder Include="Countries\Domain\Events\Handlers\" />
+    <Folder Include="Countries\Domain\Model\" />
+    <Folder Include="Countries\Domain\Specifications\" />
+    <Folder Include="Countries\Infrastructure\" />
     <Folder Include="Customers\App.Web\" />
     <Folder Include="Customers\App\" />
     <Folder Include="Customers\Domain\Model\" />
-    <Folder Include="Customers\Domain\Repositories\" />
     <Folder Include="Customers\Domain\Specifications\" />
+    <Folder Include="Customers\Infrastructure\" />
     <Folder Include="UserAccounts\App.Commands\" />
     <Folder Include="UserAccounts\App.Web\" />
     <Folder Include="UserAccounts\App\" />

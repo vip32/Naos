@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.IntegrationTests.Customers.Infrastructure
+﻿namespace Naos.Sample.IntegrationTests.Customers.Domain
 {
     using System.Linq;
     using System.Threading.Tasks;
@@ -13,14 +13,12 @@
     public class CustomerRepositoryTests : BaseTest
     {
         // https://xunit.github.io/docs/shared-context.html
-        private readonly IMediator mediator;
         private readonly ICustomerRepository sut;
         private readonly Faker<Customer> entityFaker;
         private readonly string tenantId = "naos_sample_test";
 
         public CustomerRepositoryTests()
         {
-            this.mediator = this.container.GetInstance<IMediator>();
             this.sut = this.container.GetInstance<ICustomerRepository>();
             this.entityFaker = new Faker<Customer>() //https://github.com/bchavez/Bogus
                 .RuleFor(u => u.CustomerNumber, f => f.Random.Replace("??-#####"))

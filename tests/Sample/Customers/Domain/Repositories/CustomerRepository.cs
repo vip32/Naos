@@ -14,6 +14,6 @@
 
         public async Task<Customer> FindByNumber(string number)
             => (await this.FindAllAsync(new Specification<Customer>(e => e.CustomerNumber == number))).FirstOrDefault();
-            // TODO: create propert specification + tests
+            // TODO: create proper specification + tests
     }
 }

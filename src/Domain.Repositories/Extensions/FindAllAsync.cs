@@ -16,7 +16,7 @@
         /// <param name="tenantId">The tenant identifier.</param>
         /// <param name="options">The options.</param>
         /// <returns></returns>
-        public static async Task<IEnumerable<TEntity>> FindAllAsync<TEntity>(
+        public static async Task<IEnumerable<TEntity>> FindAllAsync<TEntity>( // causes issues when used in mapped repos <TEntity, TDesitination>, Unable to cast object of type 'xxxDto' to type 'Naos.Core.Domain.ITenantEntity'. better use the tenant decorator for this
             this IRepository<TEntity> source,
             string tenantId,
             IFindOptions<TEntity> options = null)

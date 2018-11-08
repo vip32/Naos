@@ -8,6 +8,7 @@
     using Naos.Core.Domain;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.Infrastructure.Azure;
+    using Naos.Sample.Countries;
     using Naos.Sample.Customers;
     using Naos.Sample.Customers.Domain;
     using Naos.Sample.UserAccounts;
@@ -36,6 +37,7 @@
 
             // naos sample registrations
             this.container
+                .AddSampleCountries()
                 .AddSampleCustomers(configuration)
                 .AddSampleUserAccounts(configuration);
 

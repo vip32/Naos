@@ -25,12 +25,13 @@
 
         public InMemoryRepository(
             IMediator mediator,
+            Func<TDestination, object> idSelector,
             IEnumerable<TDestination> entities = null,
             IRepositoryOptions options = null,
-            IEnumerable<ISpecificationMapper<TEntity, TDestination>> specificationMappers = null,
-            Func<TDestination, object> idSelector = null)
+            IEnumerable<ISpecificationMapper<TEntity, TDestination>> specificationMappers = null)
             : base(mediator, options)
         {
+            EnsureArg.IsNotNull(idSelector, nameof(idSelector));
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Mapper, nameof(options.Mapper));
 

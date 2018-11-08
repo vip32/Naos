@@ -4,8 +4,8 @@
 
     public class HasGenderSpecification : Specification<Customer>
     {
-        public HasGenderSpecification(string gender = "Male")
-            : base(e => e.Gender == gender)
+        public HasGenderSpecification(string value = "Male")
+            : base(e => e.Gender == value)
         {
         }
     }

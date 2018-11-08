@@ -42,8 +42,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             var mediator = Substitute.For<IMediator>();
             var sut = new InMemoryRepository<StubEntity, StubDto>(
                 mediator,
-                this.entities,
-                new RepositoryOptions(
+                e => e.Identifier,
+                entities: this.entities,
+                options: new RepositoryOptions(
                     new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())));
 
             // act
@@ -63,10 +64,11 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             var sut = new RepositorySpecificationDecorator<StubEntity>(
                 new InMemoryRepository<StubEntity, StubDto>( // decoratee
                     mediator,
-                    this.entities,
-                    new RepositoryOptions(
+                    e => e.Identifier,
+                    entities: this.entities,
+                    options: new RepositoryOptions(
                         new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
-                    new[]
+                    specificationMappers: new[]
                     {
                         new AutoMapperSpecificationMapper<StubEntity, StubDto>(StubEntityMapperConfiguration.Create())
                     }),
@@ -89,10 +91,11 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                 this.tenantId,
                 new InMemoryRepository<StubEntity, StubDto>( // decoratee
                     mediator,
-                    this.entities,
-                    new RepositoryOptions(
+                    e => e.Identifier,
+                    entities: this.entities,
+                    options: new RepositoryOptions(
                         new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
-                    new[]
+                    specificationMappers: new[]
                     {
                         new AutoMapperSpecificationMapper<StubEntity, StubDto>(StubEntityMapperConfiguration.Create())
                     }));
@@ -135,10 +138,10 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             var mediator = Substitute.For<IMediator>();
             var sut = new InMemoryRepository<StubEntity, StubDto>(
                 mediator,
-                this.entities,
-                new RepositoryOptions(
-                    new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
-                new[]
+                e => e.Identifier,
+                entities: this.entities,
+                options: new RepositoryOptions(new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
+                specificationMappers: new[]
                 {
                     /*new StubHasNameSpecificationMapper(),*/
                     new AutoMapperSpecificationMapper<StubEntity, StubDto>(StubEntityMapperConfiguration.Create())
@@ -190,11 +193,11 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             var mediator = Substitute.For<IMediator>();
             var sut = new InMemoryRepository<StubEntity, StubDto>(
                 mediator,
+                e => e.Identifier,
                 this.entities,
                 new RepositoryOptions(
                     new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
-                new[] { /*new StubHasNameSpecificationMapper(),*/ new AutoMapperSpecificationMapper<StubEntity, StubDto>(StubEntityMapperConfiguration.Create()) },
-                e => e.Identifier); // infrastructure layer
+                new[] { /*new StubHasNameSpecificationMapper(),*/ new AutoMapperSpecificationMapper<StubEntity, StubDto>(StubEntityMapperConfiguration.Create()) }); // infrastructure layer
 
             // act
             var result = await sut.FindOneAsync("Identifier99").ConfigureAwait(false);
