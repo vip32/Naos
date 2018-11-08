@@ -37,6 +37,22 @@
                                         .Options)))));
             });
 
+            var inMemoryRepository = new UserAccountRepository(
+                    new RepositoryLoggingDecorator<UserAccount>(
+                        container.GetInstance<ILogger<UserAccountRepository>>(),
+                        new RepositoryTenantDecorator<UserAccount>(
+                            "naos_sample_test",
+                            new InMemoryRepository<UserAccount>(
+                                container.GetInstance<IMediator>()))));
+
+            var inMemoryWithMappedRepository = new UserAccountRepository(
+                    new RepositoryLoggingDecorator<UserAccount>(
+                        container.GetInstance<ILogger<UserAccountRepository>>(),
+                        new RepositoryTenantDecorator<UserAccount>(
+                            "naos_sample_test",
+                            new InMemoryRepository<UserAccount>(
+                                container.GetInstance<IMediator>()))));
+
             return container;
         }
     }

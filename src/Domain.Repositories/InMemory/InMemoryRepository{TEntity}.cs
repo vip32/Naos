@@ -40,7 +40,7 @@
         /// <param name="options">The options.</param>
         public InMemoryRepository(
             IMediator mediator,
-            IEnumerable<TEntity> entities = null,
+            IEnumerable<TEntity> entities,
             IRepositoryOptions options = null)
         {
             EnsureArg.IsNotNull(mediator, nameof(mediator));

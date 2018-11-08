@@ -1,10 +1,9 @@
-﻿namespace Naos.Sample.Customers.Infrastructure
+﻿namespace Naos.Sample.Customers.Domain
 {
     using System.Linq;
     using System.Threading.Tasks;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Domain.Specifications;
-    using Naos.Sample.Customers.Domain;
 
     public class CustomerRepository : BaseRepository<Customer>, ICustomerRepository
     {

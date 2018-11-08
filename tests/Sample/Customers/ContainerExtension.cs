@@ -7,7 +7,6 @@
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Infrastructure.Azure.CosmosDb;
     using Naos.Sample.Customers.Domain;
-    using Naos.Sample.Customers.Infrastructure;
     using SimpleInjector;
 
     public static class ContainerExtension

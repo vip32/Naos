@@ -11,6 +11,7 @@
     <Folder Include="Customers\App\" />
     <Folder Include="Customers\App.Web\" />
     <Folder Include="Customers\Domain\Repositories\Decorators\" />
+    <Folder Include="Customers\Infrastructure\Repositories\" />
     <Folder Include="UserAccounts\App.Commands\" />
     <Folder Include="UserAccounts\App.Web\" />
     <Folder Include="UserAccounts\App\" />

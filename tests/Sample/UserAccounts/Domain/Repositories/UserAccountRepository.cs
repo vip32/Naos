@@ -1,7 +1,6 @@
-﻿namespace Naos.Sample.UserAccounts.Infrastructure
+﻿namespace Naos.Sample.UserAccounts.Domain
 {
     using Naos.Core.Domain.Repositories;
-    using Naos.Sample.UserAccounts.Domain;
 
     public class UserAccountRepository : BaseRepository<UserAccount>, IUserAccountRepository
     {
