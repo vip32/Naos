@@ -2,7 +2,6 @@
 {
     using System.Linq;
     using MediatR;
-    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Domain.Repositories.AutoMapper;
