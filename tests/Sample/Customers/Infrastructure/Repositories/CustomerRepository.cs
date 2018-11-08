@@ -1,16 +1,20 @@
 ﻿namespace Naos.Sample.Customers.Infrastructure
 {
-    using MediatR;
-    using Microsoft.Extensions.Logging;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Naos.Core.Domain.Repositories;
-    using Naos.Core.Infrastructure.Azure.CosmosDb;
+    using Naos.Core.Domain.Specifications;
     using Naos.Sample.Customers.Domain;
 
-    public class CustomerRepository : CosmosDbSqlRepository<Customer>, ICustomerRepository
+    public class CustomerRepository : BaseRepository<Customer>, ICustomerRepository
     {
-        public CustomerRepository(ILogger<CustomerRepository> logger, IMediator mediator, ICosmosDbSqlProvider<Customer> provider, IRepositoryOptions options = null)
-            : base(logger, mediator, provider, options)
+        public CustomerRepository(IRepository<Customer> decoratee)
+            : base(decoratee)
         {
         }
+
+        public async Task<Customer> FindByNumber(string number)
+            => (await this.FindAllAsync(new Specification<Customer>(e => e.CustomerNumber == number))).FirstOrDefault();
+            // TODO: create propert specification + tests
     }
 }

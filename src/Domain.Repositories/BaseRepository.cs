@@ -1,25 +1,20 @@
 ﻿namespace Naos.Core.Domain.Repositories
 {
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using EnsureThat;
-    using Naos.Core.Common;
     using Naos.Core.Domain.Specifications;
 
-    public class RepositorySpecificationDecorator<TEntity> : IRepository<TEntity>
+    public abstract class BaseRepository<TEntity> : IRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
         private readonly IRepository<TEntity> decoratee;
-        private readonly ISpecification<TEntity> specification;
 
-        public RepositorySpecificationDecorator(IRepository<TEntity> decoratee, ISpecification<TEntity> specification)
+        protected BaseRepository(IRepository<TEntity> decoratee)
         {
             EnsureArg.IsNotNull(decoratee, nameof(decoratee));
-            EnsureArg.IsNotNull(specification, nameof(specification));
 
             this.decoratee = decoratee;
-            this.specification = specification;
         }
 
         public async Task DeleteAsync(object id)
@@ -39,19 +34,17 @@
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null)
         {
-            return await this.FindAllAsync(new List<ISpecification<TEntity>>(), options).ConfigureAwait(false);
+            return await this.decoratee.FindAllAsync(options).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null)
         {
-            return await this.FindAllAsync(new List<ISpecification<TEntity>>(new[] { specification }), options).ConfigureAwait(false);
+            return await this.decoratee.FindAllAsync(specification, options).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null)
         {
-            return await this.decoratee.FindAllAsync(
-                new[] { this.specification }.Concat(specifications.NullToEmpty()),
-                options).ConfigureAwait(false);
+            return await this.decoratee.FindAllAsync(specifications, options).ConfigureAwait(false);
         }
 
         public async Task<TEntity> FindOneAsync(object id)
