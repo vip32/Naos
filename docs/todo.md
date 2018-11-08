@@ -13,7 +13,8 @@ properties https://github.com/schotime/NPoco/blob/master/src/NPoco/PocoExpando.c
 spec mapping with visitor https://fabiomarreco.github.io/blog/2018/specificationpattern-with-entityframework/
 tenant resolver https://stackoverflow.com/questions/41820206/c-sharp-architecture-pattern-for-tenant-specific-business-logic
 serilog app insight https://github.com/serilog/serilog-sinks-applicationinsights/issues/37
-configuration validation https://www.stevejgordon.co.uk/asp-net-core-2-2-options-validation
+idea: configuration validation https://www.stevejgordon.co.uk/asp-net-core-2-2-options-validation
+ef sql logging https://wildermuth.com/2018/11/07/EntityFrameworkCore-Logging-in-ASP-NET-Core
 
 repo insert/update
 repo return status when upsert (insert or update) > + entity = tuple
