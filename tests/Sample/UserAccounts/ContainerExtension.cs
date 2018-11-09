@@ -16,7 +16,7 @@
         {
             if (dbContext != null)
             {
-                container.RegisterInstance(dbContext); // cross wiring, warning beause this will be a singleton (not scoped)
+                container.RegisterInstance(dbContext); // cross wiring, warning this will be a singleton (not scoped)
             }
 
             container.Register<IUserAccountRepository>(() =>
