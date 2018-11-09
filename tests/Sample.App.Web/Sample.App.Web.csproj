@@ -16,11 +16,17 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.5" />
     <PackageReference Include="SimpleInjector" Version="4.4.0" />
+    <PackageReference Include="SimpleInjector.Integration.AspNetCore.Mvc.Core" Version="4.4.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\App.Commands\App.Commands.csproj" />
+    <ProjectReference Include="..\..\src\App.Operations.Serilog\App.Operations.Serilog.csproj" />
     <ProjectReference Include="..\..\src\App.Web\App.Web.csproj" />
     <ProjectReference Include="..\..\src\App\App.csproj" />
+    <ProjectReference Include="..\..\src\Common.Dependency.SimpleInjector\Common.Dependency.SimpleInjector.csproj" />
+    <ProjectReference Include="..\..\src\Messaging.Infrastructure.Azure\Messaging.Infrastructure.Azure.csproj" />
+    <ProjectReference Include="..\..\src\Messaging\Messaging.csproj" />
     <ProjectReference Include="..\Sample.App\Sample.App.csproj" />
     <ProjectReference Include="..\Sample\Sample.csproj" />
   </ItemGroup>

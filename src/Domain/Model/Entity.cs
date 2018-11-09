@@ -15,6 +15,7 @@
         /// <value>
         /// The identifier.
         /// </value>
+        [JsonIgnore]
         public TId Id { get; set; }
 
         /// <summary>
