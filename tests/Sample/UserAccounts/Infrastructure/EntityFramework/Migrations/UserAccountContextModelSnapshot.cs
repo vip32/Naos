@@ -28,6 +28,8 @@ namespace Naos.Sample.UserAccounts.Infrastructure.EntityFramework.Migrations
 
                     b.Property<string>("TenantId");
 
+                    b.Property<string>("Test");
+
                     b.Property<int>("VisitCount");
 
                     b.HasKey("Id");
