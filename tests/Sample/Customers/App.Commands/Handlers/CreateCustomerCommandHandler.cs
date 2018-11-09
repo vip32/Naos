@@ -41,6 +41,8 @@
 
             this.logger.LogInformation($"command: {request.GetType().Name} response: {request.Customer.Id}");
 
+            // TODO: publish CreatedCustomer message (MessageBus)
+
             return new CommandResponse<string>
             {
                 Result = request.Customer.Id

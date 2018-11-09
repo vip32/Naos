@@ -3,7 +3,6 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Bogus;
-    using MediatR;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Domain.Specifications;
     using Naos.Sample.Customers.Domain;

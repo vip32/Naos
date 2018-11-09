@@ -6,7 +6,6 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Domain.Repositories;
-    using Naos.Core.Domain.Repositories.AutoMapper;
     using Naos.Core.Infrastructure.EntityFramework;
     using Naos.Sample.UserAccounts.Domain;
     using Naos.Sample.UserAccounts.EntityFramework;
@@ -38,13 +37,13 @@
                                         .Options)))));
             });
 
-            var inMemoryRepository = new UserAccountRepository(
-                    new RepositoryLoggingDecorator<UserAccount>(
-                        container.GetInstance<ILogger<UserAccountRepository>>(),
-                        new RepositoryTenantDecorator<UserAccount>(
-                            "naos_sample_test",
-                            new InMemoryRepository<UserAccount>(
-                                container.GetInstance<IMediator>()))));
+            //var inMemoryRepository = new UserAccountRepository(
+            //        new RepositoryLoggingDecorator<UserAccount>(
+            //            container.GetInstance<ILogger<UserAccountRepository>>(),
+            //            new RepositoryTenantDecorator<UserAccount>(
+            //                "naos_sample_test",
+            //                new InMemoryRepository<UserAccount>(
+            //                    container.GetInstance<IMediator>()))));
 
             //var inMemoryWithMappedRepository = new UserAccountRepository(
             //        new RepositoryLoggingDecorator<UserAccount>(
