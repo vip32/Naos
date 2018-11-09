@@ -1,3 +1,4 @@
+pattern cqs https://www.dotnetcurry.com/patterns-practices/1461/command-query-separation-cqs
 api 404s https://www.strathweb.com/2018/10/convert-null-valued-results-to-404-in-asp-net-core-mvc/
 secrets https://social.technet.microsoft.com/wiki/contents/articles/51871.net-core-2-managing-secrets-in-web-apps.aspx
 vault config https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-2.1

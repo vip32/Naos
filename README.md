@@ -6,12 +6,13 @@
 <p align="center"><h1>A mildly opiniated modern cloud service architecture blueprint & reference implementation</h1></p>
 
 ## architectural concepts
-- arch style: hexagonal/onion
-- pattern: cqs https://www.dotnetcurry.com/patterns-practices/1461/command-query-separation-cqs
+- architectural style: hexagonal/onion
 - pattern: domainevents
-- pattern: integrationevents
-- pattern: repositories
+- pattern: repositories (inmemory, cosmosdb, entityframework)
+- pattern: decorators
 - pattern: specifications
+- pattern: app commands/handlers (+behaviors)
+- pattern: messaging (servicebus, rabbitmq)
 
 ## dev stack
 C#, .Net Core 2.x, EnsureThat, Serilog, SimpleInjector, Mediator, FluentValidation, AutoMapper, XUnit, Shouldly, NSubstitute
