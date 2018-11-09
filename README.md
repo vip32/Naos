@@ -15,7 +15,7 @@
 - pattern: messaging (servicebus, rabbitmq)
 
 ## dev stack
-C#, .Net Core 2.x, EnsureThat, Serilog, SimpleInjector, Mediator, FluentValidation, AutoMapper, XUnit, Shouldly, NSubstitute
+C#, .Net Core 2.x, EnsureThat, Serilog, SimpleInjector, Mediator, FluentValidation, AutoMapper, xUnit, Shouldly, NSubstitute
 
 ## secrets setup (Azure Key Vault)
 - Create a key vault [^](https://docs.microsoft.com/en-us/azure/key-vault/key-vault-get-started)
