@@ -66,7 +66,7 @@
             return await this.decoratee.UpdateAsync(entity).ConfigureAwait(false);
         }
 
-        public async Task<(TEntity entity, UpsertAction action)> UpsertAsync(TEntity entity)
+        public async Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
         {
             return await this.decoratee.UpsertAsync(entity).ConfigureAwait(false);
         }

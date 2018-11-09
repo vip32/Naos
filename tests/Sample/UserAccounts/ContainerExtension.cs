@@ -1,9 +1,6 @@
 ﻿namespace Naos.Sample.UserAccounts
 {
-    using EnsureThat;
     using MediatR;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Infrastructure.EntityFramework;
@@ -15,46 +12,25 @@
     {
         public static Container AddSampleUserAccounts(
             this Container container,
-            IConfiguration configuration,
-            string section = "naos:sample:userAccounts:entityFramework")
+            UserAccountsContext dbContext = null)
         {
-            var entityFrameworkConfiguration = configuration.GetSection(section).Get<EntityFrameworkConfiguration>();
-            Ensure.That(entityFrameworkConfiguration).IsNotNull();
+            if (dbContext != null)
+            {
+                container.RegisterInstance(dbContext); // cross wiring, warning beause this will be a singleton (not scoped)
+            }
 
-            container.RegisterSingleton<IUserAccountRepository>(() =>
+            container.Register<IUserAccountRepository>(() =>
             {
                 return new UserAccountRepository(
                     new RepositoryLoggingDecorator<UserAccount>(
                         container.GetInstance<ILogger<UserAccountRepository>>(),
                         new RepositoryTenantDecorator<UserAccount>(
-                            "naos_sample_test",
+                            "naos_sample_test", // TODO: resolve from runtime context
                             new EntityFrameworkRepository<UserAccount>(
                                 container.GetInstance<ILogger<UserAccountRepository>>(), // TODO: obsolete
                                 container.GetInstance<IMediator>(),
-                                new UserAccountContext(
-                                    new DbContextOptionsBuilder<UserAccountContext>()
-                                        .UseSqlServer(entityFrameworkConfiguration.ConnectionString)
-                                        .Options)))));
+                                container.GetInstance<UserAccountsContext>()))));
             });
-
-            //var inMemoryRepository = new UserAccountRepository(
-            //        new RepositoryLoggingDecorator<UserAccount>(
-            //            container.GetInstance<ILogger<UserAccountRepository>>(),
-            //            new RepositoryTenantDecorator<UserAccount>(
-            //                "naos_sample_test",
-            //                new InMemoryRepository<UserAccount>(
-            //                    container.GetInstance<IMediator>()))));
-
-            //var inMemoryWithMappedRepository = new UserAccountRepository(
-            //        new RepositoryLoggingDecorator<UserAccount>(
-            //            container.GetInstance<ILogger<UserAccountRepository>>(),
-            //            new RepositoryTenantDecorator<UserAccount>(
-            //                "naos_sample_test",
-            //                new InMemoryRepository<UserAccount, UserAccountDto>(
-            //                    container.GetInstance<IMediator>(),
-            //                    null,
-            //                    new RepositoryOptions(
-            //                        new AutoMapperEntityMapper(XXXEntityMapperConfiguration.Create()))))));
 
             return container;
         }

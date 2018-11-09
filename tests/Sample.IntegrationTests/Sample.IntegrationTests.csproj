@@ -54,7 +54,6 @@
     <Folder Include="UserAccounts\App\" />
     <Folder Include="UserAccounts\Domain\Events\Handlers\" />
     <Folder Include="UserAccounts\Domain\Model\" />
-    <Folder Include="UserAccounts\Domain\Repositories\" />
     <Folder Include="UserAccounts\Domain\Specifications\" />
     <Folder Include="UserAccounts\Infrastructure\Repositories\" />
   </ItemGroup>

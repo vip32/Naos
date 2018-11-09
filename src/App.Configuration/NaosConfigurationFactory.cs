@@ -41,7 +41,6 @@
                 builder.AddCommandLine(args);
             }
 
-            // env >>
             var configuration = builder.Build();
             if (configuration["naos:secrets:vault:enabled"].ToBool(true))
             {
@@ -58,9 +57,6 @@
                     configuration["naos:secrets:vault:clientSecret"],
                     new EnvironmentPrefixKeyVaultSecretManager());
             }
-
-            //configuration = builder.Build(); // for kv testing purposes
-            //var s = configuration["naos:messaging:serviceBus:connectionString"];
 
             return builder;
         }

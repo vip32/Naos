@@ -24,7 +24,7 @@
         /// </summary>
         /// <param name="entity">The entity to insert or update.</param>
         /// <returns></returns>
-        Task<(TEntity entity, UpsertAction action)> UpsertAsync(TEntity entity);
+        Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity);
 
         Task DeleteAsync(object id);
 

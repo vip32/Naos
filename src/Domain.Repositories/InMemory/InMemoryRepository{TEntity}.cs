@@ -158,11 +158,11 @@
         /// </summary>
         /// <param name="entity">The entity to insert or update.</param>
         /// <returns></returns>
-        public async Task<(TEntity entity, UpsertAction action)> UpsertAsync(TEntity entity)
+        public async Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
         {
             if (entity == null)
             {
-                return (null, UpsertAction.None);
+                return (null, ActionResult.None);
             }
 
             bool isTransient = entity.Id.IsDefault();
@@ -201,7 +201,7 @@
             }
 
 #pragma warning disable SA1008 // Opening parenthesis must be spaced correctly
-            return isNew ? (entity, UpsertAction.Inserted) : (entity, UpsertAction.Updated);
+            return isNew ? (entity, ActionResult.Inserted) : (entity, ActionResult.Updated);
 #pragma warning restore SA1008 // Opening parenthesis must be spaced correctly
         }
 

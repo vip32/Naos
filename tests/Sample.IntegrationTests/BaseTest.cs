@@ -1,17 +1,20 @@
 ﻿namespace Naos.Sample.IntegrationTests
 {
     using System;
+    using Microsoft.EntityFrameworkCore;
     using Naos.Core.App.Commands;
     using Naos.Core.App.Configuration;
     using Naos.Core.App.Operations.Serilog;
     using Naos.Core.Common.Dependency.SimpleInjector;
     using Naos.Core.Domain;
+    using Naos.Core.Infrastructure.EntityFramework;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.Infrastructure.Azure;
     using Naos.Sample.Countries;
     using Naos.Sample.Customers;
     using Naos.Sample.Customers.Domain;
     using Naos.Sample.UserAccounts;
+    using Naos.Sample.UserAccounts.EntityFramework;
     using SimpleInjector;
 
     public abstract class BaseTest
@@ -39,7 +42,7 @@
             this.container
                 .AddSampleCountries()
                 .AddSampleCustomers(configuration)
-                .AddSampleUserAccounts(configuration);
+                .AddSampleUserAccounts(new UserAccountsContext(new DbContextOptionsBuilder().UseNaosSqlServer(configuration).Options));
 
             //this.container.Verify();
         }

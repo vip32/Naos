@@ -7,6 +7,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Controllers;
     using Microsoft.AspNetCore.Mvc.ViewComponents;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Core.App.Commands;
@@ -15,11 +16,13 @@
     using Naos.Core.App.Web;
     using Naos.Core.Common.Dependency.SimpleInjector;
     using Naos.Core.Domain;
+    using Naos.Core.Infrastructure.EntityFramework;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.Infrastructure.Azure;
     using Naos.Sample.Countries;
     using Naos.Sample.Customers;
     using Naos.Sample.UserAccounts;
+    using Naos.Sample.UserAccounts.EntityFramework;
     using SimpleInjector;
     using SimpleInjector.Integration.AspNetCore.Mvc;
     using SimpleInjector.Lifestyles;
@@ -28,9 +31,9 @@
     {
         private readonly Container container = new Container();
 
-        public Startup(IConfiguration configuration)
+        public Startup()
         {
-            this.Configuration = configuration;
+            this.Configuration = NaosConfigurationFactory.CreateRoot();
         }
 
         public IConfiguration Configuration { get; }
@@ -40,6 +43,7 @@
         {
             services
                 .AddHttpContextAccessor()
+                .AddDbContext<UserAccountsContext>(options => options.UseNaosSqlServer(this.Configuration)) // needed for migrations:add/update
                 .AddMvc(o =>
                 {
                     //o.Filters.Add(typeof(GlobalExceptionFilter)); TODO
@@ -85,21 +89,20 @@
             this.container.RegisterMvcViewComponents(app);
 
             // Naos application services.
-            var configuration = NaosConfigurationFactory.CreateRoot();
             this.container
                 .AddNaosMediator(new[] { typeof(IEntity).Assembly, typeof(Customers.Domain.Customer).Assembly })
-                .AddNaosLogging(configuration)
+                .AddNaosLogging(this.Configuration)
                 .AddNaosAppCommands(new[] { typeof(Customers.Domain.Customer).Assembly })
                 .AddNaosMessaging(
-                    configuration,
+                    this.Configuration,
                     AppDomain.CurrentDomain.FriendlyName,
                     assemblies: new[] { typeof(IMessageBus).Assembly, typeof(Customers.Domain.Customer).Assembly });
 
             // naos sample registrations
             this.container
                 .AddSampleCountries()
-                .AddSampleCustomers(configuration)
-                .AddSampleUserAccounts(configuration);
+                .AddSampleCustomers(this.Configuration)
+                .AddSampleUserAccounts();
 
             // Allow Simple Injector to resolve services from ASP.NET Core.
             this.container.AutoCrossWireAspNetComponents(app);

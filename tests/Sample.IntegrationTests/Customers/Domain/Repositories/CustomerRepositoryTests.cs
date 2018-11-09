@@ -175,7 +175,7 @@
                 var result = await this.sut.UpsertAsync(this.entityFaker.Generate()).ConfigureAwait(false);
 
                 // assert
-                result.action.ShouldNotBe(UpsertAction.None);
+                result.action.ShouldNotBe(ActionResult.None);
                 result.entity.ShouldNotBeNull();
                 result.entity.Id.ShouldNotBeNull();
             }

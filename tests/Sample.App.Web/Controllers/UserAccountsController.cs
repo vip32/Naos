@@ -4,16 +4,15 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
-    using Naos.Sample.Countries.Domain;
     using Naos.Sample.UserAccounts.Domain;
 
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class UserAccountsController : ControllerBase
     {
-        private readonly ICountryRepository repository;
+        private readonly IUserAccountRepository repository;
 
-        public ValuesController(ICountryRepository repository)
+        public UserAccountsController(IUserAccountRepository repository)
         {
             EnsureArg.IsNotNull(repository, nameof(repository));
 
@@ -21,7 +20,7 @@
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Country>> Get()
+        public async Task<IEnumerable<UserAccount>> Get()
         {
             return await this.repository.FindAllAsync().ConfigureAwait(false);
         }

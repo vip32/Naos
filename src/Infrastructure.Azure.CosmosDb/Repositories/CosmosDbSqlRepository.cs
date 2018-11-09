@@ -116,11 +116,11 @@
         /// </summary>
         /// <param name="entity">The entity to insert or update.</param>
         /// <returns></returns>
-        public async Task<(TEntity entity, UpsertAction action)> UpsertAsync(TEntity entity)
+        public async Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
         {
             if (entity == null)
             {
-                return (null, UpsertAction.None);
+                return (null, ActionResult.None);
             }
 
             bool isNew = entity.Id.IsDefault() || !await this.ExistsAsync(entity.Id).ConfigureAwait(false);
@@ -155,7 +155,7 @@
 
             this.logger.LogInformation($"upserted entity: {result.GetType().PrettyName()}, id: {result.Id}, isNew: {isNew}");
 #pragma warning disable SA1008 // Opening parenthesis must be spaced correctly
-            return isNew ? (result, UpsertAction.Inserted) : (result, UpsertAction.Updated);
+            return isNew ? (result, ActionResult.Inserted) : (result, ActionResult.Updated);
 #pragma warning restore SA1008 // Opening parenthesis must be spaced correctly
         }
 
