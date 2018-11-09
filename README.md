@@ -83,25 +83,25 @@ key vault keys: (or use the json configuration above)
 ## sample services
 
 ##### Countries
-domain, specifications, 
-inmemory mapped repository (entity > dto), tenant decorator
-automapper
+- domain, specifications, 
+- inmemory mapped repository (entity > dto), tenant decorator
+- automapper
 
 ##### Customers
-domain, specifications
-cosmosdb repository, tenant decorator
-app command (CreateCustomer) + handler (CreateCustomerCommandHandler) TODO which triggers CreatedCustomer message 
-TODO: validate command (behavior)
+- domain, specifications
+- cosmosdb repository, tenant decorator
+- app command (CreateCustomer) + handler (CreateCustomerCommandHandler) TODO which triggers CreatedCustomer message 
+- TODO: validate command (behavior)
 
 ##### UserAccounts
-domain, specifications, 
-messagehandler (CustomerCreated)
-entityframework sql repository, tenant decorator
-TODO: handle CreatedCustomer message
+- domain, specifications, 
+- messagehandler (CustomerCreated)
+- entityframework sql repository, tenant decorator
+- TODO: handle CreatedCustomer message
 
-`Add-Migration [NAME] -OutputDir .\UserAccounts\Infrastructure\EntityFramework\Migrations -StartupProject Sample.App.Web -Project Sample`
-`Script-Migration -StartupProject Sample.App.Web -Project Sample`
-`Update-Database -StartupProject Sample.App.Web -Project Sample`
+- `Add-Migration [NAME] -OutputDir .\UserAccounts\Infrastructure\EntityFramework\Migrations -StartupProject Sample.App.Web -Project Sample`
+- `Script-Migration -StartupProject Sample.App.Web -Project Sample`
+- `Update-Database -StartupProject Sample.App.Web -Project Sample`
 
 ### core components
 - Naos:App
@@ -157,20 +157,3 @@ naos-billing-app
 - Naos.Reference.Billing.Domain (domain/repo/specs/services)
 - Naos.Reference.Billing.Infrastructure.Azure.SqlServer (repo)
 - Naos.Reference.Billing.Provisioning.Arm/Cli
-
-deps:
-
-- autofac
-- ensurethat
-- mediator
-- xunit
-
-stack:
-
-- c#, netcore 2.1
-- azure, docker
-- builds.prop
-- azure pipelines + Xyaml build/release
-- core nuget publish
-- proper configuration
-- proper secrets
