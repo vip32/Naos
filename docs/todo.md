@@ -11,6 +11,8 @@ litedb repo https://github.com/mbdavid/LiteDB/wiki/Repository-Pattern
 file repo https://github.com/selmaohneh/Repository/tree/master/Repository.FileRepository
 properties https://github.com/schotime/NPoco/blob/master/src/NPoco/PocoExpando.cs
 spec mapping with visitor https://fabiomarreco.github.io/blog/2018/specificationpattern-with-entityframework/
+cqrs (customer events) https://www.pluralsight.com/courses/cqrs-in-practice
+spec vs cqrs https://enterprisecraftsmanship.com/2018/11/06/cqrs-vs-specification-pattern/
 tenant resolver https://stackoverflow.com/questions/41820206/c-sharp-architecture-pattern-for-tenant-specific-business-logic
 serilog app insight https://github.com/serilog/serilog-sinks-applicationinsights/issues/37
 idea: configuration validation https://www.stevejgordon.co.uk/asp-net-core-2-2-options-validation

@@ -3,7 +3,6 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Naos.Core.Domain.Repositories;
-    using Naos.Core.Domain.Specifications;
 
     public class CustomerRepository : Repository<Customer>, ICustomerRepository
     {
@@ -12,8 +11,7 @@
         {
         }
 
-        public async Task<Customer> FindByNumber(string number)
-            => (await this.FindAllAsync(new Specification<Customer>(e => e.CustomerNumber == number))).FirstOrDefault();
-            // TODO: create proper specification + tests
+        public async Task<Customer> FindByNumber(string value)
+            => (await this.FindAllAsync(new HasNumberSpecification(value))).FirstOrDefault();
     }
 }

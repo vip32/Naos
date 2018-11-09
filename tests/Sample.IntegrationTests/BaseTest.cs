@@ -41,7 +41,7 @@
                 .AddSampleCustomers(configuration)
                 .AddSampleUserAccounts(configuration);
 
-            this.container.Verify();
+            //this.container.Verify();
         }
     }
 }

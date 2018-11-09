@@ -5,6 +5,6 @@
 
     public interface ICustomerRepository : IRepository<Customer>
     {
-        Task<Customer> FindByNumber(string number);
+        Task<Customer> FindByNumber(string value);
     }
 }

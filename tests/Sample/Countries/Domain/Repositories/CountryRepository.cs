@@ -3,7 +3,6 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Naos.Core.Domain.Repositories;
-    using Naos.Core.Domain.Specifications;
 
     public class CountryRepository : Repository<Country>, ICountryRepository
     {
@@ -12,8 +11,7 @@
         {
         }
 
-        public async Task<Country> FindByName(string name)
-            => (await this.FindAllAsync(new Specification<Country>(e => e.Name == name))).FirstOrDefault();
-        // TODO: create proper specification + tests
+        public async Task<Country> FindOneByName(string value)
+            => (await this.FindAllAsync(new HasNameSpecification(value))).FirstOrDefault();
     }
 }

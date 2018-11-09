@@ -5,6 +5,6 @@
 
     public interface ICountryRepository : IRepository<Country>
     {
-        Task<Country> FindByName(string name);
+        Task<Country> FindOneByName(string value);
     }
 }
