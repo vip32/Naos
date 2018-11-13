@@ -159,37 +159,44 @@
 #pragma warning restore SA1008 // Opening parenthesis must be spaced correctly
         }
 
-        public async Task DeleteAsync(object id)
+        public async Task<ActionResult> DeleteAsync(object id)
         {
             if (id.IsDefault())
             {
-                return;
+                return ActionResult.None;
             }
 
             var entity = await this.dbContext.Set<TEntity>().FindAsync(id).ConfigureAwait(false);
-            this.dbContext.Remove(entity);
-
-            if (this.Options?.PublishEvents != false)
+            if (entity != null)
             {
-                await this.mediator.Publish(new EntityDeleteDomainEvent<IEntity>(entity)).ConfigureAwait(false);
+                this.dbContext.Remove(entity);
+
+                if (this.Options?.PublishEvents != false)
+                {
+                    await this.mediator.Publish(new EntityDeleteDomainEvent<IEntity>(entity)).ConfigureAwait(false);
+                }
+
+                await this.dbContext.SaveChangesAsync();
+
+                if (this.Options?.PublishEvents != false)
+                {
+                    await this.mediator.Publish(new EntityDeletedDomainEvent<IEntity>(entity)).ConfigureAwait(false);
+                }
+
+                return ActionResult.Deleted;
             }
 
-            await this.dbContext.SaveChangesAsync();
-
-            if (this.Options?.PublishEvents != false)
-            {
-                await this.mediator.Publish(new EntityDeletedDomainEvent<IEntity>(entity)).ConfigureAwait(false);
-            }
+            return ActionResult.None;
         }
 
-        public async Task DeleteAsync(TEntity entity)
+        public async Task<ActionResult> DeleteAsync(TEntity entity)
         {
             if (entity == null || entity.Id.IsDefault())
             {
-                return;
+                return ActionResult.None;
             }
 
-            await this.DeleteAsync(entity.Id).ConfigureAwait(false);
+            return await this.DeleteAsync(entity.Id).ConfigureAwait(false);
         }
     }
 }

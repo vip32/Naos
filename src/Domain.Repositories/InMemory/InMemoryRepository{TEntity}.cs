@@ -211,11 +211,11 @@
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException">id</exception>
-        public async Task DeleteAsync(object id)
+        public async Task<ActionResult> DeleteAsync(object id)
         {
             if (id.IsDefault())
             {
-                return;
+                return ActionResult.None;
             }
 
             var entity = this.entities.FirstOrDefault(x => x.Id.Equals(id));
@@ -232,7 +232,11 @@
                 {
                     await this.mediator.Publish(new EntityDeletedDomainEvent<IEntity>(entity)).ConfigureAwait(false);
                 }
+
+                return ActionResult.Deleted;
             }
+
+            return ActionResult.None;
         }
 
         /// <summary>
@@ -241,11 +245,11 @@
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException">Id</exception>
-        public async Task DeleteAsync(TEntity entity)
+        public async Task<ActionResult> DeleteAsync(TEntity entity)
         {
             if (entity?.Id.IsDefault() != false)
             {
-                return;
+                return ActionResult.None;
             }
 
             this.entities = this.entities.Where(x => !x.Id.Equals(entity.Id));
@@ -253,6 +257,8 @@
             {
                 await this.mediator.Publish(new EntityDeletedDomainEvent<IEntity>(entity)).ConfigureAwait(false);
             }
+
+            return ActionResult.Deleted; // TODO: check if something actually got delete
         }
 
         protected virtual Func<TEntity, bool> EnsurePredicate(ISpecification<TEntity> specification)

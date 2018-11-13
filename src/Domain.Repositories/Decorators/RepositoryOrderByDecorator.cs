@@ -24,14 +24,14 @@
             this.decoratee = decoratee;
         }
 
-        public async Task DeleteAsync(object id)
+        public async Task<ActionResult> DeleteAsync(object id)
         {
-            await this.decoratee.DeleteAsync(id).ConfigureAwait(false);
+            return await this.decoratee.DeleteAsync(id).ConfigureAwait(false);
         }
 
-        public async Task DeleteAsync(TEntity entity)
+        public async Task<ActionResult> DeleteAsync(TEntity entity)
         {
-            await this.decoratee.DeleteAsync(entity).ConfigureAwait(false);
+            return await this.decoratee.DeleteAsync(entity).ConfigureAwait(false);
         }
 
         public async Task<bool> ExistsAsync(object id)

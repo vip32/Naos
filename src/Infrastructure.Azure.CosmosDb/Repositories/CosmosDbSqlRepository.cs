@@ -159,11 +159,11 @@
 #pragma warning restore SA1008 // Opening parenthesis must be spaced correctly
         }
 
-        public async Task DeleteAsync(object id)
+        public async Task<ActionResult> DeleteAsync(object id)
         {
             if (id.IsDefault())
             {
-                return;
+                return ActionResult.None;
             }
 
             var entity = await this.FindOneAsync(id).ConfigureAwait(false);
@@ -180,17 +180,21 @@
                 {
                     await this.mediator.Publish(new EntityDeletedDomainEvent<IEntity>(entity)).ConfigureAwait(false);
                 }
+
+                return ActionResult.Deleted;
             }
+
+            return ActionResult.None;
         }
 
-        public async Task DeleteAsync(TEntity entity)
+        public async Task<ActionResult> DeleteAsync(TEntity entity)
         {
             if (entity?.Id.IsDefault() != false)
             {
-                return;
+                return ActionResult.None;
             }
 
-            await this.DeleteAsync(entity.Id).ConfigureAwait(false);
+            return await this.DeleteAsync(entity.Id).ConfigureAwait(false);
         }
     }
 }

@@ -21,6 +21,8 @@ ef sql logging https://wildermuth.com/2018/11/07/EntityFrameworkCore-Logging-in-
 ef dynamic schema support https://weblogs.thinktecture.com/pawel/2018/06/entity-framework-core-changing-database-schema-at-runtime.html
 ef sqlite https://docs.microsoft.com/en-us/ef/core/get-started/netcore/new-db-sqlite
 graphql https://fullstackmark.com/post/17/building-a-graphql-api-with-aspnet-core-2-and-entity-framework-core
+log analytics dashboard (operations) https://blogs.technet.microsoft.com/livedevopsinjapan/2017/08/23/log-analytics-log-search-rest-api-for-c/
+log analytics rest api https://dev.loganalytics.io/reference
 
 http://localhost:15672/ (rabbitmq)
 https://localhost:44347/api/values (billing)

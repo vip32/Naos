@@ -26,8 +26,8 @@
         /// <returns></returns>
         Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity);
 
-        Task DeleteAsync(object id);
+        Task<ActionResult> DeleteAsync(object id);
 
-        Task DeleteAsync(TEntity entity);
+        Task<ActionResult> DeleteAsync(TEntity entity);
     }
 }
