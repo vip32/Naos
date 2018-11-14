@@ -22,7 +22,7 @@
             string section = "naos:messaging:serviceBus",
             IEnumerable<Assembly> assemblies = null)
         {
-            var allAssemblies = new List<Assembly> { typeof(IMessageBus).GetTypeInfo().Assembly };
+            var allAssemblies = new List<Assembly> { typeof(IMessageBroker).GetTypeInfo().Assembly };
             if (!assemblies.IsNullOrEmpty())
             {
                 allAssemblies.AddRange(assemblies);
@@ -44,9 +44,9 @@
 
                 throw new NotImplementedException("no messaging servicebus is enabled");
             });
-            container.RegisterSingleton<IMessageBus>(() =>
-                new ServiceBusMessageBus(
-                        container.GetInstance<ILogger<ServiceBusMessageBus>>(),
+            container.RegisterSingleton<IMessageBroker>(() =>
+                new ServiceBusMessageBroker(
+                        container.GetInstance<ILogger<ServiceBusMessageBroker>>(),
                         container.GetInstance<IServiceBusProvider>(),
                         new SimpleInjectorMessageHandlerFactory(container),
                         subscriptionName: subscriptionName ?? AppDomain.CurrentDomain.FriendlyName, // PRODUCT.CAPABILITY

@@ -4,13 +4,13 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Messaging.Domain.Model;
 
-    public class RabbitMQMessageBus : IMessageBus
+    public class RabbitMQMessageBroker : IMessageBroker
     {
-        private readonly ILogger<RabbitMQMessageBus> logger;
+        private readonly ILogger<RabbitMQMessageBroker> logger;
         private readonly RabbitMQConfiguration configuration;
         private readonly IMessageHandlerFactory handlerFactory;
 
-        public RabbitMQMessageBus(ILogger<RabbitMQMessageBus> logger, RabbitMQConfiguration configuration, IMessageHandlerFactory handlerFactory)
+        public RabbitMQMessageBroker(ILogger<RabbitMQMessageBroker> logger, RabbitMQConfiguration configuration, IMessageHandlerFactory handlerFactory)
         {
             EnsureThat.EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureThat.EnsureArg.IsNotNull(configuration, nameof(configuration));

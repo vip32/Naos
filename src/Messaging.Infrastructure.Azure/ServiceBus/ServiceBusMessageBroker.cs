@@ -10,9 +10,9 @@
     using Naos.Core.Infrastructure.Azure.ServiceBus;
     using Newtonsoft.Json;
 
-    public class ServiceBusMessageBus : IMessageBus
+    public class ServiceBusMessageBroker : IMessageBroker
     {
-        private readonly ILogger<ServiceBusMessageBus> logger;
+        private readonly ILogger<ServiceBusMessageBroker> logger;
         private readonly IServiceBusProvider provider;
         private readonly ISubscriptionMap map;
         private readonly IMessageHandlerFactory handlerFactory;
@@ -21,7 +21,7 @@
         private SubscriptionClient client;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ServiceBusMessageBus" /> class.
+        /// Initializes a new instance of the <see cref="ServiceBusMessageBroker" /> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="provider">The connection.</param>
@@ -30,8 +30,8 @@
         /// <param name="subscriptionName">Name of the subscription.</param>
         /// <param name="messageScope">The message scope.</param>
         /// <param name="filterScope">Name of the scope.</param>
-        public ServiceBusMessageBus(
-            ILogger<ServiceBusMessageBus> logger,
+        public ServiceBusMessageBroker(
+            ILogger<ServiceBusMessageBroker> logger,
             IServiceBusProvider provider,
             IMessageHandlerFactory handlerFactory,
             string subscriptionName,

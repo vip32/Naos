@@ -21,7 +21,7 @@
                 .AddNaosMessaging(
                     configuration,
                     AppDomain.CurrentDomain.FriendlyName,
-                    assemblies: new[] { typeof(IMessageBus).Assembly, typeof(ServiceBusMessageBusTests).Assembly });
+                    assemblies: new[] { typeof(IMessageBroker).Assembly, typeof(ServiceBusMessageBusTests).Assembly });
             this.container.Verify();
         }
 
@@ -34,7 +34,7 @@
         [Fact]
         public void CanInstantiateMessageBus()
         {
-            var messageBus = this.container.GetInstance<IMessageBus>();
+            var messageBus = this.container.GetInstance<IMessageBroker>();
 
             Assert.NotNull(messageBus);
         }
@@ -42,7 +42,7 @@
         [Fact]
         public void CanPublishMessageToMessageBus()
         {
-            var messageBus = this.container.GetInstance<IMessageBus>();
+            var messageBus = this.container.GetInstance<IMessageBroker>();
             messageBus.Publish(new Message());
 
             Assert.NotNull(messageBus);

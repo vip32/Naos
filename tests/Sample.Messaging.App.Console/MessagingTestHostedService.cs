@@ -14,7 +14,7 @@
     public class MessagingTestHostedService : IHostedService
     {
         private readonly Container container = new Container();
-        private IMessageBus messageBus;
+        private IMessageBroker messageBus;
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
@@ -29,7 +29,7 @@
                     subscriptionName: capabilities[new Random().Next(0, capabilities.Length)],
                     assemblies: new[] { typeof(StubEntityMessageHandler).Assembly });
 
-            this.messageBus = this.container.GetInstance<IMessageBus>();
+            this.messageBus = this.container.GetInstance<IMessageBroker>();
 
             // subscribe
             this.messageBus.Subscribe<TestMessage, TestMessageHandler>();

@@ -96,7 +96,7 @@
                 .AddNaosMessaging(
                     this.Configuration,
                     AppDomain.CurrentDomain.FriendlyName,
-                    assemblies: new[] { typeof(IMessageBus).Assembly, typeof(Customers.Domain.Customer).Assembly });
+                    assemblies: new[] { typeof(IMessageBroker).Assembly, typeof(Customers.Domain.Customer).Assembly });
 
             // naos sample registrations
             this.container

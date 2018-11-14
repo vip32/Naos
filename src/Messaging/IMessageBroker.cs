@@ -5,7 +5,7 @@
     /// <summary>
     /// Describes the interface of the messagebus
     /// </summary>
-    public interface IMessageBus
+    public interface IMessageBroker
     {
         /// <summary>
         /// Publishes the specified message.
