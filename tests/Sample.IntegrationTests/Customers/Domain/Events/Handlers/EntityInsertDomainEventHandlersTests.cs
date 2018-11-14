@@ -22,7 +22,7 @@
             await mediator.Publish(new EntityInsertDomainEvent<IEntity>(entity)).ConfigureAwait(false);
 
             // assert
-            entity.State.IdentifierHash.ShouldNotBeNull();
+            entity.IdentifierHash.ShouldNotBeNull();
             entity.State.CreatedDate.ShouldNotBeNull();
             entity.State.UpdatedDate.ShouldBeNull();
 

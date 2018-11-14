@@ -24,15 +24,15 @@
             await mediator.Publish(new EntityUpdateDomainEvent<IEntity>(entity)).ConfigureAwait(false);
 
             // assert
-            entity.State.IdentifierHash.ShouldNotBeNull();
+            entity.IdentifierHash.ShouldNotBeNull();
             entity.State.CreatedDate.ShouldNotBeNull();
             entity.State.UpdatedDate.ShouldNotBeNull();
             entity.State.CreatedDate.ShouldNotBe(entity.State.UpdatedDate);
-            var hash = entity.State.IdentifierHash;
+            var hash = entity.IdentifierHash;
 
             entity.FirstName = "FirstName2";
             await mediator.Publish(new EntityUpdateDomainEvent<IEntity>(entity)).ConfigureAwait(false);
-            entity.State.IdentifierHash.ShouldNotBe(hash);
+            entity.IdentifierHash.ShouldNotBe(hash);
 
             await mediator.Publish(new EntityUpdatedDomainEvent<IEntity>(entity)).ConfigureAwait(false);
             // > CustomerUpdatedDomainEventHandler

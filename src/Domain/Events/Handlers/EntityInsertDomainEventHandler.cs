@@ -27,10 +27,13 @@
                 if (notification?.Entity.Is<IStateEntity>() == true)
                 {
                     var entity = notification.Entity.As<IStateEntity>();
-                    entity.State?.SetCreated("[IDENTITY]", "domainevent"); // TODO
-                    entity.State?.UpdateIdentifierHash(notification.Entity);
+                    entity.State?.SetCreated("[IDENTITY]", "domainevent"); // TODO: use current identity
+                }
 
-                    this.logger.LogInformation($"insert entity: {entity.GetType().PrettyName()}, identifier: {entity.State.IdentifierHash}");
+                if (notification?.Entity.Is<IIdentifiable>() == true)
+                {
+                    var entity = notification.Entity.As<IIdentifiable>();
+                    entity.SetIdentifierHash();
                 }
             });
         }

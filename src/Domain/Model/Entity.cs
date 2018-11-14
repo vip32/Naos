@@ -7,7 +7,7 @@
     /// A base class for all domain entities (layer supertype)
     /// </summary>
     /// <typeparam name="TId">The type of the identifier.</typeparam>
-    public abstract class Entity<TId> : IEntity<TId>, IStateEntity, IDiscriminated, IAggregateRoot
+    public abstract class Entity<TId> : IEntity<TId>, IAggregateRoot, IStateEntity, IDiscriminated, IIdentifiable
     {
         /// <summary>
         /// Gets or sets the entity identifier.
@@ -38,7 +38,15 @@
         /// The type of the entity.
         /// </value>
         //[JsonProperty(PropertyName = "_et")]
-        public string Discriminator => this.GetType().FullName;
+        public string Discriminator => this.GetType().PrettyName();
+
+        /// <summary>
+        /// Gets the identifier hash for the entity.
+        /// </summary>
+        /// <value>
+        /// The identifier hash.
+        /// </value>
+        public string IdentifierHash { get; set; }
 
         /// <summary>
         /// Gets the state for this instance.
@@ -131,11 +139,13 @@
         public bool IsTransient() => this.Id.IsDefault();
 
         /// <summary>
-        /// Updates the hash code for the entity.
+        /// Updates the version identifier to the current instance state
         /// </summary>
-        public void UpdateIdentifierHash()
+        public virtual void SetIdentifierHash()
         {
-            (this.State ?? (this.State = new State())).UpdateIdentifierHash(this);
+            // TODO: omit .State from the hashcode generation
+            this.IdentifierHash = null;
+            this.IdentifierHash = HashAlgorithm.ComputeHash(this);
         }
 
         /// <summary>
