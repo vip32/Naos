@@ -15,8 +15,6 @@
             // arrange
             var mediator = this.container.GetInstance<IMediator>();
             var entity = new Customer { FirstName = "FirstName1", LastName = "LastName1" };
-            entity.State.CreatedDate = null;
-            entity.State.UpdatedDate = null;
 
             // act
             await mediator.Publish(new EntityInsertDomainEvent<IEntity>(entity)).ConfigureAwait(false);

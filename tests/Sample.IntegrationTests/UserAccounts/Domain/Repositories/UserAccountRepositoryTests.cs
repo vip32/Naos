@@ -1,12 +1,9 @@
 ﻿namespace Naos.Sample.IntegrationTests.Customers.Domain
 {
-    using System;
-    using System.Linq;
     using System.Threading.Tasks;
     using Bogus;
     using Naos.Core.Common;
     using Naos.Core.Domain.Repositories;
-    using Naos.Core.Domain.Specifications;
     using Naos.Sample.UserAccounts.Domain;
     using Shouldly;
     using Xunit;

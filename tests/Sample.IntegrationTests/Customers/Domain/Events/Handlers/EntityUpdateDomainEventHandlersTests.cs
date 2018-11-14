@@ -3,7 +3,6 @@
     using System;
     using System.Threading.Tasks;
     using MediatR;
-    using Naos.Core.Common;
     using Naos.Core.Domain;
     using Naos.Sample.Customers.Domain;
     using Shouldly;
@@ -17,8 +16,7 @@
             // arrange
             var mediator = this.container.GetInstance<IMediator>();
             var entity = new Customer { FirstName = "FirstName1", LastName = "LastName1" };
-            entity.State.CreatedDate = new DateTimeEpoch(DateTime.UtcNow.AddDays(-1));
-            entity.State.UpdatedDate = null;
+            entity.State.CreatedDate = DateTime.UtcNow.AddDays(-1);
 
             // act
             await mediator.Publish(new EntityUpdateDomainEvent<IEntity>(entity)).ConfigureAwait(false);

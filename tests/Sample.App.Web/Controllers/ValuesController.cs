@@ -5,7 +5,6 @@
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
     using Naos.Sample.Countries.Domain;
-    using Naos.Sample.UserAccounts.Domain;
 
     [Route("api/[controller]")]
     [ApiController]

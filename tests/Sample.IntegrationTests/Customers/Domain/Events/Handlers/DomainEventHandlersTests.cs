@@ -20,8 +20,6 @@
             var mediator = this.container.GetInstance<IMediator>();
             var domainEvent = new StubDomainEvent { Name = "Name1" };
             var entity = new Customer { FirstName = "FirstName1", LastName = "LastName1" };
-            entity.State.CreatedDate = null;
-            entity.State.UpdatedDate = null;
 
             // act
             await mediator.Publish(domainEvent).ConfigureAwait(false);
