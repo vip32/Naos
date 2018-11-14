@@ -46,7 +46,7 @@
         /// <value>
         /// The state.
         /// </value>
-        public EntityState State { get; private set; } = new EntityState();
+        public State State { get; private set; } = new State();
 
 #pragma warning disable S3875 // "operator==" should not be overloaded on reference types
         /// <summary>
@@ -135,7 +135,7 @@
         /// </summary>
         public void UpdateIdentifierHash()
         {
-            (this.State ?? (this.State = new EntityState())).UpdateIdentifierHash(this);
+            (this.State ?? (this.State = new State())).UpdateIdentifierHash(this);
         }
 
         /// <summary>

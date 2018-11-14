@@ -5,7 +5,7 @@
     using System.Linq;
     using Naos.Core.Common;
 
-    public class EntityState
+    public class State
     {
         public string IdentifierHash { get; private set; }
 
@@ -55,33 +55,27 @@
 
         public string LastAccessedDescription { get; set; }
 
-        public DateTimeEpoch LastActionDate
-        {
-            get
-            {
-                return new List<DateTimeEpoch> { this.CreatedDate, this.UpdatedDate, this.DeletedDate/*, this.LastAccessedDate*/ }
-                    .Where(d => d != null).NullToEmpty().Max();
-            }
-        }
+        public DateTimeEpoch LastActionDate =>
+            new List<DateTimeEpoch> { this.CreatedDate, this.UpdatedDate, this.DeletedDate/*, this.LastAccessedDate*/ }
+            .Where(d => d != null).NullToEmpty().Max();
 
         /// <summary>
-        ///     Gets a value indicating whether determines whether this instance is active.
+        /// Gets a value indicating whether determines whether this instance is active.
         /// </summary>
-        public virtual bool IsDeactivated
-        {
-            get
-            {
-                return (this.Deactivated != null && (bool)this.Deactivated) || !this.DeactivatedReasons.IsNullOrEmpty();
-            }
-        }
+        /// <value>
+        ///   <c>true</c> if this instance is deactivated; otherwise, <c>false</c>.
+        /// </value>
+        public virtual bool IsDeactivated =>
+            (this.Deactivated != null && (bool)this.Deactivated) || !this.DeactivatedReasons.IsNullOrEmpty();
 
         /// <summary>
-        ///     Gets a value indicating whether determines whether this instance is deleted.
+        /// Gets a value indicating whether determines whether this instance is deleted.
         /// </summary>
-        public virtual bool IsDeleted
-        {
-            get { return (this.Deleted != null && (bool)this.Deleted) || !this.DeletedReason.IsNullOrEmpty(); }
-        }
+        /// <returns>
+        ///   <c>true</c> if this instance is deleted; otherwise, <c>false</c>.
+        /// </returns>
+        public virtual bool IsDeleted() =>
+            (this.Deleted != null && (bool)this.Deleted) || !this.DeletedReason.IsNullOrEmpty();
 
         /// <summary>
         /// Updates the version identifier to the current instance state

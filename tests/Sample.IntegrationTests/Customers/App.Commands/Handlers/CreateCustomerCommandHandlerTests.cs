@@ -52,7 +52,7 @@
         {
             // arrange
             var entity = this.entityFaker.Generate();
-            entity.Region = "South";
+            entity.Region = "South"; // handler will cancels customer creation in this region
             var command = new CreateCustomerCommand(entity);
 
             // act

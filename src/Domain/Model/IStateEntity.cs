@@ -8,7 +8,7 @@
         /// <value>
         /// The current state.
         /// </value>
-        EntityState State { get; }
+        State State { get; }
 
         /// <summary>
         /// Updates the state hash for an entity.
