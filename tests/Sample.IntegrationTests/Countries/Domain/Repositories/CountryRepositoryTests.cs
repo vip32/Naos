@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.IntegrationTests.Customers.Domain
+﻿namespace Naos.Sample.IntegrationTests.Countries.Domain
 {
     using System.Collections.Generic;
     using System.Linq;

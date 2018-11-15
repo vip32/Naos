@@ -36,5 +36,17 @@
 
             return source.Name;
         }
+
+        public static string FullPrettyName(this Type source)
+        {
+            if (source.IsGenericType)
+            {
+                var name = source.FullName.Substring(0, source.Name.IndexOf('`'));
+                var types = string.Join(",", source.GetGenericArguments().Select(t => t.FullPrettyName()));
+                return $"{name}<{types}>";
+            }
+
+            return source.FullName;
+        }
     }
 }

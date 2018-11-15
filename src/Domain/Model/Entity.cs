@@ -38,7 +38,7 @@
         /// The type of the entity.
         /// </value>
         //[JsonProperty(PropertyName = "_et")]
-        public string Discriminator => this.GetType().PrettyName();
+        public string Discriminator => this.GetType().FullPrettyName();
 
         /// <summary>
         /// Gets the identifier hash for the entity.

@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.IntegrationTests.Customers.Domain
+﻿namespace Naos.Sample.IntegrationTests.UserAccounts.Domain
 {
     using System.Threading.Tasks;
     using Bogus;
