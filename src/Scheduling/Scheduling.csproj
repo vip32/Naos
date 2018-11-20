@@ -2,18 +2,19 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.Messaging</AssemblyName>
-    <RootNamespace>Naos.Core.Messaging</RootNamespace>
+    <AssemblyName>Naos.Core.Scheduling</AssemblyName>
+    <RootNamespace>Naos.Core.Scheduling</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="cronos" Version="0.7.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.1" />
     <PackageReference Include="SimpleInjector" Version="4.4.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Domain.Repositories\Domain.Repositories.csproj" />
-    <ProjectReference Include="..\Domain\Domain.csproj" />
+    <Folder Include="Domain\Repositories\" />
   </ItemGroup>
 
 </Project>

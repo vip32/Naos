@@ -45,6 +45,7 @@
     <ProjectReference Include="..\..\src\Messaging.Infrastructure.Azure\Messaging.Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\..\src\Messaging.Infrastructure.RabbitMQ\Messaging.Infrastructure.RabbitMQ.csproj" />
     <ProjectReference Include="..\..\src\Messaging\Messaging.csproj" />
+    <ProjectReference Include="..\..\src\Scheduling\Scheduling.csproj" />
     <ProjectReference Include="..\Sample.App.IntegrationTests\Sample.App.IntegrationTests.csproj" />
     <ProjectReference Include="..\Sample.App.Web\Sample.App.Web.csproj" />
     <ProjectReference Include="..\Sample.App\Sample.App.csproj" />

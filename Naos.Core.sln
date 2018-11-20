@@ -79,6 +79,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Operations", "src\Operation
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Operations.Infrastructure.Azure.LogAnalytics", "src\Operations.Infrastructure.Azure.LogAnalytics\Operations.Infrastructure.Azure.LogAnalytics.csproj", "{61782421-1B22-4974-AF52-08DDA4D9FEC4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scheduling", "src\Scheduling\Scheduling.csproj", "{D0514A2A-4BEE-4898-9344-6EACA9069182}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -461,6 +463,18 @@ Global
 		{61782421-1B22-4974-AF52-08DDA4D9FEC4}.Release|x64.Build.0 = Release|Any CPU
 		{61782421-1B22-4974-AF52-08DDA4D9FEC4}.Release|x86.ActiveCfg = Release|Any CPU
 		{61782421-1B22-4974-AF52-08DDA4D9FEC4}.Release|x86.Build.0 = Release|Any CPU
+		{D0514A2A-4BEE-4898-9344-6EACA9069182}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0514A2A-4BEE-4898-9344-6EACA9069182}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0514A2A-4BEE-4898-9344-6EACA9069182}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D0514A2A-4BEE-4898-9344-6EACA9069182}.Debug|x64.Build.0 = Debug|Any CPU
+		{D0514A2A-4BEE-4898-9344-6EACA9069182}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D0514A2A-4BEE-4898-9344-6EACA9069182}.Debug|x86.Build.0 = Debug|Any CPU
+		{D0514A2A-4BEE-4898-9344-6EACA9069182}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0514A2A-4BEE-4898-9344-6EACA9069182}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0514A2A-4BEE-4898-9344-6EACA9069182}.Release|x64.ActiveCfg = Release|Any CPU
+		{D0514A2A-4BEE-4898-9344-6EACA9069182}.Release|x64.Build.0 = Release|Any CPU
+		{D0514A2A-4BEE-4898-9344-6EACA9069182}.Release|x86.ActiveCfg = Release|Any CPU
+		{D0514A2A-4BEE-4898-9344-6EACA9069182}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -497,6 +511,7 @@ Global
 		{E11B662F-19F4-4B16-9818-4CED64A83CB0} = {09D80029-71E3-4B4D-AA1A-CD153787AED0}
 		{0B254852-E2BC-4D7C-84C6-A189E5D9091F} = {09D80029-71E3-4B4D-AA1A-CD153787AED0}
 		{61782421-1B22-4974-AF52-08DDA4D9FEC4} = {09D80029-71E3-4B4D-AA1A-CD153787AED0}
+		{D0514A2A-4BEE-4898-9344-6EACA9069182} = {09D80029-71E3-4B4D-AA1A-CD153787AED0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BD699E0F-4BC9-41A9-93D5-E89FDDA8FC17}
