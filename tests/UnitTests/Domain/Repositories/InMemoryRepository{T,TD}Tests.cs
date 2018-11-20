@@ -321,7 +321,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                         .ForMember(d => d.Country, o => o.MapFrom(s => s.Country))
                         //.ForMember(d => d.FullName, o => o.ResolveUsing(new FullNameResolver()))
                         .ForMember(d => d.FullName, o => o.MapFrom(s => $"{s.FirstName} {s.LastName}"))
-                        .ForMember(d => d.YearOfBirth, o => o.ResolveUsing(new YearOfBirthResolver()));
+                        .ForMember(d => d.YearOfBirth, o => o.MapFrom(new YearOfBirthResolver()));
 
                     //c.CreateMap<ITenantEntity, StubDto>()
                     //    .ForMember(d => d.ExtTenantId, o => o.MapFrom(s => s.TenantId))
@@ -339,7 +339,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                         .ForMember(d => d.FirstName, o => o.MapFrom(s => s.FullName.Split(' ', StringSplitOptions.None).FirstOrDefault()))
                         //.ForMember(d => d.LastName, o => o.ResolveUsing(new LastNameResolver()))
                         .ForMember(d => d.LastName, o => o.MapFrom(s => s.FullName.Split(' ', StringSplitOptions.None).LastOrDefault()))
-                        .ForMember(d => d.Age, o => o.ResolveUsing(new AgeResolver()))
+                        .ForMember(d => d.Age, o => o.MapFrom(new AgeResolver()))
                         .ForMember(d => d.State, o => o.Ignore());
 
                     //c.CreateMap<StubDto, ITenantEntity>()

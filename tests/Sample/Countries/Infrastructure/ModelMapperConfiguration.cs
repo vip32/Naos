@@ -21,7 +21,7 @@
                     .ForMember(d => d.Identifier, o => o.MapFrom(s => s.Id))
                     .ForMember(d => d.CountryCode, o => o.MapFrom(s => s.Code))
                     .ForMember(d => d.CountryName, o => o.MapFrom(s => s.Name))
-                    .ForMember(d => d.LanguageCodes, o => o.ResolveUsing(new LanguageCodesResolver()));
+                    .ForMember(d => d.LanguageCodes, o => o.MapFrom(new LanguageCodesResolver()));
 
                 c.CreateMap<CountryDto, Country>()
                     .ForMember(d => d.IdentifierHash, o => o.MapFrom(s => s.ETag))
@@ -29,7 +29,7 @@
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.Identifier))
                     .ForMember(d => d.Code, o => o.MapFrom(s => s.CountryCode))
                     .ForMember(d => d.Name, o => o.MapFrom(s => s.CountryName))
-                    .ForMember(d => d.LanguageCodes, o => o.ResolveUsing(new LanguageCodesResolver()))
+                    .ForMember(d => d.LanguageCodes, o => o.MapFrom(new LanguageCodesResolver()))
                     .ForMember(d => d.State, o => o.Ignore());
             });
 
