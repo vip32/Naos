@@ -1,31 +1,35 @@
 pattern cqs https://www.dotnetcurry.com/patterns-practices/1461/command-query-separation-cqs
 api 404s https://www.strathweb.com/2018/10/convert-null-valued-results-to-404-in-asp-net-core-mvc/
-secrets https://social.technet.microsoft.com/wiki/contents/articles/51871.net-core-2-managing-secrets-in-web-apps.aspx
-vault config https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-2.1
-log scopes https://www.initpals.com/net-core/scoped-logging-using-microsoft-logger-with-serilog-in-net-core-application/
+logging: scopes https://www.initpals.com/net-core/scoped-logging-using-microsoft-logger-with-serilog-in-net-core-application/
 xunit configuration https://weblog.west-wind.com/posts/2018/Feb/18/Accessing-Configuration-in-NET-Core-Test-Projects
 criteria > linq https://blogs.msdn.microsoft.com/mattwar/2007/07/31/linq-building-an-iqueryable-provider-part-ii/
 validation : entity.Validate(handler)
 ef sqlite + inmemory : https://www.thereformedprogrammer.net/using-in-memory-databases-for-unit-testing-ef-core-applications/
 webapi test + jwt https://www.domstamand.com/testing-a-webapi-in-net-core-with-integration-tests/
-litedb repo https://github.com/mbdavid/LiteDB/wiki/Repository-Pattern
 file repo https://github.com/selmaohneh/Repository/tree/master/Repository.FileRepository
 properties https://github.com/schotime/NPoco/blob/master/src/NPoco/PocoExpando.cs
 spec mapping with visitor https://fabiomarreco.github.io/blog/2018/specificationpattern-with-entityframework/
-cqrs (customer events) https://www.pluralsight.com/courses/cqrs-in-practice
+cqrs (customer changed events) https://www.pluralsight.com/courses/cqrs-in-practice
 spec vs cqrs https://enterprisecraftsmanship.com/2018/11/06/cqrs-vs-specification-pattern/
 tenant resolver https://stackoverflow.com/questions/41820206/c-sharp-architecture-pattern-for-tenant-specific-business-logic
-serilog app insight https://github.com/serilog/serilog-sinks-applicationinsights/issues/37
+operations: serilog app insight https://github.com/serilog/serilog-sinks-applicationinsights/issues/37
 idea: configuration validation https://www.stevejgordon.co.uk/asp-net-core-2-2-options-validation
-ef sql logging https://wildermuth.com/2018/11/07/EntityFrameworkCore-Logging-in-ASP-NET-Core
-ef dynamic schema support https://weblogs.thinktecture.com/pawel/2018/06/entity-framework-core-changing-database-schema-at-runtime.html
-ef sqlite https://docs.microsoft.com/en-us/ef/core/get-started/netcore/new-db-sqlite
-graphql https://fullstackmark.com/post/17/building-a-graphql-api-with-aspnet-core-2-and-entity-framework-core
+graphql? https://fullstackmark.com/post/17/building-a-graphql-api-with-aspnet-core-2-and-entity-framework-core
 
-log analytics dashboard (operations) https://blogs.technet.microsoft.com/livedevopsinjapan/2017/08/23/log-analytics-log-search-rest-api-for-c/
-log analytics rest api https://dev.loganalytics.io/reference
-consul service registry https://www.codeproject.com/Articles/1248381/Microservices-Service-Discovery
-message broker based on rabitmq
+messaging: message broker based on rabitmq (for local usage)
+messaging: singalr based provider?
+
+repo: litedb repo https://github.com/mbdavid/LiteDB/wiki/Repository-Pattern
+repo: ef sql logging https://wildermuth.com/2018/11/07/EntityFrameworkCore-Logging-in-ASP-NET-Core
+repo: ef dynamic schema support https://weblogs.thinktecture.com/pawel/2018/06/entity-framework-core-changing-database-schema-at-runtime.html
+repo: ef sqlite https://docs.microsoft.com/en-us/ef/core/get-started/netcore/new-db-sqlite
+
+service: task scheduler (coravel) https://github.com/jamesmh/coravel/blob/master/Docs/Scheduler.md
+service: service registry https://www.codeproject.com/Articles/1248381/Microservices-Service-Discovery
+
+operations: log analytics dashboard (operations) https://blogs.technet.microsoft.com/livedevopsinjapan/2017/08/23/log-analytics-log-search-rest-api-for-c/
+operations: log analytics rest api (repo) https://dev.loganalytics.io/reference
+operations: logevent repos (1-loganalytics, 2-cosmosdb) + specifications (ForCorrelationId, Since, Till, etc...)
 
 http://localhost:15672/ (rabbitmq)
 https://localhost:44347/api/values (billing)
@@ -43,13 +47,12 @@ ENV-naos-ordering-db
 
 === MODULES === Operations
 
-
-Operations.App 
- \Domain (Logevents, Repo, ContainerExtension)
+Operations.App
+\Domain (Logevents, Repo, ContainerExtension)
 Operations.App.Serilog (serilog log setup + loggerfactory for .netcore ILogger)
 Operations.App.Web (ApiController + html dashboard)
 Operations.Infrastructure.Azure.CosmosDb
- \Repositories (logevents repo)
+\Repositories (logevents repo)
 
 === MODULES === Messaging
 Messaging
@@ -63,9 +66,6 @@ Journaling.Domain.Events.Handlers (journaling event handlers)
 Journaling.Messaging (imessagebus decorator: publish/subscribe/process)
 Journaling.Infrastructure.Azure.CosmosDb
 \Repositories (irepositopry decorator + journal for journal entity)
-
-
-
 
 projects:
 
