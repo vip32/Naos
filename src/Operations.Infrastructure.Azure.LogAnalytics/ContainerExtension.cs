@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.Operations.Infrastructure.Azure.LogAnalytics
 {
     using Microsoft.Extensions.Configuration;
+    using Microsoft.IdentityModel.Clients.ActiveDirectory;
     using Naos.Core.Operations.Domain.Repositories;
     using Naos.Core.Operations.Infrastructure.Azure.LogAnalytics.Repositories;
     using SimpleInjector;
@@ -15,13 +16,16 @@
             container.Register<ILogEventRepository>(() =>
             {
                 var authenticationConfiguration = configuration.GetSection(section).Get<LogAnalyticsConfiguration>();
-                var token = AzureAuthenticationProvider.GetTokenAsync(
-                    authenticationConfiguration.ApiAuthentication?.TenantId,
-                    authenticationConfiguration.ApiAuthentication?.ClientId,
-                    authenticationConfiguration.ApiAuthentication?.ClientSecret,
-                    authenticationConfiguration.ApiAuthentication?.Resource ?? "https://management.azure.com").Result;
 
-                return new LogEventRepository(token.AccessToken);
+                var token = new AuthenticationContext(
+                    $"https://login.microsoftonline.com/{authenticationConfiguration.ApiAuthentication?.TenantId}", false)
+                    .AcquireTokenAsync(
+                        authenticationConfiguration.ApiAuthentication?.Resource ?? "https://management.azure.com",
+                        new ClientCredential(
+                            authenticationConfiguration.ApiAuthentication?.ClientId,
+                            authenticationConfiguration.ApiAuthentication?.ClientSecret)).Result;
+
+                return new LogEventRepository(token?.AccessToken);
             }/*, Lifestyle.Scoped*/);
 
             return container;
