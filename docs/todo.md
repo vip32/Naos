@@ -27,7 +27,9 @@ repo: ef sqlite https://docs.microsoft.com/en-us/ef/core/get-started/netcore/new
 service: task scheduler (coravel) https://github.com/jamesmh/coravel/blob/master/Docs/Scheduler.md
 service: service registry https://www.codeproject.com/Articles/1248381/Microservices-Service-Discovery
 
-operations: log analytics dashboard (operations) https://blogs.technet.microsoft.com/livedevopsinjapan/2017/08/23/log-analytics-log-search-rest-api-for-c/
+operations: log analytics dashboard (operations) https://blogs.technet.microsoft.com/livedevopsinjapan/2017/08/23/log-analytics-log-search-rest-api-for-c/   
+            https://techcommunity.microsoft.com/t5/Azure-Log-Analytics/Authenticate-with-client-credentials-Log-Analytics/td-p/104996  
+            https://dev.int.loganalytics.io/documentation/1-Tutorials/Direct-API
 operations: log analytics rest api (repo) https://dev.loganalytics.io/reference
 operations: logevent repos (1-loganalytics, 2-cosmosdb) + specifications (ForCorrelationId, Since, Till, etc...)
 

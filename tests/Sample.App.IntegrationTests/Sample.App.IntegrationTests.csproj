@@ -42,13 +42,17 @@
     <ProjectReference Include="..\..\src\Domain.Specifications\Domain.Specifications.csproj" />
     <ProjectReference Include="..\..\src\Domain\Domain.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure.Azure.Arm\Infrastructure.Azure.Arm.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure.Azure.Configuration\Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure.Azure.KeyVault\Infrastructure.Azure.KeyVault.csproj" />
     <ProjectReference Include="..\..\src\Common\Common.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure.Azure.CosmosDb\Infrastructure.Azure.CosmosDb.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure.Azure.ServiceBus\Infrastructure.Azure.ServiceBus.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure.EntityFramework\Infrastructure.EntityFramework.csproj" />
     <ProjectReference Include="..\..\src\Messaging.Infrastructure.Azure\Messaging.Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\..\src\Messaging.Infrastructure.RabbitMQ\Messaging.Infrastructure.RabbitMQ.csproj" />
     <ProjectReference Include="..\..\src\Messaging\Messaging.csproj" />
+    <ProjectReference Include="..\..\src\Operations.Infrastructure.Azure.LogAnalytics\Operations.Infrastructure.Azure.LogAnalytics.csproj" />
+    <ProjectReference Include="..\..\src\Operations\Operations.csproj" />
     <ProjectReference Include="..\Sample.App.Web\Sample.App.Web.csproj" />
     <ProjectReference Include="..\Sample.App\Sample.App.csproj" />
     <ProjectReference Include="..\Sample.Messaging.App.Console\Sample.Messaging.App.Console.csproj" />

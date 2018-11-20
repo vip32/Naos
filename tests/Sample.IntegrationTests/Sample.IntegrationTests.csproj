@@ -33,6 +33,7 @@
     <ProjectReference Include="..\..\src\App.Operations.Serilog\App.Operations.Serilog.csproj" />
     <ProjectReference Include="..\..\src\Common.Dependency.SimpleInjector\Common.Dependency.SimpleInjector.csproj" />
     <ProjectReference Include="..\..\src\Messaging.Infrastructure.Azure\Messaging.Infrastructure.Azure.csproj" />
+    <ProjectReference Include="..\..\src\Operations.Infrastructure.Azure.LogAnalytics\Operations.Infrastructure.Azure.LogAnalytics.csproj" />
     <ProjectReference Include="..\Sample\Sample.csproj" />
   </ItemGroup>
 

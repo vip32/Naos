@@ -10,6 +10,7 @@
     using Naos.Core.Infrastructure.EntityFramework;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.Infrastructure.Azure;
+    using Naos.Core.Operations.Infrastructure.Azure.LogAnalytics;
     using Naos.Sample.Countries;
     using Naos.Sample.Customers;
     using Naos.Sample.Customers.Domain;
@@ -33,6 +34,7 @@
                 .AddNaosMediator(new[] { typeof(IEntity).Assembly, typeof(BaseTest).Assembly, typeof(Customer).Assembly })
                 .AddNaosLogging(configuration)
                 .AddNaosAppCommands(new[] { typeof(Customer).Assembly })
+                .AddNaosOperations(configuration)
                 .AddNaosMessaging(
                     configuration,
                     AppDomain.CurrentDomain.FriendlyName,

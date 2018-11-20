@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Infrastructure.Azure.Configuration
+﻿namespace Naos.Core.Infrastructure.Azure
 {
     public class ApplicationInsightsConfiguration
     {

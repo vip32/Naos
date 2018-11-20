@@ -6,7 +6,8 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
-    using Naos.Core.Infrastructure.Azure.Configuration;
+    using Naos.Core.Infrastructure.Azure;
+    using Naos.Core.Operations.Infrastructure.Azure.LogAnalytics;
     using SimpleInjector;
 
     public static class ContainerExtension
@@ -63,7 +64,7 @@
             //    timeToLive: ttl)
 
             // TODO: split this more so the sinks become better composable
-            var logAnalyticsConfiguration = internalConfiguration.GetSection("naos:operations:azureLogAnalytics").Get<AzureLogAnalyticsConfiguration>();
+            var logAnalyticsConfiguration = internalConfiguration.GetSection("naos:operations:azureLogAnalytics").Get<LogAnalyticsConfiguration>();
             if (logAnalyticsConfiguration?.Enabled == true
                 && logAnalyticsConfiguration?.WorkspaceId.IsNullOrEmpty() == false
                 && logAnalyticsConfiguration?.AuthenticationId.IsNullOrEmpty() == false)

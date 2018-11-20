@@ -9,11 +9,11 @@
     using SimpleInjector;
     using Xunit;
 
-    public class ServiceBusMessageBusTests : BaseTest
+    public class MessageBrokerTests : BaseTest
     {
         private readonly Container container = new Container();
 
-        public ServiceBusMessageBusTests()
+        public MessageBrokerTests()
         {
             var configuration = NaosConfigurationFactory.CreateRoot();
             this.container = new Container()
@@ -21,7 +21,7 @@
                 .AddNaosMessaging(
                     configuration,
                     AppDomain.CurrentDomain.FriendlyName,
-                    assemblies: new[] { typeof(IMessageBroker).Assembly, typeof(ServiceBusMessageBusTests).Assembly });
+                    assemblies: new[] { typeof(IMessageBroker).Assembly, typeof(MessageBrokerTests).Assembly });
             this.container.Verify();
         }
 
@@ -32,20 +32,20 @@
         }
 
         [Fact]
-        public void CanInstantiateMessageBus()
+        public void CanInstantiateMessageBroker()
         {
-            var messageBus = this.container.GetInstance<IMessageBroker>();
+            var sut = this.container.GetInstance<IMessageBroker>();
 
-            Assert.NotNull(messageBus);
+            Assert.NotNull(sut);
         }
 
         [Fact]
-        public void CanPublishMessageToMessageBus()
+        public void CanPublishToMessageBroker()
         {
-            var messageBus = this.container.GetInstance<IMessageBroker>();
-            messageBus.Publish(new Message());
+            var sut = this.container.GetInstance<IMessageBroker>();
+            sut.Publish(new Message());
 
-            Assert.NotNull(messageBus);
+            Assert.NotNull(sut);
         }
     }
 }
