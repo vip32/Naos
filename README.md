@@ -80,6 +80,9 @@ key vault keys: (or use the json configuration above)
 - `development-naos--messaging--serviceBus--clientId`
 - `development-naos--messaging--serviceBus--clientSecret`
 
+## operations setup (Azure Log Analytics)
+- logging setup: workspaceId, authenticationKey
+- apiAuthentication identity: https://dev.int.loganalytics.io/documentation/1-Tutorials/ARM-API
 
 ## sample services
 

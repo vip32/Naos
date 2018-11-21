@@ -26,6 +26,7 @@
 
         public Task<IEnumerable<LogEvent>> FindAllAsync(IFindOptions<LogEvent> options = null)
         {
+            // TODO: call log analytics api https://dev.int.loganalytics.io/documentation/1-Tutorials/ARM-API
             throw new System.NotImplementedException();
         }
 
