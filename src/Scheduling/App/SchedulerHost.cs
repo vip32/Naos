@@ -5,9 +5,9 @@
     using System.Threading.Tasks;
     using Microsoft.Extensions.Hosting;
 
-    public class SchedularHost : IHostedService
+    public class SchedulerHost : IHostedService
     {
-        // host Schedular (run with timer)
+        // host Scheduler (run with timer)
 
         public Task StartAsync(CancellationToken cancellationToken)
         {

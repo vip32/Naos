@@ -6,6 +6,7 @@
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.Domain.Model;
     using Naos.Core.Messaging.Infrastructure.Azure;
+    using Shouldly;
     using SimpleInjector;
     using Xunit;
 
@@ -22,30 +23,29 @@
                     configuration,
                     AppDomain.CurrentDomain.FriendlyName,
                     assemblies: new[] { typeof(IMessageBroker).Assembly, typeof(MessageBrokerTests).Assembly });
-            this.container.Verify();
         }
 
         [Fact]
-        public void VerifyContainer()
+        public void VerifyContainer_Test()
         {
             this.container.Verify();
         }
 
         [Fact]
-        public void CanInstantiateMessageBroker()
+        public void CanInstantiate_Test()
         {
             var sut = this.container.GetInstance<IMessageBroker>();
 
-            Assert.NotNull(sut);
+            sut.ShouldNotBeNull();
         }
 
         [Fact]
-        public void CanPublishToMessageBroker()
+        public void CanPublish_Test()
         {
             var sut = this.container.GetInstance<IMessageBroker>();
             sut.Publish(new Message());
 
-            Assert.NotNull(sut);
+            sut.ShouldNotBeNull();
         }
     }
 }

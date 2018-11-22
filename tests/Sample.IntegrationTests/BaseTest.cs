@@ -18,7 +18,7 @@
     using Naos.Sample.UserAccounts.EntityFramework;
     using SimpleInjector;
 
-    public abstract class BaseTest
+    public abstract class BaseTest : IDisposable
     {
         protected readonly Container container = new Container();
 
@@ -47,6 +47,11 @@
                 .AddSampleUserAccounts(new UserAccountsContext(new DbContextOptionsBuilder().UseNaosSqlServer(configuration).Options));
 
             //this.container.Verify();
+        }
+
+        public void Dispose()
+        {
+            //Serilog.Log.CloseAndFlush();
         }
     }
 }

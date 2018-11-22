@@ -14,14 +14,20 @@
     {
         private static IConfiguration internalConfiguration;
         private static LoggerConfiguration internalLoggerConfiguration;
+        private static string internalEnvironment;
+        private static string internalServiceDescriptor;
 
         public static Container AddNaosLogging(
             this Container container,
             IConfiguration configuration,
+            string environment = "Development",
+            string serviceDescriptor = "naos",
             LoggerConfiguration loggerConfiguration = null)
         {
             internalConfiguration = configuration;
             internalLoggerConfiguration = loggerConfiguration;
+            internalEnvironment = environment;
+            internalServiceDescriptor = serviceDescriptor;
             container.Register(CreateLoggerFactory, Lifestyle.Singleton);
             container.Register(typeof(ILogger<>), typeof(LoggingAdapter<>));
 
@@ -51,7 +57,8 @@
                 .MinimumLevel.Information()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
-                .Enrich.WithProperty("Service", AppDomain.CurrentDomain.FriendlyName)
+                .Enrich.WithProperty("Environment", internalEnvironment)
+                .Enrich.WithProperty("ServiceDescriptor", internalServiceDescriptor)
                 .WriteTo.Debug()
                 .WriteTo.LiterateConsole(/*outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss}|{Level} => {CorrelationId} => {Service}::{SourceContext}{NewLine}    {Message}{NewLine}{Exception}"*/);
             //.WriteTo.AzureDocumentDB(
@@ -69,7 +76,9 @@
                 && logAnalyticsConfiguration?.WorkspaceId.IsNullOrEmpty() == false
                 && logAnalyticsConfiguration?.AuthenticationId.IsNullOrEmpty() == false)
             {
-                loggerConfiguration.WriteTo.AzureAnalytics(logAnalyticsConfiguration.WorkspaceId, logAnalyticsConfiguration.AuthenticationId);
+                loggerConfiguration.WriteTo.AzureAnalytics(
+                    logAnalyticsConfiguration.WorkspaceId,
+                    logAnalyticsConfiguration.AuthenticationId, logName: $"LogEvents_{internalEnvironment}" );
             }
 
             // TODO: application insight setup

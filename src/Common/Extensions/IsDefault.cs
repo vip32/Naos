@@ -61,5 +61,10 @@
         {
             return source == default;
         }
+
+        public static bool IsDefault(this DateTime source)
+        {
+            return source == default;
+        }
     }
 }

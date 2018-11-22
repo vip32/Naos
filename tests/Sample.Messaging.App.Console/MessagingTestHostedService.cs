@@ -58,6 +58,8 @@
             this.messageBus.Unsubscribe<TestMessage, TestMessageHandler>();
             this.messageBus.Unsubscribe<EntityMessage<StubEntity>, StubEntityMessageHandler>();
 
+            //Serilog.Log.CloseAndFlush();
+
             return Task.CompletedTask;
         }
 

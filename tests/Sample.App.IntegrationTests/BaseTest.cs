@@ -3,7 +3,7 @@
     using System;
     using Naos.Sample.App;
 
-    public abstract class BaseTest
+    public abstract class BaseTest : IDisposable
     {
         public static AppConfiguration AppConfiguration = new AppConfiguration();
 
@@ -13,6 +13,11 @@
             Environment.SetEnvironmentVariable("ASPNETCORE_ISLOCAL", "True");
 
             AppConfiguration.Bind("naos:app:sample");
+        }
+
+        public void Dispose()
+        {
+            //Serilog.Log.CloseAndFlush();
         }
     }
 }

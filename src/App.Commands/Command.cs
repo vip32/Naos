@@ -36,6 +36,6 @@
         /// <returns>
         /// <c>true</c> if this instance is transient; otherwise, <c>false</c>.
         /// </returns>
-        public bool IsTransient() => this.Id.IsDefault();
+        //public bool IsTransient() => this.Id.IsDefault();
     }
 }

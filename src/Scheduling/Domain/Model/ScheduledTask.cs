@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.Scheduling.Domain
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using Cronos;
     using EnsureThat;
@@ -25,7 +26,7 @@
             span = span ?? TimeSpan.FromMinutes(1);
 
             var expression = CronExpression.Parse(this.cron, CronFormat.IncludeSeconds);
-            var occurrence = expression.GetNextOccurrence(fromUtc, inclusive: true);
+            var occurrence = expression.GetNextOccurrence(fromUtc);
 
             if(!occurrence.HasValue)
             {
@@ -33,6 +34,18 @@
             }
 
             return occurrence.Value - fromUtc < span;
+        }
+
+        public bool IsDue(DateTime fromUtc, DateTime toUtc)
+        {
+            EnsureArg.IsTrue(fromUtc.Kind == DateTimeKind.Utc);
+            EnsureArg.IsTrue(toUtc.Kind == DateTimeKind.Utc);
+            EnsureArg.IsTrue(fromUtc < toUtc);
+
+            var expression = CronExpression.Parse(this.cron, CronFormat.IncludeSeconds);
+            var occurrences = expression.GetOccurrences(fromUtc, toUtc);
+
+            return occurrences?.Any() == true;
         }
 
         public virtual async Task ExecuteAsync()

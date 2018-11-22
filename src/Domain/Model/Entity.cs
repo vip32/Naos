@@ -1,5 +1,6 @@
 ﻿namespace Naos.Core.Domain
 {
+    using System.Diagnostics;
     using Naos.Core.Common;
     using Newtonsoft.Json;
 
@@ -7,6 +8,7 @@
     /// A base class for all domain entities (layer supertype)
     /// </summary>
     /// <typeparam name="TId">The type of the identifier.</typeparam>
+    [DebuggerDisplay("Id={Id}")]
     public abstract class Entity<TId> : IEntity<TId>, IAggregateRoot, IStateEntity, IDiscriminated, IIdentifiable
     {
         /// <summary>
@@ -136,7 +138,7 @@
         /// <returns>
         ///   <c>true</c> if this instance is transient; otherwise, <c>false</c>.
         /// </returns>
-        public bool IsTransient() => this.Id.IsDefault();
+        // public bool IsTransient() => this.Id.IsDefault();
 
         /// <summary>
         /// Updates the version identifier to the current instance state

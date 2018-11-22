@@ -15,17 +15,23 @@
         {
             container.Register<ILogEventRepository>(() =>
             {
-                var authenticationConfiguration = configuration.GetSection(section).Get<LogAnalyticsConfiguration>();
+                var logAnalyticsConfiguration = configuration.GetSection(section).Get<LogAnalyticsConfiguration>();
 
+                // authenticate api https://dev.int.loganalytics.io/documentation/1-Tutorials/ARM-API
                 var token = new AuthenticationContext(
-                    $"https://login.microsoftonline.com/{authenticationConfiguration.ApiAuthentication?.TenantId}", false)
+                    $"https://login.microsoftonline.com/{logAnalyticsConfiguration.ApiAuthentication?.TenantId}", false)
                     .AcquireTokenAsync(
-                        authenticationConfiguration.ApiAuthentication?.Resource ?? "https://management.azure.com",
+                        logAnalyticsConfiguration.ApiAuthentication?.Resource ?? "https://management.azure.com",
                         new ClientCredential(
-                            authenticationConfiguration.ApiAuthentication?.ClientId,
-                            authenticationConfiguration.ApiAuthentication?.ClientSecret)).Result;
+                            logAnalyticsConfiguration.ApiAuthentication?.ClientId,
+                            logAnalyticsConfiguration.ApiAuthentication?.ClientSecret)).Result;
 
-                return new LogEventRepository(token?.AccessToken);
+                return new LogEventRepository(
+                    new System.Net.Http.HttpClient(), // TODO: resolve from container!
+                    token?.AccessToken,
+                    logAnalyticsConfiguration.SubscriptionId,
+                    logAnalyticsConfiguration.ResourceGroupName,
+                    logAnalyticsConfiguration.WorkspaceName);
             }/*, Lifestyle.Scoped*/);
 
             return container;

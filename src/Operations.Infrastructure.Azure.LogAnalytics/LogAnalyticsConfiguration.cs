@@ -6,10 +6,16 @@
     {
         public bool Enabled { get; set; } = true;
 
-        public string WorkspaceId { get; set; }
+        public string WorkspaceId { get; set; } // serilog
 
-        public string AuthenticationId { get; set; }
+        public string AuthenticationId { get; set; } // serilog
 
-        public AuthenticationConfiguration ApiAuthentication { get; set; }
+        public AuthenticationConfiguration ApiAuthentication { get; set; } // repo
+
+        public string SubscriptionId { get; set; } // repo
+
+        public string ResourceGroupName { get; set; } // repo
+
+        public string WorkspaceName { get; set; } // repo
     }
 }

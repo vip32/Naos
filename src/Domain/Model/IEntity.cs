@@ -29,6 +29,6 @@
         /// <returns>
         ///   <c>true</c> if this instance is transient; otherwise, <c>false</c>.
         /// </returns>
-        bool IsTransient();
+        //bool IsTransient();
     }
 }

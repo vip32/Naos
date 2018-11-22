@@ -15,10 +15,12 @@
             Guid id0 = default;
             var id1 = default(Guid);
             object id2 = default(Guid);
+            var dt1 = default(DateTime);
 
             Assert.True(id0.IsDefault());
             Assert.True(id1.IsDefault());
             Assert.True(id2.IsDefault());
+            Assert.True(dt1.IsDefault());
         }
 
         /// <summary>
