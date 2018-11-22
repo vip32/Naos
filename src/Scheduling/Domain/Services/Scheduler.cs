@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Scheduling.Domain.Services
+﻿namespace Naos.Core.Scheduling.Domain
 {
     using System;
     using System.Collections.Generic;
@@ -13,6 +13,7 @@
     {
         private readonly Dictionary<string, ScheduledTask> tasks = new Dictionary<string, ScheduledTask>();
         private readonly ILogger<Scheduler> logger;
+        private readonly IMutex mutex;
         private readonly IScheduledTaskFactory taskFactory;
         private int activeCount = 0;
         private Action<Exception> errorHandler;
@@ -20,12 +21,13 @@
         // register tasks
         // run registered task (host calls based on timer)
 
-        public Scheduler(ILogger<Scheduler> logger, IScheduledTaskFactory taskFactory)
+        public Scheduler(ILogger<Scheduler> logger, IScheduledTaskFactory taskFactory, IMutex mutex)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
 
             this.logger = logger;
-            this.taskFactory = taskFactory;
+            this.mutex = mutex ?? new InMemoryMutex();
+            this.taskFactory = taskFactory; // what to do when null?
         }
 
         public IScheduler Register(string cron, Action action)
@@ -132,19 +134,34 @@
         {
             try
             {
-                // TODO: publish domain event (task started)
-                this.logger.LogInformation($"scheduled task started (key={key})");
-
                 async Task Execute()
                 {
+                    // TODO: publish domain event (task started)
+                    this.logger.LogInformation($"scheduled task started (key={key})");
                     await task.ExecuteAsync();
+                    this.logger.LogInformation($"scheduled task finished (key={key})");
+                    // TODO: publish domain event (task finished)
                 }
 
-                await Execute();
-                // TODO: overlap check here
+                //if (task.PreventOverlap)
+                //{
+                if (this.mutex.TryGetLock(key, 1440))
+                {
+                    try
+                    {
+                        await Execute();
+                    }
+                    finally
+                    {
+                        this.mutex.ReleaseLock(key);
+                    }
+                }
+                else
+                {
+                    this.logger.LogWarning($"scheduled task already executing (key={key})");
+                }
 
-                this.logger.LogInformation($"scheduled task finished (key={key})");
-                // TODO: publish domain event (task finished)
+                //}
             }
             catch (Exception ex)
             {

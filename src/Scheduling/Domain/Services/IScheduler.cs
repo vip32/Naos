@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Scheduling.Domain.Services
+﻿namespace Naos.Core.Scheduling.Domain
 {
     using System;
     using System.Threading.Tasks;
