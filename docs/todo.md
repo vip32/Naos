@@ -28,6 +28,7 @@ repo: ef sqlite https://docs.microsoft.com/en-us/ef/core/get-started/netcore/new
 service: task scheduler (coravel) https://github.com/jamesmh/coravel/blob/master/Docs/Scheduler.md
 service: service registry (consul) https://www.codeproject.com/Articles/1248381/Microservices-Service-Discovery
                                    http://michaco.net/blog/ServiceDiscoveryAndHealthChecksInAspNetCoreWithConsul
+                                   https://open.microsoft.com/2018/10/04/use-case-modern-service-discovery-consul-azure-part-1/
 
 operations: log analytics dashboard (operations) https://blogs.technet.microsoft.com/livedevopsinjapan/2017/08/23/log-analytics-log-search-rest-api-for-c/   
             https://techcommunity.microsoft.com/t5/Azure-Log-Analytics/Authenticate-with-client-credentials-Log-Analytics/td-p/104996  

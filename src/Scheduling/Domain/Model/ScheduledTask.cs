@@ -6,18 +6,50 @@
     using Cronos;
     using EnsureThat;
 
-    public class ScheduledTask
+    public class ScheduledTask : IScheduledTask
     {
         private readonly string cron;
+        private readonly Type type;
         private readonly Func<Task> task;
         private readonly Action action;
 
-        public ScheduledTask(string cron, Func<Task> task = null, Action action = null)
+        public ScheduledTask(string cron)
         {
+            EnsureArg.IsNotNullOrEmpty(cron, nameof(cron));
+
             this.cron = cron;
-            this.task = task;
+        }
+
+        public ScheduledTask(string cron, Action action)
+        {
+            EnsureArg.IsNotNullOrEmpty(cron, nameof(cron));
+            EnsureArg.IsNotNull(action, nameof(action));
+
+            this.cron = cron;
             this.action = action;
         }
+
+        public ScheduledTask(string cron, Func<Task> task)
+        {
+            EnsureArg.IsNotNullOrEmpty(cron, nameof(cron));
+            EnsureArg.IsNotNull(task, nameof(task));
+
+            this.cron = cron;
+            this.task = task;
+        }
+
+        public ScheduledTask(string cron, Type type)
+        {
+            EnsureArg.IsNotNullOrEmpty(cron, nameof(cron));
+            EnsureArg.IsTrue(type.IsAssignableFrom(typeof(IScheduledTask)), nameof(type));
+
+            this.cron = cron;
+            this.type = type;
+        }
+
+        // TODO: Other things to schedule
+        // Schedule - Command
+        // Schedule - Message
 
         public bool IsDue(DateTime fromUtc, TimeSpan? span = null)
         {
@@ -68,7 +100,7 @@
 #pragma warning restore SA1402 // File may only contain a single class
     {
         public ScheduledTaskImpl(string cron)
-            : base(cron, null, null)
+            : base(cron)
         {
         }
 
