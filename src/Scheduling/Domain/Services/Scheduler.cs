@@ -136,13 +136,15 @@
         {
             var activeTasks = this.tasks.Where(t => t.Value?.IsDue(fromUtc) == true).Select(t =>
             {
-                return Task.Run(async () =>
+                return Task.Run(() =>
                 {
-                    await this.ExecuteTaskAsync(t.Key, t.Value);
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    this.ExecuteTaskAsync(t.Key, t.Value); // dont use await for better parallism
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 });
             });
 
-            await Task.WhenAll(activeTasks); // really wait for completion?
+            await Task.WhenAll(activeTasks).ConfigureAwait(false); // really wait for completion?
         }
 
         private async Task ExecuteTaskAsync(string key, IScheduledTask task)
