@@ -79,15 +79,16 @@
         {
             this.container.RegisterInstance(new StubProbe());
             var sut = this.container.GetInstance<IScheduler>();
-            var counter = this.container.GetInstance<StubProbe>();
+            var probe = this.container.GetInstance<StubProbe>();
 
             sut.Register<StubScheduledTask>("key1", "* 12    * * * *");
 
+            // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
             await sut.TriggerAsync("key1");
             await sut.TriggerAsync("key1");
             await sut.TriggerAsync("unk");
 
-            counter.Count.ShouldBe(2);
+            probe.Count.ShouldBe(2);
         }
 
         private class StubScheduledTask : ScheduledTask
