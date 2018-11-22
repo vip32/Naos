@@ -50,6 +50,14 @@
             this.func = func;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ScheduledTask"/> class.
+        /// </summary>
+        /// <param name="cron">The cron.</param>
+        protected ScheduledTask()
+        {
+        }
+
         // TODO: Other things to schedule
         // Schedule - Command
         // Schedule - Message
@@ -103,11 +111,6 @@
     public abstract class ScheduledTaskImpl : ScheduledTask
 #pragma warning restore SA1402 // File may only contain a single class
     {
-        public ScheduledTaskImpl(string cron)
-            : base(cron)
-        {
-        }
-
         public override abstract Task ExecuteAsync();
     }
 }

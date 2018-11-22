@@ -36,7 +36,7 @@
         }
 
         [Fact]
-        public async Task Test1()
+        public async Task ScheduleAction_Test()
         {
             var sut = this.container.GetInstance<IScheduler>();
             var count = 0;
@@ -47,7 +47,20 @@
                 System.Diagnostics.Trace.WriteLine("hello from task");
             });
 
-            sut.Register("key2", "* 12    * * * *", async () =>
+            await sut.TriggerAsync("key1");
+            await sut.TriggerAsync("key1");
+            await sut.TriggerAsync("unk");
+
+            count.ShouldBe(2);
+        }
+
+        [Fact]
+        public async Task ScheduleFunction_Test()
+        {
+            var sut = this.container.GetInstance<IScheduler>();
+            var count = 0;
+
+            sut.Register("key1", "* 12    * * * *", async () =>
             await Task.Run(() =>
             {
                 count++;
@@ -55,10 +68,50 @@
             }));
 
             await sut.TriggerAsync("key1");
-            await sut.TriggerAsync("key2");
-            await sut.TriggerAsync("key3");
+            await sut.TriggerAsync("key1");
+            await sut.TriggerAsync("unk");
 
             count.ShouldBe(2);
+        }
+
+        [Fact]
+        public async Task ScheduleType_Test()
+        {
+            this.container.RegisterInstance(new StubProbe());
+            var sut = this.container.GetInstance<IScheduler>();
+            var counter = this.container.GetInstance<StubProbe>();
+
+            sut.Register<StubScheduledTask>("key1", "* 12    * * * *");
+
+            await sut.TriggerAsync("key1");
+            await sut.TriggerAsync("key1");
+            await sut.TriggerAsync("unk");
+
+            counter.Count.ShouldBe(2);
+        }
+
+        private class StubScheduledTask : ScheduledTask
+        {
+            private readonly StubProbe probe;
+
+            public StubScheduledTask(StubProbe probe)
+            {
+                this.probe = probe;
+            }
+
+            public override async Task ExecuteAsync()
+            {
+                await Task.Run(() =>
+                {
+                    this.probe.Count++;
+                    System.Diagnostics.Trace.WriteLine("hello from task");
+                });
+            }
+        }
+
+        private class StubProbe
+        {
+            public int Count { get; set; }
         }
     }
 }
