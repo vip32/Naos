@@ -11,6 +11,6 @@
 
         bool IsDue(DateTime fromUtc, DateTime toUtc);
 
-        Task ExecuteAsync();
+        Task ExecuteAsync(string[] args = null);
     }
 }

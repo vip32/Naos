@@ -41,10 +41,10 @@
             var sut = this.container.GetInstance<IScheduler>();
             var count = 0;
 
-            sut.Register("key1", "* 12    * * * *", () =>
+            sut.Register("key1", "* 12    * * * *", (a) =>
             {
                 count++;
-                System.Diagnostics.Trace.WriteLine("hello from task");
+                System.Diagnostics.Trace.WriteLine("hello from task " + a);
             });
 
             await sut.TriggerAsync("key1");
@@ -60,11 +60,11 @@
             var sut = this.container.GetInstance<IScheduler>();
             var count = 0;
 
-            sut.Register("key1", "* 12    * * * *", async () =>
+            sut.Register("key1", "* 12    * * * *", async (a) =>
             await Task.Run(() =>
             {
                 count++;
-                System.Diagnostics.Trace.WriteLine("hello from task");
+                System.Diagnostics.Trace.WriteLine("hello from task " + a);
             }));
 
             await sut.TriggerAsync("key1");
@@ -119,12 +119,12 @@
                 this.probe = probe;
             }
 
-            public override async Task ExecuteAsync()
+            public override async Task ExecuteAsync(string[] args = null)
             {
                 await Task.Run(() =>
                 {
                     this.probe.Count++;
-                    System.Diagnostics.Trace.WriteLine("hello from task");
+                    System.Diagnostics.Trace.WriteLine("hello from task " + args);
                     System.Threading.Thread.Sleep(1000);
                 });
             }

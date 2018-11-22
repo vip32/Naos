@@ -8,8 +8,8 @@
 
     public class ScheduledTask : IScheduledTask
     {
-        private readonly Func<Task> func;
-        private readonly Action action;
+        private readonly Func<string[], Task> func;
+        private readonly Action<string[]> action;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ScheduledTask"/> class.
@@ -27,7 +27,7 @@
         /// </summary>
         /// <param name="cron">The cron expression.</param>
         /// <param name="action">The action.</param>
-        public ScheduledTask(string cron, Action action)
+        public ScheduledTask(string cron, Action<string[]> action)
         {
             EnsureArg.IsNotNullOrEmpty(cron, nameof(cron));
             EnsureArg.IsNotNull(action, nameof(action));
@@ -41,7 +41,7 @@
         /// </summary>
         /// <param name="cron">The cron expression.</param>
         /// <param name="func">The func task.</param>
-        public ScheduledTask(string cron, Func<Task> func)
+        public ScheduledTask(string cron, Func<string[], Task> func)
         {
             EnsureArg.IsNotNullOrEmpty(cron, nameof(cron));
             EnsureArg.IsNotNull(func, nameof(func));
@@ -92,25 +92,18 @@
             return occurrences?.Any() == true;
         }
 
-        public virtual async Task ExecuteAsync()
+        public virtual async Task ExecuteAsync(string[] args = null)
         {
             if(this.func != null)
             {
-                await this.func().ConfigureAwait(false);
+                await this.func(args).ConfigureAwait(false);
             }
             else if (this.action != null)
             {
-                this.action();
+                this.action(args);
             }
         }
 
         // TODO: action/func/type containing the thing to invoke when due
-    }
-
-#pragma warning disable SA1402 // File may only contain a single class
-    public abstract class ScheduledTaskImpl : ScheduledTask
-#pragma warning restore SA1402 // File may only contain a single class
-    {
-        public override abstract Task ExecuteAsync();
     }
 }

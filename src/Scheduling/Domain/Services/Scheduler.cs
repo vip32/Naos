@@ -30,33 +30,33 @@
             this.taskFactory = taskFactory; // what to do when null?
         }
 
-        public IScheduler Register(string cron, Action action)
+        public IScheduler Register(string cron, Action<string[]> action)
         {
             return this.Register(new ScheduledTask(cron, action));
         }
 
-        public IScheduler Register(string key, string cron, Action action)
+        public IScheduler Register(string key, string cron, Action<string[]> action)
         {
             return this.Register(key, new ScheduledTask(cron, action));
         }
 
-        public IScheduler Register(string cron, Func<Task> task)
+        public IScheduler Register(string cron, Func<string[], Task> task)
         {
             return this.Register(new ScheduledTask(cron, task));
         }
 
-        public IScheduler Register(string key, string cron, Func<Task> task)
+        public IScheduler Register(string key, string cron, Func<string[], Task> task)
         {
             return this.Register(key, new ScheduledTask(cron, task));
         }
 
-        public IScheduler Register<T>(string cron)
+        public IScheduler Register<T>(string cron, string[] args = null)
             where T : IScheduledTask
         {
             return this.Register<T>(null, cron);
         }
 
-        public IScheduler Register<T>(string key, string cron)
+        public IScheduler Register<T>(string key, string cron, string[] args = null)
             where T : IScheduledTask
         {
             if (!typeof(ScheduledTask).IsAssignableFrom(typeof(T)))
@@ -66,7 +66,7 @@
 
             return this.Register(
                 key,
-                new ScheduledTask(cron, async () => // defer task creation
+                new ScheduledTask(cron, async (a) => // defer task creation
                 {
                     var task = this.taskFactory.Create(typeof(T));
                     if(task == null)
@@ -74,7 +74,7 @@
                         throw new NaosException($"Cannot create instance for type {typeof(T).PrettyName()}.");
                     }
 
-                    await task.ExecuteAsync().ConfigureAwait(false);
+                    await task.ExecuteAsync(a).ConfigureAwait(false);
                 }));
         }
 

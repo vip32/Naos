@@ -9,20 +9,20 @@
 
         IScheduler Register(IScheduledTask scheduledTask);
 
-        IScheduler Register(string cron, Action action);
-
-        IScheduler Register(string cron, Func<Task> task);
-
         IScheduler Register(string key, IScheduledTask scheduledTask);
 
-        IScheduler Register(string key, string cron, Action action);
+        IScheduler Register(string cron, Action<string[]> action);
 
-        IScheduler Register(string key, string cron, Func<Task> task);
+        IScheduler Register(string key, string cron, Action<string[]> action);
 
-        IScheduler Register<T>(string cron)
+        IScheduler Register(string cron, Func<string[], Task> task);
+
+        IScheduler Register(string key, string cron, Func<string[], Task> task);
+
+        IScheduler Register<T>(string cron, string[] args = null)
             where T : IScheduledTask;
 
-        IScheduler Register<T>(string key, string cron)
+        IScheduler Register<T>(string key, string cron, string[] args = null)
             where T : IScheduledTask;
 
         Task RunAsync();
