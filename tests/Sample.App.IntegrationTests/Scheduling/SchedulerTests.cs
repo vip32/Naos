@@ -91,6 +91,25 @@
             probe.Count.ShouldBe(2);
         }
 
+        [Fact]
+        public async Task ScheduleTypeOverlap_Test()
+        {
+            this.container.RegisterInstance(new StubProbe());
+            var probe = this.container.GetInstance<StubProbe>();
+            var sut = this.container.GetInstance<IScheduler>();
+
+            sut.Register<StubScheduledTask>("key1", "* 12    * * * *");
+
+            // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
+            var t1 = sut.TriggerAsync("key1");
+            var t2 = sut.TriggerAsync("key1"); // skipped, due to overlap
+            var t3 = sut.TriggerAsync("unk");
+
+            await Task.WhenAll(new[] { t1, t2, t3});
+
+            probe.Count.ShouldBe(1);
+        }
+
         private class StubScheduledTask : ScheduledTask
         {
             private readonly StubProbe probe;
@@ -106,6 +125,7 @@
                 {
                     this.probe.Count++;
                     System.Diagnostics.Trace.WriteLine("hello from task");
+                    System.Threading.Thread.Sleep(1000);
                 });
             }
         }
