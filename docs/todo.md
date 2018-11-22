@@ -16,6 +16,7 @@ operations: serilog app insight https://github.com/serilog/serilog-sinks-applica
 idea: configuration validation https://www.stevejgordon.co.uk/asp-net-core-2-2-options-validation
 graphql? https://fullstackmark.com/post/17/building-a-graphql-api-with-aspnet-core-2-and-entity-framework-core
 
+
 messaging: message broker based on rabitmq (for local usage)
 messaging: singalr based provider?
 
@@ -25,7 +26,8 @@ repo: ef dynamic schema support https://weblogs.thinktecture.com/pawel/2018/06/e
 repo: ef sqlite https://docs.microsoft.com/en-us/ef/core/get-started/netcore/new-db-sqlite
 
 service: task scheduler (coravel) https://github.com/jamesmh/coravel/blob/master/Docs/Scheduler.md
-service: service registry https://www.codeproject.com/Articles/1248381/Microservices-Service-Discovery
+service: service registry (consul) https://www.codeproject.com/Articles/1248381/Microservices-Service-Discovery
+                                   http://michaco.net/blog/ServiceDiscoveryAndHealthChecksInAspNetCoreWithConsul
 
 operations: log analytics dashboard (operations) https://blogs.technet.microsoft.com/livedevopsinjapan/2017/08/23/log-analytics-log-search-rest-api-for-c/   
             https://techcommunity.microsoft.com/t5/Azure-Log-Analytics/Authenticate-with-client-credentials-Log-Analytics/td-p/104996  
