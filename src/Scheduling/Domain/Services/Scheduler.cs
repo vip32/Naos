@@ -11,7 +11,7 @@
 
     public class Scheduler : IScheduler
     {
-        private readonly Dictionary<string, ScheduledTask> tasks = new Dictionary<string, ScheduledTask>();
+        private readonly Dictionary<string, IScheduledTask> tasks = new Dictionary<string, IScheduledTask>();
         private readonly ILogger<Scheduler> logger;
         private readonly IMutex mutex;
         private readonly IScheduledTaskFactory taskFactory;
@@ -53,31 +53,37 @@
         public IScheduler Register<T>(string cron)
             where T : IScheduledTask
         {
-            if (!typeof(IScheduledTask).IsAssignableFrom(typeof(T)))
-            {
-                throw new NaosException("Task type to register must implement IScheduledTask.");
-            }
-
-            return this.Register(new ScheduledTask(cron, typeof(T)));
+            return this.Register<T>(null, cron);
         }
 
         public IScheduler Register<T>(string key, string cron)
             where T : IScheduledTask
         {
-            if (!typeof(IScheduledTask).IsAssignableFrom(typeof(T)))
+            if (!typeof(ScheduledTask).IsAssignableFrom(typeof(T)))
             {
                 throw new NaosException("Task type to register must implement IScheduledTask.");
             }
 
-            return this.Register(key, new ScheduledTask(cron, typeof(T)));
+            return this.Register(
+                key,
+                new ScheduledTask(cron, async () => // defer task creation
+                {
+                    var task = this.taskFactory.Create(typeof(T));
+                    if(task == null)
+                    {
+                        throw new NaosException($"Cannot create instance for type {typeof(T).PrettyName()}.");
+                    }
+
+                    await task.ExecuteAsync().ConfigureAwait(false);
+                }));
         }
 
-        public IScheduler Register(ScheduledTask scheduledTask)
+        public IScheduler Register(IScheduledTask scheduledTask)
         {
             return this.Register(null, scheduledTask);
         }
 
-        public IScheduler Register(string key, ScheduledTask scheduledTask)
+        public IScheduler Register(string key, IScheduledTask scheduledTask)
         {
             if (scheduledTask != null)
             {
@@ -99,6 +105,15 @@
             return this;
         }
 
+        public async Task TriggerAsync(string key)
+        {
+            var task = this.tasks.FirstOrDefault(t => t.Key.SafeEquals(key));
+            if (task.Value != null)
+            {
+                await this.ExecuteTaskAsync(key, task.Value).ConfigureAwait(false);
+            }
+        }
+
         public IScheduler OnError(Action<Exception> errorHandler)
         {
             this.errorHandler = errorHandler;
@@ -113,62 +128,65 @@
         public async Task RunAsync(DateTime fromUtc)
         {
             Interlocked.Increment(ref this.activeCount);
-            await this.ExecuteTasks(fromUtc);
+            await this.ExecuteTasksAsync(fromUtc).ConfigureAwait(false);
             Interlocked.Decrement(ref this.activeCount);
         }
 
-        private async Task ExecuteTasks(DateTime fromUtc)
+        private async Task ExecuteTasksAsync(DateTime fromUtc)
         {
             var activeTasks = this.tasks.Where(t => t.Value?.IsDue(fromUtc) == true).Select(t =>
             {
                 return Task.Run(async () =>
                 {
-                    await this.ExecuteTask(t.Key, t.Value);
+                    await this.ExecuteTaskAsync(t.Key, t.Value);
                 });
             });
 
             await Task.WhenAll(activeTasks); // really wait for completion?
         }
 
-        private async Task ExecuteTask(string key, ScheduledTask task)
+        private async Task ExecuteTaskAsync(string key, IScheduledTask task)
         {
-            try
+            if (!key.IsNullOrEmpty() && task != null)
             {
-                async Task Execute()
+                try
                 {
-                    // TODO: publish domain event (task started)
-                    this.logger.LogInformation($"scheduled task started (key={key})");
-                    await task.ExecuteAsync();
-                    this.logger.LogInformation($"scheduled task finished (key={key})");
-                    // TODO: publish domain event (task finished)
-                }
-
-                //if (task.PreventOverlap)
-                //{
-                if (this.mutex.TryGetLock(key, 1440))
-                {
-                    try
+                    async Task Execute()
                     {
-                        await Execute();
+                        // TODO: publish domain event (task started)
+                        this.logger.LogInformation($"scheduled task started (key={key}, type={task.GetType().PrettyName()})");
+                        await task.ExecuteAsync().ConfigureAwait(false);
+                        this.logger.LogInformation($"scheduled task finished (key={key}, type={task.GetType().PrettyName()})");
+                        // TODO: publish domain event (task finished)
                     }
-                    finally
+
+                    //if (task.PreventOverlap)
+                    //{
+                    if (this.mutex.TryGetLock(key, 1440))
                     {
-                        this.mutex.ReleaseLock(key);
+                        try
+                        {
+                            await Execute();
+                        }
+                        finally
+                        {
+                            this.mutex.ReleaseLock(key);
+                        }
                     }
+                    else
+                    {
+                        this.logger.LogWarning($"scheduled task already executing (key={key}, type={task.GetType().PrettyName()})");
+                    }
+
+                    //}
                 }
-                else
+                catch (Exception ex)
                 {
-                    this.logger.LogWarning($"scheduled task already executing (key={key})");
+                    // TODO: publish domain event (task failed)
+                    this.logger.LogError($"scheduled task failed (key={key}), type={task.GetType().PrettyName()})");
+
+                    this.errorHandler?.Invoke(ex);
                 }
-
-                //}
-            }
-            catch (Exception ex)
-            {
-                // TODO: publish domain event (task failed)
-                this.logger.LogError($"scheduled task failed (key={key})");
-
-                this.errorHandler?.Invoke(ex);
             }
         }
     }
