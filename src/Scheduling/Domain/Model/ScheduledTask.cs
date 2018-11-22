@@ -26,7 +26,7 @@
             span = span ?? TimeSpan.FromMinutes(1);
 
             var expression = CronExpression.Parse(this.cron, CronFormat.IncludeSeconds);
-            var occurrence = expression.GetNextOccurrence(fromUtc);
+            var occurrence = expression.GetNextOccurrence(fromUtc, true);
 
             if(!occurrence.HasValue)
             {
@@ -43,7 +43,7 @@
             EnsureArg.IsTrue(fromUtc < toUtc);
 
             var expression = CronExpression.Parse(this.cron, CronFormat.IncludeSeconds);
-            var occurrences = expression.GetOccurrences(fromUtc, toUtc);
+            var occurrences = expression.GetOccurrences(fromUtc, toUtc, true);
 
             return occurrences?.Any() == true;
         }
