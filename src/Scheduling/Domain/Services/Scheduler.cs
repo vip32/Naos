@@ -111,11 +111,11 @@
         public async Task RunAsync(DateTime fromUtc)
         {
             Interlocked.Increment(ref this.activeCount);
-            await this.RunTasks(fromUtc);
+            await this.ExecuteTasks(fromUtc);
             Interlocked.Decrement(ref this.activeCount);
         }
 
-        private async Task RunTasks(DateTime fromUtc)
+        private async Task ExecuteTasks(DateTime fromUtc)
         {
             var activeTasks = this.tasks.Where(t => t.Value?.IsDue(fromUtc) == true).Select(t =>
             {
