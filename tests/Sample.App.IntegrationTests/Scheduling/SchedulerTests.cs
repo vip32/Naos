@@ -78,8 +78,8 @@
         public async Task ScheduleType_Test()
         {
             this.container.RegisterInstance(new StubProbe());
-            var sut = this.container.GetInstance<IScheduler>();
             var probe = this.container.GetInstance<StubProbe>();
+            var sut = this.container.GetInstance<IScheduler>();
 
             sut.Register<StubScheduledTask>("key1", "* 12    * * * *");
 
