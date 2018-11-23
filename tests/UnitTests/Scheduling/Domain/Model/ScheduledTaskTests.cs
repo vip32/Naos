@@ -1,56 +1,89 @@
 ﻿namespace Naos.Core.UnitTests.Scheduling.Domain.Model
 {
-    using System;
-    using System.Globalization;
+    using System.Threading.Tasks;
     using Naos.Core.Scheduling.Domain;
     using Shouldly;
     using Xunit;
 
     public class ScheduledTaskTests
     {
-        [Theory]
-        [InlineData("* 12    * * * *", "15:12", true)]
-        [InlineData("* 12    * * * *", "15:12:59", true)]
-        [InlineData("* 12    * * * *", "15:13", false)]
-        [InlineData("* 12    * * * *", "15:05", false)]
-        [InlineData("* 12    * * * *", "15:05:45", false)] // more crons https://github.com/HangfireIO/Cronos/blob/master/tests/Cronos.Tests/CronExpressionFacts.cs
-        public void IsDueInMinute_Test(string cron, string fromUtcString, bool expected)
+        [Fact]
+        public async Task ActionExecuteAsync_Test()
         {
-            var sut = new ScheduledTask(cron);
-            var fromUtc = GetInstant(fromUtcString);
+            // arrang
+            var count = 0;
+            var sut = new ScheduledTask((a) =>
+            {
+                count++;
+                System.Diagnostics.Trace.WriteLine("hello from task " + a);
+            });
 
-            sut.IsDue(fromUtc.UtcDateTime, TimeSpan.FromMinutes(1)).ShouldBe(expected);
+            // act
+            await sut.ExecuteAsync(new[] { "a" }).ConfigureAwait(false);
+            await sut.ExecuteAsync(new[] { "a" }).ConfigureAwait(false);
+
+            // assert
+            count.ShouldBe(2);
         }
 
-        [Theory]
-        [InlineData("* * 15   * * *", "15:00", true)]
-        [InlineData("* * 15   * * *", "15:59", true)]
-        [InlineData("* * 15   * * *", "16:00", false)]
-        [InlineData("* * 15   * * *", "16:05", false)]
-        public void IsDueInHour_Test(string cron, string fromUtcString, bool expected)
+        [Fact]
+        public async Task FuncExecuteAsync_Test()
         {
-            var sut = new ScheduledTask(cron);
-            var fromUtc = GetInstant(fromUtcString);
-
-            sut.IsDue(fromUtc.UtcDateTime, TimeSpan.FromHours(1)).ShouldBe(expected);
-        }
-
-        private static DateTimeOffset GetInstant(string dateTimeOffsetString)
-        {
-            dateTimeOffsetString = dateTimeOffsetString.Trim();
-
-            return DateTimeOffset.ParseExact(
-                dateTimeOffsetString,
-                new[]
+            // arrang
+            var count = 0;
+            var sut = new ScheduledTask(async (a) =>
+                await Task.Run(() =>
                 {
-                    "HH:mm:ss",
-                    "HH:mm",
-                    "yyyy-MM-dd HH:mm:ss",
-                    "yyyy-MM-dd HH:mm",
-                    "yyyy-MM-dd"
-                },
-                CultureInfo.InvariantCulture,
-                DateTimeStyles.AssumeUniversal);
+                    count++;
+                    System.Diagnostics.Trace.WriteLine("hello from task " + a);
+                }));
+
+            // act
+            await sut.ExecuteAsync(new[] { "a" }).ConfigureAwait(false);
+            await sut.ExecuteAsync(new[] { "a" }).ConfigureAwait(false);
+
+            // assert
+            count.ShouldBe(2);
+        }
+
+        [Fact]
+        public async Task TypeExecuteAsync_Test()
+        {
+            // arrang
+            var probe = new StubProbe();
+            var sut = new StubScheduledTask(probe);
+
+            // act
+            await sut.ExecuteAsync(new[] { "a" }).ConfigureAwait(false);
+            await sut.ExecuteAsync(new[] { "a" }).ConfigureAwait(false);
+
+            // assert
+            probe.Count.ShouldBe(2);
+        }
+
+        private class StubScheduledTask : ScheduledTask
+        {
+            private readonly StubProbe probe;
+
+            public StubScheduledTask(StubProbe probe)
+            {
+                this.probe = probe;
+            }
+
+            public override async Task ExecuteAsync(string[] args = null)
+            {
+                await Task.Run(() =>
+                {
+                    this.probe.Count++;
+                    System.Diagnostics.Trace.WriteLine("hello from task " + args);
+                    System.Threading.Thread.Sleep(1000);
+                });
+            }
+        }
+
+        private class StubProbe
+        {
+            public int Count { get; set; }
         }
     }
 }

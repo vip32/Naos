@@ -31,7 +31,7 @@
             }
         }
 
-        public bool TryGetLock(string key, int timeoutMinutes)
+        public bool TryAcquireLock(string key, int timeoutMinutes = 1440)
         {
             lock (this.@lock)
             {
@@ -62,18 +62,20 @@
 
         private bool CreateLock(string key, int timeoutMinutes)
         {
-            if (this.items.TryGetValue(key, out var mutex))
+            if (this.items.TryGetValue(key, out var item))
             {
-                mutex.Locked = true;
-                mutex.ExpireDate = this.moment.AddMinutes(timeoutMinutes);
+                item.Locked = true;
+                item.ExpireDate = this.moment.AddMinutes(timeoutMinutes);
             }
             else
             {
-                this.items.Add(key, new MutexItem
-                {
-                    Locked = true,
-                    ExpireDate = this.moment.AddMinutes(timeoutMinutes)
-                });
+                this.items.Add(
+                    key,
+                    new MutexItem
+                    {
+                        Locked = true,
+                        ExpireDate = this.moment.AddMinutes(timeoutMinutes)
+                    });
             }
 
             return true;

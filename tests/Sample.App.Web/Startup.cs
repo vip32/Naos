@@ -9,10 +9,10 @@
     using Microsoft.AspNetCore.Mvc.ViewComponents;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
     using Naos.Core.App.Commands;
     using Naos.Core.App.Configuration;
     using Naos.Core.App.Operations.Serilog;
-    using Naos.Core.App.Operations.Web.Controllers;
     using Naos.Core.App.Web;
     using Naos.Core.Common.Dependency.SimpleInjector;
     using Naos.Core.Domain;
@@ -20,6 +20,9 @@
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.Infrastructure.Azure;
     using Naos.Core.Operations.Infrastructure.Azure.LogAnalytics;
+    using Naos.Core.Scheduling;
+    using Naos.Core.Scheduling.App;
+    using Naos.Core.Scheduling.Domain;
     using Naos.Sample.Countries;
     using Naos.Sample.Customers;
     using Naos.Sample.UserAccounts;
@@ -81,6 +84,10 @@
             services.AddSingleton<IViewComponentActivator>(new SimpleInjectorViewComponentActivator(this.container));
             services.EnableSimpleInjectorCrossWiring(this.container);
             services.UseSimpleInjectorAspNetRequestScoping(this.container);
+            // TODO: temporary solution to get the scheduler hosted service to run (with its dependencies)
+            // https://stackoverflow.com/questions/50394666/injecting-simple-injector-components-into-ihostedservice-with-asp-net-core-2-0#
+            services.AddSingleton<Microsoft.Extensions.Hosting.IHostedService>(sp =>
+                new SchedulerHostedService(sp.GetService<ILogger<SchedulerHostedService>>(), container));
         }
 
         private void InitializeContainer(IApplicationBuilder app)
@@ -98,7 +105,8 @@
                 .AddNaosMessaging(
                     this.Configuration,
                     AppDomain.CurrentDomain.FriendlyName,
-                    assemblies: new[] { typeof(IMessageBroker).Assembly, typeof(Customers.Domain.Customer).Assembly });
+                    assemblies: new[] { typeof(IMessageBroker).Assembly, typeof(Customers.Domain.Customer).Assembly })
+                .AddNaosScheduling(this.Configuration);
 
             // naos sample registrations
             this.container
@@ -108,6 +116,10 @@
 
             // Allow Simple Injector to resolve services from ASP.NET Core.
             this.container.AutoCrossWireAspNetComponents(app);
+
+            var scheduler = this.container.GetService<IScheduler>();
+            scheduler.Register("key1", Cron.Minutely(), (a) => System.Diagnostics.Trace.WriteLine("+++ hello from task1 +++"));
+            scheduler.Register("key2", Cron.MinuteInterval(2), (a) => System.Diagnostics.Trace.WriteLine("+++ hello from task2 +++"));
         }
     }
 }

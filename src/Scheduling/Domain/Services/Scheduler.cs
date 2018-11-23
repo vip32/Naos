@@ -11,11 +11,11 @@
 
     public class Scheduler : IScheduler
     {
-        private readonly Dictionary<string, IScheduledTask> tasks = new Dictionary<string, IScheduledTask>();
+        private readonly Dictionary<Registration, IScheduledTask> registrations = new Dictionary<Registration, IScheduledTask>();
         private readonly ILogger<Scheduler> logger;
         private readonly IMutex mutex;
         private readonly IScheduledTaskFactory taskFactory;
-        private int activeCount = 0;
+        private int activeCount;
         private Action<Exception> errorHandler;
 
         // register tasks
@@ -30,24 +30,26 @@
             this.taskFactory = taskFactory; // what to do when null?
         }
 
+        public bool IsRunning => this.activeCount > 0;
+
         public IScheduler Register(string cron, Action<string[]> action)
         {
-            return this.Register(new ScheduledTask(cron, action));
+            return this.Register(new Registration(null, cron), new ScheduledTask(action));
         }
 
         public IScheduler Register(string key, string cron, Action<string[]> action)
         {
-            return this.Register(key, new ScheduledTask(cron, action));
+            return this.Register(new Registration(key, cron), new ScheduledTask(action));
         }
 
-        public IScheduler Register(string cron, Func<string[], Task> task)
+        public IScheduler Register(string cron, Func<string[], Task> func)
         {
-            return this.Register(new ScheduledTask(cron, task));
+            return this.Register(new Registration(null, cron), new ScheduledTask(func));
         }
 
-        public IScheduler Register(string key, string cron, Func<string[], Task> task)
+        public IScheduler Register(string key, string cron, Func<string[], Task> func)
         {
-            return this.Register(key, new ScheduledTask(cron, task));
+            return this.Register(new Registration(key, cron), new ScheduledTask(func));
         }
 
         public IScheduler Register<T>(string cron, string[] args = null)
@@ -65,8 +67,8 @@
             }
 
             return this.Register(
-                key,
-                new ScheduledTask(cron, async (a) => // defer task creation
+                new Registration(key, cron),
+                new ScheduledTask(async (a) => // defer task creation
                 {
                     var task = this.taskFactory.Create(typeof(T));
                     if(task == null)
@@ -78,18 +80,16 @@
                 }));
         }
 
-        public IScheduler Register(IScheduledTask scheduledTask)
+        public IScheduler Register(Registration registration, IScheduledTask task)
         {
-            return this.Register(null, scheduledTask);
-        }
+            EnsureArg.IsNotNull(registration, nameof(registration));
+            EnsureArg.IsNotNullOrEmpty(registration.Cron, nameof(registration.Cron));
 
-        public IScheduler Register(string key, IScheduledTask scheduledTask)
-        {
-            if (scheduledTask != null)
+            if (task != null)
             {
-                key = key ?? HashAlgorithm.ComputeHash(scheduledTask);
-                this.logger.LogInformation($"register scheduled task (key={key})");
-                this.tasks.AddOrUpdate(key, scheduledTask);
+                registration.Key = registration.Key ?? HashAlgorithm.ComputeHash(task);
+                this.logger.LogInformation($"register scheduled task (key={registration.Key}, cron={registration.Cron})");
+                this.registrations.Add(registration, task); // TODO: remove existing by key
             }
 
             return this;
@@ -97,21 +97,17 @@
 
         public IScheduler UnRegister(string key)
         {
-            if (!key.IsNullOrEmpty() && this.tasks.ContainsKey(key))
+            return this.UnRegister(this.GetRegistationByKey(key));
+        }
+
+        public IScheduler UnRegister(Registration registration)
+        {
+            if (registration != null)
             {
-                this.tasks.Remove(key);
+                this.registrations.Remove(registration);
             }
 
             return this;
-        }
-
-        public async Task TriggerAsync(string key)
-        {
-            var task = this.tasks.FirstOrDefault(t => t.Key.SafeEquals(key));
-            if (task.Value != null)
-            {
-                await this.ExecuteTaskAsync(key, task.Value).ConfigureAwait(false);
-            }
         }
 
         public IScheduler OnError(Action<Exception> errorHandler)
@@ -120,31 +116,49 @@
             return this;
         }
 
+        public async Task TriggerAsync(string key)
+        {
+            var task = this.GetTaskByKey(key);
+            if (task != null)
+            {
+                await this.ExecuteTaskAsync(key, task).ConfigureAwait(false);
+            }
+        }
+
         public async Task RunAsync()
         {
             await this.RunAsync(DateTime.UtcNow);
         }
 
-        public async Task RunAsync(DateTime fromUtc)
+        public async Task RunAsync(DateTime moment)
         {
+            EnsureArg.IsTrue(moment.Kind == DateTimeKind.Utc);
+
             Interlocked.Increment(ref this.activeCount);
-            await this.ExecuteTasksAsync(fromUtc).ConfigureAwait(false);
+            this.logger.LogInformation($"scheduler run started (activeCount=#{this.activeCount}, moment={moment.ToString("o")})");
+            await this.ExecuteTasksAsync(moment).ConfigureAwait(false);
             Interlocked.Decrement(ref this.activeCount);
+            this.logger.LogInformation($"scheduler run finished (activeCount=#{this.activeCount})");
         }
 
-        private async Task ExecuteTasksAsync(DateTime fromUtc)
+private async Task ExecuteTasksAsync(DateTime moment)
         {
-            var activeTasks = this.tasks.Where(t => t.Value?.IsDue(fromUtc) == true).Select(t =>
+            var dueTasks = this.registrations.Where(t => t.Key?.IsDue(moment) == true).Select(t =>
             {
                 return Task.Run(() =>
                 {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    this.ExecuteTaskAsync(t.Key, t.Value); // dont use await for better parallism
+                    this.ExecuteTaskAsync(t.Key.Key, t.Value); // dont use await for better parallism
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 });
-            });
+            }).ToList();
 
-            await Task.WhenAll(activeTasks).ConfigureAwait(false); // really wait for completion?
+            if (dueTasks.IsNullOrEmpty())
+            {
+                this.logger.LogInformation("scheduler run found no due tasks");
+            }
+
+            await Task.WhenAll(dueTasks).ConfigureAwait(false); // really wait for completion (await)?
         }
 
         private async Task ExecuteTaskAsync(string key, IScheduledTask task)
@@ -164,7 +178,7 @@
 
                     //if (task.PreventOverlap)
                     //{
-                    if (this.mutex.TryGetLock(key, 1440))
+                    if (this.mutex.TryAcquireLock(key))
                     {
                         try
                         {
@@ -190,6 +204,16 @@
                     this.errorHandler?.Invoke(ex);
                 }
             }
+        }
+
+        private Registration GetRegistationByKey(string key)
+        {
+            return this.registrations.Where(r => r.Key.Key.SafeEquals(key)).Select(r => r.Key).FirstOrDefault();
+        }
+
+        private IScheduledTask GetTaskByKey(string key)
+        {
+            return this.registrations.Where(r => r.Key.Key.SafeEquals(key)).Select(r => r.Value).FirstOrDefault();
         }
     }
 }

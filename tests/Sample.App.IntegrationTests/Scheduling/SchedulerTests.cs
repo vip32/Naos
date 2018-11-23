@@ -41,7 +41,7 @@
             var sut = this.container.GetInstance<IScheduler>();
             var count = 0;
 
-            sut.Register("key1", "* 12    * * * *", (a) =>
+            sut.Register("key1", "* 12 * * * *", (a) =>
             {
                 count++;
                 System.Diagnostics.Trace.WriteLine("hello from task " + a);
@@ -60,12 +60,12 @@
             var sut = this.container.GetInstance<IScheduler>();
             var count = 0;
 
-            sut.Register("key1", "* 12    * * * *", async (a) =>
-            await Task.Run(() =>
-            {
-                count++;
-                System.Diagnostics.Trace.WriteLine("hello from task " + a);
-            }));
+            sut.Register("key1", "* 12 * * * *", async (a) =>
+                await Task.Run(() =>
+                {
+                    count++;
+                    System.Diagnostics.Trace.WriteLine("hello from task " + a);
+                }));
 
             await sut.TriggerAsync("key1");
             await sut.TriggerAsync("key1");
@@ -81,7 +81,7 @@
             var probe = this.container.GetInstance<StubProbe>();
             var sut = this.container.GetInstance<IScheduler>();
 
-            sut.Register<StubScheduledTask>("key1", "* 12    * * * *");
+            sut.Register<StubScheduledTask>("key1", "* 12 * * * *");
 
             // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
             await sut.TriggerAsync("key1");
@@ -98,14 +98,14 @@
             var probe = this.container.GetInstance<StubProbe>();
             var sut = this.container.GetInstance<IScheduler>();
 
-            sut.Register<StubScheduledTask>("key1", "* 12    * * * *");
+            sut.Register<StubScheduledTask>("key1", "* 12 * * * *");
 
             // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
             var t1 = sut.TriggerAsync("key1");
             var t2 = sut.TriggerAsync("key1"); // skipped, due to overlap
             var t3 = sut.TriggerAsync("unk");
 
-            await Task.WhenAll(new[] { t1, t2, t3});
+            await Task.WhenAll(new[] { t1, t2, t3 });
 
             probe.Count.ShouldBe(1);
         }

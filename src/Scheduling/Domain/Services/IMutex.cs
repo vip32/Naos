@@ -4,6 +4,6 @@
     {
         void ReleaseLock(string key);
 
-        bool TryGetLock(string key, int timeoutMinutes);
+        bool TryAcquireLock(string key, int timeoutMinutes = 1440);
     }
 }
