@@ -92,9 +92,10 @@
 
                     var callExpression = task.Body as MethodCallExpression;
                     var method = callExpression.Method;
-                    var args = callExpression.Arguments.Select(a => (a as ConstantExpression)?.Value);
+                    var args = callExpression.Arguments.Select(this.ReduceToConstant).ToArray();
+                    //var args = callExpression.Arguments.Select(a => (a as ConstantExpression)?.Value);
 
-                    method.Invoke(job, args.ToArray()); // this.GetExpressionValues(callExpression.Arguments)
+                    method.Invoke(job, args); // this.GetExpressionValues(callExpression.Arguments)
                 }));
         }
 
@@ -251,6 +252,14 @@ private async Task ExecuteJobsAsync(DateTime moment)
         private JobRegistration GetRegistationByKey(string key)
         {
             return this.registrations.Where(r => r.Key.Key.SafeEquals(key)).Select(r => r.Key).FirstOrDefault();
+        }
+
+        private object ReduceToConstant(Expression expression)
+        {
+            var objectMember = Expression.Convert(expression, typeof(object));
+            var getterLambda = Expression.Lambda<Func<object>>(objectMember);
+            var getter = getterLambda.Compile();
+            return getter();
         }
     }
 }

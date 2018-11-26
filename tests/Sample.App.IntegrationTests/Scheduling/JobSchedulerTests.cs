@@ -185,14 +185,16 @@
             var probe = this.container.GetInstance<StubProbe>();
             var sut = this.container.GetInstance<IJobScheduler>();
 
-            sut.Register<StubJob>("key1", "* 12 * * * *", (t) => t.CustomExecuteAsync("arg1"));
+            sut.Register<StubJob>("key1", "* 12 * * * *", (t) => t.CustomExecuteAsync("arg1", probe));
+            sut.Register<StubJob>("key2", "* 12 * * * *", (t) => t.CustomExecuteAsync("arg2", probe));
 
             // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
             var t1 = sut.TriggerAsync("key1");
+            var t2 = sut.TriggerAsync("key2");
 
-            await Task.WhenAll(new[] { t1 });
+            await Task.WhenAll(new[] { t1, t2 });
 
-            probe.Count.ShouldBe(0);
+            probe.Count.ShouldBe(2);
         }
 
         private class StubJob : Job
@@ -227,10 +229,11 @@
                 }, token);
             }
 
-            public async Task CustomExecuteAsync(string arg1)
+            public async Task CustomExecuteAsync(string arg1, StubProbe probe)
             {
                 await Task.Run(() =>
                 {
+                    probe.Count++;
                     System.Diagnostics.Trace.WriteLine($"+++ hello from custom job {DateTime.UtcNow.ToString("o")} " + arg1);
                 });
             }
