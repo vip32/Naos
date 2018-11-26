@@ -9,16 +9,16 @@
     using Naos.Core.Scheduling.Domain;
     using SimpleInjector;
 
-    public class SchedulerHostedService : IHostedService, IDisposable
+    public class JobSchedulerHostedService : IHostedService, IDisposable
     {
-        private readonly ILogger<SchedulerHostedService> logger;
+        private readonly ILogger<JobSchedulerHostedService> logger;
         private readonly IJobScheduler scheduler;
         private bool enabled = true;
 
         // TODO: start/stop from outside https://stackoverflow.com/questions/51469881/asp-net-core-ihostedservice-manual-start-stop-pause
         private Timer timer;
 
-        public SchedulerHostedService(ILogger<SchedulerHostedService> logger, Container container)
+        public JobSchedulerHostedService(ILogger<JobSchedulerHostedService> logger, Container container)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(container, nameof(container));
@@ -63,7 +63,7 @@
         {
             if (this.enabled)
             {
-                await this.scheduler.RunAsync().ConfigureAwait(false);
+                await this.scheduler.RunAsync(CancellationToken.None).ConfigureAwait(false); // TODO: pass cancellationtoken
             }
         }
     }

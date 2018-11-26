@@ -1,16 +1,18 @@
 ﻿namespace Naos.Core.UnitTests.Scheduling.Domain.Model
 {
+    using System;
+    using System.Threading;
     using System.Threading.Tasks;
     using Naos.Core.Scheduling.Domain;
     using Shouldly;
     using Xunit;
 
-    public class ScheduledTaskTests
+    public class JobTests
     {
         [Fact]
         public async Task ActionExecuteAsync_Test()
         {
-            // arrang
+            // arrange
             var count = 0;
             var sut = new Job((a) =>
             {
@@ -29,7 +31,7 @@
         [Fact]
         public async Task FuncExecuteAsync_Test()
         {
-            // arrang
+            // arrange
             var count = 0;
             var sut = new Job(async (a) =>
                 await Task.Run(() =>
@@ -49,9 +51,9 @@
         [Fact]
         public async Task TypeExecuteAsync_Test()
         {
-            // arrang
+            // arrange
             var probe = new StubProbe();
-            var sut = new StubScheduledTask(probe);
+            var sut = new StubJob(probe);
 
             // act
             await sut.ExecuteAsync(new[] { "a" }).ConfigureAwait(false);
@@ -61,23 +63,61 @@
             probe.Count.ShouldBe(2);
         }
 
-        private class StubScheduledTask : Job
+        [Fact]
+        public async Task TypeExecuteWithCancellationAsync_Test()
+        {
+            // arrange
+            var probe = new StubProbe();
+            var cts = new CancellationTokenSource();
+            var sut = new StubJob(probe);
+            bool thrown = false;
+
+            // act
+            try
+            {
+                var t1 = sut.ExecuteAsync(cts.Token, new[] { "a" });
+                cts.CancelAfter(TimeSpan.FromMilliseconds(250));
+
+                await Task.WhenAll(new[] { t1 });
+                //await ShouldThrowAsyncExtensions.ShouldThrowAsync<TaskCanceledException>(() => sut.ExecuteAsync(cancellationToken, new[] { "a" }));
+            }
+            catch(OperationCanceledException)
+            {
+                thrown = true;
+            }
+
+            // assert
+            probe.Count.ShouldBe(1);
+            thrown.ShouldBe(true);
+        }
+
+        private class StubJob : Job
         {
             private readonly StubProbe probe;
 
-            public StubScheduledTask(StubProbe probe)
+            public StubJob(StubProbe probe)
             {
                 this.probe = probe;
             }
 
-            public override async Task ExecuteAsync(string[] args = null)
+            public override async Task ExecuteAsync(CancellationToken token, string[] args = null)
             {
                 await Task.Run(() =>
                 {
                     this.probe.Count++;
-                    System.Diagnostics.Trace.WriteLine("hello from task " + args);
-                    System.Threading.Thread.Sleep(1000);
-                });
+                    System.Diagnostics.Trace.WriteLine("hello from job " + args);
+
+                    for (int i = 0; i < 5; i++) // fake some long running process, can be cancelled with token
+                    {
+                        token.ThrowIfCancellationRequested();
+                        //if (cancellationToken.IsCancellationRequested)
+                        //{
+                        //    Task.FromCanceled(cancellationToken);
+                        //}
+
+                        Thread.Sleep(200);
+                    }
+                }, token).ConfigureAwait(false);
             }
         }
 

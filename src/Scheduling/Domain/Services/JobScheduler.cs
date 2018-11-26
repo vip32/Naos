@@ -65,7 +65,7 @@
 
             return this.Register(
                 new JobRegistration(key, cron),
-                new Job(async (a) => // defer job creation
+                new Job(async (t, a) => // defer job creation
                 {
                     var job = this.jobFactory.Create(typeof(T));
                     if(job == null)
@@ -73,7 +73,7 @@
                         throw new NaosException($"Cannot create job instance for type {typeof(T).PrettyName()}.");
                     }
 
-                    await job.ExecuteAsync(a).ConfigureAwait(false);
+                    await job.ExecuteAsync(t, a).ConfigureAwait(false);
                 }));
         }
 
@@ -115,10 +115,15 @@
 
         public async Task TriggerAsync(string key)
         {
+            await this.TriggerAsync(key, CancellationToken.None);
+        }
+
+        public async Task TriggerAsync(string key, CancellationToken token)
+        {
             var item = this.registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(key));
             if (item.Key != null)
             {
-                await this.ExecuteJobAsync(item.Key, item.Value).ConfigureAwait(false);
+                await this.ExecuteJobAsync(item.Key, item.Value, token).ConfigureAwait(false);
             }
             else
             {
@@ -126,43 +131,43 @@
             }
         }
 
-        public async Task RunAsync()
+        public async Task RunAsync(CancellationToken token)
         {
-            await this.RunAsync(DateTime.UtcNow);
+            await this.RunAsync(DateTime.UtcNow, token);
         }
 
-        public async Task RunAsync(DateTime moment)
+        public async Task RunAsync(DateTime moment, CancellationToken token)
         {
             EnsureArg.IsTrue(moment.Kind == DateTimeKind.Utc);
 
             Interlocked.Increment(ref this.activeCount);
             this.logger.LogInformation($"job scheduler run started (activeCount=#{this.activeCount}, moment={moment.ToString("o")})");
-            await this.ExecuteJobsAsync(moment).ConfigureAwait(false);
+            await this.ExecuteJobsAsync(moment, token).ConfigureAwait(false);
             Interlocked.Decrement(ref this.activeCount);
             this.logger.LogInformation($"job scheduler run finished (activeCount=#{this.activeCount})");
         }
 
-private async Task ExecuteJobsAsync(DateTime moment)
+private async Task ExecuteJobsAsync(DateTime moment, CancellationToken token)
         {
             var dueJobs = this.registrations.Where(t => t.Key?.IsDue(moment) == true).Select(t =>
             {
                 return Task.Run(() =>
                 {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    this.ExecuteJobAsync(t.Key, t.Value); // dont use await for better parallism
+                    this.ExecuteJobAsync(t.Key, t.Value, token); // dont use await for better parallism
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                });
+                }, token);
             }).ToList();
 
             if (dueJobs.IsNullOrEmpty())
             {
-                this.logger.LogInformation($"job scheduler run no due jobs at moment {moment.ToString("o")}");
+                this.logger.LogInformation($"job run no due jobs at moment {moment.ToString("o")}");
             }
 
             await Task.WhenAll(dueJobs).ConfigureAwait(false); // really wait for completion (await)?
         }
 
-        private async Task ExecuteJobAsync(JobRegistration registration, IJob job)
+        private async Task ExecuteJobAsync(JobRegistration registration, IJob job, CancellationToken token)
         {
             if (registration?.Key.IsNullOrEmpty() == false && job != null)
             {
@@ -171,9 +176,9 @@ private async Task ExecuteJobsAsync(DateTime moment)
                     async Task Execute()
                     {
                         // TODO: publish domain event (task started)
-                        this.logger.LogInformation($"job scheduled job started (key={registration.Key}, type={job.GetType().PrettyName()})");
-                        await job.ExecuteAsync().ConfigureAwait(false);
-                        this.logger.LogInformation($"job scheduled job finished (key={registration.Key}, type={job.GetType().PrettyName()})");
+                        this.logger.LogInformation($"job started (key={registration.Key}, type={job.GetType().PrettyName()})");
+                        await job.ExecuteAsync(token).ConfigureAwait(false);
+                        this.logger.LogInformation($"job finished (key={registration.Key}, type={job.GetType().PrettyName()})");
                         // TODO: publish domain event (job finished)
                     }
 
@@ -192,7 +197,7 @@ private async Task ExecuteJobsAsync(DateTime moment)
                         }
                         else
                         {
-                            this.logger.LogWarning($"job scheduled already executing (key={registration.Key}, type={job.GetType().PrettyName()})");
+                            this.logger.LogWarning($"job already executing (key={registration.Key}, type={job.GetType().PrettyName()})");
                         }
                     }
                     else
@@ -200,10 +205,16 @@ private async Task ExecuteJobsAsync(DateTime moment)
                         await Execute();
                     }
                 }
+                catch (OperationCanceledException ex)
+                {
+                    // TODO: publish domain event (job failed)
+                    this.logger.LogWarning(ex, $"job canceled (key={registration.Key}), type={job.GetType().PrettyName()}) [{ex.GetType().Name}] {ex.Message}");
+                    //this.errorHandler?.Invoke(ex);
+                }
                 catch (Exception ex)
                 {
                     // TODO: publish domain event (job failed)
-                    this.logger.LogError(ex, $"job scheduled failed (key={registration.Key}), type={job.GetType().PrettyName()}) {ex.Message}");
+                    this.logger.LogError(ex, $"job failed (key={registration.Key}), type={job.GetType().PrettyName()}) [{ex.GetType().Name}] {ex.Message}");
                     this.errorHandler?.Invoke(ex);
                 }
             }

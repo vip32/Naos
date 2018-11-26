@@ -87,7 +87,7 @@
             // TODO: temporary solution to get the scheduler hosted service to run (with its dependencies)
             // https://stackoverflow.com/questions/50394666/injecting-simple-injector-components-into-ihostedservice-with-asp-net-core-2-0#
             services.AddSingleton<Microsoft.Extensions.Hosting.IHostedService>(sp =>
-                new SchedulerHostedService(sp.GetService<ILogger<SchedulerHostedService>>(), container));
+                new JobSchedulerHostedService(sp.GetService<ILogger<JobSchedulerHostedService>>(), container));
         }
 
         private void InitializeContainer(IApplicationBuilder app)

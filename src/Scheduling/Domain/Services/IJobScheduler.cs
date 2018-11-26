@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.Scheduling.Domain
 {
     using System;
+    using System.Threading;
     using System.Threading.Tasks;
 
     public interface IJobScheduler
@@ -25,11 +26,13 @@
         IJobScheduler Register<T>(string key, string cron, string[] args = null)
             where T : IJob;
 
-        Task RunAsync();
+        Task RunAsync(CancellationToken token);
 
-        Task RunAsync(DateTime moment);
+        Task RunAsync(DateTime moment, CancellationToken token);
 
         Task TriggerAsync(string key);
+
+        Task TriggerAsync(string key, CancellationToken token);
 
         IJobScheduler UnRegister(string key);
 

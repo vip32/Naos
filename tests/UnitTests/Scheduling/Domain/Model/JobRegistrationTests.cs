@@ -6,7 +6,7 @@
     using Shouldly;
     using Xunit;
 
-    public class RegistrationTests
+    public class JobRegistrationTests
     {
         [Theory]
         [InlineData("* 12 * * * *", "15:12", true)]
