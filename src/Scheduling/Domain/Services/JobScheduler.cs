@@ -52,7 +52,7 @@
         public IJobScheduler Register<T>(string cron, string[] args = null)
             where T : IJob
         {
-            return this.Register<T>(null, cron);
+            return this.Register<T>(null, cron, args);
         }
 
         public IJobScheduler Register<T>(string key, string cron, string[] args = null)
@@ -64,7 +64,7 @@
             }
 
             return this.Register(
-                new JobRegistration(key, cron),
+                new JobRegistration(key, cron, args),
                 new Job(async (t, a) => // defer job creation
                 {
                     var job = this.jobFactory.Create(typeof(T));
@@ -113,17 +113,17 @@
             return this;
         }
 
-        public async Task TriggerAsync(string key)
+        public async Task TriggerAsync(string key, string[] args = null)
         {
-            await this.TriggerAsync(key, CancellationToken.None);
+            await this.TriggerAsync(key, CancellationToken.None, args);
         }
 
-        public async Task TriggerAsync(string key, CancellationToken token)
+        public async Task TriggerAsync(string key, CancellationToken token, string[] args = null)
         {
             var item = this.registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(key));
             if (item.Key != null)
             {
-                await this.ExecuteJobAsync(item.Key, item.Value, token).ConfigureAwait(false);
+                await this.ExecuteJobAsync(item.Key, item.Value, token, args ?? item.Key?.Args).ConfigureAwait(false);
             }
             else
             {
@@ -167,7 +167,7 @@ private async Task ExecuteJobsAsync(DateTime moment, CancellationToken token)
             await Task.WhenAll(dueJobs).ConfigureAwait(false); // really wait for completion (await)?
         }
 
-        private async Task ExecuteJobAsync(JobRegistration registration, IJob job, CancellationToken token)
+        private async Task ExecuteJobAsync(JobRegistration registration, IJob job, CancellationToken token, string[] args = null)
         {
             if (registration?.Key.IsNullOrEmpty() == false && job != null)
             {
@@ -175,9 +175,9 @@ private async Task ExecuteJobsAsync(DateTime moment, CancellationToken token)
                 {
                     async Task Execute()
                     {
-                        // TODO: publish domain event (task started)
+                        // TODO: publish domain event (job started)
                         this.logger.LogInformation($"job started (key={registration.Key}, type={job.GetType().PrettyName()})");
-                        await job.ExecuteAsync(token).ConfigureAwait(false);
+                        await job.ExecuteAsync(token, args).ConfigureAwait(false);
                         this.logger.LogInformation($"job finished (key={registration.Key}, type={job.GetType().PrettyName()})");
                         // TODO: publish domain event (job finished)
                     }

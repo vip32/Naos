@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using Naos.Core.App.Configuration;
     using Naos.Core.App.Operations.Serilog;
+    using Naos.Core.Common;
     using Naos.Core.Scheduling;
     using Naos.Core.Scheduling.Domain;
     using Shouldly;
@@ -77,20 +78,41 @@
         }
 
         [Fact]
-        public async Task RegisterAndTriggerType_Test()
+        public async Task RegisterAndTriggerTypeWithArgs_Test()
         {
             this.container.RegisterInstance(new StubProbe());
             var probe = this.container.GetInstance<StubProbe>();
             var sut = this.container.GetInstance<IJobScheduler>();
 
-            sut.Register<StubJob>("key1", "* 12 * * * *");
+            sut.Register<StubJob>("key1", "* 12 * * * *", new[] { "once"});
 
             // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
-            await sut.TriggerAsync("key1");
-            await sut.TriggerAsync("key1");
-            await sut.TriggerAsync("unk");
+            var t1 = sut.TriggerAsync("key1");
+            var t2 = sut.TriggerAsync("key1");
+            var t3 = sut.TriggerAsync("unk");
 
-            probe.Count.ShouldBe(10); // 2 * 5
+            await Task.WhenAll(new[] { t1, t2, t3 });
+
+            probe.Count.ShouldBe(2); // each job trigger runs once
+        }
+
+        [Fact]
+        public async Task RegisterAndTriggerTypeWithArgsAndCancellation_Test()
+        {
+            this.container.RegisterInstance(new StubProbe());
+            var probe = this.container.GetInstance<StubProbe>();
+            var sut = this.container.GetInstance<IJobScheduler>();
+
+            sut.Register<StubJob>("key1", "* 12 * * * *", new[] { "once" });
+            sut.Register<StubJob>("key2", "* 12 * * * *", new[] { "cancel" });
+
+            // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
+            var t1 = sut.TriggerAsync("key1");
+            var t2 = sut.TriggerAsync("key2");
+
+            await Task.WhenAll(new[] { t1, t2 });
+
+            probe.Count.ShouldBe(1); // jirst job trigger runs once, second job cancels directly
         }
 
         [Fact]
@@ -103,7 +125,6 @@
 
             sut.Register<StubJob>("key1", "* 12 * * * *");
             sut.Register<StubJob>("key2", "* 12 * * * *");
-            //sut.Register<StubJob>("key3", "* 12 * * * *", new[] { "dontcancel" });
 
             // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
             cts.CancelAfter(TimeSpan.FromMilliseconds(250));
@@ -150,9 +171,17 @@
             {
                 await Task.Run(() =>
                 {
-                    for (int i = 0; i < 5; i++) // fake some long running process, can be cancelled with token
+                    var max = args.Contains("once", StringComparison.OrdinalIgnoreCase) ? 1 : 5;
+                    var cancel = args.Contains("cancel", StringComparison.OrdinalIgnoreCase);
+
+                    for (int i = 0; i < max; i++) // fake some long running process, can be cancelled with token
                     {
                         token.ThrowIfCancellationRequested();
+                        if (cancel)
+                        {
+                            throw new OperationCanceledException("oops");
+                        }
+
                         this.probe.Count++;
                         System.Diagnostics.Trace.WriteLine($"hello from job {DateTime.UtcNow.ToString("o")}");
 

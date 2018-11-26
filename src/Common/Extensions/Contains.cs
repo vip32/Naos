@@ -6,7 +6,7 @@
 
     public static partial class Extensions
     {
-        public static bool Contains(this string source, string value, StringComparison comp = StringComparison.InvariantCultureIgnoreCase)
+        public static bool Contains(this string source, string value, StringComparison comp = StringComparison.OrdinalIgnoreCase)
         {
             if (string.IsNullOrEmpty(source))
             {
@@ -21,7 +21,7 @@
             return source.IndexOf(value, comp) >= 0;
         }
 
-        public static bool Contains(this IEnumerable<string> source, string value, StringComparison comp = StringComparison.InvariantCultureIgnoreCase)
+        public static bool Contains(this IEnumerable<string> source, string value, StringComparison comp = StringComparison.OrdinalIgnoreCase)
         {
             if (source.IsNullOrEmpty())
             {
