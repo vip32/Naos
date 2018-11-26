@@ -194,7 +194,7 @@
 
             await Task.WhenAll(new[] { t1, t2 });
 
-            probe.Count.ShouldBe(4);
+            probe.Count.ShouldBe(4); // probe.count gets increased per job
         }
 
         private class StubJob : Job
