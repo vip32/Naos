@@ -1,9 +1,7 @@
 ﻿namespace Naos.Core.Scheduling
 {
     using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Scheduling.App;
     using Naos.Core.Scheduling.Domain;
     using SimpleInjector;
 
@@ -21,14 +19,14 @@
             //        container);
             //}/*, Lifestyle.Scoped*/);
 
-            container.RegisterSingleton<IScheduler>(() =>
+            container.RegisterSingleton<IJobScheduler>(() =>
             {
                 //var logAnalyticsConfiguration = configuration.GetSection(section).Get<LogAnalyticsConfiguration>();
 
-                return new Scheduler(
-                    container.GetInstance<ILogger<Scheduler>>(),
-                    new SimpleInjectorScheduledTaskFactory(container),
-                    new InMemoryMutex());
+                return new JobScheduler(
+                    container.GetInstance<ILogger<JobScheduler>>(),
+                    new SimpleInjectorJobFactory(container),
+                    new InProcessMutex());
             }/*, Lifestyle.Scoped*/);
 
             return container;

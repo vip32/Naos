@@ -2,13 +2,13 @@
 {
     using System;
 
-    public interface IScheduledTaskFactory
+    public interface IJobFactory
     {
         /// <summary>
         /// Creates the specified scheduled task type.
         /// </summary>
-        /// <param name="scheduledTaskType">Type of the scheduled task.</param>
+        /// <param name="jobType">Type of the job.</param>
         /// <returns></returns>
-        IScheduledTask Create(Type scheduledTaskType);
+        IJob Create(Type jobType);
     }
 }

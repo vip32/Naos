@@ -17,7 +17,7 @@
         [InlineData("* 12 * * * *", "15:05:45", false)] // more crons https://github.com/HangfireIO/Cronos/blob/master/tests/Cronos.Tests/CronExpressionFacts.cs
         public void IsDueInMinute_Test(string cron, string moment, bool expected)
         {
-            var sut = new Registration("key1", cron);
+            var sut = new JobRegistration("key1", cron);
             var fromUtc = GetDateTime(moment);
 
             sut.IsDue(fromUtc.UtcDateTime, TimeSpan.FromMinutes(1)).ShouldBe(expected);
@@ -31,7 +31,7 @@
         [InlineData("* * 15 * * *", "16:05", false)]
         public void IsDueInHour_Test(string cron, string moment, bool expected)
         {
-            var sut = new Registration("key1", cron);
+            var sut = new JobRegistration("key1", cron);
             var fromUtc = GetDateTime(moment);
 
             sut.IsDue(fromUtc.UtcDateTime, TimeSpan.FromHours(1)).ShouldBe(expected);

@@ -12,10 +12,9 @@
     public class SchedulerHostedService : IHostedService, IDisposable
     {
         private readonly ILogger<SchedulerHostedService> logger;
-        private readonly IScheduler scheduler;
+        private readonly IJobScheduler scheduler;
         private bool enabled = true;
 
-        // host Scheduler (run with timer)
         // TODO: start/stop from outside https://stackoverflow.com/questions/51469881/asp-net-core-ihostedservice-manual-start-stop-pause
         private Timer timer;
 
@@ -25,7 +24,7 @@
             EnsureArg.IsNotNull(container, nameof(container));
 
             this.logger = logger;
-            this.scheduler = container.GetInstance<IScheduler>();
+            this.scheduler = container.GetInstance<IJobScheduler>();
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -45,7 +44,7 @@
             // suspend stopping schedular untill all tasks are done
             if (this.scheduler.IsRunning)
             {
-                this.logger.LogWarning("scheduler hosted service will be stopped but is waiting on running tasks");
+                this.logger.LogWarning("scheduler hosted service will be stopped but is waiting on running jobs");
             }
 
             while (this.scheduler.IsRunning)

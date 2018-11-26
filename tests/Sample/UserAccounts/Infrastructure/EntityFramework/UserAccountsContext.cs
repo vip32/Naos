@@ -1,7 +1,6 @@
 ﻿namespace Naos.Sample.UserAccounts.EntityFramework
 {
     using Microsoft.EntityFrameworkCore;
-    using Naos.Core.Common;
     using Naos.Sample.UserAccounts.Domain;
 
     public class UserAccountsContext : DbContext

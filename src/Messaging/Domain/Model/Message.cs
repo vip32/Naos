@@ -1,7 +1,6 @@
 ﻿namespace Naos.Core.Messaging.Domain.Model
 {
     using System;
-    using Naos.Core.Common;
     using Naos.Core.Domain;
     using Newtonsoft.Json;
 

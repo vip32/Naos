@@ -2,7 +2,7 @@
 {
     using System.Threading.Tasks;
 
-    public interface IScheduledTask
+    public interface IJob
     {
         Task ExecuteAsync(string[] args = null);
     }

@@ -5,17 +5,18 @@
     using Cronos;
     using EnsureThat;
 
-    public class Registration
+    public class JobRegistration
     {
         private readonly CronExpression cronExpression;
 
-        public Registration(string key, string cron)
+        public JobRegistration(string key, string cron, bool preventOverlap = true)
         {
             EnsureArg.IsNotNullOrEmpty(key, nameof(key));
             EnsureArg.IsNotNullOrEmpty(cron, nameof(cron));
 
             this.Key = key;
             this.Cron = cron;
+            this.PreventOverlap = true;
             if (cron.Count(char.IsWhiteSpace) == 4) // mi ho da mo yy
             {
                 this.cronExpression = CronExpression.Parse(this.Cron, CronFormat.Standard);
@@ -29,6 +30,8 @@
         public string Key { get; set; }
 
         public string Cron { get; }
+
+        public bool PreventOverlap { get; } = true;
 
         public bool IsDue(DateTime fromUtc, TimeSpan? span = null)
         {

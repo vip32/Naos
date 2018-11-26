@@ -1,6 +1,5 @@
 ﻿namespace Naos.Core.App.Operations.Serilog
 {
-    using System;
     using global::Serilog;
     using global::Serilog.Events;
     using Microsoft.Extensions.Configuration;

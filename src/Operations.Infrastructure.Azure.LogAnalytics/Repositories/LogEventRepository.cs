@@ -11,7 +11,6 @@
     using Naos.Core.Domain.Specifications;
     using Naos.Core.Operations.Domain;
     using Naos.Core.Operations.Domain.Repositories;
-    using Newtonsoft.Json;
 
     public class LogEventRepository : ILogEventRepository
     {

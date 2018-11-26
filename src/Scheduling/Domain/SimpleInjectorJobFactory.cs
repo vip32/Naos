@@ -4,15 +4,15 @@
     using EnsureThat;
     using SimpleInjector;
 
-    public class SimpleInjectorScheduledTaskFactory : IScheduledTaskFactory
+    public class SimpleInjectorJobFactory : IJobFactory
     {
         private readonly Container container;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SimpleInjectorScheduledTaskFactory"/> class.
+        /// Initializes a new instance of the <see cref="SimpleInjectorJobFactory"/> class.
         /// </summary>
         /// <param name="container">The service provider.</param>
-        public SimpleInjectorScheduledTaskFactory(Container container)
+        public SimpleInjectorJobFactory(Container container)
         {
             EnsureArg.IsNotNull(container, nameof(container));
 
@@ -22,11 +22,11 @@
         /// <summary>
         /// Creates the specified scheduled task type.
         /// </summary>
-        /// <param name="scheduledTaskType">Type of the scheduled task.</param>
+        /// <param name="jobType">Type of the job.</param>
         /// <returns></returns>
-        public IScheduledTask Create(Type scheduledTaskType)
+        public IJob Create(Type jobType)
         {
-            return this.container.GetInstance(scheduledTaskType) as IScheduledTask;
+            return this.container.GetInstance(jobType) as IJob;
         }
     }
 }

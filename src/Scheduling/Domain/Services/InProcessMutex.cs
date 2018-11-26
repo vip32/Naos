@@ -3,18 +3,18 @@
     using System;
     using System.Collections.Generic;
 
-    public class InMemoryMutex : IMutex
+    public class InProcessMutex : IMutex
     {
         private readonly object @lock = new object();
         private readonly DateTime moment;
         private readonly Dictionary<string, MutexItem> items = new Dictionary<string, MutexItem>();
 
-        public InMemoryMutex()
+        public InProcessMutex()
         {
             this.moment = DateTime.UtcNow;
         }
 
-        public InMemoryMutex(DateTime moment)
+        public InProcessMutex(DateTime moment)
         {
             this.moment = moment;
         }

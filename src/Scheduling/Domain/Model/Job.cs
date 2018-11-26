@@ -4,17 +4,17 @@
     using System.Threading.Tasks;
     using EnsureThat;
 
-    public class ScheduledTask : IScheduledTask
+    public class Job : IJob
     {
         private readonly Func<string[], Task> func;
         private readonly Action<string[]> action;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ScheduledTask"/> class.
+        /// Initializes a new instance of the <see cref="Job"/> class.
         /// </summary>
         /// <param name="cron">The cron expression.</param>
         /// <param name="action">The action.</param>
-        public ScheduledTask(Action<string[]> action)
+        public Job(Action<string[]> action)
         {
             EnsureArg.IsNotNull(action, nameof(action));
 
@@ -22,11 +22,11 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ScheduledTask"/> class.
+        /// Initializes a new instance of the <see cref="Job"/> class.
         /// </summary>
         /// <param name="cron">The cron expression.</param>
         /// <param name="func">The func task.</param>
-        public ScheduledTask(Func<string[], Task> func)
+        public Job(Func<string[], Task> func)
         {
             EnsureArg.IsNotNull(func, nameof(func));
 
@@ -34,10 +34,10 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ScheduledTask"/> class.
+        /// Initializes a new instance of the <see cref="Job"/> class.
         /// </summary>
         /// <param name="cron">The cron.</param>
-        protected ScheduledTask()
+        protected Job()
         {
         }
 

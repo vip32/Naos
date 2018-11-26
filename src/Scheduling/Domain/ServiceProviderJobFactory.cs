@@ -3,15 +3,15 @@
     using System;
     using EnsureThat;
 
-    public class ServiceProviderScheduledTaskFactory : IScheduledTaskFactory
+    public class ServiceProviderJobFactory : IJobFactory
     {
         private readonly IServiceProvider serviceProvider;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ServiceProviderScheduledTaskFactory"/> class.
+        /// Initializes a new instance of the <see cref="ServiceProviderJobFactory"/> class.
         /// </summary>
         /// <param name="serviceProvider">The service provider.</param>
-        public ServiceProviderScheduledTaskFactory(IServiceProvider serviceProvider)
+        public ServiceProviderJobFactory(IServiceProvider serviceProvider)
         {
             EnsureArg.IsNotNull(serviceProvider, nameof(serviceProvider));
 
@@ -21,11 +21,11 @@
         /// <summary>
         /// Creates the specified scheduled task type.
         /// </summary>
-        /// <param name="scheduledTaskType">Type of the scheduled task.</param>
+        /// <param name="jobType">Type of the job.</param>
         /// <returns></returns>
-        public IScheduledTask Create(Type scheduledTaskType)
+        public IJob Create(Type jobType)
         {
-            return this.serviceProvider.GetService(scheduledTaskType) as IScheduledTask;
+            return this.serviceProvider.GetService(jobType) as IJob;
         }
     }
 }

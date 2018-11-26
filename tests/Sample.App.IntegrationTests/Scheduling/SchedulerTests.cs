@@ -30,7 +30,7 @@
         [Fact]
         public void CanInstantiate_Test()
         {
-            var sut = this.container.GetInstance<IScheduler>();
+            var sut = this.container.GetInstance<IJobScheduler>();
 
             sut.ShouldNotBeNull();
         }
@@ -38,7 +38,7 @@
         [Fact]
         public async Task ScheduleAction_Test()
         {
-            var sut = this.container.GetInstance<IScheduler>();
+            var sut = this.container.GetInstance<IJobScheduler>();
             var count = 0;
 
             sut.Register("key1", "* 12 * * * *", (a) =>
@@ -57,7 +57,7 @@
         [Fact]
         public async Task ScheduleFunction_Test()
         {
-            var sut = this.container.GetInstance<IScheduler>();
+            var sut = this.container.GetInstance<IJobScheduler>();
             var count = 0;
 
             sut.Register("key1", "* 12 * * * *", async (a) =>
@@ -79,7 +79,7 @@
         {
             this.container.RegisterInstance(new StubProbe());
             var probe = this.container.GetInstance<StubProbe>();
-            var sut = this.container.GetInstance<IScheduler>();
+            var sut = this.container.GetInstance<IJobScheduler>();
 
             sut.Register<StubScheduledTask>("key1", "* 12 * * * *");
 
@@ -96,7 +96,7 @@
         {
             this.container.RegisterInstance(new StubProbe());
             var probe = this.container.GetInstance<StubProbe>();
-            var sut = this.container.GetInstance<IScheduler>();
+            var sut = this.container.GetInstance<IJobScheduler>();
 
             sut.Register<StubScheduledTask>("key1", "* 12 * * * *");
 
@@ -110,7 +110,7 @@
             probe.Count.ShouldBe(1);
         }
 
-        private class StubScheduledTask : ScheduledTask
+        private class StubScheduledTask : Job
         {
             private readonly StubProbe probe;
 

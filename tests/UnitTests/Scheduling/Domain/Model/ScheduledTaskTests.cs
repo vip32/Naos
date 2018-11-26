@@ -12,7 +12,7 @@
         {
             // arrang
             var count = 0;
-            var sut = new ScheduledTask((a) =>
+            var sut = new Job((a) =>
             {
                 count++;
                 System.Diagnostics.Trace.WriteLine("hello from task " + a);
@@ -31,7 +31,7 @@
         {
             // arrang
             var count = 0;
-            var sut = new ScheduledTask(async (a) =>
+            var sut = new Job(async (a) =>
                 await Task.Run(() =>
                 {
                     count++;
@@ -61,7 +61,7 @@
             probe.Count.ShouldBe(2);
         }
 
-        private class StubScheduledTask : ScheduledTask
+        private class StubScheduledTask : Job
         {
             private readonly StubProbe probe;
 

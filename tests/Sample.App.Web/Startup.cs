@@ -117,7 +117,7 @@
             // Allow Simple Injector to resolve services from ASP.NET Core.
             this.container.AutoCrossWireAspNetComponents(app);
 
-            var scheduler = this.container.GetService<IScheduler>();
+            var scheduler = this.container.GetService<IJobScheduler>();
             scheduler.Register("key1", Cron.Minutely(), (a) => System.Diagnostics.Trace.WriteLine("+++ hello from task1 +++"));
             scheduler.Register("key2", Cron.MinuteInterval(2), (a) => System.Diagnostics.Trace.WriteLine("+++ hello from task2 +++"));
         }

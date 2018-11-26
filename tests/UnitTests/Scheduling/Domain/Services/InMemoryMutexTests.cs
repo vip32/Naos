@@ -10,7 +10,7 @@
         public void AcquireAndRelease_Test()
         {
             // arrange
-            var sut = new InMemoryMutex();
+            var sut = new InProcessMutex();
 
             // act
             var result1 = sut.TryAcquireLock("key1");
