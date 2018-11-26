@@ -47,14 +47,15 @@
             sut.Register("key1", "* 12 * * * *", (a) =>
             {
                 count++;
-                System.Diagnostics.Trace.WriteLine("hello from task " + a);
+                System.Diagnostics.Trace.WriteLine("+++ hello from task " + a);
             });
 
-            await sut.TriggerAsync("key1");
-            await sut.TriggerAsync("key1");
-            await sut.TriggerAsync("unk");
+            var t1 = sut.TriggerAsync("key1");
+            var t2 = sut.TriggerAsync("key1");
 
-            count.ShouldBe(2);
+            await Task.WhenAll(new[] { t1, t2 });
+
+            count.ShouldBe(2); // action does not support overlap (due to async not supported?)
         }
 
         [Fact]
@@ -67,18 +68,38 @@
                 await Task.Run(() =>
                 {
                     count++;
-                    System.Diagnostics.Trace.WriteLine("hello from task " + a);
+                    System.Diagnostics.Trace.WriteLine("+++ hello from task " + a);
                 }));
 
-            await sut.TriggerAsync("key1");
-            await sut.TriggerAsync("key1");
-            await sut.TriggerAsync("unk");
+            var t1 = sut.TriggerAsync("key1");
+            var t2 = sut.TriggerAsync("key1");
 
-            count.ShouldBe(2);
+            await Task.WhenAll(new[] { t1, t2 });
+
+            count.ShouldBe(1); // due to overlap (key1) the job runs once
         }
 
         [Fact]
         public async Task RegisterAndTriggerTypeWithArgs_Test()
+        {
+            this.container.RegisterInstance(new StubProbe());
+            var probe = this.container.GetInstance<StubProbe>();
+            var sut = this.container.GetInstance<IJobScheduler>();
+
+            sut.Register<StubJob>("key1", "* 12 * * * *", new[] { "once" });
+            sut.Register<StubJob>("key2", "* 12 * * * *", new[] { "once" });
+
+            // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
+            var t1 = sut.TriggerAsync("key1");
+            var t2 = sut.TriggerAsync("key2");
+
+            await Task.WhenAll(new[] { t1, t2 });
+
+            probe.Count.ShouldBe(2); // each job (key1/key2) runs once (2 * 1)
+        }
+
+        [Fact]
+        public async Task RegisterAndTriggerTypeWithOverlapAndArgs_Test()
         {
             this.container.RegisterInstance(new StubProbe());
             var probe = this.container.GetInstance<StubProbe>();
@@ -89,11 +110,10 @@
             // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
             var t1 = sut.TriggerAsync("key1");
             var t2 = sut.TriggerAsync("key1");
-            var t3 = sut.TriggerAsync("unk");
 
-            await Task.WhenAll(new[] { t1, t2, t3 });
+            await Task.WhenAll(new[] { t1, t2 });
 
-            probe.Count.ShouldBe(2); // each job trigger runs once
+            probe.Count.ShouldBe(1); // due to overlap (key1) the job runs once
         }
 
         [Fact]
@@ -183,7 +203,7 @@
                         }
 
                         this.probe.Count++;
-                        System.Diagnostics.Trace.WriteLine($"hello from job {DateTime.UtcNow.ToString("o")}");
+                        System.Diagnostics.Trace.WriteLine($"+++ hello from job {DateTime.UtcNow.ToString("o")}");
 
                         Thread.Sleep(200);
                     }
