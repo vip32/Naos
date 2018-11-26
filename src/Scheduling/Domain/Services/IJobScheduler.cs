@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.Scheduling.Domain
 {
     using System;
+    using System.Linq.Expressions;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -25,6 +26,8 @@
 
         IJobScheduler Register<T>(string key, string cron, string[] args = null)
             where T : IJob;
+
+        IJobScheduler Register<T>(string key, string cron, Expression<Func<T, Task>> task);
 
         Task RunAsync();
 

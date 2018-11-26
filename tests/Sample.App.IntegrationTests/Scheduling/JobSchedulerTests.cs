@@ -178,6 +178,23 @@
             probe.Count.ShouldBe(5);
         }
 
+        [Fact]
+        public async Task RegisterAndTriggerCustomType_Test()
+        {
+            this.container.RegisterInstance(new StubProbe());
+            var probe = this.container.GetInstance<StubProbe>();
+            var sut = this.container.GetInstance<IJobScheduler>();
+
+            sut.Register<StubJob>("key1", "* 12 * * * *", (t) => t.CustomExecuteAsync("arg1"));
+
+            // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
+            var t1 = sut.TriggerAsync("key1");
+
+            await Task.WhenAll(new[] { t1 });
+
+            probe.Count.ShouldBe(0);
+        }
+
         private class StubJob : Job
         {
             private readonly StubProbe probe;
@@ -208,6 +225,14 @@
                         Thread.Sleep(200);
                     }
                 }, token);
+            }
+
+            public async Task CustomExecuteAsync(string arg1)
+            {
+                await Task.Run(() =>
+                {
+                    System.Diagnostics.Trace.WriteLine($"+++ hello from custom job {DateTime.UtcNow.ToString("o")} " + arg1);
+                });
             }
         }
 

@@ -27,7 +27,7 @@
             this.scheduler = container.GetInstance<IJobScheduler>();
         }
 
-        public Task StartAsync(CancellationToken token)
+        public Task StartAsync(CancellationToken cancellationToken)
         {
             var moment = DateTime.UtcNow;
             this.timer = new Timer(this.RunSchedulerAsync, null, new TimeSpan(0, 0, 0, 60 - moment.Second, 1000 - moment.Millisecond), TimeSpan.FromSeconds(60));

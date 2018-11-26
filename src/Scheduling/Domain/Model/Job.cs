@@ -10,6 +10,14 @@
         private readonly Func<string[], Task> task;
         private readonly Func<CancellationToken, string[], Task> task2;
         private readonly Action<string[]> action;
+        private readonly Action action2;
+
+        public Job(Action action)
+        {
+            EnsureArg.IsNotNull(action, nameof(action));
+
+            this.action2 = action;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Job"/> class.
@@ -67,6 +75,10 @@
             else if (this.task2 != null)
             {
                 await this.task2(token, args).ConfigureAwait(false);
+            }
+            else if (this.action2 != null)
+            {
+                this.action2();
             }
             else if (this.action != null)
             {

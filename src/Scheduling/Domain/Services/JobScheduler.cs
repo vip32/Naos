@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
@@ -74,6 +75,26 @@
                     }
 
                     await job.ExecuteAsync(t, a).ConfigureAwait(false);
+                }));
+        }
+
+        public IJobScheduler Register<T>(string key, string cron, Expression<Func<T, Task>> task)
+        {
+            return this.Register(
+                new JobRegistration(key, cron),
+                new Job(() => // defer job creation
+                {
+                    var job = this.jobFactory.Create(typeof(T));
+                    if (job == null)
+                    {
+                        throw new NaosException($"Cannot create job instance for type {typeof(T).PrettyName()}.");
+                    }
+
+                    var callExpression = task.Body as MethodCallExpression;
+                    var method = callExpression.Method;
+                    var args = callExpression.Arguments.Select(a => (a as ConstantExpression)?.Value);
+
+                    method.Invoke(job, args.ToArray()); // this.GetExpressionValues(callExpression.Arguments)
                 }));
         }
 
