@@ -10,7 +10,7 @@
 
         IJobScheduler OnError(Action<Exception> errorHandler);
 
-        IJobScheduler Register(string cron, Action<string[]> action);
+        IJobScheduler Register(string cron, Action<string[]> action); // TODO: not really needed
 
         IJobScheduler Register(string key, string cron, Action<string[]> action);
 
@@ -26,9 +26,9 @@
         IJobScheduler Register<T>(string key, string cron, string[] args = null)
             where T : IJob;
 
-        Task RunAsync(CancellationToken token);
+        Task RunAsync();
 
-        Task RunAsync(DateTime moment, CancellationToken token);
+        Task RunAsync(DateTime moment);
 
         Task TriggerAsync(string key, string[] args = null);
 

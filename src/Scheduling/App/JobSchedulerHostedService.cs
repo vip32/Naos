@@ -27,7 +27,7 @@
             this.scheduler = container.GetInstance<IJobScheduler>();
         }
 
-        public Task StartAsync(CancellationToken cancellationToken)
+        public Task StartAsync(CancellationToken token)
         {
             var moment = DateTime.UtcNow;
             this.timer = new Timer(this.RunSchedulerAsync, null, new TimeSpan(0, 0, 0, 60 - moment.Second, 1000 - moment.Millisecond), TimeSpan.FromSeconds(60));
@@ -49,7 +49,7 @@
 
             while (this.scheduler.IsRunning)
             {
-                await Task.Delay(50);
+                await Task.Delay(50); // TODO: try to cancel the running jobs
             }
         }
 
@@ -63,7 +63,7 @@
         {
             if (this.enabled)
             {
-                await this.scheduler.RunAsync(CancellationToken.None).ConfigureAwait(false); // TODO: pass cancellationtoken
+                await this.scheduler.RunAsync().ConfigureAwait(false);
             }
         }
     }

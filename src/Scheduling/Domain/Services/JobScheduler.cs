@@ -29,7 +29,7 @@
 
         public bool IsRunning => this.activeCount > 0;
 
-        public IJobScheduler Register(string cron, Action<string[]> action)
+        public IJobScheduler Register(string cron, Action<string[]> action) // TODO: not really needed
         {
             return this.Register(new JobRegistration(null, cron), new Job(action));
         }
@@ -115,7 +115,15 @@
 
         public async Task TriggerAsync(string key, string[] args = null)
         {
-            await this.TriggerAsync(key, CancellationToken.None, args);
+            var item = this.registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(key));
+            if (item.Key != null)
+            {
+                await this.TriggerAsync(key, new CancellationTokenSource(item.Key.Timeout).Token, args);
+            }
+            else
+            {
+                this.logger.LogInformation($"job scheduler does not have a job registered with key {key}");
+            }
         }
 
         public async Task TriggerAsync(string key, CancellationToken token, string[] args = null)
@@ -131,37 +139,36 @@
             }
         }
 
-        public async Task RunAsync(CancellationToken token)
+        public async Task RunAsync() // TODO: a different token per job is better to cancel individual jobs (+ timeout)
         {
-            await this.RunAsync(DateTime.UtcNow, token);
+            await this.RunAsync(DateTime.UtcNow);
         }
 
-        public async Task RunAsync(DateTime moment, CancellationToken token)
+        public async Task RunAsync(DateTime moment) // TODO: a different token per job is better to cancel individual jobs (+ timeout)
         {
             EnsureArg.IsTrue(moment.Kind == DateTimeKind.Utc);
 
             Interlocked.Increment(ref this.activeCount);
             this.logger.LogInformation($"job scheduler run started (activeCount=#{this.activeCount}, moment={moment.ToString("o")})");
-            await this.ExecuteJobsAsync(moment, token).ConfigureAwait(false);
+            await this.ExecuteJobsAsync(moment).ConfigureAwait(false);
             Interlocked.Decrement(ref this.activeCount);
             this.logger.LogInformation($"job scheduler run finished (activeCount=#{this.activeCount})");
         }
 
-private async Task ExecuteJobsAsync(DateTime moment, CancellationToken token)
+private async Task ExecuteJobsAsync(DateTime moment)
         {
-            var dueJobs = this.registrations.Where(t => t.Key?.IsDue(moment) == true).Select(t =>
+            var dueJobs = this.registrations.Where(t => t.Key?.IsDue(moment) == true).Select(r =>
             {
-                return Task.Run(() =>
+                var cts = new CancellationTokenSource(r.Key.Timeout);
+                return Task.Run(async () =>
                 {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    this.ExecuteJobAsync(t.Key, t.Value, token); // dont use await for better parallism
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                }, token);
+                    await this.ExecuteJobAsync(r.Key, r.Value, cts.Token, r.Key.Args).ConfigureAwait(false);
+                }, cts.Token);
             }).ToList();
 
             if (dueJobs.IsNullOrEmpty())
             {
-                this.logger.LogInformation($"job run no due jobs at moment {moment.ToString("o")}");
+                this.logger.LogInformation($"job scheduler run no due jobs at moment {moment.ToString("o")}");
             }
 
             await Task.WhenAll(dueJobs).ConfigureAwait(false); // really wait for completion (await)?
