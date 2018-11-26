@@ -194,7 +194,7 @@
 
             await Task.WhenAll(new[] { t1, t2 });
 
-            probe.Count.ShouldBe(2);
+            probe.Count.ShouldBe(4);
         }
 
         private class StubJob : Job
@@ -233,6 +233,7 @@
             {
                 await Task.Run(() =>
                 {
+                    this.probe.Count++;
                     probe.Count++;
                     System.Diagnostics.Trace.WriteLine($"+++ hello from custom job {DateTime.UtcNow.ToString("o")} " + arg1);
                 });
