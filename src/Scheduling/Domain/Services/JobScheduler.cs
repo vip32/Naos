@@ -31,33 +31,33 @@
 
         public bool IsRunning => this.activeCount > 0;
 
-        public IJobScheduler Register(string cron, Action<string[]> action, bool preventOverlap = true, TimeSpan? timeout = null) // TODO: not really needed
+        public IJobScheduler Register(string cron, Action<string[]> action, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true) // TODO: not really needed
         {
-            return this.Register(new JobRegistration(null, cron, null, preventOverlap, timeout), new Job(action));
+            return this.Register(new JobRegistration(null, cron, null, isReentrant, timeout, enabled), new Job(action));
         }
 
-        public IJobScheduler Register(string key, string cron, Action<string[]> action, bool preventOverlap = true, TimeSpan? timeout = null)
+        public IJobScheduler Register(string key, string cron, Action<string[]> action, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
         {
-            return this.Register(new JobRegistration(key, cron, null, preventOverlap, timeout), new Job(action));
+            return this.Register(new JobRegistration(key, cron, null, isReentrant, timeout, enabled), new Job(action));
         }
 
-        public IJobScheduler Register(string cron, Func<string[], Task> task, bool preventOverlap = true, TimeSpan? timeout = null)
+        public IJobScheduler Register(string cron, Func<string[], Task> task, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
         {
-            return this.Register(new JobRegistration(null, cron, null, preventOverlap, timeout), new Job(task));
+            return this.Register(new JobRegistration(null, cron, null, isReentrant, timeout, enabled), new Job(task));
         }
 
-        public IJobScheduler Register(string key, string cron, Func<string[], Task> task, bool preventOverlap = true, TimeSpan? timeout = null)
+        public IJobScheduler Register(string key, string cron, Func<string[], Task> task, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
         {
-            return this.Register(new JobRegistration(key, cron, null, preventOverlap, timeout), new Job(task));
+            return this.Register(new JobRegistration(key, cron, null, isReentrant, timeout, enabled), new Job(task));
         }
 
-        public IJobScheduler Register<T>(string cron, string[] args = null, bool preventOverlap = true, TimeSpan? timeout = null)
+        public IJobScheduler Register<T>(string cron, string[] args = null, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
             where T : IJob
         {
-            return this.Register<T>(null, cron, args, preventOverlap, timeout);
+            return this.Register<T>(null, cron, args, isReentrant, timeout, enabled);
         }
 
-        public IJobScheduler Register<T>(string key, string cron, string[] args = null, bool preventOverlap = true, TimeSpan? timeout = null)
+        public IJobScheduler Register<T>(string key, string cron, string[] args = null, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
             where T : IJob
         {
             if (!typeof(Job).IsAssignableFrom(typeof(T)))
@@ -66,7 +66,7 @@
             }
 
             return this.Register(
-                new JobRegistration(key, cron, args, preventOverlap, timeout),
+                new JobRegistration(key, cron, args, isReentrant, timeout, enabled),
                 new Job(async (t, a) => // defer job creation
                 {
                     var job = this.jobFactory.Create(typeof(T));
@@ -79,12 +79,12 @@
                 }));
         }
 
-        public IJobScheduler Register<T>(string key, string cron, Expression<Func<T, Task>> task, bool preventOverlap = true, TimeSpan? timeout = null)
+        public IJobScheduler Register<T>(string key, string cron, Expression<Func<T, Task>> task, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
         {
             EnsureArg.IsNotNull(task, nameof(task));
 
             return this.Register(
-                new JobRegistration(key, cron, null, preventOverlap, timeout),
+                new JobRegistration(key, cron, null, isReentrant, timeout, enabled),
                 new Job(async (t, a) => // defer job creation
                 {
                     await Task.Run(() =>
@@ -110,7 +110,7 @@
             EnsureArg.IsNotNull(job, nameof(job));
 
             registration.Key = registration.Key ?? HashAlgorithm.ComputeHash(job);
-            this.logger.LogInformation($"register scheduled job (key={registration.Key}, cron={registration.Cron}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")})");
+            this.logger.LogInformation($"register scheduled job (key={registration.Key}, cron={registration.Cron}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")}, enabled={registration.Enabled})");
 
             var item = this.registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(registration.Key));
             if(item.Key != null)
@@ -187,7 +187,7 @@
 
         private async Task ExecuteJobsAsync(DateTime moment)
         {
-            var dueJobs = this.registrations.Where(t => t.Key?.IsDue(moment) == true).Select(r =>
+            var dueJobs = this.registrations.Where(r => r.Key?.IsDue(moment) == true && r.Key.Enabled).Select(r =>
             {
                 var cts = new CancellationTokenSource(r.Key.Timeout);
                 return Task.Run(async () =>

@@ -21,7 +21,7 @@
             var configuration = NaosConfigurationFactory.CreateRoot();
             this.container = new Container()
                 .AddNaosLogging(configuration)
-                .AddNaosScheduling(configuration);
+                .AddNaosScheduling();
         }
 
         [Fact]

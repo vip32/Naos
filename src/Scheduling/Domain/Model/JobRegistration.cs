@@ -9,7 +9,7 @@
     {
         private readonly CronExpression cronExpression;
 
-        public JobRegistration(string key, string cron, string[] args = null, bool isReentrant = false, TimeSpan? timeout = null)
+        public JobRegistration(string key, string cron, string[] args = null, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
         {
             EnsureArg.IsNotNullOrEmpty(cron, nameof(cron));
 
@@ -18,6 +18,7 @@
             this.Args = args;
             this.IsReentrant = isReentrant;
             this.Timeout = timeout ?? new TimeSpan(0, 20, 0);
+            this.Enabled = enabled;
             if (cron.Count(char.IsWhiteSpace) == 4) // mi ho da mo yy
             {
                 this.cronExpression = CronExpression.Parse(this.Cron, CronFormat.Standard);
@@ -35,6 +36,8 @@
         public string[] Args { get; }
 
         public bool IsReentrant { get; }
+
+        public bool Enabled { get; }
 
         public TimeSpan Timeout { get; }
 

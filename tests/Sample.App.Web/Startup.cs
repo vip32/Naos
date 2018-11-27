@@ -108,7 +108,7 @@
                     this.Configuration,
                     AppDomain.CurrentDomain.FriendlyName,
                     assemblies: new[] { typeof(IMessageBroker).Assembly, typeof(Customers.Domain.Customer).Assembly })
-                .AddNaosScheduling(this.Configuration);
+                .AddNaosScheduling();
 
             // naos sample registrations
             this.container
