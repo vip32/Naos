@@ -18,6 +18,7 @@ idea: configuration validation https://www.stevejgordon.co.uk/asp-net-core-2-2-o
 graphql? https://fullstackmark.com/post/17/building-a-graphql-api-with-aspnet-core-2-and-entity-framework-core
 workflow https://github.com/danielgerlag/workflow-core
 web exception handling https://github.com/JosephWoodward/GlobalExceptionHandlerDotNet
+exception enricher demistify https://github.com/nblumhardt/serilog-enrichers-demystify
 
 messaging: message broker based on rabitmq (for local usage)
 messaging: singalr based provider?
