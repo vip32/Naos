@@ -206,7 +206,7 @@
                 this.probe = probe;
             }
 
-            public override async Task ExecuteAsync(CancellationToken token, string[] args = null)
+            public override async Task ExecuteAsync(CancellationToken cancellationToken, string[] args = null)
             {
                 await Task.Run(() =>
                 {
@@ -215,7 +215,7 @@
 
                     for (int i = 0; i < max; i++) // fake some long running process, can be cancelled with token
                     {
-                        token.ThrowIfCancellationRequested();
+                        cancellationToken.ThrowIfCancellationRequested();
                         if (cancel)
                         {
                             throw new OperationCanceledException("oops");
@@ -226,7 +226,7 @@
 
                         Thread.Sleep(200);
                     }
-                }, token);
+                }, cancellationToken);
             }
 
             public async Task CustomExecuteAsync(string arg1, StubProbe probe)

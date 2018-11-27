@@ -173,14 +173,14 @@
         private void RegisterMessageHandler()
         {
             this.client.RegisterMessageHandler(
-                async (message, token) =>
+                async (m, t) =>
                 {
                     //this.logger.LogInformation("message received (id={MessageId}, name={MessageName})", message.MessageId, message.Label);
 
-                    if (await this.ProcessMessage(message))
+                    if (await this.ProcessMessage(m))
                     {
                         // complete message so it is not received again
-                        await this.client.CompleteAsync(message.SystemProperties.LockToken);
+                        await this.client.CompleteAsync(m.SystemProperties.LockToken);
                     }
                 },
                 new MessageHandlerOptions(this.ExceptionReceivedHandler)

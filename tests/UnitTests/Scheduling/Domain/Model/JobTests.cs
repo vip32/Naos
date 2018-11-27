@@ -100,7 +100,7 @@
                 this.probe = probe;
             }
 
-            public override async Task ExecuteAsync(CancellationToken token, string[] args = null)
+            public override async Task ExecuteAsync(CancellationToken cancellationToken, string[] args = null)
             {
                 await Task.Run(() =>
                 {
@@ -109,7 +109,7 @@
 
                     for (int i = 0; i < 5; i++) // fake some long running process, can be cancelled with token
                     {
-                        token.ThrowIfCancellationRequested();
+                        cancellationToken.ThrowIfCancellationRequested();
                         //if (cancellationToken.IsCancellationRequested)
                         //{
                         //    Task.FromCanceled(cancellationToken);
@@ -117,7 +117,7 @@
 
                         Thread.Sleep(200);
                     }
-                }, token).ConfigureAwait(false);
+                }, cancellationToken).ConfigureAwait(false);
             }
         }
 

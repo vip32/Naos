@@ -7,6 +7,6 @@
     {
         Task ExecuteAsync(string[] args = null);
 
-        Task ExecuteAsync(CancellationToken token, string[] args = null);
+        Task ExecuteAsync(CancellationToken cancellationToken, string[] args = null);
     }
 }

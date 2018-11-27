@@ -69,7 +69,7 @@
                 new Job(async (t, a) => // defer job creation
                 {
                     var job = this.jobFactory.Create(typeof(T));
-                    if(job == null)
+                    if (job == null)
                     {
                         throw new NaosException($"Cannot create job instance for type {typeof(T).PrettyName()}.");
                     }
@@ -80,18 +80,23 @@
 
         public IJobScheduler Register<T>(string key, string cron, Expression<Func<T, Task>> task)
         {
+            EnsureArg.IsNotNull(task, nameof(task));
+
             return this.Register(
                 new JobRegistration(key, cron),
-                new Job(() => // defer job creation
+                new Job(async (t, a) => // defer job creation
                 {
-                    var job = this.jobFactory.Create(typeof(T));
-                    if (job == null)
+                    await Task.Run(() =>
                     {
-                        throw new NaosException($"Cannot create job instance for type {typeof(T).PrettyName()}.");
-                    }
+                        var job = this.jobFactory.Create(typeof(T));
+                        if (job == null)
+                        {
+                            throw new NaosException($"Cannot create job instance for type {typeof(T).PrettyName()}.");
+                        }
 
-                    var callExpression = task.Body as MethodCallExpression;
-                    callExpression?.Method.Invoke(job, callExpression?.Arguments?.Select(this.ReduceToConstant).ToArray());
+                        var callExpression = task.Body as MethodCallExpression;
+                        callExpression?.Method.Invoke(job, callExpression?.Arguments?.Select(this.ReduceToConstant).ToArray());
+                    });
                 }));
         }
 
@@ -99,14 +104,18 @@
         {
             EnsureArg.IsNotNull(registration, nameof(registration));
             EnsureArg.IsNotNullOrEmpty(registration.Cron, nameof(registration.Cron));
+            EnsureArg.IsNotNull(job, nameof(job));
 
-            if (job != null)
+            registration.Key = registration.Key ?? HashAlgorithm.ComputeHash(job);
+            this.logger.LogInformation($"register scheduled job (key={registration.Key}, cron={registration.Cron})");
+
+            var item = this.registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(registration.Key));
+            if(item.Key != null)
             {
-                registration.Key = registration.Key ?? HashAlgorithm.ComputeHash(job);
-                this.logger.LogInformation($"register scheduled job (key={registration.Key}, cron={registration.Cron})");
-                this.registrations.Add(registration, job); // TODO: remove existing by key
+                this.registrations.Remove(item.Key);
             }
 
+            this.registrations.Add(registration, job);
             return this;
         }
 
@@ -144,12 +153,12 @@
             }
         }
 
-        public async Task TriggerAsync(string key, CancellationToken token, string[] args = null)
+        public async Task TriggerAsync(string key, CancellationToken cancellationToken, string[] args = null)
         {
             var item = this.registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(key));
             if (item.Key != null)
             {
-                await this.ExecuteJobAsync(item.Key, item.Value, token, args ?? item.Key?.Args).ConfigureAwait(false);
+                await this.ExecuteJobAsync(item.Key, item.Value, cancellationToken, args ?? item.Key?.Args).ConfigureAwait(false);
             }
             else
             {
@@ -173,7 +182,7 @@
             this.logger.LogInformation($"job scheduler run finished (activeCount=#{this.activeCount})");
         }
 
-private async Task ExecuteJobsAsync(DateTime moment)
+        private async Task ExecuteJobsAsync(DateTime moment)
         {
             var dueJobs = this.registrations.Where(t => t.Key?.IsDue(moment) == true).Select(r =>
             {
@@ -192,7 +201,7 @@ private async Task ExecuteJobsAsync(DateTime moment)
             await Task.WhenAll(dueJobs).ConfigureAwait(false); // really wait for completion (await)?
         }
 
-        private async Task ExecuteJobAsync(JobRegistration registration, IJob job, CancellationToken token, string[] args = null)
+        private async Task ExecuteJobAsync(JobRegistration registration, IJob job, CancellationToken cancellationToken, string[] args = null)
         {
             if (registration?.Key.IsNullOrEmpty() == false && job != null)
             {
@@ -202,7 +211,7 @@ private async Task ExecuteJobsAsync(DateTime moment)
                     {
                         // TODO: publish domain event (job started)
                         this.logger.LogInformation($"job started (key={registration.Key}, type={job.GetType().PrettyName()})");
-                        await job.ExecuteAsync(token, args).ConfigureAwait(false);
+                        await job.ExecuteAsync(cancellationToken, args).ConfigureAwait(false);
                         this.logger.LogInformation($"job finished (key={registration.Key}, type={job.GetType().PrettyName()})");
                         // TODO: publish domain event (job finished)
                     }

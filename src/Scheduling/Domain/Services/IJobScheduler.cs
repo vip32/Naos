@@ -35,7 +35,7 @@
 
         Task TriggerAsync(string key, string[] args = null);
 
-        Task TriggerAsync(string key, CancellationToken token, string[] args = null);
+        Task TriggerAsync(string key, CancellationToken cancellationToken, string[] args = null);
 
         IJobScheduler UnRegister(string key);
 
