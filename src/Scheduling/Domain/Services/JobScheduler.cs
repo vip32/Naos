@@ -245,13 +245,13 @@
                 catch (OperationCanceledException ex)
                 {
                     // TODO: publish domain event (job failed)
-                    this.logger.LogWarning(ex.Demystify(), $"job canceled (key={registration.Key}), type={job.GetType().PrettyName()})");
+                    this.logger.LogWarning(ex, $"job canceled (key={registration.Key}), type={job.GetType().PrettyName()})");
                     //this.errorHandler?.Invoke(ex);
                 }
                 catch (Exception ex)
                 {
                     // TODO: publish domain event (job failed)
-                    this.logger.LogError(ex.Demystify(), $"job failed (key={registration.Key}), type={job.GetType().PrettyName()})");
+                    this.logger.LogError(ex, $"job failed (key={registration.Key}), type={job.GetType().PrettyName()})");
                     this.errorHandler?.Invoke(ex);
                 }
             }

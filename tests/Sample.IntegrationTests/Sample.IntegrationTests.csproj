@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Bogus" Version="24.3.1" />
+    <PackageReference Include="Bogus" Version="25.0.1" />
     <PackageReference Include="MediatR" Version="5.1.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
     <PackageReference Include="NSubstitute" Version="3.1.0" />

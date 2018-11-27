@@ -56,6 +56,7 @@
                 .MinimumLevel.Information()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
+                .Enrich.With(new ExceptionEnricher())
                 .Enrich.WithProperty("Environment", internalEnvironment)
                 .Enrich.WithProperty("ServiceDescriptor", internalServiceDescriptor)
                 .WriteTo.Debug()
