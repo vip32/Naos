@@ -91,11 +91,7 @@
                     }
 
                     var callExpression = task.Body as MethodCallExpression;
-                    var method = callExpression.Method;
-                    var args = callExpression.Arguments.Select(this.ReduceToConstant).ToArray();
-                    //var args = callExpression.Arguments.Select(a => (a as ConstantExpression)?.Value);
-
-                    method.Invoke(job, args); // this.GetExpressionValues(callExpression.Arguments)
+                    callExpression?.Method.Invoke(job, callExpression?.Arguments?.Select(this.ReduceToConstant).ToArray());
                 }));
         }
 
