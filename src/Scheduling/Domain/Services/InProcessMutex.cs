@@ -2,20 +2,26 @@
 {
     using System;
     using System.Collections.Generic;
+    using EnsureThat;
+    using Microsoft.Extensions.Logging;
 
     public class InProcessMutex : IMutex
     {
-        private readonly object @lock = new object();
+        private readonly ILogger<InProcessMutex> logger;
         private readonly DateTime moment;
         private readonly Dictionary<string, MutexItem> items = new Dictionary<string, MutexItem>();
+        private readonly object @lock = new object();
 
-        public InProcessMutex()
+        public InProcessMutex(ILogger<InProcessMutex> logger)
+            : this(logger, DateTime.UtcNow)
         {
-            this.moment = DateTime.UtcNow;
         }
 
-        public InProcessMutex(DateTime moment)
+        public InProcessMutex(ILogger<InProcessMutex> logger, DateTime moment)
         {
+            EnsureArg.IsNotNull(logger, nameof(logger));
+
+            this.logger = logger;
             this.moment = moment;
         }
 
@@ -27,6 +33,7 @@
                 {
                     item.Locked = false;
                     item.ExpireDate = null;
+                    this.logger.LogInformation($"lock released (key={key})");
                 }
             }
         }
@@ -77,6 +84,8 @@
                         ExpireDate = this.moment.AddMinutes(timeoutMinutes)
                     });
             }
+
+            this.logger.LogInformation($"lock created (key={key}, timeout({new TimeSpan(0, timeoutMinutes, 0).ToString("c")}))");
 
             return true;
         }

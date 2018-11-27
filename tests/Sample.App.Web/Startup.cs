@@ -1,6 +1,7 @@
 ﻿namespace Naos.Sample.App.Web
 {
     using System;
+    using System.Threading.Tasks;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -33,6 +34,7 @@
 
     public class Startup
     {
+        private static readonly Random Random = new Random(DateTime.Now.GetHashCode());
         private readonly Container container = new Container();
 
         public Startup()
@@ -117,9 +119,30 @@
             // Allow Simple Injector to resolve services from ASP.NET Core.
             this.container.AutoCrossWireAspNetComponents(app);
 
-            var scheduler = this.container.GetService<IJobScheduler>();
-            scheduler.Register("key1", Cron.Minutely(), (a) => System.Diagnostics.Trace.WriteLine("+++ hello from task1 +++"));
-            scheduler.Register("key2", Cron.MinuteInterval(2), (a) => System.Diagnostics.Trace.WriteLine("+++ hello from task2 +++"));
+            this.InitializeSchedular(this.container.GetService<IJobScheduler>());
+        }
+
+        private void InitializeSchedular(IJobScheduler scheduler)
+        {
+            scheduler
+                .Register("key1", Cron.Minutely(), (a) => System.Diagnostics.Trace.WriteLine("+++ hello from task1 +++"))
+                .Register(Cron.MinuteInterval(2), (a) =>
+                {
+                    System.Diagnostics.Trace.WriteLine("+++ hello from task2 +++");
+
+                    if (Random.Next(2) == 0)// throw randomly
+                    {
+                        throw new ApplicationException("+++ ohoh error from task 2");
+                    }
+                })
+                .Register("long1", Cron.Minutely(), async (a) =>
+                {
+                    for (int i = 1; i <= 5; i++)
+                    {
+                        System.Diagnostics.Trace.WriteLine($"+++ hello from LONG task #{i}");
+                        await Task.Delay(new TimeSpan(0, 0, 45));
+                    }
+                });
         }
     }
 }

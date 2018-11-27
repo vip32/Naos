@@ -13,10 +13,8 @@
     {
         private readonly ILogger<JobSchedulerHostedService> logger;
         private readonly IJobScheduler scheduler;
-        private bool enabled = true;
-
-        // TODO: start/stop from outside https://stackoverflow.com/questions/51469881/asp-net-core-ihostedservice-manual-start-stop-pause
-        private Timer timer;
+        private bool enabled = true; // TODO: start/stop from outside https://stackoverflow.com/questions/51469881/asp-net-core-ihostedservice-manual-start-stop-pause
+        private Timer schedulerTimer;
 
         public JobSchedulerHostedService(ILogger<JobSchedulerHostedService> logger, Container container)
         {
@@ -30,7 +28,11 @@
         public Task StartAsync(CancellationToken cancellationToken)
         {
             var moment = DateTime.UtcNow;
-            this.timer = new Timer(this.RunSchedulerAsync, null, new TimeSpan(0, 0, 0, 60 - moment.Second, 1000 - moment.Millisecond), TimeSpan.FromSeconds(60));
+            this.schedulerTimer = new Timer(
+                this.RunSchedulerAsync,
+                null,
+                new DateTime(moment.Year, moment.Month, moment.Day, moment.Hour, moment.Minute, 59, 999, DateTimeKind.Utc) - moment, // trigger on the minute start
+                TimeSpan.FromMinutes(1));
             this.logger.LogInformation($"scheduler hosted service started (moment={moment.ToString("o")})");
             return Task.CompletedTask;
         }
@@ -39,7 +41,7 @@
         {
             this.logger.LogInformation("scheduler hosted service stopping");
             this.enabled = false;
-            this.timer?.Change(Timeout.Infinite, 0);
+            this.schedulerTimer?.Change(Timeout.Infinite, 0);
 
             // suspend stopping schedular untill all tasks are done
             if (this.scheduler.IsRunning)
@@ -55,7 +57,7 @@
 
         public void Dispose()
         {
-            this.timer?.Dispose();
+            this.schedulerTimer?.Dispose();
             this.logger.LogInformation("scheduler hosted service stopped");
         }
 

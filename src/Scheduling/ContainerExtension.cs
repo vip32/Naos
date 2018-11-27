@@ -26,7 +26,7 @@
                 return new JobScheduler(
                     container.GetInstance<ILogger<JobScheduler>>(),
                     new SimpleInjectorJobFactory(container),
-                    new InProcessMutex());
+                    new InProcessMutex(container.GetInstance<ILogger<InProcessMutex>>()));
             }/*, Lifestyle.Scoped*/);
 
             return container;

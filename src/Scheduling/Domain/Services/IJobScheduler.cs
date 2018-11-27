@@ -11,23 +11,23 @@
 
         IJobScheduler OnError(Action<Exception> errorHandler);
 
-        IJobScheduler Register(string cron, Action<string[]> action); // TODO: not really needed
+        IJobScheduler Register(string cron, Action<string[]> action, bool preventOverlap = true, TimeSpan? timeout = null); // TODO: not really needed
 
-        IJobScheduler Register(string key, string cron, Action<string[]> action);
+        IJobScheduler Register(string key, string cron, Action<string[]> action, bool preventOverlap = true, TimeSpan? timeout = null);
 
-        IJobScheduler Register(string cron, Func<string[], Task> task);
+        IJobScheduler Register(string cron, Func<string[], Task> task, bool preventOverlap = true, TimeSpan? timeout = null);
 
-        IJobScheduler Register(string key, string cron, Func<string[], Task> task);
+        IJobScheduler Register(string key, string cron, Func<string[], Task> task, bool preventOverlap = true, TimeSpan? timeout = null);
 
         IJobScheduler Register(JobRegistration registration, IJob job);
 
-        IJobScheduler Register<T>(string cron, string[] args = null)
+        IJobScheduler Register<T>(string cron, string[] args = null, bool preventOverlap = true, TimeSpan? timeout = null)
             where T : IJob;
 
-        IJobScheduler Register<T>(string key, string cron, string[] args = null)
+        IJobScheduler Register<T>(string key, string cron, string[] args = null, bool preventOverlap = true, TimeSpan? timeout = null)
             where T : IJob;
 
-        IJobScheduler Register<T>(string key, string cron, Expression<Func<T, Task>> task);
+        IJobScheduler Register<T>(string key, string cron, Expression<Func<T, Task>> task, bool preventOverlap = true, TimeSpan? timeout = null);
 
         Task RunAsync();
 

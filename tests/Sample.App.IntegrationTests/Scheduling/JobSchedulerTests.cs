@@ -185,8 +185,8 @@
             var probe = this.container.GetInstance<StubProbe>();
             var sut = this.container.GetInstance<IJobScheduler>();
 
-            sut.Register<StubJob>("key1", "* 12 * * * *", (t) => t.CustomExecuteAsync("arg1", probe));
-            sut.Register<StubJob>("key2", "* 12 * * * *", (t) => t.CustomExecuteAsync("arg2", probe));
+            sut.Register<StubCustomJob>("key1", "* 12 * * * *", (j) => j.MyExecuteAsync("arg1", probe, CancellationToken.None));
+            sut.Register<StubCustomJob>("key2", "* 12 * * * *", (j) => j.MyExecuteAsync("arg2", probe, CancellationToken.None));
 
             // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
             var t1 = sut.TriggerAsync("key1");
@@ -228,8 +228,18 @@
                     }
                 }, cancellationToken);
             }
+        }
 
-            public async Task CustomExecuteAsync(string arg1, StubProbe probe)
+        private class StubCustomJob : Job
+        {
+            private readonly StubProbe probe;
+
+            public StubCustomJob(StubProbe probe)
+            {
+                this.probe = probe;
+            }
+
+            public async Task MyExecuteAsync(string arg1, StubProbe probe, CancellationToken cancellationToken)
             {
                 await Task.Run(() =>
                 {

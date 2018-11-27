@@ -1,4 +1,5 @@
 pattern cqs https://www.dotnetcurry.com/patterns-practices/1461/command-query-separation-cqs
+cqrs https://github.com/OpenCQRS/OpenCQRS
 api 404s https://www.strathweb.com/2018/10/convert-null-valued-results-to-404-in-asp-net-core-mvc/
 logging: scopes https://www.initpals.com/net-core/scoped-logging-using-microsoft-logger-with-serilog-in-net-core-application/
 xunit configuration https://weblog.west-wind.com/posts/2018/Feb/18/Accessing-Configuration-in-NET-Core-Test-Projects
@@ -15,11 +16,13 @@ tenant resolver https://stackoverflow.com/questions/41820206/c-sharp-architectur
 operations: serilog app insight https://github.com/serilog/serilog-sinks-applicationinsights/issues/37
 idea: configuration validation https://www.stevejgordon.co.uk/asp-net-core-2-2-options-validation
 graphql? https://fullstackmark.com/post/17/building-a-graphql-api-with-aspnet-core-2-and-entity-framework-core
-
+workflow https://github.com/danielgerlag/workflow-core
+web exception handling https://github.com/JosephWoodward/GlobalExceptionHandlerDotNet
 
 messaging: message broker based on rabitmq (for local usage)
 messaging: singalr based provider?
 
+repo: file based https://github.com/ttu/json-flatfile-datastore
 repo: litedb repo https://github.com/mbdavid/LiteDB/wiki/Repository-Pattern
 repo: ef sql logging https://wildermuth.com/2018/11/07/EntityFrameworkCore-Logging-in-ASP-NET-Core
 repo: ef dynamic schema support https://weblogs.thinktecture.com/pawel/2018/06/entity-framework-core-changing-database-schema-at-runtime.html
@@ -35,6 +38,13 @@ operations: log analytics dashboard (operations) https://blogs.technet.microsoft
             https://dev.int.loganalytics.io/documentation/1-Tutorials/Direct-API
 operations: log analytics rest api (repo) https://dev.loganalytics.io/reference
 operations: logevent repos (1-loganalytics, 2-cosmosdb) + specifications (ForCorrelationId, Since, Till, etc...)
+operations: render razor without mcv https://blogs.u2u.be/peter/post/using-razor-outside-of-mvc-for-building-custom-middleware-or-other-generation-stuff
+                                     https://github.com/toddams/RazorLight
+
+scheduling: cron is due but check with optional Specification<DateTime> if the job should really run (maybe only on business days, or other datetime logic)
+
+messaging: azure storage queue messagebroker implementation
+messaging: transport alternatives https://github.com/rebus-org/RebusSamples/tree/master/PubSub 
 
 http://localhost:15672/ (rabbitmq)
 https://localhost:44347/api/values (billing)

@@ -105,7 +105,7 @@
                 await Task.Run(() =>
                 {
                     this.probe.Count++;
-                    System.Diagnostics.Trace.WriteLine("hello from job " + args);
+                    System.Diagnostics.Trace.WriteLine("+++ hello from job " + args);
 
                     for (int i = 0; i < 5; i++) // fake some long running process, can be cancelled with token
                     {
@@ -118,6 +118,26 @@
                         Thread.Sleep(200);
                     }
                 }, cancellationToken).ConfigureAwait(false);
+            }
+        }
+
+        private class StubCustomJob
+        {
+            private readonly StubProbe probe;
+
+            public StubCustomJob(StubProbe probe)
+            {
+                this.probe = probe;
+            }
+
+            public async Task MyExecuteAsync(string arg1, StubProbe probe, CancellationToken cancellationToken)
+            {
+                await Task.Run(() =>
+                {
+                    this.probe.Count++;
+                    probe.Count++;
+                    System.Diagnostics.Trace.WriteLine($"+++ hello from custom job {DateTime.UtcNow.ToString("o")} " + arg1);
+                });
             }
         }
 

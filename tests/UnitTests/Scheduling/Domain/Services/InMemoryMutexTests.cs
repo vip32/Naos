@@ -1,6 +1,8 @@
 ﻿namespace Naos.Core.UnitTests.Scheduling.Domain.Model
 {
+    using Microsoft.Extensions.Logging;
     using Naos.Core.Scheduling.Domain;
+    using NSubstitute;
     using Shouldly;
     using Xunit;
 
@@ -10,7 +12,7 @@
         public void AcquireAndRelease_Test()
         {
             // arrange
-            var sut = new InProcessMutex();
+            var sut = new InProcessMutex(Substitute.For<ILogger<InProcessMutex>>());
 
             // act
             var result1 = sut.TryAcquireLock("key1");

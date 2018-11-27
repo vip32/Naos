@@ -9,16 +9,15 @@
     {
         private readonly CronExpression cronExpression;
 
-        public JobRegistration(string key, string cron, string[] args = null, bool preventOverlap = true, TimeSpan? timeout = null)
+        public JobRegistration(string key, string cron, string[] args = null, bool isReentrant = false, TimeSpan? timeout = null)
         {
-            EnsureArg.IsNotNullOrEmpty(key, nameof(key));
             EnsureArg.IsNotNullOrEmpty(cron, nameof(cron));
 
             this.Key = key;
             this.Cron = cron;
             this.Args = args;
-            this.PreventOverlap = true;
-            this.Timeout = timeout ?? new TimeSpan(1, 0, 0);
+            this.IsReentrant = isReentrant;
+            this.Timeout = timeout ?? new TimeSpan(0, 20, 0);
             if (cron.Count(char.IsWhiteSpace) == 4) // mi ho da mo yy
             {
                 this.cronExpression = CronExpression.Parse(this.Cron, CronFormat.Standard);
@@ -35,7 +34,7 @@
 
         public string[] Args { get; }
 
-        public bool PreventOverlap { get; } = true;
+        public bool IsReentrant { get; }
 
         public TimeSpan Timeout { get; }
 

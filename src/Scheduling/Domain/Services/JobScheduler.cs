@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading;
@@ -24,39 +25,39 @@
             EnsureArg.IsNotNull(logger, nameof(logger));
 
             this.logger = logger;
-            this.mutex = mutex ?? new InProcessMutex();
             this.jobFactory = jobFactory; // what to do when null?
+            this.mutex = mutex; //?? new InProcessMutex();
         }
 
         public bool IsRunning => this.activeCount > 0;
 
-        public IJobScheduler Register(string cron, Action<string[]> action) // TODO: not really needed
+        public IJobScheduler Register(string cron, Action<string[]> action, bool preventOverlap = true, TimeSpan? timeout = null) // TODO: not really needed
         {
-            return this.Register(new JobRegistration(null, cron), new Job(action));
+            return this.Register(new JobRegistration(null, cron, null, preventOverlap, timeout), new Job(action));
         }
 
-        public IJobScheduler Register(string key, string cron, Action<string[]> action)
+        public IJobScheduler Register(string key, string cron, Action<string[]> action, bool preventOverlap = true, TimeSpan? timeout = null)
         {
-            return this.Register(new JobRegistration(key, cron), new Job(action));
+            return this.Register(new JobRegistration(key, cron, null, preventOverlap, timeout), new Job(action));
         }
 
-        public IJobScheduler Register(string cron, Func<string[], Task> task)
+        public IJobScheduler Register(string cron, Func<string[], Task> task, bool preventOverlap = true, TimeSpan? timeout = null)
         {
-            return this.Register(new JobRegistration(null, cron), new Job(task));
+            return this.Register(new JobRegistration(null, cron, null, preventOverlap, timeout), new Job(task));
         }
 
-        public IJobScheduler Register(string key, string cron, Func<string[], Task> task)
+        public IJobScheduler Register(string key, string cron, Func<string[], Task> task, bool preventOverlap = true, TimeSpan? timeout = null)
         {
-            return this.Register(new JobRegistration(key, cron), new Job(task));
+            return this.Register(new JobRegistration(key, cron, null, preventOverlap, timeout), new Job(task));
         }
 
-        public IJobScheduler Register<T>(string cron, string[] args = null)
+        public IJobScheduler Register<T>(string cron, string[] args = null, bool preventOverlap = true, TimeSpan? timeout = null)
             where T : IJob
         {
-            return this.Register<T>(null, cron, args);
+            return this.Register<T>(null, cron, args, preventOverlap, timeout);
         }
 
-        public IJobScheduler Register<T>(string key, string cron, string[] args = null)
+        public IJobScheduler Register<T>(string key, string cron, string[] args = null, bool preventOverlap = true, TimeSpan? timeout = null)
             where T : IJob
         {
             if (!typeof(Job).IsAssignableFrom(typeof(T)))
@@ -65,7 +66,7 @@
             }
 
             return this.Register(
-                new JobRegistration(key, cron, args),
+                new JobRegistration(key, cron, args, preventOverlap, timeout),
                 new Job(async (t, a) => // defer job creation
                 {
                     var job = this.jobFactory.Create(typeof(T));
@@ -78,12 +79,12 @@
                 }));
         }
 
-        public IJobScheduler Register<T>(string key, string cron, Expression<Func<T, Task>> task)
+        public IJobScheduler Register<T>(string key, string cron, Expression<Func<T, Task>> task, bool preventOverlap = true, TimeSpan? timeout = null)
         {
             EnsureArg.IsNotNull(task, nameof(task));
 
             return this.Register(
-                new JobRegistration(key, cron),
+                new JobRegistration(key, cron, null, preventOverlap, timeout),
                 new Job(async (t, a) => // defer job creation
                 {
                     await Task.Run(() =>
@@ -95,8 +96,9 @@
                         }
 
                         var callExpression = task.Body as MethodCallExpression;
-                        callExpression?.Method.Invoke(job, callExpression?.Arguments?.Select(this.ReduceToConstant).ToArray());
-                        // TODO: inject t (=cancallationtoken) into method invoke (argument)? https://gist.github.com/i-e-b/8556753
+                        callExpression?.Method.Invoke(
+                            job,
+                            callExpression?.Arguments?.Select(p => this.MapParameter(p, t)).ToArray());
                     });
                 }));
         }
@@ -108,7 +110,7 @@
             EnsureArg.IsNotNull(job, nameof(job));
 
             registration.Key = registration.Key ?? HashAlgorithm.ComputeHash(job);
-            this.logger.LogInformation($"register scheduled job (key={registration.Key}, cron={registration.Cron})");
+            this.logger.LogInformation($"register scheduled job (key={registration.Key}, cron={registration.Cron}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")})");
 
             var item = this.registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(registration.Key));
             if(item.Key != null)
@@ -211,13 +213,13 @@
                     async Task Execute()
                     {
                         // TODO: publish domain event (job started)
-                        this.logger.LogInformation($"job started (key={registration.Key}, type={job.GetType().PrettyName()})");
+                        this.logger.LogInformation($"job started (key={registration.Key}, type={job.GetType().PrettyName()}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")})");
                         await job.ExecuteAsync(cancellationToken, args).ConfigureAwait(false);
                         this.logger.LogInformation($"job finished (key={registration.Key}, type={job.GetType().PrettyName()})");
                         // TODO: publish domain event (job finished)
                     }
 
-                    if (registration.PreventOverlap)
+                    if (!registration.IsReentrant)
                     {
                         if (this.mutex.TryAcquireLock(registration.Key))
                         {
@@ -243,13 +245,13 @@
                 catch (OperationCanceledException ex)
                 {
                     // TODO: publish domain event (job failed)
-                    this.logger.LogWarning(ex, $"job canceled (key={registration.Key}), type={job.GetType().PrettyName()}) [{ex.GetType().Name}] {ex.Message}");
+                    this.logger.LogWarning(ex.Demystify(), $"job canceled (key={registration.Key}), type={job.GetType().PrettyName()})");
                     //this.errorHandler?.Invoke(ex);
                 }
                 catch (Exception ex)
                 {
                     // TODO: publish domain event (job failed)
-                    this.logger.LogError(ex, $"job failed (key={registration.Key}), type={job.GetType().PrettyName()}) [{ex.GetType().Name}] {ex.Message}");
+                    this.logger.LogError(ex.Demystify(), $"job failed (key={registration.Key}), type={job.GetType().PrettyName()})");
                     this.errorHandler?.Invoke(ex);
                 }
             }
@@ -260,8 +262,14 @@
             return this.registrations.Where(r => r.Key.Key.SafeEquals(key)).Select(r => r.Key).FirstOrDefault();
         }
 
-        private object ReduceToConstant(Expression expression)
+        private object MapParameter(Expression expression, CancellationToken cancellationToken)
         {
+            // https://gist.github.com/i-e-b/8556753
+            if (expression.Type.IsValueType && expression.Type == typeof(CancellationToken))
+            {
+                return cancellationToken;
+            }
+
             var objectMember = Expression.Convert(expression, typeof(object));
             var getterLambda = Expression.Lambda<Func<object>>(objectMember);
             var getter = getterLambda.Compile();
