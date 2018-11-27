@@ -96,7 +96,7 @@
 
                         var callExpression = task.Body as MethodCallExpression;
                         callExpression?.Method.Invoke(job, callExpression?.Arguments?.Select(this.ReduceToConstant).ToArray());
-                        // TODO: inject t (=cancallationtoken) into method invoke (argument)?
+                        // TODO: inject t (=cancallationtoken) into method invoke (argument)? https://gist.github.com/i-e-b/8556753
                     });
                 }));
         }
