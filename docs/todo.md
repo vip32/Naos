@@ -19,6 +19,7 @@ graphql? https://fullstackmark.com/post/17/building-a-graphql-api-with-aspnet-co
 workflow https://github.com/danielgerlag/workflow-core
 web exception handling https://github.com/JosephWoodward/GlobalExceptionHandlerDotNet
 exception enricher demistify https://github.com/nblumhardt/serilog-enrichers-demystify
+identity provider example https://alejandroruizvarela.blogspot.com/2018/11/aspnet-core-identity-with-cosmos-db.html
 
 messaging: message broker based on rabitmq (for local usage)
 messaging: singalr based provider?
