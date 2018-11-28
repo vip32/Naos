@@ -3,6 +3,7 @@
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
     using Naos.Core.App.Configuration;
+    using Serilog;
 
     public static class Program
     {
@@ -17,6 +18,7 @@
                 {
                     NaosConfigurationFactory.Extend(config);
                 })
-                .UseStartup<Startup>();
+                .UseStartup<Startup>()
+                .UseSerilog();
     }
 }

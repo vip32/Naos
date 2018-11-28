@@ -1,5 +1,6 @@
 ﻿namespace Naos.Core.App.Operations.Serilog
 {
+    using System;
     using global::Serilog;
     using global::Serilog.Events;
     using Microsoft.Extensions.Configuration;
@@ -53,8 +54,8 @@
         private static void ConfigureLogger()
         {
             var loggerConfiguration = new LoggerConfiguration()
-                .MinimumLevel.Information()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                 .Enrich.FromLogContext()
                 .Enrich.With(new ExceptionEnricher())
                 .Enrich.WithProperty("Environment", internalEnvironment)
@@ -71,7 +72,36 @@
             //    timeToLive: ttl)
 
             // TODO: split this more so the sinks become better composable
-            var logAnalyticsConfiguration = internalConfiguration.GetSection("naos:operations:azureLogAnalytics").Get<LogAnalyticsConfiguration>();
+            var logFileConfiguration = internalConfiguration.GetSection("naos:operations:logEvents:file").Get<LogFileConfiguration>();
+            if (logFileConfiguration?.Enabled == true)
+            {
+                // https://github.com/serilog/serilog-aspnetcore
+                loggerConfiguration.WriteTo.File(
+                    logFileConfiguration.FileName,
+                    //outputTemplate: diagnosticsLogStreamConfiguration.OutputTemplate "{Timestamp:yyyy-MM-dd HH:mm:ss}|{Level} => {CorrelationId} => {Service}::{SourceContext}{NewLine}    {Message}{NewLine}{Exception}",
+                    fileSizeLimitBytes: logFileConfiguration.FileSizeLimitBytes,
+                    rollOnFileSizeLimit: logFileConfiguration.RollOnFileSizeLimit,
+                    rollingInterval: (RollingInterval)Enum.Parse(typeof(RollingInterval), logFileConfiguration.RollingInterval),
+                    shared: logFileConfiguration.Shared,
+                    flushToDiskInterval: TimeSpan.FromSeconds(logFileConfiguration.FlushToDiskIntervalSeconds));
+            }
+
+            // TODO: split this more so the sinks become better composable
+            var diagnosticsLogStreamConfiguration = internalConfiguration.GetSection("naos:operations:logEvents:azureDiagnosticsLogStream").Get<DiagnosticsLogStreamConfiguration>();
+            if (diagnosticsLogStreamConfiguration?.Enabled == true)
+            {
+                // https://github.com/serilog/serilog-aspnetcore
+                loggerConfiguration.WriteTo.File(
+                    diagnosticsLogStreamConfiguration.FileName,
+                    //outputTemplate: diagnosticsLogStreamConfiguration.OutputTemplate "{Timestamp:yyyy-MM-dd HH:mm:ss}|{Level} => {CorrelationId} => {Service}::{SourceContext}{NewLine}    {Message}{NewLine}{Exception}",
+                    fileSizeLimitBytes: diagnosticsLogStreamConfiguration.FileSizeLimitBytes,
+                    rollOnFileSizeLimit: diagnosticsLogStreamConfiguration.RollOnFileSizeLimit,
+                    shared: diagnosticsLogStreamConfiguration.Shared,
+                    flushToDiskInterval: TimeSpan.FromSeconds(diagnosticsLogStreamConfiguration.FlushToDiskIntervalSeconds));
+            }
+
+            // TODO: split this more so the sinks become better composable
+            var logAnalyticsConfiguration = internalConfiguration.GetSection("naos:operations:azureLogAnalytics").Get<LogAnalyticsConfiguration>(); // TODO: move to operations:logevents:azureLogAnalytics
             if (logAnalyticsConfiguration?.Enabled == true
                 && logAnalyticsConfiguration?.WorkspaceId.IsNullOrEmpty() == false
                 && logAnalyticsConfiguration?.AuthenticationId.IsNullOrEmpty() == false)
@@ -82,7 +112,7 @@
             }
 
             // TODO: application insight setup
-            var appInsightsConfiguration = internalConfiguration.GetSection("naos:operations:azureApplicationInsights").Get<ApplicationInsightsConfiguration>();
+            var appInsightsConfiguration = internalConfiguration.GetSection("naos:operations:logEvents:azureApplicationInsights").Get<ApplicationInsightsConfiguration>();
             if (appInsightsConfiguration?.Enabled == true
                 && appInsightsConfiguration?.ApplicationKey.IsNullOrEmpty() == false)
             {

@@ -33,6 +33,7 @@
     <ProjectReference Include="..\..\src\App.Commands\App.Commands.csproj" />
     <ProjectReference Include="..\..\src\App.Configuration\App.Configuration.csproj" />
     <ProjectReference Include="..\..\src\App.Operations.Serilog\App.Operations.Serilog.csproj" />
+    <ProjectReference Include="..\..\src\App.Operations.Web\App.Operations.Web.csproj" />
     <ProjectReference Include="..\..\src\App.Web\App.Web.csproj" />
     <ProjectReference Include="..\..\src\App\App.csproj" />
     <ProjectReference Include="..\..\src\Common.Dependency.SimpleInjector\Common.Dependency.SimpleInjector.csproj" />

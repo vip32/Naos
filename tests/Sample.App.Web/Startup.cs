@@ -15,6 +15,7 @@
     using Naos.Core.App.Configuration;
     using Naos.Core.App.Operations.Serilog;
     using Naos.Core.App.Web;
+    using Naos.Core.App.Web.Correlation;
     using Naos.Core.Common.Dependency.SimpleInjector;
     using Naos.Core.Domain;
     using Naos.Core.Infrastructure.EntityFramework;
@@ -49,6 +50,7 @@
         {
             services
                 .AddHttpContextAccessor()
+                .AddNaosCorrelation()
                 .AddDbContext<UserAccountsContext>(options => options.UseNaosSqlServer(this.Configuration)) // needed for migrations:add/update
                 .AddMvc(o =>
                 {
@@ -63,7 +65,7 @@
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             this.InitializeContainer(app);
-            this.container.Verify();
+            //this.container.Verify();
 
             if (env.IsDevelopment())
             {
@@ -75,6 +77,7 @@
             }
 
             app.UseHttpsRedirection();
+            app.UseNaosCorrelation();
             app.UseMvc();
         }
 

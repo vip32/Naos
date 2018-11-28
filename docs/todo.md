@@ -20,6 +20,7 @@ workflow https://github.com/danielgerlag/workflow-core
 web exception handling https://github.com/JosephWoodward/GlobalExceptionHandlerDotNet
 exception enricher demistify https://github.com/nblumhardt/serilog-enrichers-demystify
 identity provider example https://alejandroruizvarela.blogspot.com/2018/11/aspnet-core-identity-with-cosmos-db.html
+correlationid https://www.stevejgordon.co.uk/asp-net-core-correlation-ids
 
 messaging: message broker based on rabitmq (for local usage)
 messaging: singalr based provider?
@@ -42,6 +43,8 @@ operations: log analytics rest api (repo) https://dev.loganalytics.io/reference
 operations: logevent repos (1-loganalytics, 2-cosmosdb) + specifications (ForCorrelationId, Since, Till, etc...)
 operations: render razor without mcv https://blogs.u2u.be/peter/post/using-razor-outside-of-mvc-for-building-custom-middleware-or-other-generation-stuff
                                      https://github.com/toddams/RazorLight
+operations: stream logevents https://www.tpeczek.com/2017/02/server-sent-events-sse-support-for.html
+operations: signalr https://github.com/dmitry26/Serilog.Sinks.SignalR.NetCore (console client example)
 
 scheduling: cron is due but check with optional Specification<DateTime> if the job should really run (maybe only on business days, or other datetime logic)
 
