@@ -1,7 +1,6 @@
 variables:
   solution: "**/*.sln"
   buildConfiguration: "Release"
-  buildConfiguration: "Release"
   codecovToken: ""
 
 steps:
