@@ -105,7 +105,11 @@ top 100000 by Timestamp_t")).ConfigureAwait(false);
                         var result = new LogEvent();
                         foreach (var key in keys)
                         {
-                            result.Properties.AddOrUpdate(key, values[keys.IndexOf(key)]);
+                            var value = values[keys.IndexOf(key)];
+                            if (value != null && !string.IsNullOrEmpty(value.ToString()))
+                            {
+                                result.Properties.AddOrUpdate(key, value);
+                            }
                         }
 
                         result.Level = result.Properties.TryGetValue("LogLevel") as string;

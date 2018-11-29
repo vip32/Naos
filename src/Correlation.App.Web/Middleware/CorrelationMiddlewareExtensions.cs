@@ -1,9 +1,10 @@
-﻿namespace Naos.Core.App.Web.Correlation
+﻿namespace Naos.Core.Correlation.App.Web
 {
     using System;
     using EnsureThat;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.Options;
+    using Naos.Core.Correlation.Domain;
 
     /// <summary>
     /// Extension methods for the CorrelationIdMiddleware.

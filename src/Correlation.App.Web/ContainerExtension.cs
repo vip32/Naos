@@ -1,5 +1,6 @@
-﻿namespace Naos.Core.App.Web.Correlation
+﻿namespace Naos.Core.Correlation.App.Web
 {
+    using Naos.Core.Correlation.Domain;
     using SimpleInjector;
 
     /// <summary>
@@ -14,8 +15,8 @@
         /// <returns></returns>
         public static Container AddNaosCorrelation(this Container container)
         {
-            container.Register<ICorrelationContextAccessor, CorrelationContextAccessor>(Lifestyle.Singleton); // sing
-            container.Register<ICorrelationContextFactory, CorrelationContextFactory>(Lifestyle.Transient); // tran
+            container.Register<ICorrelationContextAccessor, CorrelationContextAccessor>(Lifestyle.Singleton);
+            container.Register<ICorrelationContextFactory, CorrelationContextFactory>(Lifestyle.Transient);
 
             return container;
         }

@@ -31,7 +31,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\App.Configuration\App.Configuration.csproj" />
     <ProjectReference Include="..\..\src\App.Operations.Serilog\App.Operations.Serilog.csproj" />
-    <ProjectReference Include="..\..\src\App.Web.Correlation\App.Web.Correlation.csproj" />
     <ProjectReference Include="..\..\src\Common.Dependency.SimpleInjector\Common.Dependency.SimpleInjector.csproj" />
     <ProjectReference Include="..\..\src\Messaging.Infrastructure.Azure\Messaging.Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\..\src\Operations.Infrastructure.Azure.LogAnalytics\Operations.Infrastructure.Azure.LogAnalytics.csproj" />

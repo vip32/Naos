@@ -1,7 +1,8 @@
-﻿namespace Naos.Core.App.Web.Correlation
+﻿namespace Naos.Core.Correlation.App.Web
 {
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
+    using Naos.Core.Correlation.Domain;
 
     /// <summary>
     /// Extensions on the <see cref="IServiceCollection"/>.

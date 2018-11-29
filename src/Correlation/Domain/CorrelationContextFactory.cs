@@ -1,9 +1,11 @@
-﻿namespace Naos.Core.App.Web.Correlation
+﻿namespace Naos.Core.Correlation.Domain
 {
+    using Naos.Core.Correlation.Domain.Model;
+
     /// <inheritdoc />
     public class CorrelationContextFactory : ICorrelationContextFactory
     {
-        private readonly ICorrelationContextAccessor correlationContextAccessor;
+        private readonly ICorrelationContextAccessor accessor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CorrelationContextFactory" /> class.
@@ -19,28 +21,28 @@
         /// <param name="correlationContextAccessor">The <see cref="ICorrelationContextAccessor"/> through which the <see cref="CorrelationContext"/> will be set.</param>
         public CorrelationContextFactory(ICorrelationContextAccessor correlationContextAccessor)
         {
-            this.correlationContextAccessor = correlationContextAccessor;
+            this.accessor = correlationContextAccessor;
         }
 
         /// <inheritdoc />
         public CorrelationContext Create(string correlationId, string header)
         {
-            var correlationContext = new CorrelationContext(correlationId, header);
+            var result = new CorrelationContext(correlationId, header);
 
-            if (this.correlationContextAccessor != null)
+            if (this.accessor != null)
             {
-                this.correlationContextAccessor.CorrelationContext = correlationContext;
+                this.accessor.Context = result;
             }
 
-            return correlationContext;
+            return result;
         }
 
         /// <inheritdoc />
         public void Dispose()
         {
-            if (this.correlationContextAccessor != null)
+            if (this.accessor != null)
             {
-                this.correlationContextAccessor.CorrelationContext = null;
+                this.accessor.Context = null;
             }
         }
     }

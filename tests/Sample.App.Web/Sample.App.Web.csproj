@@ -28,10 +28,10 @@
     <ProjectReference Include="..\..\src\App.Commands\App.Commands.csproj" />
     <ProjectReference Include="..\..\src\App.Operations.Serilog\App.Operations.Serilog.csproj" />
     <ProjectReference Include="..\..\src\App.Operations.Web\App.Operations.Web.csproj" />
-    <ProjectReference Include="..\..\src\App.Web.Correlation\App.Web.Correlation.csproj" />
     <ProjectReference Include="..\..\src\App.Web\App.Web.csproj" />
     <ProjectReference Include="..\..\src\App\App.csproj" />
     <ProjectReference Include="..\..\src\Common.Dependency.SimpleInjector\Common.Dependency.SimpleInjector.csproj" />
+    <ProjectReference Include="..\..\src\Correlation.App.Web\Correlation.App.Web.csproj" />
     <ProjectReference Include="..\..\src\Messaging.Infrastructure.Azure\Messaging.Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\..\src\Messaging\Messaging.csproj" />
     <ProjectReference Include="..\..\src\Operations.Infrastructure.Azure.LogAnalytics\Operations.Infrastructure.Azure.LogAnalytics.csproj" />

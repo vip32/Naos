@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.App.Web.Correlation
+﻿namespace Naos.Core.Correlation.App.Web
 {
     using System;
     using System.Threading.Tasks;
@@ -7,6 +7,7 @@
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Microsoft.Extensions.Primitives;
+    using Naos.Core.Correlation.Domain;
 
     /// <summary>
     /// Middleware which attempts to reads / creates a Correlation ID that can then be used in logs and
@@ -67,7 +68,7 @@
                 });
             }
 
-            using (this.logger.BeginScope("{CorrelationId}", correlationId))
+            using (this.logger.BeginScope($"{{{this.options.LogPropertyName}}}", correlationId))
             {
                 await this.next(context);
             }

@@ -3,13 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Text;
     using System.Threading.Tasks;
     using Humanizer;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-    using Naos.Core.Common;
-    using Naos.Core.Common.Web;
     using Naos.Core.Operations.Domain;
     using Naos.Core.Operations.Domain.Repositories;
 

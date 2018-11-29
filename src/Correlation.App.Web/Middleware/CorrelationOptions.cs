@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.App.Web.Correlation
+﻿namespace Naos.Core.Correlation.App.Web
 {
     /// <summary>
     /// Options for correlation ids.
@@ -6,11 +6,14 @@
     public class CorrelationOptions
     {
         private const string DefaultHeader = "x-correlationid";
+        private const string DefaultLogPropertyName = "CorrelationId";
 
         /// <summary>
         /// The name of the header from which the Correlation ID is read/written.
         /// </summary>
         public string Header { get; set; } = DefaultHeader;
+
+        public string LogPropertyName { get; set; } = DefaultLogPropertyName;
 
         /// <summary>
         /// <para>
