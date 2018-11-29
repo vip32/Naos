@@ -5,7 +5,7 @@ variables:
 
 steps:
   - task: gittools.gitversion.gitversion-task.GitVersion@3
-    displayName: GitVersion
+    displayName: gitversion
 
   - task: DotNetCoreCLI@2
     displayName: "dotnet restore"
