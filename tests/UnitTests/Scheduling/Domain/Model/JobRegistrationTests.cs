@@ -14,7 +14,8 @@
         [InlineData("* 12 * * * *", "15:12:59", true)]
         [InlineData("* 12 * * * *", "15:13", false)]
         [InlineData("* 12 * * * *", "15:05", false)]
-        [InlineData("* 12 * * * *", "15:05:45", false)] // more crons https://github.com/HangfireIO/Cronos/blob/master/tests/Cronos.Tests/CronExpressionFacts.cs
+        [InlineData("* 12 * * * *", "15:05:45", false)]
+        [InlineData("12 * * * *", "15:05:45", false)] // more crons https://github.com/HangfireIO/Cronos/blob/master/tests/Cronos.Tests/CronExpressionFacts.cs
         public void IsDueInMinute_Test(string cron, string moment, bool expected)
         {
             var sut = new JobRegistration("key1", cron);
@@ -29,6 +30,7 @@
         [InlineData("* * 15 * * *", "15:59", true)]
         [InlineData("* * 15 * * *", "16:00", false)]
         [InlineData("* * 15 * * *", "16:05", false)]
+        [InlineData("* 15 * * *", "16:05", false)]
         public void IsDueInHour_Test(string cron, string moment, bool expected)
         {
             var sut = new JobRegistration("key1", cron);
