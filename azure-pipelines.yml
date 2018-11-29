@@ -28,9 +28,12 @@ steps:
       projects: "**/*[Tt]ests/*UnitTests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput='$(Build.ArtifactStagingDirectory)" # https://github.com/tonerdo/coverlet
       arguments: "--configuration $(buildConfiguration)"
 
-  - task: DotNetCoreCLI@2
-    displayName: "codecov upload" # https://docs.codecov.io/docs/about-the-codecov-bash-uploader
-    arguments: "-f (Build.ArtifactStagingDirectory)/coverage.opencover.xml -t $(codecovToken)"
+  - task: Bash@3
+    displayName: 'codecov upload' # https://docs.codecov.io/docs/about-the-codecov-bash-uploader
+    inputs:
+      targetType: "filePath"
+      filePath: ./tests/UnitTests/CodecovUploader.sh
+      arguments: "-f (Build.ArtifactStagingDirectory)/coverage.opencover.xml -t $(codecovToken)"
 
   - task: DotNetCoreCLI@2
     displayName: "dotnet publish"
