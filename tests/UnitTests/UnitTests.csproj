@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="coverlet.msbuild" Version="2.4.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="MediatR" Version="5.1.0" />
     <PackageReference Include="AutoMapper" Version="8.0.0" />
     <PackageReference Include="AutoMapper.Extensions.ExpressionMapping" Version="2.0.0" />

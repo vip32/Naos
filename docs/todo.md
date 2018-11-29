@@ -1,5 +1,6 @@
 pattern cqs https://www.dotnetcurry.com/patterns-practices/1461/command-query-separation-cqs
 cqrs https://github.com/OpenCQRS/OpenCQRS
+crs https://github.com/gautema/CQRSlite (eventstore)
 api 404s https://www.strathweb.com/2018/10/convert-null-valued-results-to-404-in-asp-net-core-mvc/
 logging: scopes https://www.initpals.com/net-core/scoped-logging-using-microsoft-logger-with-serilog-in-net-core-application/
 xunit configuration https://weblog.west-wind.com/posts/2018/Feb/18/Accessing-Configuration-in-NET-Core-Test-Projects
@@ -21,6 +22,9 @@ web exception handling https://github.com/JosephWoodward/GlobalExceptionHandlerD
 exception enricher demistify https://github.com/nblumhardt/serilog-enrichers-demystify
 identity provider example https://alejandroruizvarela.blogspot.com/2018/11/aspnet-core-identity-with-cosmos-db.html
 correlationid https://www.stevejgordon.co.uk/asp-net-core-correlation-ids
+polly logging ctx https://github.com/stevejgordon/PollyLoggingContextSample
+multi tenant (tenancy) https://github.com/Finbuckle/Finbuckle.MultiTenant
+code coverage https://github.com/tonerdo/coverlet + https://codecov.io/gh/vip32/Naos.Core
 
 messaging: message broker based on rabitmq (for local usage)
 messaging: singalr based provider?

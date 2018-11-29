@@ -23,7 +23,7 @@ steps:
     displayName: "dotnet test"
     inputs:
       command: test
-      projects: "**/*[Tt]ests/*UnitTests.csproj"
+      projects: "**/*[Tt]ests/*UnitTests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput='$(Build.ArtifactStagingDirectory)" # https://github.com/tonerdo/coverlet
       arguments: "--configuration $(buildConfiguration)"
 
   - task: DotNetCoreCLI@2
