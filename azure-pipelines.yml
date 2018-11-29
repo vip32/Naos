@@ -29,8 +29,8 @@ steps:
       arguments: "--configuration $(buildConfiguration)"
 
   - bash: test.sh
-    displayName: 'codecov upload' # https://docs.codecov.io/docs/about-the-codecov-bash-uploader
-    arguments: '-f (Build.ArtifactStagingDirectory)/coverage.opencover.xml -t $(codecovToken)'
+    displayName: "codecov upload" # https://docs.codecov.io/docs/about-the-codecov-bash-uploader
+    arguments: "-f (Build.ArtifactStagingDirectory)/coverage.opencover.xml -t $(codecovToken)"
 
   - task: DotNetCoreCLI@2
     displayName: "dotnet publish"
