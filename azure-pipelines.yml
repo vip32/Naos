@@ -26,7 +26,7 @@ steps:
     displayName: "dotnet test"
     inputs:
       command: test
-      projects: "**/*[Tt]ests/*UnitTests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput='$(Build.ArtifactStagingDirectory)" # https://github.com/tonerdo/coverlet
+      projects: "**/*[Tt]ests/*UnitTests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=opencover" # https://github.com/tonerdo/coverlet
       arguments: "--configuration $(buildConfiguration)"
 
   - task: Bash@3
@@ -34,8 +34,7 @@ steps:
     inputs:
       targetType: "filePath"
       filePath: "./tests/UnitTests/CodecovUploader.sh"
-      workingDirectory: $(Build.ArtifactStagingDirectory)
-      arguments: "-f coverage.opencover.xml -t $codecovToken"
+      arguments: "-f ./tests/UnitTests/coverage.opencover.xml -t $codecovToken"
 
   - task: DotNetCoreCLI@2
     displayName: "dotnet publish"
