@@ -35,7 +35,7 @@ steps:
       targetType: "filePath"
       filePath: "./tests/UnitTests/CodecovUploader.sh"
       workingDirectory: $(Build.ArtifactStagingDirectory)
-      arguments: "-f coverage.xml -t $codecovToken"
+      arguments: "-f coverage.xml -t $(codecovToken)"
 
   - task: DotNetCoreCLI@2
     displayName: "dotnet publish"
