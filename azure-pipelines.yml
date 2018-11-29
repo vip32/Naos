@@ -32,7 +32,7 @@ steps:
     displayName: 'codecov upload'  # https://docs.codecov.io/docs/about-the-codecov-bash-uploader
     inputs:
       targetType: "filePath"
-      filePath: ./tests/UnitTests/CodecovUploader.sh
+      filePath: "./tests/UnitTests/CodecovUploader.sh"
       arguments: "-f (Build.ArtifactStagingDirectory)/coverage.opencover.xml -t $(codecovToken)"
 
   - task: DotNetCoreCLI@2
