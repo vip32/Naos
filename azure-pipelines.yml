@@ -36,7 +36,7 @@ steps:
       targetType: "filePath"
       filePath: "./tests/UnitTests/CodecovUploader.sh"
       workingDirectory: $(Agent.BuildDirectory)
-      arguments: "-f $coverage.opencover.xml -t $codecovToken"
+      arguments: "-f coverage.opencover.xml -t $codecovToken"
 
   - task: DotNetCoreCLI@2
     displayName: "dotnet publish"
