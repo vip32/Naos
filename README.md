@@ -1,5 +1,6 @@
 [![Build Status](https://dev.azure.com/doomsday32/Naos/_apis/build/status/vip32.Naos)](https://dev.azure.com/doomsday32/Naos/_build/latest?definitionId=1)
 [![CodeFactor](https://www.codefactor.io/repository/github/vip32/naos.core/badge)](https://www.codefactor.io/repository/github/vip32/naos.core)
+[![codecov](https://codecov.io/gh/vip32/Naos.Core/branch/master/graph/badge.svg)](https://codecov.io/gh/vip32/Naos.Core)
 
 ![Alt text](/docs/logo.png?raw=true "Naos")
 
