@@ -35,7 +35,7 @@ steps:
     inputs:
       targetType: "filePath"
       filePath: "./tests/UnitTests/CodecovUploader.sh"
-      workingDirectory: $(Agent.BuildDirectory)
+      workingDirectory: $(Build.ArtifactStagingDirectory)
       arguments: "-f coverage.opencover.xml -t $codecovToken"
 
   - task: DotNetCoreCLI@2
