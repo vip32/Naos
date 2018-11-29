@@ -34,7 +34,7 @@ steps:
     inputs:
       targetType: "filePath"
       filePath: "./tests/UnitTests/CodecovUploader.sh"
-      arguments: "-f ./tests/UnitTests/coverage.opencover.xml -t $codecovToken"
+      arguments: "-f ./coverage.opencover.xml -t $codecovToken"
 
   - task: DotNetCoreCLI@2
     displayName: "dotnet publish"
