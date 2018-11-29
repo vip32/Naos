@@ -30,7 +30,7 @@ steps:
       arguments: "--configuration $(buildConfiguration)"
 
   - task: Bash@3
-    displayName: "codecov upload"
+    displayName: "codecov upload" # https://docs.codecov.io/docs/about-the-codecov-bash-uploader
     inputs:
       targetType: "filePath"
       filePath: "./tests/UnitTests/CodecovUploader.sh"
