@@ -1,7 +1,7 @@
 variables:
   solution: "**/*.sln"
   buildConfiguration: "Release"
-  codecovToken: ""
+  codecovToken: "$(codecov.token)"
 
 # https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/?view=vsts
 
