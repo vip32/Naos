@@ -27,7 +27,7 @@ steps:
     inputs:
       command: test
       projects: "**/*[Tt]ests/*UnitTests.csproj"
-      arguments: "/p:Configuration=$(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput='$(Build.ArtifactStagingDirectory)" # https://github.com/tonerdo/coverlet
+      arguments: "/p:Configuration=$(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=$(Build.ArtifactStagingDirectory)" # https://github.com/tonerdo/coverlet
 
   - task: Bash@3
     displayName: "codecov upload" # https://docs.codecov.io/docs/about-the-codecov-bash-uploader
