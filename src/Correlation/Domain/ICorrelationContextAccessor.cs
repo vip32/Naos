@@ -8,7 +8,7 @@
     public interface ICorrelationContextAccessor
     {
         /// <summary>
-        /// The <see cref="Context"/> for the current request.
+        /// The <see cref="CorrelationContext"/> for the current request.
         /// </summary>
         CorrelationContext Context { get; set; }
     }

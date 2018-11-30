@@ -7,6 +7,7 @@
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Microsoft.Extensions.Primitives;
+    using Naos.Core.Common;
     using Naos.Core.Correlation.Domain;
 
     /// <summary>
@@ -40,58 +41,79 @@
         /// Processes a request to synchronise TraceIdentifier and Correlation ID headers. Also creates a
         /// <see cref="CorrelationContext"/> for the current request and disposes of it when the request is completing.
         /// </summary>
-        /// <param name="context">The <see cref="HttpContext"/> for the current request.</param>
-        /// <param name="correlationContextFactory">The <see cref="ICorrelationContextFactory"/> which can create a <see cref="CorrelationContext"/>.</param>
+        /// <param name="httpContext">The <see cref="HttpContext"/> for the current request.</param>
+        /// <param name="contextFactory">The <see cref="ICorrelationContextFactory"/> which can create a <see cref="CorrelationContext"/>.</param>
         /// <returns></returns>
-        public async Task Invoke(HttpContext context, ICorrelationContextFactory correlationContextFactory)
+        public async Task Invoke(HttpContext httpContext, ICorrelationContextFactory contextFactory)
         {
-            var correlationId = this.SetCorrelationId(context);
+            var correlationId = this.EnsureCorrelationId(httpContext);
+            var requestId = this.EnsureRequestId(httpContext);
 
             if (this.options.UpdateTraceIdentifier)
             {
-                context.TraceIdentifier = correlationId;
+                this.logger.LogDebug($"API request ({requestId}) now has traceIdentifier {correlationId}, was {httpContext.TraceIdentifier}"); // TODO: move to request logging middleware (operations)
+                httpContext.TraceIdentifier = correlationId;
             }
 
-            correlationContextFactory.Create(correlationId, this.options.Header);
+            contextFactory.Create(correlationId, this.options.CorrelationHeader, requestId, this.options.RequestHeader);
 
             if (this.options.IncludeInResponse)
             {
-                // apply the correlation ID to the response header for client side tracking
-                context.Response.OnStarting(() =>
+                httpContext.Response.OnStarting(() =>
                 {
-                    if (!context.Response.Headers.ContainsKey(this.options.Header))
+                    // add the response headers
+                    if (!httpContext.Response.Headers.ContainsKey(this.options.CorrelationHeader))
                     {
-                        context.Response.Headers.Add(this.options.Header, correlationId);
+                        httpContext.Response.Headers.Add(this.options.CorrelationHeader, correlationId);
+                    }
+                    if (!httpContext.Response.Headers.ContainsKey(this.options.RequestHeader))
+                    {
+                        httpContext.Response.Headers.Add(this.options.RequestHeader, requestId);
                     }
 
                     return Task.CompletedTask;
                 });
             }
 
-            using (this.logger.BeginScope($"{{{this.options.LogPropertyName}}}", correlationId))
+            using (this.logger.BeginScope($"{{{this.options.CorrelationLogPropertyName}}}{{{this.options.RequestLogPropertyName}}}", correlationId, requestId))
             {
-                await this.next(context);
+                await this.next(httpContext);
             }
 
-            correlationContextFactory.Dispose();
+            contextFactory.Dispose();
         }
 
-        private static bool RequiresGenerationOfCorrelationId(bool isInHeader, StringValues headerId) =>
-            !isInHeader || StringValues.IsNullOrEmpty(headerId);
-
-        private StringValues SetCorrelationId(HttpContext context)
+        private StringValues EnsureCorrelationId(HttpContext httpContext)
         {
-            var found = context.Request.Headers.TryGetValue(this.options.Header, out var correlationId);
-
-            if (RequiresGenerationOfCorrelationId(found, correlationId))
+            var isFound = httpContext.Request.Headers.TryGetValue(this.options.CorrelationHeader, out var id);
+            if (!isFound || StringValues.IsNullOrEmpty(id))
             {
-                correlationId = this.GenerateCorrelationId(context.TraceIdentifier);
+                if (this.options.UseGuidAsCorrelationId)
+                {
+                    id = Guid.NewGuid().ToString();
+                }
+                else if (this.options.UseHashAsCorrelationId)
+                {
+                    id = HashAlgorithm.ComputeHash(httpContext.TraceIdentifier);
+                }
+                else
+                {
+                    id = httpContext.TraceIdentifier;
+                }
             }
 
-            return correlationId;
+            return id;
         }
 
-        private StringValues GenerateCorrelationId(string traceIdentifier) =>
-            this.options.UseGuidForCorrelationId || string.IsNullOrEmpty(traceIdentifier) ? Guid.NewGuid().ToString() : traceIdentifier;
+        private StringValues EnsureRequestId(HttpContext httpContext)
+        {
+            var isFound = httpContext.Request.Headers.TryGetValue(this.options.RequestHeader, out var id);
+            if (!isFound || StringValues.IsNullOrEmpty(id))
+            {
+                id = RandomGenerator.GenerateString(this.options.RequestIdLength, this.options.RequestIdAlphanumeric);
+            }
+
+            return id;
+        }
     }
 }

@@ -1,27 +1,39 @@
 ﻿namespace Naos.Core.Correlation.Domain.Model
 {
     /// <summary>
-    /// Provides access to per request correlation properties.
+    /// Provides access to the request correlation properties.
     /// </summary>
     public class CorrelationContext
     {
-        public CorrelationContext(string correlationId, string header)
+        public CorrelationContext(string correlationId, string correlationHeader, string requestId, string requestHeader)
         {
-            EnsureThat.EnsureArg.IsNotNullOrEmpty(correlationId, nameof(correlationId));
-            EnsureThat.EnsureArg.IsNotNullOrEmpty(correlationId, nameof(header));
+            //EnsureThat.EnsureArg.IsNotNullOrEmpty(correlationId, nameof(correlationId));
+            //EnsureThat.EnsureArg.IsNotNullOrEmpty(correlationId, nameof(header));
 
             this.CorrelationId = correlationId;
-            this.Header = header;
+            this.CorrelationHeader = correlationHeader;
+            this.RequestId = requestId;
+            this.RequestHeader = requestHeader;
         }
 
         /// <summary>
-        /// The Correlation ID which is applicable to the current request.
+        /// The correlation id which is applicable to the current request.
         /// </summary>
         public string CorrelationId { get; }
 
         /// <summary>
-        /// The name of the header from which the Correlation ID is read/written.
+        /// The name of the header from which the correlation id is read/written.
         /// </summary>
-        public string Header { get; }
+        public string CorrelationHeader { get; }
+
+        /// <summary>
+        /// The request id which is applicable to the current request.
+        /// </summary>
+        public string RequestId { get; }
+
+        /// <summary>
+        /// The name of the header from which the request id is read/written.
+        /// </summary>
+        public string RequestHeader { get; }
     }
 }

@@ -51,7 +51,7 @@
             var response = await this.httpClient.SendAsync(
                 this.PrepareRequest(@"
 LogEvents_Development_CL | where LogMessage_s != '' | 
-where TimeGenerated > ago(24h) and LogLevel_s == 'Information' | 
+where TimeGenerated > ago(24h) and LogLevel_s != 'Verbose' | 
 order by Timestamp_t | 
 top 100000 by Timestamp_t")).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();

@@ -18,16 +18,16 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="CorrelationContextFactory"/> class.
         /// </summary>
-        /// <param name="correlationContextAccessor">The <see cref="ICorrelationContextAccessor"/> through which the <see cref="CorrelationContext"/> will be set.</param>
-        public CorrelationContextFactory(ICorrelationContextAccessor correlationContextAccessor)
+        /// <param name="accessor">The <see cref="ICorrelationContextAccessor"/> through which the <see cref="CorrelationContext"/> will be set.</param>
+        public CorrelationContextFactory(ICorrelationContextAccessor accessor)
         {
-            this.accessor = correlationContextAccessor;
+            this.accessor = accessor;
         }
 
         /// <inheritdoc />
-        public CorrelationContext Create(string correlationId, string header)
+        public CorrelationContext Create(string correlationId, string correlationHeader, string requestId, string requestHeader)
         {
-            var result = new CorrelationContext(correlationId, header);
+            var result = new CorrelationContext(correlationId, correlationHeader, requestId, requestHeader);
 
             if (this.accessor != null)
             {

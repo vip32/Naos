@@ -7,12 +7,12 @@
     using Naos.Core.Correlation.Domain;
 
     /// <summary>
-    /// Extension methods for the CorrelationIdMiddleware.
+    /// Extension methods for the correlation middleware.
     /// </summary>
     public static class CorrelationMiddlewareExtensions
     {
         /// <summary>
-        /// Enables correlation IDs for the request.
+        /// Enables correlation/request ids for the API request/responses.
         /// </summary>
         /// <param name="app"></param>
         /// <returns></returns>
@@ -24,23 +24,7 @@
         }
 
         /// <summary>
-        /// Enables correlation IDs for the request.
-        /// </summary>
-        /// <param name="app"></param>
-        /// <param name="header">The header field name to use for the correlation ID.</param>
-        /// <returns></returns>
-        public static IApplicationBuilder UseNaosCorrelation(this IApplicationBuilder app, string header)
-        {
-            EnsureArg.IsNotNull(app, nameof(app));
-
-            return app.UseNaosCorrelation(new CorrelationOptions
-            {
-                Header = header
-            });
-        }
-
-        /// <summary>
-        /// Enables correlation IDs for the request.
+        /// Enables correlation/request ids for the API request/responses
         /// </summary>
         /// <param name="app"></param>
         /// <param name="options"></param>
@@ -52,7 +36,7 @@
 
             if (app.ApplicationServices.GetService(typeof(ICorrelationContextFactory)) == null)
             {
-                throw new InvalidOperationException("Unable to find the required services. You must call the AddCorrelationId method in ConfigureServices in the application startup code.");
+                throw new InvalidOperationException("Unable to find the required services. You must call the AddNaosCorrelation method in ConfigureServices in the application startup code.");
             }
 
             return app.UseMiddleware<CorrelationMiddleware>(Options.Create(options));

@@ -1,43 +1,59 @@
 ﻿namespace Naos.Core.Correlation.App.Web
 {
     /// <summary>
-    /// Options for correlation ids.
+    /// Options for correlation.
     /// </summary>
     public class CorrelationOptions
     {
-        private const string DefaultHeader = "x-correlationid";
-        private const string DefaultLogPropertyName = "CorrelationId";
+        private const string DefaultCorrelationHeader = "X-Correlation-Id";
+        private const string DefaultCorrelationLogPropertyName = "CorrelationId";
+        private const string DefaultRequestHeader = "X-Request-Id";
+        private const string DefaultRequestLogPropertyName = "RequestId";
 
         /// <summary>
-        /// The name of the header from which the Correlation ID is read/written.
+        /// The name of the header from which the correlation id is read/written.
         /// </summary>
-        public string Header { get; set; } = DefaultHeader;
+        public string CorrelationHeader { get; set; } = DefaultCorrelationHeader;
 
-        public string LogPropertyName { get; set; } = DefaultLogPropertyName;
+        public string CorrelationLogPropertyName { get; set; } = DefaultCorrelationLogPropertyName;
 
         /// <summary>
-        /// <para>
-        /// Controls whether the correlation ID is returned in the response headers.
-        /// </para>
-        /// <para>Default: true</para>
+        /// The name of the header from which the request id is read/written.
+        /// </summary>
+        public string RequestHeader { get; set; } = DefaultRequestHeader;
+
+        public string RequestLogPropertyName { get; set; } = DefaultRequestLogPropertyName;
+
+        /// <summary>
+        /// Controls whether the correlation/request id is returned in the response headers.
         /// </summary>
         public bool IncludeInResponse { get; set; } = true;
 
         /// <summary>
-        /// <para>
-        /// Controls whether the ASP.NET Core TraceIdentifier will be set to match the CorrelationId.
-        /// </para>
-        /// <para>Default: true</para>
+        /// Controls whether the ASP.NET TraceIdentifier will be set to match the CorrelationId.
         /// </summary>
         public bool UpdateTraceIdentifier { get; set; } = true;
 
         /// <summary>
-        /// <para>
         /// Controls whether a GUID will be used in cases where no correlation ID is retrieved from the request header.
         /// When false the TraceIdentifier for the current request will be used.
-        /// </para>
-        /// <para> Default: false.</para>
         /// </summary>
-        public bool UseGuidForCorrelationId { get; set; } = false;
+        public bool UseGuidAsCorrelationId { get; set; } = true;
+
+        /// <summary>
+        /// Controls whether a hash will be used in cases where no correlation ID is retrieved from the request header.
+        /// When false the TraceIdentifier for the current request will be hashed and used.
+        /// </summary>
+        public bool UseHashAsCorrelationId { get; set; }
+
+        /// <summary>
+        /// Controls the length of the request id if it could not be retrieved from the request header.
+        /// </summary>
+        public int RequestIdLength { get; set; } = 5;
+
+        /// <summary>
+        /// Controls if the generated request id contains alphanumeric chharacters it could not be retrieved from the request header.
+        /// </summary>
+        public bool RequestIdAlphanumeric { get; set; }
     }
 }
