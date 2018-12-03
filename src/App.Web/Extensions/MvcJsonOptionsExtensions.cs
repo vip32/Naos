@@ -1,13 +1,14 @@
-﻿namespace Naos.Core.App.Web
+﻿namespace Naos.Core.App.Web // TODO: Naos.Core.Common.Web.Mvc?
 {
     using Microsoft.AspNetCore.Mvc;
     using Naos.Core.Common;
+    using Newtonsoft.Json;
 
     public static class MvcJsonOptionsExtensions
     {
-        public static MvcJsonOptions AddDefaultJsonSerializerSettings(this MvcJsonOptions source)
+        public static MvcJsonOptions AddDefaultJsonSerializerSettings(this MvcJsonOptions source, JsonSerializerSettings settings = null)
         {
-            var settings = DefaultJsonSerializerSettings.Create();
+            settings = settings ?? DefaultJsonSerializerSettings.Create();
 
             // copy some json serializer settings for the mvcoptions
             source.SerializerSettings.ContractResolver = settings.ContractResolver;
