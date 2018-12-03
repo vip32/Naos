@@ -1,7 +1,5 @@
-﻿namespace Naos.Core.Correlation.Domain
+﻿namespace Naos.Core.App.Correlation
 {
-    using Naos.Core.Correlation.Domain.Model;
-
     /// <summary>
     /// Provides access to the <see cref="CorrelationContext"/> for the current request.
     /// </summary>

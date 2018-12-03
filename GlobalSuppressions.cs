@@ -71,9 +71,11 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2240:Add an implementation of GetObjectData to exception type", Justification = "<Pending>")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Cryptography", "CA5351:Do Not Use Broken Cryptographic Algorithms", Justification = "<Pending>")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1041:Provide ObsoleteAttribute message", Justification = "<Pending>")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Info Code Smell", "SA1100:Do not prefix calls with base unless local implementation exists", Justification = "<Pending>")]
 
 // SonarQube
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Info Code Smell", "S1135:Track uses of \"TODO\" tags", Justification = "<Pending>")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S125:Sections of code should not be commented out", Justification = "<Pending>")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S3925:\"ISerializable\" should be implemented correctly", Justification = "<Pending>")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Security Hotspot", "S2245:Using pseudorandom number generators (PRNGs) is security-sensitive", Justification = "<Pending>")]
+//SA1100: Do not prefix calls with base unless local implementation exists

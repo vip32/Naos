@@ -8,20 +8,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Countries\App\" />
     <Folder Include="Customers\App\" />
     <Folder Include="Customers\App.Web\" />
     <Folder Include="Customers\Domain\Repositories\Decorators\" />
     <Folder Include="Customers\Infrastructure\" />
     <Folder Include="UserAccounts\App.Commands\" />
     <Folder Include="UserAccounts\App.Web\" />
-    <Folder Include="UserAccounts\App\" />
     <Folder Include="UserAccounts\Domain\Events\" />
     <Folder Include="UserAccounts\Infrastructure\EntityFramework\Migrations\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Humanizer.Core" Version="2.5.16" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.1.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.1.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.4">
@@ -35,6 +34,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\App.Commands\App.Commands.csproj" />
+    <ProjectReference Include="..\..\src\App.Correlation\App.Correlation.csproj" />
     <ProjectReference Include="..\..\src\Domain.Repositories.AutoMapper\Domain.Repositories.AutoMapper.csproj" />
     <ProjectReference Include="..\..\src\Domain.Repositories\Domain.Repositories.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure.Azure.CosmosDb\Infrastructure.Azure.CosmosDb.csproj" />

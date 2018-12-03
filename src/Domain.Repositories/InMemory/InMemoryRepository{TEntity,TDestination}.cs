@@ -19,7 +19,6 @@
     public class InMemoryRepository<TEntity, TDestination> : InMemoryRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
-        protected new IEnumerable<TDestination> entities;
         private readonly IEnumerable<ISpecificationMapper<TEntity, TDestination>> specificationMappers;
         private readonly Func<TDestination, object> idSelector;
 
@@ -35,7 +34,7 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Mapper, nameof(options.Mapper));
 
-            this.entities = entities.NullToEmpty();
+            base.entities = entities.NullToEmpty().Select(d => this.Options.Mapper.Map<TEntity>(d));
             this.specificationMappers = specificationMappers;
             this.idSelector = idSelector;
         }
@@ -48,7 +47,7 @@
         /// <returns></returns>
         public override async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null)
         {
-            var result = this.entities;
+            var result = base.entities.NullToEmpty().Select(d => this.Options.Mapper.Map<TDestination>(d));
 
             foreach (var specification in specifications.NullToEmpty())
             {
@@ -71,7 +70,8 @@
                 return null;
             }
 
-            var result = this.entities.SingleOrDefault(e => this.idSelector(e) == id); // TODO: use HasIdSpecification + MapExpression (makes idSelector obsolete)
+            var result = base.entities.NullToEmpty().Select(d => this.Options.Mapper.Map<TDestination>(d)).SingleOrDefault(e => this.idSelector(e).Equals(id)); // TODO: use HasIdSpecification + MapExpression (makes idSelector obsolete)
+            // return (await this.FindAllAsync(new HasIdSpecification<TEntity>(id))).FirstOrDefault();
 
             if (this.Options?.Mapper != null && result != null)
             {

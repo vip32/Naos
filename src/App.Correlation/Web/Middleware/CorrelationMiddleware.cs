@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Correlation.App.Web
+﻿namespace Naos.Core.App.Correlation.Web
 {
     using System;
     using System.Threading.Tasks;
@@ -8,7 +8,6 @@
     using Microsoft.Extensions.Options;
     using Microsoft.Extensions.Primitives;
     using Naos.Core.Common;
-    using Naos.Core.Correlation.Domain;
 
     /// <summary>
     /// Middleware which attempts to reads / creates a Correlation ID that can then be used in logs and
@@ -18,7 +17,7 @@
     {
         private readonly RequestDelegate next;
         private readonly ILogger<CorrelationMiddleware> logger;
-        private readonly CorrelationOptions options;
+        private readonly CorrelationMiddlewareOptions options;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CorrelationMiddleware"/> class.
@@ -27,14 +26,14 @@
         /// <param name="next">The next middleware in the pipeline.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="options">The configuration options.</param>
-        public CorrelationMiddleware(RequestDelegate next, ILogger<CorrelationMiddleware> logger, IOptions<CorrelationOptions> options)
+        public CorrelationMiddleware(RequestDelegate next, ILogger<CorrelationMiddleware> logger, IOptions<CorrelationMiddlewareOptions> options)
         {
             EnsureArg.IsNotNull(next, nameof(next));
             EnsureArg.IsNotNull(logger, nameof(logger));
 
             this.next = next;
             this.logger = logger;
-            this.options = options.Value ?? new CorrelationOptions();
+            this.options = options.Value ?? new CorrelationMiddlewareOptions();
         }
 
         /// <summary>

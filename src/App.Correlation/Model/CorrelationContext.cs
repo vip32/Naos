@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Correlation.Domain.Model
+﻿namespace Naos.Core.App.Correlation
 {
     /// <summary>
     /// Provides access to the request correlation properties.

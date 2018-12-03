@@ -1,10 +1,9 @@
-﻿namespace Naos.Core.Correlation.App.Web
+﻿namespace Naos.Core.App.Correlation.Web
 {
     using System;
     using EnsureThat;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.Options;
-    using Naos.Core.Correlation.Domain;
 
     /// <summary>
     /// Extension methods for the correlation middleware.
@@ -20,7 +19,7 @@
         {
             EnsureArg.IsNotNull(app, nameof(app));
 
-            return app.UseNaosCorrelation(new CorrelationOptions());
+            return app.UseNaosCorrelation(new CorrelationMiddlewareOptions());
         }
 
         /// <summary>
@@ -29,7 +28,7 @@
         /// <param name="app"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public static IApplicationBuilder UseNaosCorrelation(this IApplicationBuilder app, CorrelationOptions options)
+        public static IApplicationBuilder UseNaosCorrelation(this IApplicationBuilder app, CorrelationMiddlewareOptions options)
         {
             EnsureArg.IsNotNull(app, nameof(app));
             EnsureArg.IsNotNull(options, nameof(options));

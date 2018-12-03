@@ -26,6 +26,7 @@ correlationid https://www.stevejgordon.co.uk/asp-net-core-correlation-ids
 polly logging ctx https://github.com/stevejgordon/PollyLoggingContextSample
 multi tenant (tenancy) https://github.com/Finbuckle/Finbuckle.MultiTenant
 code coverage https://github.com/tonerdo/coverlet + https://codecov.io/gh/vip32/Naos.Core
+api problem details https://www.strathweb.com/2018/07/centralized-exception-handling-and-request-validation-in-asp-net-core/
 miniprofiler https://miniprofiler.com/dotnet/
 miniprofiler + swagger ui https://stackoverflow.com/questions/49150492/wire-up-miniprofiler-to-asp-net-core-web-api-swagger
                           https://community.miniprofiler.com/t/can-i-use-mini-profiler-for-asp-net-web-api-and-have-results-still-seen-on-url/365/2

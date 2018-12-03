@@ -121,7 +121,7 @@
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        public async Task<bool> ExistsAsync(object id)
+        public virtual async Task<bool> ExistsAsync(object id)
         {
             if (id.IsDefault())
             {
@@ -136,7 +136,7 @@
         /// </summary>
         /// <param name="entity">The entity to insert.</param>
         /// <returns></returns>
-        public async Task<TEntity> InsertAsync(TEntity entity)
+        public virtual async Task<TEntity> InsertAsync(TEntity entity)
         {
             var result = await this.UpsertAsync(entity).ConfigureAwait(false);
             return result.entity;
@@ -147,7 +147,7 @@
         /// </summary>
         /// <param name="entity">The entity to update.</param>
         /// <returns></returns>
-        public async Task<TEntity> UpdateAsync(TEntity entity)
+        public virtual async Task<TEntity> UpdateAsync(TEntity entity)
         {
             var result = await this.UpsertAsync(entity).ConfigureAwait(false);
             return result.entity;

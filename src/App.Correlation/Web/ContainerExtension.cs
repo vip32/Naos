@@ -1,6 +1,5 @@
-﻿namespace Naos.Core.Correlation.App.Web
+﻿namespace Naos.Core.App.Correlation.Web
 {
-    using Naos.Core.Correlation.Domain;
     using SimpleInjector;
 
     /// <summary>

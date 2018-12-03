@@ -1,7 +1,5 @@
-﻿namespace Naos.Core.Correlation.Domain
+﻿namespace Naos.Core.App.Correlation
 {
-    using Naos.Core.Correlation.Domain.Model;
-
     /// <summary>
     /// A factory for creating and disposing an instance of a <see cref="CorrelationContext"/>.
     /// </summary>

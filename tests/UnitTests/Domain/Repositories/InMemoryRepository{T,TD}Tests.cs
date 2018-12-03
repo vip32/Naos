@@ -36,6 +36,52 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         }
 
         [Fact]
+        public async Task FindOneEntity_Test()
+        {
+            // arrange
+            var mediator = Substitute.For<IMediator>();
+            var sut = new InMemoryRepository<StubEntity, StubDto>(
+                mediator,
+                e => e.Identifier,
+                entities: this.entities,
+                options: new RepositoryOptions(
+                    new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())));
+
+            // act
+            var result = await sut.FindOneAsync("Identifier1").ConfigureAwait(false);
+
+            // assert
+            Assert.NotNull(result);
+            Assert.True(result.Id == "Identifier1");
+        }
+
+        [Fact]
+        public async Task FindOneTenantEntity_Test()
+        {
+            // arrange
+            var mediator = Substitute.For<IMediator>();
+            var sut = new RepositorySpecificationDecorator<StubEntity>(
+                new InMemoryRepository<StubEntity, StubDto>( // decoratee
+                    mediator,
+                    e => e.Identifier,
+                    entities: this.entities,
+                    options: new RepositoryOptions(
+                        new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
+                    specificationMappers: new[]
+                    {
+                        new AutoMapperSpecificationMapper<StubEntity, StubDto>(StubEntityMapperConfiguration.Create())
+                    }),
+                new Specification<StubEntity>(t => t.TenantId == this.tenantId));
+
+            // act
+            var result = await sut.FindOneAsync("Identifier1").ConfigureAwait(false);
+
+            // assert
+            Assert.NotNull(result);
+            Assert.True(result.Id == "Identifier1");
+        }
+
+        [Fact]
         public async Task FindAllEntities_Test()
         {
             // arrange

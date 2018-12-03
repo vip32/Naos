@@ -1,7 +1,5 @@
-﻿namespace Naos.Core.Correlation.Domain
+﻿namespace Naos.Core.App.Correlation
 {
-    using Naos.Core.Correlation.Domain.Model;
-
     /// <inheritdoc />
     public class CorrelationContextFactory : ICorrelationContextFactory
     {

@@ -56,7 +56,7 @@
 
         public async Task<TEntity> FindOneAsync(object id)
         {
-            return await this.decoratee.FindOneAsync(id).ConfigureAwait(false);
+            return await this.decoratee.FindOneAsync(id).ConfigureAwait(false); // TODO: (tenant) this.specification?
         }
 
         public async Task<TEntity> InsertAsync(TEntity entity)

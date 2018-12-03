@@ -1,7 +1,6 @@
-﻿namespace Naos.Core.Correlation.Domain
+﻿namespace Naos.Core.App.Correlation
 {
     using System.Threading;
-    using Naos.Core.Correlation.Domain.Model;
 
     /// <inheritdoc />
     public class CorrelationContextAccessor : ICorrelationContextAccessor

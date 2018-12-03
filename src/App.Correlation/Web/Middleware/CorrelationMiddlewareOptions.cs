@@ -1,9 +1,9 @@
-﻿namespace Naos.Core.Correlation.App.Web
+﻿namespace Naos.Core.App.Correlation.Web
 {
     /// <summary>
     /// Options for correlation.
     /// </summary>
-    public class CorrelationOptions
+    public class CorrelationMiddlewareOptions
     {
         private const string DefaultCorrelationHeader = "X-Correlation-Id";
         private const string DefaultCorrelationLogPropertyName = "CorrelationId";

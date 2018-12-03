@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.App.Web.Controllers
+﻿namespace Naos.Sample.UserAccounts.App.Web.Controllers
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

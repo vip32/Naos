@@ -13,10 +13,10 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.App.Commands;
     using Naos.Core.App.Configuration;
+    using Naos.Core.App.Correlation.Web;
     using Naos.Core.App.Operations.Serilog;
     using Naos.Core.App.Web;
     using Naos.Core.Common.Dependency.SimpleInjector;
-    using Naos.Core.Correlation.App.Web;
     using Naos.Core.Domain;
     using Naos.Core.Infrastructure.EntityFramework;
     using Naos.Core.Messaging;
