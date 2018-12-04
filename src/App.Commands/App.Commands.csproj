@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="8.0.101" />
     <PackageReference Include="MediatR" Version="5.1.0" />
-    <PackageReference Include="SimpleInjector" Version="4.4.0" />
+    <PackageReference Include="SimpleInjector" Version="4.4.2" />
   </ItemGroup>
 
   <ItemGroup>
