@@ -1087,6 +1087,9 @@
         [ContentTypeMetadata(Value = "application/json", IsText = true, FileExtension = "json")]
         JSON,
 
+        [ContentTypeMetadata(Value = "application/problem+json", IsText = true)]
+        JSONPROBLEM,
+
         [Obsolete]
         [ContentTypeMetadata(Value = "text/json", IsText = true, FileExtension = "json")] // used for DDB json
         TJSON,  // TODO: remove, not needed anymore because of blob storage migration

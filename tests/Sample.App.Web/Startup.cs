@@ -36,11 +36,13 @@
     public class Startup
     {
         private static readonly Random Random = new Random(DateTime.Now.GetHashCode());
+        private readonly ILogger<Startup> logger;
         private readonly Container container = new Container();
 
-        public Startup()
+        public Startup(ILogger<Startup> logger)
         {
             this.Configuration = NaosConfigurationFactory.CreateRoot();
+            this.logger = logger;
         }
 
         public IConfiguration Configuration { get; }
@@ -50,11 +52,11 @@
         {
             services
                 .AddHttpContextAccessor()
-                .AddNaosCorrelation()
+                .AddNaosCorrelation() // TODO: use container registration instead of serivice registration
                 .AddDbContext<UserAccountsContext>(options => options.UseNaosSqlServer(this.Configuration)) // needed for migrations:add/update
                 .AddMvc(o =>
                 {
-                    //o.Filters.Add(typeof(GlobalExceptionFilter)); TODO
+                    //o.Filters.Add(typeof(GlobalExceptionFilter));
                 }).AddJsonOptions(o => o.AddDefaultJsonSerializerSettings())
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -64,20 +66,19 @@
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            this.InitializeContainer(app);
+            this.InitializeContainer(app, env);
             //this.container.Verify();
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
+            this.logger.LogInformation($"app {env.ApplicationName} environment: {env.EnvironmentName}");
+            if (env.IsProduction())
             {
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
             app.UseNaosCorrelation();
+            app.UseNaosExceptionHandling(this.container); // app.UseMiddleware<ExceptionHandlerMiddleware>(this.container);
+
             app.UseMvc();
         }
 
@@ -89,13 +90,14 @@
             services.AddSingleton<IViewComponentActivator>(new SimpleInjectorViewComponentActivator(this.container));
             services.EnableSimpleInjectorCrossWiring(this.container);
             services.UseSimpleInjectorAspNetRequestScoping(this.container);
+
             // TODO: temporary solution to get the scheduler hosted service to run (with its dependencies)
             // https://stackoverflow.com/questions/50394666/injecting-simple-injector-components-into-ihostedservice-with-asp-net-core-2-0#
             services.AddSingleton<Microsoft.Extensions.Hosting.IHostedService>(sp =>
                 new JobSchedulerHostedService(sp.GetService<ILogger<JobSchedulerHostedService>>(), container));
         }
 
-        private void InitializeContainer(IApplicationBuilder app)
+        private void InitializeContainer(IApplicationBuilder app, IHostingEnvironment env)
         {
             // Add application presentation components:
             this.container.RegisterMvcControllers(app);
@@ -105,6 +107,7 @@
             this.container
                 .AddNaosMediator(new[] { typeof(IEntity).Assembly, typeof(Customers.Domain.Customer).Assembly })
                 .AddNaosLogging(this.Configuration)
+                .AddNaosExceptionHandling(env.IsProduction())
                 .AddNaosOperations(this.Configuration)
                 .AddNaosAppCommands(new[] { typeof(Customers.Domain.Customer).Assembly })
                 .AddNaosMessaging(
@@ -113,14 +116,17 @@
                     assemblies: new[] { typeof(IMessageBroker).Assembly, typeof(Customers.Domain.Customer).Assembly })
                 .AddNaosScheduling();
 
-            // naos sample registrations
+            // naos sample product registrations
             this.container
                 .AddSampleCountries()
                 .AddSampleCustomers(this.Configuration)
                 .AddSampleUserAccounts();
+                //.Verify();
 
             // Allow Simple Injector to resolve services from ASP.NET Core.
             this.container.AutoCrossWireAspNetComponents(app);
+
+            this.logger.LogInformation("app container initialized");
 
             this.InitializeSchedular(this.container.GetService<IJobScheduler>());
         }

@@ -1,5 +1,6 @@
 ﻿namespace Naos.Sample.Countries.App.Web.Controllers
 {
+    using System;
     using System.Collections.Generic;
     using System.Net;
     using System.Threading.Tasks;
@@ -51,6 +52,11 @@
             if (id.IsNullOrEmpty())
             {
                 return this.BadRequest();
+            }
+
+            if (id.Equals("-1"))
+            {
+                throw new ArgumentException("-1 not allowed"); // trigger an exception to test exception handling
             }
 
             var result = await this.repository.FindOneAsync(id).ConfigureAwait(false);
