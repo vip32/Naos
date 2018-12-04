@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\App.Correlation\App.Correlation.csproj" />
+    <ProjectReference Include="..\App.Web\App.Web.csproj" />
     <ProjectReference Include="..\Common.Web\Common.Web.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>

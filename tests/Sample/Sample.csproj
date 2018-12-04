@@ -35,6 +35,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\App.Commands\App.Commands.csproj" />
     <ProjectReference Include="..\..\src\App.Correlation\App.Correlation.csproj" />
+    <ProjectReference Include="..\..\src\App.Web\App.Web.csproj" />
     <ProjectReference Include="..\..\src\Domain.Repositories.AutoMapper\Domain.Repositories.AutoMapper.csproj" />
     <ProjectReference Include="..\..\src\Domain.Repositories\Domain.Repositories.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure.Azure.CosmosDb\Infrastructure.Azure.CosmosDb.csproj" />

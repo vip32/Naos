@@ -8,6 +8,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Naos.Core.App.Correlation;
+    using Naos.Core.App.Web;
     using Naos.Core.Common;
     using Naos.Sample.Countries.Domain;
 
@@ -35,6 +36,7 @@
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<IEnumerable<Country>>> Get()
         {
             this.logger.LogInformation($"hello from values controller >> {this.correlationContext.Context?.CorrelationId}");
@@ -46,12 +48,13 @@
         [Route("{id}")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<Country>> Get(string id)
         {
-            if (id.IsNullOrEmpty())
+            if (id.IsNullOrEmpty() || id.Equals("0"))
             {
-                return this.BadRequest();
+                throw new BadRequestException("Model id cannot be empty");
             }
 
             if (id.Equals("-1"))
@@ -60,7 +63,6 @@
             }
 
             var result = await this.repository.FindOneAsync(id).ConfigureAwait(false);
-
             if(result == null)
             {
                 return this.NotFound();
@@ -72,12 +74,18 @@
         [HttpPut]
         [Route("{id}")]
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult<Country>> Update(string id, Country entity)
+        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<Country>> Update(string id, Country model)
         {
-            if (id.IsNullOrEmpty() || entity == null) // TODO: better happy path flow https://www.strathweb.com/2018/07/centralized-exception-handling-and-request-validation-in-asp-net-core/
+            if (id.IsNullOrEmpty() || id.Equals("0"))
             {
-                return this.BadRequest();
+                throw new BadRequestException("Model id cannot be empty");
+            }
+
+            if (model == null) // TODO: better happy path flow https://www.strathweb.com/2018/07/centralized-exception-handling-and-request-validation-in-asp-net-core/
+            {
+                throw new BadRequestException("Model cannot be empty");
             }
 
             if (!this.ModelState.IsValid)
@@ -85,19 +93,19 @@
                 return this.BadRequest(this.ModelState);
             }
 
-            entity = await this.repository.UpdateAsync(entity).ConfigureAwait(false);
-
-            return this.Accepted(this.Url.Action(nameof(this.Get), new { id = entity.Id }), entity);
+            model = await this.repository.UpdateAsync(model).ConfigureAwait(false);
+            return this.Accepted(this.Url.Action(nameof(this.Get), new { id = model.Id }), model);
         }
 
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult<Country>> Create(Country entity)
+        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<Country>> Create(Country model)
         {
-            if (entity == null) // TODO: better happy path flow https://www.strathweb.com/2018/07/centralized-exception-handling-and-request-validation-in-asp-net-core/
+            if (model == null) // TODO: better happy path flow https://www.strathweb.com/2018/07/centralized-exception-handling-and-request-validation-in-asp-net-core/
             {
-                return this.BadRequest();
+                throw new BadRequestException("Model cannot be empty");
             }
 
             if (!this.ModelState.IsValid)
@@ -105,24 +113,23 @@
                 return this.BadRequest(this.ModelState);
             }
 
-            entity = await this.repository.UpdateAsync(entity).ConfigureAwait(false);
-
-            return this.CreatedAtAction(nameof(this.Get), new { id = entity.Id }, entity);
+            model = await this.repository.UpdateAsync(model).ConfigureAwait(false);
+            return this.CreatedAtAction(nameof(this.Get), new { id = model.Id }, model);
         }
 
         [HttpDelete]
         [Route("{id}")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> Delete(string id)
         {
-            if (id.IsNullOrEmpty())
+            if (id.IsNullOrEmpty() || id.Equals("0"))
             {
-                return this.BadRequest();
+                throw new BadRequestException("Model id cannot be empty");
             }
 
             await this.repository.DeleteAsync(id).ConfigureAwait(false);
-
             return this.NoContent();
         }
     }

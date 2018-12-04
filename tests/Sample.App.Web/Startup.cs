@@ -1,6 +1,7 @@
 ﻿namespace Naos.Sample.App.Web
 {
     using System;
+    using System.Reflection;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -30,6 +31,8 @@
     using Naos.Sample.Customers;
     using Naos.Sample.UserAccounts;
     using Naos.Sample.UserAccounts.EntityFramework;
+    using NJsonSchema;
+    using NSwag.AspNetCore;
     using SimpleInjector;
     using SimpleInjector.Integration.AspNetCore.Mvc;
     using SimpleInjector.Lifestyles;
@@ -61,6 +64,8 @@
                 }).AddJsonOptions(o => o.AddDefaultJsonSerializerSettings())
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            services.AddSwaggerDocument();
+
             this.IntegrateSimpleInjector(services, this.container);
         }
 
@@ -79,6 +84,9 @@
             app.UseHttpsRedirection();
             app.UseNaosCorrelation();
             app.UseNaosExceptionHandling(this.container); // app.UseMiddleware<ExceptionHandlerMiddleware>(this.container);
+
+            app.UseSwagger();
+            app.UseSwaggerUi3();
 
             app.UseMvc();
         }
