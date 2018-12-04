@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.App.Web
+﻿namespace Naos.Core.App.ExceptionHandling.Web
 {
     using System;
     using System.Collections.Generic;
@@ -9,7 +9,6 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.Options;
     using Naos.Core.App.Correlation;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;

@@ -14,6 +14,7 @@
     using Naos.Core.App.Commands;
     using Naos.Core.App.Configuration;
     using Naos.Core.App.Correlation.Web;
+    using Naos.Core.App.ExceptionHandling.Web;
     using Naos.Core.App.Operations.Serilog;
     using Naos.Core.App.Web;
     using Naos.Core.Common.Dependency.SimpleInjector;

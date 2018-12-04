@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.App.Web
+﻿namespace Naos.Core.App.ExceptionHandling.Web
 {
     using System;
     using System.Diagnostics;
@@ -52,7 +52,7 @@
                 validationException.Errors.NullToEmpty().ForEach(f => details.Errors.Add(f.PropertyName, new[] { f.ToString() }));
                 context.Result = new BadRequestObjectResult(details);
             }
-            else if(context.Exception is BadHttpRequestException badHttpRequestException)
+            else if (context.Exception is BadHttpRequestException badHttpRequestException)
             {
                 context.Result = new ObjectResult(
                     new ProblemDetails
