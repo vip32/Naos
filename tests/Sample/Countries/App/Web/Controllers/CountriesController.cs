@@ -81,19 +81,9 @@
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
         public async Task<ActionResult<Country>> Update(string id, Country model)
         {
-            if (id.IsNullOrEmpty() || id.Equals("0"))
-            {
-                throw new BadRequestException("Model id cannot be empty");
-            }
-
-            if (model == null) // TODO: better happy path flow https://www.strathweb.com/2018/07/centralized-exception-handling-and-request-validation-in-asp-net-core/
-            {
-                throw new BadRequestException("Model cannot be empty");
-            }
-
             if (!this.ModelState.IsValid)
             {
-                return this.BadRequest(this.ModelState);
+                throw new BadRequestException(this.ModelState);
             }
 
             model = await this.repository.UpdateAsync(model).ConfigureAwait(false);
@@ -105,16 +95,12 @@
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
-        public async Task<ActionResult<Country>> Create(Country model)
+        public async Task<ActionResult<Country>> Post(Country model)
         {
-            if (model == null) // TODO: better happy path flow https://www.strathweb.com/2018/07/centralized-exception-handling-and-request-validation-in-asp-net-core/
-            {
-                throw new BadRequestException("Model cannot be empty");
-            }
-
+            // TODO: better happy path flow https://www.strathweb.com/2018/07/centralized-exception-handling-and-request-validation-in-asp-net-core/
             if (!this.ModelState.IsValid)
             {
-                return this.BadRequest(this.ModelState);
+                throw new BadRequestException(this.ModelState);
             }
 
             model = await this.repository.UpdateAsync(model).ConfigureAwait(false);

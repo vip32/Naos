@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.App.ExceptionHandling.Web
 {
     using System;
+    using System.Linq;
     using System.Net;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -23,12 +24,18 @@
                 {
                     var details = new ValidationProblemDetails
                     {
-                        Title = "Bad request",
+                        Title = badRequestException.ModelState.IsNullOrEmpty() ? "A request validation error has occurred while executing the request" : "A model validation error has occurred while executing the request",
                         Status = (int)HttpStatusCode.BadRequest,
                         Instance = instance,
-                        Detail = hideDetails ? null : badRequestException.Message,
+                        Detail = hideDetails ? null : !badRequestException.ModelState.IsNullOrEmpty() ? "See errors property for more details" : badRequestException.Message,
                         Type = hideDetails ? null : badRequestException.GetType().FullPrettyName(),
                     };
+
+                    foreach(var item in badRequestException.ModelState.NullToEmpty())
+                    {
+                        details.Errors.Add(item.Key, item.Value.Errors.Select(e => e.ErrorMessage).ToArray());
+                    }
+
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                     context.Response.WriteJson(details, contentType: ContentType.JSONPROBLEM);
                 }

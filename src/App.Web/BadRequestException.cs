@@ -2,9 +2,10 @@
 {
     using System;
     using System.Runtime.Serialization;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
 
     /// <summary>
-    /// Base exception type for exceptions thrown by Naos
+    /// Bad request exception type for exceptions thrown by Naos api controllers
     /// </summary>
     [Serializable]
     public class BadRequestException : Exception
@@ -44,5 +45,12 @@
             : base(message, innerException)
         {
         }
+
+        public BadRequestException(ModelStateDictionary modelState)
+        {
+            this.ModelState = modelState;
+        }
+
+        public ModelStateDictionary ModelState { get; }
     }
 }

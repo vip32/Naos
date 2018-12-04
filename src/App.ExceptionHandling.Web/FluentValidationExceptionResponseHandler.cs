@@ -23,7 +23,7 @@
                 {
                     var details = new ValidationProblemDetails
                     {
-                        Title = "A validation error has occurred while executing the request",
+                        Title = "A model validation error has occurred while executing the request",
                         Status = (int)HttpStatusCode.BadRequest,
                         Instance = instance,
                         Detail = hideDetails ? null : validationException.Message,

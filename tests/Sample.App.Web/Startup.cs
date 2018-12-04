@@ -64,6 +64,12 @@
                 }).AddJsonOptions(o => o.AddDefaultJsonSerializerSettings())
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            // needed to disable automatic modelstate validation, as we validate it ourselves and have nicer exceptions
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+
             services.AddSwaggerDocument();
 
             this.IntegrateSimpleInjector(services, this.container);
