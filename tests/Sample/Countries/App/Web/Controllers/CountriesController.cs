@@ -64,26 +64,42 @@
                 throw new ArgumentException("-1 not allowed"); // trigger an exception to test exception handling
             }
 
-            var result = await this.repository.FindOneAsync(id).ConfigureAwait(false);
-            if(result == null)
+            var model = await this.repository.FindOneAsync(id).ConfigureAwait(false);
+            if(model == null)
             {
-                return this.NotFound();
+                return this.NotFound(); // TODO: throw notfoundexception?
             }
 
-            return this.Ok(result);
+            return this.Ok(model);
         }
 
         [HttpPut]
         [Route("{id}")]
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
         public async Task<ActionResult<Country>> Update(string id, Country model)
         {
+            if (id.IsNullOrEmpty() || id.Equals("0"))
+            {
+                throw new BadRequestException("Model id cannot be empty");
+            }
+
+            if (!id.Equals(model.Id))
+            {
+                throw new BadRequestException("Model id must match route");
+            }
+
             if (!this.ModelState.IsValid)
             {
                 throw new BadRequestException(this.ModelState);
+            }
+
+            if (!await this.repository.ExistsAsync(id).ConfigureAwait(false))
+            {
+                return this.NotFound(); // TODO: throw notfoundexception?
             }
 
             model = await this.repository.UpdateAsync(model).ConfigureAwait(false);
@@ -103,6 +119,11 @@
                 throw new BadRequestException(this.ModelState);
             }
 
+            if (await this.repository.ExistsAsync(model.Id).ConfigureAwait(false))
+            {
+                throw new BadRequestException($"Model with id {model.Id} already exists");
+            }
+
             model = await this.repository.UpdateAsync(model).ConfigureAwait(false);
             return this.CreatedAtAction(nameof(this.Get), new { id = model.Id }, model);
         }
@@ -110,6 +131,7 @@
         [HttpDelete]
         [Route("{id}")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
@@ -118,6 +140,11 @@
             if (id.IsNullOrEmpty() || id.Equals("0"))
             {
                 throw new BadRequestException("Model id cannot be empty");
+            }
+
+            if (!await this.repository.ExistsAsync(id).ConfigureAwait(false))
+            {
+                return this.NotFound(); // TODO: throw notfoundexception?
             }
 
             await this.repository.DeleteAsync(id).ConfigureAwait(false);
