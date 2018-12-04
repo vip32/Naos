@@ -5,7 +5,7 @@
     /// <summary>
     /// Extensions on the <see cref="Container"/>.
     /// </summary>
-    public static class ContainerExtension
+    public static class ContainerExtensions
     {
         /// <summary>
         /// Adds required services to support the Correlation ID functionality.

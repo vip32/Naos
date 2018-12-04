@@ -6,7 +6,7 @@
     using Naos.Core.Operations.Infrastructure.Azure.LogAnalytics.Repositories;
     using SimpleInjector;
 
-    public static class ContainerExtension
+    public static class ContainerExtensions
     {
         public static Container AddNaosOperations(
             this Container container,

@@ -9,7 +9,7 @@
     using Naos.Sample.Countries.Infrastructure;
     using SimpleInjector;
 
-    public static class ContainerExtension
+    public static class ContainerExtensions
     {
         public static Container AddSampleCountries(
             this Container container)

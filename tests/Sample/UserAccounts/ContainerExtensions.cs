@@ -8,7 +8,7 @@
     using Naos.Sample.UserAccounts.EntityFramework;
     using SimpleInjector;
 
-    public static class ContainerExtension
+    public static class ContainerExtensions
     {
         public static Container AddSampleUserAccounts(
             this Container container,

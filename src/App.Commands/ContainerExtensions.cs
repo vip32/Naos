@@ -5,7 +5,7 @@
     using Naos.Core.Common;
     using SimpleInjector;
 
-    public static class ContainerExtension
+    public static class ContainerExtensions
     {
         public static Container AddNaosAppCommands(
             this Container container,

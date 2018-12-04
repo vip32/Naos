@@ -10,7 +10,7 @@
     using Naos.Core.Operations.Infrastructure.Azure.LogAnalytics;
     using SimpleInjector;
 
-    public static class ContainerExtension
+    public static class ContainerExtensions
     {
         private static IConfiguration internalConfiguration;
         private static LoggerConfiguration internalLoggerConfiguration;

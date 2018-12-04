@@ -4,7 +4,7 @@
     using Naos.Core.Scheduling.Domain;
     using SimpleInjector;
 
-    public static class ContainerExtension
+    public static class ContainerExtensions
     {
         public static Container AddNaosScheduling(
             this Container container,

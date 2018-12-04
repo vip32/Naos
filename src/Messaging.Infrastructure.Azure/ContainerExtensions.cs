@@ -12,7 +12,7 @@
     using Naos.Core.Messaging.Infrastructure.Azure.ServiceBus;
     using SimpleInjector;
 
-    public static class ContainerExtension
+    public static class ContainerExtensions
     {
         public static Container AddNaosMessaging(
             this Container container,
