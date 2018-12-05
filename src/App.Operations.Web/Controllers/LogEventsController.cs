@@ -3,10 +3,13 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Net;
     using System.Threading.Tasks;
+    using EnsureThat;
     using Humanizer;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Logging;
     using Naos.Core.Operations.Domain;
     using Naos.Core.Operations.Domain.Repositories;
 
@@ -14,17 +17,25 @@
     [ApiController]
     public class LogEventsController : ControllerBase // or use normal middleware?  https://stackoverflow.com/questions/47617994/how-to-use-a-controller-in-another-assembly-in-asp-net-core-mvc-2-0?rq=1
     {
+        private readonly ILogger<LogEventsController> logger;
         private readonly ILogEventRepository repository;
 
-        public LogEventsController(ILogEventRepository repository)
+        public LogEventsController(
+            ILogger<LogEventsController> logger,
+            ILogEventRepository repository)
         {
-            EnsureThat.EnsureArg.IsNotNull(repository, nameof(repository));
+            EnsureArg.IsNotNull(logger, nameof(logger));
+            EnsureArg.IsNotNull(repository, nameof(repository));
 
+            this.logger = logger;
             this.repository = repository;
         }
 
         [HttpGet]
-        public async Task<IEnumerable<LogEvent>> Get()
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<IEnumerable<LogEvent>>> Get()
         {
             //var acceptHeader = this.HttpContext.Request.Headers.GetValue("Accept");
             //if (acceptHeader.ContainsAny(new[] { ContentType.HTML.ToValue(), ContentType.HTM.ToValue() }))
@@ -32,11 +43,15 @@
             //    return await this.GetHtmlAsync().ConfigureAwait(false);
             //}
 
-            return await this.GetJsonAsync().ConfigureAwait(false);
+            return this.Ok(await this.GetJsonAsync().ConfigureAwait(false));
         }
 
         [HttpGet]
-        [Route("html")]
+        [Route("dashboard")]
+        [Produces("text/html")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public Task GetHtml()
         {
             return this.GetHtmlAsync();

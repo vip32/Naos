@@ -53,7 +53,7 @@
 
         public ITopicClient CreateModel()
         {
-            if(this.client == null)
+            if (this.client == null)
             {
                 this.client = new TopicClient(this.ConnectionStringBuilder, RetryPolicy.Default);
             }

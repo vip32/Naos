@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.App.ExceptionHandling.Web
+﻿namespace Naos.Core.App.Exceptions.Web
 {
     using System.Collections.Generic;
     using System.Reflection;

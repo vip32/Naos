@@ -1,15 +1,15 @@
-﻿namespace Naos.Core.Messaging
+namespace Naos.Core.Messaging
 {
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
 
-    public class TestMessageHandler : IMessageHandler<TestMessage>
+    public class DummyMessageHandler : IMessageHandler<DummyMessage>
     {
-        protected readonly ILogger<TestMessageHandler> logger;
+        protected readonly ILogger<DummyMessageHandler> logger;
 
-        public TestMessageHandler(ILogger<TestMessageHandler> logger)
+        public DummyMessageHandler(ILogger<DummyMessageHandler> logger)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
 
@@ -21,7 +21,7 @@
         /// </summary>
         /// <param name="message">The event.</param>
         /// <returns></returns>
-        public virtual Task Handle(TestMessage message)
+        public virtual Task Handle(DummyMessage message)
         {
             using (this.logger.BeginScope("{CorrelationId}", message.CorrelationId))
             {

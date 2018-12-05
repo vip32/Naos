@@ -93,7 +93,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scheduling", "Scheduling", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Correlation", "src\App.Correlation\App.Correlation.csproj", "{04739965-B30A-464D-A493-4B5BD43584DD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.ExceptionHandling.Web", "src\App.ExceptionHandling.Web\App.ExceptionHandling.Web.csproj", "{93A7943B-C7A1-40E2-ABC8-0C38D3CCE22E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Exceptions.Web", "src\App.ExceptionHandling.Web\App.Exceptions.Web.csproj", "{93A7943B-C7A1-40E2-ABC8-0C38D3CCE22E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

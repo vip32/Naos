@@ -55,7 +55,7 @@
         {
             var loggerConfiguration = new LoggerConfiguration()
                 .MinimumLevel.Debug()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
                 .Enrich.With(new ExceptionEnricher())
                 .Enrich.WithProperty("Environment", internalEnvironment)

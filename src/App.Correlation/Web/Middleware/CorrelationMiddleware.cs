@@ -13,7 +13,7 @@
     /// Middleware which attempts to reads / creates a Correlation ID that can then be used in logs and
     /// passed to upstream requests.
     /// </summary>
-    public class CorrelationMiddleware //: IMiddleware
+    public class CorrelationMiddleware //: TODO: IMiddleware + injection
     {
         private readonly RequestDelegate next;
         private readonly ILogger<CorrelationMiddleware> logger;
@@ -50,7 +50,7 @@
 
             if (this.options.UpdateTraceIdentifier)
             {
-                this.logger.LogDebug($"API request ({requestId}) now has traceIdentifier {correlationId}, was {context.TraceIdentifier}"); // TODO: move to request logging middleware (operations)
+                this.logger.LogDebug($"api request ({requestId}) now has traceIdentifier {correlationId}, was {context.TraceIdentifier}"); // TODO: move to request logging middleware (operations)
                 context.TraceIdentifier = correlationId;
             }
 

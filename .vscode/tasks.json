@@ -17,8 +17,8 @@
       "problemMatcher": "$msCompile"
     },
     {
-      "label": "test core",
-      "command": "dotnet test ./tests/Core.UnitTests/Core.UnitTests.csproj",
+      "label": "test core unittests",
+      "command": "dotnet test ./tests/UnitTests/UnitTests.csproj",
       "type": "shell",
       "group": {
         "kind": "test",
@@ -30,8 +30,21 @@
       "problemMatcher": "$msCompile"
     },
     {
-      "label": "test reference",
-      "command": "dotnet test ./tests/Reference.UnitTests/Reference.UnitTests.csproj",
+      "label": "test sample integrationtests",
+      "command": "dotnet test ./tests/Sample.IntegrationTests/Sample.IntegrationTests.csproj",
+      "type": "shell",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always"
+      },
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "test sample integrationtests",
+      "command": "dotnet test ./tests/Sample.App.IntegrationTests/Sample.App.IntegrationTests.csproj",
       "type": "shell",
       "group": {
         "kind": "test",

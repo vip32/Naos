@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.App.Web // TODO: Naos.Core.Common.Web.Mvc?
+﻿namespace Naos.Core.App.Web
 {
     using Microsoft.AspNetCore.Mvc;
     using Naos.Core.Common;

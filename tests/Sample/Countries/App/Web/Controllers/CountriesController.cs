@@ -8,8 +8,8 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Naos.Core.App.Correlation;
-    using Naos.Core.App.Web;
     using Naos.Core.Common;
+    using Naos.Core.Common.Web;
     using Naos.Sample.Countries.Domain;
 
     [Route("api/[controller]")]

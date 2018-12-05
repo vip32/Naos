@@ -2,18 +2,18 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.Correlation.Web</AssemblyName>
-    <RootNamespace>Naos.Core.Correlation.Web</RootNamespace>
+    <AssemblyName>Naos.Core.App.Exceptions.Web</AssemblyName>
+    <RootNamespace>Naos.Core.App.Exceptions.Web</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="8.0.101" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="2.2.0" />
     <PackageReference Include="Ben.Demystifier" Version="0.1.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.1.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Core" Version="2.1.3" />
-    <PackageReference Include="SimpleInjector" Version="4.4.0" />
-    <PackageReference Include="SimpleInjector.Integration.AspNetCore.Mvc.Core" Version="4.4.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Core" Version="2.2.0" />
+    <PackageReference Include="SimpleInjector" Version="4.4.2" />
+    <PackageReference Include="SimpleInjector.Integration.AspNetCore.Mvc.Core" Version="4.4.2" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.App.ExceptionHandling.Web
+﻿namespace Naos.Core.App.Exceptions.Web
 {
     using System;
     using Microsoft.AspNetCore.Http;

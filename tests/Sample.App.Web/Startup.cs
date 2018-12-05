@@ -1,7 +1,6 @@
 ﻿namespace Naos.Sample.App.Web
 {
     using System;
-    using System.Reflection;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -15,7 +14,7 @@
     using Naos.Core.App.Commands;
     using Naos.Core.App.Configuration;
     using Naos.Core.App.Correlation.Web;
-    using Naos.Core.App.ExceptionHandling.Web;
+    using Naos.Core.App.Exceptions.Web;
     using Naos.Core.App.Operations.Serilog;
     using Naos.Core.App.Web;
     using Naos.Core.Common.Dependency.SimpleInjector;
@@ -31,7 +30,6 @@
     using Naos.Sample.Customers;
     using Naos.Sample.UserAccounts;
     using Naos.Sample.UserAccounts.EntityFramework;
-    using NJsonSchema;
     using NSwag.AspNetCore;
     using SimpleInjector;
     using SimpleInjector.Integration.AspNetCore.Mvc;
@@ -56,21 +54,13 @@
         {
             services
                 .AddHttpContextAccessor()
+                .AddSwaggerDocument()
                 .AddNaosCorrelation() // TODO: use container registration instead of serivice registration
                 .AddDbContext<UserAccountsContext>(options => options.UseNaosSqlServer(this.Configuration)) // needed for migrations:add/update
                 .AddMvc(o =>
                 {
-                    //o.Filters.Add(typeof(GlobalExceptionFilter));
                 }).AddJsonOptions(o => o.AddDefaultJsonSerializerSettings())
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
-            // needed to disable automatic modelstate validation, as we validate it ourselves and have nicer exceptions
-            services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.SuppressModelStateInvalidFilter = true;
-            });
-
-            services.AddSwaggerDocument();
 
             this.IntegrateSimpleInjector(services, this.container);
         }
@@ -88,8 +78,8 @@
             }
 
             app.UseHttpsRedirection();
-            app.UseNaosCorrelation();
-            app.UseNaosExceptionHandling(this.container); // app.UseMiddleware<ExceptionHandlerMiddleware>(this.container);
+            app.UseNaosCorrelation(); // TODO: convert to proper IMiddleware (to get the injection working), like UseNaosExceptionHandling
+            app.UseNaosExceptionHandling(this.container);
 
             app.UseSwagger();
             app.UseSwaggerUi3();
@@ -110,6 +100,12 @@
             // https://stackoverflow.com/questions/50394666/injecting-simple-injector-components-into-ihostedservice-with-asp-net-core-2-0#
             services.AddSingleton<Microsoft.Extensions.Hosting.IHostedService>(sp =>
                 new JobSchedulerHostedService(sp.GetService<ILogger<JobSchedulerHostedService>>(), container));
+
+            // TODO needed to disable automatic modelstate validation, as we validate it ourselves (app.exceptions.web) and have nicer exceptions
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
         }
 
         private void InitializeContainer(IApplicationBuilder app, IHostingEnvironment env)
@@ -122,6 +118,7 @@
             this.container
                 .AddNaosMediator(new[] { typeof(IEntity).Assembly, typeof(Customers.Domain.Customer).Assembly })
                 .AddNaosLogging(this.Configuration)
+                //.AddNaosCorrelation() // TODO: use this instead of services.AddNaosCorrelation()
                 .AddNaosExceptionHandling(env.IsProduction())
                 .AddNaosOperations(this.Configuration)
                 .AddNaosAppCommands(new[] { typeof(Customers.Domain.Customer).Assembly })
