@@ -62,6 +62,11 @@
                 }).AddJsonOptions(o => o.AddDefaultJsonSerializerSettings())
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            //var s = this.Configuration.GetSection<EntityFrameworkConfiguration>(["naos:sample:userAccounts:entityFramework:connectionString"]);
+            //services.AddHealthChecks();
+            //    .AddSqlServer(s);
+            //services.AddHealthChecksUI();
+
             this.IntegrateSimpleInjector(services, this.container);
         }
 
@@ -83,6 +88,8 @@
 
             app.UseSwagger();
             app.UseSwaggerUi3();
+            //app.UseHealthChecks("/health");
+            //app.UseHealthChecksUI(/*s => s.ApiPath = "/health/ui"*/);
 
             app.UseMvc();
         }

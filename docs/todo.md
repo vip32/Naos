@@ -30,6 +30,9 @@ api problem details https://www.strathweb.com/2018/07/centralized-exception-hand
 miniprofiler https://miniprofiler.com/dotnet/
 miniprofiler + swagger ui https://stackoverflow.com/questions/49150492/wire-up-miniprofiler-to-asp-net-core-web-api-swagger
                           https://community.miniprofiler.com/t/can-i-use-mini-profiler-for-asp-net-web-api-and-have-results-still-seen-on-url/365/2
+service healthcheck https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks
+                    https://github.com/Xabaril/BeatPulse
+cosmosdb provider redo https://www.nuget.org/packages/Microsoft.Azure.Cosmos/3.0.0.1-preview
 
 messaging: message broker based on rabitmq (for local usage)
 messaging: singalr based provider?
