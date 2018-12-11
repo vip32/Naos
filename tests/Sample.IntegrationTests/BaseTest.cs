@@ -44,7 +44,7 @@
             this.container
                 .AddSampleCountries()
                 .AddSampleCustomers(configuration)
-                .AddSampleUserAccounts(new UserAccountsContext(new DbContextOptionsBuilder().UseNaosSqlServer(configuration).Options));
+                .AddSampleUserAccounts(configuration, null, dbContext: new UserAccountsContext(new DbContextOptionsBuilder().UseNaosSqlServer(configuration, "naos:sample:userAccounts:entityFramework").Options));
 
             //this.container.Verify();
         }

@@ -8,7 +8,7 @@
     using MediatR;
     using MediatR.Pipeline;
 
-    public static class ContainerExtensions
+    public static class ServiceRegistrations
     {
         public static Container AddNaosMediator(this Container container, params Assembly[] assemblies)
         {

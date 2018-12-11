@@ -1,6 +1,8 @@
 ﻿namespace Naos.Sample.UserAccounts
 {
     using MediatR;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Infrastructure.EntityFramework;
@@ -8,10 +10,13 @@
     using Naos.Sample.UserAccounts.EntityFramework;
     using SimpleInjector;
 
-    public static class ContainerExtensions
+    public static class ServiceRegistrations
     {
         public static Container AddSampleUserAccounts(
             this Container container,
+            IConfiguration configuration,
+            IServiceCollection services,
+            string section = "naos:sample:userAccounts:entityFramework",
             UserAccountsContext dbContext = null)
         {
             if (dbContext != null)
@@ -31,6 +36,11 @@
                                 container.GetInstance<IMediator>(),
                                 container.GetInstance<UserAccountsContext>()))));
             });
+
+            var entityFrameworkConfiguration = configuration.GetSection(section).Get<EntityFrameworkConfiguration>();
+            services?.AddDbContext<UserAccountsContext>(options => options.UseNaosSqlServer(entityFrameworkConfiguration.ConnectionString)); // needed for migrations:add/update
+            services?.AddHealthChecks()
+                .AddSqlServer(entityFrameworkConfiguration.ConnectionString);
 
             return container;
         }

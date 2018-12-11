@@ -8,8 +8,8 @@
         public static DbContextOptionsBuilder UseNaosSqlite(
             this DbContextOptionsBuilder source,
             IConfiguration configuration,
-            string name,
-            string section = "naos:sample:userAccounts:entityFramework")
+            string name = null,
+            string section = "naos:service:entityFramework")
         {
             var entityFrameworkConfiguration = configuration.GetSection(section).Get<EntityFrameworkConfiguration>();
 

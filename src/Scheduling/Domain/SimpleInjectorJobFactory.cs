@@ -19,12 +19,17 @@
             this.container = container;
         }
 
+        public object Create(Type jobType)
+        {
+            return this.container.GetInstance(jobType);
+        }
+
         /// <summary>
         /// Creates the specified scheduled task type.
         /// </summary>
         /// <param name="jobType">Type of the job.</param>
         /// <returns></returns>
-        public IJob Create(Type jobType)
+        public IJob CreateJob(Type jobType)
         {
             return this.container.GetInstance(jobType) as IJob;
         }

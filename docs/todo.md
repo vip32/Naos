@@ -34,6 +34,10 @@ service healthcheck https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChec
                     https://github.com/Xabaril/BeatPulse
 cosmosdb provider redo https://www.nuget.org/packages/Microsoft.Azure.Cosmos/3.0.0.1-preview
 
+identity overview      https://developer.okta.com/blog/2018/03/23/token-authentication-aspnetcore-complete-guide
+identity.openiddict    https://github.com/openiddict/openiddict-core
+identity.b2c
+
 messaging: message broker based on rabitmq (for local usage)
 messaging: singalr based provider?
 

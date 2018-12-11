@@ -68,7 +68,7 @@
                 new JobRegistration(key, cron, args, isReentrant, timeout, enabled),
                 new Job(async (t, a) => // defer job creation
                 {
-                    var job = this.jobFactory.Create(typeof(T));
+                    var job = this.jobFactory.CreateJob(typeof(T));
                     if (job == null)
                     {
                         throw new NaosException($"Cannot create job instance for type {typeof(T).PrettyName()}.");

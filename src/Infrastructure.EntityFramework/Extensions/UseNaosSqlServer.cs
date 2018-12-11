@@ -8,11 +8,18 @@
         public static DbContextOptionsBuilder UseNaosSqlServer(
             this DbContextOptionsBuilder source,
             IConfiguration configuration,
-            string section = "naos:sample:userAccounts:entityFramework")
+            string section = "naos:service:entityFramework")
         {
             var entityFrameworkConfiguration = configuration.GetSection(section).Get<EntityFrameworkConfiguration>();
 
             return source.UseSqlServer(entityFrameworkConfiguration?.ConnectionString ?? "Server=(localdb)\\mssqllocaldb;Database=naos;Trusted_Connection=True;");
+        }
+
+        public static DbContextOptionsBuilder UseNaosSqlServer(
+            this DbContextOptionsBuilder source,
+            string connectionString)
+        {
+            return source.UseSqlServer(connectionString ?? "Server=(localdb)\\mssqllocaldb;Database=naos;Trusted_Connection=True;");
         }
     }
 }

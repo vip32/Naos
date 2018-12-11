@@ -9,6 +9,8 @@
         /// </summary>
         /// <param name="jobType">Type of the job.</param>
         /// <returns></returns>
-        IJob Create(Type jobType);
+        IJob CreateJob(Type jobType);
+
+        object Create(Type jobType);
     }
 }

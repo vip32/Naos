@@ -9,7 +9,7 @@
     using Naos.Sample.Customers.Domain;
     using SimpleInjector;
 
-    public static class ContainerExtensions
+    public static class ServiceRegistrations
     {
         public static Container AddSampleCustomers(
             this Container container,
