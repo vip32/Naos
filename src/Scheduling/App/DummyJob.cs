@@ -27,20 +27,19 @@
             }, cancellationToken);
         }
 
-        public async Task LogMessageAsync(string message, CancellationToken cancellationToken, bool breakable)
+        public Task LogMessageAsync(string message, CancellationToken cancellationToken, bool breakable)
         {
-            await Task.Run(() =>
+            if (breakable && Random.Next(2) == 0)// throw randomly
             {
-                if (breakable && Random.Next(2) == 0)// throw randomly
-                {
-                    throw new NaosException("error from job");
-                }
+                throw new NaosException("error from job");
+            }
 
-                if (!message.IsNullOrEmpty())
-                {
-                    this.logger.LogInformation(message);
-                }
-            }, cancellationToken);
+            if (!message.IsNullOrEmpty())
+            {
+                this.logger.LogInformation(message);
+            }
+
+            return Task.CompletedTask;
         }
 
         public Task LongRunningAsync(string message, CancellationToken cancellationToken)

@@ -11,23 +11,7 @@
 
         IJobScheduler OnError(Action<Exception> errorHandler);
 
-        IJobScheduler Register(string cron, Action<string[]> action, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true); // TODO: not really needed
-
-        IJobScheduler Register(string key, string cron, Action<string[]> action, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true);
-
-        IJobScheduler Register(string cron, Func<string[], Task> task, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true);
-
-        IJobScheduler Register(string key, string cron, Func<string[], Task> task, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true);
-
         IJobScheduler Register(JobRegistration registration, IJob job);
-
-        IJobScheduler Register<T>(string cron, string[] args = null, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
-            where T : IJob;
-
-        IJobScheduler Register<T>(string key, string cron, string[] args = null, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
-            where T : IJob;
-
-        IJobScheduler Register<T>(string key, string cron, Expression<Func<T, Task>> task, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true);
 
         Task RunAsync();
 

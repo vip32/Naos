@@ -12,95 +12,28 @@
 
     public class JobScheduler : IJobScheduler
     {
-        private readonly Dictionary<JobRegistration, IJob> registrations = new Dictionary<JobRegistration, IJob>();
+        private readonly IDictionary<JobRegistration, IJob> registrations = new Dictionary<JobRegistration, IJob>();
         private readonly ILogger<JobScheduler> logger;
         private readonly IMutex mutex;
-        private readonly IJobFactory jobFactory;
         private int activeCount;
         private Action<Exception> errorHandler;
 
-        public JobScheduler(ILogger<JobScheduler> logger, IJobFactory jobFactory, IMutex mutex)
+        public JobScheduler(ILogger<JobScheduler> logger, IMutex mutex)
+            : this(logger, mutex, null)
+        {
+        }
+
+        public JobScheduler(ILogger<JobScheduler> logger, IMutex mutex, JobSchedulerSettings settings)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
+            EnsureArg.IsNotNull(settings, nameof(settings));
 
             this.logger = logger;
-            this.jobFactory = jobFactory; // what to do when null?
-            this.mutex = mutex; //?? new InProcessMutex();
+            this.mutex = mutex ?? new InProcessMutex(null);
+            this.registrations = settings.Registrations ?? new Dictionary<JobRegistration, IJob>();
         }
 
         public bool IsRunning => this.activeCount > 0;
-
-        public IJobScheduler Register(string cron, Action<string[]> action, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true) // TODO: not really needed
-        {
-            return this.Register(new JobRegistration(null, cron, null, isReentrant, timeout, enabled), new Job(action));
-        }
-
-        public IJobScheduler Register(string key, string cron, Action<string[]> action, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
-        {
-            return this.Register(new JobRegistration(key, cron, null, isReentrant, timeout, enabled), new Job(action));
-        }
-
-        public IJobScheduler Register(string cron, Func<string[], Task> task, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
-        {
-            return this.Register(new JobRegistration(null, cron, null, isReentrant, timeout, enabled), new Job(task));
-        }
-
-        public IJobScheduler Register(string key, string cron, Func<string[], Task> task, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
-        {
-            return this.Register(new JobRegistration(key, cron, null, isReentrant, timeout, enabled), new Job(task));
-        }
-
-        public IJobScheduler Register<T>(string cron, string[] args = null, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
-            where T : IJob
-        {
-            return this.Register<T>(null, cron, args, isReentrant, timeout, enabled);
-        }
-
-        public IJobScheduler Register<T>(string key, string cron, string[] args = null, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
-            where T : IJob
-        {
-            if (!typeof(Job).IsAssignableFrom(typeof(T)))
-            {
-                throw new NaosException("Job type to register must implement IJob.");
-            }
-
-            return this.Register(
-                new JobRegistration(key, cron, args, isReentrant, timeout, enabled),
-                new Job(async (t, a) => // defer job creation
-                {
-                    var job = this.jobFactory.CreateJob(typeof(T));
-                    if (job == null)
-                    {
-                        throw new NaosException($"Cannot create job instance for type {typeof(T).PrettyName()}.");
-                    }
-
-                    await job.ExecuteAsync(t, a).ConfigureAwait(false);
-                }));
-        }
-
-        public IJobScheduler Register<T>(string key, string cron, Expression<Func<T, Task>> task, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
-        {
-            EnsureArg.IsNotNull(task, nameof(task));
-
-            return this.Register(
-                new JobRegistration(key, cron, null, isReentrant, timeout, enabled),
-                new Job(async (t, a) => // defer job creation
-                {
-                    await Task.Run(() =>
-                    {
-                        var job = this.jobFactory.Create(typeof(T));
-                        if (job == null)
-                        {
-                            throw new NaosException($"Cannot create job instance for type {typeof(T).PrettyName()}.");
-                        }
-
-                        var callExpression = task.Body as MethodCallExpression;
-                        callExpression?.Method.Invoke(
-                            job,
-                            callExpression?.Arguments?.Select(p => this.MapParameter(p, t)).ToArray());
-                    });
-                }));
-        }
 
         public IJobScheduler Register(JobRegistration registration, IJob job)
         {
@@ -112,7 +45,7 @@
             this.logger.LogInformation($"register scheduled job (key={registration.Key}, cron={registration.Cron}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")}, enabled={registration.Enabled})");
 
             var item = this.registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(registration.Key));
-            if(item.Key != null)
+            if (item.Key != null)
             {
                 this.registrations.Remove(item.Key);
             }
@@ -250,8 +183,8 @@
                 catch (Exception ex)
                 {
                     // TODO: publish domain event (job failed)
-                    this.logger.LogError(ex, $"job failed (key={registration.Key}), type={job.GetType().PrettyName()})");
-                    this.errorHandler?.Invoke(ex);
+                    this.logger.LogError(ex.InnerException ?? ex, $"job failed (key={registration.Key}), type={job.GetType().PrettyName()})");
+                    this.errorHandler?.Invoke(ex.InnerException ?? ex);
                 }
             }
         }

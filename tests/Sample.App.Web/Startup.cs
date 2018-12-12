@@ -55,10 +55,11 @@
         {
             services
                 .AddHttpContextAccessor()
-                .AddSwaggerDocument()
+                .AddSwaggerDocument(s => s.Description = "naos")
                 .AddNaosCorrelation()
-                .AddMvc().AddJsonOptions(o => o.AddDefaultJsonSerializerSettings())
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                .AddMvc()
+                    .AddJsonOptions(o => o.AddDefaultJsonSerializerSettings())
+                    .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // Naos application services.
             this.container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
@@ -73,7 +74,11 @@
                     this.Configuration,
                     AppDomain.CurrentDomain.FriendlyName,
                     assemblies: new[] { typeof(IMessageBroker).Assembly, typeof(Customers.Domain.Customer).Assembly })
-                .AddNaosScheduling(services); // TODO: register jobs here somehow
+                .AddNaosScheduling(
+                    services,
+                    s => s.Register<DummyJob>("job1", Cron.Minutely(), (j) => j.LogMessageAsync("+++ hello from job1 +++", CancellationToken.None))
+                          .Register<DummyJob>("job2", Cron.MinuteInterval(2), j => j.LogMessageAsync("+++ hello from job2 +++", CancellationToken.None, true))
+                          .Register<DummyJob>("longjob3", Cron.Minutely(), j => j.LongRunningAsync("+++ hello from longjob3 +++", CancellationToken.None)));
 
             // naos sample product registrations
             this.container
@@ -128,14 +133,14 @@
             // Allow Simple Injector to resolve services from ASP.NET Core.
             this.container.AutoCrossWireAspNetComponents(app);
 
-            this.InitializeSchedular(this.container.GetService<IJobScheduler>());
+            //this.InitializeSchedular(this.container.GetService<IJobScheduler>());
         }
 
-        private void InitializeSchedular(IJobScheduler scheduler) => scheduler // TODO: where to put these registrations
-                .Register<DummyJob>("job1", Cron.Minutely(), (j) => j.LogMessageAsync("+++ hello from job1 +++", CancellationToken.None))
-                .Register<DummyJob>("job2", Cron.MinuteInterval(2), j => j.LogMessageAsync("+++ hello from job2 +++", CancellationToken.None, true))
-                .Register<DummyJob>("longjob3", Cron.Minutely(), j => j.LongRunningAsync("+++ hello from longjob3 +++", CancellationToken.None));
-                //.Register("longjob4", Cron.Minutely(), async (a) =>
+        //private void InitializeSchedular(IJobScheduler scheduler) => scheduler // TODO: where to put these registrations
+        //        .Register<DummyJob>("job1", Cron.Minutely(), (j) => j.LogMessageAsync("+++ hello from job1 +++", CancellationToken.None))
+        //        .Register<DummyJob>("job2", Cron.MinuteInterval(2), j => j.LogMessageAsync("+++ hello from job2 +++", CancellationToken.None, true))
+        //        .Register<DummyJob>("longjob3", Cron.Minutely(), j => j.LongRunningAsync("+++ hello from longjob3 +++", CancellationToken.None));
+        //        //.Register("longjob4", Cron.Minutely(), async (a) =>
                 //{
                 //    for (int i = 1; i <= 5; i++)
                 //    {

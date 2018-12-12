@@ -1,5 +1,6 @@
 ﻿namespace Naos.Core.Scheduling
 {
+    using System;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Scheduling.App;
@@ -10,8 +11,17 @@
     {
         public static Container AddNaosScheduling(
             this Container container,
-            IServiceCollection services = null,
+            Action<JobSchedulerSettings> setupAction = null,
             string section = "naos:scheduling")
+        {
+            return container.AddNaosScheduling(null, setupAction, section);
+        }
+
+        public static Container AddNaosScheduling(
+        this Container container,
+        IServiceCollection services,
+        Action<JobSchedulerSettings> setupAction = null,
+        string section = "naos:scheduling")
         {
             //container.RegisterSingleton<IHostedService>(() =>
             //{
@@ -27,10 +37,17 @@
 
             container.RegisterSingleton<IJobScheduler>(() =>
             {
-                return new JobScheduler(
+                var settings = new JobSchedulerSettings(
+                    container.GetInstance<ILogger<JobSchedulerSettings>>(),
+                    new SimpleInjectorJobFactory(container));
+                setupAction?.Invoke(settings);
+
+                var result = new JobScheduler(
                     container.GetInstance<ILogger<JobScheduler>>(),
-                    new SimpleInjectorJobFactory(container),
-                    new InProcessMutex(container.GetInstance<ILogger<InProcessMutex>>()));
+                    new InProcessMutex(container.GetInstance<ILogger<InProcessMutex>>()),
+                    settings);
+
+                return result;
             });
 
             //services?.AddSingleton<IJobScheduler>(sp =>

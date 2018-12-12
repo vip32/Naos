@@ -19,7 +19,7 @@
 
         public InProcessMutex(ILogger<InProcessMutex> logger, DateTime moment)
         {
-            EnsureArg.IsNotNull(logger, nameof(logger));
+            //EnsureArg.IsNotNull(logger, nameof(logger));
 
             this.logger = logger;
             this.moment = moment;
@@ -33,7 +33,7 @@
                 {
                     item.Locked = false;
                     item.ExpireDate = null;
-                    this.logger.LogInformation($"lock released (key={key})");
+                    this.logger?.LogDebug($"lock released (key={key})");
                 }
             }
         }
@@ -85,7 +85,7 @@
                     });
             }
 
-            this.logger.LogInformation($"lock created (key={key}, timeout({new TimeSpan(0, timeoutMinutes, 0).ToString("c")}))");
+            this.logger?.LogDebug($"lock created (key={key}, timeout({new TimeSpan(0, timeoutMinutes, 0).ToString("c")}))");
 
             return true;
         }
