@@ -1,13 +1,14 @@
 ﻿namespace Naos.Core.Scheduling.Domain
 {
     using System;
-    using System.Linq.Expressions;
     using System.Threading;
     using System.Threading.Tasks;
 
     public interface IJobScheduler
     {
         bool IsRunning { get; }
+
+        JobSchedulerSettings Settings { get; }
 
         IJobScheduler OnError(Action<Exception> errorHandler);
 

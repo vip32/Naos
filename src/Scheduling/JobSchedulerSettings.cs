@@ -13,7 +13,6 @@
 
     public class JobSchedulerSettings
     {
-        private readonly IDictionary<JobRegistration, IJob> registrations = new Dictionary<JobRegistration, IJob>();
         private readonly ILogger<JobSchedulerSettings> logger;
         private readonly IJobFactory jobFactory;
 
@@ -25,7 +24,7 @@
             this.jobFactory = jobFactory; // what to do when null?
         }
 
-        public IDictionary<JobRegistration, IJob> Registrations => this.registrations;
+        public IDictionary<JobRegistration, IJob> Registrations { get; } = new Dictionary<JobRegistration, IJob>();
 
         public JobSchedulerSettings Register(string cron, Action<string[]> action, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true) // TODO: not really needed
         {
@@ -108,13 +107,13 @@
             registration.Key = registration.Key ?? HashAlgorithm.ComputeHash(job);
             this.logger.LogInformation($"register scheduled job (key={registration.Key}, cron={registration.Cron}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")}, enabled={registration.Enabled})");
 
-            var item = this.registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(registration.Key));
+            var item = this.Registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(registration.Key));
             if (item.Key != null)
             {
-                this.registrations.Remove(item.Key);
+                this.Registrations.Remove(item.Key);
             }
 
-            this.registrations.Add(registration, job);
+            this.Registrations.Add(registration, job);
             return this;
         }
 

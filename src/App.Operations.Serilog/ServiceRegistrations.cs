@@ -1,14 +1,14 @@
-﻿namespace Naos.Core.App.Operations.Serilog
+﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
     using global::Serilog;
     using global::Serilog.Events;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.App.Operations.Serilog;
     using Naos.Core.Common;
     using Naos.Core.Infrastructure.Azure;
     using Naos.Core.Operations.Infrastructure.Azure.LogAnalytics;
-    using SimpleInjector;
 
     public static class ServiceRegistrations
     {
@@ -17,8 +17,8 @@
         private static string internalEnvironment;
         private static string internalServiceDescriptor;
 
-        public static Container AddNaosLogging(
-            this Container container,
+        public static IServiceCollection AddNaosLoggingSerilog(
+            this IServiceCollection services,
             IConfiguration configuration,
             string environment = "Development",
             string serviceDescriptor = "naos",
@@ -28,10 +28,13 @@
             internalLoggerConfiguration = loggerConfiguration;
             internalEnvironment = environment;
             internalServiceDescriptor = serviceDescriptor;
-            container.Register(CreateLoggerFactory, Lifestyle.Singleton);
-            container.Register(typeof(ILogger<>), typeof(LoggingAdapter<>));
+            //container.Register(CreateLoggerFactory, Lifestyle.Singleton);
+            //container.Register(typeof(ILogger<>), typeof(LoggingAdapter<>));
 
-            return container;
+            services?.AddSingleton(sp => CreateLoggerFactory());
+            services?.AddSingleton(typeof(ILogger<>), typeof(LoggingAdapter<>));
+
+            return services;
         }
 
         private static ILoggerFactory CreateLoggerFactory()

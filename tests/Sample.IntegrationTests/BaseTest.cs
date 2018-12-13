@@ -2,25 +2,19 @@
 {
     using System;
     using Microsoft.EntityFrameworkCore;
-    using Naos.Core.App.Commands;
+    using Microsoft.Extensions.DependencyInjection;
     using Naos.Core.App.Configuration;
-    using Naos.Core.App.Operations.Serilog;
-    using Naos.Core.Common.Dependency.SimpleInjector;
     using Naos.Core.Domain;
     using Naos.Core.Infrastructure.EntityFramework;
     using Naos.Core.Messaging;
-    using Naos.Core.Messaging.Infrastructure.Azure;
-    using Naos.Core.Operations.Infrastructure.Azure.LogAnalytics;
-    using Naos.Sample.Countries;
-    using Naos.Sample.Customers;
     using Naos.Sample.Customers.Domain;
-    using Naos.Sample.UserAccounts;
     using Naos.Sample.UserAccounts.EntityFramework;
     using SimpleInjector;
 
-    public abstract class BaseTest : IDisposable
+    public abstract class BaseTest
     {
         protected readonly Container container = new Container();
+        protected readonly IServiceCollection services = new ServiceCollection();
 
         protected BaseTest()
         {
@@ -30,28 +24,24 @@
             var configuration = NaosConfigurationFactory.CreateRoot();
 
             // naos core registrations
+            this.services
+                .AddNaosLoggingSerilog(configuration)
+                .AddNaosOperationsLogAnalytics(configuration)
+                .AddNaosMessaging(configuration, AppDomain.CurrentDomain.FriendlyName);
+
             this.container
                 .AddNaosMediator(new[] { typeof(IEntity).Assembly, typeof(BaseTest).Assembly, typeof(Customer).Assembly })
-                .AddNaosLogging(configuration)
-                .AddNaosAppCommands(new[] { typeof(Customer).Assembly })
-                .AddNaosOperations(configuration)
-                .AddNaosMessaging(
-                    configuration,
-                    AppDomain.CurrentDomain.FriendlyName,
-                    assemblies: new[] { typeof(IMessageBroker).Assembly, typeof(BaseTest).Assembly, typeof(Customer).Assembly });
+                .AddNaosAppCommands(new[] { typeof(Customer).Assembly });
 
             // naos sample registrations
-            this.container
+            this.services
                 .AddSampleCountries()
                 .AddSampleCustomers(configuration)
                 .AddSampleUserAccounts(configuration, null, dbContext: new UserAccountsContext(new DbContextOptionsBuilder().UseNaosSqlServer(configuration, "naos:sample:userAccounts:entityFramework").Options));
 
-            //this.container.Verify();
+            this.ServiceProvider = this.services.BuildServiceProvider();
         }
 
-        public void Dispose()
-        {
-            //Serilog.Log.CloseAndFlush();
-        }
+        public ServiceProvider ServiceProvider { get; private set; }
     }
 }

@@ -3,33 +3,35 @@
     using System;
     using System.Threading;
     using System.Threading.Tasks;
+    using EnsureThat;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
-    using Naos.Core.App.Configuration;
-    using Naos.Core.App.Operations.Serilog;
+    using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Messaging;
-    using Naos.Core.Messaging.Infrastructure.Azure;
     using SimpleInjector;
 
     public class MessagingTestHostedService : IHostedService
     {
         private readonly Container container = new Container();
+        private readonly IServiceProvider serviceProvider;
         private IMessageBroker messageBus;
+        private ILogger<MessagingTestHostedService> logger;
+
+        public MessagingTestHostedService(ILogger<MessagingTestHostedService> logger, IServiceProvider serviceProvider)
+        {
+            EnsureArg.IsNotNull(logger, nameof(logger));
+            EnsureArg.IsNotNull(serviceProvider, nameof(serviceProvider));
+
+            this.logger = logger;
+            this.serviceProvider = serviceProvider;
+        }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
             Console.WriteLine("starting hosted service");
 
-            var configuration = NaosConfigurationFactory.CreateRoot();
-            string[] capabilities = { $"{AppDomain.CurrentDomain.FriendlyName}-A", $"{AppDomain.CurrentDomain.FriendlyName}-B", $"{AppDomain.CurrentDomain.FriendlyName}-C" };
-            this.container
-                .AddNaosLogging(configuration)
-                .AddNaosMessaging(
-                    configuration,
-                    subscriptionName: capabilities[new Random().Next(0, capabilities.Length)],
-                    assemblies: new[] { typeof(StubEntityMessageHandler).Assembly });
-
-            this.messageBus = this.container.GetInstance<IMessageBroker>();
+            this.messageBus = this.serviceProvider.GetRequiredService<IMessageBroker>();
 
             // subscribe
             this.messageBus.Subscribe<TestMessage, TestMessageHandler>();
@@ -55,8 +57,8 @@
         public Task StopAsync(CancellationToken cancellationToken)
         {
             Console.WriteLine("stopping hosted service");
-            this.messageBus.Unsubscribe<TestMessage, TestMessageHandler>();
-            this.messageBus.Unsubscribe<EntityMessage<StubEntity>, StubEntityMessageHandler>();
+            //this.messageBus.Unsubscribe<TestMessage, TestMessageHandler>();
+            //this.messageBus.Unsubscribe<EntityMessage<StubEntity>, StubEntityMessageHandler>();
 
             //Serilog.Log.CloseAndFlush();
 

@@ -1,25 +1,15 @@
-﻿namespace Naos.Core.Scheduling
+﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
-    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Scheduling;
     using Naos.Core.Scheduling.App;
     using Naos.Core.Scheduling.Domain;
-    using SimpleInjector;
 
     public static class ServiceRegistrations
     {
-        public static Container AddNaosScheduling(
-            this Container container,
-            Action<JobSchedulerSettings> setupAction = null,
-            string section = "naos:scheduling")
-        {
-            return container.AddNaosScheduling(null, setupAction, section);
-        }
-
-        public static Container AddNaosScheduling(
-        this Container container,
-        IServiceCollection services,
+        public static IServiceCollection AddNaosScheduling(
+        this IServiceCollection services,
         Action<JobSchedulerSettings> setupAction = null,
         string section = "naos:scheduling")
         {
@@ -32,33 +22,40 @@
 
             // TODO: temporary solution to get the scheduler hosted service to run (with its dependencies)
             // https://stackoverflow.com/questions/50394666/injecting-simple-injector-components-into-ihostedservice-with-asp-net-core-2-0#
-            services?.AddSingleton<Microsoft.Extensions.Hosting.IHostedService>(sp =>
-                    new JobSchedulerHostedService(sp.GetService<ILogger<JobSchedulerHostedService>>(), container));
+            services.AddSingleton<Hosting.IHostedService>(sp =>
+                    new JobSchedulerHostedService(sp.GetRequiredService<ILogger<JobSchedulerHostedService>>(), sp));
 
-            container.RegisterSingleton<IJobScheduler>(() =>
+            //container.RegisterSingleton<IJobScheduler>(() =>
+            //{
+            //    var settings = new JobSchedulerSettings(
+            //        container.GetInstance<ILogger<JobSchedulerSettings>>(),
+            //        new SimpleInjectorJobFactory(container));
+            //    setupAction?.Invoke(settings);
+
+            //    var result = new JobScheduler(
+            //        container.GetInstance<ILogger<JobScheduler>>(),
+            //        new InProcessMutex(container.GetInstance<ILogger<InProcessMutex>>()),
+            //        settings);
+
+            //    return result;
+            //});
+
+            services.AddSingleton<IJobScheduler>(sp =>
             {
                 var settings = new JobSchedulerSettings(
-                    container.GetInstance<ILogger<JobSchedulerSettings>>(),
-                    new SimpleInjectorJobFactory(container));
+                    sp.GetRequiredService<ILogger<JobSchedulerSettings>>(),
+                    new ServiceProviderJobFactory(sp));
                 setupAction?.Invoke(settings);
 
                 var result = new JobScheduler(
-                    container.GetInstance<ILogger<JobScheduler>>(),
-                    new InProcessMutex(container.GetInstance<ILogger<InProcessMutex>>()),
+                    sp.GetRequiredService<ILogger<JobScheduler>>(),
+                    new InProcessMutex(sp.GetRequiredService<ILogger<InProcessMutex>>()),
                     settings);
 
                 return result;
             });
 
-            //services?.AddSingleton<IJobScheduler>(sp =>
-            //{
-            //    return new JobScheduler(
-            //        container.GetInstance<ILogger<JobScheduler>>(),
-            //        new ServiceProviderJobFactory(sp),
-            //        new InProcessMutex(container.GetInstance<ILogger<InProcessMutex>>()));
-            //});
-
-            return container;
+            return services;
         }
     }
 }

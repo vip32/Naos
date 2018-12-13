@@ -1,19 +1,19 @@
-﻿namespace Naos.Core.Operations.Infrastructure.Azure.LogAnalytics
+﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using Microsoft.Extensions.Configuration;
     using Microsoft.IdentityModel.Clients.ActiveDirectory;
     using Naos.Core.Operations.Domain.Repositories;
+    using Naos.Core.Operations.Infrastructure.Azure.LogAnalytics;
     using Naos.Core.Operations.Infrastructure.Azure.LogAnalytics.Repositories;
-    using SimpleInjector;
 
     public static class ServiceRegistrations
     {
-        public static Container AddNaosOperations(
-            this Container container,
+        public static IServiceCollection AddNaosOperationsLogAnalytics(
+            this IServiceCollection services,
             IConfiguration configuration,
             string section = "naos:operations:azureLogAnalytics")
         {
-            container.Register<ILogEventRepository>(() =>
+            services.AddSingleton<ILogEventRepository>(sp =>
             {
                 var logAnalyticsConfiguration = configuration.GetSection(section).Get<LogAnalyticsConfiguration>();
 
@@ -34,7 +34,7 @@
                     logAnalyticsConfiguration.WorkspaceName);
             }/*, Lifestyle.Scoped*/);
 
-            return container;
+            return services;
         }
     }
 }

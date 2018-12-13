@@ -4,10 +4,10 @@
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Scheduling.Domain;
-    using SimpleInjector;
 
     public class JobSchedulerHostedService : IHostedService, IDisposable
     {
@@ -16,24 +16,27 @@
         private bool enabled = true; // TODO: start/stop from outside https://stackoverflow.com/questions/51469881/asp-net-core-ihostedservice-manual-start-stop-pause
         private Timer schedulerTimer;
 
-        public JobSchedulerHostedService(ILogger<JobSchedulerHostedService> logger, Container container)
+        public JobSchedulerHostedService(ILogger<JobSchedulerHostedService> logger, IServiceProvider serviceProvider)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
-            EnsureArg.IsNotNull(container, nameof(container));
 
             this.logger = logger;
-            this.scheduler = container.GetInstance<IJobScheduler>();
+            this.scheduler = serviceProvider.GetRequiredService<IJobScheduler>();
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            var moment = DateTime.UtcNow;
-            this.schedulerTimer = new Timer(
-                this.RunSchedulerAsync,
-                null,
-                new DateTime(moment.Year, moment.Month, moment.Day, moment.Hour, moment.Minute, 59, 999, DateTimeKind.Utc) - moment, // trigger on the minute start
-                TimeSpan.FromMinutes(1));
-            this.logger.LogInformation($"scheduler hosted service started (moment={moment.ToString("o")})");
+            if (!cancellationToken.IsCancellationRequested)
+            {
+                var moment = DateTime.UtcNow;
+                this.schedulerTimer = new Timer(
+                    this.RunSchedulerAsync,
+                    null,
+                    new DateTime(moment.Year, moment.Month, moment.Day, moment.Hour, moment.Minute, 59, 999, DateTimeKind.Utc) - moment, // trigger on the minute start
+                    TimeSpan.FromMinutes(1));
+                this.logger.LogInformation($"scheduler hosted service started (moment={moment.ToString("o")})");
+            }
+
             return Task.CompletedTask;
         }
 
@@ -49,7 +52,7 @@
                 this.logger.LogWarning("scheduler hosted service will be stopped but is waiting on running jobs");
             }
 
-            while (this.scheduler.IsRunning)
+            while (this.scheduler.IsRunning && !cancellationToken.IsCancellationRequested)
             {
                 await Task.Delay(50); // TODO: try to cancel the running jobs
             }

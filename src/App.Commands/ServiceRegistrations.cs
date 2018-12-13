@@ -1,7 +1,8 @@
-﻿namespace Naos.Core.App.Commands
+﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System.Collections.Generic;
     using System.Reflection;
+    using Naos.Core.App.Commands;
     using Naos.Core.Common;
     using SimpleInjector;
 

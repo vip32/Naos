@@ -3,37 +3,42 @@
     using System;
     using System.Threading;
     using System.Threading.Tasks;
+    using Microsoft.Extensions.DependencyInjection;
     using Naos.Core.App.Configuration;
-    using Naos.Core.App.Operations.Serilog;
     using Naos.Core.Common;
-    using Naos.Core.Scheduling;
     using Naos.Core.Scheduling.Domain;
     using Shouldly;
-    using SimpleInjector;
     using Xunit;
 
     public class JobSchedulerTests : BaseTest
     {
-        private readonly Container container = new Container();
+        private readonly IServiceCollection services = new ServiceCollection();
 
         public JobSchedulerTests()
         {
             var configuration = NaosConfigurationFactory.CreateRoot();
-            this.container = new Container()
-                .AddNaosLogging(configuration)
+
+            this.services
+                .AddNaosLoggingSerilog(configuration)
                 .AddNaosScheduling();
+
+            this.services.AddScoped<StubProbe>();
+
+            this.ServiceProvider = this.services.BuildServiceProvider();
         }
 
-        [Fact]
-        public void VerifyContainer_Test()
-        {
-            this.container.Verify();
-        }
+        public ServiceProvider ServiceProvider { get; private set; }
+
+        //[Fact]
+        //public void VerifyContainer_Test()
+        //{
+        //    this.container.Verify();
+        //}
 
         [Fact]
         public void CanInstantiate_Test()
         {
-            var sut = this.container.GetInstance<IJobScheduler>();
+            var sut = this.ServiceProvider.GetRequiredService<IJobScheduler>();
 
             sut.ShouldNotBeNull();
         }
@@ -41,10 +46,10 @@
         [Fact]
         public async Task RegisterAndTriggerAction_Test()
         {
-            var sut = this.container.GetInstance<IJobScheduler>();
+            var sut = this.ServiceProvider.GetRequiredService<IJobScheduler>();
             var count = 0;
 
-            sut.Register("key1", "* 12 * * * *", (a) =>
+            sut.Settings.Register("key1", "* 12 * * * *", (a) =>
             {
                 count++;
                 System.Diagnostics.Trace.WriteLine("+++ hello from task " + a);
@@ -61,10 +66,10 @@
         [Fact]
         public async Task RegisterAndTriggerTask_Test()
         {
-            var sut = this.container.GetInstance<IJobScheduler>();
+            var sut = this.ServiceProvider.GetRequiredService<IJobScheduler>();
             var count = 0;
 
-            sut.Register("key1", "* 12 * * * *", async (a) =>
+            sut.Settings.Register("key1", "* 12 * * * *", async (a) =>
                 await Task.Run(() =>
                 {
                     count++;
@@ -82,12 +87,11 @@
         [Fact]
         public async Task RegisterAndTriggerTypeWithArgs_Test()
         {
-            this.container.RegisterInstance(new StubProbe());
-            var probe = this.container.GetInstance<StubProbe>();
-            var sut = this.container.GetInstance<IJobScheduler>();
+            var probe = this.ServiceProvider.GetRequiredService<StubProbe>();
+            var sut = this.ServiceProvider.GetRequiredService<IJobScheduler>();
 
-            sut.Register<StubJob>("key1", "* 12 * * * *", new[] { "once" });
-            sut.Register<StubJob>("key2", "* 12 * * * *", new[] { "once" });
+            sut.Settings.Register<StubJob>("key1", "* 12 * * * *", new[] { "once" });
+            sut.Settings.Register<StubJob>("key2", "* 12 * * * *", new[] { "once" });
 
             // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
             var t1 = sut.TriggerAsync("key1");
@@ -101,11 +105,10 @@
         [Fact]
         public async Task RegisterAndTriggerTypeWithOverlapAndArgs_Test()
         {
-            this.container.RegisterInstance(new StubProbe());
-            var probe = this.container.GetInstance<StubProbe>();
-            var sut = this.container.GetInstance<IJobScheduler>();
+            var probe = this.ServiceProvider.GetRequiredService<StubProbe>();
+            var sut = this.ServiceProvider.GetRequiredService<IJobScheduler>();
 
-            sut.Register<StubJob>("key1", "* 12 * * * *", new[] { "once"});
+            sut.Settings.Register<StubJob>("key1", "* 12 * * * *", new[] { "once"});
 
             // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
             var t1 = sut.TriggerAsync("key1");
@@ -119,12 +122,12 @@
         [Fact]
         public async Task RegisterAndTriggerTypeWithArgsAndCancellation_Test()
         {
-            this.container.RegisterInstance(new StubProbe());
-            var probe = this.container.GetInstance<StubProbe>();
-            var sut = this.container.GetInstance<IJobScheduler>();
+            var probe = this.ServiceProvider.GetRequiredService<StubProbe>();
+            var sut = this.ServiceProvider.GetRequiredService<IJobScheduler>();
 
-            sut.Register<StubJob>("key1", "* 12 * * * *", new[] { "once" });
-            sut.Register<StubJob>("key2", "* 12 * * * *", new[] { "cancel" });
+            sut.Settings
+                .Register<StubJob>("key1", "* 12 * * * *", new[] { "once" })
+                .Register<StubJob>("key2", "* 12 * * * *", new[] { "cancel" });
 
             // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
             var t1 = sut.TriggerAsync("key1");
@@ -138,13 +141,12 @@
         [Fact]
         public async Task RegisterAndTriggerTypeWithCancellation_Test()
         {
-            this.container.RegisterInstance(new StubProbe());
-            var probe = this.container.GetInstance<StubProbe>();
+            var probe = this.ServiceProvider.GetRequiredService<StubProbe>();
             var cts = new CancellationTokenSource();
-            var sut = this.container.GetInstance<IJobScheduler>();
+            var sut = this.ServiceProvider.GetRequiredService<IJobScheduler>();
 
-            sut.Register<StubJob>("key1", "* 12 * * * *");
-            sut.Register<StubJob>("key2", "* 12 * * * *");
+            sut.Settings.Register<StubJob>("key1", "* 12 * * * *");
+            sut.Settings.Register<StubJob>("key2", "* 12 * * * *");
 
             // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
             cts.CancelAfter(TimeSpan.FromMilliseconds(250));
@@ -162,11 +164,10 @@
         [Fact]
         public async Task RegisterAndTriggerTypeOverlap_Test()
         {
-            this.container.RegisterInstance(new StubProbe());
-            var probe = this.container.GetInstance<StubProbe>();
-            var sut = this.container.GetInstance<IJobScheduler>();
+            var probe = this.ServiceProvider.GetRequiredService<StubProbe>();
+            var sut = this.ServiceProvider.GetRequiredService<IJobScheduler>();
 
-            sut.Register<StubJob>("key1", "* 12 * * * *");
+            sut.Settings.Register<StubJob>("key1", "* 12 * * * *");
 
             // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
             var t1 = sut.TriggerAsync("key1");
@@ -181,12 +182,12 @@
         [Fact]
         public async Task RegisterAndTriggerCustomType_Test()
         {
-            this.container.RegisterInstance(new StubProbe());
-            var probe = this.container.GetInstance<StubProbe>();
-            var sut = this.container.GetInstance<IJobScheduler>();
+            var probe = this.ServiceProvider.GetRequiredService<StubProbe>();
+            var sut = this.ServiceProvider.GetRequiredService<IJobScheduler>();
 
-            sut.Register<StubCustomJob>("key1", "* 12 * * * *", (j) => j.MyExecuteAsync("arg1", probe, CancellationToken.None));
-            sut.Register<StubCustomJob>("key2", "* 12 * * * *", (j) => j.MyExecuteAsync("arg2", probe, CancellationToken.None));
+            sut.Settings
+                .Register<StubCustomJob>("key1", "* 12 * * * *", (j) => j.MyExecuteAsync("arg1", probe, CancellationToken.None))
+                .Register<StubCustomJob>("key2", "* 12 * * * *", (j) => j.MyExecuteAsync("arg2", probe, CancellationToken.None));
 
             // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
             var t1 = sut.TriggerAsync("key1");

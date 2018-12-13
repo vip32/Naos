@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.Countries
+﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System.Linq;
     using MediatR;
@@ -7,24 +7,23 @@
     using Naos.Core.Domain.Repositories.AutoMapper;
     using Naos.Sample.Countries.Domain;
     using Naos.Sample.Countries.Infrastructure;
-    using SimpleInjector;
 
-    public static class ServiceRegistrations
+    public static partial class ServiceRegistrations
     {
-        public static Container AddSampleCountries(
-            this Container container)
+        public static IServiceCollection AddSampleCountries(
+            this IServiceCollection services)
         {
-            container.RegisterSingleton<ICountryRepository>(() =>
+            services.AddScoped<ICountryRepository>(sp =>
             {
                 return new CountryRepository(
                     new RepositoryLoggingDecorator<Country>(
-                        container.GetInstance<ILogger<CountryRepository>>(),
+                        sp.GetRequiredService<ILogger<CountryRepository>>(),
                         new RepositoryTenantDecorator<Country>(
                             "naos_sample_test",
                             new RepositoryOrderByDecorator<Country>(
                                 e => e.Name,
                                 new InMemoryRepository<Country, CountryDto>(
-                                    container.GetInstance<IMediator>(),
+                                    sp.GetRequiredService<IMediator>(),
                                     e => e.Identifier,
                                     new[]
                                     {
@@ -37,7 +36,7 @@
                                     new[] { new AutoMapperSpecificationMapper<Country, CountryDto>(ModelMapperConfiguration.Create()) })))));
             });
 
-            return container;
+            return services;
         }
     }
 }

@@ -66,7 +66,7 @@
             await this.ExecuteAsync(CancellationToken.None, args).ConfigureAwait(false);
         }
 
-        public virtual async Task ExecuteAsync(CancellationToken cancellationToken, string[] args = null)
+        public virtual async Task ExecuteAsync(CancellationToken cancellationToken = default, string[] args = null)
         {
             if(this.task != null)
             {

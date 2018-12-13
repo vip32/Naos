@@ -25,6 +25,7 @@
         /// <returns></returns>
         public object Create(Type messageHandlerType)
         {
+            //return ActivatorUtilities.CreateInstance(this.serviceProvider, messageHandlerType);
             return this.serviceProvider.GetService(messageHandlerType);
         }
     }

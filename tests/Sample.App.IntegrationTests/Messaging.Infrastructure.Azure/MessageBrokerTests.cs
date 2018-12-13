@@ -1,40 +1,40 @@
 ﻿namespace Naos.Sample.App.IntegrationTests.Messaging.Infrastructure.Azure
 {
     using System;
+    using Microsoft.Extensions.DependencyInjection;
     using Naos.Core.App.Configuration;
-    using Naos.Core.App.Operations.Serilog;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.Domain.Model;
-    using Naos.Core.Messaging.Infrastructure.Azure;
     using Shouldly;
-    using SimpleInjector;
     using Xunit;
 
     public class MessageBrokerTests : BaseTest
     {
-        private readonly Container container = new Container();
+        private readonly IServiceCollection services = new ServiceCollection();
 
         public MessageBrokerTests()
         {
             var configuration = NaosConfigurationFactory.CreateRoot();
-            this.container = new Container()
-                .AddNaosLogging(configuration)
-                .AddNaosMessaging(
-                    configuration,
-                    AppDomain.CurrentDomain.FriendlyName,
-                    assemblies: new[] { typeof(IMessageBroker).Assembly, typeof(MessageBrokerTests).Assembly });
+
+            this.services
+                .AddNaosLoggingSerilog(configuration)
+                .AddNaosMessaging(configuration, AppDomain.CurrentDomain.FriendlyName);
+
+            this.ServiceProvider = this.services.BuildServiceProvider();
         }
 
-        [Fact]
-        public void VerifyContainer_Test()
-        {
-            this.container.Verify();
-        }
+        public ServiceProvider ServiceProvider { get; private set; }
+
+        //[Fact]
+        //public void VerifyContainer_Test()
+        //{
+        //    this.container.Verify();
+        //}
 
         [Fact]
         public void CanInstantiate_Test()
         {
-            var sut = this.container.GetInstance<IMessageBroker>();
+            var sut = this.ServiceProvider.GetService<IMessageBroker>();
 
             sut.ShouldNotBeNull();
         }
@@ -42,7 +42,7 @@
         [Fact]
         public void CanPublish_Test()
         {
-            var sut = this.container.GetInstance<IMessageBroker>();
+            var sut = this.ServiceProvider.GetService<IMessageBroker>();
             sut.Publish(new Message());
 
             sut.ShouldNotBeNull();

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Common.Dependency.SimpleInjector
+﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
     using System.Collections.Generic;

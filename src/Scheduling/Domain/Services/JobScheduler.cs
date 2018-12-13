@@ -1,9 +1,7 @@
 ﻿namespace Naos.Core.Scheduling.Domain
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Linq.Expressions;
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
@@ -12,7 +10,6 @@
 
     public class JobScheduler : IJobScheduler
     {
-        private readonly IDictionary<JobRegistration, IJob> registrations = new Dictionary<JobRegistration, IJob>();
         private readonly ILogger<JobScheduler> logger;
         private readonly IMutex mutex;
         private int activeCount;
@@ -30,10 +27,12 @@
 
             this.logger = logger;
             this.mutex = mutex ?? new InProcessMutex(null);
-            this.registrations = settings.Registrations ?? new Dictionary<JobRegistration, IJob>();
+            this.Settings = settings;
         }
 
         public bool IsRunning => this.activeCount > 0;
+
+        public JobSchedulerSettings Settings { get; }
 
         public IJobScheduler Register(JobRegistration registration, IJob job)
         {
@@ -44,13 +43,13 @@
             registration.Key = registration.Key ?? HashAlgorithm.ComputeHash(job);
             this.logger.LogInformation($"register scheduled job (key={registration.Key}, cron={registration.Cron}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")}, enabled={registration.Enabled})");
 
-            var item = this.registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(registration.Key));
+            var item = this.Settings.Registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(registration.Key));
             if (item.Key != null)
             {
-                this.registrations.Remove(item.Key);
+                this.Settings.Registrations.Remove(item.Key);
             }
 
-            this.registrations.Add(registration, job);
+            this.Settings.Registrations.Add(registration, job);
             return this;
         }
 
@@ -63,7 +62,7 @@
         {
             if (registration != null)
             {
-                this.registrations.Remove(registration);
+                this.Settings.Registrations.Remove(registration);
             }
 
             return this;
@@ -77,7 +76,7 @@
 
         public async Task TriggerAsync(string key, string[] args = null)
         {
-            var item = this.registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(key));
+            var item = this.Settings.Registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(key));
             if (item.Key != null)
             {
                 await this.TriggerAsync(key, new CancellationTokenSource(item.Key.Timeout).Token, args);
@@ -90,7 +89,7 @@
 
         public async Task TriggerAsync(string key, CancellationToken cancellationToken, string[] args = null)
         {
-            var item = this.registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(key));
+            var item = this.Settings.Registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(key));
             if (item.Key != null)
             {
                 await this.ExecuteJobAsync(item.Key, item.Value, cancellationToken, args ?? item.Key?.Args).ConfigureAwait(false);
@@ -119,7 +118,7 @@
 
         private async Task ExecuteJobsAsync(DateTime moment)
         {
-            var dueJobs = this.registrations.Where(r => r.Key?.IsDue(moment) == true && r.Key.Enabled).Select(r =>
+            var dueJobs = this.Settings.Registrations.Where(r => r.Key?.IsDue(moment) == true && r.Key.Enabled).Select(r =>
             {
                 var cts = new CancellationTokenSource(r.Key.Timeout);
                 return Task.Run(async () =>
@@ -191,21 +190,7 @@
 
         private JobRegistration GetRegistationByKey(string key)
         {
-            return this.registrations.Where(r => r.Key.Key.SafeEquals(key)).Select(r => r.Key).FirstOrDefault();
-        }
-
-        private object MapParameter(Expression expression, CancellationToken cancellationToken)
-        {
-            // https://gist.github.com/i-e-b/8556753
-            if (expression.Type.IsValueType && expression.Type == typeof(CancellationToken))
-            {
-                return cancellationToken;
-            }
-
-            var objectMember = Expression.Convert(expression, typeof(object));
-            var getterLambda = Expression.Lambda<Func<object>>(objectMember);
-            var getter = getterLambda.Compile();
-            return getter();
+            return this.Settings.Registrations.Where(r => r.Key.Key.SafeEquals(key)).Select(r => r.Key).FirstOrDefault();
         }
     }
 }

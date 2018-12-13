@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using EnsureThat;
     using Microsoft.Extensions.Logging;
 
     public class InProcessMutex : IMutex

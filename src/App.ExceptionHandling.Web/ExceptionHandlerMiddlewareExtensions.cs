@@ -1,7 +1,7 @@
-﻿namespace Naos.Core.App.Exceptions.Web
+﻿namespace Microsoft.AspNetCore.Builder
 {
     using EnsureThat;
-    using Microsoft.AspNetCore.Builder;
+    using Naos.Core.App.Exceptions.Web;
     using SimpleInjector;
 
     public static class ExceptionHandlerMiddlewareExtensions
@@ -11,7 +11,8 @@
             EnsureArg.IsNotNull(app, nameof(app));
             EnsureArg.IsNotNull(container, nameof(container));
 
-            return app.UseMiddleware<ExceptionHandlerMiddleware>(container);
+            return SimpleInjectorAspNetCoreIntegrationExtensions.UseMiddleware<ExceptionHandlerMiddleware>(app, container);
+            //return app.UseMiddleware<ExceptionHandlerMiddleware>(container);
         }
     }
 }

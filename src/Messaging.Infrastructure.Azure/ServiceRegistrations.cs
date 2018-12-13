@@ -1,35 +1,30 @@
-﻿namespace Naos.Core.Messaging.Infrastructure.Azure
+﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
-    using System.Collections.Generic;
-    using System.Reflection;
     using Humanizer;
     using Microsoft.Azure.Management.ResourceManager.Fluent;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Infrastructure.Azure.ServiceBus;
+    using Naos.Core.Messaging;
     using Naos.Core.Messaging.Infrastructure.Azure.ServiceBus;
-    using SimpleInjector;
 
     public static class ServiceRegistrations
     {
-        public static Container AddNaosMessaging(
-            this Container container,
+        public static IServiceCollection AddNaosMessaging(
+            this IServiceCollection services,
             IConfiguration configuration,
             string topicName = null,
             string subscriptionName = null,
-            string section = "naos:messaging:serviceBus",
-            IEnumerable<Assembly> assemblies = null)
+            string section = "naos:messaging:serviceBus")
         {
-            var allAssemblies = new List<Assembly> { typeof(IMessageBroker).GetTypeInfo().Assembly };
-            if (!assemblies.IsNullOrEmpty())
-            {
-                allAssemblies.AddRange(assemblies);
-            }
+            services.Scan(scan => scan // https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/
+                .FromExecutingAssembly()
+                .FromApplicationDependencies(a => !a.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) && !a.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase))
+                .AddClasses(classes => classes.AssignableTo(typeof(IMessageHandler<>)), true));
 
-            container.Register(typeof(IMessageHandler<>), allAssemblies.DistinctBy(a => a.FullName)); // register all message handlers
-            container.RegisterSingleton<IServiceBusProvider>(() =>
+            services.AddScoped<IServiceBusProvider>(sp =>
             {
                 var serviceBusConfiguration = configuration.GetSection(section).Get<ServiceBusConfiguration>();
                 serviceBusConfiguration.EntityPath = topicName ?? $"{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}-Naos.Messaging";
@@ -37,24 +32,25 @@
                 if (serviceBusConfiguration?.Enabled == true)
                 {
                     return new ServiceBusProvider(
-                        container.GetInstance<ILogger<ServiceBusProvider>>(),
+                        sp.GetRequiredService<ILogger<ServiceBusProvider>>(),
                         SdkContext.AzureCredentialsFactory.FromServicePrincipal(serviceBusConfiguration.ClientId, serviceBusConfiguration.ClientSecret, serviceBusConfiguration.TenantId, AzureEnvironment.AzureGlobalCloud),
                         serviceBusConfiguration);
                 }
 
                 throw new NotImplementedException("no messaging servicebus is enabled");
             });
-            container.RegisterSingleton<IMessageBroker>(() =>
+
+            services.AddSingleton<IMessageBroker>(sp =>
                 new ServiceBusMessageBroker(
-                        container.GetInstance<ILogger<ServiceBusMessageBroker>>(),
-                        container.GetInstance<IServiceBusProvider>(),
-                        new SimpleInjectorMessageHandlerFactory(container),
+                        sp.GetRequiredService<ILogger<ServiceBusMessageBroker>>(),
+                        sp.GetRequiredService<IServiceBusProvider>(),
+                        new ServiceProviderMessageHandlerFactory(sp),
                         subscriptionName: subscriptionName ?? AppDomain.CurrentDomain.FriendlyName, // PRODUCT.CAPABILITY
                         filterScope: Environment.GetEnvironmentVariable("ASPNETCORE_ISLOCAL").ToBool()
                             ? Environment.MachineName.Humanize().Dehumanize().ToLower()
                             : string.Empty)); // scope the messagebus messages to the local machine, so local events are handled locally
 
-            return container;
+            return services;
         }
     }
 }

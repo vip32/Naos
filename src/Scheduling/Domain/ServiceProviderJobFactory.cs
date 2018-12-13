@@ -2,6 +2,7 @@
 {
     using System;
     using EnsureThat;
+    using Microsoft.Extensions.DependencyInjection;
 
     public class ServiceProviderJobFactory : IJobFactory
     {
@@ -20,7 +21,8 @@
 
         public object Create(Type jobType)
         {
-            return this.serviceProvider.GetService(jobType);
+            return ActivatorUtilities.CreateInstance(this.serviceProvider, jobType);
+            //return this.serviceProvider.GetService(jobType);
         }
 
         /// <summary>
@@ -30,7 +32,8 @@
         /// <returns></returns>
         public IJob CreateJob(Type jobType)
         {
-            return this.serviceProvider.GetService(jobType) as IJob;
+            return ActivatorUtilities.CreateInstance(this.serviceProvider, jobType) as IJob;
+            //return this.serviceProvider.GetService(jobType) as IJob;
         }
     }
 }
