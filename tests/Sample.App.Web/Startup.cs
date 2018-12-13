@@ -28,7 +28,6 @@
 
     public class Startup
     {
-        private static readonly Random Random = new Random(DateTime.Now.GetHashCode());
         private readonly ILogger<Startup> logger;
         private readonly Container container = new Container();
 
@@ -83,7 +82,6 @@
         public void Configure(IApplicationBuilder app/*, IServiceCollection services*/, IHostingEnvironment env)
         {
             this.ConfigureContainer(app, env);
-            //this.container.Verify();
 
             this.logger.LogInformation($"app {env.ApplicationName} environment: {env.EnvironmentName}");
             if (env.IsProduction())
@@ -115,7 +113,7 @@
                     await c.Response.WriteAsync(result);
                 }
             });
-            //app.UseHealthChecksUI();
+
             app.UseHealthChecksUI(s =>
             {
                 s.ApiPath = "/health/api";
@@ -140,23 +138,7 @@
             // Add application presentation components:
             this.container.RegisterMvcControllers(app);
             this.container.RegisterMvcViewComponents(app);
-            // Allow Simple Injector to resolve services from ASP.NET Core.
             this.container.AutoCrossWireAspNetComponents(app);
-
-            //this.InitializeSchedular(this.container.GetRequiredService<IJobScheduler>());
         }
-
-        //private void InitializeSchedular(IJobScheduler scheduler) => scheduler // TODO: where to put these registrations
-        //        .Register<DummyJob>("job1", Cron.Minutely(), (j) => j.LogMessageAsync("+++ hello from job1 +++", CancellationToken.None))
-        //        .Register<DummyJob>("job2", Cron.MinuteInterval(2), j => j.LogMessageAsync("+++ hello from job2 +++", CancellationToken.None, true))
-        //        .Register<DummyJob>("longjob3", Cron.Minutely(), j => j.LongRunningAsync("+++ hello from longjob3 +++", CancellationToken.None));
-        //        //.Register("longjob4", Cron.Minutely(), async (a) =>
-        //{
-        //    for (int i = 1; i <= 5; i++)
-        //    {
-        //        System.Diagnostics.Trace.WriteLine($"+++ hello from LONG task #{i}");
-        //        await Task.Delay(new TimeSpan(0, 0, 45));
-        //    }
-        //});
     }
 }
