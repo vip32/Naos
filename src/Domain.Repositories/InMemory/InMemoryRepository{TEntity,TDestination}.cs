@@ -67,7 +67,7 @@
         {
             if (id.IsDefault())
             {
-                return null;
+                return default;
             }
 
             var result = base.entities.NullToEmpty().Select(d => this.Options.Mapper.Map<TDestination>(d)).SingleOrDefault(e => this.idSelector(e).Equals(id)); // TODO: use HasIdSpecification + MapExpression (makes idSelector obsolete)
@@ -78,7 +78,7 @@
                 return await Task.FromResult(this.Options.Mapper.Map<TEntity>(result));
             }
 
-            return null;
+            return default;
         }
 
         protected new Func<TDestination, bool> EnsurePredicate(ISpecification<TEntity> specification)

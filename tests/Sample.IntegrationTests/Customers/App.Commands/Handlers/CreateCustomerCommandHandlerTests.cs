@@ -3,6 +3,7 @@
     using System.Threading.Tasks;
     using Bogus;
     using MediatR;
+    using Microsoft.Extensions.DependencyInjection;
     using Naos.Sample.Customers.App;
     using Naos.Sample.Customers.Domain;
     using Shouldly;
@@ -16,7 +17,7 @@
 
         public CreateCustomerCommandHandlerTests()
         {
-            this.mediator = this.container.GetInstance<IMediator>();
+            this.mediator = this.ServiceProvider.GetService<IMediator>();
             this.entityFaker = new Faker<Customer>() //https://github.com/bchavez/Bogus
                 .RuleFor(u => u.Gender, f => f.PickRandom(new[] { "Male", "Female" }))
                 .RuleFor(u => u.FirstName, (f, u) => f.Name.FirstName())

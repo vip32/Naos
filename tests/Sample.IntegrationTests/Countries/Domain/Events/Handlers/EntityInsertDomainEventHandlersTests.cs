@@ -1,10 +1,10 @@
-﻿namespace Naos.Sample.IntegrationTests.Customers.Domain
+﻿namespace Naos.Sample.IntegrationTests.Countries.Domain
 {
     using System.Threading.Tasks;
     using MediatR;
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Core.Domain;
-    using Naos.Sample.Customers.Domain;
+    using Naos.Sample.Countries.Domain;
     using Shouldly;
     using Xunit;
 
@@ -15,7 +15,7 @@
         {
             // arrange
             var mediator = this.ServiceProvider.GetService<IMediator>();
-            var entity = new Customer { FirstName = "FirstName1", LastName = "LastName1" };
+            var entity = new Country { Code = "CodaA", Name = "Name1" };
 
             // act
             await mediator.Publish(new EntityInsertDomainEvent(entity)).ConfigureAwait(false);

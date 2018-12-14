@@ -8,7 +8,7 @@
     /// A base class for all domain entities (layer supertype)
     /// </summary>
     /// <typeparam name="TId">The type of the identifier.</typeparam>
-    [DebuggerDisplay("Id={Id}")]
+    [DebuggerDisplay(" Type={GetType().Name}, Id={Id}")]
     public abstract class Entity<TId> : IEntity<TId>, IAggregateRoot, IStateEntity, IDiscriminated, IIdentifiable
     {
         /// <summary>
@@ -135,9 +135,6 @@
         /// <summary>
         /// Determines whether this instance is transient (not persisted).
         /// </summary>
-        /// <returns>
-        ///   <c>true</c> if this instance is transient; otherwise, <c>false</c>.
-        /// </returns>
         // public bool IsTransient() => this.Id.IsDefault();
 
         /// <summary>

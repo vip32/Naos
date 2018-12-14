@@ -9,7 +9,6 @@
     using Microsoft.Azure.Documents;
 
     public interface ICosmosDbSqlProvider<T>
-        where T : class
     {
         Task<T> UpsertAsync(T entity);
 

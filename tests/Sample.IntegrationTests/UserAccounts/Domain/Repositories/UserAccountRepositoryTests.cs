@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
     using Bogus;
+    using Microsoft.Extensions.DependencyInjection;
     using Naos.Core.Common;
     using Naos.Core.Domain.Repositories;
     using Naos.Sample.UserAccounts.Domain;
@@ -17,7 +18,7 @@
 
         public UserAccountRepositoryTests()
         {
-            this.sut = this.container.GetInstance<IUserAccountRepository>();
+            this.sut = this.ServiceProvider.GetService<IUserAccountRepository>();
             this.entityFaker = new Faker<UserAccount>() //https://github.com/bchavez/Bogus
                 .RuleFor(u => u.Email, (f, u) => f.Internet.Email())
                 .RuleFor(u => u.LastVisitDate, (f, u) => new DateTimeEpoch())
@@ -175,6 +176,10 @@
                 result.action.ShouldNotBe(ActionResult.None);
                 result.entity.ShouldNotBeNull();
                 result.entity.Id.ShouldNotBeNull();
+                result.entity.IdentifierHash.ShouldNotBeNull(); // EntityInsertDomainEventHandler
+                result.entity.State.ShouldNotBeNull();
+                result.entity.State.CreatedDescription.ShouldNotBeNull(); // EntityInsertDomainEventHandler
+                result.entity.State.CreatedBy.ShouldNotBeNull(); // EntityInsertDomainEventHandler
             }
         }
 

@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.UserAccounts.App.Web.Controllers
+﻿namespace Naos.Sample.Customers.App.Web.Controllers
 {
     using System;
     using System.Collections.Generic;
@@ -10,19 +10,19 @@
     using Naos.Core.App.Correlation;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
-    using Naos.Sample.UserAccounts.Domain;
+    using Naos.Sample.Customers.Domain;
 
     [Route("api/[controller]")]
     [ApiController]
-    public class UserAccountsController : ControllerBase
+    public class CustomersController : ControllerBase
     {
-        private readonly ILogger<UserAccountsController> logger;
-        private readonly IUserAccountRepository repository;
+        private readonly ILogger<CustomersController> logger;
+        private readonly ICustomerRepository repository;
         private readonly ICorrelationContextAccessor correlationContext;
 
-        public UserAccountsController(
-            ILogger<UserAccountsController> logger,
-            IUserAccountRepository repository,
+        public CustomersController(
+            ILogger<CustomersController> logger,
+            ICustomerRepository repository,
             ICorrelationContextAccessor correlationContext)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
@@ -38,7 +38,7 @@
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
-        public async Task<ActionResult<IEnumerable<UserAccount>>> Get()
+        public async Task<ActionResult<IEnumerable<Customer>>> Get()
         {
             this.logger.LogInformation($"hello from {this.GetType().Name} >> {this.correlationContext.Context?.CorrelationId}");
 
@@ -52,7 +52,7 @@
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
-        public async Task<ActionResult<UserAccount>> Get(string id)
+        public async Task<ActionResult<Customer>> Get(string id)
         {
             if (id.IsNullOrEmpty() || id.Equals("0"))
             {
@@ -65,7 +65,7 @@
             }
 
             var model = await this.repository.FindOneAsync(id).ConfigureAwait(false);
-            if (model == null)
+            if(model == null)
             {
                 return this.NotFound(); // TODO: throw notfoundexception?
             }
@@ -80,7 +80,7 @@
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
-        public async Task<ActionResult<UserAccount>> Put(string id, UserAccount model)
+        public async Task<ActionResult<Customer>> Put(string id, Customer model)
         {
             if (id.IsNullOrEmpty() || id.Equals("0"))
             {
@@ -111,7 +111,7 @@
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
-        public async Task<ActionResult<UserAccount>> Post(UserAccount model)
+        public async Task<ActionResult<Customer>> Post(Customer model)
         {
             // TODO: better happy path flow https://www.strathweb.com/2018/07/centralized-exception-handling-and-request-validation-in-asp-net-core/
             if (!this.ModelState.IsValid)

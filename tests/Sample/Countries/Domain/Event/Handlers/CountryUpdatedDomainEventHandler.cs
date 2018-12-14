@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.Customers.Domain
+﻿namespace Naos.Sample.Countries.Domain
 {
     using System.Threading;
     using System.Threading.Tasks;
@@ -7,12 +7,12 @@
     using Naos.Core.Common;
     using Naos.Core.Domain;
 
-    public class CustomerUpdatedDomainEventHandler
+    public class CountryUpdatedDomainEventHandler
         : IDomainEventHandler<EntityUpdatedDomainEvent>
     {
-        private readonly ILogger<CustomerUpdatedDomainEventHandler> logger;
+        private readonly ILogger<CountryUpdatedDomainEventHandler> logger;
 
-        public CustomerUpdatedDomainEventHandler(ILogger<CustomerUpdatedDomainEventHandler> logger)
+        public CountryUpdatedDomainEventHandler(ILogger<CountryUpdatedDomainEventHandler> logger)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
 
@@ -21,7 +21,7 @@
 
         public bool CanHandle(EntityUpdatedDomainEvent notification)
         {
-            return notification?.Entity.Is<Customer>() == true;
+            return notification?.Entity.Is<Country>() == true;
         }
 
         public async Task Handle(EntityUpdatedDomainEvent notification, CancellationToken cancellationToken)

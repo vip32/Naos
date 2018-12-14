@@ -72,7 +72,7 @@
         {
             if (id.IsDefault())
             {
-                return null;
+                return default;
             }
 
             return await this.provider.GetByIdAsync(id as string);
@@ -120,7 +120,7 @@
         {
             if (entity == null)
             {
-                return (null, ActionResult.None);
+                return (default, ActionResult.None);
             }
 
             bool isNew = entity.Id.IsDefault() || !await this.ExistsAsync(entity.Id).ConfigureAwait(false);
@@ -129,11 +129,11 @@
             {
                 if (isNew)
                 {
-                    await this.mediator.Publish(new EntityInsertDomainEvent<IEntity>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityInsertDomainEvent(entity)).ConfigureAwait(false);
                 }
                 else
                 {
-                    await this.mediator.Publish(new EntityUpdateDomainEvent<IEntity>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityUpdateDomainEvent(entity)).ConfigureAwait(false);
                 }
             }
 
@@ -145,11 +145,13 @@
             {
                 if (isNew)
                 {
-                    await this.mediator.Publish(new EntityInsertedDomainEvent<IEntity>(result)).ConfigureAwait(false);
+                    //await this.mediator.Publish(new EntityInsertedDomainEvent<IEntity>(result)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityInsertedDomainEvent(result)).ConfigureAwait(false);
                 }
                 else
                 {
-                    await this.mediator.Publish(new EntityUpdatedDomainEvent<IEntity>(result)).ConfigureAwait(false);
+                    //await this.mediator.Publish(new EntityUpdatedDomainEvent<IEntity>(result)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityUpdatedDomainEvent(result)).ConfigureAwait(false);
                 }
             }
 
@@ -171,14 +173,14 @@
             {
                 if (this.Options?.PublishEvents != false)
                 {
-                    await this.mediator.Publish(new EntityDeleteDomainEvent<IEntity>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityDeleteDomainEvent(entity)).ConfigureAwait(false);
                 }
 
                 await this.provider.DeleteByIdAsync(id as string).ConfigureAwait(false);
 
                 if (this.Options?.PublishEvents != false)
                 {
-                    await this.mediator.Publish(new EntityDeletedDomainEvent<IEntity>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityDeletedDomainEvent(entity)).ConfigureAwait(false);
                 }
 
                 return ActionResult.Deleted;

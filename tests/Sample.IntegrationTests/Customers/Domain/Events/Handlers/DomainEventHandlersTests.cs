@@ -4,6 +4,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using MediatR;
+    using Microsoft.Extensions.DependencyInjection;
     using Naos.Core.Common;
     using Naos.Core.Domain;
     using Naos.Sample.Customers.Domain;
@@ -17,7 +18,7 @@
         public async Task DomainEvent_Test()
         {
             // arrange
-            var mediator = this.container.GetInstance<IMediator>();
+            var mediator = this.ServiceProvider.GetService<IMediator>();
             var domainEvent = new StubDomainEvent { Name = "Name1" };
             var entity = new Customer { FirstName = "FirstName1", LastName = "LastName1" };
 
@@ -38,6 +39,11 @@
 
         public class FirstStubDomainEventHandler : IDomainEventHandler<StubDomainEvent>
         {
+            public bool CanHandle(StubDomainEvent notification)
+            {
+                return true;
+            }
+
             public Task Handle(StubDomainEvent notification, CancellationToken cancellationToken)
             {
                 notification.Properties.AddOrUpdate(this.GetType().Name, true);
@@ -47,6 +53,11 @@
 
         public class SecondStubDomainEventHandler : IDomainEventHandler<StubDomainEvent>
         {
+            public bool CanHandle(StubDomainEvent notification)
+            {
+                return true;
+            }
+
             public Task Handle(StubDomainEvent notification, CancellationToken cancellationToken)
             {
                 notification.Properties.AddOrUpdate(this.GetType().Name, true);

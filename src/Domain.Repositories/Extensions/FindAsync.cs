@@ -28,7 +28,7 @@
                 return entity;
             }
 
-            return null;
+            return default;
         }
     }
 }

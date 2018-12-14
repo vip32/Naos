@@ -15,7 +15,7 @@
     using Newtonsoft.Json;
 
     public class CosmosDbSqlProvider<T> : ICosmosDbSqlProvider<T>
-        where T : class, IDiscriminated
+        where T : IDiscriminated
     {
         private readonly IDocumentClient client;
         private readonly string databaseId;
@@ -82,7 +82,7 @@
         {
             if (string.IsNullOrEmpty(id))
             {
-                return null;
+                return default;
             }
 
             try
@@ -95,7 +95,7 @@
             {
                 if (ex.Message.Contains("Resource Not Found"))
                 {
-                    return null;
+                    return default;
                 }
 
                 throw;

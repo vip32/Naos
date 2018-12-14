@@ -2,7 +2,7 @@ pattern cqs https://www.dotnetcurry.com/patterns-practices/1461/command-query-se
 cqrs https://github.com/OpenCQRS/OpenCQRS
 crs https://github.com/gautema/CQRSlite (eventstore)
 api 404s https://www.strathweb.com/2018/10/convert-null-valued-results-to-404-in-asp-net-core-mvc/
-httpclient https://rehansaeed.com/optimally-configuring-asp-net-core-httpclientfactory/
+httpclient (polly/CorrelationIdDelegatingHandler) https://rehansaeed.com/optimally-configuring-asp-net-core-httpclientfactory/
 logging: scopes https://www.initpals.com/net-core/scoped-logging-using-microsoft-logger-with-serilog-in-net-core-application/
 xunit configuration https://weblog.west-wind.com/posts/2018/Feb/18/Accessing-Configuration-in-NET-Core-Test-Projects
 criteria > linq https://blogs.msdn.microsoft.com/mattwar/2007/07/31/linq-building-an-iqueryable-provider-part-ii/
@@ -42,6 +42,7 @@ identity.b2c
 messaging: message broker based on rabitmq (for local usage)
 messaging: singalr based provider?
 
+repo: in memory https://github.com/zzzprojects/nmemory
 repo: file based https://github.com/ttu/json-flatfile-datastore
 repo: litedb repo https://github.com/mbdavid/LiteDB/wiki/Repository-Pattern
 repo: ef sql logging https://wildermuth.com/2018/11/07/EntityFrameworkCore-Logging-in-ASP-NET-Core

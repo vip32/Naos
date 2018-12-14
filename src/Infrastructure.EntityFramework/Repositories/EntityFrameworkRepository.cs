@@ -131,11 +131,11 @@
             {
                 if (isNew)
                 {
-                    await this.mediator.Publish(new EntityInsertDomainEvent<IEntity>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityInsertDomainEvent(entity)).ConfigureAwait(false);
                 }
                 else
                 {
-                    await this.mediator.Publish(new EntityUpdateDomainEvent<IEntity>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityUpdateDomainEvent(entity)).ConfigureAwait(false);
                 }
             }
 
@@ -146,11 +146,11 @@
             {
                 if (isNew)
                 {
-                    await this.mediator.Publish(new EntityInsertedDomainEvent<IEntity>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityInsertedDomainEvent(entity)).ConfigureAwait(false);
                 }
                 else
                 {
-                    await this.mediator.Publish(new EntityUpdatedDomainEvent<IEntity>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityUpdatedDomainEvent(entity)).ConfigureAwait(false);
                 }
             }
 
@@ -173,14 +173,14 @@
 
                 if (this.Options?.PublishEvents != false)
                 {
-                    await this.mediator.Publish(new EntityDeleteDomainEvent<IEntity>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityDeleteDomainEvent(entity)).ConfigureAwait(false);
                 }
 
                 await this.dbContext.SaveChangesAsync();
 
                 if (this.Options?.PublishEvents != false)
                 {
-                    await this.mediator.Publish(new EntityDeletedDomainEvent<IEntity>(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityDeletedDomainEvent(entity)).ConfigureAwait(false);
                 }
 
                 return ActionResult.Deleted;

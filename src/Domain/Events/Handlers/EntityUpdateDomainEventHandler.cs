@@ -6,8 +6,8 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
 
-    public class EntityUpdateDomainEventHandler
-        : IDomainEventHandler<EntityUpdateDomainEvent<IEntity>>
+    public abstract class EntityUpdateDomainEventHandler
+        : IDomainEventHandler<EntityUpdateDomainEvent>
     {
         private readonly ILogger<EntityUpdateDomainEventHandler> logger;
 
@@ -18,22 +18,27 @@
             this.logger = logger;
         }
 
-        public async Task Handle(EntityUpdateDomainEvent<IEntity> notification, CancellationToken cancellationToken)
+        public abstract bool CanHandle(EntityUpdateDomainEvent notification);
+
+        public virtual async Task Handle(EntityUpdateDomainEvent notification, CancellationToken cancellationToken)
         {
             await Task.Run(() =>
             {
-                this.logger.LogInformation($"update entity: {notification.Entity.GetType().PrettyName()} handled by {this.GetType().PrettyName()}");
-
-                if (notification?.Entity.Is<IStateEntity>() == true)
+                if (this.CanHandle(notification))
                 {
-                    var entity = notification.Entity.As<IStateEntity>();
-                    entity.State?.SetUpdated("[IDENTITY]", "domainevent"); // TODO: use current identity
-                }
+                    this.logger.LogInformation($"update entity: {notification.Entity.GetType().PrettyName()} handled by {this.GetType().PrettyName()}");
 
-                if (notification?.Entity.Is<IIdentifiable>() == true)
-                {
-                    var entity = notification.Entity.As<IIdentifiable>();
-                    entity.SetIdentifierHash();
+                    if (notification?.Entity.Is<IStateEntity>() == true)
+                    {
+                        var entity = notification.Entity.As<IStateEntity>();
+                        entity.State?.SetUpdated("[IDENTITY]", "domainevent"); // TODO: use current identity
+                    }
+
+                    if (notification?.Entity.Is<IIdentifiable>() == true)
+                    {
+                        var entity = notification.Entity.As<IIdentifiable>();
+                        entity.SetIdentifierHash();
+                    }
                 }
             });
         }

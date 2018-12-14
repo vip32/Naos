@@ -1,28 +1,18 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
-    using System.Collections.Generic;
-    using System.Reflection;
+    using System;
     using Naos.Core.App.Commands;
-    using Naos.Core.Common;
-    using SimpleInjector;
 
     public static class ServiceRegistrations
     {
-        public static Container AddNaosAppCommands(
-            this Container container,
-
-            IEnumerable<Assembly> assemblies = null)
+        public static IServiceCollection AddNaosAppCommands(
+            this IServiceCollection services)
         {
-            var allAssemblies = new List<Assembly> { typeof(ICommandBehavior).GetTypeInfo().Assembly };
-            if (!assemblies.IsNullOrEmpty())
-            {
-                allAssemblies.AddRange(assemblies);
-            }
-
-            // TODO: improve this so command behavior types can be configured, as the sequence matters. for now ALL behaviors are simply added
-            container.Collection.Register<ICommandBehavior>(allAssemblies.DistinctBy(a => a.FullName)); // register all command behaviors
-
-            return container;
+            return services
+                .Scan(scan => scan // https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/
+                    .FromExecutingAssembly()
+                    .FromApplicationDependencies(a => !a.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) && !a.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase))
+                    .AddClasses(classes => classes.AssignableTo(typeof(ICommandBehavior)), true));
         }
     }
 }

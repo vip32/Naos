@@ -80,7 +80,7 @@
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
-        public async Task<ActionResult<Country>> Update(string id, Country model)
+        public async Task<ActionResult<Country>> Put(string id, Country model)
         {
             if (id.IsNullOrEmpty() || id.Equals("0"))
             {
@@ -124,7 +124,7 @@
                 throw new BadRequestException($"Model with id {model.Id} already exists");
             }
 
-            model = await this.repository.UpdateAsync(model).ConfigureAwait(false);
+            model = await this.repository.InsertAsync(model).ConfigureAwait(false);
             return this.CreatedAtAction(nameof(this.Get), new { id = model.Id }, model);
         }
 

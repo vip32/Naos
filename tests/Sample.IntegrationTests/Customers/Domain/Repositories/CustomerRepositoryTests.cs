@@ -3,6 +3,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Bogus;
+    using Microsoft.Extensions.DependencyInjection;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Domain.Specifications;
     using Naos.Sample.Customers.Domain;
@@ -18,7 +19,7 @@
 
         public CustomerRepositoryTests()
         {
-            this.sut = this.container.GetInstance<ICustomerRepository>();
+            this.sut = this.ServiceProvider.GetService<ICustomerRepository>();
             this.entityFaker = new Faker<Customer>() //https://github.com/bchavez/Bogus
                 .RuleFor(u => u.CustomerNumber, f => f.Random.Replace("??-#####"))
                 .RuleFor(u => u.Gender, f => f.PickRandom(new[] { "Male", "Female" }))
@@ -164,6 +165,10 @@
             // assert
             result.ShouldNotBeNull();
             result.Id.ShouldNotBeNull();
+            result.IdentifierHash.ShouldNotBeNull(); // EntityInsertDomainEventHandler
+            result.State.ShouldNotBeNull();
+            result.State.CreatedDescription.ShouldNotBeNull(); // EntityInsertDomainEventHandler
+            result.State.CreatedBy.ShouldNotBeNull(); // EntityInsertDomainEventHandler
         }
 
         [Fact]
@@ -178,6 +183,10 @@
                 result.action.ShouldNotBe(ActionResult.None);
                 result.entity.ShouldNotBeNull();
                 result.entity.Id.ShouldNotBeNull();
+                result.entity.IdentifierHash.ShouldNotBeNull(); // EntityInsertDomainEventHandler
+                result.entity.State.ShouldNotBeNull();
+                result.entity.State.CreatedDescription.ShouldNotBeNull(); // EntityInsertDomainEventHandler
+                result.entity.State.CreatedBy.ShouldNotBeNull(); // EntityInsertDomainEventHandler
             }
         }
 

@@ -3,6 +3,7 @@
     using System;
     using System.Threading.Tasks;
     using MediatR;
+    using Microsoft.Extensions.DependencyInjection;
     using Naos.Core.Domain;
     using Naos.Sample.Customers.Domain;
     using Shouldly;
@@ -14,12 +15,12 @@
         public async Task DomainEvent_Update_Test()
         {
             // arrange
-            var mediator = this.container.GetInstance<IMediator>();
+            var mediator = this.ServiceProvider.GetService<IMediator>();
             var entity = new Customer { FirstName = "FirstName1", LastName = "LastName1" };
             entity.State.CreatedDate = DateTime.UtcNow.AddDays(-1);
 
             // act
-            await mediator.Publish(new EntityUpdateDomainEvent<IEntity>(entity)).ConfigureAwait(false);
+            await mediator.Publish(new EntityUpdateDomainEvent(entity)).ConfigureAwait(false);
 
             // assert
             entity.IdentifierHash.ShouldNotBeNull();
@@ -29,10 +30,10 @@
             var hash = entity.IdentifierHash;
 
             entity.FirstName = "FirstName2";
-            await mediator.Publish(new EntityUpdateDomainEvent<IEntity>(entity)).ConfigureAwait(false);
+            await mediator.Publish(new EntityUpdateDomainEvent(entity)).ConfigureAwait(false);
             entity.IdentifierHash.ShouldNotBe(hash);
 
-            await mediator.Publish(new EntityUpdatedDomainEvent<IEntity>(entity)).ConfigureAwait(false);
+            await mediator.Publish(new EntityUpdatedDomainEvent(entity)).ConfigureAwait(false);
             // > CustomerUpdatedDomainEventHandler
         }
     }

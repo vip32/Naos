@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Microsoft.Extensions.DependencyInjection;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Domain.Specifications;
     using Naos.Sample.Countries.Domain;
@@ -17,7 +18,7 @@
 
         public CountryRepositoryTests()
         {
-            this.sut = this.container.GetInstance<ICountryRepository>();
+            this.sut = this.ServiceProvider.GetService<ICountryRepository>();
         }
 
         [Fact]
@@ -158,6 +159,19 @@
             // assert
             result.ShouldNotBeNull();
             result.Id.ShouldNotBeNull();
+            result.IdentifierHash.ShouldNotBeNull(); // EntityInsertDomainEventHandler
+            result.State.ShouldNotBeNull();
+            result.State.CreatedDescription.ShouldNotBeNull(); // EntityInsertDomainEventHandler
+            result.State.CreatedBy.ShouldNotBeNull(); // EntityInsertDomainEventHandler
+
+            using (var scope = this.ServiceProvider.CreateScope())
+            {
+                var sut2 = scope.ServiceProvider.GetService<ICountryRepository>();
+                var entity = await sut2.FindOneAsync("fr").ConfigureAwait(false);
+
+                entity.ShouldNotBeNull();
+                entity.Id.ShouldBe("fr");
+            }
         }
 
         //[Fact]
