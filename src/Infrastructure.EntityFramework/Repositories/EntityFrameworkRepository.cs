@@ -1,5 +1,6 @@
 ﻿namespace Naos.Core.Infrastructure.EntityFramework
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -40,6 +41,13 @@
             this.mediator = mediator;
             this.dbContext = dbContext;
             this.Options = options;
+
+            if(dbContext.Database.GetDbConnection().ConnectionString.Equals("DataSource=:memory:", StringComparison.OrdinalIgnoreCase))
+            {
+                // needed for sqlite inmemory
+                dbContext.Database.OpenConnection();
+                dbContext.Database.EnsureCreated();
+            }
         }
 
         protected IRepositoryOptions Options { get; }

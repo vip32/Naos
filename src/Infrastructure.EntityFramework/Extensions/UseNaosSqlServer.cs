@@ -1,7 +1,5 @@
 ﻿namespace Naos.Core.Infrastructure.EntityFramework
 {
-    using System;
-    using EnsureThat;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
 
