@@ -1,5 +1,7 @@
 ﻿namespace Naos.Core.Infrastructure.EntityFramework
 {
+    using System;
+    using EnsureThat;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
 
@@ -12,6 +14,7 @@
         {
             var entityFrameworkConfiguration = configuration.GetSection(section).Get<EntityFrameworkConfiguration>();
 
+            //source.EnableSensitiveDataLogging = true;
             return source.UseSqlServer(entityFrameworkConfiguration?.ConnectionString ?? "Server=(localdb)\\mssqllocaldb;Database=naos;Trusted_Connection=True;");
         }
 
