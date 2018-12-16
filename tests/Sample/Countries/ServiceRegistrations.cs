@@ -15,11 +15,11 @@
             this IServiceCollection services)
         {
             services.AddSingleton(sp =>
-                  new Database<CountryDto>(new[]
+                  new Database<DbCountry>(new[]
                                     {
-                                        new CountryDto { CountryCode = "de", LanguageCodes = "de-de", CountryName = "Germany", OwnerTenant = "naos_sample_test", Identifier = "de" },
-                                        new CountryDto { CountryCode = "nl", LanguageCodes = "nl-nl", CountryName = "Netherlands", OwnerTenant = "naos_sample_test", Identifier = "nl" },
-                                        new CountryDto { CountryCode = "be", LanguageCodes = "fr-be;nl-be", CountryName = "Belgium", OwnerTenant = "naos_sample_test", Identifier = "be" },
+                                        new DbCountry { CountryCode = "de", LanguageCodes = "de-de", CountryName = "Germany", OwnerTenant = "naos_sample_test", Identifier = "de" },
+                                        new DbCountry { CountryCode = "nl", LanguageCodes = "nl-nl", CountryName = "Netherlands", OwnerTenant = "naos_sample_test", Identifier = "nl" },
+                                        new DbCountry { CountryCode = "be", LanguageCodes = "fr-be;nl-be", CountryName = "Belgium", OwnerTenant = "naos_sample_test", Identifier = "be" },
                                     }.ToList()));
 
             services.AddScoped<ICountryRepository>(sp =>
@@ -31,13 +31,13 @@
                             "naos_sample_test",
                             new RepositoryOrderByDecorator<Country>(
                                 e => e.Name,
-                                new InMemoryRepository<Country, CountryDto>(
+                                new InMemoryRepository<Country, DbCountry>(
                                     sp.GetRequiredService<IMediator>(),
                                     e => e.Identifier,
-                                    sp.GetRequiredService<Database<CountryDto>>().Entities,
+                                    sp.GetRequiredService<Database<DbCountry>>().Entities,
                                     new RepositoryOptions(
                                         new AutoMapperEntityMapper(ModelMapperConfiguration.Create())),
-                                    new[] { new AutoMapperSpecificationMapper<Country, CountryDto>(ModelMapperConfiguration.Create()) })))));
+                                    new[] { new AutoMapperSpecificationMapper<Country, DbCountry>(ModelMapperConfiguration.Create()) })))));
             });
 
             return services;

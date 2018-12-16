@@ -1,6 +1,6 @@
 ﻿namespace Naos.Sample.Countries.Infrastructure
 {
-    public class CountryDto
+    public class DbCountry
     {
         public string Identifier { get; set; }
 

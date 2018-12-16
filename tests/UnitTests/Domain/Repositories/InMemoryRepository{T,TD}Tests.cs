@@ -19,20 +19,20 @@ namespace Naos.Core.UnitTests.Domain.Repositories
     using Xunit;
 
 #pragma warning disable SA1649 // File name must match first type name
-    public class InMemoryRepositoryDtoTests
+    public class InMemoryRepositoryDbTests
 #pragma warning restore SA1649 // File name must match first type name
     {
         private readonly string tenantId = "TestTenant";
-        private readonly IEnumerable<StubDto> entities;
+        private readonly IEnumerable<DbStub> entities;
 
-        public InMemoryRepositoryDtoTests()
+        public InMemoryRepositoryDbTests()
         {
-            this.entities = Builder<StubDto>
+            this.entities = Builder<DbStub>
                 .CreateListOfSize(20).All()
                 .With(x => x.FullName, $"John {Core.Common.RandomGenerator.GenerateString(5)}")
                 .With(x => x.ExtTenantId, this.tenantId)
                 .With(x => x.Country, "USA").Build()
-                .Concat(new List<StubDto> { new StubDto { Identifier = "Identifier99", FullName = "John Doe", YearOfBirth = 1980, Country = "USA" } });
+                .Concat(new List<DbStub> { new DbStub { Identifier = "Identifier99", FullName = "John Doe", YearOfBirth = 1980, Country = "USA" } });
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         {
             // arrange
             var mediator = Substitute.For<IMediator>();
-            var sut = new InMemoryRepository<StubEntity, StubDto>(
+            var sut = new InMemoryRepository<StubEntity, DbStub>(
                 mediator,
                 e => e.Identifier,
                 entities: this.entities,
@@ -61,7 +61,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             // arrange
             var mediator = Substitute.For<IMediator>();
             var sut = new RepositorySpecificationDecorator<StubEntity>(
-                new InMemoryRepository<StubEntity, StubDto>( // decoratee
+                new InMemoryRepository<StubEntity, DbStub>( // decoratee
                     mediator,
                     e => e.Identifier,
                     entities: this.entities,
@@ -69,7 +69,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                         new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
                     specificationMappers: new[]
                     {
-                        new AutoMapperSpecificationMapper<StubEntity, StubDto>(StubEntityMapperConfiguration.Create())
+                        new AutoMapperSpecificationMapper<StubEntity, DbStub>(StubEntityMapperConfiguration.Create())
                     }),
                 new Specification<StubEntity>(t => t.TenantId == this.tenantId));
 
@@ -86,7 +86,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         {
             // arrange
             var mediator = Substitute.For<IMediator>();
-            var sut = new InMemoryRepository<StubEntity, StubDto>(
+            var sut = new InMemoryRepository<StubEntity, DbStub>(
                 mediator,
                 e => e.Identifier,
                 entities: this.entities,
@@ -108,7 +108,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             // arrange
             var mediator = Substitute.For<IMediator>();
             var sut = new RepositorySpecificationDecorator<StubEntity>(
-                new InMemoryRepository<StubEntity, StubDto>( // decoratee
+                new InMemoryRepository<StubEntity, DbStub>( // decoratee
                     mediator,
                     e => e.Identifier,
                     entities: this.entities,
@@ -116,7 +116,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                         new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
                     specificationMappers: new[]
                     {
-                        new AutoMapperSpecificationMapper<StubEntity, StubDto>(StubEntityMapperConfiguration.Create())
+                        new AutoMapperSpecificationMapper<StubEntity, DbStub>(StubEntityMapperConfiguration.Create())
                     }),
                 new Specification<StubEntity>(t => t.TenantId == this.tenantId));
 
@@ -135,7 +135,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             var mediator = Substitute.For<IMediator>();
             var sut = new RepositoryTenantDecorator<StubEntity>(
                 this.tenantId,
-                new InMemoryRepository<StubEntity, StubDto>( // decoratee
+                new InMemoryRepository<StubEntity, DbStub>( // decoratee
                     mediator,
                     e => e.Identifier,
                     entities: this.entities,
@@ -143,7 +143,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                         new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
                     specificationMappers: new[]
                     {
-                        new AutoMapperSpecificationMapper<StubEntity, StubDto>(StubEntityMapperConfiguration.Create())
+                        new AutoMapperSpecificationMapper<StubEntity, DbStub>(StubEntityMapperConfiguration.Create())
                     }));
 
             // act
@@ -163,7 +163,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
 
             // act
             var dtoExpression = StubEntityMapperConfiguration.Create()
-                .MapExpression<Expression<Func<StubDto, bool>>>(expression);
+                .MapExpression<Expression<Func<DbStub, bool>>>(expression);
             var result = this.entities.Where(dtoExpression.Compile());
 
             //var mapped = StubEntityMapperConfiguration.Create().Map<Expression<Func<StubEntity, bool>>, Expression<Func<StubDto, bool>>>(expression);
@@ -182,7 +182,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         {
             // arrange
             var mediator = Substitute.For<IMediator>();
-            var sut = new InMemoryRepository<StubEntity, StubDto>(
+            var sut = new InMemoryRepository<StubEntity, DbStub>(
                 mediator,
                 e => e.Identifier,
                 entities: this.entities,
@@ -190,7 +190,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                 specificationMappers: new[]
                 {
                     /*new StubHasNameSpecificationMapper(),*/
-                    new AutoMapperSpecificationMapper<StubEntity, StubDto>(StubEntityMapperConfiguration.Create())
+                    new AutoMapperSpecificationMapper<StubEntity, DbStub>(StubEntityMapperConfiguration.Create())
                 }); // infrastructure layer
 
             // act
@@ -237,13 +237,13 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         {
             // arrange
             var mediator = Substitute.For<IMediator>();
-            var sut = new InMemoryRepository<StubEntity, StubDto>(
+            var sut = new InMemoryRepository<StubEntity, DbStub>(
                 mediator,
                 e => e.Identifier,
                 this.entities,
                 new RepositoryOptions(
                     new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
-                new[] { /*new StubHasNameSpecificationMapper(),*/ new AutoMapperSpecificationMapper<StubEntity, StubDto>(StubEntityMapperConfiguration.Create()) }); // infrastructure layer
+                new[] { /*new StubHasNameSpecificationMapper(),*/ new AutoMapperSpecificationMapper<StubEntity, DbStub>(StubEntityMapperConfiguration.Create()) }); // infrastructure layer
 
             // act
             var result = await sut.FindOneAsync("Identifier99").ConfigureAwait(false);
@@ -265,7 +265,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             public int Age { get; set; }
         }
 
-        public class StubDto
+        public class DbStub
         {
             public string ExtTenantId { get; set; }
 
@@ -334,14 +334,14 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             }
         }
 
-        public class StubHasNameSpecificationMapper : ISpecificationMapper<StubEntity, StubDto>
+        public class StubHasNameSpecificationMapper : ISpecificationMapper<StubEntity, DbStub>
         {
             public bool CanHandle(ISpecification<StubEntity> specification)
             {
                 return specification.Is<StubHasNameSpecification>();
             }
 
-            public Func<StubDto, bool> Map(ISpecification<StubEntity> specification)
+            public Func<DbStub, bool> Map(ISpecification<StubEntity> specification)
             {
                 var s = specification.As<StubHasNameSpecification>();
                 return td => td.FullName == $"{s.FirstName} {s.LastName}";
@@ -360,7 +360,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                     //c.AddExpressionMapping();
                     //c.IgnoreUnmapped();
                     //c.AllowNullCollections = true;
-                    c.CreateMap<StubEntity, StubDto>()
+                    c.CreateMap<StubEntity, DbStub>()
                         .ForMember(d => d.ExtTenantId, o => o.MapFrom(s => s.TenantId))
                         .ForMember(d => d.Identifier, o => o.MapFrom(s => s.Id))
                         .ForMember(d => d.ETag, o => o.MapFrom(s => s.IdentifierHash))
@@ -376,7 +376,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                     //    .ForMember(d => d.FullName, o => o.Ignore())
                     //    .ForMember(d => d.YearOfBirth, o => o.Ignore());
 
-                    c.CreateMap<StubDto, StubEntity>()
+                    c.CreateMap<DbStub, StubEntity>()
                         .ForMember(d => d.TenantId, o => o.MapFrom(s => s.ExtTenantId))
                         .ForMember(d => d.Id, o => o.MapFrom(s => s.Identifier))
                         .ForMember(d => d.IdentifierHash, o => o.MapFrom(s => s.ETag))
@@ -404,9 +404,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             //    }
             //}
 
-            private class YearOfBirthResolver : IValueResolver<StubEntity, StubDto, int>
+            private class YearOfBirthResolver : IValueResolver<StubEntity, DbStub, int>
             {
-                public int Resolve(StubEntity source, StubDto destination, int destMember, ResolutionContext context)
+                public int Resolve(StubEntity source, DbStub destination, int destMember, ResolutionContext context)
                 {
                     return DateTime.UtcNow.Year - source.Age;
                 }
@@ -428,9 +428,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             //    }
             //}
 
-            private class AgeResolver : IValueResolver<StubDto, StubEntity, int>
+            private class AgeResolver : IValueResolver<DbStub, StubEntity, int>
             {
-                public int Resolve(StubDto source, StubEntity destination, int destMember, ResolutionContext context)
+                public int Resolve(DbStub source, StubEntity destination, int destMember, ResolutionContext context)
                 {
                     return DateTime.UtcNow.Year - source.YearOfBirth;
                 }
