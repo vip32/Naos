@@ -23,8 +23,8 @@
             this DbContextOptionsBuilder source)
         {
             return source
-                .UseSqlite("DataSource=:memory:")
-                .EnableSensitiveDataLogging();
+                .UseSqlite("DataSource=:memory:");
+                //.EnableSensitiveDataLogging();
         }
     }
 }

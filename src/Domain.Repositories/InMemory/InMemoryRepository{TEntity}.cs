@@ -17,36 +17,25 @@
     public class InMemoryRepository<TEntity> : IRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
-        protected IEnumerable<TEntity> entities;
+        protected readonly InMemoryContext<TEntity> context;
         private readonly IMediator mediator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InMemoryRepository{T}" /> class.
         /// </summary>
         /// <param name="mediator">The mediator.</param>
+        /// <param name="context">The context containing entities.</param>
         /// <param name="options">The options.</param>
         public InMemoryRepository(
             IMediator mediator,
-            IRepositoryOptions options = null)
-            : this(mediator, null, options)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="InMemoryRepository{T}" /> class.
-        /// </summary>
-        /// <param name="mediator">The mediator.</param>
-        /// <param name="entities">The entities.</param>
-        /// <param name="options">The options.</param>
-        public InMemoryRepository(
-            IMediator mediator,
-            IEnumerable<TEntity> entities,
+            InMemoryContext<TEntity> context,
             IRepositoryOptions options = null)
         {
             EnsureArg.IsNotNull(mediator, nameof(mediator));
+            EnsureArg.IsNotNull(context, nameof(context));
 
             this.mediator = mediator;
-            this.entities = entities.NullToEmpty();
+            this.context = context ?? new InMemoryContext<TEntity>();
             this.Options = options;
         }
 
@@ -83,7 +72,7 @@
         /// <returns></returns>
         public virtual async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null)
         {
-            var result = this.entities;
+            var result = this.context.Entities.AsEnumerable();
 
             foreach (var specification in specifications.NullToEmpty())
             {
@@ -106,7 +95,7 @@
                 return default;
             }
 
-            var result = this.entities.FirstOrDefault(x => x.Id.Equals(id));
+            var result = this.context.Entities.FirstOrDefault(x => x.Id.Equals(id));
 
             if (this.Options?.Mapper != null && result != null)
             {
@@ -186,7 +175,13 @@
             }
 
             // TODO: map to destination
-            this.entities = this.entities.Where(e => !e.Id.Equals(entity.Id)).Concat(new[] { entity }).ToList();
+            //this.entities = this.entities.Where(e => !e.Id.Equals(entity.Id)).Concat(new[] { entity }).ToList();
+            if (this.context.Entities.Contains(entity))
+            {
+                this.context.Entities.Remove(entity);
+            }
+
+            this.context.Entities.Add(entity);
 
             if (this.Options?.PublishEvents != false)
             {
@@ -218,7 +213,7 @@
                 return ActionResult.None;
             }
 
-            var entity = this.entities.FirstOrDefault(x => x.Id.Equals(id));
+            var entity = this.context.Entities.FirstOrDefault(x => x.Id.Equals(id));
             if (entity != null)
             {
                 if (this.Options?.PublishEvents != false)
@@ -226,7 +221,7 @@
                     await this.mediator.Publish(new EntityDeleteDomainEvent(entity)).ConfigureAwait(false);
                 }
 
-                this.entities = this.entities.Where(x => !x.Id.Equals(entity.Id));
+                this.context.Entities.Remove(entity);
 
                 if (this.Options?.PublishEvents != false)
                 {
@@ -257,7 +252,7 @@
                 await this.mediator.Publish(new EntityDeleteDomainEvent(entity)).ConfigureAwait(false);
             }
 
-            this.entities = this.entities.Where(x => !x.Id.Equals(entity.Id));
+            this.context.Entities.Remove(entity);
 
             if (this.Options?.PublishEvents != false)
             {
@@ -303,7 +298,7 @@
         {
             if (entity is IEntity<int>)
             {
-                (entity as IEntity<int>).Id = this.entities.Count() + 1;
+                (entity as IEntity<int>).Id = this.context.Entities.Count() + 1;
             }
             else if (entity is IEntity<string>)
             {

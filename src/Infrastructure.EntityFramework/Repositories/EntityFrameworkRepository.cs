@@ -42,11 +42,19 @@
             this.dbContext = dbContext;
             this.Options = options;
 
-            if(dbContext.Database.GetDbConnection().ConnectionString.Equals("DataSource=:memory:", StringComparison.OrdinalIgnoreCase))
+            try
             {
-                // needed for sqlite inmemory
-                dbContext.Database.OpenConnection();
-                dbContext.Database.EnsureCreated();
+                if (dbContext.Database.GetDbConnection().ConnectionString.Equals("DataSource=:memory:", StringComparison.OrdinalIgnoreCase))
+                {
+                    // needed for sqlite inmemory
+                    dbContext.Database.OpenConnection();
+                    dbContext.Database.EnsureCreated();
+                }
+            }
+            catch (InvalidOperationException)
+            {
+                // not possible for DbContext with UseInMemoryDatabase enabled (options)
+                // 'Relational-specific methods can only be used when the context is using a relational database provider.'
             }
         }
 

@@ -13,7 +13,6 @@
     <Folder Include="Customers\Infrastructure\" />
     <Folder Include="UserAccounts\App.Commands\" />
     <Folder Include="UserAccounts\App.Web\" />
-    <Folder Include="UserAccounts\Domain\Events\" />
     <Folder Include="UserAccounts\Infrastructure\EntityFramework\Migrations\" />
   </ItemGroup>
 

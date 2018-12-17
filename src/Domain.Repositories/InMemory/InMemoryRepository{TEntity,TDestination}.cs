@@ -25,16 +25,15 @@
         public InMemoryRepository(
             IMediator mediator,
             Func<TDestination, object> idSelector,
-            IEnumerable<TDestination> entities = null,
+            InMemoryContext<TEntity> context,
             IRepositoryOptions options = null,
             IEnumerable<ISpecificationMapper<TEntity, TDestination>> specificationMappers = null)
-            : base(mediator, options)
+            : base(mediator, context, options)
         {
             EnsureArg.IsNotNull(idSelector, nameof(idSelector));
-            EnsureArg.IsNotNull(options, nameof(options));
-            EnsureArg.IsNotNull(options.Mapper, nameof(options.Mapper));
+            EnsureArg.IsNotNull(options?.Mapper, nameof(options.Mapper));
 
-            base.entities = entities.NullToEmpty().Select(d => this.Options.Mapper.Map<TEntity>(d));
+            //base.entities = entities.NullToEmpty().Select(d => this.Options.Mapper.Map<TEntity>(d));
             this.specificationMappers = specificationMappers;
             this.idSelector = idSelector;
         }
@@ -47,11 +46,11 @@
         /// <returns></returns>
         public override async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null)
         {
-            var result = base.entities.NullToEmpty().Select(d => this.Options.Mapper.Map<TDestination>(d));
+            var result = this.context.Entities.NullToEmpty().Select(d => this.Options.Mapper.Map<TDestination>(d)); // work on destination objects
 
             foreach (var specification in specifications.NullToEmpty())
             {
-                result = result.Where(this.EnsurePredicate(specification));
+                result = result.Where(this.EnsurePredicate(specification)); // translate specification to destination predicate
             }
 
             return await Task.FromResult(this.FindAll(result, options));
@@ -70,7 +69,8 @@
                 return default;
             }
 
-            var result = base.entities.NullToEmpty().Select(d => this.Options.Mapper.Map<TDestination>(d)).SingleOrDefault(e => this.idSelector(e).Equals(id)); // TODO: use HasIdSpecification + MapExpression (makes idSelector obsolete)
+            var result = this.context.Entities.NullToEmpty().Select(d => this.Options.Mapper.Map<TDestination>(d)) // work on destination objects
+                .SingleOrDefault(e => this.idSelector(e).Equals(id)); // TODO: use HasIdSpecification + MapExpression (makes idSelector obsolete)
             // return (await this.FindAllAsync(new HasIdSpecification<TEntity>(id))).FirstOrDefault();
 
             if (this.Options?.Mapper != null && result != null)

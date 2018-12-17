@@ -8,7 +8,7 @@
     {
         // TODO: don't let the repo grow with ALL commands in time > out of mem issue
         public CommandInMemoryRepository(IMediator mediator, IEnumerable<Command> entities = null)
-            : base(mediator, entities)
+            : base(mediator, new InMemoryContext<Command>(entities))
         {
         }
     }

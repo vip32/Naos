@@ -14,13 +14,12 @@
         public static IServiceCollection AddSampleCountries(
             this IServiceCollection services)
         {
-            services.AddSingleton(sp =>
-                  new Database<DbCountry>(new[]
-                                    {
-                                        new DbCountry { CountryCode = "de", LanguageCodes = "de-de", CountryName = "Germany", OwnerTenant = "naos_sample_test", Identifier = "de" },
-                                        new DbCountry { CountryCode = "nl", LanguageCodes = "nl-nl", CountryName = "Netherlands", OwnerTenant = "naos_sample_test", Identifier = "nl" },
-                                        new DbCountry { CountryCode = "be", LanguageCodes = "fr-be;nl-be", CountryName = "Belgium", OwnerTenant = "naos_sample_test", Identifier = "be" },
-                                    }.ToList()));
+            services.AddSingleton(sp => new InMemoryContext<Country>(new[]
+            {
+                new Country { Code = "de", LanguageCodes = new[] {"de-de" }, Name = "Germany", TenantId = "naos_sample_test", Id = "de" },
+                new Country { Code = "nl", LanguageCodes = new[] {"nl-nl" }, Name = "Netherlands", TenantId = "naos_sample_test", Id = "nl" },
+                new Country { Code = "be", LanguageCodes = new[] {"fr-be", "nl-be" }, Name = "Belgium", TenantId = "naos_sample_test", Id = "be" },
+            }.ToList()));
 
             services.AddScoped<ICountryRepository>(sp =>
             {
@@ -34,7 +33,7 @@
                                 new InMemoryRepository<Country, DbCountry>(
                                     sp.GetRequiredService<IMediator>(),
                                     e => e.Identifier,
-                                    sp.GetRequiredService<Database<DbCountry>>().Entities,
+                                    sp.GetRequiredService<InMemoryContext<Country>>(), // singleton
                                     new RepositoryOptions(
                                         new AutoMapperEntityMapper(ModelMapperConfiguration.Create())),
                                     new[] { new AutoMapperSpecificationMapper<Country, DbCountry>(ModelMapperConfiguration.Create()) })))));
@@ -42,17 +41,5 @@
 
             return services;
         }
-    }
-
-#pragma warning disable SA1402 // File may only contain a single class
-    public class Database<TEntity>
-#pragma warning restore SA1402 // File may only contain a single class
-    {
-        public Database(List<TEntity> entities)
-        {
-            this.Entities = entities;
-        }
-
-        public List<TEntity> Entities { get; }
     }
 }
