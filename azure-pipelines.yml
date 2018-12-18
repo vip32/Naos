@@ -9,6 +9,12 @@ steps:
   - task: gittools.gitversion.gitversion-task.GitVersion@3
     displayName: gitversion
 
+  - task: DotNetCoreInstaller@0
+    displayName: "install .net core sdk"
+    inputs:
+      version: 2.2.100
+      packageType: sdk
+
   - task: DotNetCoreCLI@2
     displayName: "dotnet restore"
     inputs:
