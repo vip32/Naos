@@ -42,6 +42,7 @@ identity.b2c
 messaging: message broker based on rabitmq (for local usage)
 messaging: singalr based provider?
 
+repo: decorator and di https://andrewlock.net/adding-decorated-classes-to-the-asp.net-core-di-container-using-scrutor/
 repo: in memory https://github.com/zzzprojects/nmemory
 repo: file based https://github.com/ttu/json-flatfile-datastore
 repo: litedb repo https://github.com/mbdavid/LiteDB/wiki/Repository-Pattern
