@@ -1,5 +1,6 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
+    using EnsureThat;
     using Microsoft.Extensions.Configuration;
     using Microsoft.IdentityModel.Clients.ActiveDirectory;
     using Naos.Core.Operations.Domain.Repositories;
@@ -13,6 +14,8 @@
             IConfiguration configuration,
             string section = "naos:operations:azureLogAnalytics")
         {
+            EnsureArg.IsNotNull(services, nameof(services));
+
             services.AddSingleton<ILogEventRepository>(sp =>
             {
                 var logAnalyticsConfiguration = configuration.GetSection(section).Get<LogAnalyticsConfiguration>();

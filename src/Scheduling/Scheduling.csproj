@@ -10,7 +10,6 @@
     <PackageReference Include="cronos" Version="0.7.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
-    <PackageReference Include="SimpleInjector" Version="4.4.2" />
   </ItemGroup>
 
   <ItemGroup>

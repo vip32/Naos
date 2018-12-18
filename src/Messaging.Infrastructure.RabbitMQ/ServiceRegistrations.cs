@@ -1,34 +1,36 @@
-﻿namespace Naos.Core.Messaging.Infrastructure.RabbitMQ
+﻿namespace Microsoft.Extensions.DependencyInjection
 {
+    using System;
     using System.Collections.Generic;
     using System.Reflection;
+    using EnsureThat;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
-    using SimpleInjector;
+    using Naos.Core.Messaging;
+    using Naos.Core.Messaging.Infrastructure.RabbitMQ;
 
     public static class ServiceRegistrations
     {
-        public static Container AddNaosMessaging(
-            this Container container,
+        public static IServiceCollection AddNaosMessagingRabbitMQ(
+            this IServiceCollection services,
             IConfiguration configuration,
             string section = "naos:messaging:rabbitMQ",
             IEnumerable<Assembly> assemblies = null)
         {
-            var allAssemblies = new List<Assembly> { typeof(IMessageBroker).GetTypeInfo().Assembly };
-            if (!assemblies.IsNullOrEmpty())
-            {
-                allAssemblies.AddRange(assemblies);
-            }
+            EnsureArg.IsNotNull(services, nameof(services));
 
-            container.Register(typeof(IMessageHandler<>), allAssemblies.DistinctBy(a => a.FullName)); // register all message handlers
-            container.RegisterSingleton<IMessageBroker>(() =>
+            services.Scan(scan => scan // https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/
+               .FromExecutingAssembly()
+               .FromApplicationDependencies(a => !a.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) && !a.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase))
+               .AddClasses(classes => classes.AssignableTo(typeof(IMessageHandler<>)), true));
+
+            services.AddSingleton<IMessageBroker>(sp =>
                 new RabbitMQMessageBroker(
-                        container.GetInstance<ILogger<RabbitMQMessageBroker>>(),
+                        sp.GetRequiredService<ILogger<RabbitMQMessageBroker>>(),
                         configuration.GetSection(section).Get<RabbitMQConfiguration>(),
-                        new SimpleInjectorMessageHandlerFactory(container)));
+                        new ServiceProviderMessageHandlerFactory(sp)));
 
-            return container;
+            return services;
         }
     }
 }

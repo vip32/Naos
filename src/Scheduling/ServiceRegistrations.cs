@@ -1,6 +1,7 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
+    using EnsureThat;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Scheduling;
     using Naos.Core.Scheduling.App;
@@ -13,6 +14,8 @@
         Action<JobSchedulerSettings> setupAction = null,
         string section = "naos:scheduling")
         {
+            EnsureArg.IsNotNull(services, nameof(services));
+
             //container.RegisterSingleton<IHostedService>(() =>
             //{
             //    return new SchedulerHostedService(
@@ -47,12 +50,10 @@
                     new ServiceProviderJobFactory(sp));
                 setupAction?.Invoke(settings);
 
-                var result = new JobScheduler(
+                return new JobScheduler(
                     sp.GetRequiredService<ILogger<JobScheduler>>(),
                     new InProcessMutex(sp.GetRequiredService<ILogger<InProcessMutex>>()),
                     settings);
-
-                return result;
             });
 
             return services;

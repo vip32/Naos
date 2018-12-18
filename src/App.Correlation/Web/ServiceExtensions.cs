@@ -1,5 +1,6 @@
 ﻿namespace Naos.Core.App.Correlation.Web
 {
+    using EnsureThat;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -11,14 +12,16 @@
         /// <summary>
         /// Adds required services to support the Correlation ID functionality.
         /// </summary>
-        /// <param name="serviceCollection"></param>
+        /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddNaosCorrelation(this IServiceCollection serviceCollection)
+        public static IServiceCollection AddNaosCorrelation(this IServiceCollection services)
         {
-            serviceCollection.TryAddSingleton<ICorrelationContextAccessor, CorrelationContextAccessor>();
-            serviceCollection.TryAddTransient<ICorrelationContextFactory, CorrelationContextFactory>();
+            EnsureArg.IsNotNull(services, nameof(services));
 
-            return serviceCollection;
+            services.TryAddSingleton<ICorrelationContextAccessor, CorrelationContextAccessor>();
+            services.TryAddTransient<ICorrelationContextFactory, CorrelationContextFactory>();
+
+            return services;
         }
     }
 }

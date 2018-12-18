@@ -22,9 +22,9 @@
             // naos core registrations
             this.services
                 .AddMediatR()
-                .AddNaosLoggingSerilog(configuration)
+                .AddNaosOperationsSerilog(configuration)
                 .AddNaosOperationsLogAnalytics(configuration)
-                .AddNaosMessaging(configuration, AppDomain.CurrentDomain.FriendlyName)
+                .AddNaosMessagingServiceBus(configuration, AppDomain.CurrentDomain.FriendlyName)
                 .AddNaosAppCommands();
 
             // naos sample registrations

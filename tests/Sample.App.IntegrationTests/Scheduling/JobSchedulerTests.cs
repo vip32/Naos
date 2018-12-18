@@ -19,7 +19,7 @@
             var configuration = NaosConfigurationFactory.CreateRoot();
 
             this.services
-                .AddNaosLoggingSerilog(configuration)
+                .AddNaosOperationsSerilog(configuration)
                 .AddNaosScheduling();
 
             this.services.AddScoped<StubProbe>();

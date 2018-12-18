@@ -13,7 +13,7 @@
     /// Middleware which attempts to reads / creates a Correlation ID that can then be used in logs and
     /// passed to upstream requests.
     /// </summary>
-    public class CorrelationMiddleware //: TODO: IMiddleware + injection
+    public class CorrelationMiddleware
     {
         private readonly RequestDelegate next;
         private readonly ILogger<CorrelationMiddleware> logger;
@@ -26,7 +26,10 @@
         /// <param name="next">The next middleware in the pipeline.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="options">The configuration options.</param>
-        public CorrelationMiddleware(RequestDelegate next, ILogger<CorrelationMiddleware> logger, IOptions<CorrelationMiddlewareOptions> options)
+        public CorrelationMiddleware(
+            RequestDelegate next,
+            ILogger<CorrelationMiddleware> logger,
+            IOptions<CorrelationMiddlewareOptions> options)
         {
             EnsureArg.IsNotNull(next, nameof(next));
             EnsureArg.IsNotNull(logger, nameof(logger));

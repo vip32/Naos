@@ -1,6 +1,7 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
+    using EnsureThat;
     using Humanizer;
     using Microsoft.Azure.Management.ResourceManager.Fluent;
     using Microsoft.Extensions.Configuration;
@@ -12,13 +13,15 @@
 
     public static class ServiceRegistrations
     {
-        public static IServiceCollection AddNaosMessaging(
+        public static IServiceCollection AddNaosMessagingServiceBus(
             this IServiceCollection services,
             IConfiguration configuration,
             string topicName = null,
             string subscriptionName = null,
             string section = "naos:messaging:serviceBus")
         {
+            EnsureArg.IsNotNull(services, nameof(services));
+
             services.Scan(scan => scan // https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/
                 .FromExecutingAssembly()
                 .FromApplicationDependencies(a => !a.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) && !a.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase))

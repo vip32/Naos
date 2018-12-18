@@ -1,46 +1,51 @@
-﻿namespace Naos.Core.App.Exceptions.Web
-{
-    using System;
-    using System.Collections.Generic;
-    using Microsoft.Extensions.DependencyInjection;
-    using Naos.Core.Common;
+﻿//namespace Naos.Core.App.Exceptions.Web
+//{
+//    using System;
+//    using System.Collections.Generic;
+//    using EnsureThat;
+//    using Microsoft.Extensions.DependencyInjection;
+//    using Naos.Core.Common;
 
-    /// <summary>
-    /// Extensions on the <see cref="IServiceCollection"/>.
-    /// </summary>
-    public static class ServiceExtensions
-    {
-        public static IServiceCollection AddNaosAppExceptionHandling(
-            this IServiceCollection serviceCollection,
-            IEnumerable<Type> responseHandlers,
-            bool hideDetails = false)
-        {
-            return serviceCollection.AddNaosAppExceptionHandling(responseHandlers, new ExceptionHandlerMiddlewareOptions { HideDetails = hideDetails });
-        }
+//    /// <summary>
+//    /// Extensions on the <see cref="IServiceCollection"/>.
+//    /// </summary>
+//    public static class ServiceExtensions
+//    {
+//        public static IServiceCollection AddNaosAppExceptionHandling(
+//            this IServiceCollection services,
+//            IEnumerable<Type> responseHandlers,
+//            bool hideDetails = false)
+//        {
+//            EnsureArg.IsNotNull(services, nameof(services));
 
-        /// <summary>
-        /// Adds required services to support the excecption handling functionality.
-        /// </summary>
-        /// <param name="serviceCollection"></param>
-        /// <param name="responseHandlers"></param>
-        /// <param name="options"></param>
-        /// <returns></returns>
-        public static IServiceCollection AddNaosAppExceptionHandling(
-        this IServiceCollection serviceCollection,
-        IEnumerable<Type> responseHandlers,
-        ExceptionHandlerMiddlewareOptions options)
-        {
-            foreach (var item in responseHandlers.NullToEmpty())
-            {
-                if (item.IsAssignableFrom(typeof(IExceptionResponseHandler)))
-                {
-                    serviceCollection.AddSingleton<Type>();
-                }
-            }
+//            return services.AddNaosAppExceptionHandling(responseHandlers, new ExceptionHandlerMiddlewareOptions { HideDetails = hideDetails });
+//        }
 
-            serviceCollection.AddSingleton(options ?? new ExceptionHandlerMiddlewareOptions());
+//        /// <summary>
+//        /// Adds required services to support the excecption handling functionality.
+//        /// </summary>
+//        /// <param name="services"></param>
+//        /// <param name="responseHandlers"></param>
+//        /// <param name="options"></param>
+//        /// <returns></returns>
+//        public static IServiceCollection AddNaosAppExceptionHandling(
+//        this IServiceCollection services,
+//        IEnumerable<Type> responseHandlers,
+//        ExceptionHandlerMiddlewareOptions options)
+//        {
+//            EnsureArg.IsNotNull(services, nameof(services));
 
-            return serviceCollection;
-        }
-    }
-}
+//            foreach (var item in responseHandlers.NullToEmpty())
+//            {
+//                if (item.IsAssignableFrom(typeof(IExceptionResponseHandler)))
+//                {
+//                    services.AddSingleton<Type>();
+//                }
+//            }
+
+//            services.AddSingleton(options ?? new ExceptionHandlerMiddlewareOptions());
+
+//            return services;
+//        }
+//    }
+//}

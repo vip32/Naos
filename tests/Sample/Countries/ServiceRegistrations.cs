@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using EnsureThat;
     using MediatR;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Domain.Repositories;
@@ -14,6 +15,8 @@
         public static IServiceCollection AddSampleCountries(
             this IServiceCollection services)
         {
+            EnsureArg.IsNotNull(services, nameof(services));
+
             services.AddSingleton(sp => new InMemoryContext<Country>(new[]
             {
                 new Country { Code = "de", LanguageCodes = new[] {"de-de" }, Name = "Germany", TenantId = "naos_sample_test", Id = "de" },

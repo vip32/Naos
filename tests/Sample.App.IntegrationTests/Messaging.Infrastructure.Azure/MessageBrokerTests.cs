@@ -17,8 +17,8 @@
             var configuration = NaosConfigurationFactory.CreateRoot();
 
             this.services
-                .AddNaosLoggingSerilog(configuration)
-                .AddNaosMessaging(configuration, AppDomain.CurrentDomain.FriendlyName);
+                .AddNaosOperationsSerilog(configuration)
+                .AddNaosMessagingServiceBus(configuration, AppDomain.CurrentDomain.FriendlyName);
 
             this.ServiceProvider = this.services.BuildServiceProvider();
         }

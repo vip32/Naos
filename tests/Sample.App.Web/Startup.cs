@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using System.Net.Http;
     using System.Threading;
     using MediatR;
     using Microsoft.AspNetCore.Builder;
@@ -16,6 +17,8 @@
     using Naos.Core.App.Correlation.Web;
     using Naos.Core.App.Web;
     using Naos.Core.Common;
+    using Naos.Core.Common.Web;
+    using Naos.Core.Correlation.Web;
     using Naos.Core.Scheduling.App;
     using Naos.Core.Scheduling.Domain;
     using Newtonsoft.Json;
@@ -24,7 +27,6 @@
     public class Startup
     {
         private readonly ILogger<Startup> logger;
-        //private readonly Container container = new Container();
 
         public Startup(ILogger<Startup> logger)
         {
@@ -34,9 +36,12 @@
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton(sp => new HttpClient(
+                new HttpMessageHandlerBuilder(sp.GetRequiredService<ILogger>())
+                    .Add(new HttpClientCorrelationHandler()).Build()));
+
             services
                 .AddHttpContextAccessor()
                 .AddHealthChecksUI()
@@ -49,14 +54,14 @@
             // naos application services
             services
                 .AddNaosCorrelation()
-                .AddNaosLoggingSerilog(this.Configuration)
+                .AddNaosOperationsSerilog(this.Configuration)
                 .AddNaosOperationsLogAnalytics(this.Configuration)
                 .AddNaosExceptionHandling(/*env.IsProduction()*/)
                 .AddNaosScheduling(s => s
                     .Register<DummyJob>("job1", Cron.Minutely(), (j) => j.LogMessageAsync("+++ hello from job1 +++", CancellationToken.None))
                     .Register<DummyJob>("job2", Cron.MinuteInterval(2), j => j.LogMessageAsync("+++ hello from job2 +++", CancellationToken.None, true))
                     .Register<DummyJob>("longjob3", Cron.Minutely(), j => j.LongRunningAsync("+++ hello from longjob3 +++", CancellationToken.None)))
-                .AddNaosMessaging(this.Configuration, AppDomain.CurrentDomain.FriendlyName)
+                .AddNaosMessagingServiceBus(this.Configuration, AppDomain.CurrentDomain.FriendlyName)
                 .AddNaosAppCommands();
 
             // naos sample product registrations
@@ -82,7 +87,7 @@
             // Middleware
             app.UseHttpsRedirection();
             app.UseNaosCorrelation(); // TODO: convert to proper IMiddleware (to get the injection working), like UseNaosExceptionHandling
-            //app.UseNaosExceptionHandling(this.container);
+            app.UseNaosExceptionHandling();
 
             app.UseSwagger();
             app.UseSwaggerUi3();
@@ -112,23 +117,5 @@
 
             app.UseMvc();
         }
-
-        //private void IntegrateSimpleInjector(IServiceCollection services, Container container) // TODO: move to App.Web (extension method)
-        //{
-        //    //container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
-        //    services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-        //    services.AddSingleton<IControllerActivator>(new SimpleInjectorControllerActivator(this.container));
-        //    services.AddSingleton<IViewComponentActivator>(new SimpleInjectorViewComponentActivator(this.container));
-        //    services.EnableSimpleInjectorCrossWiring(this.container);
-        //    services.UseSimpleInjectorAspNetRequestScoping(this.container);
-        //}
-
-        //private void ConfigureContainer(IApplicationBuilder app, IHostingEnvironment env)
-        //{
-        //    // Add application presentation components:
-        //    this.container.RegisterMvcControllers(app);
-        //    this.container.RegisterMvcViewComponents(app);
-        //    this.container.AutoCrossWireAspNetComponents(app);
-        //}
     }
 }

@@ -15,6 +15,8 @@
             IConfiguration configuration,
             string section = "naos:sample:customers:cosmosDb")
         {
+            EnsureArg.IsNotNull(services, nameof(services));
+
             var cosmosDbConfiguration = configuration.GetSection(section).Get<CosmosDbConfiguration>();
             Ensure.That(cosmosDbConfiguration).IsNotNull();
 

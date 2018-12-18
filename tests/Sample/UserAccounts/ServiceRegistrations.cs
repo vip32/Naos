@@ -1,5 +1,6 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
+    using EnsureThat;
     using MediatR;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
@@ -16,6 +17,8 @@
             string section = "naos:sample:userAccounts:entityFramework",
             UserAccountsContext dbContext = null)
         {
+            EnsureArg.IsNotNull(services, nameof(services));
+
             if (dbContext != null)
             {
                 services.AddSingleton(dbContext); // cross wiring, warning this will be a singleton (not scoped)

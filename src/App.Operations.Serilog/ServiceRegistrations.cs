@@ -1,6 +1,7 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
+    using EnsureThat;
     using global::Serilog;
     using global::Serilog.Events;
     using Microsoft.Extensions.Configuration;
@@ -17,22 +18,23 @@
         private static string internalEnvironment;
         private static string internalServiceDescriptor;
 
-        public static IServiceCollection AddNaosLoggingSerilog(
+        public static IServiceCollection AddNaosOperationsSerilog(
             this IServiceCollection services,
             IConfiguration configuration,
             string environment = "Development",
             string serviceDescriptor = "naos",
             LoggerConfiguration loggerConfiguration = null)
         {
+            EnsureArg.IsNotNull(services, nameof(services));
+
             internalConfiguration = configuration;
             internalLoggerConfiguration = loggerConfiguration;
             internalEnvironment = environment;
             internalServiceDescriptor = serviceDescriptor;
-            //container.Register(CreateLoggerFactory, Lifestyle.Singleton);
-            //container.Register(typeof(ILogger<>), typeof(LoggingAdapter<>));
 
-            services?.AddSingleton(sp => CreateLoggerFactory());
-            services?.AddSingleton(typeof(ILogger<>), typeof(LoggingAdapter<>));
+            services.AddSingleton(sp => CreateLoggerFactory());
+            services.AddSingleton(typeof(ILogger<>), typeof(LoggingAdapter<>));
+            services.AddSingleton(typeof(Logging.ILogger), typeof(LoggingAdapter));
 
             return services;
         }

@@ -13,32 +13,36 @@
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
 
-    public class ExceptionHandlerMiddleware : IMiddleware
+    public class ExceptionHandlerMiddleware
     {
+        private readonly RequestDelegate next;
         private readonly ILogger<ExceptionHandlerMiddleware> logger;
         private readonly IEnumerable<IExceptionResponseHandler> responseHandlers;
         private readonly ICorrelationContextAccessor correlationContext;
         private readonly ExceptionHandlerMiddlewareOptions options;
 
         public ExceptionHandlerMiddleware(
+            RequestDelegate next,
             ILogger<ExceptionHandlerMiddleware> logger,
             IEnumerable<IExceptionResponseHandler> responseHandlers,
             ICorrelationContextAccessor correlationContext,
             ExceptionHandlerMiddlewareOptions options)
         {
+            EnsureArg.IsNotNull(next, nameof(next));
             EnsureArg.IsNotNull(logger, nameof(logger));
 
+            this.next = next;
             this.logger = logger;
             this.responseHandlers = responseHandlers;
             this.correlationContext = correlationContext;
             this.options = options ?? new ExceptionHandlerMiddlewareOptions();
         }
 
-        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+        public async Task InvokeAsync(HttpContext context)
         {
             try
             {
-                await next(context);
+                await this.next(context);
             }
             catch (Exception ex)
             {

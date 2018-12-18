@@ -3,13 +3,13 @@
     using System;
     using Microsoft.Extensions.Logging;
 
-    public class LoggingAdapter : ILogger
+    public class LoggingAdapter<T> : ILogger<T>
     {
         private readonly ILogger adaptee;
 
         public LoggingAdapter(ILoggerFactory factory)
         {
-            this.adaptee = factory.CreateLogger("default");
+            this.adaptee = factory.CreateLogger<T>();
         }
 
         public IDisposable BeginScope<TState>(TState state)

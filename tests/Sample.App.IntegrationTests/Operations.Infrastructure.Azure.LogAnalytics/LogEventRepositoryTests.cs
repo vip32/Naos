@@ -16,7 +16,7 @@
             var configuration = NaosConfigurationFactory.CreateRoot();
 
             this.services
-                .AddNaosLoggingSerilog(configuration)
+                .AddNaosOperationsSerilog(configuration)
                 .AddNaosOperationsLogAnalytics(configuration)
                 .AddNaosScheduling();
 

@@ -9,11 +9,9 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Messaging;
-    using SimpleInjector;
 
     public class MessagingTestHostedService : IHostedService
     {
-        private readonly Container container = new Container();
         private readonly IServiceProvider serviceProvider;
         private IMessageBroker messageBus;
         private ILogger<MessagingTestHostedService> logger;

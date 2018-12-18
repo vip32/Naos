@@ -17,8 +17,8 @@
                 .ConfigureServices((context, services) =>
                 {
                     services.AddSingleton<IHostedService, MessagingTestHostedService>()
-                            .AddNaosLoggingSerilog(configuration)
-                            .AddNaosMessaging(
+                            .AddNaosOperationsSerilog(configuration)
+                            .AddNaosMessagingServiceBus(
                                 configuration,
                                 subscriptionName: capabilities[new Random().Next(0, capabilities.Length)]);
                 });
