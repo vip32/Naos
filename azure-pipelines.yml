@@ -10,7 +10,7 @@ steps:
     displayName: gitversion
 
   - task: DotNetCoreInstaller@0
-    displayName: "install .net core sdk"
+    displayName: "install dotnet sdk"
     inputs:
       version: 2.2.100
       packageType: sdk
