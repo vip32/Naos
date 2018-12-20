@@ -77,7 +77,7 @@
                 });
             }
 
-            using (this.logger.BeginScope($"{{{this.options.CorrelationLogPropertyName}}}{{{this.options.RequestLogPropertyName}}}", correlationId, requestId))
+            using (this.logger.BeginScope($"{{{this.options.CorrelationLogPropertyName}}}{{{this.options.RequestIdLogPropertyName}}}", correlationId, requestId))
             {
                 await this.next(context);
             }

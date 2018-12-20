@@ -1,6 +1,5 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
-    using System.Collections.Generic;
     using System.Linq;
     using EnsureThat;
     using MediatR;

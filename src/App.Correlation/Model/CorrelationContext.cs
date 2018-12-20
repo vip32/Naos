@@ -7,9 +7,6 @@
     {
         public CorrelationContext(string correlationId, string correlationHeader, string requestId, string requestHeader)
         {
-            //EnsureThat.EnsureArg.IsNotNullOrEmpty(correlationId, nameof(correlationId));
-            //EnsureThat.EnsureArg.IsNotNullOrEmpty(correlationId, nameof(header));
-
             this.CorrelationId = correlationId;
             this.CorrelationHeader = correlationHeader;
             this.RequestId = requestId;

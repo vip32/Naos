@@ -6,7 +6,6 @@ namespace Naos.Core.UnitTests.Domain.Repositories
     using System.Linq.Expressions;
     using System.Threading.Tasks;
     using AutoMapper;
-    using AutoMapper.Extensions.ExpressionMapping;
     using EnsureThat;
     using FizzWare.NBuilder;
     using MediatR;

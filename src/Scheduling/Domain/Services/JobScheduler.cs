@@ -109,6 +109,12 @@
         {
             EnsureArg.IsTrue(moment.Kind == DateTimeKind.Utc);
 
+            if (!this.Settings.Enabled)
+            {
+                this.logger.LogDebug($"job scheduler run not started (enabled={this.Settings.Enabled})");
+                return;
+            }
+
             Interlocked.Increment(ref this.activeCount);
             this.logger.LogInformation($"job scheduler run started (activeCount=#{this.activeCount}, moment={moment.ToString("o")})");
             await this.ExecuteJobsAsync(moment).ConfigureAwait(false);

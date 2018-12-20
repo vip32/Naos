@@ -11,15 +11,15 @@
     {
         private static readonly Random Random = new Random(DateTime.Now.GetHashCode());
         private readonly ILogger<DummyJob> logger;
-        private readonly HttpClient httpClient;
+        private readonly IHttpClientFactory httpClientFactory;
 
-        public DummyJob(ILogger<DummyJob> logger, HttpClient httpClient)
+        public DummyJob(ILogger<DummyJob> logger, IHttpClientFactory httpClientFactory)
         {
             EnsureThat.EnsureArg.IsNotNull(logger, nameof(logger));
-            EnsureThat.EnsureArg.IsNotNull(httpClient, nameof(httpClient));
+            EnsureThat.EnsureArg.IsNotNull(httpClientFactory, nameof(httpClientFactory));
 
             this.logger = logger;
-            this.httpClient = httpClient;
+           this.httpClientFactory = httpClientFactory;
         }
 
         public async Task LogMessageAsync(string message, CancellationToken cancellationToken)
@@ -58,9 +58,10 @@
                     return; //Task.FromCanceled(cancellationToken);
                 }
 
-                var response = await this.httpClient.PostAsync("http://mockbin.org/request", null, cancellationToken).ConfigureAwait(false);
+                var httpClient = this.httpClientFactory.CreateClient("default");
+                var response = await httpClient.PostAsync("http://mockbin.org/request", null, cancellationToken).ConfigureAwait(false);
 
-                this.logger.LogInformation(message);
+                this.logger.LogInformation($"{message} [{(int)response.StatusCode}]");
                 Thread.Sleep(new TimeSpan(0, 0, 45));
                 //await Task.Delay(new TimeSpan(0, 0, 45));
             }

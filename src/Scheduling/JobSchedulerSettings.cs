@@ -24,7 +24,15 @@
             this.jobFactory = jobFactory; // what to do when null?
         }
 
+        public bool Enabled { get; private set; } = true;
+
         public IDictionary<JobRegistration, IJob> Registrations { get; } = new Dictionary<JobRegistration, IJob>();
+
+        public JobSchedulerSettings SetEnabled(bool enabled = true)
+        {
+            this.Enabled = enabled;
+            return this;
+        }
 
         public JobSchedulerSettings Register(string cron, Action<string[]> action, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true) // TODO: not really needed
         {

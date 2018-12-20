@@ -30,7 +30,7 @@
                 return null;
             }
 
-            return QueryHelpers.ParseNullableQuery(source.RequestUri.Query);
+            return QueryHelpers.ParseNullableQuery(source.RequestUri?.Query);
         }
 
         /// <summary>
@@ -43,23 +43,22 @@
         {
             if (source == null)
             {
-                return null;
+                return default;
             }
 
             if (string.IsNullOrEmpty(name))
             {
-                return null;
+                return default;
             }
 
-            // IEnumerable<KeyValuePair<string,string>> - right!
-            var queryStrings = QueryHelpers.ParseNullableQuery(source.RequestUri.Query);
-            if (queryStrings?.Any() == false || !queryStrings.ContainsKey(name))
+            var queryParts = QueryHelpers.ParseNullableQuery(source.RequestUri.Query);
+            if (queryParts == null || queryParts.Count == 0 || !queryParts.ContainsKey(name))
             {
-                return null;
+                return default;
             }
 
-            var match =
-                queryStrings.FirstOrDefault(kv => string.Compare(kv.Key, name, StringComparison.OrdinalIgnoreCase) == 0);
+            var match = queryParts
+                .FirstOrDefault(kv => string.Compare(kv.Key, name, StringComparison.OrdinalIgnoreCase) == 0);
             return string.IsNullOrEmpty(match.Value) ? null : match.Value.FirstOrDefault();
         }
 
@@ -81,15 +80,14 @@
                 return default;
             }
 
-            // IEnumerable<KeyValuePair<string,string>> - right!
-            var queryStrings = QueryHelpers.ParseNullableQuery(source.RequestUri.Query);
-            if (queryStrings?.Any() == false || !queryStrings.ContainsKey(name))
+            var queryParts = QueryHelpers.ParseNullableQuery(source.RequestUri.Query);
+            if (queryParts == null || queryParts.Count == 0 || !queryParts.ContainsKey(name))
             {
                 return default;
             }
 
-            var match =
-                queryStrings.FirstOrDefault(kv => string.Compare(kv.Key, name, StringComparison.OrdinalIgnoreCase) == 0);
+            var match = queryParts
+                .FirstOrDefault(kv => string.Compare(kv.Key, name, StringComparison.OrdinalIgnoreCase) == 0);
             return string.IsNullOrEmpty(match.Value) ? default : match.Value;
         }
 
@@ -103,12 +101,12 @@
         {
             if (source == null)
             {
-                return null;
+                return default;
             }
 
             if (string.IsNullOrEmpty(name))
             {
-                return null;
+                return default;
             }
 
             var result = source.GetQueryValue(name);
@@ -202,20 +200,30 @@
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static string GetCorrelationId2(this HttpRequestMessage source)
+        public static string GetCorrelationId(this HttpRequestMessage source)
         {
             if (source == null)
             {
                 return null;
             }
 
-            var result = source.GetQueryOrHeaderValue("correlationid");
-            //if (result.IsNullOrEmpty())
-            //{
-            //    result = source.GetCorrelationId().ToString();
-            //}
+            return source.GetQueryOrHeaderValue("correlationid");
+        }
 
-            return result;
+        /// <summary>
+        ///     Retrieves the requestid from a specific header or if not present
+        ///     get it from the request directly.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static string GetRequestId(this HttpRequestMessage source)
+        {
+            if (source == null)
+            {
+                return null;
+            }
+
+            return source.GetQueryOrHeaderValue("requestid");
         }
 
         public static HttpRequestMessage WithCorrelationId(this HttpRequestMessage source, string value)

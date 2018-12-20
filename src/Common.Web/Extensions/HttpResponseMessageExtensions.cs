@@ -43,17 +43,22 @@
 
         public static string GetErrorHeader(this HttpResponseMessage source)
         {
-            return source.GetHeader("x-http-error-description");
+            return source.GetHeader("http-error-description");
         }
 
         public static string GetCorrelationIdHeader(this HttpResponseMessage source)
         {
-            return source.GetHeader("x-correlationid");
+            return source.GetHeader("correlationid");
+        }
+
+        public static string GetRequestIdHeader(this HttpResponseMessage source)
+        {
+            return source.GetHeader("requestid");
         }
 
         public static string GetEntityIdHeader(this HttpResponseMessage source)
         {
-            return source.GetHeader("x-entityid");
+            return source.GetHeader("entityid");
         }
 
         /// <summary>

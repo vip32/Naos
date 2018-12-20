@@ -5,9 +5,9 @@
     /// </summary>
     public class CorrelationMiddlewareOptions
     {
-        private const string DefaultCorrelationHeader = "X-Correlation-Id";
+        private const string DefaultCorrelationHeader = "X-CorrelationId";
         private const string DefaultCorrelationLogPropertyName = "CorrelationId";
-        private const string DefaultRequestHeader = "X-Request-Id";
+        private const string DefaultRequestHeader = "X-RequestId";
         private const string DefaultRequestLogPropertyName = "RequestId";
 
         /// <summary>
@@ -22,7 +22,7 @@
         /// </summary>
         public string RequestHeader { get; set; } = DefaultRequestHeader;
 
-        public string RequestLogPropertyName { get; set; } = DefaultRequestLogPropertyName;
+        public string RequestIdLogPropertyName { get; set; } = DefaultRequestLogPropertyName;
 
         /// <summary>
         /// Controls whether the correlation/request id is returned in the response headers.

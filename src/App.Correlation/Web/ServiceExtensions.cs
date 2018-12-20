@@ -1,8 +1,8 @@
-﻿namespace Naos.Core.App.Correlation.Web
+﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using EnsureThat;
-    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
+    using Naos.Core.App.Correlation;
 
     /// <summary>
     /// Extensions on the <see cref="IServiceCollection"/>.
