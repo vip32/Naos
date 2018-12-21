@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.App.Correlation
+﻿namespace Naos.Core.Common.Web
 {
     /// <summary>
     /// A factory for creating and disposing an instance of a <see cref="CorrelationContext"/>.

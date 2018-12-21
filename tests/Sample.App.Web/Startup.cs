@@ -13,11 +13,10 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Naos.Core.App.Configuration;
-    using Naos.Core.App.Correlation.Web;
     using Naos.Core.App.Web;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
-    using Naos.Core.Correlation.Web;
+    using Naos.Core.Correlation.App.Web;
     using Naos.Core.Scheduling.App;
     using Naos.Core.Scheduling.Domain;
     using Newtonsoft.Json;
@@ -95,8 +94,9 @@
 
             // Middleware
             app.UseHttpsRedirection();
-            app.UseNaosCorrelation(); // TODO: convert to proper IMiddleware (to get the injection working), like UseNaosExceptionHandling
-            app.UseNaosExceptionHandling();
+            app.UseNaosCorrelation();
+            //app.UseNaosExceptionHandling();
+            app.UseNaosOperationsRequestResponseLogging();
 
             app.UseSwagger();
             app.UseSwaggerUi3();

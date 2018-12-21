@@ -1,11 +1,11 @@
-﻿namespace Naos.Core.Correlation.Web
+﻿namespace Naos.Core.Correlation.App.Web
 {
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.App.Correlation;
     using Naos.Core.Common;
+    using Naos.Core.Common.Web;
 
     public class HttpClientCorrelationHandler : DelegatingHandler
     {

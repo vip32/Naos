@@ -31,7 +31,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\App.Commands\App.Commands.csproj" />
     <ProjectReference Include="..\..\src\App.Configuration\App.Configuration.csproj" />
-    <ProjectReference Include="..\..\src\App.Correlation\App.Correlation.csproj" />
     <ProjectReference Include="..\..\src\App.ExceptionHandling.Web\App.Exceptions.Web.csproj" />
     <ProjectReference Include="..\..\src\App.Operations.Serilog\App.Operations.Serilog.csproj" />
     <ProjectReference Include="..\..\src\App.Operations.Web\App.Operations.Web.csproj" />
@@ -40,6 +39,7 @@
     <ProjectReference Include="..\..\src\Common.Web.Extensions\Common.Web.Extensions.csproj" />
     <ProjectReference Include="..\..\src\Common.Web\Common.Web.csproj" />
     <ProjectReference Include="..\..\src\Common\Common.csproj" />
+    <ProjectReference Include="..\..\src\Correlation.App\Correlation.App.csproj" />
     <ProjectReference Include="..\..\src\Domain.Repositories.AutoMapper\Domain.Repositories.AutoMapper.csproj" />
     <ProjectReference Include="..\..\src\Domain.Repositories\Domain.Repositories.csproj" />
     <ProjectReference Include="..\..\src\Domain.Specifications\Domain.Specifications.csproj" />
@@ -72,7 +72,7 @@
     <Folder Include="App\" />
     <Folder Include="App.Web\" />
     <Folder Include="Infrastructure.CosmosDb\" />
-    <Folder Include="App.Correlation\" />
+    <Folder Include="Correlation\" />
   </ItemGroup>
 
   <ItemGroup>

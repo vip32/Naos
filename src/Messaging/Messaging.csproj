@@ -20,4 +20,8 @@
     <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-18618-05" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="App\" />
+  </ItemGroup>
+
 </Project>

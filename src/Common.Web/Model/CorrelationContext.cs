@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.App.Correlation
+﻿namespace Naos.Core.Common.Web
 {
     /// <summary>
     /// Provides access to the request correlation properties.

@@ -66,7 +66,10 @@
                 .Enrich.WithProperty("Environment", internalEnvironment)
                 .Enrich.WithProperty("ServiceDescriptor", internalServiceDescriptor)
                 .WriteTo.Debug()
-                .WriteTo.LiterateConsole(/*outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss}|{Level} => {CorrelationId} => {Service}::{SourceContext}{NewLine}    {Message}{NewLine}{Exception}"*/);
+                .WriteTo.LiterateConsole(
+                    restrictedToMinimumLevel: LogEventLevel.Information,
+                    outputTemplate: "[{Timestamp:HH:mm:ss.fff} {Level:u3}] {CorrelationId}|{Service}|{SourceContext}: {Message:lj}{NewLine}{Exception}");
+
             //.WriteTo.AzureDocumentDB(
             //    uri,
             //    authkey,

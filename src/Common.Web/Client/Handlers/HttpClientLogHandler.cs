@@ -10,8 +10,6 @@
 
     public class HttpClientLogHandler : DelegatingHandler
     {
-        private const string LogPrefix = "====================";
-        private const string LogSuffix = "====================";
         private readonly ILogger logger;
 
         ///// <summary>

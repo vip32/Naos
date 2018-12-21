@@ -6,7 +6,7 @@
     /// <summary>
     /// Custom action result for internal server errors (500)
     /// </summary>
-    /// <seealso cref="Microsoft.AspNetCore.Mvc.ObjectResult" />
+    /// <seealso cref="ObjectResult" />
     public class InternalServerErrorObjectResult : ObjectResult
     {
         public InternalServerErrorObjectResult(object error)

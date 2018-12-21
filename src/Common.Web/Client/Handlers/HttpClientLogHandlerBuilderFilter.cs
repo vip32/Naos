@@ -17,7 +17,7 @@
             this.loggerFactory = loggerFactory;
         }
 
-        public Action<Microsoft.Extensions.Http.HttpMessageHandlerBuilder> Configure(Action<Microsoft.Extensions.Http.HttpMessageHandlerBuilder> next)
+        public Action<HttpMessageHandlerBuilder> Configure(Action<HttpMessageHandlerBuilder> next)
         {
             EnsureArg.IsNotNull(next, nameof(next));
 

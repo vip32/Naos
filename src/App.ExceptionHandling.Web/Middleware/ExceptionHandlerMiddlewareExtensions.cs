@@ -3,24 +3,16 @@
     using System;
     using EnsureThat;
     using Microsoft.Extensions.Options;
-    using Naos.Core.App.Correlation;
-    using Naos.Core.App.Correlation.Web;
+    using Naos.Core.App.Exceptions.Web;
+    using Naos.Core.Common.Web;
 
-    /// <summary>
-    /// Extension methods for the correlation middleware.
-    /// </summary>
-    public static class CorrelationMiddlewareExtensions
+    public static class ExceptionHandlerMiddlewareExtensions
     {
-        /// <summary>
-        /// Enables correlation/request ids for the API request/responses.
-        /// </summary>
-        /// <param name="app"></param>
-        /// <returns></returns>
-        public static IApplicationBuilder UseNaosCorrelation(this IApplicationBuilder app)
+        public static IApplicationBuilder UseNaosExceptionHandling(this IApplicationBuilder app)
         {
             EnsureArg.IsNotNull(app, nameof(app));
 
-            return app.UseNaosCorrelation(new CorrelationMiddlewareOptions());
+            return app.UseNaosExceptionHandling(new ExceptionHandlerMiddlewareOptions());
         }
 
         /// <summary>
@@ -29,7 +21,7 @@
         /// <param name="app"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public static IApplicationBuilder UseNaosCorrelation(this IApplicationBuilder app, CorrelationMiddlewareOptions options)
+        public static IApplicationBuilder UseNaosExceptionHandling(this IApplicationBuilder app, ExceptionHandlerMiddlewareOptions options)
         {
             EnsureArg.IsNotNull(app, nameof(app));
             EnsureArg.IsNotNull(options, nameof(options));
@@ -39,7 +31,7 @@
                 throw new InvalidOperationException("Unable to find the required services. You must call the AddNaosCorrelation method in ConfigureServices in the application startup code.");
             }
 
-            return app.UseMiddleware<CorrelationMiddleware>(Options.Create(options));
+            return app.UseMiddleware<ExceptionHandlerMiddleware>(Options.Create(options));
         }
     }
 }

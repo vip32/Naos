@@ -7,7 +7,6 @@
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.App.Correlation;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
     using Naos.Sample.UserAccounts.Domain;
@@ -52,16 +51,11 @@
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
-        public async Task<ActionResult<UserAccount>> Get(string id)
+        public async Task<ActionResult<UserAccount>> Get(Guid id)
         {
-            if (id.IsNullOrEmpty() || id.Equals("0"))
+            if (id.IsDefault())
             {
-                throw new BadRequestException("Model id cannot be empty");
-            }
-
-            if (id.Equals("-1"))
-            {
-                throw new ArgumentException("-1 not allowed"); // trigger an exception to test exception handling
+                throw new BadRequestException("Model id cannot default");
             }
 
             var model = await this.repository.FindOneAsync(id).ConfigureAwait(false);
@@ -80,11 +74,11 @@
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
-        public async Task<ActionResult<UserAccount>> Put(string id, UserAccount model)
+        public async Task<ActionResult<UserAccount>> Put(Guid id, UserAccount model)
         {
-            if (id.IsNullOrEmpty() || id.Equals("0"))
+            if (id.IsDefault())
             {
-                throw new BadRequestException("Model id cannot be empty");
+                throw new BadRequestException("Model id cannot default");
             }
 
             if (!id.Equals(model.Id))
@@ -137,9 +131,9 @@
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
         public async Task<IActionResult> Delete(string id)
         {
-            if (id.IsNullOrEmpty() || id.Equals("0"))
+            if (id.IsDefault())
             {
-                throw new BadRequestException("Model id cannot be empty");
+                throw new BadRequestException("Model id cannot default");
             }
 
             if (!await this.repository.ExistsAsync(id).ConfigureAwait(false))

@@ -7,7 +7,7 @@
     using Microsoft.Extensions.Http;
     using Naos.Core.App.Configuration;
     using Naos.Core.Common.Web;
-    using Naos.Core.Correlation.Web;
+    using Naos.Core.Correlation.App.Web;
     using Shouldly;
     using Xunit;
 

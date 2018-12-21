@@ -1,5 +1,7 @@
-﻿namespace Naos.Core.App.Correlation
+﻿namespace Naos.Core.Correlation.App
 {
+    using Naos.Core.Common.Web;
+
     /// <inheritdoc />
     public class CorrelationContextFactory : ICorrelationContextFactory
     {
