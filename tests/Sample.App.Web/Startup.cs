@@ -11,6 +11,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Logging;
     using Naos.Core.App.Configuration;
     using Naos.Core.App.Web;
@@ -38,16 +39,9 @@
         {
             services.AddTransient<HttpClientCorrelationHandler>();
             services.AddTransient<HttpClientLogHandler>();
-
             services.AddHttpClient("default")
                 .AddHttpMessageHandler<HttpClientCorrelationHandler>();
-                //.AddHttpMessageHandler<HttpClientLogHandler>();
-
-            //services.AddSingleton(sp => new HttpClient(
-            //    new HttpMessageHandlerBuilder(sp.GetRequiredService<ILogger>())
-            //        .Add(new HttpClientCorrelationHandler()).Build()));
-            // or https://www.stevejgordon.co.uk/httpclientfactory-asp-net-core-logging
-            //services.Replace(ServiceDescriptor.Singleton<Microsoft.Extensions.Http.IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
+            services.Replace(ServiceDescriptor.Singleton<Microsoft.Extensions.Http.IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
 
             services
                 .AddHttpContextAccessor()
@@ -77,15 +71,11 @@
                 .AddSampleCountries()
                 .AddSampleCustomers(this.Configuration)
                 .AddSampleUserAccounts(this.Configuration);
-
-            //this.IntegrateSimpleInjector(services, this.container);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app/*, IServiceCollection services*/, IHostingEnvironment env)
         {
-            //this.ConfigureContainer(app, env);
-
             this.logger.LogInformation($"app {env.ApplicationName} environment: {env.EnvironmentName}");
             if (env.IsProduction())
             {
@@ -95,8 +85,8 @@
             // Middleware
             app.UseHttpsRedirection();
             app.UseNaosCorrelation();
-            //app.UseNaosExceptionHandling();
             app.UseNaosOperationsRequestResponseLogging();
+            app.UseNaosExceptionHandling();
 
             app.UseSwagger();
             app.UseSwaggerUi3();

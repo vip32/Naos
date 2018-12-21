@@ -55,7 +55,7 @@
         {
             if (id.IsDefault())
             {
-                throw new BadRequestException("Model id cannot default");
+                throw new BadRequestException("Model id cannot be default");
             }
 
             var model = await this.repository.FindOneAsync(id).ConfigureAwait(false);
@@ -78,7 +78,7 @@
         {
             if (id.IsDefault())
             {
-                throw new BadRequestException("Model id cannot default");
+                throw new BadRequestException("Model id cannot be default");
             }
 
             if (!id.Equals(model.Id))
@@ -133,7 +133,7 @@
         {
             if (id.IsDefault())
             {
-                throw new BadRequestException("Model id cannot default");
+                throw new BadRequestException("Model id cannot be default");
             }
 
             if (!await this.repository.ExistsAsync(id).ConfigureAwait(false))

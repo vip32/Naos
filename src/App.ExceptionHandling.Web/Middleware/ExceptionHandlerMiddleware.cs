@@ -9,6 +9,7 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
 
@@ -25,7 +26,7 @@
             ILogger<ExceptionHandlerMiddleware> logger,
             IEnumerable<IExceptionResponseHandler> responseHandlers,
             ICorrelationContextAccessor correlationContext,
-            ExceptionHandlerMiddlewareOptions options)
+            IOptions<ExceptionHandlerMiddlewareOptions> options)
         {
             EnsureArg.IsNotNull(next, nameof(next));
             EnsureArg.IsNotNull(logger, nameof(logger));
@@ -34,7 +35,7 @@
             this.logger = logger;
             this.responseHandlers = responseHandlers;
             this.correlationContext = correlationContext;
-            this.options = options ?? new ExceptionHandlerMiddlewareOptions();
+            this.options = options.Value ?? new ExceptionHandlerMiddlewareOptions();
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -45,10 +46,10 @@
             }
             catch (Exception ex)
             {
-                this.logger.LogError(
-                    ex != null ? new EventId(ex.HResult) : new EventId(-1),
-                    ex,
-                    $"[{ex?.GetType().PrettyName()}] {ex?.Message}");
+                //this.logger.LogError(
+                //    ex != null ? new EventId(ex.HResult) : new EventId(-1),
+                //    ex,
+                //    $"[{ex?.GetType().PrettyName()}] {ex?.Message}");
 
                 var instance = this.correlationContext == null || this.correlationContext.Context == null
                             ? context.TraceIdentifier
@@ -64,7 +65,7 @@
                 if (responseHandler != null)
                 {
                     // specific handler for exception
-                    responseHandler.Handle(context, ex, instance, this.options.HideDetails, this.options.JsonResponse);
+                    responseHandler.Handle(context, ex, instance, this.correlationContext?.Context?.RequestId, this.options.HideDetails, this.options.JsonResponse);
                 }
                 else
                 {
@@ -75,8 +76,11 @@
                         Status = 500,
                         Instance = instance,
                         Detail = this.options.HideDetails ? null : ex.Demystify().ToString(),
-                        Type = this.options.HideDetails ? null : ex.GetType().FullPrettyName(),
+                        Type = this.options.HideDetails ? null : ex.GetType().PrettyName(),
                     };
+
+                    this.logger?.LogError(ex, $"SERVICE http request ({{RequestId}}) {details.Title} [{ex.GetType().PrettyName()}] {ex.Message}", this.correlationContext?.Context?.RequestId);
+
                     context.Response.StatusCode = 500;
                     context.Response.WriteJson(details, contentType: ContentType.JSONPROBLEM);
                 }

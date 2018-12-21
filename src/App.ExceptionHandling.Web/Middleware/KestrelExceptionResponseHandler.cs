@@ -6,17 +6,25 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Server.Kestrel.Core;
+    using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
 
     public class KestrelExceptionResponseHandler : IExceptionResponseHandler
     {
+        private readonly ILogger<KestrelExceptionResponseHandler> logger;
+
+        public KestrelExceptionResponseHandler(ILogger<KestrelExceptionResponseHandler> logger)
+        {
+            this.logger = logger;
+        }
+
         public bool CanHandle(Exception exception)
         {
             return exception is BadHttpRequestException;
         }
 
-        public void Handle(HttpContext context, Exception exception, string instance, bool hideDetails = false, bool jsonResponse = true)
+        public void Handle(HttpContext context, Exception exception, string instance, string requestId, bool hideDetails = false, bool jsonResponse = true)
         {
             if (exception is BadHttpRequestException badHttpRequestException)
             {
@@ -31,6 +39,9 @@
                         Detail = hideDetails ? null : badHttpRequestException.Demystify().ToString(),
                         Type = hideDetails ? null : badHttpRequestException.GetType().FullPrettyName()
                     };
+
+                    this.logger?.LogWarning(exception, $"SERVICE http request ({{RequestId}}) {details.Title} [{badHttpRequestException.GetType().PrettyName()}] {badHttpRequestException.Message}", requestId);
+
                     context.Response.StatusCode = details.Status.Value;
                     context.Response.WriteJson(details, contentType: ContentType.JSONPROBLEM);
                 }

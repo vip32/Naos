@@ -1,10 +1,12 @@
 ﻿namespace Naos.Core.App.Operations.Web
 {
+    using System.Diagnostics;
     using System.IO;
     using System.Threading.Tasks;
+    using Humanizer;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Http.Extensions;
-    using Microsoft.AspNetCore.Http.Internal;
+    //using Microsoft.AspNetCore.Http.Internal;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Microsoft.IO;
@@ -32,14 +34,15 @@
             this.streamManager = new RecyclableMemoryStreamManager();
         }
 
-        public /*async*/ Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context)
         {
             var requestId = this.correlationContext?.Context?.RequestId;
 
             this.LogRequest(context, requestId);
-            this.LogResponse(context, requestId);
-
-            return Task.CompletedTask;
+            var timer = Stopwatch.StartNew();
+            await this.next.Invoke(context).ConfigureAwait(false);
+            timer.Stop();
+            this.LogResponse(context, requestId, timer.Elapsed);
         }
 
         private static string ReadStreamInChunks(Stream stream)
@@ -68,7 +71,7 @@
 
         private void LogRequest(HttpContext context, string requestId)
         {
-            this.logger.LogInformation($"API http request ({requestId}) {context.Request.Method} {context.Request.GetDisplayUrl()}");
+            this.logger.LogInformation($"SERVICE http request ({{RequestId}}) {context.Request.Method} {context.Request.GetDisplayUrl()}", requestId);
 
             //request.EnableRewind();
             //using (var stream = this.streamManager.GetStream())
@@ -84,9 +87,19 @@
             //}
         }
 
-        private void LogResponse(HttpContext context, string requestId)
+        private void LogResponse(HttpContext context, string requestId, System.TimeSpan elapsed)
         {
-            this.logger.LogInformation($"API http response ({requestId}) {context.Request.Method} {context.Request.GetDisplayUrl()} {context.Response.StatusCode} -> TODO");
+            var level = LogLevel.Information;
+            if ((int)context.Response.StatusCode > 499)
+            {
+                level = LogLevel.Error;
+            }
+            else if ((int)context.Response.StatusCode > 399)
+            {
+                level = LogLevel.Warning;
+            }
+
+            this.logger.Log(level, $"SERVICE http response ({{RequestId}}) {context.Request.Method} {context.Request.GetDisplayUrl()} {context.Response.StatusCode} -> took {elapsed.Humanize(3)}", requestId);
         }
 
         //private async Task LogResponseAsync(HttpContext context, string requestId)
