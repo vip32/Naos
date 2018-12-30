@@ -5,7 +5,6 @@ api 404s https://www.strathweb.com/2018/10/convert-null-valued-results-to-404-in
 httpclient (polly/CorrelationIdDelegatingHandler) https://rehansaeed.com/optimally-configuring-asp-net-core-httpclientfactory/
 logging: scopes https://www.initpals.com/net-core/scoped-logging-using-microsoft-logger-with-serilog-in-net-core-application/
 xunit configuration https://weblog.west-wind.com/posts/2018/Feb/18/Accessing-Configuration-in-NET-Core-Test-Projects
-criteria > linq https://blogs.msdn.microsoft.com/mattwar/2007/07/31/linq-building-an-iqueryable-provider-part-ii/
 validation : entity.Validate(handler)
 ef sqlite + inmemory : https://www.thereformedprogrammer.net/using-in-memory-databases-for-unit-testing-ef-core-applications/
 webapi test + jwt https://www.domstamand.com/testing-a-webapi-in-net-core-with-integration-tests/
@@ -42,6 +41,17 @@ identity.b2c
 messaging: message broker based on rabitmq (for local usage)
 messaging: singalr based provider?
 
+criteria:
+  https://blogs.msdn.microsoft.com/mattwar/2007/07/31/linq-building-an-iqueryable-provider-part-ii/
+  https://stackoverflow.com/questions/43685229/using-predicatebuilder-to-build-query-searching-across-multiple-columns-of-entit
+  https://stackoverflow.com/questions/16208214/construct-lambdaexpression-for-nested-property-from-string
+
+  query: /logevents?q=correlationId=eq:2b34cc25-cd06-475c-8f9c-c42791f49b46,timestamp=qte:01-01-1980,level=eq:debug,OR,level=eq:information
+  pagination: &skip=XX&take=XX
+  orderby: &orderby=desc:timestamp,asc:level
+
+  middleware > criteria builder (request) > criteriacontext > controller (ctor) > repository (use criteria as specificaton)
+
 repo: decorator and di https://andrewlock.net/adding-decorated-classes-to-the-asp.net-core-di-container-using-scrutor/
 repo: in memory https://github.com/zzzprojects/nmemory
 repo: file based https://github.com/ttu/json-flatfile-datastore
@@ -49,6 +59,7 @@ repo: litedb repo https://github.com/mbdavid/LiteDB/wiki/Repository-Pattern
 repo: ef sql logging https://wildermuth.com/2018/11/07/EntityFrameworkCore-Logging-in-ASP-NET-Core
 repo: ef dynamic schema support https://weblogs.thinktecture.com/pawel/2018/06/entity-framework-core-changing-database-schema-at-runtime.html
 repo: ef sqlite https://docs.microsoft.com/en-us/ef/core/get-started/netcore/new-db-sqlite
+repo: persistent mongo docker container https://blog.jeremylikness.com/mongodb-on-windows-in-minutes-with-docker-3e412f076762
 
 service: task scheduler (coravel) https://github.com/jamesmh/coravel/blob/master/Docs/Scheduler.md
 service: service registry (consul) https://www.codeproject.com/Articles/1248381/Microservices-Service-Discovery
