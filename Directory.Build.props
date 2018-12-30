@@ -2,10 +2,10 @@
 	<PropertyGroup>
     <LangVersion>7.1</LangVersion>
     <!--package-->
-		<Authors>Doomsday32</Authors>
+		<Authors>vip32</Authors>
 		<Description>A modern cloud service architecture blueprint and reference implementation</Description>
 		<Product>Naos</Product>
-		<Copyright>Copyright 2018 (c) Doomsday32. All rights reserved.</Copyright>
+		<Copyright>Copyright 2018 (c) vip32. All rights reserved.</Copyright>
     <!--sourcelink https://github.com/dotnet/sourcelink -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
@@ -27,6 +27,6 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 		</PackageReference>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63127-02" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-18618-05" />
 	</ItemGroup>
 </Project>
