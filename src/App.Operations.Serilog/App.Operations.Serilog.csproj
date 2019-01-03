@@ -11,7 +11,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
     <PackageReference Include="serilog" Version="2.7.1" />
     <PackageReference Include="Serilog.Extensions.Hosting" Version="2.0.0" />
-    <PackageReference Include="Serilog.Sinks.AzureAnalytics" Version="3.1.0" />
+    <PackageReference Include="Serilog.Sinks.AzureAnalytics" Version="4.0.0" />
     <PackageReference Include="Serilog.Sinks.AzureDocumentDB" Version="4.0.0" />
     <PackageReference Include="Serilog.Sinks.Debug" Version="1.0.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
