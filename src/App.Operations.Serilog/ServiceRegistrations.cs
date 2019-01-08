@@ -68,7 +68,8 @@
                 .WriteTo.Debug()
                 .WriteTo.LiterateConsole(
                     restrictedToMinimumLevel: LogEventLevel.Information,
-                    outputTemplate: "[{Timestamp:HH:mm:ss.fff} {Level:u3}] {CorrelationId}|{Service}|{SourceContext}: {Message:lj}{NewLine}{Exception}");
+                    //outputTemplate: "[{Timestamp:HH:mm:ss.fff} {Level:u3}] {CorrelationId}|{Service}|{SourceContext}: {Message:lj}{NewLine}{Exception}");
+                    outputTemplate: "[{Timestamp:HH:mm:ss.fff} {Level:u3}] {Message:lj}{NewLine}{Exception}");
 
             //.WriteTo.AzureDocumentDB(
             //    uri,

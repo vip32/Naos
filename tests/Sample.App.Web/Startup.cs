@@ -55,6 +55,7 @@
             // naos application services
             services
                 .AddNaosCorrelation()
+                .AddNaosFiltering()
                 .AddNaosOperationsSerilog(this.Configuration)
                 .AddNaosOperationsLogAnalytics(this.Configuration)
                 .AddNaosExceptionHandling(/*env.IsProduction()*/)
@@ -82,11 +83,12 @@
                 app.UseHsts();
             }
 
-            // Middleware
-            app.UseHttpsRedirection();
-            app.UseNaosCorrelation();
-            app.UseNaosOperationsRequestResponseLogging();
-            app.UseNaosExceptionHandling();
+            // naos middleware
+            app.UseHttpsRedirection()
+               .UseNaosCorrelation()
+               .UseNaosCriteria()
+               .UseNaosOperationsRequestResponseLogging()
+               .UseNaosExceptionHandling();
 
             app.UseSwagger();
             app.UseSwaggerUi3();

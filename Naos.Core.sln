@@ -97,9 +97,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scheduling.App.Web", "src\S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Web", "src\App.Web\App.Web.csproj", "{6DBCB900-0693-42D4-8AB8-15058EE701FB}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Criteria", "Criteria", "{41BFCC05-8541-4335-8F13-E4E8B702F486}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Filtering", "Filtering", "{41BFCC05-8541-4335-8F13-E4E8B702F486}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Criteria.App", "src\Criteria.App\Criteria.App.csproj", "{340B90BA-DB12-4E7D-9F33-BA45F184B79D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Filtering.App", "src\Criteria.App\Filtering.App.csproj", "{340B90BA-DB12-4E7D-9F33-BA45F184B79D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

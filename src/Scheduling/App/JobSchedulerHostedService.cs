@@ -9,7 +9,7 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Scheduling.Domain;
 
-    public class JobSchedulerHostedService : IHostedService, IDisposable
+    public class JobSchedulerHostedService : IHostedService, IDisposable // TODO: or use BackgroundService? https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/multi-container-microservice-net-applications/background-tasks-with-ihostedservice#implementing-ihostedservice-with-a-custom-hosted-service-class-deriving-from-the-backgroundservice-base-class
     {
         private readonly ILogger<JobSchedulerHostedService> logger;
         private readonly IJobScheduler scheduler;

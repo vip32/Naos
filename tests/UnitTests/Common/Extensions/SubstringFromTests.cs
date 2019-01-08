@@ -10,6 +10,7 @@
         {
             Assert.Equal("a".SubstringFrom("a"), string.Empty);
             Assert.Equal("a".SubstringFrom("z"), string.Empty);
+            Assert.Equal(string.Empty, "bbb".SubstringFrom(":"));
             Assert.Equal("bbb", "aaa.bbb".SubstringFrom("."));
             Assert.Equal("bb", "aaa.bbb".SubstringFrom("b"));
             Assert.Equal(string.Empty, "aaa.bbb".SubstringFrom("bbb"));

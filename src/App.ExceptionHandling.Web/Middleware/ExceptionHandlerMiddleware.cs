@@ -79,7 +79,7 @@
                         Type = this.options.HideDetails ? null : ex.GetType().PrettyName(),
                     };
 
-                    this.logger?.LogError(ex, $"SERVICE http request ({{RequestId}}) {details.Title} [{ex.GetType().PrettyName()}] {ex.Message}", this.correlationContext?.Context?.RequestId);
+                    this.logger?.LogError(ex, $"SERVICE http request  ({{RequestId}}) {details.Title} [{ex.GetType().PrettyName()}] {ex.Message}", this.correlationContext?.Context?.RequestId);
 
                     context.Response.StatusCode = 500;
                     context.Response.WriteJson(details, contentType: ContentType.JSONPROBLEM);

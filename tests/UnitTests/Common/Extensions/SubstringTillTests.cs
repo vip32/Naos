@@ -9,6 +9,7 @@
         public void From_All_Positions()
         {
             Assert.Equal(string.Empty, "a".SubstringTill("a"));
+            Assert.Equal("aaa", "aaa".SubstringTill(":"));
             Assert.Equal("aaa", "aaa.bbb".SubstringTill("."));
             Assert.Equal("aaa.", "aaa.bbb".SubstringTill("b"));
             Assert.Equal("aaa.", "aaa.bbb".SubstringTill("bbb"));

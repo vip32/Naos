@@ -71,7 +71,7 @@
 
         private void LogRequest(HttpContext context, string requestId)
         {
-            this.logger.LogInformation($"SERVICE http request ({{RequestId}}) {context.Request.Method} {context.Request.GetDisplayUrl()}", requestId);
+            this.logger.LogInformation($"SERVICE http request  ({{RequestId}}) {context.Request.Method} {context.Request.GetDisplayUrl()}", requestId);
 
             //request.EnableRewind();
             //using (var stream = this.streamManager.GetStream())
