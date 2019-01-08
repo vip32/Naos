@@ -44,6 +44,7 @@
     <ProjectReference Include="..\..\src\Domain.Repositories\Domain.Repositories.csproj" />
     <ProjectReference Include="..\..\src\Domain.Specifications\Domain.Specifications.csproj" />
     <ProjectReference Include="..\..\src\Domain\Domain.csproj" />
+    <ProjectReference Include="..\..\src\Filtering.App\Filtering.App.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure.Azure.Arm\Infrastructure.Azure.Arm.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure.Azure.Configuration\Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure.Azure.Cosmosdb\Infrastructure.Azure.CosmosDb.csproj" />

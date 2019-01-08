@@ -16,11 +16,11 @@
         /// </summary>
         /// <param name="app"></param>
         /// <returns></returns>
-        public static IApplicationBuilder UseNaosCriteria(this IApplicationBuilder app)
+        public static IApplicationBuilder UseNaosFiltering(this IApplicationBuilder app)
         {
             EnsureArg.IsNotNull(app, nameof(app));
 
-            return app.UseNaosCriteria(new FilterMiddlewareOptions());
+            return app.UseNaosFiltering(new FilterMiddlewareOptions());
         }
 
         /// <summary>
@@ -29,7 +29,7 @@
         /// <param name="app"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public static IApplicationBuilder UseNaosCriteria(this IApplicationBuilder app, FilterMiddlewareOptions options)
+        public static IApplicationBuilder UseNaosFiltering(this IApplicationBuilder app, FilterMiddlewareOptions options)
         {
             EnsureArg.IsNotNull(app, nameof(app));
             EnsureArg.IsNotNull(options, nameof(options));

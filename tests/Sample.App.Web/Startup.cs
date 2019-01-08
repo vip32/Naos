@@ -86,7 +86,7 @@
             // naos middleware
             app.UseHttpsRedirection()
                .UseNaosCorrelation()
-               .UseNaosCriteria()
+               .UseNaosFiltering()
                .UseNaosOperationsRequestResponseLogging()
                .UseNaosExceptionHandling();
 

@@ -52,6 +52,10 @@
             var correlationId = this.EnsureCorrelationId(context);
             var requestId = this.EnsureRequestId(context);
 
+            // needed by other request middlewares (requestresponselogging, filtering)
+            context.SetCorrelationId(correlationId);
+            context.SetRequestId(requestId);
+
             if (this.options.UpdateTraceIdentifier)
             {
                 this.logger.LogDebug($"api request ({requestId}) now has traceIdentifier {correlationId}, was {context.TraceIdentifier}"); // TODO: move to request logging middleware (operations)

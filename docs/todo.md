@@ -46,9 +46,11 @@ criteria:
   https://stackoverflow.com/questions/43685229/using-predicatebuilder-to-build-query-searching-across-multiple-columns-of-entit
   https://stackoverflow.com/questions/16208214/construct-lambdaexpression-for-nested-property-from-string
 
-  query: /logevents?q=correlationId=eq:2b34cc25-cd06-475c-8f9c-c42791f49b46,timestamp=qte:01-01-1980,level=eq:debug,OR,level=eq:information
+  criteria: /logevents?q=type=111,correlationId=eq:2b34cc25-cd06-475c-8f9c-c42791f49b46,timestamp=gte:01-01-1980,level=eq:debug,OR,level=eq:information
   pagination: &skip=XX&take=XX
   orderby: &orderby=desc:timestamp,asc:level
+
+  ?q=type=111,correlationId=eq:2b34cc25-cd06-475c-8f9c-c42791f49b46,timestamp=gte:01-01-1980,level=eq:debug,OR,level=eq:information&skip=0&take=100&orderby=desc:timestamp,asc:level
 
   middleware > criteria builder (request) > criteriacontext > controller (ctor) > repository (use criteria as specificaton)
 

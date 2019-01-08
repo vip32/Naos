@@ -4,7 +4,7 @@
 
     public class OrderBy
     {
-        public OrderBy(string name, OrderByDirection direction = OrderByDirection.Ascending)
+        public OrderBy(string name, OrderByDirection direction = OrderByDirection.Asc)
         {
             EnsureArg.IsNotNullOrEmpty(name);
 
