@@ -86,8 +86,8 @@
             // naos middleware
             app.UseHttpsRedirection()
                .UseNaosCorrelation()
-               .UseNaosFiltering()
                .UseNaosOperationsRequestResponseLogging()
+               .UseNaosFiltering()
                .UseNaosExceptionHandling();
 
             app.UseSwagger();

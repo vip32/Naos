@@ -1,13 +1,22 @@
 ﻿namespace Naos.Core.Common.Web
 {
     using Microsoft.AspNetCore.Http;
-    using Microsoft.Extensions.Primitives;
 
     /// <summary>
     ///     Extends the HttpContext type
     /// </summary>
     public static partial class HttpContextExtensions
     {
+        public static bool HasCorrelationId(this HttpContext context)
+        {
+            if (context == null)
+            {
+                return false;
+            }
+
+            return context.Items.ContainsKey("correlationId");
+        }
+
         public static void SetCorrelationId(this HttpContext context, string value)
         {
             if (context == null)
@@ -32,6 +41,16 @@
 
             context.Items.TryGetValue("correlationId", out object value);
             return value?.ToString();
+        }
+
+        public static bool HasRequestId(this HttpContext context)
+        {
+            if (context == null)
+            {
+                return false;
+            }
+
+            return context.Items.ContainsKey("requestId");
         }
 
         public static void SetRequestId(this HttpContext context, string value)

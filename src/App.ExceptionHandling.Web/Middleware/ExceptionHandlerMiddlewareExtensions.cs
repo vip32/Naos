@@ -1,10 +1,8 @@
 ﻿namespace Microsoft.AspNetCore.Builder
 {
-    using System;
     using EnsureThat;
     using Microsoft.Extensions.Options;
     using Naos.Core.App.Exceptions.Web;
-    using Naos.Core.Common.Web;
 
     public static class ExceptionHandlerMiddlewareExtensions
     {
@@ -25,11 +23,6 @@
         {
             EnsureArg.IsNotNull(app, nameof(app));
             EnsureArg.IsNotNull(options, nameof(options));
-
-            if (app.ApplicationServices.GetService(typeof(ICorrelationContextFactory)) == null)
-            {
-                throw new InvalidOperationException("Unable to find the required services. You must call the AddNaosCorrelation method in ConfigureServices in the application startup code.");
-            }
 
             return app.UseMiddleware<ExceptionHandlerMiddleware>(Options.Create(options));
         }

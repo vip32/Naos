@@ -1,6 +1,5 @@
 ﻿namespace Naos.Core.Filtering.App
 {
-    using System.Collections.Generic;
     using Microsoft.AspNetCore.Http;
 
     /// <summary>

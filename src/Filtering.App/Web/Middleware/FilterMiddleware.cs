@@ -1,14 +1,10 @@
 ﻿namespace Naos.Core.App.Criteria.App.Web
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
-    using Naos.Core.Common;
     using Naos.Core.Common.Web;
     using Naos.Core.Filtering.App;
 
@@ -52,8 +48,11 @@
         public async Task Invoke(HttpContext context, IFilterContextFactory contextFactory)
         {
             var filterContext = contextFactory.Create(context?.Request, this.options.CriteriaQueryStringKey, this.options.OrderByQueryStringKey, this.options.SkipQueryStringKey, this.options.TakeQueryStringKey);
+            if (filterContext.Enabled)
+            {
+                this.logger.LogInformation($"SERVICE http request  ({{RequestId}}) {{@FilterContext}}", context.GetRequestId(), filterContext);
+            }
 
-            this.logger.LogInformation($"SERVICE http request  ({{RequestId}}) {{@FilterContext}}", context.GetRequestId(), filterContext);
             await this.next(context);
 
             contextFactory.Dispose();

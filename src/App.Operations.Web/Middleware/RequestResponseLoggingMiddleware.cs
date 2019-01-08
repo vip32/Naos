@@ -17,26 +17,23 @@
         private const int ReadChunkBufferLength = 4096;
         private readonly RequestDelegate next;
         private readonly ILogger<RequestResponseLoggingMiddleware> logger;
-        private readonly ICorrelationContextAccessor correlationContext;
         private readonly RequestResponseLoggingOptions options;
         private readonly RecyclableMemoryStreamManager streamManager;
 
         public RequestResponseLoggingMiddleware(
             RequestDelegate next,
             ILogger<RequestResponseLoggingMiddleware> logger,
-            ICorrelationContextAccessor correlationContext,
             IOptions<RequestResponseLoggingOptions> options)
         {
             this.next = next;
             this.logger = logger;
-            this.correlationContext = correlationContext;
             this.options = options.Value ?? new RequestResponseLoggingOptions();
             this.streamManager = new RecyclableMemoryStreamManager();
         }
 
         public async Task Invoke(HttpContext context)
         {
-            var requestId = this.correlationContext?.Context?.RequestId;
+            var requestId = context.GetRequestId();
 
             this.LogRequest(context, requestId);
             var timer = Stopwatch.StartNew();

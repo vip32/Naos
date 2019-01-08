@@ -1,7 +1,6 @@
 ﻿namespace Naos.Core.Correlation.App
 {
     using System.Threading;
-    using Naos.Core.Common.Web;
 
     /// <inheritdoc />
     public class CorrelationContextAccessor : ICorrelationContextAccessor

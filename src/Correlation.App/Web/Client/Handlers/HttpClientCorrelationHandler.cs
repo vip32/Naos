@@ -5,7 +5,6 @@
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
-    using Naos.Core.Common.Web;
 
     public class HttpClientCorrelationHandler : DelegatingHandler
     {

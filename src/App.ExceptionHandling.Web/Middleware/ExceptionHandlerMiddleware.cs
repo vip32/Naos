@@ -18,14 +18,12 @@
         private readonly RequestDelegate next;
         private readonly ILogger<ExceptionHandlerMiddleware> logger;
         private readonly IEnumerable<IExceptionResponseHandler> responseHandlers;
-        private readonly ICorrelationContextAccessor correlationContext;
         private readonly ExceptionHandlerMiddlewareOptions options;
 
         public ExceptionHandlerMiddleware(
             RequestDelegate next,
             ILogger<ExceptionHandlerMiddleware> logger,
             IEnumerable<IExceptionResponseHandler> responseHandlers,
-            ICorrelationContextAccessor correlationContext,
             IOptions<ExceptionHandlerMiddlewareOptions> options)
         {
             EnsureArg.IsNotNull(next, nameof(next));
@@ -34,7 +32,6 @@
             this.next = next;
             this.logger = logger;
             this.responseHandlers = responseHandlers;
-            this.correlationContext = correlationContext;
             this.options = options.Value ?? new ExceptionHandlerMiddlewareOptions();
         }
 
@@ -51,9 +48,9 @@
                 //    ex,
                 //    $"[{ex?.GetType().PrettyName()}] {ex?.Message}");
 
-                var instance = this.correlationContext == null || this.correlationContext.Context == null
-                            ? context.TraceIdentifier
-                            : $"{this.correlationContext.Context.CorrelationId} ({this.correlationContext.Context.RequestId})";
+                var instance = context.HasCorrelationId() || context.HasRequestId()
+                            ? $"{context.GetCorrelationId()} ({context.GetRequestId()})"
+                            : context.TraceIdentifier;
 
                 if (context.Response.HasStarted)
                 {
@@ -65,7 +62,7 @@
                 if (responseHandler != null)
                 {
                     // specific handler for exception
-                    responseHandler.Handle(context, ex, instance, this.correlationContext?.Context?.RequestId, this.options.HideDetails, this.options.JsonResponse);
+                    responseHandler.Handle(context, ex, instance, context.GetRequestId(), this.options.HideDetails, this.options.JsonResponse);
                 }
                 else
                 {
@@ -79,7 +76,7 @@
                         Type = this.options.HideDetails ? null : ex.GetType().PrettyName(),
                     };
 
-                    this.logger?.LogError(ex, $"SERVICE http request  ({{RequestId}}) {details.Title} [{ex.GetType().PrettyName()}] {ex.Message}", this.correlationContext?.Context?.RequestId);
+                    this.logger?.LogError(ex, $"SERVICE http request  ({{RequestId}}) {details.Title} [{ex.GetType().PrettyName()}] {ex.Message}", context.GetRequestId());
 
                     context.Response.StatusCode = 500;
                     context.Response.WriteJson(details, contentType: ContentType.JSONPROBLEM);
