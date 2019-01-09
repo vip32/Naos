@@ -67,6 +67,12 @@
         /// <summary>
         /// Gets all subscription details.
         /// </summary>
+        /// <returns></returns>
+        IReadOnlyDictionary<string, IEnumerable<SubscriptionDetails>> GetAll();
+
+        /// <summary>
+        /// Gets all subscription details.
+        /// </summary>
         /// <typeparam name="TM"></typeparam>
         /// <returns></returns>
         IEnumerable<SubscriptionDetails> GetAll<TM>()

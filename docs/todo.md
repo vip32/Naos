@@ -25,8 +25,14 @@ identity provider example https://alejandroruizvarela.blogspot.com/2018/11/aspne
 correlationid https://www.stevejgordon.co.uk/asp-net-core-correlation-ids
 polly logging ctx https://github.com/stevejgordon/PollyLoggingContextSample
 multi tenant (tenancy) https://github.com/Finbuckle/Finbuckle.MultiTenant
+inter service JSON RPC http://www.jsonrpc.org/specification
+                       https://github.com/ipjohnson/EasyRpc (incl authorization, client, dotnet di, messagepack transport) 
+                       https://github.com/alexanderkozlenko/aspnetcore-json-rpc (simple, only http transport) + client https://github.com/alexanderkozlenko/json-rpc-client
+                       https://github.com/edjCase/JsonRpc
+                       https://github.com/httpjsonrpcnet/httpjsonrpcnet
 code coverage https://github.com/tonerdo/coverlet + https://codecov.io/gh/vip32/Naos.Core
 api problem details https://www.strathweb.com/2018/07/centralized-exception-handling-and-request-validation-in-asp-net-core/
+performance test websurge https://github.com/edjCase/JsonRpc/blob/master/test/PerformanceTests/BasicTests.websurge
 miniprofiler https://miniprofiler.com/dotnet/
 miniprofiler + swagger ui https://stackoverflow.com/questions/49150492/wire-up-miniprofiler-to-asp-net-core-web-api-swagger
                           https://community.miniprofiler.com/t/can-i-use-mini-profiler-for-asp-net-web-api-and-have-results-still-seen-on-url/365/2

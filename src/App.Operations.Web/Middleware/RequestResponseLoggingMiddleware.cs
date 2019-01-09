@@ -10,6 +10,7 @@
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Microsoft.IO;
+    using Naos.Core.Common;
     using Naos.Core.Common.Web;
 
     public class RequestResponseLoggingMiddleware
@@ -33,13 +34,20 @@
 
         public async Task Invoke(HttpContext context)
         {
-            var requestId = context.GetRequestId();
+            if (context.Request.Path.Value.EqualsWildcardAny(this.options.PathBlackListPatterns))
+            {
+                await this.next.Invoke(context).ConfigureAwait(false);
+            }
+            else
+            {
+                var requestId = context.GetRequestId();
 
-            this.LogRequest(context, requestId);
-            var timer = Stopwatch.StartNew();
-            await this.next.Invoke(context).ConfigureAwait(false);
-            timer.Stop();
-            this.LogResponse(context, requestId, timer.Elapsed);
+                this.LogRequest(context, requestId);
+                var timer = Stopwatch.StartNew();
+                await this.next.Invoke(context).ConfigureAwait(false);
+                timer.Stop();
+                this.LogResponse(context, requestId, timer.Elapsed);
+            }
         }
 
         private static string ReadStreamInChunks(Stream stream)

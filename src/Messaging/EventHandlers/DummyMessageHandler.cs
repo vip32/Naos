@@ -25,7 +25,7 @@ namespace Naos.Core.Messaging
         {
             using (this.logger.BeginScope("{CorrelationId}", message.CorrelationId))
             {
-                this.logger.LogInformation("handle  message (name={MessageName}, id={MessageId}, origin={MessageOrigin}) " + message.Data, message.GetType().PrettyName(), message.Id, message.Origin);
+                this.logger.LogInformation("MESSAGE handle  (name={MessageName}, id={MessageId}, origin={MessageOrigin}) " + message.Data, message.GetType().PrettyName(), message.Id, message.Origin);
 
                 return Task.CompletedTask;
             }

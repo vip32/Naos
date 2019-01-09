@@ -16,7 +16,7 @@
         {
             using (this.logger.BeginScope("{CorrelationId}", message.CorrelationId))
             {
-                this.logger.LogInformation("handle  message (name={MessageName}, id={EventId}, origin={EventOrigin}) " + $"{message.Entity.FirstName} {message.Entity.LastName}", message.GetType().PrettyName(), message.Id, message.Origin);
+                this.logger.LogInformation("MESSAGE handle  (name={MessageName}, id={EventId}, origin={EventOrigin}) " + $"{message.Entity.FirstName} {message.Entity.LastName}", message.GetType().PrettyName(), message.Id, message.Origin);
 
                 return Task.CompletedTask;
             }

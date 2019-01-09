@@ -60,7 +60,8 @@
         /// </summary>
         /// <typeparam name="TMessage">The type of the message.</typeparam>
         /// <typeparam name="THandler">The type of the handler.</typeparam>
-        public void Subscribe<TMessage, THandler>()
+        /// <returns></returns>
+        public IMessageBroker Subscribe<TMessage, THandler>()
             where TMessage : Domain.Model.Message
             where THandler : IMessageHandler<TMessage>
         {
@@ -87,6 +88,8 @@
 
                 this.map.Add<TMessage, THandler>();
             }
+
+            return this;
         }
 
         /// <summary>
@@ -111,7 +114,7 @@
 
                 var messageName = /*message.Name*/ message.GetType().PrettyName();
 
-                this.logger.LogInformation("publish message (name={MessageName}, id={MessageId}, service={Service})", messageName, message.Id, this.messageScope);
+                this.logger.LogInformation("MESSAGE publish (name={MessageName}, id={MessageId}, service={Service})", messageName, message.Id, this.messageScope);
 
                 // TODO: really need non-async Result?
                 var serviceBusMessage = new Message
@@ -227,7 +230,7 @@
                             message.Origin = messageOrigin;
                         }
 
-                        this.logger.LogInformation("process message (name={MessageName}, id={MessageId}, service={Service}, origin={MessageOrigin})",
+                        this.logger.LogInformation("MESSAGE process (name={MessageName}, id={MessageId}, service={Service}, origin={MessageOrigin})",
                             serviceBusMessage.Label, message?.Id, this.messageScope, messageOrigin);
 
                         // construct the handler by using the DI container
@@ -262,7 +265,7 @@
             this.provider.EnsureSubscription(topicName, subscriptionName);
             this.client = new SubscriptionClient(provider.ConnectionStringBuilder, subscriptionName);
 
-            this.logger.LogInformation($"servicebus initialize (topic={topicName}, subscription={subscriptionName}");
+            this.logger.LogInformation($"servicebus initialize (topic={topicName}, subscription={subscriptionName})");
 
             try
             {

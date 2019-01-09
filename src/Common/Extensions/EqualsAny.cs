@@ -7,7 +7,7 @@
     {
         public static bool EqualsAny(
             this string source,
-            IEnumerable<string> items,
+            IEnumerable<string> values,
             StringComparison comp = StringComparison.OrdinalIgnoreCase)
         {
             if (string.IsNullOrEmpty(source))
@@ -15,19 +15,19 @@
                 return false;
             }
 
-            if (items.IsNullOrEmpty())
+            if (values.IsNullOrEmpty())
             {
                 return false;
             }
 
-            foreach (var item in items)
+            foreach (var value in values)
             {
-                if (item == null)
+                if (value == null)
                 {
                     continue;
                 }
 
-                if (source.Equals(item, comp))
+                if (source.Equals(value, comp))
                 {
                     return true;
                 }
@@ -38,16 +38,16 @@
 
         public static bool EqualsAny(
             this int source,
-            IEnumerable<int> items)
+            IEnumerable<int> values)
         {
-            if (items.IsNullOrEmpty())
+            if (values.IsNullOrEmpty())
             {
                 return false;
             }
 
-            foreach (var item in items)
+            foreach (var value in values)
             {
-                if (source == item)
+                if (source == value)
                 {
                     return true;
                 }
@@ -58,16 +58,16 @@
 
         public static bool EqualsAny(
             this long source,
-            IEnumerable<long> items)
+            IEnumerable<long> values)
         {
-            if (items.IsNullOrEmpty())
+            if (values.IsNullOrEmpty())
             {
                 return false;
             }
 
-            foreach (var item in items)
+            foreach (var value in values)
             {
-                if (source == item)
+                if (source == value)
                 {
                     return true;
                 }

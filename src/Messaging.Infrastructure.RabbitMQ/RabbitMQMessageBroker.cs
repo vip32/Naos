@@ -26,11 +26,11 @@
             throw new NotImplementedException();
         }
 
-        public void Subscribe<TMessage, THandler>()
+        public IMessageBroker Subscribe<TMessage, THandler>()
             where TMessage : Message
             where THandler : IMessageHandler<TMessage>
         {
-            throw new NotImplementedException();
+            return this;
         }
 
         public void Unsubscribe<TMessage, THandler>()

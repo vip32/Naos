@@ -1,6 +1,7 @@
 ﻿namespace Naos.Sample.App.Web
 {
     using System;
+    using System.Diagnostics;
     using System.Linq;
     using System.Threading;
     using MediatR;
@@ -14,10 +15,12 @@
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Logging;
     using Naos.Core.App.Configuration;
+    using Naos.Core.App.Operations.Web.Middleware;
     using Naos.Core.App.Web;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
     using Naos.Core.Correlation.App.Web;
+    using Naos.Core.Messaging;
     using Naos.Core.Scheduling.App;
     using Naos.Core.Scheduling.Domain;
     using Newtonsoft.Json;
@@ -44,6 +47,7 @@
             services.Replace(ServiceDescriptor.Singleton<Microsoft.Extensions.Http.IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
 
             services
+                .AddMiddlewareAnalysis()
                 .AddHttpContextAccessor()
                 .AddHealthChecksUI()
                 .AddSwaggerDocument(s => s.Description = "naos")
@@ -64,7 +68,9 @@
                     .Register<DummyJob>("job1", Cron.Minutely(), (j) => j.LogMessageAsync("+++ hello from job1 +++", CancellationToken.None))
                     .Register<DummyJob>("job2", Cron.MinuteInterval(2), j => j.LogMessageAsync("+++ hello from job2 +++", CancellationToken.None, true), enabled: false)
                     .Register<DummyJob>("longjob3", Cron.Minutely(), j => j.LongRunningAsync("+++ hello from longjob3 +++", CancellationToken.None)))
-                .AddNaosMessagingServiceBus(this.Configuration, AppDomain.CurrentDomain.FriendlyName)
+                .AddNaosMessagingServiceBus(
+                    this.Configuration,
+                    s => s.Subscribe<TestMessage, TestMessageHandler>())
                 .AddNaosAppCommands();
 
             // naos sample product registrations
@@ -72,12 +78,16 @@
                 .AddSampleCountries()
                 .AddSampleCustomers(this.Configuration)
                 .AddSampleUserAccounts(this.Configuration);
+
+            // TODO: need to find a way to start the MessageBroker (done by resolving the IMessageBroker somewhere, HostedService? like scheduling)
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app/*, IServiceCollection services*/, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, DiagnosticListener diagnosticListener, IHostingEnvironment env)
         {
             this.logger.LogInformation($"app {env.ApplicationName} environment: {env.EnvironmentName}");
+            //diagnosticListener.SubscribeWithAdapter(new NaosDiagnosticListener());
+
             if (env.IsProduction())
             {
                 app.UseHsts();

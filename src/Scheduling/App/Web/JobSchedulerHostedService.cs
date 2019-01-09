@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Scheduling.App
+﻿namespace Naos.Core.Scheduling.App.Web
 {
     using System;
     using System.Threading;

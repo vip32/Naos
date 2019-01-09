@@ -63,6 +63,21 @@
         /// <summary>
         /// Gets all subscription details.
         /// </summary>
+        /// <returns></returns>
+        public IReadOnlyDictionary<string, IEnumerable<SubscriptionDetails>> GetAll()
+        {
+            var result = new Dictionary<string, IEnumerable<SubscriptionDetails>>();
+            foreach(var i in this.map.NullToEmpty())
+            {
+                result.Add(i.Key, i.Value.AsEnumerable());
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets all subscription details.
+        /// </summary>
         /// <typeparam name="TM"></typeparam>
         /// <returns></returns>
         public IEnumerable<SubscriptionDetails> GetAll<TM>()

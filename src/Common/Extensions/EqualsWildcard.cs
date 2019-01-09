@@ -1,5 +1,6 @@
 ﻿namespace Naos.Core.Common
 {
+    using System.Collections.Generic;
     using System.Text.RegularExpressions;
 
     public static partial class Extensions
@@ -29,6 +30,44 @@
             var regexp = Regex.Escape(value).Replace("\\*", ".*");
 
             return Regex.IsMatch(source, "^" + (ignoreCase ? "(?i)" : string.Empty) + regexp + "$");
+        }
+
+        /// <summary>
+        /// Compares strings with usage of wildcard *
+        /// </summary>
+        /// <param name="source">the source string</param>
+        /// <param name="values">the value strings to compare to</param>
+        /// <param name="ignoreCase">Ignore case</param>
+        /// <returns>true if equal, otherwhise false</returns>
+        public static bool EqualsWildcardAny(
+            this string source,
+            IEnumerable<string> values,
+            bool ignoreCase = true)
+        {
+            if (source == null && values == null)
+            {
+                return true;
+            }
+
+            if (values.IsNullOrEmpty())
+            {
+                return false;
+            }
+
+            foreach (var value in values.NullToEmpty())
+            {
+                if (value == null)
+                {
+                    continue;
+                }
+
+                if (source.EqualsWildcard(value, ignoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

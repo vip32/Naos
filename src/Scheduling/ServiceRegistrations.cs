@@ -4,7 +4,7 @@
     using EnsureThat;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Scheduling;
-    using Naos.Core.Scheduling.App;
+    using Naos.Core.Scheduling.App.Web;
     using Naos.Core.Scheduling.Domain;
 
     public static class ServiceRegistrations

@@ -9,6 +9,7 @@
     using Naos.Core.Common;
     using Naos.Core.Infrastructure.Azure.ServiceBus;
     using Naos.Core.Messaging;
+    using Naos.Core.Messaging.App.Web;
     using Naos.Core.Messaging.Infrastructure.Azure.ServiceBus;
 
     public static class ServiceRegistrations
@@ -16,6 +17,7 @@
         public static IServiceCollection AddNaosMessagingServiceBus(
             this IServiceCollection services,
             IConfiguration configuration,
+            Action<IMessageBroker> setupAction = null,
             string topicName = null,
             string subscriptionName = null,
             string section = "naos:messaging:serviceBus")
@@ -27,7 +29,10 @@
                 .FromApplicationDependencies(a => !a.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) && !a.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase))
                 .AddClasses(classes => classes.AssignableTo(typeof(IMessageHandler<>)), true));
 
-            services.AddScoped<IServiceBusProvider>(sp =>
+            services.AddSingleton<Hosting.IHostedService>(sp =>
+                    new MessagingHostedService(sp.GetRequiredService<ILogger<MessagingHostedService>>(), sp));
+
+            services.AddSingleton<IServiceBusProvider>(sp =>
             {
                 var serviceBusConfiguration = configuration.GetSection(section).Get<ServiceBusConfiguration>();
                 serviceBusConfiguration.EntityPath = topicName ?? $"{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}-Naos.Messaging";
@@ -43,15 +48,22 @@
                 throw new NotImplementedException("no messaging servicebus is enabled");
             });
 
+            services.AddSingleton<ISubscriptionMap, SubscriptionMap>();
             services.AddSingleton<IMessageBroker>(sp =>
-                new ServiceBusMessageBroker(
+            {
+                var result = new ServiceBusMessageBroker(
                         sp.GetRequiredService<ILogger<ServiceBusMessageBroker>>(),
                         sp.GetRequiredService<IServiceBusProvider>(),
                         new ServiceProviderMessageHandlerFactory(sp),
+                        map: sp.GetRequiredService<ISubscriptionMap>(),
                         subscriptionName: subscriptionName ?? AppDomain.CurrentDomain.FriendlyName, // PRODUCT.CAPABILITY
                         filterScope: Environment.GetEnvironmentVariable("ASPNETCORE_ISLOCAL").ToBool()
                             ? Environment.MachineName.Humanize().Dehumanize().ToLower()
-                            : string.Empty)); // scope the messagebus messages to the local machine, so local events are handled locally
+                            : string.Empty);
+
+                setupAction?.Invoke(result);
+                return result;
+            }); // scope the messagebus messages to the local machine, so local events are handled locally
 
             return services;
         }

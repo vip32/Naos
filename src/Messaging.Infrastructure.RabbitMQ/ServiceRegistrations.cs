@@ -14,6 +14,7 @@
         public static IServiceCollection AddNaosMessagingRabbitMQ(
             this IServiceCollection services,
             IConfiguration configuration,
+            Action<IMessageBroker> setupAction = null,
             string section = "naos:messaging:rabbitMQ",
             IEnumerable<Assembly> assemblies = null)
         {
@@ -25,10 +26,15 @@
                .AddClasses(classes => classes.AssignableTo(typeof(IMessageHandler<>)), true));
 
             services.AddSingleton<IMessageBroker>(sp =>
-                new RabbitMQMessageBroker(
+            {
+                var result = new RabbitMQMessageBroker(
                         sp.GetRequiredService<ILogger<RabbitMQMessageBroker>>(),
                         configuration.GetSection(section).Get<RabbitMQConfiguration>(),
-                        new ServiceProviderMessageHandlerFactory(sp)));
+                        new ServiceProviderMessageHandlerFactory(sp));
+
+                setupAction?.Invoke(result);
+                return result;
+            });
 
             return services;
         }

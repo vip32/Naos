@@ -3,7 +3,7 @@
     using System;
     using EnsureThat;
     using Microsoft.Extensions.Options;
-    using Naos.Core.App.Criteria.App.Web;
+    using Naos.Core.App.Filtering.App.Web;
     using Naos.Core.Filtering.App;
 
     /// <summary>

@@ -12,9 +12,9 @@
 
     public class MessagingTestHostedService : IHostedService
     {
+        private readonly ILogger<MessagingTestHostedService> logger;
         private readonly IServiceProvider serviceProvider;
         private IMessageBroker messageBus;
-        private ILogger<MessagingTestHostedService> logger;
 
         public MessagingTestHostedService(ILogger<MessagingTestHostedService> logger, IServiceProvider serviceProvider)
         {
@@ -29,11 +29,9 @@
         {
             Console.WriteLine("starting hosted service");
 
-            this.messageBus = this.serviceProvider.GetRequiredService<IMessageBroker>();
-
-            // subscribe
-            this.messageBus.Subscribe<TestMessage, TestMessageHandler>();
-            this.messageBus.Subscribe<EntityMessage<StubEntity>, StubEntityMessageHandler>();
+            this.messageBus = this.serviceProvider.GetRequiredService<IMessageBroker>()
+                .Subscribe<TestMessage, TestMessageHandler>()
+                .Subscribe<EntityMessage<StubEntity>, StubEntityMessageHandler>();
 
             Task.Run(() =>
             {
