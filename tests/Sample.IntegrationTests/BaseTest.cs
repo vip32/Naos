@@ -24,7 +24,8 @@
                 .AddMediatR()
                 .AddNaosOperationsSerilog(configuration)
                 .AddNaosOperationsLogAnalytics(configuration)
-                .AddNaosMessagingServiceBus(configuration)
+                //.AddNaosMessagingFileSystem(configuration)
+                .AddNaosMessagingAzureServiceBus(configuration)
                 .AddNaosAppCommands();
 
             // naos sample registrations

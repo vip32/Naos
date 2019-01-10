@@ -70,7 +70,7 @@
                 .AddNaosMessagingFileSystem(
                     this.Configuration,
                     s => s.Subscribe<TestMessage, TestMessageHandler>())
-                //.AddNaosMessagingServiceBus(
+                //.AddNaosMessagingAzureServiceBus(
                 //    this.Configuration,
                 //    s => s.Subscribe<TestMessage, TestMessageHandler>())
                 .AddNaosAppCommands();

@@ -14,7 +14,7 @@
 
     public static class ServiceRegistrations
     {
-        public static IServiceCollection AddNaosMessagingServiceBus(
+        public static IServiceCollection AddNaosMessagingAzureServiceBus(
             this IServiceCollection services,
             IConfiguration configuration,
             Action<IMessageBroker> setupAction = null,

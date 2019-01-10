@@ -19,7 +19,7 @@
                     services.AddSingleton<IHostedService, MessagingTestHostedService>()
                             .AddNaosOperationsSerilog(configuration)
                             .AddNaosMessagingFileSystem(configuration);
-                            //.AddNaosMessagingServiceBus(
+                            //.AddNaosMessagingAzureServiceBus(
                             //    configuration,
                             //    subscriptionName: capabilities[new Random().Next(0, capabilities.Length)]);
                 });

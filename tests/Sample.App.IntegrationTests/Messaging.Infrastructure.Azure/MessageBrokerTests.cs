@@ -18,7 +18,8 @@
 
             this.services
                 .AddNaosOperationsSerilog(configuration)
-                .AddNaosMessagingServiceBus(configuration);
+                //.AddNaosMessagingFileSystem(configuration)
+                .AddNaosMessagingAzureServiceBus(configuration);
 
             this.ServiceProvider = this.services.BuildServiceProvider();
         }
