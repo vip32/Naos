@@ -19,7 +19,7 @@
         private readonly ILogger<SignalRServerlessMessageBroker> logger;
         private readonly IMessageHandlerFactory handlerFactory;
         private readonly string connectionString;
-        private readonly HttpClient httpClient;
+        private readonly IHttpClientFactory httpClient;
         private readonly ISubscriptionMap map;
         private readonly string filterScope;
         private readonly string messageScope;
@@ -29,7 +29,7 @@
             ILogger<SignalRServerlessMessageBroker> logger,
             IMessageHandlerFactory handlerFactory,
             string connectionString,
-            HttpClient httpClient,
+            IHttpClientFactory httpClient,
             ISubscriptionMap map = null,
             string filterScope = null,
             string messageScope = "local") // message origin identifier
@@ -59,9 +59,6 @@
 
         public void Publish(Message message)
         {
-            // TODO: publish by http posting to hub endpoint https://github.com/aspnet/AzureSignalR-samples/blob/master/samples/Serverless/ServerHandler.cs
-            //       hubname = 'naos_messaging' (TestMessage)
-            //       group = messageName
             EnsureArg.IsNotNull(message, nameof(message));
             if (message.CorrelationId.IsNullOrEmpty())
             {
@@ -76,9 +73,12 @@
                     this.logger.LogDebug($"set messageId (id={message.Id})");
                 }
 
+                message.Origin = this.messageScope;
+
                 var messageName = /*message.Name*/ message.GetType().PrettyName();
 
-                // TODO: send http request to signalr hub endoint
+                this.logger.LogInformation("MESSAGE publish (name={MessageName}, id={MessageId}, service={Service})", message.GetType().PrettyName(), message.Id, this.messageScope);
+
                 var serviceUtils = new ServiceUtils(this.connectionString);
                 var url = $"{serviceUtils.Endpoint}/api/v1/hubs/{this.HubName}";
                 var request = new HttpRequestMessage(HttpMethod.Post, url);
@@ -87,17 +87,17 @@
                 request.Content = new StringContent(JsonConvert.SerializeObject(
                     new PayloadMessage
                     {
-                        Target = "SendMessage", // needs to be Sendmessage or can be messagename?
-                        Arguments = new[]
+                        Target = messageName,
+                        Arguments = new object[]
                         {
                             messageName,
-                            $"Hello from message {message.Id}", // should contain Message itself
+                            message
                         }
                     }), Encoding.UTF8, ContentType.JSON.ToValue());
-                var response = this.httpClient.SendAsync(request).GetAwaiter().GetResult(); // TODO: async!
+                var response = this.httpClient.CreateClient("default").SendAsync(request).GetAwaiter().GetResult(); // TODO: async!
                 if (response.StatusCode != HttpStatusCode.Accepted)
                 {
-                    Console.WriteLine($"Sent error: {response.StatusCode}");
+                    this.logger.LogError("MESSAGE publish failed: HTTP statuscode {StatusCode} (name={MessageName}, id={MessageId}, service={Service})", response.StatusCode, message.GetType().PrettyName(), message.Id, this.messageScope);
                 }
             }
         }
@@ -106,15 +106,12 @@
             where TMessage : Message
             where THandler : IMessageHandler<TMessage>
         {
-            // TODO: subscribe by connecting to the hub and registering SendMessage handler (=ProcessMessage)
-            //       hubname = 'naos_messaging' (TestMessage)
-            //       group = messageName
-            //       https://github.com/aspnet/AzureSignalR-samples/blob/master/samples/Serverless/ClientHandler.cs
-
             var messageName = typeof(TMessage).PrettyName();
 
             if (!this.map.Exists<TMessage>())
             {
+                this.logger.LogInformation("MESSAGE subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType})", typeof(TMessage).PrettyName(), this.messageScope, this.filterScope, typeof(THandler).Name);
+
                 this.map.Add<TMessage, THandler>();
             }
 
@@ -131,15 +128,17 @@
                         };
                     }).Build();
 
-                this.connection.On<string, string>(
-                    "SendMessage", // needs to be Sendmessage or can be messagename?
-                    (string n, string m) =>
-                    {
-                        Console.WriteLine($"[{DateTime.Now.ToString()}] Received message {n}: {m}");
-                    });
-
+                this.logger.LogInformation($"signalr connection started (url={url})");
                 this.connection.StartAsync().GetAwaiter().GetResult();
             }
+
+            // add listener for the specific messageName
+            this.connection.On(
+                messageName,
+                async (string n, object m) =>
+                {
+                    await this.ProcessMessage(n, m).ConfigureAwait(false);
+                });
 
             return this;
         }
@@ -149,6 +148,58 @@
             where THandler : IMessageHandler<TMessage>
         {
             this.connection?.StopAsync().GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Processes the message by invoking the message handler.
+        /// </summary>
+        /// <param name="messageName"></param>
+        /// <param name="signalRMessage"></param>
+        /// <returns></returns>
+        private async Task<bool> ProcessMessage(string messageName, object signalRMessage)
+        {
+            var processed = false;
+
+            if (this.map.Exists(messageName))
+            {
+                foreach (var subscription in this.map.GetAll(messageName))
+                {
+                    var messageType = this.map.GetByName(messageName);
+                    if (messageType == null)
+                    {
+                        continue;
+                    }
+
+                    var jsonMessage = JsonConvert.DeserializeObject(signalRMessage.ToString(), messageType);
+                    var message = jsonMessage as Domain.Model.Message;
+
+                    this.logger.LogInformation("MESSAGE process (name={MessageName}, id={MessageId}, service={Service}, origin={MessageOrigin})",
+                            messageType.PrettyName(), message?.Id, this.messageScope, message?.Origin);
+
+                    // construct the handler by using the DI container
+                    var handler = this.handlerFactory.Create(subscription.HandlerType); // should not be null, did you forget to register your generic handler (EntityMessageHandler<T>)
+                    var concreteType = typeof(IMessageHandler<>).MakeGenericType(messageType);
+
+                    var method = concreteType.GetMethod("Handle");
+                    if (handler != null && method != null)
+                    {
+                        await (Task)method.Invoke(handler, new object[] { jsonMessage as object });
+                    }
+                    else
+                    {
+                        this.logger.LogWarning("process message failed, message handler could not be created. is the handler registered in the service provider? (name={MessageName}, service={Service}, id={MessageId}, origin={MessageOrigin})",
+                            messageType.PrettyName(), this.messageScope, message?.Id, message?.Origin);
+                    }
+                }
+
+                processed = true;
+            }
+            else
+            {
+                this.logger.LogDebug($"unprocessed: {messageName}");
+            }
+
+            return processed;
         }
 
         public class PayloadMessage

@@ -137,7 +137,6 @@
                     }
 
                     var jsonMessage = JsonConvert.DeserializeObject(messageBody, messageType);
-
                     var message = jsonMessage as Domain.Model.Message;
                     if (message != null)
                     {

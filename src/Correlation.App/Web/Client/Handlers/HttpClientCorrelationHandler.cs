@@ -27,7 +27,7 @@
 
             using (this.logger.BeginScope("{RequestId}", requestId))
             {
-                this.logger.LogDebug($"CLIENT http request ({requestId}) added correlation headers");
+                this.logger.LogDebug($"CLIENT http request  ({requestId}) added correlation headers");
 
                 request.Headers.Add("x-correlationid", correlationId);
                 request.Headers.Add("x-requestid", requestId);

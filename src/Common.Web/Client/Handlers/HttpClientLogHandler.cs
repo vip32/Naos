@@ -12,35 +12,6 @@
     {
         private readonly ILogger logger;
 
-        ///// <summary>
-        ///// Initializes a new instance of the <see cref="HttpClientLogHandler"/> class.
-        ///// Constructs the <see cref="HttpClientLogHandler"/> with the default <see cref="HttpClientHandler"/> and the default <see cref="DebugLogger"/>
-        ///// </summary>
-        //public HttpClientLogHandler()
-        //    : this(new HttpClientHandler(), null)
-        //{
-        //}
-
-        ///// <summary>
-        ///// Initializes a new instance of the <see cref="HttpClientLogHandler"/> class.
-        ///// Constructs the <see cref="HttpClientLogHandler"/> with a custom <see cref="HttpMessageHandler"/> and the default <see cref="DebugLogger"/>
-        ///// </summary>
-        ///// <param name="handler">User defined <see cref="HttpMessageHandler"/></param>
-        //public HttpClientLogHandler(HttpMessageHandler handler)
-        //    : this(handler, null)
-        //{
-        //}
-
-        ///// <summary>
-        ///// Initializes a new instance of the <see cref="HttpClientLogHandler"/> class.
-        ///// Constructs the <see cref="HttpClientLogHandler"/> with a custom <see cref="ILogger"/> and the default <see cref="HttpClientHandler"/>
-        ///// </summary>
-        ///// <param name="logger">User defined <see cref="ILogger"/></param>
-        //public HttpClientLogHandler(ILogger logger)
-        //    : this(new HttpClientHandler(), logger)
-        //{
-        //}
-
         /// <summary>
         /// Initializes a new instance of the <see cref="HttpClientLogHandler"/> class.
         /// Constructs the <see cref="HttpClientLogHandler"/> with a custom <see cref="ILogger"/> and the default <see cref="HttpClientHandler"/>
@@ -50,18 +21,6 @@
         {
             this.logger = logger;
         }
-
-        ///// <summary>
-        ///// Initializes a new instance of the <see cref="HttpClientLogHandler"/> class.
-        ///// Constructs the <see cref="HttpClientLogHandler"/> with a custom <see cref="ILogger"/> and a custom <see cref="HttpMessageHandler"/>
-        ///// </summary>
-        ///// <param name="handler">User defined <see cref="HttpMessageHandler"/></param>
-        ///// <param name="logger">User defined <see cref="ILogger"/></param>
-        //public HttpClientLogHandler(HttpMessageHandler handler, ILogger logger)
-        //{
-        //    this.InnerHandler = handler;
-        //    this.logger = logger;
-        //}
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
@@ -95,7 +54,7 @@
                 content = await this.GetRequestContent(request).ConfigureAwait(false);
             }
 
-            var message = $"CLIENT http request ({requestId}): [{request?.Method}] {request.RequestUri}";
+            var message = $"CLIENT http request  ({requestId}): [{request?.Method}] {request.RequestUri}";
 
             this.WriteLog(message: message);
         }

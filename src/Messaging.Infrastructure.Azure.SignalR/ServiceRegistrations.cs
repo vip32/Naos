@@ -37,7 +37,7 @@
                         sp.GetRequiredService<ILogger<SignalRServerlessMessageBroker>>(),
                         new ServiceProviderMessageHandlerFactory(sp),
                         "Endpoint=",
-                        sp.GetRequiredService<HttpClient>(),
+                        sp.GetRequiredService<IHttpClientFactory>(),
                         map: sp.GetRequiredService<ISubscriptionMap>(),
                         filterScope: Environment.GetEnvironmentVariable("ASPNETCORE_ISLOCAL").ToBool()
                             ? Environment.MachineName.Humanize().Dehumanize().ToLower()

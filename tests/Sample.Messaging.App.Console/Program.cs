@@ -3,8 +3,11 @@
     using System;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Hosting;
     using Naos.Core.App.Configuration;
+    using Naos.Core.Common.Web;
+    using Naos.Core.Correlation.App.Web;
 
     public static class Program
     {
@@ -16,12 +19,25 @@
             var builder = new HostBuilder()
                 .ConfigureServices((context, services) =>
                 {
-                    services.AddSingleton<IHostedService, MessagingTestHostedService>()
-                            .AddNaosOperationsSerilog(configuration)
-                            .AddNaosMessagingFileSystem(configuration);
-                            //.AddNaosMessagingAzureServiceBus(
-                            //    configuration,
-                            //    subscriptionName: capabilities[new Random().Next(0, capabilities.Length)]);
+                    // framework application services
+                    services.AddTransient<HttpClientLogHandler>();
+                    services.AddTransient<HttpClientCorrelationHandler>();
+                    services.AddHttpClient("default")
+                        .AddHttpMessageHandler<HttpClientCorrelationHandler>()
+                        .AddHttpMessageHandler<HttpClientLogHandler>();
+                    //services.Replace(ServiceDescriptor.Singleton<Microsoft.Extensions.Http.IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
+                    services.RemoveAll<Microsoft.Extensions.Http.IHttpMessageHandlerBuilderFilter>();
+
+                    // naos application services
+                    services
+                        .AddNaosCorrelation()
+                        .AddNaosOperationsSerilog(configuration)
+                        .AddNaosMessagingSignalR(configuration)
+                        //.AddNaosMessagingFileSystem(configuration);
+                        //.AddNaosMessagingAzureServiceBus(
+                        //    configuration,
+                        //    subscriptionName: capabilities[new Random().Next(0, capabilities.Length)])
+                        .AddSingleton<IHostedService, MessagingTestHostedService>();
                 });
 
             await builder.RunConsoleAsync();

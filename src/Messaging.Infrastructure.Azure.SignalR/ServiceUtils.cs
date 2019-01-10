@@ -35,7 +35,7 @@
                 };
             }
 
-            return this.GenerateAccessTokenInternal(audience, claims, lifetime ?? TimeSpan.FromHours(1));
+            return this.GenerateAccessTokenInternal(audience, claims, lifetime ?? TimeSpan.FromDays(365));
         }
 
         public string GenerateAccessTokenInternal(string audience, IEnumerable<Claim> claims, TimeSpan lifetime)

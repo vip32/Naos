@@ -39,6 +39,7 @@
 
         public void ConfigureServices(IServiceCollection services)
         {
+            // framework application services
             services.AddTransient<HttpClientCorrelationHandler>();
             services.AddTransient<HttpClientLogHandler>();
             services.AddHttpClient("default")

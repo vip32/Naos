@@ -25,8 +25,10 @@
     <ProjectReference Include="..\..\src\App.Configuration\App.Configuration.csproj" />
     <ProjectReference Include="..\..\src\App.Operations.Serilog\App.Operations.Serilog.csproj" />
     <ProjectReference Include="..\..\src\Common\Common.csproj" />
+    <ProjectReference Include="..\..\src\Correlation.App\Correlation.App.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure.Azure.KeyVault\Infrastructure.Azure.KeyVault.csproj" />
     <ProjectReference Include="..\..\src\App\App.csproj" />
+    <ProjectReference Include="..\..\src\Messaging.Infrastructure.Azure.SignalR\Messaging.Infrastructure.Azure.SignalR.csproj" />
     <ProjectReference Include="..\..\src\Messaging.Infrastructure.Azure\Messaging.Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\..\src\Messaging.Infrastructure.FileSystem\Messaging.Infrastructure.FileSystem.csproj" />
     <ProjectReference Include="..\..\src\Messaging\Messaging.csproj" />
