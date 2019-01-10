@@ -1,6 +1,7 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
+    using System.Net.Http;
     using EnsureThat;
     using Humanizer;
     using Microsoft.Extensions.Configuration;
@@ -8,16 +9,16 @@
     using Naos.Core.Common;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.App.Web;
-    using Naos.Core.Messaging.Infrastructure.FileSystem;
+    using Naos.Core.Messaging.Infrastructure.Azure.SignalR;
 
     public static class ServiceRegistrations
     {
-        public static IServiceCollection AddNaosMessagingFileSystem(
+        public static IServiceCollection AddNaosMessagingSignalR(
             this IServiceCollection services,
             IConfiguration configuration,
             Action<IMessageBroker> setupAction = null,
             string messageScope = null,
-            string section = "naos:messaging:filebased")
+            string section = "naos:messaging:signalr")
         {
             EnsureArg.IsNotNull(services, nameof(services));
 
@@ -32,9 +33,11 @@
             services.AddSingleton<ISubscriptionMap, SubscriptionMap>();
             services.AddSingleton<IMessageBroker>(sp =>
             {
-                var result = new FileSystemMessageBroker(
-                        sp.GetRequiredService<ILogger<FileSystemMessageBroker>>(),
+                var result = new SignalRServerlessMessageBroker(
+                        sp.GetRequiredService<ILogger<SignalRServerlessMessageBroker>>(),
                         new ServiceProviderMessageHandlerFactory(sp),
+                        "Endpoint=",
+                        sp.GetRequiredService<HttpClient>(),
                         map: sp.GetRequiredService<ISubscriptionMap>(),
                         filterScope: Environment.GetEnvironmentVariable("ASPNETCORE_ISLOCAL").ToBool()
                             ? Environment.MachineName.Humanize().Dehumanize().ToLower()

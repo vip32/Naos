@@ -94,7 +94,7 @@
 
                     watcher.Renamed += (sender, e) =>
                     {
-                        this.ProcessMessage(e.FullPath).GetAwaiter().GetResult();
+                        this.ProcessMessage(e.FullPath).GetAwaiter().GetResult(); // TODO: async!
                     };
 
                     this.watchers.Add(messageName, watcher);
