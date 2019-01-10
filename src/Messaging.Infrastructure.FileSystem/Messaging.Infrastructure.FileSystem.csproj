@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Naos.Core.Messaging.Infrastructure.FileSystem</AssemblyName>
+    <RootNamespace>Naos.Core.Messaging.Infrastructure.FileSystem</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Scrutor" Version="3.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Messaging\Messaging.csproj" />
+  </ItemGroup>
+
+</Project>

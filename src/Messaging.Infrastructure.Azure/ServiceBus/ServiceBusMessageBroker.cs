@@ -28,8 +28,8 @@
         /// <param name="map">The map.</param>
         /// <param name="handlerFactory">The service provider.</param>
         /// <param name="subscriptionName">Name of the subscription.</param>
-        /// <param name="messageScope">The message scope.</param>
         /// <param name="filterScope">Name of the scope.</param>
+        /// <param name="messageScope">The message scope.</param>
         public ServiceBusMessageBroker(
             ILogger<ServiceBusMessageBroker> logger,
             IServiceBusProvider provider,
@@ -70,7 +70,7 @@
 
             if (!this.map.Exists<TMessage>())
             {
-                this.logger.LogInformation("subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType})", messageName, this.messageScope, this.filterScope, typeof(THandler).Name);
+                this.logger.LogInformation("MESSAGE subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType})", messageName, this.messageScope, this.filterScope, typeof(THandler).Name);
 
                 try
                 {

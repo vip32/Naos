@@ -29,6 +29,16 @@
            where TH : IMessageHandler<TM>;
 
         /// <summary>
+        /// Adds this instance.
+        /// </summary>
+        /// <typeparam name="TM"></typeparam>
+        /// <typeparam name="TH">The type of the h.</typeparam>
+        /// <param name="messageName"></param>
+        void Add<TM, TH>(string messageName)
+           where TM : Message
+           where TH : IMessageHandler<TM>;
+
+        /// <summary>
         /// Removes this instance.
         /// </summary>
         /// <typeparam name="TM"></typeparam>

@@ -52,6 +52,20 @@
         }
 
         /// <summary>
+        /// Adds this instance.
+        /// </summary>
+        /// <typeparam name="TM">The type of the message.</typeparam>
+        /// <typeparam name="TH">The type of the message handler.</typeparam>
+        /// <param name="messageName"></param>
+        public void Add<TM, TH>(string messageName)
+            where TM : Message
+            where TH : IMessageHandler<TM>
+        {
+            this.Add(messageName, typeof(TH));
+            this.messageTypes.Add(typeof(TM));
+        }
+
+        /// <summary>
         /// Removes this instance.
         /// </summary>
         /// <typeparam name="TM"></typeparam>
@@ -112,7 +126,8 @@
         /// <returns></returns>
         public Type GetByName(string messageName) =>
             //this.messageTypes.SingleOrDefault(t => t.Name == messageName);
-            this.messageTypes.SingleOrDefault(t => this.GetKey(t).Equals(messageName, StringComparison.OrdinalIgnoreCase));
+            this.messageTypes.SingleOrDefault(t => this.GetKey(t).Equals(messageName, StringComparison.OrdinalIgnoreCase)
+                || t.PrettyName(false).Equals(messageName, StringComparison.OrdinalIgnoreCase));
 
         /// <summary>
         /// Gets the key.

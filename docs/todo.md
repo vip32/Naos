@@ -20,16 +20,21 @@ idea: configuration validation https://www.stevejgordon.co.uk/asp-net-core-2-2-o
 graphql? https://fullstackmark.com/post/17/building-a-graphql-api-with-aspnet-core-2-and-entity-framework-core
 workflow https://github.com/danielgerlag/workflow-core
 web exception handling https://github.com/JosephWoodward/GlobalExceptionHandlerDotNet
+app service docker container (rabbitmq?) https://docs.microsoft.com/en-us/azure/app-service/containers/tutorial-custom-docker-image 
 exception enricher demistify https://github.com/nblumhardt/serilog-enrichers-demystify
 identity provider example https://alejandroruizvarela.blogspot.com/2018/11/aspnet-core-identity-with-cosmos-db.html
 correlationid https://www.stevejgordon.co.uk/asp-net-core-correlation-ids
 polly logging ctx https://github.com/stevejgordon/PollyLoggingContextSample
 multi tenant (tenancy) https://github.com/Finbuckle/Finbuckle.MultiTenant
+
 inter service JSON RPC http://www.jsonrpc.org/specification
                        https://github.com/ipjohnson/EasyRpc (incl authorization, client, dotnet di, messagepack transport) 
                        https://github.com/alexanderkozlenko/aspnetcore-json-rpc (simple, only http transport) + client https://github.com/alexanderkozlenko/json-rpc-client
                        https://github.com/edjCase/JsonRpc
                        https://github.com/httpjsonrpcnet/httpjsonrpcnet
+                       https://www.rabbitmq.com/tutorials/tutorial-six-python.html
+                       http://gigi.nullneuron.net/gigilabs/abstracting-rabbitmq-rpc-with-taskcompletionsource/
+
 code coverage https://github.com/tonerdo/coverlet + https://codecov.io/gh/vip32/Naos.Core
 api problem details https://www.strathweb.com/2018/07/centralized-exception-handling-and-request-validation-in-asp-net-core/
 performance test websurge https://github.com/edjCase/JsonRpc/blob/master/test/PerformanceTests/BasicTests.websurge
@@ -44,8 +49,11 @@ identity overview      https://developer.okta.com/blog/2018/03/23/token-authenti
 identity.openiddict    https://github.com/openiddict/openiddict-core
 identity.b2c
 
+messaging: folder based provider + filewatcher (localhost usage)
 messaging: message broker based on rabitmq (for local usage)
 messaging: singalr based provider?
+messaging: in memory provider https://docs.microsoft.com/en-us/dotnet/standard/io/memory-mapped-files
+                              https://dotnetcodr.com/2015/11/18/messaging-through-memory-mapped-files-in-net-c/
 
 criteria:
   https://blogs.msdn.microsoft.com/mattwar/2007/07/31/linq-building-an-iqueryable-provider-part-ii/
@@ -70,6 +78,9 @@ repo: ef sqlite https://docs.microsoft.com/en-us/ef/core/get-started/netcore/new
 repo: persistent mongo docker container https://blog.jeremylikness.com/mongodb-on-windows-in-minutes-with-docker-3e412f076762
 
 service: task scheduler (coravel) https://github.com/jamesmh/coravel/blob/master/Docs/Scheduler.md
+service: service registry (steeltoe) https://thenewstack.io/steeltoe-modernize-net-apps-for-a-microservices-architecture/
+                                     https://steeltoe.io/docs/steeltoe-discovery/
+
 service: service registry (consul) https://www.codeproject.com/Articles/1248381/Microservices-Service-Discovery
                                    http://michaco.net/blog/ServiceDiscoveryAndHealthChecksInAspNetCoreWithConsul
                                    https://open.microsoft.com/2018/10/04/use-case-modern-service-discovery-consul-azure-part-1/

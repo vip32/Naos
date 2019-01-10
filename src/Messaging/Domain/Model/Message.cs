@@ -21,6 +21,7 @@
         /// <value>
         /// The message identifier.
         /// </value>
+        [JsonIgnore] // needed for FolderBasedBroker::Publish (JsonSerialize ID issue)
         public string Id { get; set; }
 
         [JsonProperty(PropertyName = "id")]

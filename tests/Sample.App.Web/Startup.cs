@@ -1,6 +1,5 @@
 ﻿namespace Naos.Sample.App.Web
 {
-    using System;
     using System.Diagnostics;
     using System.Linq;
     using System.Threading;
@@ -68,9 +67,12 @@
                     .Register<DummyJob>("job1", Cron.Minutely(), (j) => j.LogMessageAsync("+++ hello from job1 +++", CancellationToken.None))
                     .Register<DummyJob>("job2", Cron.MinuteInterval(2), j => j.LogMessageAsync("+++ hello from job2 +++", CancellationToken.None, true), enabled: false)
                     .Register<DummyJob>("longjob3", Cron.Minutely(), j => j.LongRunningAsync("+++ hello from longjob3 +++", CancellationToken.None)))
-                .AddNaosMessagingServiceBus(
+                .AddNaosMessagingFileSystem(
                     this.Configuration,
                     s => s.Subscribe<TestMessage, TestMessageHandler>())
+                //.AddNaosMessagingServiceBus(
+                //    this.Configuration,
+                //    s => s.Subscribe<TestMessage, TestMessageHandler>())
                 .AddNaosAppCommands();
 
             // naos sample product registrations

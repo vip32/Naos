@@ -18,9 +18,10 @@
                 {
                     services.AddSingleton<IHostedService, MessagingTestHostedService>()
                             .AddNaosOperationsSerilog(configuration)
-                            .AddNaosMessagingServiceBus(
-                                configuration,
-                                subscriptionName: capabilities[new Random().Next(0, capabilities.Length)]);
+                            .AddNaosMessagingFileSystem(configuration);
+                            //.AddNaosMessagingServiceBus(
+                            //    configuration,
+                            //    subscriptionName: capabilities[new Random().Next(0, capabilities.Length)]);
                 });
 
             await builder.RunConsoleAsync();

@@ -36,7 +36,7 @@
 
             if (app.ApplicationServices.GetService(typeof(ICorrelationContextFactory)) == null)
             {
-                throw new InvalidOperationException($"Unable to find the required services. You must call the {nameof(Microsoft.Extensions.DependencyInjection.ServiceExtensions.AddNaosCorrelation)} method in ConfigureServices in the application startup code.");
+                throw new InvalidOperationException($"Unable to find the required services. You must call the {nameof(Microsoft.Extensions.DependencyInjection.ServiceRegistrations.AddNaosCorrelation)} method in ConfigureServices in the application startup code.");
             }
 
             return app.UseMiddleware<CorrelationMiddleware>(Options.Create(options));

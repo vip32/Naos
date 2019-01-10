@@ -39,6 +39,7 @@
     <ProjectReference Include="..\..\src\Correlation.App\Correlation.App.csproj" />
     <ProjectReference Include="..\..\src\Filtering.App\Filtering.App.csproj" />
     <ProjectReference Include="..\..\src\Messaging.Infrastructure.Azure\Messaging.Infrastructure.Azure.csproj" />
+    <ProjectReference Include="..\..\src\Messaging.Infrastructure.FileSystem\Messaging.Infrastructure.FileSystem.csproj" />
     <ProjectReference Include="..\..\src\Messaging\Messaging.csproj" />
     <ProjectReference Include="..\..\src\Operations.Infrastructure.Azure.LogAnalytics\Operations.Infrastructure.Azure.LogAnalytics.csproj" />
     <ProjectReference Include="..\..\src\Scheduling.App.Web\Scheduling.App.Web.csproj" />
