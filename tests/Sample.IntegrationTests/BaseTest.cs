@@ -24,7 +24,7 @@
                 .AddMediatR()
                 .AddNaosOperationsSerilog(configuration)
                 .AddNaosOperationsLogAnalytics(configuration)
-                .AddNaosMessagingServiceBus(configuration, AppDomain.CurrentDomain.FriendlyName)
+                .AddNaosMessagingServiceBus(configuration)
                 .AddNaosAppCommands();
 
             // naos sample registrations

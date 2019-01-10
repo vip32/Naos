@@ -18,7 +18,7 @@
 
             this.services
                 .AddNaosOperationsSerilog(configuration)
-                .AddNaosMessagingServiceBus(configuration, AppDomain.CurrentDomain.FriendlyName);
+                .AddNaosMessagingServiceBus(configuration);
 
             this.ServiceProvider = this.services.BuildServiceProvider();
         }
