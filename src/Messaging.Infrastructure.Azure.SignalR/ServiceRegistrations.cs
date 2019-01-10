@@ -30,6 +30,8 @@
             services.AddSingleton<Hosting.IHostedService>(sp =>
                     new MessagingHostedService(sp.GetRequiredService<ILogger<MessagingHostedService>>(), sp));
 
+            // TODO: typed configuration like servicebus + KV
+
             services.AddSingleton<ISubscriptionMap, SubscriptionMap>();
             services.AddSingleton<IMessageBroker>(sp =>
             {
