@@ -1,6 +1,6 @@
 ﻿namespace Naos.Core.Discovery.App
 {
-    public class LocalServiceRegistry : IServiceRegistry
+    public class FileSystemServiceRegistry : IServiceRegistry
     {
         public void DeRegister(string id)
         {

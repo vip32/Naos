@@ -7,7 +7,7 @@
     /// <summary>
     /// Extensions on the <see cref="IServiceCollection"/>.
     /// </summary>
-    public static class ServiceRegistrations // TODO: rename to ServiceExtensions
+    public static class ServiceExtensions // TODO: rename to ServiceExtensions
     {
         /// <summary>
         /// Adds required services to support the Discovery functionality.
@@ -18,7 +18,7 @@
         {
             EnsureArg.IsNotNull(services, nameof(services));
 
-            services.TryAddSingleton<IServiceRegistry, LocalServiceRegistry>();
+            services.TryAddSingleton<IServiceRegistry, FileSystemServiceRegistry>();
 
             return services;
         }

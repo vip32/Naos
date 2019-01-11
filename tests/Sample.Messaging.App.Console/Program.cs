@@ -32,8 +32,8 @@
                     services
                         .AddNaosCorrelation()
                         .AddNaosOperationsSerilog(configuration)
-                        .AddNaosMessagingSignalR(configuration)
-                        //.AddNaosMessagingFileSystem(configuration);
+                        //.AddNaosMessagingSignalR(configuration)
+                        .AddNaosMessagingFileSystem(configuration)
                         //.AddNaosMessagingAzureServiceBus(
                         //    configuration,
                         //    subscriptionName: capabilities[new Random().Next(0, capabilities.Length)])

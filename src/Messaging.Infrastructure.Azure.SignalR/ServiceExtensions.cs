@@ -7,11 +7,12 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
+    using Naos.Core.Infrastructure.Azure;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.App.Web;
     using Naos.Core.Messaging.Infrastructure.Azure.SignalR;
 
-    public static class ServiceRegistrations
+    public static class ServiceExtensions
     {
         public static IServiceCollection AddNaosMessagingSignalR(
             this IServiceCollection services,
@@ -30,16 +31,15 @@
             services.AddSingleton<Hosting.IHostedService>(sp =>
                     new MessagingHostedService(sp.GetRequiredService<ILogger<MessagingHostedService>>(), sp));
 
-            // TODO: typed configuration like servicebus + KV
-
             services.AddSingleton<ISubscriptionMap, SubscriptionMap>();
             services.AddSingleton<IMessageBroker>(sp =>
             {
+                var signalRConfiguration = configuration.GetSection(section).Get<SignalRConfiguration>();
+
                 var result = new SignalRServerlessMessageBroker(
                         sp.GetRequiredService<ILogger<SignalRServerlessMessageBroker>>(),
                         new ServiceProviderMessageHandlerFactory(sp),
-                        // TODO: move to KV config
-                        "Endpoint=",
+                        signalRConfiguration.ConnectionString,
                         sp.GetRequiredService<IHttpClientFactory>(),
                         map: sp.GetRequiredService<ISubscriptionMap>(),
                         filterScope: Environment.GetEnvironmentVariable("ASPNETCORE_ISLOCAL").ToBool()

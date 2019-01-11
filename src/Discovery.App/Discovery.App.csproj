@@ -17,8 +17,4 @@
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Registries\Shared\" />
-  </ItemGroup>
-
 </Project>

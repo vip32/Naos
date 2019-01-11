@@ -12,7 +12,7 @@
     using Naos.Core.Messaging.App.Web;
     using Naos.Core.Messaging.Infrastructure.Azure.ServiceBus;
 
-    public static class ServiceRegistrations
+    public static class ServiceExtensions
     {
         public static IServiceCollection AddNaosMessagingAzureServiceBus(
             this IServiceCollection services,
