@@ -23,6 +23,7 @@
         private readonly ISubscriptionMap map;
         private readonly string filterScope;
         private readonly string messageScope;
+        private readonly ServiceUtils serviceUtils;
         private HubConnection connection;
 
         public SignalRServerlessMessageBroker(
@@ -46,6 +47,7 @@
             this.map = map ?? new SubscriptionMap();
             this.filterScope = filterScope;
             this.messageScope = messageScope ?? AppDomain.CurrentDomain.FriendlyName;
+            this.serviceUtils = new ServiceUtils(this.connectionString);
         }
 
         private string HubName => this.filterScope.IsNullOrEmpty() ? "naos_messaging".ToLower() : $"naos_messaging_{this.filterScope}".ToLower();
@@ -79,10 +81,9 @@
 
                 this.logger.LogInformation("MESSAGE publish (name={MessageName}, id={MessageId}, service={Service})", message.GetType().PrettyName(), message.Id, this.messageScope);
 
-                var serviceUtils = new ServiceUtils(this.connectionString);
-                var url = $"{serviceUtils.Endpoint}/api/v1/hubs/{this.HubName}";
+                var url = $"{this.serviceUtils.Endpoint}/api/v1/hubs/{this.HubName}";
                 var request = new HttpRequestMessage(HttpMethod.Post, url);
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", serviceUtils.GenerateAccessToken(url, "userId"));
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", this.serviceUtils.GenerateAccessToken(url, "userId"));
                 request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(ContentType.JSON.ToValue()));
                 request.Content = new StringContent(JsonConvert.SerializeObject(
                     new PayloadMessage
@@ -110,25 +111,24 @@
 
             if (!this.map.Exists<TMessage>())
             {
-                this.logger.LogInformation("MESSAGE subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType})", typeof(TMessage).PrettyName(), this.messageScope, this.filterScope, typeof(THandler).Name);
+                this.logger.LogInformation("MESSAGE subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, endpoint={Endpoint}, hub={Hub})", typeof(TMessage).PrettyName(), this.messageScope, this.filterScope, typeof(THandler).Name, this.serviceUtils.Endpoint, this.HubName);
 
                 this.map.Add<TMessage, THandler>();
             }
 
             if (this.connection == null)
             {
-                var serviceUtils = new ServiceUtils(this.connectionString);
-                var url = $"{serviceUtils.Endpoint}/client/?hub={this.HubName}";
+                var url = $"{this.serviceUtils.Endpoint}/client/?hub={this.HubName}";
                 this.connection = new HubConnectionBuilder()
                     .WithUrl(url, option =>
                     {
                         option.AccessTokenProvider = () =>
                         {
-                            return Task.FromResult(serviceUtils.GenerateAccessToken(url, "userId"));
+                            return Task.FromResult(this.serviceUtils.GenerateAccessToken(url, "userId"));
                         };
                     }).Build();
 
-                this.logger.LogInformation($"signalr connection started (url={url})");
+                this.logger.LogDebug($"signalr connection started (url={url})");
                 this.connection.StartAsync().GetAwaiter().GetResult();
             }
 
@@ -139,6 +139,7 @@
                 {
                     await this.ProcessMessage(n, m).ConfigureAwait(false);
                 });
+            this.logger.LogDebug($"signalr connection onmessage handler registered (name={messageName})");
 
             return this;
         }

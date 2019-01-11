@@ -8,6 +8,8 @@
     {
         ServiceBusConnectionStringBuilder ConnectionStringBuilder { get; }
 
+        string EntityPath { get; }
+
         ITopicClient CreateModel();
 
         Task<ITopic> EnsureTopic(string topicName);

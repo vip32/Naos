@@ -41,6 +41,7 @@
             };
             var serviceBusManager = ServiceBusManager.Authenticate(credentials, configuration.SubscriptionId);
             this.serviceBusNamespace = serviceBusManager.Namespaces.GetByResourceGroup(configuration.ResourceGroup, configuration.NamespaceName);
+            this.EntityPath = configuration.EntityPath;
         }
 
         /// <summary>
@@ -50,6 +51,8 @@
         /// The connection string builder.
         /// </value>
         public ServiceBusConnectionStringBuilder ConnectionStringBuilder { get; }
+
+        public string EntityPath { get; }
 
         public ITopicClient CreateModel()
         {

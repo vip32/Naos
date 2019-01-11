@@ -41,10 +41,8 @@
         public string GenerateAccessTokenInternal(string audience, IEnumerable<Claim> claims, TimeSpan lifetime)
         {
             var expire = DateTime.UtcNow.Add(lifetime);
-
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.AccessKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
             var token = JwtTokenHandler.CreateJwtSecurityToken(
                 issuer: null,
                 audience: audience,

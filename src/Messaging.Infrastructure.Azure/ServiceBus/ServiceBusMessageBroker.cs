@@ -70,7 +70,7 @@
 
             if (!this.map.Exists<TMessage>())
             {
-                this.logger.LogInformation("MESSAGE subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType})", messageName, this.messageScope, this.filterScope, typeof(THandler).Name);
+                this.logger.LogInformation("MESSAGE subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, entityPath={EntityPath})", messageName, this.messageScope, this.filterScope, typeof(THandler).Name, this.provider.EntityPath);
 
                 try
                 {
