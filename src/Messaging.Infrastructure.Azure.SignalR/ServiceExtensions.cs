@@ -39,7 +39,7 @@
                 var result = new SignalRServerlessMessageBroker(
                         sp.GetRequiredService<ILogger<SignalRServerlessMessageBroker>>(),
                         new ServiceProviderMessageHandlerFactory(sp),
-                        signalRConfiguration.ConnectionString,
+                        signalRConfiguration,
                         sp.GetRequiredService<IHttpClientFactory>(),
                         map: sp.GetRequiredService<ISubscriptionMap>(),
                         filterScope: Environment.GetEnvironmentVariable("ASPNETCORE_ISLOCAL").ToBool()

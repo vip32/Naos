@@ -10,14 +10,14 @@
     using Naos.Core.Messaging.App.Web;
     using Naos.Core.Messaging.Infrastructure.FileSystem;
 
-    public static class ServiceRegistrations
+    public static class ServiceExtensions
     {
         public static IServiceCollection AddNaosMessagingFileSystem(
             this IServiceCollection services,
             IConfiguration configuration,
             Action<IMessageBroker> setupAction = null,
             string messageScope = null,
-            string section = "naos:messaging:filebased")
+            string section = "naos:messaging:fileSystem")
         {
             EnsureArg.IsNotNull(services, nameof(services));
 
@@ -35,6 +35,7 @@
                 var result = new FileSystemMessageBroker(
                         sp.GetRequiredService<ILogger<FileSystemMessageBroker>>(),
                         new ServiceProviderMessageHandlerFactory(sp),
+                        configuration.GetSection(section).Get<FileSystemConfiguration>(),
                         map: sp.GetRequiredService<ISubscriptionMap>(),
                         filterScope: Environment.GetEnvironmentVariable("ASPNETCORE_ISLOCAL").ToBool()
                             ? Environment.MachineName.Humanize().Dehumanize().ToLower()

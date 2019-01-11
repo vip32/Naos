@@ -11,6 +11,7 @@
     using Microsoft.AspNetCore.SignalR.Client;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
+    using Naos.Core.Infrastructure.Azure;
     using Naos.Core.Messaging.Domain.Model;
     using Newtonsoft.Json;
 
@@ -18,7 +19,7 @@
     {
         private readonly ILogger<SignalRServerlessMessageBroker> logger;
         private readonly IMessageHandlerFactory handlerFactory;
-        private readonly string connectionString;
+        private readonly SignalRConfiguration configuration;
         private readonly IHttpClientFactory httpClient;
         private readonly ISubscriptionMap map;
         private readonly string filterScope;
@@ -29,7 +30,7 @@
         public SignalRServerlessMessageBroker(
             ILogger<SignalRServerlessMessageBroker> logger,
             IMessageHandlerFactory handlerFactory,
-            string connectionString,
+            SignalRConfiguration configuration,
             IHttpClientFactory httpClient,
             ISubscriptionMap map = null,
             string filterScope = null,
@@ -37,17 +38,18 @@
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(handlerFactory, nameof(handlerFactory));
-            EnsureArg.IsNotNullOrEmpty(connectionString, nameof(connectionString));
+            EnsureArg.IsNotNull(configuration, nameof(configuration));
+            EnsureArg.IsNotNullOrEmpty(configuration.ConnectionString, nameof(configuration.ConnectionString));
             EnsureArg.IsNotNull(httpClient, nameof(httpClient));
 
             this.logger = logger;
             this.handlerFactory = handlerFactory;
-            this.connectionString = connectionString;
+            this.configuration = configuration;
             this.httpClient = httpClient;
             this.map = map ?? new SubscriptionMap();
             this.filterScope = filterScope;
             this.messageScope = messageScope ?? AppDomain.CurrentDomain.FriendlyName;
-            this.serviceUtils = new ServiceUtils(this.connectionString);
+            this.serviceUtils = new ServiceUtils(this.configuration.ConnectionString);
         }
 
         private string HubName => this.filterScope.IsNullOrEmpty() ? "naos_messaging".ToLower() : $"naos_messaging_{this.filterScope}".ToLower();

@@ -14,6 +14,7 @@
     {
         private readonly ILogger<FileSystemMessageBroker> logger;
         private readonly IMessageHandlerFactory handlerFactory;
+        private readonly FileSystemConfiguration configuration;
         private readonly ISubscriptionMap map;
         private readonly string filterScope;
         private readonly string messageScope;
@@ -22,6 +23,7 @@
         public FileSystemMessageBroker(
             ILogger<FileSystemMessageBroker> logger,
             IMessageHandlerFactory handlerFactory,
+            FileSystemConfiguration configuration = null,
             ISubscriptionMap map = null,
             string filterScope = null,
             string messageScope = "local") // message origin identifier
@@ -31,6 +33,7 @@
 
             this.logger = logger;
             this.handlerFactory = handlerFactory;
+            this.configuration = configuration ?? new FileSystemConfiguration();
             this.map = map ?? new SubscriptionMap();
             this.filterScope = filterScope;
             this.messageScope = messageScope ?? AppDomain.CurrentDomain.FriendlyName;
@@ -65,6 +68,7 @@
                 {
                     streamWriter.Write(SerializationHelper.JsonSerialize(message));
                     streamWriter.Flush();
+                    streamWriter.Close();
                 }
 
                 File.Move(fullFileName, fullFileName.SubstringTillLast(".")); // rename file
@@ -175,7 +179,7 @@
 
         private string GetDirectory(string messageName, string filterScope)
         {
-            return $@"{Path.GetTempPath()}naos_messaging\{filterScope}\{messageName}\".Replace("\\", @"\");
+            return $@"{this.configuration.Folder}naos_messaging\{filterScope}\{messageName}\".Replace("\\", @"\");
         }
 
         private void EnsureDirectory(string fullPath)
@@ -188,7 +192,8 @@
 
         private string ReadMessage(string fullPath)
         {
-            using (StreamReader reader = new StreamReader(fullPath))
+            System.Threading.Thread.Sleep(this.configuration.ProcessDelay); // this helps with locked files
+            using (var reader = new StreamReader(File.Open(fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)))
             {
                 return reader.ReadToEnd();
             }
