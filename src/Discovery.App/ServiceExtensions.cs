@@ -14,7 +14,7 @@
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddNaosDiscoveryLocal(this IServiceCollection services)
+        public static IServiceCollection AddNaosDiscoveryFileSystem(this IServiceCollection services)
         {
             EnsureArg.IsNotNull(services, nameof(services));
 
