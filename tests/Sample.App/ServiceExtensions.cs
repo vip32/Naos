@@ -3,7 +3,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
-    public static class ServiceRegistrations
+    public static class ServiceExtensions
     {
         public static IServiceCollection AddNaosApp(
             this IServiceCollection services,

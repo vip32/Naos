@@ -9,7 +9,7 @@
     using Naos.Sample.UserAccounts.Domain;
     using Naos.Sample.UserAccounts.EntityFramework;
 
-    public static partial class ServiceRegistrations
+    public static partial class ServiceExtensions
     {
         public static IServiceCollection AddSampleUserAccounts(
             this IServiceCollection services,

@@ -11,7 +11,7 @@
     using Naos.Core.Infrastructure.Azure;
     using Naos.Core.Operations.Infrastructure.Azure.LogAnalytics;
 
-    public static class ServiceRegistrations
+    public static class ServiceExtensions
     {
         private static IConfiguration internalConfiguration;
         private static LoggerConfiguration internalLoggerConfiguration;

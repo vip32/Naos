@@ -3,7 +3,7 @@
     using System;
     using Naos.Core.App.Commands;
 
-    public static class ServiceRegistrations
+    public static class ServiceExtensions
     {
         public static IServiceCollection AddNaosAppCommands(
             this IServiceCollection services)

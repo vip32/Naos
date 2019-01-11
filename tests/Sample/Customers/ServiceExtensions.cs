@@ -8,7 +8,7 @@
     using Naos.Core.Infrastructure.Azure.CosmosDb;
     using Naos.Sample.Customers.Domain;
 
-    public static partial class ServiceRegistrations
+    public static partial class ServiceExtensions
     {
         public static IServiceCollection AddSampleCustomers(
             this IServiceCollection services,

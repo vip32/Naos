@@ -7,7 +7,7 @@
     /// <summary>
     /// Extension methods for the correlation middleware.
     /// </summary>
-    public static class RequestResponseLoggingExtensions
+    public static class ApplicationExtensions
     {
         /// <summary>
         /// Enables correlation/request ids for the API request/responses.

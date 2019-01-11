@@ -5,7 +5,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Naos.Core.App.Exceptions.Web;
 
-    public static class ServiceRegistrations
+    public static class ServiceExtensions
     {
         public static IServiceCollection AddNaosExceptionHandling(
             this IServiceCollection services,

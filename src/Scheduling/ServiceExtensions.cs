@@ -7,7 +7,7 @@
     using Naos.Core.Scheduling.App.Web;
     using Naos.Core.Scheduling.Domain;
 
-    public static class ServiceRegistrations
+    public static class ServiceExtensions
     {
         public static IServiceCollection AddNaosScheduling(
         this IServiceCollection services,

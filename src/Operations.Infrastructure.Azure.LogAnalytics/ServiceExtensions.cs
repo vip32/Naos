@@ -7,7 +7,7 @@
     using Naos.Core.Operations.Infrastructure.Azure.LogAnalytics;
     using Naos.Core.Operations.Infrastructure.Azure.LogAnalytics.Repositories;
 
-    public static class ServiceRegistrations
+    public static class ServiceExtensions
     {
         public static IServiceCollection AddNaosOperationsLogAnalytics(
             this IServiceCollection services,

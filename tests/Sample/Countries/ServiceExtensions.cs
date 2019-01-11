@@ -9,7 +9,7 @@
     using Naos.Sample.Countries.Domain;
     using Naos.Sample.Countries.Infrastructure;
 
-    public static partial class ServiceRegistrations
+    public static partial class ServiceExtensions
     {
         public static IServiceCollection AddSampleCountries(
             this IServiceCollection services)

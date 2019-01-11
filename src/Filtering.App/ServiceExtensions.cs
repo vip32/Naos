@@ -4,7 +4,7 @@
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Naos.Core.Filtering.App;
 
-    public static class ServiceRegistrations
+    public static class ServiceExtensions
     {
         public static IServiceCollection AddNaosFiltering(
             this IServiceCollection services)

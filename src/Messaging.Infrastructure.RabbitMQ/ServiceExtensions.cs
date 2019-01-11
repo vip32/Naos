@@ -9,7 +9,7 @@
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.Infrastructure.RabbitMQ;
 
-    public static class ServiceRegistrations
+    public static class ServiceExtensions
     {
         public static IServiceCollection AddNaosMessagingRabbitMQ(
             this IServiceCollection services,

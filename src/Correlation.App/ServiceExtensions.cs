@@ -7,7 +7,7 @@
     /// <summary>
     /// Extensions on the <see cref="IServiceCollection"/>.
     /// </summary>
-    public static class ServiceRegistrations
+    public static class ServiceExtensions
     {
         /// <summary>
         /// Adds required services to support the Correlation ID functionality.
