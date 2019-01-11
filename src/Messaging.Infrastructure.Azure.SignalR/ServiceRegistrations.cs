@@ -38,6 +38,7 @@
                 var result = new SignalRServerlessMessageBroker(
                         sp.GetRequiredService<ILogger<SignalRServerlessMessageBroker>>(),
                         new ServiceProviderMessageHandlerFactory(sp),
+                        // TODO: move to KV config
                         "Endpoint=",
                         sp.GetRequiredService<IHttpClientFactory>(),
                         map: sp.GetRequiredService<ISubscriptionMap>(),
