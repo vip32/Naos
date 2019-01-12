@@ -44,7 +44,7 @@
             services.AddTransient<HttpClientLogHandler>();
             services.AddHttpClient("default")
                 .AddHttpMessageHandler<HttpClientCorrelationHandler>();
-            services.Replace(ServiceDescriptor.Singleton<Microsoft.Extensions.Http.IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
+            services.Replace(Microsoft.Extensions.DependencyInjection.ServiceDescriptor.Singleton<Microsoft.Extensions.Http.IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
 
             services
                 .AddMiddlewareAnalysis()
