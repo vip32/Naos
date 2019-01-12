@@ -6,6 +6,7 @@
     public class FileSystemServiceRegistry : IServiceRegistry
     {
         private readonly FileSystemServiceRegistryConfiguration configuration;
+        private List<ServiceRegistration> store = new List<ServiceRegistration>();
 
         public FileSystemServiceRegistry(FileSystemServiceRegistryConfiguration configuration)
         {
@@ -22,12 +23,14 @@
         public void Register(ServiceRegistration registration)
         {
             // TODO: store registration
+            this.store.Add(registration);
         }
 
         public IEnumerable<ServiceRegistration> Registrations()
         {
             // TODO: return list
-            return Enumerable.Empty<ServiceRegistration>(); // omit unhealthy registrations!
+            //return Enumerable.Empty<ServiceRegistration>(); // omit unhealthy registrations!
+            return this.store;
         }
     }
 }

@@ -20,13 +20,14 @@
         public static IServiceCollection AddNaosDiscoveryFileSystem(
             this IServiceCollection services,
             IConfiguration configuration,
-            string section = "naos:serviceDiscovery:registries:fileSystem")
+            string section = "naos:serviceDiscovery:registry:fileSystem")
         {
             EnsureArg.IsNotNull(services, nameof(services));
 
             var fileSystemConfiguration = configuration.GetSection(section).Get<FileSystemServiceRegistryConfiguration>();
 
             services.TryAddSingleton<IServiceRegistry>(sp => new FileSystemServiceRegistry(fileSystemConfiguration));
+            services.TryAddSingleton<IDiscoveryClient, DiscoveryClient>();
 
             return services;
         }

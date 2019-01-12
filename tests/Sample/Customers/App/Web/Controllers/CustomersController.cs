@@ -10,6 +10,7 @@
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
     using Naos.Core.Correlation.App;
+    using Naos.Sample.Customers.App.Client;
     using Naos.Sample.Customers.Domain;
 
     [Route("api/[controller]")]
@@ -23,11 +24,13 @@
         public CustomersController(
             ILogger<CustomersController> logger,
             ICustomerRepository repository,
-            ICorrelationContextAccessor correlationContext)
+            ICorrelationContextAccessor correlationContext,
+            UserAccountsProxy userAccountsProxy)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(repository, nameof(repository));
             EnsureArg.IsNotNull(correlationContext, nameof(correlationContext));
+            EnsureArg.IsNotNull(userAccountsProxy, nameof(userAccountsProxy));
 
             this.logger = logger;
             this.repository = repository;

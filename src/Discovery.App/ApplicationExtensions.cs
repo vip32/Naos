@@ -79,8 +79,8 @@
                 var uri = new Uri(address);
                 var registration = new ServiceRegistration()
                 {
-                    Id = $"{AppDomain.CurrentDomain.FriendlyName}-{HashAlgorithm.ComputeHash(uri)}", // TODO: use servicedescriptor for id/name
-                    Name = AppDomain.CurrentDomain.FriendlyName,
+                    Id = $"useraccounts-{HashAlgorithm.ComputeHash(uri.ToString())}", // TODO: use resolved servicedescriptor for id/name  (AppDomain.CurrentDomain.FriendlyName)
+                    Name = "useraccounts",
                     Address = $"{uri.Scheme}://{uri.Host}",
                     Port = uri.Port
                 };

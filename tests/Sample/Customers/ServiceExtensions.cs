@@ -6,6 +6,7 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Infrastructure.Azure.CosmosDb;
+    using Naos.Sample.Customers.App.Client;
     using Naos.Sample.Customers.Domain;
 
     public static partial class ServiceExtensions
@@ -20,6 +21,7 @@
             var cosmosDbConfiguration = configuration.GetSection(section).Get<CosmosDbConfiguration>();
             Ensure.That(cosmosDbConfiguration).IsNotNull();
 
+            services.AddHttpClient<UserAccountsProxy>();
             services.AddScoped<ICustomerRepository>(sp =>
             {
                 return new CustomerRepository(
