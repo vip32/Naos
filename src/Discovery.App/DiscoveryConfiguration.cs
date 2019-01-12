@@ -1,9 +1,9 @@
 ﻿namespace Naos.Core.App.Correlation.App.Web
 {
     /// <summary>
-    /// Options for discovery.
+    /// Service discovery configuration.
     /// </summary>
-    public class DiscoveryOptions
+    public class DiscoveryConfiguration
     {
         public string[] Addresses { get; set; }
     }

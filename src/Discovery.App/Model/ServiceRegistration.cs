@@ -4,6 +4,8 @@
     {
         public string Id { get; set; }
 
+        public bool Enabled { get; set; } = true;
+
         public string Name { get; set; }
 
         public string Address { get; set; }

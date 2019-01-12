@@ -58,6 +58,7 @@
 
             // naos application services
             services
+                .AddNaosDiscoveryFileSystem(this.Configuration)
                 .AddNaosCorrelation()
                 .AddNaosFiltering()
                 .AddNaosOperationsSerilog(this.Configuration)
@@ -86,7 +87,7 @@
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, DiagnosticListener diagnosticListener, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, DiagnosticListener diagnosticListener, IHostingEnvironment env, IApplicationLifetime lifetime)
         {
             this.logger.LogInformation($"app {env.ApplicationName} environment: {env.EnvironmentName}");
             //diagnosticListener.SubscribeWithAdapter(new NaosDiagnosticListener());
@@ -98,6 +99,7 @@
 
             // naos middleware
             app.UseHttpsRedirection()
+               .UseNaosDiscovery(this.Configuration, lifetime)
                .UseNaosCorrelation()
                .UseNaosOperationsRequestResponseLogging()
                .UseNaosFiltering()
