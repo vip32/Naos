@@ -37,7 +37,6 @@
     <ProjectReference Include="..\..\src\App\App.csproj" />
     <ProjectReference Include="..\..\src\Common\Common.csproj" />
     <ProjectReference Include="..\..\src\Correlation.App\Correlation.App.csproj" />
-    <ProjectReference Include="..\..\src\Discovery.App\Discovery.App.csproj" />
     <ProjectReference Include="..\..\src\Filtering.App\Filtering.App.csproj" />
     <ProjectReference Include="..\..\src\Messaging.Infrastructure.Azure\Messaging.Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\..\src\Messaging.Infrastructure.FileSystem\Messaging.Infrastructure.FileSystem.csproj" />
@@ -45,6 +44,8 @@
     <ProjectReference Include="..\..\src\Operations.Infrastructure.Azure.LogAnalytics\Operations.Infrastructure.Azure.LogAnalytics.csproj" />
     <ProjectReference Include="..\..\src\Scheduling.App.Web\Scheduling.App.Web.csproj" />
     <ProjectReference Include="..\..\src\Scheduling\Scheduling.csproj" />
+    <ProjectReference Include="..\..\src\ServiceContext.App\ServiceContext.App.csproj" />
+    <ProjectReference Include="..\..\src\ServiceDiscovery.App\ServiceDiscovery.App.csproj" />
     <ProjectReference Include="..\Sample.App\Sample.App.csproj" />
     <ProjectReference Include="..\Sample\Sample.csproj" />
   </ItemGroup>

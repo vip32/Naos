@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Discovery.App
+﻿namespace Naos.Core.ServiceDiscovery.App
 {
     using System;
 

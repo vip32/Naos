@@ -58,6 +58,7 @@
 
             // naos application services
             services
+                .AddNaosServiceContext(this.Configuration, "Product", "Capability", tags: new[] { "Customers", "UserAccounts", "Countries" })
                 .AddNaosDiscoveryFileSystem(this.Configuration)
                 .AddNaosCorrelation()
                 .AddNaosFiltering()
@@ -99,7 +100,6 @@
 
             // naos middleware
             app.UseHttpsRedirection()
-               .UseNaosDiscovery(this.Configuration, lifetime)
                .UseNaosCorrelation()
                .UseNaosOperationsRequestResponseLogging()
                .UseNaosFiltering()

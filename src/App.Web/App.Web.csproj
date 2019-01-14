@@ -15,8 +15,4 @@
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-      
-  </ItemGroup>
-
 </Project>

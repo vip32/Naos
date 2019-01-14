@@ -1,6 +1,8 @@
 ﻿namespace Naos.Core.App
 {
-    public class ServiceDescriptor // TODO: or is this pure App layer
+    using System.Linq;
+
+    public class ServiceDescriptor // APP layer?
     {
         public string Name => $"{this.Product}.{this.Capability}";
 
@@ -10,9 +12,7 @@
 
         public string Version { get; set; } = "1.0.0";
 
-        public string VersionInformation { get; set; } // TODO: does not belong here
-
-        public string BuildDate { get; set; } // TODO: does not belong here + does not have the right date right now
+        public string[] Tags { get; set; } = Enumerable.Empty<string>().ToArray();
 
         public override string ToString()
         {

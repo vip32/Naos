@@ -8,10 +8,6 @@
             this.TenantId = "default";
         }
 
-        public string CorrelationId { get; set; }
-
-        public string RequestId { get; set; }
-
         public string TenantId { get; set; }
 
         public bool TestMode { get; set; }
@@ -23,5 +19,7 @@
         public ServiceDescriptor Service { get; set; }
 
         public ServiceDescriptor Referrer { get; set; }
+
+        // runtimedescriptor?
     }
 }

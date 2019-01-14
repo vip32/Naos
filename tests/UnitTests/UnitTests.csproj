@@ -57,6 +57,8 @@
     <ProjectReference Include="..\..\src\Operations.Infrastructure.Azure.LogAnalytics\Operations.Infrastructure.Azure.LogAnalytics.csproj" />
     <ProjectReference Include="..\..\src\Operations\Operations.csproj" />
     <ProjectReference Include="..\..\src\Scheduling\Scheduling.csproj" />
+    <ProjectReference Include="..\..\src\ServiceContext.App\ServiceContext.App.csproj" />
+    <ProjectReference Include="..\..\src\ServiceDiscovery.App\ServiceDiscovery.App.csproj" />
     <ProjectReference Include="..\Sample.App.IntegrationTests\Sample.App.IntegrationTests.csproj" />
     <ProjectReference Include="..\Sample.App.Web\Sample.App.Web.csproj" />
     <ProjectReference Include="..\Sample.App\Sample.App.csproj" />

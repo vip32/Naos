@@ -3,12 +3,15 @@
     using EnsureThat;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection.Extensions;
-    using Naos.Core.Discovery.App;
+    using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Logging;
+    using Naos.Core.ServiceDiscovery.App;
+    using Naos.Core.ServiceDiscovery.App.Web;
 
     /// <summary>
     /// Extensions on the <see cref="IServiceCollection"/>.
     /// </summary>
-    public static class ServiceExtensions // TODO: rename to ServiceExtensions
+    public static class ServiceExtensions
     {
         /// <summary>
         /// Adds required services to support the Discovery functionality.
@@ -20,13 +23,14 @@
         public static IServiceCollection AddNaosDiscoveryFileSystem(
             this IServiceCollection services,
             IConfiguration configuration,
-            string section = "naos:serviceDiscovery:registry:fileSystem")
+            string section = "naos:serviceDiscovery")
         {
             EnsureArg.IsNotNull(services, nameof(services));
 
-            var fileSystemConfiguration = configuration.GetSection(section).Get<FileSystemServiceRegistryConfiguration>();
-
-            services.TryAddSingleton<IServiceRegistry>(sp => new FileSystemServiceRegistry(fileSystemConfiguration));
+            services.AddSingleton(sp => configuration.GetSection(section).Get<DiscoveryConfiguration>());
+            services.AddSingleton<IHostedService, ServiceDiscoveryHostedService>();
+            services.TryAddSingleton<IServiceRegistry>(sp => new FileSystemServiceRegistry(
+                sp.GetRequiredService<ILogger<FileSystemServiceRegistry>>(), configuration.GetSection($"{section}:registry:fileSystem").Get<FileSystemServiceRegistryConfiguration>()));
             services.TryAddSingleton<IDiscoveryClient, DiscoveryClient>();
 
             return services;

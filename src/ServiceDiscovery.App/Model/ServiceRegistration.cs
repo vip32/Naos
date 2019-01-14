@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Discovery.App
+﻿namespace Naos.Core.ServiceDiscovery.App
 {
     public class ServiceRegistration // https://cecilphillip.com/using-consul-for-service-discovery-with-asp-net-core/
     {

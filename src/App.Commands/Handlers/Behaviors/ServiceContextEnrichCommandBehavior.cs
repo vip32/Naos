@@ -11,7 +11,7 @@
         /// Initializes a new instance of the <see cref="ServiceContextEnrichCommandBehavior"/> class.
         /// </summary>
         /// <param name="serviceContext">The service context.</param>
-        public ServiceContextEnrichCommandBehavior(ServiceContext serviceContext)
+        public ServiceContextEnrichCommandBehavior(ServiceContext serviceContext) // TODO: accessor
         {
             EnsureArg.IsNotNull(serviceContext);
 
@@ -28,7 +28,7 @@
         {
             EnsureArg.IsNotNull(command);
 
-            command.Update(this.serviceContext.RequestId, this.serviceContext.CorrelationId);
+            //command.Update(this.serviceContext.RequestId, this.serviceContext.CorrelationId);
 
             return await Task.FromResult(new CommandBehaviorResult()).ConfigureAwait(false);
         }

@@ -1,7 +1,7 @@
 ﻿namespace Naos.Sample.Customers.App.Client
 {
     using System.Net.Http;
-    using Naos.Core.Discovery.App;
+    using Naos.Core.ServiceDiscovery.App;
 
     public class UserAccountsProxy : DiscoveryProxy
     {
@@ -10,6 +10,6 @@
         {
         }
 
-        public override string ServiceName => "useraccounts";
+        public override string ServiceName => "Sample.UserAccounts"; //= ServiceDescriptor.Product ServiceDescriptor.Capability
     }
 }
