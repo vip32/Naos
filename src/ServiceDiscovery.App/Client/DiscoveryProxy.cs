@@ -5,24 +5,41 @@
     using System.Net.Http;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
 
     public abstract class DiscoveryProxy
     {
-        public DiscoveryProxy(ILogger<DiscoveryProxy> logger, HttpClient httpClient, IDiscoveryClient discoveryClient)
+        public DiscoveryProxy(
+            ILogger<DiscoveryProxy> logger,
+            HttpClient httpClient,
+            IDiscoveryClient discoveryClient,
+            string serviceName = null,
+            string serviceTag = null)
         {
             EnsureArg.IsNotNull(httpClient, nameof(httpClient)); // TYPED CLIENT > https://docs.microsoft.com/en-us/aspnet/core/fundamentals/http-requests?view=aspnetcore-2.2
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(discoveryClient, nameof(discoveryClient));
 
-            var serviceRegistration = discoveryClient.ServicesAsync(this.ServiceName).Result.FirstOrDefault();
-            if(serviceRegistration != null)
+            var registrations = discoveryClient.ServicesAsync().Result;
+            if (!serviceName.IsNullOrEmpty())
             {
-                httpClient.BaseAddress = new Uri($"{serviceRegistration.Address}:{serviceRegistration.Port}".TrimEnd(':'));
-                logger.LogInformation("CLIENT discovery httpclient (service={ServiceName}, address={BaseAddress})", this.ServiceName, httpClient.BaseAddress);
+                registrations = registrations?.Where(r => r.Name.Equals(serviceName, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (!serviceTag.IsNullOrEmpty())
+            {
+                registrations = registrations?.Where(r => serviceTag.EqualsAny(r.Tags));
+            }
+
+            var registration = registrations?.FirstOrDefault();
+            if (registration != null)
+            {
+                httpClient.BaseAddress = new Uri($"{registration.Address}:{registration.Port}".TrimEnd(':'));
+                logger.LogInformation("CLIENT discovery httpclient (service={ServiceName}, tag={ServiceTag}, address={BaseAddress})", serviceName, serviceTag, httpClient.BaseAddress);
             }
             else
             {
-                logger.LogWarning("CLIENT discovery httpclient (name={ServiceName}, address=not found in registry)", this.ServiceName);
+                logger.LogWarning("CLIENT discovery httpclient (name={ServiceName}, tag={ServiceTag}, address=not found in registry)", serviceName, serviceTag);
             }
 
             // TODO: get serviceregistration by name OR any of the tags
@@ -34,8 +51,6 @@
 
             this.HttpClient = httpClient;
         }
-
-        public abstract string ServiceName { get; }
 
         public HttpClient HttpClient { get; }
     }

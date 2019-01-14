@@ -7,10 +7,8 @@
     public class UserAccountsProxy : DiscoveryProxy
     {
         public UserAccountsProxy(HttpClient httpClient, ILogger<UserAccountsProxy> logger, IDiscoveryClient discoveryClient)
-            : base(logger, httpClient, discoveryClient)
+            : base(logger, httpClient, discoveryClient, "Product.Capability", "UserAccounts")
         {
         }
-
-        public override string ServiceName => "Product.Capability"; //= ServiceDescriptor.Product Product.Capability
     }
 }
