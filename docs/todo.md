@@ -84,6 +84,7 @@ service: service registry (steeltoe) https://thenewstack.io/steeltoe-modernize-n
 service: service registry (consul) https://www.codeproject.com/Articles/1248381/Microservices-Service-Discovery
                                    http://michaco.net/blog/ServiceDiscoveryAndHealthChecksInAspNetCoreWithConsul
                                    https://open.microsoft.com/2018/10/04/use-case-modern-service-discovery-consul-azure-part-1/
+         service registry reverse proxy https://auth0.com/blog/building-a-reverse-proxy-in-dot-net-core/
 
 operations: log analytics dashboard (operations) https://blogs.technet.microsoft.com/livedevopsinjapan/2017/08/23/log-analytics-log-search-rest-api-for-c/   
             https://techcommunity.microsoft.com/t5/Azure-Log-Analytics/Authenticate-with-client-credentials-Log-Analytics/td-p/104996  
