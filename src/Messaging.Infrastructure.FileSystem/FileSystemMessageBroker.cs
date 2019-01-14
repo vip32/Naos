@@ -127,7 +127,7 @@
         {
             var processed = false;
             var messageName = fullPath.SubstringTillLast(@"\").SubstringFromLast(@"\");
-            var messageBody = this.ReadMessage(fullPath);
+            var messageBody = this.ReadFile(fullPath);
 
             if (this.map.Exists(messageName))
             {
@@ -179,7 +179,7 @@
 
         private string GetDirectory(string messageName, string filterScope)
         {
-            return $@"{this.configuration.Folder}naos_messaging\{filterScope}\{messageName}\".Replace("\\", @"\");
+            return $@"{this.configuration.Folder.EmptyToNull() ?? Path.GetTempPath()}naos_messaging\{filterScope}\{messageName}\".Replace("\\", @"\");
         }
 
         private void EnsureDirectory(string fullPath)
@@ -190,7 +190,7 @@
             }
         }
 
-        private string ReadMessage(string fullPath)
+        private string ReadFile(string fullPath)
         {
             System.Threading.Thread.Sleep(this.configuration.ProcessDelay); // this helps with locked files
             using (var reader = new StreamReader(File.Open(fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)))
