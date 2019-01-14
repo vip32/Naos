@@ -23,7 +23,7 @@
             var registrations = discoveryClient.ServicesAsync().Result;
             if (!serviceName.IsNullOrEmpty())
             {
-                registrations = registrations?.Where(r => r.Name.Equals(serviceName, StringComparison.OrdinalIgnoreCase));
+                registrations = registrations?.Where(r => r.Name?.Equals(serviceName, StringComparison.OrdinalIgnoreCase) == true);
             }
 
             if (!serviceTag.IsNullOrEmpty())

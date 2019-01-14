@@ -26,7 +26,7 @@
         public async Task<IEnumerable<ServiceRegistration>> ServicesAsync(string name)
         {
             return (await this.registry.RegistrationsAsync()).NullToEmpty()
-                .Where(r => r.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+                .Where(r => r.Name?.Equals(name, StringComparison.OrdinalIgnoreCase) == true);
         }
     }
 }
