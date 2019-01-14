@@ -9,7 +9,7 @@
 
     public static class ServiceExtensions
     {
-        public static IServiceCollection AddNaosScheduling(
+        public static IServiceCollection AddNaosJobScheduling(
         this IServiceCollection services,
         Action<JobSchedulerSettings> setupAction = null,
         string section = "naos:scheduling")

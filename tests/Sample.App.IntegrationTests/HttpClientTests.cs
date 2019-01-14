@@ -29,7 +29,7 @@
             this.services.Replace(Microsoft.Extensions.DependencyInjection.ServiceDescriptor.Singleton<IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
 
             this.services
-                .AddNaosCorrelation()
+                .AddNaosRequestCorrelation()
                 .AddNaosOperationsSerilog(configuration);
 
             this.ServiceProvider = this.services.BuildServiceProvider();

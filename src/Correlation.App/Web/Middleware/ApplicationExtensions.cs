@@ -16,7 +16,7 @@
         /// </summary>
         /// <param name="app"></param>
         /// <returns></returns>
-        public static IApplicationBuilder UseNaosCorrelation(this IApplicationBuilder app)
+        public static IApplicationBuilder UseNaosRequestCorrelation(this IApplicationBuilder app)
         {
             EnsureArg.IsNotNull(app, nameof(app));
 
@@ -36,7 +36,7 @@
 
             if (app.ApplicationServices.GetService(typeof(ICorrelationContextFactory)) == null)
             {
-                throw new InvalidOperationException($"Unable to find the required services. You must call the {nameof(Microsoft.Extensions.DependencyInjection.ServiceExtensions.AddNaosCorrelation)} method in ConfigureServices in the application startup code.");
+                throw new InvalidOperationException($"Unable to find the required services. You must call the {nameof(Microsoft.Extensions.DependencyInjection.ServiceExtensions.AddNaosRequestCorrelation)} method in ConfigureServices in the application startup code.");
             }
 
             return app.UseMiddleware<CorrelationMiddleware>(Options.Create(options));

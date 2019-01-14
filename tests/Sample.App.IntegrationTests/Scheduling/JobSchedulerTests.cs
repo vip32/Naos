@@ -20,7 +20,7 @@
 
             this.services
                 .AddNaosOperationsSerilog(configuration)
-                .AddNaosScheduling();
+                .AddNaosJobScheduling();
 
             this.services.AddScoped<StubProbe>();
 

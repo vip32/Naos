@@ -59,13 +59,13 @@
             // naos application services
             services
                 .AddNaosServiceContext(this.Configuration, "Product", "Capability", tags: new[] { "Customers", "UserAccounts", "Countries" })
-                .AddNaosDiscoveryFileSystem(this.Configuration)
-                .AddNaosCorrelation()
-                .AddNaosFiltering()
+                .AddNaosServiceDiscoveryFileSystem(this.Configuration)
+                .AddNaosRequestCorrelation()
+                .AddNaosRequestFiltering()
                 .AddNaosOperationsSerilog(this.Configuration)
                 .AddNaosOperationsLogAnalytics(this.Configuration)
                 .AddNaosExceptionHandling(/*env.IsProduction()*/)
-                .AddNaosScheduling(s => s
+                .AddNaosJobScheduling(s => s
                     .SetEnabled(false)
                     .Register<DummyJob>("job1", Cron.Minutely(), (j) => j.LogMessageAsync("+++ hello from job1 +++", CancellationToken.None))
                     .Register<DummyJob>("job2", Cron.MinuteInterval(2), j => j.LogMessageAsync("+++ hello from job2 +++", CancellationToken.None, true), enabled: false)
@@ -100,9 +100,9 @@
 
             // naos middleware
             app.UseHttpsRedirection()
-               .UseNaosCorrelation()
+               .UseNaosRequestCorrelation()
                .UseNaosOperationsRequestResponseLogging()
-               .UseNaosFiltering()
+               .UseNaosRequestFiltering()
                .UseNaosExceptionHandling();
 
             app.UseSwagger();

@@ -14,7 +14,7 @@
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddNaosCorrelation(this IServiceCollection services)
+        public static IServiceCollection AddNaosRequestCorrelation(this IServiceCollection services)
         {
             EnsureArg.IsNotNull(services, nameof(services));
 

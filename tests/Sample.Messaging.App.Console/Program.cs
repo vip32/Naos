@@ -30,7 +30,7 @@
 
                     // naos application services
                     services
-                        .AddNaosCorrelation()
+                        .AddNaosRequestCorrelation()
                         .AddNaosOperationsSerilog(configuration)
                         //.AddNaosMessagingSignalR(configuration)
                         .AddNaosMessagingFileSystem(configuration)

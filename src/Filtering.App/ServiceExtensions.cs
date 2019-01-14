@@ -6,7 +6,7 @@
 
     public static class ServiceExtensions
     {
-        public static IServiceCollection AddNaosFiltering(
+        public static IServiceCollection AddNaosRequestFiltering(
             this IServiceCollection services)
         {
             EnsureArg.IsNotNull(services, nameof(services));

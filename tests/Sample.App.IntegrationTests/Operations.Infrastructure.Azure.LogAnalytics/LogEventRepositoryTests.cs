@@ -18,7 +18,7 @@
             this.services
                 .AddNaosOperationsSerilog(configuration)
                 .AddNaosOperationsLogAnalytics(configuration)
-                .AddNaosScheduling();
+                .AddNaosJobScheduling();
 
             this.ServiceProvider = this.services.BuildServiceProvider();
         }

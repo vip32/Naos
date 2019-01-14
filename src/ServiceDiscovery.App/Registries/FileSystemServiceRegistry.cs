@@ -94,6 +94,11 @@
                     this.RefreshRegistrations(this.directory);
                 };
 
+                this.watcher.Changed += (sender, e) =>
+                {
+                    this.RefreshRegistrations(this.directory);
+                };
+
                 this.watcher.Deleted += (sender, e) =>
                 {
                     this.RefreshRegistrations(this.directory);
