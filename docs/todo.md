@@ -28,6 +28,7 @@ polly logging ctx https://github.com/stevejgordon/PollyLoggingContextSample
 multi tenant (tenancy) https://github.com/Finbuckle/Finbuckle.MultiTenant
 
 inter service JSON RPC http://www.jsonrpc.org/specification
+                       service-bus: https://github.com/Azure/azure-service-bus/tree/master/samples/DotNet/Microsoft.Azure.ServiceBus/QueuesRequestResponse
                        https://github.com/ipjohnson/EasyRpc (incl authorization, client, dotnet di, messagepack transport) 
                        https://github.com/alexanderkozlenko/aspnetcore-json-rpc (simple, only http transport) + client https://github.com/alexanderkozlenko/json-rpc-client
                        https://github.com/edjCase/JsonRpc

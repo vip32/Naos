@@ -70,7 +70,6 @@
                 .AddNaosOperationsLogAnalytics(this.Configuration)
                 .AddNaosExceptionHandling(/*env.IsProduction()*/)
                 .AddNaosJobScheduling(s => s
-                    .SetEnabled(false)
                     .Register<DummyJob>("job1", Cron.Minutely(), (j) => j.LogMessageAsync("+++ hello from job1 +++", CancellationToken.None))
                     .Register<DummyJob>("job2", Cron.MinuteInterval(2), j => j.LogMessageAsync("+++ hello from job2 +++", CancellationToken.None, true), enabled: false)
                     .Register<DummyJob>("longjob3", Cron.Minutely(), j => j.LongRunningAsync("+++ hello from longjob3 +++", CancellationToken.None)))
@@ -115,12 +114,12 @@
 
             // https://blog.elmah.io/asp-net-core-2-2-health-checks-explained/
             // https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks/blob/master/src/HealthChecks.UI/ServiceCollectionExtensions.cs
-            app.UseHealthChecks("/health", new HealthCheckOptions // TODO: move to AddNaosOperationsHealthChecks
+            app.UseHealthChecks("/health", new HealthCheckOptions // TODO: move to UseNaosOperationsHealthChecks
             {
                 ResponseWriter = async (c, r) =>
                 {
                     c.Response.ContentType = ContentType.JSON.ToValue();
-                    var result = JsonConvert.SerializeObject(new
+                    await c.Response.WriteAsync(JsonConvert.SerializeObject(new
                     {
                         status = r.Status.ToString(),
                         took = r.TotalDuration.ToString(),
@@ -132,8 +131,7 @@
                             took = e.Value.Duration.ToString(),
                             message = e.Value.Exception?.Message
                         })
-                    }, DefaultJsonSerializerSettings.Create());
-                    await c.Response.WriteAsync(result);
+                    }, DefaultJsonSerializerSettings.Create()));
                 }
             });
 
