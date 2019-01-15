@@ -69,6 +69,7 @@
                             //Runtime = runtimeDescriptor,
                             Endpoints = new Dictionary<string, string>
                             {
+                                // TODO: get these endpoints through DI for all active capabilities
                                 ["logevents-ui"] = $"{context.Request.Uri()}api/operations/logevents/dashboard",
                                 ["logevents"] = $"{context.Request.Uri()}api/operations/logevents",
                                 ["swagger-ui"] = $"{context.Request.Uri()}swagger/index.html",

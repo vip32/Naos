@@ -115,7 +115,7 @@
 
             // https://blog.elmah.io/asp-net-core-2-2-health-checks-explained/
             // https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks/blob/master/src/HealthChecks.UI/ServiceCollectionExtensions.cs
-            app.UseHealthChecks("/health", new HealthCheckOptions
+            app.UseHealthChecks("/health", new HealthCheckOptions // TODO: move to AddNaosOperationsHealthChecks
             {
                 ResponseWriter = async (c, r) =>
                 {
