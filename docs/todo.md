@@ -50,9 +50,7 @@ identity overview      https://developer.okta.com/blog/2018/03/23/token-authenti
 identity.openiddict    https://github.com/openiddict/openiddict-core
 identity.b2c
 
-messaging: folder based provider + filewatcher (localhost usage)
 messaging: message broker based on rabitmq (for local usage)
-messaging: singalr based provider?
 messaging: in memory provider https://docs.microsoft.com/en-us/dotnet/standard/io/memory-mapped-files
                               https://dotnetcodr.com/2015/11/18/messaging-through-memory-mapped-files-in-net-c/
 
