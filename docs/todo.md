@@ -50,7 +50,7 @@ identity overview      https://developer.okta.com/blog/2018/03/23/token-authenti
 identity.openiddict    https://github.com/openiddict/openiddict-core
 identity.b2c
 
-messaging: message broker based on rabitmq (for local usage)
+messaging: message broker based on rabittmq (for local usage)
 messaging: in memory provider https://docs.microsoft.com/en-us/dotnet/standard/io/memory-mapped-files
                               https://dotnetcodr.com/2015/11/18/messaging-through-memory-mapped-files-in-net-c/
 
@@ -80,10 +80,10 @@ service: task scheduler (coravel) https://github.com/jamesmh/coravel/blob/master
 service: service registry (steeltoe) https://thenewstack.io/steeltoe-modernize-net-apps-for-a-microservices-architecture/
                                      https://steeltoe.io/docs/steeltoe-discovery/
 
-service: service registry (consul) https://www.codeproject.com/Articles/1248381/Microservices-Service-Discovery
+service: service discovery (consul) https://www.codeproject.com/Articles/1248381/Microservices-Service-Discovery
                                    http://michaco.net/blog/ServiceDiscoveryAndHealthChecksInAspNetCoreWithConsul
                                    https://open.microsoft.com/2018/10/04/use-case-modern-service-discovery-consul-azure-part-1/
-         service registry reverse proxy https://auth0.com/blog/building-a-reverse-proxy-in-dot-net-core/
+         service discovery reverse proxy https://auth0.com/blog/building-a-reverse-proxy-in-dot-net-core/
 
 operations: log analytics dashboard (operations) https://blogs.technet.microsoft.com/livedevopsinjapan/2017/08/23/log-analytics-log-search-rest-api-for-c/   
             https://techcommunity.microsoft.com/t5/Azure-Log-Analytics/Authenticate-with-client-credentials-Log-Analytics/td-p/104996  
@@ -126,7 +126,7 @@ Operations.Infrastructure.Azure.CosmosDb
 === MODULES === Messaging
 Messaging
 Messaging.Infrastructure.Azure
-Messaging.Infrastructure.RabitMQ
+Messaging.Infrastructure.RabittMQ
 
 === MODULES === Journaling
 Journaling
