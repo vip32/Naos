@@ -51,7 +51,7 @@
                 this.logger.LogInformation($"SERVICE http request  ({{RequestId}}) service={serviceDescriptor.Name}, tags={string.Join("|", serviceDescriptor.Tags.NullToEmpty())}", context.GetRequestId());
                 await this.next(context);
 
-                if (context.Request.Path == "/") // root
+                if (context.Request.Path == "/" && this.options.RootEnabled) // root
                 {
                     context.Response.StatusCode = 200; // TODO: however a 404 will be logged
                     context.Response.ContentType = ContentType.JSON.ToValue();
@@ -67,7 +67,7 @@
                                 //["username"] = serviceContext.Username
                             },
                             //Runtime = runtimeDescriptor,
-                            Endpoints = new Dictionary<string, string>
+                            Actions = new Dictionary<string, string>
                             {
                                 // TODO: get these endpoints through DI for all active capabilities
                                 ["logevents-ui"] = $"{context.Request.Uri()}api/operations/logevents/dashboard",
@@ -79,7 +79,7 @@
                             }
                         }, DefaultJsonSerializerSettings.Create())).ConfigureAwait(false);
                 }
-                else if (context.Request.Path == "/echo")
+                else if (context.Request.Path == "/echo" && this.options.EchoEnabled)
                 {
                     context.Response.ContentType = ContentType.TEXT.ToValue();
                     context.Response.StatusCode = 200;
@@ -100,7 +100,7 @@
 
             public RuntimeDescriptor Runtime { get; set; }
 
-            public IDictionary<string, string> Endpoints { get; set; }
+            public IDictionary<string, string> Actions { get; set; }
         }
     }
 }
