@@ -54,9 +54,9 @@
                 content = await this.GetRequestContent(request).ConfigureAwait(false);
             }
 
-            var message = $"CLIENT http request  ({requestId}): [{request?.Method}] {request.RequestUri}";
+            var message = $"CLIENT http request   ({{RequestId}}) {request?.Method} {{Url}}";
 
-            this.WriteLog(message: message);
+            this.WriteLog(message: message, args: new object[] { requestId, request.RequestUri });
         }
 
         protected async Task LogHttpResponse(HttpResponseMessage response, string requestId, TimeSpan elapsed)
@@ -77,12 +77,12 @@
                 content = await this.GetResponseContent(response).ConfigureAwait(false);
             }
 
-            var message = $"CLIENT http response ({requestId}): [{response.RequestMessage.Method}] {response.RequestMessage.RequestUri} {(int)response.StatusCode} ({response.StatusCode}) -> took {elapsed.Humanize(3)}";
+            var message = $"CLIENT http response  ({{RequestId}}) {response.RequestMessage.Method} {{Url}} {{StatusCode}} ({response.StatusCode}) -> took {elapsed.Humanize(3)}";
 
-            this.WriteLog(message, null, level);
+            this.WriteLog(message, null, level, args: new object[] { requestId, response.RequestMessage.RequestUri, (int)response.StatusCode });
         }
 
-        private void WriteLog(string message, Exception exception = null, LogLevel level = LogLevel.Information)
+        private void WriteLog(string message, Exception exception = null, LogLevel level = LogLevel.Information, params object[] args)
         {
             if (this.logger == null)
             {
@@ -91,7 +91,7 @@
             else
             {
                 // TODO: add scope (correlationid/requestid/servicedescr)
-                this.logger.Log(level, exception, message);
+                this.logger.Log(level, exception, message, args);
             }
         }
     }

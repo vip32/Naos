@@ -1,6 +1,7 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
+    using System.IO;
     using EnsureThat;
     using global::Serilog;
     using global::Serilog.Events;
@@ -16,13 +17,13 @@
         private static IConfiguration internalConfiguration;
         private static LoggerConfiguration internalLoggerConfiguration;
         private static string internalEnvironment;
-        private static string internalServiceDescriptor;
+        //private static string internalServiceDescriptor;
 
         public static IServiceCollection AddNaosOperationsSerilog(
             this IServiceCollection services,
             IConfiguration configuration,
             string environment = "Development",
-            string serviceDescriptor = "naos",
+            //string serviceDescriptor = "naos",
             LoggerConfiguration loggerConfiguration = null)
         {
             EnsureArg.IsNotNull(services, nameof(services));
@@ -30,7 +31,7 @@
             internalConfiguration = configuration;
             internalLoggerConfiguration = loggerConfiguration;
             internalEnvironment = environment;
-            internalServiceDescriptor = serviceDescriptor;
+            //internalServiceDescriptor = serviceDescriptor;
 
             services.AddSingleton(sp => CreateLoggerFactory());
             services.AddSingleton(typeof(ILogger<>), typeof(LoggingAdapter<>));
@@ -61,10 +62,12 @@
             var loggerConfiguration = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .MinimumLevel.Override("HealthChecks.UI", LogEventLevel.Information)
+                .MinimumLevel.Override("System.Net.Http.HttpClient", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
                 .Enrich.With(new ExceptionEnricher())
                 .Enrich.WithProperty("Environment", internalEnvironment)
-                .Enrich.WithProperty("ServiceDescriptor", internalServiceDescriptor)
+                //.Enrich.WithProperty("ServiceDescriptor", internalServiceDescriptor)
                 .WriteTo.Debug()
                 .WriteTo.LiterateConsole(
                     restrictedToMinimumLevel: LogEventLevel.Information,
@@ -84,9 +87,19 @@
             var logFileConfiguration = internalConfiguration.GetSection("naos:operations:logEvents:file").Get<LogFileConfiguration>();
             if (logFileConfiguration?.Enabled == true)
             {
+                var fullFileName = logFileConfiguration.File; // for local web root storage
+                if (!logFileConfiguration.Folder.IsNullOrEmpty() && !logFileConfiguration.SubFolder.IsNullOrEmpty())
+                {
+                    fullFileName = Path.Combine(logFileConfiguration.Folder, "naos_operations", logFileConfiguration.File);
+                }
+                else if (!logFileConfiguration.Folder.IsNullOrEmpty() && logFileConfiguration.SubFolder.IsNullOrEmpty())
+                {
+                    fullFileName = Path.Combine(logFileConfiguration.Folder, logFileConfiguration.File);
+                }
+
                 // https://github.com/serilog/serilog-aspnetcore
                 loggerConfiguration.WriteTo.File(
-                    logFileConfiguration.FileName,
+                    fullFileName,
                     //outputTemplate: diagnosticsLogStreamConfiguration.OutputTemplate "{Timestamp:yyyy-MM-dd HH:mm:ss}|{Level} => {CorrelationId} => {Service}::{SourceContext}{NewLine}    {Message}{NewLine}{Exception}",
                     fileSizeLimitBytes: logFileConfiguration.FileSizeLimitBytes,
                     rollOnFileSizeLimit: logFileConfiguration.RollOnFileSizeLimit,
@@ -101,7 +114,7 @@
             {
                 // https://github.com/serilog/serilog-aspnetcore
                 loggerConfiguration.WriteTo.File(
-                    diagnosticsLogStreamConfiguration.FileName,
+                    diagnosticsLogStreamConfiguration.File,
                     //outputTemplate: diagnosticsLogStreamConfiguration.OutputTemplate "{Timestamp:yyyy-MM-dd HH:mm:ss}|{Level} => {CorrelationId} => {Service}::{SourceContext}{NewLine}    {Message}{NewLine}{Exception}",
                     fileSizeLimitBytes: diagnosticsLogStreamConfiguration.FileSizeLimitBytes,
                     rollOnFileSizeLimit: diagnosticsLogStreamConfiguration.RollOnFileSizeLimit,

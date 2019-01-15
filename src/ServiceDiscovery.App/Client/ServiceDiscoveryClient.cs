@@ -7,11 +7,11 @@
     using EnsureThat;
     using Naos.Core.Common;
 
-    public class DiscoveryClient : IDiscoveryClient
+    public class ServiceDiscoveryClient : IServiceDiscoveryClient
     {
         private readonly IServiceRegistry registry;
 
-        public DiscoveryClient(IServiceRegistry registry)
+        public ServiceDiscoveryClient(IServiceRegistry registry)
         {
             EnsureArg.IsNotNull(registry, nameof(registry));
 

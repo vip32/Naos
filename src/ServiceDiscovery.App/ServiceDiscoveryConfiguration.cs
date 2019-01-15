@@ -3,7 +3,7 @@
     /// <summary>
     /// Service discovery configuration.
     /// </summary>
-    public class DiscoveryConfiguration
+    public class ServiceDiscoveryConfiguration
     {
         public bool Enabled { get; set; }
 

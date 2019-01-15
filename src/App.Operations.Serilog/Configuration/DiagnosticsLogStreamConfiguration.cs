@@ -4,7 +4,7 @@
     {
         public DiagnosticsLogStreamConfiguration()
         {
-            this.FileName = @"D:\home\LogFiles\Application\naos.log";
+            this.File = @"D:\home\LogFiles\Application\naos.log";
             this.FileSizeLimitBytes = 1_000_000;
             this.RollOnFileSizeLimit = true;
             this.Shared = true;

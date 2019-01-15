@@ -15,30 +15,30 @@
     /// Middleware which attempts to reads / creates a Correlation ID that can then be used in logs and
     /// passed to upstream requests.
     /// </summary>
-    public class CorrelationMiddleware
+    public class RequestCorrelationMiddleware
     {
         private readonly RequestDelegate next;
-        private readonly ILogger<CorrelationMiddleware> logger;
-        private readonly CorrelationMiddlewareOptions options;
+        private readonly ILogger<RequestCorrelationMiddleware> logger;
+        private readonly RequestCorrelationMiddlewareOptions options;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CorrelationMiddleware"/> class.
+        /// Initializes a new instance of the <see cref="RequestCorrelationMiddleware"/> class.
         /// Creates a new instance of the CorrelationIdMiddleware.
         /// </summary>
         /// <param name="next">The next middleware in the pipeline.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="options">The configuration options.</param>
-        public CorrelationMiddleware(
+        public RequestCorrelationMiddleware(
             RequestDelegate next,
-            ILogger<CorrelationMiddleware> logger,
-            IOptions<CorrelationMiddlewareOptions> options)
+            ILogger<RequestCorrelationMiddleware> logger,
+            IOptions<RequestCorrelationMiddlewareOptions> options)
         {
             EnsureArg.IsNotNull(next, nameof(next));
             EnsureArg.IsNotNull(logger, nameof(logger));
 
             this.next = next;
             this.logger = logger;
-            this.options = options.Value ?? new CorrelationMiddlewareOptions();
+            this.options = options.Value ?? new RequestCorrelationMiddlewareOptions();
         }
 
         /// <summary>
@@ -59,7 +59,7 @@
 
             if (this.options.UpdateTraceIdentifier)
             {
-                this.logger.LogDebug($"api request ({requestId}) now has traceIdentifier {correlationId}, was {context.TraceIdentifier}"); // TODO: move to request logging middleware (operations)
+                this.logger.LogDebug($"SERVICE http request  ({requestId}) now has traceIdentifier {correlationId}, was {context.TraceIdentifier}"); // TODO: move to request logging middleware (operations)
                 context.TraceIdentifier = correlationId;
             }
 

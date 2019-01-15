@@ -7,18 +7,23 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
 
-    public abstract class DiscoveryProxy
+    public abstract class ServiceDiscoveryProxy // TODO: actual this is the 'client'
     {
-        public DiscoveryProxy(
-            ILogger<DiscoveryProxy> logger,
+        public ServiceDiscoveryProxy(
+            ILogger<ServiceDiscoveryProxy> logger,
             HttpClient httpClient,
-            IDiscoveryClient discoveryClient,
+            IServiceDiscoveryClient discoveryClient,
             string serviceName = null,
             string serviceTag = null)
         {
             EnsureArg.IsNotNull(httpClient, nameof(httpClient)); // TYPED CLIENT > https://docs.microsoft.com/en-us/aspnet/core/fundamentals/http-requests?view=aspnetcore-2.2
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(discoveryClient, nameof(discoveryClient));
+
+            if(serviceName.IsNullOrEmpty() && serviceTag.IsNullOrEmpty())
+            {
+                throw new ArgumentNullException("ServiceName and ServiceTag both cannot be null or empty");
+            }
 
             var registrations = discoveryClient.ServicesAsync().Result;
             if (!serviceName.IsNullOrEmpty())

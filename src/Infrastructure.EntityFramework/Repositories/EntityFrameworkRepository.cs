@@ -64,6 +64,7 @@
         {
             return await Task.FromResult(
                     this.dbContext.Set<TEntity>().TakeIf(options?.Take).ToList()).ConfigureAwait(false);
+            // TODO: implement orderby (options)
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null)
@@ -73,6 +74,7 @@
                             .WhereExpression(specification?.ToExpression())
                             .SkipIf(options?.Skip)
                             .TakeIf(options?.Take).ToList()).ConfigureAwait(false);
+            // TODO: implement orderby (options)
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null)
@@ -85,6 +87,7 @@
                             .WhereExpressions(expressions)
                             .SkipIf(options?.Skip)
                             .TakeIf(options?.Take).ToList()).ConfigureAwait(false);
+            // TODO: implement orderby (options)
         }
 
         public async Task<TEntity> FindOneAsync(object id)

@@ -24,7 +24,6 @@
         /// </summary>
         /// <param name="next">The next middleware in the pipeline.</param>
         /// <param name="logger">The logger.</param>
-        /// <param name="builder">The filter builder.</param>
         /// <param name="options">The configuration options.</param>
         public FilterMiddleware(
             RequestDelegate next,

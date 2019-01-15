@@ -5,7 +5,7 @@
     using System.Linq.Expressions;
 
     /// <summary>
-    /// Various options to specify the <see cref="IRepository{TEntity}" /> find operations
+    /// Various options to specify the <see cref="IRepository{T}" /> find operations
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <seealso cref="Domain.IFindOptions{TEntity}" />
@@ -26,7 +26,7 @@
 
         public int? Take { get; set; }
 
-        public Expression<Func<T, object>> OrderBy { get; set; }
+        public IEnumerable<OrderByOption<T>> OrderBy { get; set; }
 
         public IEnumerable<Expression<Func<T, object>>> Includes { get; set; }
     }

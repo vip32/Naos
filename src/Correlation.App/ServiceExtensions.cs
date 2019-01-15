@@ -3,6 +3,7 @@
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Naos.Core.Correlation.App;
+    using Naos.Core.Correlation.App.Web;
 
     /// <summary>
     /// Extensions on the <see cref="IServiceCollection"/>.
@@ -20,6 +21,7 @@
 
             services.TryAddSingleton<ICorrelationContextAccessor, CorrelationContextAccessor>();
             services.TryAddTransient<ICorrelationContextFactory, CorrelationContextFactory>();
+            services.AddTransient<HttpClientCorrelationHandler>();
 
             return services;
         }

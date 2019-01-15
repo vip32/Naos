@@ -4,8 +4,11 @@
     using MediatR;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Common.Web;
+    using Naos.Core.Correlation.App.Web;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Infrastructure.Azure.CosmosDb;
+    using Naos.Core.ServiceContext.App.Web;
     using Naos.Sample.Customers.App.Client;
     using Naos.Sample.Customers.Domain;
 
@@ -21,7 +24,11 @@
             var cosmosDbConfiguration = configuration.GetSection(section).Get<CosmosDbConfiguration>();
             Ensure.That(cosmosDbConfiguration).IsNotNull();
 
-            services.AddHttpClient<UserAccountsProxy>();
+            services.AddHttpClient<UserAccountsProxy>()
+                .AddHttpMessageHandler<HttpClientCorrelationHandler>()
+                .AddHttpMessageHandler<HttpClientServiceContextHandler>()
+                .AddHttpMessageHandler<HttpClientLogHandler>();
+
             services.AddScoped<ICustomerRepository>(sp =>
             {
                 return new CustomerRepository(
@@ -40,6 +47,16 @@
                                     collectionOfferThroughput: cosmosDbConfiguration.CollectionOfferThroughput,
                                     isMasterCollection: cosmosDbConfiguration.IsMasterCollection)))));
             });
+
+            services
+                .AddHealthChecks()
+                    .AddDocumentDb(s =>
+                    {
+                        s.UriEndpoint = cosmosDbConfiguration.ServiceEndpointUri;
+                        s.PrimaryKey = cosmosDbConfiguration.AuthKeyOrResourceToken;
+                    },
+                    name: "Customers-cosmosdb")
+                    .AddServiceDiscoveryProxy<UserAccountsProxy>();
 
             return services;
         }

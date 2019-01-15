@@ -16,8 +16,4 @@
     <ProjectReference Include="..\Common.Web\Common.Web.csproj" />
     <ProjectReference Include="..\Operations\Operations.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-      
-  </ItemGroup>
 </Project>

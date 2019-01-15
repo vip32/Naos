@@ -4,9 +4,9 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.ServiceDiscovery.App;
 
-    public class UserAccountsProxy : DiscoveryProxy
+    public class UserAccountsProxy : ServiceDiscoveryProxy
     {
-        public UserAccountsProxy(HttpClient httpClient, ILogger<UserAccountsProxy> logger, IDiscoveryClient discoveryClient)
+        public UserAccountsProxy(HttpClient httpClient, ILogger<UserAccountsProxy> logger, IServiceDiscoveryClient discoveryClient)
             : base(logger, httpClient, discoveryClient, "Product.Capability", "UserAccounts")
         {
         }

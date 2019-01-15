@@ -20,6 +20,7 @@
         private readonly ILogger<CustomersController> logger;
         private readonly ICustomerRepository repository;
         private readonly ICorrelationContextAccessor correlationContext;
+        private readonly UserAccountsProxy userAccountsProxy;
 
         public CustomersController(
             ILogger<CustomersController> logger,
@@ -35,6 +36,7 @@
             this.logger = logger;
             this.repository = repository;
             this.correlationContext = correlationContext;
+            this.userAccountsProxy = userAccountsProxy;
         }
 
         [HttpGet]
@@ -44,6 +46,8 @@
         public async Task<ActionResult<IEnumerable<Customer>>> Get()
         {
             this.logger.LogInformation($"hello from {this.GetType().Name} >> {this.correlationContext.Context?.CorrelationId}");
+
+            //var response = await this.userAccountsProxy.HttpClient.GetAsync("/echo").ConfigureAwait(false);
 
             return this.Ok(await this.repository.FindAllAsync().ConfigureAwait(false));
         }

@@ -27,11 +27,11 @@
         {
             EnsureArg.IsNotNull(services, nameof(services));
 
-            services.AddSingleton(sp => configuration.GetSection(section).Get<DiscoveryConfiguration>());
+            services.AddSingleton(sp => configuration.GetSection(section).Get<ServiceDiscoveryConfiguration>());
             services.AddSingleton<IHostedService, ServiceDiscoveryHostedService>();
             services.TryAddSingleton<IServiceRegistry>(sp => new FileSystemServiceRegistry(
                 sp.GetRequiredService<ILogger<FileSystemServiceRegistry>>(), configuration.GetSection($"{section}:registry:fileSystem").Get<FileSystemServiceRegistryConfiguration>()));
-            services.TryAddSingleton<IDiscoveryClient, DiscoveryClient>();
+            services.TryAddSingleton<IServiceDiscoveryClient, ServiceDiscoveryClient>();
 
             return services;
         }

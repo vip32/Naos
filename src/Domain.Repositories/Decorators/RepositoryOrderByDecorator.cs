@@ -10,17 +10,27 @@
     public class RepositoryOrderByDecorator<TEntity> : IRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
-        private readonly Expression<Func<TEntity, object>> orderBy;
+        private readonly Expression<Func<TEntity, object>> orderByExpression;
+        private readonly OrderByDirection orderByDirection;
         private readonly IRepository<TEntity> decoratee;
 
         public RepositoryOrderByDecorator(
-            Expression<Func<TEntity, object>> orderBy,
+            Expression<Func<TEntity, object>> orderByExpression, // TODO: accept a proper OrderByOption collection
+            IRepository<TEntity> decoratee)
+            : this(orderByExpression, OrderByDirection.Ascending, decoratee)
+        {
+        }
+
+        public RepositoryOrderByDecorator(
+            Expression<Func<TEntity, object>> orderByExpression, // TODO: accept a proper OrderByOption collection
+            OrderByDirection orderByDirection,
             IRepository<TEntity> decoratee)
         {
-            EnsureArg.IsNotNull(orderBy, nameof(orderBy));
+            EnsureArg.IsNotNull(orderByExpression, nameof(orderByExpression));
             EnsureArg.IsNotNull(decoratee, nameof(decoratee));
 
-            this.orderBy = orderBy;
+            this.orderByExpression = orderByExpression;
+            this.orderByDirection = orderByDirection;
             this.decoratee = decoratee;
         }
 
@@ -84,7 +94,10 @@
                 options = new FindOptions<TEntity>();
             }
 
-            options.OrderBy = this.orderBy;
+            options.OrderBy = new[]
+            {
+                new OrderByOption<TEntity>() { Expression = this.orderByExpression, Direction = this.orderByDirection }
+            };
             return options;
         }
     }

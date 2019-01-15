@@ -30,7 +30,7 @@
         {
             EnsureArg.IsNotNull(services, nameof(services));
 
-            services.AddSingleton(sp => configuration.GetSection(section).Get<DiscoveryConfiguration>());
+            services.AddSingleton(sp => configuration.GetSection(section).Get<ServiceDiscoveryConfiguration>());
             services.AddSingleton<IHostedService, ServiceDiscoveryHostedService>();
             services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(c =>
             {
@@ -38,7 +38,7 @@
             }));
             services.TryAddSingleton<IServiceRegistry>(sp => new ConsulServiceRegistry(
                 sp.GetRequiredService<ILogger<ConsulServiceRegistry>>(), sp.GetRequiredService<IConsulClient>()));
-            services.TryAddSingleton<IDiscoveryClient, DiscoveryClient>();
+            services.TryAddSingleton<IServiceDiscoveryClient, ServiceDiscoveryClient>();
 
             return services;
         }

@@ -3,7 +3,7 @@
     /// <summary>
     /// Options for correlation.
     /// </summary>
-    public class CorrelationMiddlewareOptions
+    public class RequestCorrelationMiddlewareOptions
     {
         private const string DefaultCorrelationHeader = "X-CorrelationId";
         private const string DefaultCorrelationLogPropertyName = "CorrelationId";

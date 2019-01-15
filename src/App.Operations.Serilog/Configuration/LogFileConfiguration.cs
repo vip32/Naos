@@ -1,10 +1,16 @@
 ﻿namespace Naos.Core.App.Operations.Serilog
 {
+    using System.IO;
+
     public class LogFileConfiguration
     {
         public bool Enabled { get; set; } = true;
 
-        public string FileName { get; set; } = "naos.log";
+        public string Folder { get; set; } = Path.GetTempPath();
+
+        public string SubFolder { get; set; } = "naos_operations";
+
+        public string File { get; set; } = "naos.log";
 
         public string OutputTemplate { get; set; }
 

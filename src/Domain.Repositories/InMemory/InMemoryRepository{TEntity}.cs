@@ -281,9 +281,16 @@
                 result = result.Take(options.Take.Value);
             }
 
-            if (options?.OrderBy != null)
+            foreach (var orderBy in options?.OrderBy.NullToEmpty())
             {
-                result = result.OrderBy(options.OrderBy.Compile());
+                if (orderBy.Direction == OrderByDirection.Ascending)
+                {
+                    result = result.OrderBy(orderBy.Expression.Compile());
+                }
+                else
+                {
+                    result = result.OrderByDescending(orderBy.Expression.Compile());
+                }
             }
 
             if (this.Options?.Mapper != null && result != null)

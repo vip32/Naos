@@ -20,7 +20,7 @@
         {
             EnsureArg.IsNotNull(app, nameof(app));
 
-            return app.UseNaosCorrelation(new CorrelationMiddlewareOptions());
+            return app.UseNaosCorrelation(new RequestCorrelationMiddlewareOptions());
         }
 
         /// <summary>
@@ -29,7 +29,7 @@
         /// <param name="app"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public static IApplicationBuilder UseNaosCorrelation(this IApplicationBuilder app, CorrelationMiddlewareOptions options)
+        public static IApplicationBuilder UseNaosCorrelation(this IApplicationBuilder app, RequestCorrelationMiddlewareOptions options)
         {
             EnsureArg.IsNotNull(app, nameof(app));
             EnsureArg.IsNotNull(options, nameof(options));
@@ -39,7 +39,7 @@
                 throw new InvalidOperationException($"Unable to find the required services. You must call the {nameof(Microsoft.Extensions.DependencyInjection.ServiceExtensions.AddNaosRequestCorrelation)} method in ConfigureServices in the application startup code.");
             }
 
-            return app.UseMiddleware<CorrelationMiddleware>(Options.Create(options));
+            return app.UseMiddleware<RequestCorrelationMiddleware>(Options.Create(options));
         }
     }
 }

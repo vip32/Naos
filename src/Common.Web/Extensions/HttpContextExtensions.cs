@@ -78,5 +78,41 @@
             context.Items.TryGetValue("requestId", out object value);
             return value?.ToString();
         }
+
+        public static bool HasServiceName(this HttpContext context)
+        {
+            if (context == null)
+            {
+                return false;
+            }
+
+            return context.Items.ContainsKey("serviceName");
+        }
+
+        public static void SetServiceName(this HttpContext context, string value)
+        {
+            if (context == null)
+            {
+                return;
+            }
+
+            if (context.Items.ContainsKey("serviceName"))
+            {
+                context.Items.Remove("serviceName");
+            }
+
+            context.Items.Add("serviceName", value);
+        }
+
+        public static string GetServiceName(this HttpContext context)
+        {
+            if (context == null)
+            {
+                return default;
+            }
+
+            context.Items.TryGetValue("serviceName", out object value);
+            return value?.ToString();
+        }
     }
 }

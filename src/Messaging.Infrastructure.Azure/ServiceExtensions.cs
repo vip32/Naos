@@ -32,11 +32,10 @@
             services.AddSingleton<Hosting.IHostedService>(sp =>
                     new MessagingHostedService(sp.GetRequiredService<ILogger<MessagingHostedService>>(), sp));
 
+            var serviceBusConfiguration = configuration.GetSection(section).Get<ServiceBusConfiguration>();
+            serviceBusConfiguration.EntityPath = topicName ?? $"{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}-Naos.Messaging";
             services.AddSingleton<IServiceBusProvider>(sp =>
             {
-                var serviceBusConfiguration = configuration.GetSection(section).Get<ServiceBusConfiguration>();
-                serviceBusConfiguration.EntityPath = topicName ?? $"{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}-Naos.Messaging";
-
                 if (serviceBusConfiguration?.Enabled == true)
                 {
                     return new ServiceBusProvider(
@@ -64,6 +63,9 @@
                 setupAction?.Invoke(result);
                 return result;
             }); // scope the messagebus messages to the local machine, so local events are handled locally
+
+            services.AddHealthChecks()
+                .AddAzureServiceBusTopic(serviceBusConfiguration.ConnectionString, serviceBusConfiguration.EntityPath, "messaging-servicebus");
 
             return services;
         }

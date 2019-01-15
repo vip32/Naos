@@ -18,4 +18,6 @@
 
         public string Hostname { get; set; }
     }
+
+    // howto get assembly infos (product/version) https://rehansaeed.com/optimally-configuring-asp-net-core-httpclientfactory/
 }

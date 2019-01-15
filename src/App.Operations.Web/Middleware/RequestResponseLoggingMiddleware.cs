@@ -1,11 +1,14 @@
 ﻿namespace Naos.Core.App.Operations.Web
 {
+    using System;
     using System.Diagnostics;
     using System.IO;
+    using System.Linq;
     using System.Threading.Tasks;
     using Humanizer;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Http.Extensions;
+    using Microsoft.AspNetCore.WebUtilities;
     //using Microsoft.AspNetCore.Http.Internal;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
@@ -50,33 +53,15 @@
             }
         }
 
-        private static string ReadStreamInChunks(Stream stream)
-        {
-            string result;
-            stream.Seek(0, SeekOrigin.Begin);
-
-            using (var textWriter = new StringWriter())
-            using (var reader = new StreamReader(stream))
-            {
-                var readChunk = new char[ReadChunkBufferLength];
-                int readChunkLength;
-
-                do //do while: is useful for the last iteration in case readChunkLength < chunkLength
-                {
-                    readChunkLength = reader.ReadBlock(readChunk, 0, ReadChunkBufferLength);
-                    textWriter.Write(readChunk, 0, readChunkLength);
-                }
-                while (readChunkLength > 0);
-
-                result = textWriter.ToString();
-            }
-
-            return result;
-        }
-
         private void LogRequest(HttpContext context, string requestId)
         {
-            this.logger.LogInformation($"SERVICE http request  ({{RequestId}}) {context.Request.Method} {context.Request.GetDisplayUrl()}", requestId);
+            this.logger.LogInformation($"SERVICE http request  ({{RequestId}}) {context.Request.Method} {{Url}}", requestId, new Uri(context.Request.GetDisplayUrl()));
+            //if (context.HasServiceName())
+            //{
+            //    this.logger.LogInformation($"SERVICE http request  ({{RequestId}}) service {context.GetServiceName()}", requestId);
+            //}
+
+            this.logger.LogInformation($"SERVICE http request  ({{RequestId}}) headers={string.Join(", ", context.Request.Headers.Select(h => $"{h.Key}={h.Value}"))}");
 
             //request.EnableRewind();
             //using (var stream = this.streamManager.GetStream())
@@ -104,29 +89,53 @@
                 level = LogLevel.Warning;
             }
 
-            this.logger.Log(level, $"SERVICE http response ({{RequestId}}) {context.Request.Method} {context.Request.GetDisplayUrl()} {context.Response.StatusCode} -> took {elapsed.Humanize(3)}", requestId);
+            this.logger.Log(level, $"SERVICE http response ({{RequestId}}) {context.Request.Method} {{Url}} {{StatusCode}} ({ReasonPhrases.GetReasonPhrase(context.Response.StatusCode)}) -> took {elapsed.Humanize(3)}", requestId, new Uri(context.Request.GetDisplayUrl()), context.Response.StatusCode);
         }
 
         //private async Task LogResponseAsync(HttpContext context, string requestId)
         //{
-            //var body = context.Response.Body;
-            //using (var stream = this.streamManager.GetStream())
-            //{
-            //    context.Response.Body = stream;
+        //var body = context.Response.Body;
+        //using (var stream = this.streamManager.GetStream())
+        //{
+        //    context.Response.Body = stream;
 
-            //    await this.next.Invoke(context);
+        //    await this.next.Invoke(context);
 
-            //    await stream.CopyToAsync(body);
+        //    await stream.CopyToAsync(body);
 
-            //    this.logger.LogInformation($"Http Response Information:{System.Environment.NewLine}" +
-            //                           $"Schema:{context.Request.Scheme} " +
-            //                           $"Host: {context.Request.Host} " +
-            //                           $"Path: {context.Request.Path} " +
-            //                           $"QueryString: {context.Request.QueryString} " +
-            //                           $"Response Body: {ReadStreamInChunks(stream)}");
-            //}
-
-            //context.Response.Body = body;
+        //    this.logger.LogInformation($"Http Response Information:{System.Environment.NewLine}" +
+        //                           $"Schema:{context.Request.Scheme} " +
+        //                           $"Host: {context.Request.Host} " +
+        //                           $"Path: {context.Request.Path} " +
+        //                           $"QueryString: {context.Request.QueryString} " +
+        //                           $"Response Body: {this.ReadStreamInChunks(stream)}");
         //}
+
+        //context.Response.Body = body;
+        //}
+
+        private string ReadStreamInChunks(Stream stream)
+        {
+            string result;
+            stream.Seek(0, SeekOrigin.Begin);
+
+            using (var textWriter = new StringWriter())
+            using (var reader = new StreamReader(stream))
+            {
+                var readChunk = new char[ReadChunkBufferLength];
+                int readChunkLength;
+
+                do //do while: is useful for the last iteration in case readChunkLength < chunkLength
+                {
+                    readChunkLength = reader.ReadBlock(readChunk, 0, ReadChunkBufferLength);
+                    textWriter.Write(readChunk, 0, readChunkLength);
+                }
+                while (readChunkLength > 0);
+
+                result = textWriter.ToString();
+            }
+
+            return result;
+        }
     }
 }

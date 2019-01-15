@@ -108,10 +108,18 @@
                 result = result.Take(options.Take.Value);
             }
 
-            if (options?.OrderBy != null)
+            foreach(var orderBy in options?.OrderBy.NullToEmpty())
             {
-                result = result.OrderBy(
-                    this.Options.Mapper.MapExpression<Expression<Func<TDestination, object>>>(options.OrderBy).Compile());
+                if(orderBy.Direction == OrderByDirection.Ascending)
+                {
+                    result = result.OrderBy(
+                        this.Options.Mapper.MapExpression<Expression<Func<TDestination, object>>>(orderBy.Expression).Compile());
+                }
+                else
+                {
+                    result = result.OrderByDescending(
+                        this.Options.Mapper.MapExpression<Expression<Func<TDestination, object>>>(orderBy.Expression).Compile());
+                }
             }
 
             if (this.Options?.Mapper != null && result != null)

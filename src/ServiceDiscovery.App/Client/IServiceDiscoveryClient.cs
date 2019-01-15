@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public interface IDiscoveryClient
+    public interface IServiceDiscoveryClient
     {
         Task<IEnumerable<ServiceRegistration>> ServicesAsync();
 

@@ -14,6 +14,7 @@
                 DefaultValueHandling = DefaultValueHandling.Ignore,
                 NullValueHandling = NullValueHandling.Ignore,
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                TypeNameHandling = TypeNameHandling.None,
                 Converters = new List<JsonConverter>
                 {
                     new StringEnumConverter(),

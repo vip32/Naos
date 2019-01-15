@@ -1,5 +1,6 @@
 ﻿namespace Naos.Sample.App.Web
 {
+    using System;
     using System.Diagnostics;
     using System.Linq;
     using System.Threading;
@@ -22,6 +23,7 @@
     using Naos.Core.Messaging;
     using Naos.Core.Scheduling.App;
     using Naos.Core.Scheduling.Domain;
+    using Naos.Core.ServiceContext.App.Web;
     using Newtonsoft.Json;
     using NSwag.AspNetCore;
 
@@ -40,16 +42,18 @@
         public void ConfigureServices(IServiceCollection services)
         {
             // framework application services
-            services.AddTransient<HttpClientCorrelationHandler>();
             services.AddTransient<HttpClientLogHandler>();
             services.AddHttpClient("default")
-                .AddHttpMessageHandler<HttpClientCorrelationHandler>();
-            services.Replace(Microsoft.Extensions.DependencyInjection.ServiceDescriptor.Singleton<Microsoft.Extensions.Http.IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
+                .AddHttpMessageHandler<HttpClientCorrelationHandler>()
+                .AddHttpMessageHandler<HttpClientServiceContextHandler>();
+            services.Replace(ServiceDescriptor.Singleton<Microsoft.Extensions.Http.IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
 
             services
                 .AddMiddlewareAnalysis()
                 .AddHttpContextAccessor()
-                .AddHealthChecksUI()
+                //.AddHealthChecksUI()
+                //.AddHealthChecks()
+                //    .AddUrlGroup(new Uri("http://httpbin.org/status/200"), "default").Services
                 .AddSwaggerDocument(s => s.Description = "naos")
                 .AddMediatR() // singleton due to inmemory repository: c => c.AsSingleton()
                 .AddMvc()
@@ -70,12 +74,12 @@
                     .Register<DummyJob>("job1", Cron.Minutely(), (j) => j.LogMessageAsync("+++ hello from job1 +++", CancellationToken.None))
                     .Register<DummyJob>("job2", Cron.MinuteInterval(2), j => j.LogMessageAsync("+++ hello from job2 +++", CancellationToken.None, true), enabled: false)
                     .Register<DummyJob>("longjob3", Cron.Minutely(), j => j.LongRunningAsync("+++ hello from longjob3 +++", CancellationToken.None)))
-                .AddNaosMessagingFileSystem(
-                    this.Configuration,
-                    s => s.Subscribe<TestMessage, TestMessageHandler>())
-                //.AddNaosMessagingAzureServiceBus(
+                //.AddNaosMessagingFileSystem(
                 //    this.Configuration,
                 //    s => s.Subscribe<TestMessage, TestMessageHandler>())
+                .AddNaosMessagingAzureServiceBus(
+                    this.Configuration,
+                    s => s.Subscribe<TestMessage, TestMessageHandler>())
                 .AddNaosAppCommands();
 
             // naos sample product registrations
@@ -101,9 +105,10 @@
             // naos middleware
             app.UseHttpsRedirection()
                .UseNaosRequestCorrelation()
-               .UseNaosOperationsRequestResponseLogging()
+               .UseNaosServiceContext()
                .UseNaosRequestFiltering()
-               .UseNaosExceptionHandling();
+               .UseNaosExceptionHandling()
+               .UseNaosOperationsRequestResponseLogging();
 
             app.UseSwagger();
             app.UseSwaggerUi3();
@@ -119,17 +124,24 @@
                     {
                         status = r.Status.ToString(),
                         took = r.TotalDuration.ToString(),
-                        checks = r.Entries.Select(e => new { key = e.Key, status = e.Value.Status.ToString(), took = e.Value.Duration.ToString(), message = e.Value.Exception?.Message })
+                        checks = r.Entries.Select(e => new
+                        {
+                            service = c.GetServiceName(),
+                            key = e.Key,
+                            status = e.Value.Status.ToString(),
+                            took = e.Value.Duration.ToString(),
+                            message = e.Value.Exception?.Message
+                        })
                     }, DefaultJsonSerializerSettings.Create());
                     await c.Response.WriteAsync(result);
                 }
             });
 
-            app.UseHealthChecksUI(s =>
-            {
-                s.ApiPath = "/health/api";
-                s.UIPath = "/health/ui";
-            });
+            //app.UseHealthChecksUI(s =>
+            //{
+            //    s.ApiPath = "/health/api";
+            //    s.UIPath = "/health/ui";
+            //});
 
             app.UseMvc();
         }

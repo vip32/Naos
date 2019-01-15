@@ -17,7 +17,7 @@
     public class ServiceDiscoveryHostedService : IHostedService
     {
         private readonly ILogger<ServiceDiscoveryHostedService> logger;
-        private readonly DiscoveryConfiguration configuration;
+        private readonly ServiceDiscoveryConfiguration configuration;
         private readonly IServiceRegistry registry;
         private readonly IServer server;
         private readonly ServiceDescriptor serviceDescriptor;
@@ -28,7 +28,7 @@
 
         public ServiceDiscoveryHostedService(
             ILogger<ServiceDiscoveryHostedService> logger,
-            DiscoveryConfiguration configuration,
+            ServiceDiscoveryConfiguration configuration,
             IServiceRegistry registry,
             IServer server,
             ServiceDescriptor serviceDescriptor)

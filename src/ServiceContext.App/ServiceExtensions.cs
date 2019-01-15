@@ -6,6 +6,7 @@
     using Microsoft.Extensions.Configuration;
     using Naos.Core.Common;
     using Naos.Core.ServiceContext.App;
+    using Naos.Core.ServiceContext.App.Web;
 
     /// <summary>
     /// Extensions on the <see cref="IServiceCollection"/>.
@@ -48,7 +49,7 @@
                 throw new NaosException("SERVICE descriptor needs a capabilityName");
             }
 
-            version = version ?? serviceContextConfiguration?.Version;
+            version = version ?? serviceContextConfiguration?.Version ?? "1.0.0";
             tags = tags ?? serviceContextConfiguration?.Tags;
 
             if (!tags.Any())
@@ -56,6 +57,7 @@
                 tags = new[] { capabilityName }; // tags are used for service discovery too
             }
 
+            services.AddTransient<HttpClientServiceContextHandler>();
             services.AddSingleton(sp => new Naos.Core.App.ServiceDescriptor
             {
                 Product = productName ?? AppDomain.CurrentDomain.FriendlyName.SubstringTillLast("."),

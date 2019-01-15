@@ -47,6 +47,7 @@
         {
             // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
             var entities = await this.provider.WhereAsync<TEntity>(count: options?.Take ?? -1).ConfigureAwait(false);
+            // TODO: implement orderby (options)
             return entities.ToList();
         }
 
@@ -56,6 +57,7 @@
             var entities = await this.provider.WhereAsync<TEntity>(
                 expression: specification?.ToExpression().Expand(),
                 count: options?.Take ?? -1).ConfigureAwait(false);
+            // TODO: implement orderby (options)
             return entities.ToList();
         }
 
@@ -65,6 +67,7 @@
             var entities = await this.provider.WhereAsync<TEntity>(
                 expressions: specifications.NullToEmpty().Select(s => s.ToExpression().Expand()),
                 count: options?.Take ?? -1).ConfigureAwait(false);
+            // TODO: implement orderby (options)
             return entities.ToList();
         }
 

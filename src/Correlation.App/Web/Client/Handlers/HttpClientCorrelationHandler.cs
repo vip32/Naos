@@ -23,11 +23,11 @@
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             var correlationId = this.correlationContext?.Context?.CorrelationId ?? string.Empty; // current correlationid will be set on outgoing request
-            var requestId = RandomGenerator.GenerateString(4, false); // every outgoing request needs a unique id
+            var requestId = RandomGenerator.GenerateString(5, false); // every outgoing request needs a unique id
 
             using (this.logger.BeginScope("{RequestId}", requestId))
             {
-                this.logger.LogDebug($"CLIENT http request  ({requestId}) added correlation headers");
+                this.logger.LogDebug("CLIENT http request  ({RequestId}) added correlation headers", requestId);
 
                 request.Headers.Add("x-correlationid", correlationId);
                 request.Headers.Add("x-requestid", requestId);
