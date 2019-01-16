@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.Filtering.App</AssemblyName>
-    <RootNamespace>Naos.Core.Filtering.App</RootNamespace>
+    <AssemblyName>Naos.Core.RequestFiltering.App</AssemblyName>
+    <RootNamespace>Naos.Core.RequestFiltering.App</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

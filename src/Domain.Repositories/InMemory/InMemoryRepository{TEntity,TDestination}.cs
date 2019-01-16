@@ -108,18 +108,21 @@
                 result = result.Take(options.Take.Value);
             }
 
-            foreach(var orderBy in options?.OrderBy.NullToEmpty())
+            IOrderedEnumerable<TDestination> orderedResult = null;
+            foreach (var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
             {
-                if(orderBy.Direction == OrderByDirection.Ascending)
-                {
-                    result = result.OrderBy(
-                        this.Options.Mapper.MapExpression<Expression<Func<TDestination, object>>>(orderBy.Expression).Compile());
-                }
-                else
-                {
-                    result = result.OrderByDescending(
-                        this.Options.Mapper.MapExpression<Expression<Func<TDestination, object>>>(orderBy.Expression).Compile());
-                }
+                orderedResult = orderedResult == null
+                    ? order.Direction == OrderDirection.Ascending
+                        ? result.OrderBy(this.Options.Mapper.MapExpression<Expression<Func<TDestination, object>>>(order.Expression).Compile())
+                        : result.OrderByDescending(this.Options.Mapper.MapExpression<Expression<Func<TDestination, object>>>(order.Expression).Compile())
+                    : order.Direction == OrderDirection.Ascending
+                        ? orderedResult.ThenBy(this.Options.Mapper.MapExpression<Expression<Func<TDestination, object>>>(order.Expression).Compile())
+                        : orderedResult.ThenByDescending(this.Options.Mapper.MapExpression<Expression<Func<TDestination, object>>>(order.Expression).Compile());
+            }
+
+            if (orderedResult != null)
+            {
+                result = orderedResult;
             }
 
             if (this.Options?.Mapper != null && result != null)

@@ -3,9 +3,9 @@
     using System;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Scheduling;
-    using Naos.Core.Scheduling.App.Web;
-    using Naos.Core.Scheduling.Domain;
+    using Naos.Core.JobScheduling;
+    using Naos.Core.JobScheduling.App.Web;
+    using Naos.Core.JobScheduling.Domain;
 
     public static class ServiceExtensions
     {

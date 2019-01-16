@@ -6,23 +6,17 @@
     public class RequestCorrelationMiddlewareOptions
     {
         private const string DefaultCorrelationHeader = "X-CorrelationId";
-        private const string DefaultCorrelationLogPropertyName = "CorrelationId";
         private const string DefaultRequestHeader = "X-RequestId";
-        private const string DefaultRequestLogPropertyName = "RequestId";
 
         /// <summary>
         /// The name of the header from which the correlation id is read/written.
         /// </summary>
         public string CorrelationHeader { get; set; } = DefaultCorrelationHeader;
 
-        public string CorrelationLogPropertyName { get; set; } = DefaultCorrelationLogPropertyName;
-
         /// <summary>
         /// The name of the header from which the request id is read/written.
         /// </summary>
         public string RequestHeader { get; set; } = DefaultRequestHeader;
-
-        public string RequestIdLogPropertyName { get; set; } = DefaultRequestLogPropertyName;
 
         /// <summary>
         /// Controls whether the correlation/request id is returned in the response headers.
@@ -38,7 +32,9 @@
         /// Controls whether a GUID will be used in cases where no correlation ID is retrieved from the request header.
         /// When false the TraceIdentifier for the current request will be used.
         /// </summary>
-        public bool UseGuidAsCorrelationId { get; set; } = true;
+        public bool UseRandomCorrelationId { get; set; } = true;
+
+        public int RandomCorrelationIdLength { get; set; } = 13;
 
         /// <summary>
         /// Controls whether a hash will be used in cases where no correlation ID is retrieved from the request header.

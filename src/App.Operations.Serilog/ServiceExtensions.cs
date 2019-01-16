@@ -64,10 +64,10 @@
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .MinimumLevel.Override("HealthChecks.UI", LogEventLevel.Information)
                 .MinimumLevel.Override("System.Net.Http.HttpClient", LogEventLevel.Warning)
-                .Enrich.FromLogContext()
                 .Enrich.With(new ExceptionEnricher())
-                .Enrich.WithProperty("Environment", internalEnvironment)
+                .Enrich.WithProperty(LogEventPropertyKeys.Environment, internalEnvironment)
                 //.Enrich.WithProperty("ServiceDescriptor", internalServiceDescriptor)
+                .Enrich.FromLogContext()
                 .WriteTo.Debug()
                 .WriteTo.LiterateConsole(
                     restrictedToMinimumLevel: LogEventLevel.Information,
@@ -130,7 +130,11 @@
             {
                 loggerConfiguration.WriteTo.AzureAnalytics(
                     logAnalyticsConfiguration.WorkspaceId,
-                    logAnalyticsConfiguration.AuthenticationId, logName: $"LogEvents_{internalEnvironment}" );
+                    logAnalyticsConfiguration.AuthenticationId,
+                    logName: $"LogEvents_{internalEnvironment}",
+                    storeTimestampInUtc: true,
+                    logBufferSize: logAnalyticsConfiguration.BufferSize,
+                    batchSize: logAnalyticsConfiguration.BatchSize);
             }
 
             // TODO: application insight setup

@@ -1,5 +1,6 @@
-﻿namespace Naos.Core.Correlation.App.Web
+﻿namespace Naos.Core.RequestCorrelation.App.Web
 {
+    using System.Collections.Generic;
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
@@ -25,9 +26,14 @@
             var correlationId = this.correlationContext?.Context?.CorrelationId ?? string.Empty; // current correlationid will be set on outgoing request
             var requestId = RandomGenerator.GenerateString(5, false); // every outgoing request needs a unique id
 
-            using (this.logger.BeginScope("{RequestId}", requestId))
+            var loggerState = new Dictionary<string, object>
             {
-                this.logger.LogDebug("CLIENT http request  ({RequestId}) added correlation headers", requestId);
+                [LogEventPropertyKeys.CorrelationId] = requestId
+            };
+
+            using (this.logger.BeginScope(loggerState))
+            {
+                this.logger.LogDebug($"CLIENT http request   ({requestId}) added correlation headers");
 
                 request.Headers.Add("x-correlationid", correlationId);
                 request.Headers.Add("x-requestid", requestId);

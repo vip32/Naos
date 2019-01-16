@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Correlation.App
+﻿namespace Naos.Core.RequestCorrelation.App
 {
     /// <inheritdoc />
     public class CorrelationContextFactory : ICorrelationContextFactory

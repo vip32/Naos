@@ -17,5 +17,9 @@
         public string ResourceGroupName { get; set; } // repo
 
         public string WorkspaceName { get; set; } // repo
+
+        public int BufferSize { get; set; } = 10;
+
+        public int BatchSize { get; set; } = 1;
     }
 }

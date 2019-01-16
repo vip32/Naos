@@ -5,9 +5,9 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common.Web;
-    using Naos.Core.Correlation.App.Web;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Infrastructure.Azure.CosmosDb;
+    using Naos.Core.RequestCorrelation.App.Web;
     using Naos.Core.ServiceContext.App.Web;
     using Naos.Sample.Customers.App.Client;
     using Naos.Sample.Customers.Domain;

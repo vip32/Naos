@@ -281,16 +281,21 @@
                 result = result.Take(options.Take.Value);
             }
 
-            foreach (var orderBy in options?.OrderBy.NullToEmpty())
+            IOrderedEnumerable<TEntity> orderedResult = null;
+            foreach (var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
             {
-                if (orderBy.Direction == OrderByDirection.Ascending)
-                {
-                    result = result.OrderBy(orderBy.Expression.Compile());
-                }
-                else
-                {
-                    result = result.OrderByDescending(orderBy.Expression.Compile());
-                }
+                orderedResult = orderedResult == null
+                    ? order.Direction == OrderDirection.Ascending
+                        ? result.OrderBy(order.Expression.Compile())
+                        : result.OrderByDescending(order.Expression.Compile())
+                    : order.Direction == OrderDirection.Ascending
+                        ? orderedResult.ThenBy(order.Expression.Compile())
+                        : orderedResult.ThenByDescending(order.Expression.Compile());
+            }
+
+            if(orderedResult != null)
+            {
+                result = orderedResult;
             }
 
             if (this.Options?.Mapper != null && result != null)

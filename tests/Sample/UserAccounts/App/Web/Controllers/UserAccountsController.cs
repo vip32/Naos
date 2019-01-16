@@ -9,7 +9,7 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
-    using Naos.Core.Correlation.App;
+    using Naos.Core.RequestCorrelation.App;
     using Naos.Sample.UserAccounts.Domain;
 
     [Route("api/[controller]")]

@@ -1,5 +1,6 @@
 ﻿namespace Naos.Core.Sample.Messaging.App.Console
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
@@ -14,7 +15,12 @@
 
         public override Task Handle(EntityMessage<StubEntity> message)
         {
-            using (this.logger.BeginScope("{CorrelationId}", message.CorrelationId))
+            var loggerState = new Dictionary<string, object>
+            {
+                [LogEventPropertyKeys.CorrelationId] = message.CorrelationId,
+            };
+
+            using (this.logger.BeginScope(loggerState))
             {
                 this.logger.LogInformation("MESSAGE handle  (name={MessageName}, id={EventId}, origin={EventOrigin}) " + $"{message.Entity.FirstName} {message.Entity.LastName}", message.GetType().PrettyName(), message.Id, message.Origin);
 

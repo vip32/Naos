@@ -88,7 +88,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
 
             result = await sut.FindAllAsync(
                 new HasTenantSpecification<StubEntityString>(this.tenantId),
-                new FindOptions<StubEntityString>(take: 5) { OrderBy = e => e.Country}).ConfigureAwait(false);
+                new FindOptions<StubEntityString>(take: 5, orderExpression: e => e.Country)).ConfigureAwait(false);
 
             Assert.False(result.IsNullOrEmpty());
             Assert.Equal(5, result.Count());

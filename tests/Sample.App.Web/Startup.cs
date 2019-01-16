@@ -1,6 +1,5 @@
 ﻿namespace Naos.Sample.App.Web
 {
-    using System;
     using System.Diagnostics;
     using System.Linq;
     using System.Threading;
@@ -15,14 +14,13 @@
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Logging;
     using Naos.Core.App.Configuration;
-    using Naos.Core.App.Operations.Web.Middleware;
     using Naos.Core.App.Web;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
-    using Naos.Core.Correlation.App.Web;
+    using Naos.Core.JobScheduling.App;
+    using Naos.Core.JobScheduling.Domain;
     using Naos.Core.Messaging;
-    using Naos.Core.Scheduling.App;
-    using Naos.Core.Scheduling.Domain;
+    using Naos.Core.RequestCorrelation.App.Web;
     using Naos.Core.ServiceContext.App.Web;
     using Newtonsoft.Json;
     using NSwag.AspNetCore;
@@ -45,7 +43,8 @@
             services.AddTransient<HttpClientLogHandler>();
             services.AddHttpClient("default")
                 .AddHttpMessageHandler<HttpClientCorrelationHandler>()
-                .AddHttpMessageHandler<HttpClientServiceContextHandler>();
+                .AddHttpMessageHandler<HttpClientServiceContextHandler>()
+                .AddHttpMessageHandler<HttpClientLogHandler>();
             services.Replace(ServiceDescriptor.Singleton<Microsoft.Extensions.Http.IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
 
             services
@@ -70,9 +69,10 @@
                 .AddNaosOperationsLogAnalytics(this.Configuration)
                 .AddNaosExceptionHandling(/*env.IsProduction()*/)
                 .AddNaosJobScheduling(s => s
+                    .SetEnabled(false)
                     .Register<DummyJob>("job1", Cron.Minutely(), (j) => j.LogMessageAsync("+++ hello from job1 +++", CancellationToken.None))
                     .Register<DummyJob>("job2", Cron.MinuteInterval(2), j => j.LogMessageAsync("+++ hello from job2 +++", CancellationToken.None, true), enabled: false)
-                    .Register<DummyJob>("longjob3", Cron.Minutely(), j => j.LongRunningAsync("+++ hello from longjob3 +++", CancellationToken.None)))
+                    .Register<DummyJob>("longjob33", Cron.Minutely(), j => j.LongRunningAsync("+++ hello from longjob3 +++", CancellationToken.None)))
                 //.AddNaosMessagingFileSystem(
                 //    this.Configuration,
                 //    s => s.Subscribe<TestMessage, TestMessageHandler>())
@@ -105,9 +105,9 @@
             app.UseHttpsRedirection()
                .UseNaosRequestCorrelation()
                .UseNaosServiceContext()
+               .UseNaosOperationsRequestResponseLogging()
                .UseNaosRequestFiltering()
-               .UseNaosExceptionHandling()
-               .UseNaosOperationsRequestResponseLogging();
+               .UseNaosExceptionHandling();
 
             app.UseSwagger();
             app.UseSwaggerUi3();

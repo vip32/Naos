@@ -39,12 +39,12 @@
     <ProjectReference Include="..\..\src\Common.Web.Extensions\Common.Web.Extensions.csproj" />
     <ProjectReference Include="..\..\src\Common.Web\Common.Web.csproj" />
     <ProjectReference Include="..\..\src\Common\Common.csproj" />
-    <ProjectReference Include="..\..\src\Correlation.App\Correlation.App.csproj" />
+    <ProjectReference Include="..\..\src\Correlation.App\RequestCorrelation.App.csproj" />
     <ProjectReference Include="..\..\src\Domain.Repositories.AutoMapper\Domain.Repositories.AutoMapper.csproj" />
     <ProjectReference Include="..\..\src\Domain.Repositories\Domain.Repositories.csproj" />
     <ProjectReference Include="..\..\src\Domain.Specifications\Domain.Specifications.csproj" />
     <ProjectReference Include="..\..\src\Domain\Domain.csproj" />
-    <ProjectReference Include="..\..\src\Filtering.App\Filtering.App.csproj" />
+    <ProjectReference Include="..\..\src\Filtering.App\RequestFiltering.App.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure.Azure.Arm\Infrastructure.Azure.Arm.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure.Azure.Configuration\Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure.Azure.Cosmosdb\Infrastructure.Azure.CosmosDb.csproj" />
@@ -56,7 +56,7 @@
     <ProjectReference Include="..\..\src\Messaging\Messaging.csproj" />
     <ProjectReference Include="..\..\src\Operations.Infrastructure.Azure.LogAnalytics\Operations.Infrastructure.Azure.LogAnalytics.csproj" />
     <ProjectReference Include="..\..\src\Operations\Operations.csproj" />
-    <ProjectReference Include="..\..\src\Scheduling\Scheduling.csproj" />
+    <ProjectReference Include="..\..\src\Scheduling\JobScheduling.csproj" />
     <ProjectReference Include="..\..\src\ServiceContext.App\ServiceContext.App.csproj" />
     <ProjectReference Include="..\..\src\ServiceDiscovery.App\ServiceDiscovery.App.csproj" />
     <ProjectReference Include="..\Sample.App.IntegrationTests\Sample.App.IntegrationTests.csproj" />

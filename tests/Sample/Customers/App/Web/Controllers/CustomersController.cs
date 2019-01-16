@@ -9,7 +9,7 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
-    using Naos.Core.Correlation.App;
+    using Naos.Core.RequestCorrelation.App;
     using Naos.Sample.Customers.App.Client;
     using Naos.Sample.Customers.Domain;
 

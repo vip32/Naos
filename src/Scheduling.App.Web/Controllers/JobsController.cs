@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Scheduling.App.Web
+﻿namespace Naos.Core.JobScheduling.App.Web
 {
     using System.Linq;
     using System.Net;
@@ -8,7 +8,7 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
-    using Naos.Core.Scheduling.Domain;
+    using Naos.Core.JobScheduling.Domain;
 
     [Route("api/[controller]")]
     [ApiController]

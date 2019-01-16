@@ -1,6 +1,6 @@
 ﻿namespace Naos.Core.Domain.Repositories
 {
-    public enum OrderByDirection
+    public enum OrderDirection
     {
         Ascending = 10,
         Descending = 20

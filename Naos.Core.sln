@@ -75,7 +75,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Operations", "src\Operation
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Operations.Infrastructure.Azure.LogAnalytics", "src\Operations.Infrastructure.Azure.LogAnalytics\Operations.Infrastructure.Azure.LogAnalytics.csproj", "{61782421-1B22-4974-AF52-08DDA4D9FEC4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scheduling", "src\Scheduling\Scheduling.csproj", "{D0514A2A-4BEE-4898-9344-6EACA9069182}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobScheduling", "src\Scheduling\JobScheduling.csproj", "{D0514A2A-4BEE-4898-9344-6EACA9069182}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Operations.Web", "src\App.Operations.Web\App.Operations.Web.csproj", "{463DEB37-B732-43DB-88A9-2CBB23FFFAF2}"
 EndProject
@@ -87,19 +87,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Messaging", "Messaging", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JobScheduling", "JobScheduling", "{0978CAE5-4C82-4789-9083-4042E7106906}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Correlation.App", "src\Correlation.App\Correlation.App.csproj", "{04739965-B30A-464D-A493-4B5BD43584DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RequestCorrelation.App", "src\Correlation.App\RequestCorrelation.App.csproj", "{04739965-B30A-464D-A493-4B5BD43584DD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Exceptions.Web", "src\App.ExceptionHandling.Web\App.Exceptions.Web.csproj", "{93A7943B-C7A1-40E2-ABC8-0C38D3CCE22E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RequestCorrelation", "RequestCorrelation", "{D4E005A7-0093-422D-B7BE-05204D7C63CC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scheduling.App.Web", "src\Scheduling.App.Web\Scheduling.App.Web.csproj", "{5B5C61A1-952C-461F-9BFD-CDD486D3E187}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobScheduling.App.Web", "src\Scheduling.App.Web\JobScheduling.App.Web.csproj", "{5B5C61A1-952C-461F-9BFD-CDD486D3E187}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Web", "src\App.Web\App.Web.csproj", "{6DBCB900-0693-42D4-8AB8-15058EE701FB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RequestFiltering", "RequestFiltering", "{41BFCC05-8541-4335-8F13-E4E8B702F486}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Filtering.App", "src\Filtering.App\Filtering.App.csproj", "{F0307521-B912-42F4-887D-FBA7D3545B4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RequestFiltering.App", "src\Filtering.App\RequestFiltering.App.csproj", "{F0307521-B912-42F4-887D-FBA7D3545B4A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.Infrastructure.FileSystem", "src\Messaging.Infrastructure.FileSystem\Messaging.Infrastructure.FileSystem.csproj", "{4D3D368A-7701-4966-9371-5D266A5EC139}"
 EndProject

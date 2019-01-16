@@ -7,30 +7,30 @@
     using EnsureThat;
     using Naos.Core.Domain.Specifications;
 
-    public class RepositoryOrderByDecorator<TEntity> : IRepository<TEntity>
+    public class RepositoryOrderDecorator<TEntity> : IRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
-        private readonly Expression<Func<TEntity, object>> orderByExpression;
-        private readonly OrderByDirection orderByDirection;
+        private readonly Expression<Func<TEntity, object>> orderExpression;
+        private readonly OrderDirection orderDirection;
         private readonly IRepository<TEntity> decoratee;
 
-        public RepositoryOrderByDecorator(
+        public RepositoryOrderDecorator(
             Expression<Func<TEntity, object>> orderByExpression, // TODO: accept a proper OrderByOption collection
             IRepository<TEntity> decoratee)
-            : this(orderByExpression, OrderByDirection.Ascending, decoratee)
+            : this(orderByExpression, OrderDirection.Ascending, decoratee)
         {
         }
 
-        public RepositoryOrderByDecorator(
-            Expression<Func<TEntity, object>> orderByExpression, // TODO: accept a proper OrderByOption collection
-            OrderByDirection orderByDirection,
+        public RepositoryOrderDecorator(
+            Expression<Func<TEntity, object>> orderExpression, // TODO: accept a proper OrderByOption collection
+            OrderDirection orderDirection,
             IRepository<TEntity> decoratee)
         {
-            EnsureArg.IsNotNull(orderByExpression, nameof(orderByExpression));
+            EnsureArg.IsNotNull(orderExpression, nameof(orderExpression));
             EnsureArg.IsNotNull(decoratee, nameof(decoratee));
 
-            this.orderByExpression = orderByExpression;
-            this.orderByDirection = orderByDirection;
+            this.orderExpression = orderExpression;
+            this.orderDirection = orderDirection;
             this.decoratee = decoratee;
         }
 
@@ -94,10 +94,7 @@
                 options = new FindOptions<TEntity>();
             }
 
-            options.OrderBy = new[]
-            {
-                new OrderByOption<TEntity>() { Expression = this.orderByExpression, Direction = this.orderByDirection }
-            };
+            options.Order = new OrderOption<TEntity>(this.orderExpression, this.orderDirection);
             return options;
         }
     }

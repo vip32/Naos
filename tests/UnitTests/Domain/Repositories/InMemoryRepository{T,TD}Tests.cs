@@ -203,7 +203,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             // act
             var result = await sut.FindAllAsync(
                 new StubHasNameSpecification("John", "Doe"),
-                new FindOptions<StubEntity> { OrderBy = e => e.Country }).ConfigureAwait(false); // domain layer
+                new FindOptions<StubEntity>(orderExpression: e => e.Country )).ConfigureAwait(false); // domain layer
             //var result = await sut.FindAllAsync(
             //    new StubHasIdSpecification("Id99")).ConfigureAwait(false); // domain layer
 

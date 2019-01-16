@@ -45,10 +45,18 @@
         /// <returns></returns>
         public async Task Invoke(HttpContext context, ServiceDescriptor serviceDescriptor)
         {
-            using (this.logger.BeginScope("{ProductName}{CapabilityName}{ServiceName}", serviceDescriptor.Product, serviceDescriptor.Capability, serviceDescriptor.Name))
+            var loggerState = new Dictionary<string, object>
+            {
+                [LogEventPropertyKeys.ServiceProduct] = serviceDescriptor.Product,
+                [LogEventPropertyKeys.ServiceCapability] = serviceDescriptor.Capability,
+                [LogEventPropertyKeys.ServiceName] = serviceDescriptor.Name,
+            };
+
+            using (this.logger.BeginScope(loggerState))
             {
                 context.SetServiceName(serviceDescriptor.Name);
-                this.logger.LogInformation($"SERVICE http request  ({{RequestId}}) service={serviceDescriptor.Name}, tags={string.Join("|", serviceDescriptor.Tags.NullToEmpty())}", context.GetRequestId());
+                // TODO: log below should take blacklistpatterns in account (RequestResponseLoggingOptions)
+                //this.logger.LogInformation($"SERVICE http request  ({context.GetRequestId()}) service={serviceDescriptor.Name}, tags={string.Join("|", serviceDescriptor.Tags.NullToEmpty())}");
                 await this.next(context);
 
                 if (context.Request.Path == "/" && this.options.RootEnabled) // root
@@ -61,8 +69,8 @@
                             Service = serviceDescriptor,
                             Request = new Dictionary<string, string> // TODO: replace with RequestCorrelationContext
                             {
-                                ["requestId"] = context.GetRequestId(),
-                                ["correlationId"] = context.GetCorrelationId(),
+                                ["CorrelationId"] = context.GetCorrelationId(),
+                                ["RequestId"] = context.GetRequestId(),
                                 //["userIdentity"] = serviceContext.UserIdentity,
                                 //["username"] = serviceContext.Username
                             },
@@ -75,7 +83,11 @@
                                 ["swagger-ui"] = $"{context.Request.Uri()}swagger/index.html",
                                 ["swagger"] = $"{context.Request.Uri()}swagger/v1/swagger.json",
                                 ["health"] = $"{context.Request.Uri()}health",
-                                ["echo"] = $"{context.Request.Uri()}echo"
+                                ["echo"] = $"{context.Request.Uri()}echo",
+                                ["echo-messaging"] = $"{context.Request.Uri()}api/echo/messaging",
+                                ["echo-correlation"] = $"{context.Request.Uri()}api/echo/correlation",
+                                ["echo-servicecontext"] = $"{context.Request.Uri()}api/echo/servicecontext",
+                                ["echo-servicediscovery"] = $"{context.Request.Uri()}api/echo/servicediscovery",
                             }
                         }, DefaultJsonSerializerSettings.Create())).ConfigureAwait(false);
                 }

@@ -14,7 +14,9 @@
 
         int? Take { get; set; }
 
-        IEnumerable<OrderByOption<T>> OrderBy { get; set; }
+        OrderOption<T> Order { get; set; }
+
+        IEnumerable<OrderOption<T>> Orders { get; set; }
 
         IEnumerable<Expression<Func<T, object>>> Includes { get; set; }
     }

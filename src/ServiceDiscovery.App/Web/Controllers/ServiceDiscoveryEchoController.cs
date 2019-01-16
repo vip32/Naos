@@ -6,7 +6,6 @@
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.App;
 
     [Route("api/echo/servicediscovery")]
     [ApiController]

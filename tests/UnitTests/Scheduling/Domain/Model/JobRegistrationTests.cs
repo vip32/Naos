@@ -2,7 +2,7 @@
 {
     using System;
     using System.Globalization;
-    using Naos.Core.Scheduling.Domain;
+    using Naos.Core.JobScheduling.Domain;
     using Shouldly;
     using Xunit;
 

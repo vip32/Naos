@@ -1,6 +1,5 @@
 ﻿namespace Naos.Sample.App.IntegrationTests.Messaging.Infrastructure.Azure
 {
-    using System;
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Core.App.Configuration;
     using Naos.Core.Messaging;

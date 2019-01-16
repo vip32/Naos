@@ -15,6 +15,6 @@
         /// <summary>
         /// The path patterns to ignore
         /// </summary>
-        public string[] PathBlackListPatterns { get; set; } = new[] { "/swagger*", "/favicon.ico" };
+        public string[] PathBlackListPatterns { get; set; } = new[] { "/swagger*", "/favicon.ico", "/api/operations/logevents*" };
     }
 }

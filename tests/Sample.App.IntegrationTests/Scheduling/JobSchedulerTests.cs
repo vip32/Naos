@@ -6,7 +6,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Core.App.Configuration;
     using Naos.Core.Common;
-    using Naos.Core.Scheduling.Domain;
+    using Naos.Core.JobScheduling.Domain;
     using Shouldly;
     using Xunit;
 

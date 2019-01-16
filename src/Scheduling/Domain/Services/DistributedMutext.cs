@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Scheduling.Domain
+﻿namespace Naos.Core.JobScheduling.Domain
 {
     using System;
     using EnsureThat;

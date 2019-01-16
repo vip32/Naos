@@ -43,7 +43,7 @@
                         details.Errors.Add(item.Key, item.Value.Errors.Select(e => e.ErrorMessage).ToArray());
                     }
 
-                    this.logger?.LogWarning($"SERVICE http request  ({{RequestId}}) {details.Title} [{badRequestException.GetType().PrettyName()}] {badRequestException.Message}", requestId);
+                    this.logger?.LogWarning($"SERVICE http request  ({requestId}) {details.Title} [{badRequestException.GetType().PrettyName()}] {badRequestException.Message}");
 
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                     context.Response.WriteJson(details, contentType: ContentType.JSONPROBLEM);

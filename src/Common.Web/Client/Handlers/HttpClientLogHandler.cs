@@ -2,6 +2,7 @@
 {
     using System;
     using System.Diagnostics;
+    using System.Linq;
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
@@ -24,9 +25,10 @@
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
+            var correlationId = request.GetCorrelationId();
             var requestId = request.GetRequestId();
 
-            await this.LogHttpRequest(request, requestId);
+            await this.LogHttpRequest(request, correlationId, requestId);
 
             var timer = Stopwatch.StartNew();
             var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
@@ -46,7 +48,7 @@
             return await response.Content.ReadAsStringAsync();
         }
 
-        protected async Task LogHttpRequest(HttpRequestMessage request, string requestId)
+        protected async Task LogHttpRequest(HttpRequestMessage request, string correlationId, string requestId)
         {
             var content = string.Empty;
             if (request?.Content != null)
@@ -54,9 +56,12 @@
                 content = await this.GetRequestContent(request).ConfigureAwait(false);
             }
 
-            var message = $"CLIENT http request   ({{RequestId}}) {request?.Method} {{Url}}";
+            if (!request.Headers.IsNullOrEmpty())
+            {
+                this.WriteLog($"CLIENT http request   ({requestId}) headers={string.Join("|", request.Headers.Select(h => $"{h.Key}={string.Join("|", h.Value)}"))}");
+            }
 
-            this.WriteLog(message: message, args: new object[] { requestId, request.RequestUri });
+            this.WriteLog($"CLIENT http request   ({requestId}) {request?.Method} {{Url}} ({correlationId})", args: new object[] { request.RequestUri });
         }
 
         protected async Task LogHttpResponse(HttpResponseMessage response, string requestId, TimeSpan elapsed)
@@ -77,9 +82,12 @@
                 content = await this.GetResponseContent(response).ConfigureAwait(false);
             }
 
-            var message = $"CLIENT http response  ({{RequestId}}) {response.RequestMessage.Method} {{Url}} {{StatusCode}} ({response.StatusCode}) -> took {elapsed.Humanize(3)}";
+            if (!response.Headers.IsNullOrEmpty())
+            {
+                this.WriteLog($"CLIENT http response  ({requestId}) headers={string.Join("|", response.Headers.Select(h => $"{h.Key}={string.Join("|", h.Value)}"))}", level: level);
+            }
 
-            this.WriteLog(message, null, level, args: new object[] { requestId, response.RequestMessage.RequestUri, (int)response.StatusCode });
+            this.WriteLog($"CLIENT http response  ({requestId}) {response.RequestMessage.Method} {{Url}} {{StatusCode}} ({response.StatusCode}) -> took {elapsed.Humanize(3)}", null, level, args: new object[] { response.RequestMessage.RequestUri, (int)response.StatusCode });
         }
 
         private void WriteLog(string message, Exception exception = null, LogLevel level = LogLevel.Information, params object[] args)

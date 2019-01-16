@@ -2,8 +2,8 @@
 {
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection.Extensions;
-    using Naos.Core.Correlation.App;
-    using Naos.Core.Correlation.App.Web;
+    using Naos.Core.RequestCorrelation.App;
+    using Naos.Core.RequestCorrelation.App.Web;
 
     /// <summary>
     /// Extensions on the <see cref="IServiceCollection"/>.

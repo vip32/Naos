@@ -30,7 +30,7 @@
                         sp.GetRequiredService<ILogger<CountryRepository>>(),
                         new RepositoryTenantDecorator<Country>(
                             "naos_sample_test",
-                            new RepositoryOrderByDecorator<Country>(
+                            new RepositoryOrderDecorator<Country>(
                                 e => e.Name,
                                 new InMemoryRepository<Country, DbCountry>(
                                     sp.GetRequiredService<IMediator>(),

@@ -7,7 +7,7 @@
     using Microsoft.Extensions.Hosting;
     using Naos.Core.App.Configuration;
     using Naos.Core.Common.Web;
-    using Naos.Core.Correlation.App.Web;
+    using Naos.Core.RequestCorrelation.App.Web;
 
     public static class Program
     {

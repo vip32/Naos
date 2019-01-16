@@ -23,7 +23,7 @@
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            this.logger.LogInformation("messaging hosted service started");
+            this.logger.LogInformation("MESSAGING hosted service started");
 
             return Task.CompletedTask;
         }
@@ -36,7 +36,7 @@
         public void Dispose()
         {
             //this.broker?.Dispose();
-            this.logger.LogInformation("messaging hosted service stopped");
+            this.logger.LogInformation("MESSAGING hosted service stopped");
         }
     }
 }

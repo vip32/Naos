@@ -1,10 +1,10 @@
-﻿namespace Naos.Core.Correlation.App.Web.Controllers
+﻿namespace Naos.Core.RequestCorrelation.App.Web.Controllers
 {
     using System.Net;
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Correlation.App;
+    using Naos.Core.RequestCorrelation.App;
 
     [Route("api/echo/correlation")]
     [ApiController]

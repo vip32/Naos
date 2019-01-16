@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.App.Operations.Web
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
@@ -43,25 +44,38 @@
             }
             else
             {
+                var correlationId = context.GetCorrelationId();
                 var requestId = context.GetRequestId();
 
-                this.LogRequest(context, requestId);
-                var timer = Stopwatch.StartNew();
-                await this.next.Invoke(context).ConfigureAwait(false);
-                timer.Stop();
-                this.LogResponse(context, requestId, timer.Elapsed);
+                //var loggerState = new Dictionary<string, object> // again
+                //{
+                //    [LogEventPropertyKeys.CorrelationId] = correlationId,
+                //    [LogEventPropertyKeys.RequestId] = requestId
+                //};
+
+                //using (this.logger.BeginScope(loggerState))
+                //{
+                    this.LogRequest(context, correlationId, requestId);
+                    var timer = Stopwatch.StartNew();
+                    await this.next.Invoke(context).ConfigureAwait(false);
+                    timer.Stop();
+                    this.LogResponse(context, requestId, timer.Elapsed);
+                //}
             }
         }
 
-        private void LogRequest(HttpContext context, string requestId)
+        private void LogRequest(HttpContext context, string correlationId, string requestId)
         {
-            this.logger.LogInformation($"SERVICE http request  ({{RequestId}}) {context.Request.Method} {{Url}}", requestId, new Uri(context.Request.GetDisplayUrl()));
+            this.logger.LogInformation($"SERVICE http request  ({requestId}) {context.Request.Method} {{Url}} ({correlationId})", new Uri(context.Request.GetDisplayUrl()));
             //if (context.HasServiceName())
             //{
-            //    this.logger.LogInformation($"SERVICE http request  ({{RequestId}}) service {context.GetServiceName()}", requestId);
+            //    this.logger.LogInformation($"SERVICE http request  ({requestId}) service {context.GetServiceName()}");
             //}
 
-            this.logger.LogInformation($"SERVICE http request  ({{RequestId}}) headers={string.Join(", ", context.Request.Headers.Select(h => $"{h.Key}={h.Value}"))}");
+            if (!context.Request.Headers.IsNullOrEmpty())
+            {
+                this.logger.LogInformation($"SERVICE http request  ({requestId}) headers={string.Join("|", context.Request.Headers.Select(h => $"{h.Key}={h.Value}"))}");
+            }
 
             //request.EnableRewind();
             //using (var stream = this.streamManager.GetStream())
@@ -89,7 +103,12 @@
                 level = LogLevel.Warning;
             }
 
-            this.logger.Log(level, $"SERVICE http response ({{RequestId}}) {context.Request.Method} {{Url}} {{StatusCode}} ({ReasonPhrases.GetReasonPhrase(context.Response.StatusCode)}) -> took {elapsed.Humanize(3)}", requestId, new Uri(context.Request.GetDisplayUrl()), context.Response.StatusCode);
+            if (!context.Response.Headers.IsNullOrEmpty())
+            {
+                this.logger.Log(level, $"SERVICE http response ({requestId}) headers={string.Join("|", context.Response.Headers.Select(h => $"{h.Key}={h.Value}"))}");
+            }
+
+            this.logger.Log(level, $"SERVICE http response ({requestId}) {context.Request.Method} {{Url}} {{StatusCode}} ({ReasonPhrases.GetReasonPhrase(context.Response.StatusCode)}) -> took {elapsed.Humanize(3)}", new Uri(context.Request.GetDisplayUrl()), context.Response.StatusCode);
         }
 
         //private async Task LogResponseAsync(HttpContext context, string requestId)

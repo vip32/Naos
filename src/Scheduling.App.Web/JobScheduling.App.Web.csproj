@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.Scheduling.App.Web</AssemblyName>
-    <RootNamespace>Naos.Core.Scheduling.App.Web</RootNamespace>
+    <AssemblyName>Naos.Core.JobScheduling.App.Web</AssemblyName>
+    <RootNamespace>Naos.Core.JobScheduling.App.Web</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,11 +14,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common.Web\Common.Web.csproj" />
-    <ProjectReference Include="..\Scheduling\Scheduling.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-      
+    <ProjectReference Include="..\Scheduling\JobScheduling.csproj" />
   </ItemGroup>
 
 </Project>

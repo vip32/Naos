@@ -44,10 +44,15 @@
             EnsureArg.IsNotNull(message, nameof(message));
             if (message.CorrelationId.IsNullOrEmpty())
             {
-                message.CorrelationId = Guid.NewGuid().ToString();
+                message.CorrelationId = RandomGenerator.GenerateString(13, true); //Guid.NewGuid().ToString().Replace("-", string.Empty);
             }
 
-            using (this.logger.BeginScope("{CorrelationId}", message.CorrelationId))
+            var loggerState = new Dictionary<string, object>
+            {
+                [LogEventPropertyKeys.CorrelationId] = message.CorrelationId,
+            };
+
+            using (this.logger.BeginScope(loggerState))
             {
                 if (message.Id.IsNullOrEmpty())
                 {

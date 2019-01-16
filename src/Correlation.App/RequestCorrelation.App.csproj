@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.Correlation.App</AssemblyName>
-    <RootNamespace>Naos.Core.Correlation.App</RootNamespace>
+    <AssemblyName>Naos.Core.RequestCorrelation.App</AssemblyName>
+    <RootNamespace>Naos.Core.RequestCorrelation.App</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\App\App.csproj" />
     <ProjectReference Include="..\Common.Web\Common.Web.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>

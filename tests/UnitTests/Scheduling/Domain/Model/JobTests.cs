@@ -3,7 +3,7 @@
     using System;
     using System.Threading;
     using System.Threading.Tasks;
-    using Naos.Core.Scheduling.Domain;
+    using Naos.Core.JobScheduling.Domain;
     using Shouldly;
     using Xunit;
 

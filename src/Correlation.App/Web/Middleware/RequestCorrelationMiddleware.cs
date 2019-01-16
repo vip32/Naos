@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.App.Correlation.App.Web
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.AspNetCore.Http;
@@ -9,7 +10,7 @@
     using Microsoft.Extensions.Primitives;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
-    using Naos.Core.Correlation.App;
+    using Naos.Core.RequestCorrelation.App;
 
     /// <summary>
     /// Middleware which attempts to reads / creates a Correlation ID that can then be used in logs and
@@ -53,75 +54,82 @@
             var correlationId = this.EnsureCorrelationId(context);
             var requestId = this.EnsureRequestId(context);
 
-            // needed by other request middlewares (requestresponselogging, filtering)
-            context.SetCorrelationId(correlationId);
-            context.SetRequestId(requestId);
-
-            if (this.options.UpdateTraceIdentifier)
+            var loggerState = new Dictionary<string, object>
             {
-                this.logger.LogDebug($"SERVICE http request  ({requestId}) now has traceIdentifier {correlationId}, was {context.TraceIdentifier}"); // TODO: move to request logging middleware (operations)
-                context.TraceIdentifier = correlationId;
-            }
+                [LogEventPropertyKeys.CorrelationId] = correlationId, //"t " + correlationId.SubstringTillLast("-"),
+                [LogEventPropertyKeys.RequestId] = requestId
+            };
 
-            contextFactory.Create(correlationId, this.options.CorrelationHeader, requestId, this.options.RequestHeader);
-
-            if (this.options.IncludeInResponse)
+            using (this.logger.BeginScope(loggerState))
             {
-                context.Response.OnStarting(() =>
+                // needed by other request middlewares (requestresponselogging, filtering)
+                context.SetCorrelationId(correlationId);
+                context.SetRequestId(requestId);
+
+                if (this.options.UpdateTraceIdentifier)
                 {
-                    // add the response headers
-                    if (!context.Response.Headers.ContainsKey(this.options.CorrelationHeader))
-                    {
-                        context.Response.Headers.Add(this.options.CorrelationHeader, correlationId);
-                    }
-                    if (!context.Response.Headers.ContainsKey(this.options.RequestHeader))
-                    {
-                        context.Response.Headers.Add(this.options.RequestHeader, requestId);
-                    }
+                    this.logger.LogDebug($"SERVICE http request  ({requestId}) now has traceIdentifier {correlationId}, was {context.TraceIdentifier}"); // TODO: move to request logging middleware (operations)
+                    context.TraceIdentifier = correlationId;
+                }
 
-                    return Task.CompletedTask;
-                });
-            }
+                contextFactory.Create(correlationId, this.options.CorrelationHeader, requestId, this.options.RequestHeader);
 
-            using (this.logger.BeginScope($"{{{this.options.CorrelationLogPropertyName}}}{{{this.options.RequestIdLogPropertyName}}}", correlationId, requestId))
-            {
+                if (this.options.IncludeInResponse)
+                {
+                    context.Response.OnStarting(() =>
+                    {
+                        // add the response headers
+                        if (!context.Response.Headers.ContainsKey(this.options.CorrelationHeader))
+                        {
+                            context.Response.Headers.Add(this.options.CorrelationHeader, correlationId);
+                        }
+                        if (!context.Response.Headers.ContainsKey(this.options.RequestHeader))
+                        {
+                            context.Response.Headers.Add(this.options.RequestHeader, requestId);
+                        }
+
+                        return Task.CompletedTask;
+                    });
+                }
+
                 await this.next(context);
             }
 
             contextFactory.Dispose();
         }
 
-        private StringValues EnsureCorrelationId(HttpContext httpContext)
+        private string EnsureCorrelationId(HttpContext httpContext)
         {
             var isFound = httpContext.Request.Headers.TryGetValue(this.options.CorrelationHeader, out var id);
             if (!isFound || StringValues.IsNullOrEmpty(id))
             {
-                if (this.options.UseGuidAsCorrelationId)
+                if (this.options.UseRandomCorrelationId)
                 {
-                    id = Guid.NewGuid().ToString();
+                    //return Guid.NewGuid().ToString(); //.Replace("-", string.Empty);
+                    return RandomGenerator.GenerateString(this.options.RandomCorrelationIdLength, true);
                 }
                 else if (this.options.UseHashAsCorrelationId)
                 {
-                    id = HashAlgorithm.ComputeHash(httpContext.TraceIdentifier);
+                    return HashAlgorithm.ComputeHash(httpContext.TraceIdentifier);
                 }
                 else
                 {
-                    id = httpContext.TraceIdentifier;
+                    return httpContext.TraceIdentifier;
                 }
             }
 
-            return id;
+            return id.ToString();
         }
 
-        private StringValues EnsureRequestId(HttpContext httpContext)
+        private string EnsureRequestId(HttpContext httpContext)
         {
             var isFound = httpContext.Request.Headers.TryGetValue(this.options.RequestHeader, out var id);
             if (!isFound || StringValues.IsNullOrEmpty(id))
             {
-                id = RandomGenerator.GenerateString(this.options.RequestIdLength, this.options.RequestIdAlphanumeric);
+                return RandomGenerator.GenerateString(this.options.RequestIdLength, this.options.RequestIdAlphanumeric);
             }
 
-            return id;
+            return id.ToString();
         }
     }
 }

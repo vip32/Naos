@@ -101,19 +101,19 @@
 <body>");
             try
             {
-                var logEntries = await this.repository.FindAllAsync().ConfigureAwait(false);
-                foreach (var logEntry in logEntries)
+                var logEvents = await this.repository.FindAllAsync().ConfigureAwait(false);
+                foreach (var logEvent in logEvents)
                 {
                     var levelColor = "lime";
-                    if (logEntry.Level.Equals("Verbose", StringComparison.OrdinalIgnoreCase) || logEntry.Level.Equals("Debug", StringComparison.OrdinalIgnoreCase))
+                    if (logEvent.Level.Equals("Verbose", StringComparison.OrdinalIgnoreCase) || logEvent.Level.Equals("Debug", StringComparison.OrdinalIgnoreCase))
                     {
                         levelColor = "#75715E";
                     }
-                    else if (logEntry.Level.Equals("Warning", StringComparison.OrdinalIgnoreCase))
+                    else if (logEvent.Level.Equals("Warning", StringComparison.OrdinalIgnoreCase))
                     {
                         levelColor = "#FF8C00";
                     }
-                    else if (logEntry.Level.Equals("Error", StringComparison.OrdinalIgnoreCase) || logEntry.Level.Equals("Fatal", StringComparison.OrdinalIgnoreCase))
+                    else if (logEvent.Level.Equals("Error", StringComparison.OrdinalIgnoreCase) || logEvent.Level.Equals("Fatal", StringComparison.OrdinalIgnoreCase))
                     {
                         levelColor = "#FF0000";
                     }
@@ -122,13 +122,13 @@
                     var extraStyles = string.Empty;
 
                     await this.HttpContext.Response.WriteAsync("<div style='white-space: nowrap;'><span style='color: #EB1864; font-size: x-small;'>");
-                    await this.HttpContext.Response.WriteAsync($"{logEntry.Timestamp.ToUniversalTime():u}");
+                    await this.HttpContext.Response.WriteAsync($"{logEvent.Timestamp.ToUniversalTime():u}");
                     await this.HttpContext.Response.WriteAsync("</span>");
                     await this.HttpContext.Response.WriteAsync($"&nbsp;[<span style='color: {levelColor}'>");
-                    await this.HttpContext.Response.WriteAsync($"{logEntry.Level.ToUpper().Truncate(3, string.Empty)}");
-                    await this.HttpContext.Response.WriteAsync("</span>]&nbsp;");
+                    await this.HttpContext.Response.WriteAsync($"{logEvent.Level.ToUpper().Truncate(3, string.Empty)}");
+                    await this.HttpContext.Response.WriteAsync($"</span>]&nbsp;{logEvent.CorrelationId}&nbsp;");
                     await this.HttpContext.Response.WriteAsync($"<span style='color: {messageColor}; {extraStyles}'>");
-                    await this.HttpContext.Response.WriteAsync($"{logEntry.Message}");
+                    await this.HttpContext.Response.WriteAsync($"{logEvent.Message}");
                     await this.HttpContext.Response.WriteAsync("</span>");
                     await this.HttpContext.Response.WriteAsync("</div>");
                 }

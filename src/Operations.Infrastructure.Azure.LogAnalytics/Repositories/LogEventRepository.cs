@@ -53,7 +53,7 @@
 LogEvents_Development_CL | where LogMessage_s != '' | 
 where TimeGenerated > ago(24h) and LogLevel_s != 'Verbose' | 
 order by Timestamp_t | 
-top 100000 by Timestamp_t")).ConfigureAwait(false);
+top 300 by Timestamp_t")).ConfigureAwait(false); // 100000
             response.EnsureSuccessStatusCode();
 
             return this.MapResponse(SerializationHelper.JsonDeserialize<LogAnalyticsResponse>(
@@ -113,13 +113,13 @@ top 100000 by Timestamp_t")).ConfigureAwait(false);
                         }
 
                         result.Level = result.Properties.TryGetValue("LogLevel") as string;
-                        result.Environment = result.Properties.TryGetValue("Environment") as string;
+                        result.Environment = result.Properties.TryGetValue(LogEventPropertyKeys.Environment) as string;
                         result.Message = result.Properties.TryGetValue("LogMessage") as string;
                         result.Timestamp = result.Properties.TryGetValue("Timestamp") is DateTime
                             ? (DateTime)result.Properties.TryGetValue("Timestamp")
                             : default;
-                        result.CorrelationId = result.Properties.TryGetValue("CorrelationId") as string;
-                        result.ServiceDescriptor = result.Properties.TryGetValue("ServiceDescriptor") as string;
+                        result.CorrelationId = result.Properties.TryGetValue(LogEventPropertyKeys.CorrelationId) as string;
+                        //result.ServiceDescriptor = result.Properties.TryGetValue("ServiceDescriptor") as string;
                         result.SourceContext = result.Properties.TryGetValue("SourceContext") as string;
 
                         yield return result;

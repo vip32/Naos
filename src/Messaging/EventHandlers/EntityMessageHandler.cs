@@ -1,5 +1,6 @@
 ﻿namespace Naos.Core.Messaging
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
@@ -22,7 +23,12 @@
         /// <returns></returns>
         public virtual Task Handle(EntityMessage<T> message)
         {
-            using (this.logger.BeginScope("{CorrelationId}", message.CorrelationId))
+            var loggerState = new Dictionary<string, object>
+            {
+                [LogEventPropertyKeys.CorrelationId] = message.CorrelationId,
+            };
+
+            using (this.logger.BeginScope(loggerState))
             {
                 this.logger.LogInformation("MESSAGE handle  (name={MessageName}, id={MessageId}, origin={MessageOrigin}) " + message.Entity.GetType().Name, message.GetType().PrettyName(), message.Id, message.Origin);
 

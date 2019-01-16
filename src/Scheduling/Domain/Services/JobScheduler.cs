@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Scheduling.Domain
+﻿namespace Naos.Core.JobScheduling.Domain
 {
     using System;
     using System.Linq;
@@ -41,7 +41,7 @@
             EnsureArg.IsNotNull(job, nameof(job));
 
             registration.Key = registration.Key ?? HashAlgorithm.ComputeHash(job);
-            this.logger.LogInformation($"register scheduled job (key={registration.Key}, cron={registration.Cron}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")}, enabled={registration.Enabled})");
+            this.logger.LogInformation($"JOB registration (key={{JobKey}}, cron={registration.Cron}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")}, enabled={registration.Enabled})", registration.Key);
 
             var item = this.Settings.Registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(registration.Key));
             if (item.Key != null)
@@ -83,7 +83,7 @@
             }
             else
             {
-                this.logger.LogInformation($"job scheduler does not have a job registered with key {key}");
+                this.logger.LogInformation("job scheduler does not have a registration with key {{JobKey}} registered", key);
             }
         }
 
@@ -96,7 +96,7 @@
             }
             else
             {
-                this.logger.LogInformation($"job scheduler does not have a job registered with key {key}");
+                this.logger.LogInformation("JOB scheduler does not have a registration with key {{JobKey}} registered", key);
             }
         }
 
@@ -111,15 +111,15 @@
 
             if (!this.Settings.Enabled)
             {
-                this.logger.LogDebug($"job scheduler run not started (enabled={this.Settings.Enabled})");
+                //this.logger.LogDebug($"job scheduler run not started (enabled={this.Settings.Enabled})");
                 return;
             }
 
             Interlocked.Increment(ref this.activeCount);
-            this.logger.LogInformation($"job scheduler run started (activeCount=#{this.activeCount}, moment={moment.ToString("o")})");
+            this.logger.LogInformation($"JOB scheduler run started (activeCount=#{this.activeCount}, moment={moment.ToString("o")})");
             await this.ExecuteJobsAsync(moment).ConfigureAwait(false);
             Interlocked.Decrement(ref this.activeCount);
-            this.logger.LogInformation($"job scheduler run finished (activeCount=#{this.activeCount})");
+            this.logger.LogInformation($"JOB scheduler run finished (activeCount=#{this.activeCount})");
         }
 
         private async Task ExecuteJobsAsync(DateTime moment)
@@ -135,7 +135,7 @@
 
             if (dueJobs.IsNullOrEmpty())
             {
-                this.logger.LogInformation($"job scheduler run no due jobs at moment {moment.ToString("o")}");
+                this.logger.LogInformation($"JOB scheduler run no due jobs at moment {moment.ToString("o")}");
             }
 
             await Task.WhenAll(dueJobs).ConfigureAwait(false); // really wait for completion (await)?
@@ -150,9 +150,9 @@
                     async Task Execute()
                     {
                         // TODO: publish domain event (job started)
-                        this.logger.LogInformation($"job started (key={registration.Key}, type={job.GetType().PrettyName()}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")})");
+                        this.logger.LogInformation($"JOB started (key={{JobKey}}, type={job.GetType().PrettyName()}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")})", registration.Key);
                         await job.ExecuteAsync(cancellationToken, args).ConfigureAwait(false);
-                        this.logger.LogInformation($"job finished (key={registration.Key}, type={job.GetType().PrettyName()})");
+                        this.logger.LogInformation($"JOB finished (key={{JobKey}}, type={job.GetType().PrettyName()})", registration.Key);
                         // TODO: publish domain event (job finished)
                     }
 
@@ -171,7 +171,7 @@
                         }
                         else
                         {
-                            this.logger.LogWarning($"job already executing (key={registration.Key}, type={job.GetType().PrettyName()})");
+                            this.logger.LogWarning($"JOB already executing (key={{JobKey}}, type={job.GetType().PrettyName()})", registration.Key);
                         }
                     }
                     else
@@ -182,13 +182,13 @@
                 catch (OperationCanceledException ex)
                 {
                     // TODO: publish domain event (job failed)
-                    this.logger.LogWarning(ex, $"job canceled (key={registration.Key}), type={job.GetType().PrettyName()})");
+                    this.logger.LogWarning(ex, $"JOB canceled (key={{JobKey}}), type={job.GetType().PrettyName()})", registration.Key);
                     //this.errorHandler?.Invoke(ex);
                 }
                 catch (Exception ex)
                 {
                     // TODO: publish domain event (job failed)
-                    this.logger.LogError(ex.InnerException ?? ex, $"job failed (key={registration.Key}), type={job.GetType().PrettyName()})");
+                    this.logger.LogError(ex.InnerException ?? ex, $"JOB failed (key={{JobKey}}), type={job.GetType().PrettyName()})", registration.Key);
                     this.errorHandler?.Invoke(ex.InnerException ?? ex);
                 }
             }

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Scheduling
+﻿namespace Naos.Core.JobScheduling
 {
     using System;
     using System.Collections.Generic;
@@ -9,7 +9,7 @@
     using EnsureThat;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
-    using Naos.Core.Scheduling.Domain;
+    using Naos.Core.JobScheduling.Domain;
 
     public class JobSchedulerSettings
     {
@@ -113,7 +113,7 @@
             EnsureArg.IsNotNull(job, nameof(job));
 
             registration.Key = registration.Key ?? HashAlgorithm.ComputeHash(job);
-            this.logger.LogInformation($"register scheduled job (key={registration.Key}, cron={registration.Cron}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")}, enabled={registration.Enabled})");
+            this.logger.LogInformation($"JOB registration (key={{JobKey}}, cron={registration.Cron}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")}, enabled={registration.Enabled})", registration.Key);
 
             var item = this.Registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(registration.Key));
             if (item.Key != null)

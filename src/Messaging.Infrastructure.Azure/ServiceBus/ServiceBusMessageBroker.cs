@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.Messaging.Infrastructure.Azure.ServiceBus
 {
     using System;
+    using System.Collections.Generic;
     using System.Text;
     using System.Threading.Tasks;
     using Common;
@@ -101,10 +102,15 @@
             EnsureArg.IsNotNull(message, nameof(message));
             if (message.CorrelationId.IsNullOrEmpty())
             {
-                message.CorrelationId = Guid.NewGuid().ToString();
+                message.CorrelationId = RandomGenerator.GenerateString(13, true); //Guid.NewGuid().ToString().Replace("-", string.Empty);
             }
 
-            using (this.logger.BeginScope("{CorrelationId}", message.CorrelationId))
+            var loggerState = new Dictionary<string, object>
+            {
+                [LogEventPropertyKeys.CorrelationId] = message.CorrelationId,
+            };
+
+            using (this.logger.BeginScope(loggerState))
             {
                 if (message.Id.IsNullOrEmpty())
                 {
@@ -218,7 +224,12 @@
                     }
 
                     var jsonMessage = JsonConvert.DeserializeObject(messageBody, messageType);
-                    using (this.logger.BeginScope("{CorrelationId}", serviceBusMessage.CorrelationId))
+                    var loggerState = new Dictionary<string, object>
+                    {
+                        [LogEventPropertyKeys.CorrelationId] = serviceBusMessage.CorrelationId,
+                    };
+
+                    using (this.logger.BeginScope(loggerState))
                     {
                         var messageOrigin = serviceBusMessage.UserProperties.ContainsKey("Origin") ? serviceBusMessage.UserProperties["Origin"] as string : string.Empty;
 

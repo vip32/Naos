@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Scheduling.App
+﻿namespace Naos.Core.JobScheduling.App
 {
     using System;
     using System.Net.Http;
@@ -58,10 +58,15 @@
                     return; //Task.FromCanceled(cancellationToken);
                 }
 
+                if (!message.IsNullOrEmpty())
+                {
+                    this.logger.LogInformation(message);
+                }
+
+                // TODO: use typed client here
                 var httpClient = this.httpClientFactory.CreateClient("default");
                 var response = await httpClient.PostAsync("http://mockbin.org/request", null, cancellationToken).ConfigureAwait(false);
 
-                this.logger.LogInformation($"{message} [{(int)response.StatusCode}]");
                 Thread.Sleep(new TimeSpan(0, 0, 45));
                 //await Task.Delay(new TimeSpan(0, 0, 45));
             }
