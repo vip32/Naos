@@ -64,7 +64,7 @@
                 }
 
                 // TODO: use typed client here
-                var httpClient = this.httpClientFactory.CreateClient("default");
+                var httpClient = this.httpClientFactory.CreateClient("default"); // contains the configured handlers
                 var response = await httpClient.PostAsync("http://mockbin.org/request", null, cancellationToken).ConfigureAwait(false);
 
                 Thread.Sleep(new TimeSpan(0, 0, 45));

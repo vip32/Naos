@@ -5,14 +5,17 @@
     using System.IO;
     using System.Threading.Tasks;
     using EnsureThat;
+    using MediatR;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
+    using Naos.Core.Messaging.Domain;
     using Naos.Core.Messaging.Domain.Model;
     using Newtonsoft.Json;
 
     public class FileSystemMessageBroker : IMessageBroker
     {
         private readonly ILogger<FileSystemMessageBroker> logger;
+        private readonly IMediator mediator;
         private readonly IMessageHandlerFactory handlerFactory;
         private readonly FileSystemConfiguration configuration;
         private readonly ISubscriptionMap map;
@@ -22,16 +25,19 @@
 
         public FileSystemMessageBroker(
             ILogger<FileSystemMessageBroker> logger,
+            IMediator mediator,
             IMessageHandlerFactory handlerFactory,
             FileSystemConfiguration configuration = null,
             ISubscriptionMap map = null,
             string filterScope = null,
-            string messageScope = "local") // message origin identifier
+            string messageScope = "local") // message origin service name
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
+            EnsureArg.IsNotNull(mediator, nameof(mediator));
             EnsureArg.IsNotNull(handlerFactory, nameof(handlerFactory));
 
             this.logger = logger;
+            this.mediator = mediator;
             this.handlerFactory = handlerFactory;
             this.configuration = configuration ?? new FileSystemConfiguration();
             this.map = map ?? new SubscriptionMap();
@@ -57,8 +63,17 @@
                 if (message.Id.IsNullOrEmpty())
                 {
                     message.Id = Guid.NewGuid().ToString();
-                    this.logger.LogDebug($"set messageId (id={message.Id})");
+                    this.logger.LogDebug($"{LogEventIdentifiers.Messaging} set message (id={message.Id})");
                 }
+
+                if (message.Origin.IsNullOrEmpty())
+                {
+                    message.Origin = this.messageScope;
+                    this.logger.LogDebug($"{LogEventIdentifiers.Messaging} set message (origin={message.Origin})");
+                }
+
+                // TODO: async publish!
+                /*await */ this.mediator.Publish(new MessagePublishDomainEvent(message)).GetAwaiter().GetResult(); /*.ConfigureAwait(false);*/
 
                 var messageName = /*message.Name*/ message.GetType().PrettyName(false);
 
@@ -66,7 +81,7 @@
                 var directory = this.GetDirectory(messageName, this.filterScope);
                 this.EnsureDirectory(directory);
 
-                this.logger.LogInformation("MESSAGE publish (name={MessageName}, id={MessageId}, service={Service})", message.GetType().PrettyName(), message.Id, this.messageScope);
+                this.logger.LogInformation($"{LogEventIdentifiers.Messaging} publish (name={{MessageName}}, id={{MessageId}}, origin={{MessageOrigin}})", message.GetType().PrettyName(), message.Id, message.Origin);
 
                 var fullFileName = Path.Combine(this.GetDirectory(messageName, this.filterScope), $"message_{message.Id}_{this.messageScope}.json.tmp");
                 using (var streamWriter = File.CreateText(fullFileName))
@@ -91,7 +106,7 @@
                 if (!this.watchers.ContainsKey(messageName))
                 {
                     var directory = this.GetDirectory(messageName, this.filterScope);
-                    this.logger.LogInformation("MESSAGE subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, watch={Directory})", typeof(TMessage).PrettyName(), this.messageScope, this.filterScope, typeof(THandler).Name, directory);
+                    this.logger.LogInformation($"{LogEventIdentifiers.Messaging} subscribe (name={{MessageName}}, service={{Service}}, filterScope={{FilterScope}}, handler={{MessageHandlerType}}, watch={{Directory}})", typeof(TMessage).PrettyName(), this.messageScope, this.filterScope, typeof(THandler).Name, directory);
                     this.EnsureDirectory(directory);
 
                     var watcher = new FileSystemWatcher(directory)
@@ -107,6 +122,7 @@
                     };
 
                     this.watchers.Add(messageName, watcher);
+                    this.logger.LogDebug($"{LogEventIdentifiers.Messaging} filesystem onrenamed handler registered (name={{messageName}})");
 
                     this.map.Add<TMessage, THandler>(messageName);
                 }
@@ -120,7 +136,7 @@
             where THandler : IMessageHandler<TMessage>
         {
             // remove folder watch
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -136,7 +152,6 @@
 
             if (this.map.Exists(messageName))
             {
-                var messageOrigin = fullPath.SubstringFromLast("_").SubstringTillLast("."); // read metadata from filename
                 foreach (var subscription in this.map.GetAll(messageName))
                 {
                     var messageType = this.map.GetByName(messageName);
@@ -146,15 +161,17 @@
                     }
 
                     var jsonMessage = JsonConvert.DeserializeObject(messageBody, messageType);
-                    var message = jsonMessage as Domain.Model.Message;
-                    if (message != null)
+                    var message = jsonMessage as Message;
+                    if (message?.Origin.IsNullOrEmpty() == true)
                     {
                         //message.CorrelationId = jsonMessage.AsJToken().GetStringPropertyByToken("CorrelationId");
-                        message.Origin = messageOrigin;
+                        message.Origin = fullPath.SubstringFromLast("_").SubstringTillLast("."); // read metadata from filename
                     }
 
-                    this.logger.LogInformation("MESSAGE process (name={MessageName}, id={MessageId}, service={Service}, origin={MessageOrigin})",
-                            messageType.PrettyName(), message?.Id, this.messageScope, messageOrigin);
+                    // TODO: async publish!
+                    /*await */ this.mediator.Publish(new MessageProcessDomainEvent(message, this.messageScope)).GetAwaiter().GetResult(); /*.ConfigureAwait(false);*/
+                    this.logger.LogInformation($"{LogEventIdentifiers.Messaging} process (name={{MessageName}}, id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}})",
+                            messageType.PrettyName(), message?.Id, this.messageScope, message.Origin);
 
                     // construct the handler by using the DI container
                     var handler = this.handlerFactory.Create(subscription.HandlerType); // should not be null, did you forget to register your generic handler (EntityMessageHandler<T>)
@@ -167,8 +184,8 @@
                     }
                     else
                     {
-                        this.logger.LogWarning("process message failed, message handler could not be created. is the handler registered in the service provider? (name={MessageName}, service={Service}, id={MessageId}, origin={MessageOrigin})",
-                            messageType.PrettyName(), this.messageScope, message?.Id, messageOrigin);
+                        this.logger.LogWarning($"{LogEventIdentifiers.Messaging} process failed, message handler could not be created. is the handler registered in the service provider? (name={{MessageName}}, service={{Service}}, id={{MessageId}}, origin={{MessageOrigin}})",
+                            messageType.PrettyName(), this.messageScope, message?.Id, message.Origin);
                     }
                 }
 
@@ -176,7 +193,7 @@
             }
             else
             {
-                this.logger.LogDebug($"unprocessed: {messageName}");
+                this.logger.LogDebug($"{LogEventIdentifiers.Messaging} unprocessed: {messageName}");
             }
 
             return processed;

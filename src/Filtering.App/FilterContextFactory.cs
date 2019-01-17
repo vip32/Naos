@@ -34,7 +34,7 @@
             var result = new FilterContext
             {
                 Criterias = this.BuildCriterias(request, criteriaQueryStringKey),
-                OrderBy = this.BuildOrderBy(request, orderByQueryStringKey),
+                OrderBy = this.BuildOrder(request, orderByQueryStringKey),
                 Skip = request?.Query?.FirstOrDefault(p => p.Key.Equals(skipQueryStringKey, StringComparison.OrdinalIgnoreCase)).Value.FirstOrDefault().ToNullableInt(),
                 Take = request?.Query?.FirstOrDefault(p => p.Key.Equals(takeQueryStringKey, StringComparison.OrdinalIgnoreCase)).Value.FirstOrDefault().ToNullableInt()
             };
@@ -89,26 +89,26 @@
             return result;
         }
 
-        private IEnumerable<OrderBy> BuildOrderBy(HttpRequest request, string orderByQueryStringKey)
+        private IEnumerable<Order> BuildOrder(HttpRequest request, string orderByQueryStringKey)
         {
             if (request?.Query?.ContainsKey(orderByQueryStringKey) == false)
             {
-                return Enumerable.Empty<OrderBy>();
+                return Enumerable.Empty<Order>();
             }
 
-            // orderBy=desc:timestamp,level
+            // order=desc:timestamp,level
             var query = request.Query.FirstOrDefault(p => p.Key.Equals(orderByQueryStringKey, StringComparison.OrdinalIgnoreCase));
             var items = query.Value.ToString().Split(',');
 
-            var result = new List<OrderBy>();
+            var result = new List<Order>();
             foreach (var item in items.Where(c => !c.IsNullOrEmpty()))
             {
                 var name = item.Contains(":") ? item.SubstringFrom(":").Trim() : item;
                 var direction = item.Contains(":") ? item.SubstringTill(":").Trim() : "ascending";
 
-                result.Add(new OrderBy(
+                result.Add(new Order(
                     name.Trim(),
-                    Enum.TryParse(direction, true, out OrderByDirection e) ? e : OrderByDirection.Asc));
+                    Enum.TryParse(direction, true, out OrderDirection e) ? e : OrderDirection.Asc));
             }
 
             return result;

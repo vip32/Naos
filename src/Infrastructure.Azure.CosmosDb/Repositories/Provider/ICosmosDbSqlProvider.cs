@@ -46,8 +46,18 @@
 
         Task<IEnumerable<T>> WhereAsync(Expression<Func<T, bool>> expression);
 
-        Task<IEnumerable<T>> WhereAsync<TKey>(Expression<Func<T, bool>> expression = null, IEnumerable<Expression<Func<T, bool>>> expressions = null, int count = 100, Expression<Func<T, TKey>> orderExpression = null, bool desc = false);
+        Task<IEnumerable<T>> WhereAsync(
+            Expression<Func<T, bool>> expression = null,
+            IEnumerable<Expression<Func<T, bool>>> expressions = null,
+            int count = 100,
+            Expression<Func<T, object>> orderExpression = null,
+            bool orderDescending = false);
 
-        Task<IEnumerable<T>> WhereAsync<TKey>(Expression<Func<T, bool>> expression, Expression<Func<T, T>> selector, int count = 100, Expression<Func<T, TKey>> orderExpression = null);
+        Task<IEnumerable<T>> WhereAsync(
+            Expression<Func<T, bool>> expression,
+            Expression<Func<T, T>> selector,
+            int count = 100,
+            Expression<Func<T, object>> orderExpression = null,
+            bool orderDescending = false);
     }
 }

@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using MediatR;
+    using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Domain.Specifications;
 
@@ -18,22 +19,27 @@
         where TEntity : class, IEntity, IAggregateRoot
     {
         protected readonly InMemoryContext<TEntity> context;
+        protected readonly ILogger<IRepository<TEntity>> logger;
         private readonly IMediator mediator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InMemoryRepository{T}" /> class.
         /// </summary>
+        /// <param name="logger">The logger.</param>
         /// <param name="mediator">The mediator.</param>
         /// <param name="context">The context containing entities.</param>
         /// <param name="options">The options.</param>
         public InMemoryRepository(
+            ILogger<IRepository<TEntity>> logger,
             IMediator mediator,
             InMemoryContext<TEntity> context,
             IRepositoryOptions options = null)
         {
+            EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(mediator, nameof(mediator));
             EnsureArg.IsNotNull(context, nameof(context));
 
+            this.logger = logger;
             this.mediator = mediator;
             this.context = context ?? new InMemoryContext<TEntity>();
             this.Options = options;
@@ -174,6 +180,7 @@
                 }
             }
 
+            this.logger.LogInformation($"{LogEventIdentifiers.DomainRepository} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}");
             // TODO: map to destination
             //this.entities = this.entities.Where(e => !e.Id.Equals(entity.Id)).Concat(new[] { entity }).ToList();
             if (this.context.Entities.Contains(entity))
@@ -194,6 +201,8 @@
                     await this.mediator.Publish(new EntityUpdatedDomainEvent(entity)).ConfigureAwait(false);
                 }
             }
+
+            this.logger.LogInformation($"{LogEventIdentifiers.DomainRepository} upserted entity: {entity.GetType().PrettyName()}, id: {entity.Id}, isNew: {isNew}");
 
 #pragma warning disable SA1008 // Opening parenthesis must be spaced correctly
             return isNew ? (entity, ActionResult.Inserted) : (entity, ActionResult.Updated);
@@ -221,6 +230,7 @@
                     await this.mediator.Publish(new EntityDeleteDomainEvent(entity)).ConfigureAwait(false);
                 }
 
+                this.logger.LogInformation($"{LogEventIdentifiers.DomainRepository} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}");
                 this.context.Entities.Remove(entity);
 
                 if (this.Options?.PublishEvents != false)
@@ -252,6 +262,7 @@
                 await this.mediator.Publish(new EntityDeleteDomainEvent(entity)).ConfigureAwait(false);
             }
 
+            this.logger.LogInformation($"{LogEventIdentifiers.DomainRepository} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}");
             this.context.Entities.Remove(entity);
 
             if (this.Options?.PublishEvents != false)

@@ -8,6 +8,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
     using EnsureThat;
     using FizzWare.NBuilder;
     using MediatR;
+    using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Domain;
     using Naos.Core.Domain.Repositories;
@@ -40,8 +41,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task FindAllEntities_Test()
         {
             // arrange
+            var logger = Substitute.For<ILogger<IRepository<StubEntityString>>>();
             var mediator = Substitute.For<IMediator>();
-            var sut = new InMemoryRepository<StubEntityString>(mediator, new InMemoryContext<StubEntityString>(this.entities));
+            var sut = new InMemoryRepository<StubEntityString>(logger, mediator, new InMemoryContext<StubEntityString>(this.entities));
 
             // act
             var result = await sut.FindAllAsync().ConfigureAwait(false);
@@ -55,9 +57,10 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task FindAllTenantEntities_Test() // TODO: move to own test class + mocks
         {
             // arrange
+            var logger = Substitute.For<ILogger<IRepository<StubEntityString>>>();
             var mediator = Substitute.For<IMediator>();
             var sut = new RepositorySpecificationDecorator<StubEntityString>(
-                new InMemoryRepository<StubEntityString>(mediator, new InMemoryContext<StubEntityString>(this.entities)),
+                new InMemoryRepository<StubEntityString>(logger, mediator, new InMemoryContext<StubEntityString>(this.entities)),
                 new Specification<StubEntityString>(t => t.TenantId == this.tenantId)); // = decoratee
 
             // act
@@ -72,8 +75,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task FindAllEntitiesWithSingleSpecification_Test()
         {
             // arrange
+            var logger = Substitute.For<ILogger<IRepository<StubEntityString>>>();
             var mediator = Substitute.For<IMediator>();
-            var sut = new InMemoryRepository<StubEntityString>(mediator, new InMemoryContext<StubEntityString>(this.entities));
+            var sut = new InMemoryRepository<StubEntityString>(logger, mediator, new InMemoryContext<StubEntityString>(this.entities));
 
             // act/assert
             var result = await sut.FindAllAsync(new StubHasNameSpecification(this.entities.First().FirstName)).ConfigureAwait(false);
@@ -103,8 +107,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task FindAllEntitiesWithMultipleSpecifications_Test()
         {
             // arrange
+            var logger = Substitute.For<ILogger<IRepository<StubEntityString>>>();
             var mediator = Substitute.For<IMediator>();
-            var sut = new InMemoryRepository<StubEntityString>(mediator, new InMemoryContext<StubEntityString>(this.entities));
+            var sut = new InMemoryRepository<StubEntityString>(logger, mediator, new InMemoryContext<StubEntityString>(this.entities));
 
             // act/assert
             var result = await sut.FindAllAsync(
@@ -131,8 +136,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task FindAllWithAndSpecification_Test()
         {
             // arrange
+            var logger = Substitute.For<ILogger<IRepository<StubEntityString>>>();
             var mediator = Substitute.For<IMediator>();
-            var sut = new InMemoryRepository<StubEntityString>(mediator, new InMemoryContext<StubEntityString>(this.entities));
+            var sut = new InMemoryRepository<StubEntityString>(logger, mediator, new InMemoryContext<StubEntityString>(this.entities));
 
             // act
             var findResults = await sut.FindAllAsync(
@@ -148,8 +154,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task FindAllWithOrSpecification_Test()
         {
             // arrange
+            var logger = Substitute.For<ILogger<IRepository<StubEntityString>>>();
             var mediator = Substitute.For<IMediator>();
-            var sut = new InMemoryRepository<StubEntityString>(mediator, new InMemoryContext<StubEntityString>(this.entities));
+            var sut = new InMemoryRepository<StubEntityString>(logger, mediator, new InMemoryContext<StubEntityString>(this.entities));
 
             // act
             var findResults = await sut.FindAllAsync(
@@ -167,8 +174,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task FindAllWithNotSpecification_Test()
         {
             // arrange
+            var logger = Substitute.For<ILogger<IRepository<StubEntityString>>>();
             var mediator = Substitute.For<IMediator>();
-            var sut = new InMemoryRepository<StubEntityString>(mediator, new InMemoryContext<StubEntityString>(this.entities));
+            var sut = new InMemoryRepository<StubEntityString>(logger, mediator, new InMemoryContext<StubEntityString>(this.entities));
 
             // act
             var findResults = await sut.FindAllAsync(
@@ -185,8 +193,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task FindEntityByStringId_Test()
         {
             // arrange
+            var logger = Substitute.For<ILogger<IRepository<StubEntityString>>>();
             var mediator = Substitute.For<IMediator>();
-            var sut = new InMemoryRepository<StubEntityString>(mediator, new InMemoryContext<StubEntityString>(this.entities));
+            var sut = new InMemoryRepository<StubEntityString>(logger, mediator, new InMemoryContext<StubEntityString>(this.entities));
 
             // act/assert
             var id = this.entities.First().Id;
@@ -205,8 +214,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task FindEntityByGuidId_Test()
         {
             // arrange
+            var logger = Substitute.For<ILogger<IRepository<StubEntityGuid>>>();
             var mediator = Substitute.For<IMediator>();
-            var sut = new InMemoryRepository<StubEntityGuid>(mediator, new InMemoryContext<StubEntityGuid>(this.entitiesGuid));
+            var sut = new InMemoryRepository<StubEntityGuid>(logger, mediator, new InMemoryContext<StubEntityGuid>(this.entitiesGuid));
 
             // act/assert
             var result = await sut.FindOneAsync(this.entitiesGuid.First().Id).ConfigureAwait(false);
@@ -224,8 +234,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task InsertNewEntityWithId_EntityIsAdded()
         {
             // arrange
+            var logger = Substitute.For<ILogger<IRepository<StubEntityString>>>();
             var mediator = Substitute.For<IMediator>();
-            var sut = new InMemoryRepository<StubEntityString>(mediator, new InMemoryContext<StubEntityString>(this.entities));
+            var sut = new InMemoryRepository<StubEntityString>(logger, mediator, new InMemoryContext<StubEntityString>(this.entities));
 
             // act
             var result = await sut.UpsertAsync(new StubEntityString
@@ -251,8 +262,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task InsertNewEntityWithoutId_EntityIsAddedWithGeneratedId()
         {
             // arrange
+            var logger = Substitute.For<ILogger<IRepository<StubEntityString>>>();
             var mediator = Substitute.For<IMediator>();
-            var sut = new InMemoryRepository<StubEntityString>(mediator, new InMemoryContext<StubEntityString>(this.entities));
+            var sut = new InMemoryRepository<StubEntityString>(logger, mediator, new InMemoryContext<StubEntityString>(this.entities));
 
             // act
             var result = await sut.UpsertAsync(new StubEntityString
@@ -278,8 +290,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task UpdateExistingEntityWithId_EntityIsUpdated()
         {
             // arrange
+            var logger = Substitute.For<ILogger<IRepository<StubEntityString>>>();
             var mediator = Substitute.For<IMediator>();
-            var sut = new InMemoryRepository<StubEntityString>(mediator, new InMemoryContext<StubEntityString>(this.entities));
+            var sut = new InMemoryRepository<StubEntityString>(logger, mediator, new InMemoryContext<StubEntityString>(this.entities));
 
             // act
             var result = await sut.UpsertAsync(new StubEntityString
@@ -308,8 +321,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task DeleteEntityById_Test()
         {
             // arrange
+            var logger = Substitute.For<ILogger<IRepository<StubEntityString>>>();
             var mediator = Substitute.For<IMediator>();
-            var sut = new InMemoryRepository<StubEntityString>(mediator, new InMemoryContext<StubEntityString>(this.entities));
+            var sut = new InMemoryRepository<StubEntityString>(logger, mediator, new InMemoryContext<StubEntityString>(this.entities));
 
             // act
             var id = this.entities.First().Id;
@@ -325,8 +339,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task DeleteEntity_Test()
         {
             // arrange
+            var logger = Substitute.For<ILogger<IRepository<StubEntityString>>>();
             var mediator = Substitute.For<IMediator>();
-            var sut = new InMemoryRepository<StubEntityString>(mediator, new InMemoryContext<StubEntityString>(this.entities));
+            var sut = new InMemoryRepository<StubEntityString>(logger, mediator, new InMemoryContext<StubEntityString>(this.entities));
 
             // act
             var entity = this.entities.FirstOrDefault(e => e.FirstName == this.entities.First().FirstName);

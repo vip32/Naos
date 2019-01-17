@@ -3,6 +3,7 @@
     using System;
     using EnsureThat;
     using Humanizer;
+    using MediatR;
     using Microsoft.Azure.Management.ResourceManager.Fluent;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
@@ -50,8 +51,18 @@
             services.AddSingleton<ISubscriptionMap, SubscriptionMap>();
             services.AddSingleton<IMessageBroker>(sp =>
             {
+                // HACK: get a registerd as scoped instance (mediator) inside a singleton instance
+                IMediator mediator = null;
+                //using (var scope = sp.CreateScope())
+                //{
+                //    mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                //}
+
+                mediator = sp.CreateScope().ServiceProvider.GetRequiredService<IMediator>(); // WARN: is not disposed
+
                 var result = new ServiceBusMessageBroker(
                         sp.GetRequiredService<ILogger<ServiceBusMessageBroker>>(),
+                        mediator,
                         sp.GetRequiredService<IServiceBusProvider>(),
                         new ServiceProviderMessageHandlerFactory(sp),
                         map: sp.GetRequiredService<ISubscriptionMap>(),

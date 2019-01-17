@@ -6,12 +6,17 @@
 
     public static partial class Extensions
     {
-        public static IQueryable<T> OrderBy<T, TKey>(
+        public static IQueryable<T> OrderByIf<T, TKey>(
             this IQueryable<T> source,
-            Expression<Func<T, TKey>> expression)
+            Expression<Func<T, TKey>> expression, bool descending = false)
         {
             if (expression != null)
             {
+                if (descending)
+                {
+                    return source.OrderByDescending(expression);
+                }
+
                 return source.OrderBy(expression);
             }
 

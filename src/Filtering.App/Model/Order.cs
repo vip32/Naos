@@ -2,9 +2,9 @@
 {
     using EnsureThat;
 
-    public class OrderBy
+    public class Order
     {
-        public OrderBy(string name, OrderByDirection direction = OrderByDirection.Asc)
+        public Order(string name, OrderDirection direction = OrderDirection.Asc)
         {
             EnsureArg.IsNotNullOrEmpty(name);
 
@@ -14,6 +14,6 @@
 
         public string Name { get; }
 
-        public OrderByDirection Direction { get; }
+        public OrderDirection Direction { get; }
     }
 }

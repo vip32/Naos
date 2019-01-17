@@ -1,3 +1,39 @@
+TODO:
+
+Operations 
+  Dashboard for journal logevents (domainevents/commands/....)
+
+Filtering
+  Convert filter to expresion (specification) so it can be used by the repositories
+  Convert order/skip/take to FindOptions for repositories
+
+Operations
+  Logevents filtering (correlationId, since, till) API > LAna query
+
+Commands
+  CommandHandler should support Decorators (besides the Behaviors) > https://app.pluralsight.com/player?course=cqrs-in-practice&author=vladimir-khorikov&name=22d61509-b7ab-4268-96f1-258bc8a95b99&clip=6&mode=live
+  create retrydecorator for commandhandler
+
+Repositories
+  Decorator setup with scrutor Decorators (services.Decorate) https://github.com/khellang/Scrutor
+
+ServiceDiscovery
+  Reverse proxy (router)
+
+Documentation
+  Diagrams for ServiceDiscovery(proxy, router)
+  Diagrams for Commands
+  Diagrams for Messaging
+  Diagrams for Scheduling
+
+
+
+
+
+
+azure deployment (ARM) https://markheath.net/post/arm-vs-azure-cli
+                 (CLI) https://gist.github.com/pascalnaber/75412a97a0d0b059314d193c3ab37c4c
+
 pattern cqs https://www.dotnetcurry.com/patterns-practices/1461/command-query-separation-cqs
 cqrs https://github.com/OpenCQRS/OpenCQRS
 crs https://github.com/gautema/CQRSlite (eventstore)
@@ -27,6 +63,7 @@ correlationid https://www.stevejgordon.co.uk/asp-net-core-correlation-ids
 polly logging ctx https://github.com/stevejgordon/PollyLoggingContextSample
 multi tenant (tenancy) https://github.com/Finbuckle/Finbuckle.MultiTenant
 role based authorization / access control http://jasonwatmore.com/post/2019/01/08/aspnet-core-22-role-based-authorization-tutorial-with-example-api
+attr based decorators https://app.pluralsight.com/player?course=cqrs-in-practice&author=vladimir-khorikov&name=22d61509-b7ab-4268-96f1-258bc8a95b99&clip=5&mode=live
 
 inter service JSON RPC http://www.jsonrpc.org/specification
                        service-bus: https://github.com/Azure/azure-service-bus/tree/master/samples/DotNet/Microsoft.Azure.ServiceBus/QueuesRequestResponse
@@ -62,7 +99,7 @@ criteria:
 
   criteria: /logevents?q=type=111,correlationId=eq:2b34cc25-cd06-475c-8f9c-c42791f49b46,timestamp=gte:01-01-1980,level=eq:debug,OR,level=eq:information
   pagination: &skip=XX&take=XX
-  orderby: &orderby=desc:timestamp,asc:level
+  order: &order=desc:timestamp,asc:level
 
   ?q=type=111,correlationId=eq:2b34cc25-cd06-475c-8f9c-c42791f49b46,timestamp=gte:01-01-1980,level=eq:debug,OR,level=eq:information&skip=0&take=100&orderby=desc:timestamp,asc:level
 

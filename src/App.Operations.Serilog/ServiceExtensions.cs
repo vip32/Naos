@@ -17,12 +17,15 @@
         private static IConfiguration internalConfiguration;
         private static LoggerConfiguration internalLoggerConfiguration;
         private static string internalEnvironment;
+        private static string internalCorrelationId;
+
         //private static string internalServiceDescriptor;
 
         public static IServiceCollection AddNaosOperationsSerilog(
             this IServiceCollection services,
             IConfiguration configuration,
             string environment = "Development",
+            string correlationId = null,
             //string serviceDescriptor = "naos",
             LoggerConfiguration loggerConfiguration = null)
         {
@@ -31,6 +34,7 @@
             internalConfiguration = configuration;
             internalLoggerConfiguration = loggerConfiguration;
             internalEnvironment = environment;
+            internalCorrelationId = correlationId;
             //internalServiceDescriptor = serviceDescriptor;
 
             services.AddSingleton(sp => CreateLoggerFactory());
@@ -53,7 +57,7 @@
 
             var factory = new LoggerFactory();
             factory.AddSerilog(Log.Logger);
-            Log.Logger.Information("naos logging initialized");
+            Log.Logger.Debug($"{LogEventIdentifiers.Operations} logging initialized: serilog");
             return factory;
         }
 
@@ -73,6 +77,11 @@
                     restrictedToMinimumLevel: LogEventLevel.Information,
                     //outputTemplate: "[{Timestamp:HH:mm:ss.fff} {Level:u3}] {CorrelationId}|{Service}|{SourceContext}: {Message:lj}{NewLine}{Exception}");
                     outputTemplate: "[{Timestamp:HH:mm:ss.fff} {Level:u3}] {Message:lj}{NewLine}{Exception}");
+
+            if (!internalCorrelationId.IsNullOrEmpty())
+            {
+                loggerConfiguration.Enrich.WithProperty(LogEventPropertyKeys.CorrelationId, internalCorrelationId);
+            }
 
             //.WriteTo.AzureDocumentDB(
             //    uri,

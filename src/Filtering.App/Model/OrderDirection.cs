@@ -1,6 +1,6 @@
 ﻿namespace Naos.Core.Filtering.App
 {
-    public enum OrderByDirection
+    public enum OrderDirection
     {
         Asc = 10,
         Desc = 20,

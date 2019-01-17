@@ -33,6 +33,7 @@
                             new RepositoryOrderDecorator<Country>(
                                 e => e.Name,
                                 new InMemoryRepository<Country, DbCountry>(
+                                    sp.GetRequiredService<ILogger<IRepository<Country>>>(),
                                     sp.GetRequiredService<IMediator>(),
                                     e => e.Identifier,
                                     sp.GetRequiredService<InMemoryContext<Country>>(), // singleton

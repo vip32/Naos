@@ -6,7 +6,7 @@
     public class FilterMiddlewareOptions
     {
         private const string DefaultCriteriaQueryStringKey = "q";
-        private const string DefaultOrderByQueryStringKey = "orderby";
+        private const string DefaultOrderByQueryStringKey = "order";
         private const string DefaultSkipQueryStringKey = "skip";
         private const string DefaultTakeQueryStringKey = "take";
 

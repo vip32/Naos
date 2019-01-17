@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
 
     public class InProcessMutex : IMutex
     {
@@ -32,7 +33,7 @@
                 {
                     item.Locked = false;
                     item.ExpireDate = null;
-                    this.logger?.LogDebug($"lock released (key={key})");
+                    this.logger?.LogDebug($"{LogEventIdentifiers.JobScheduling} lock released (key={key})");
                 }
             }
         }
@@ -84,7 +85,7 @@
                     });
             }
 
-            this.logger?.LogDebug($"lock created (key={key}, timeout({new TimeSpan(0, timeoutMinutes, 0).ToString("c")}))");
+            this.logger?.LogDebug($"{LogEventIdentifiers.JobScheduling} lock created (key={key}, timeout({new TimeSpan(0, timeoutMinutes, 0).ToString("c")}))");
 
             return true;
         }

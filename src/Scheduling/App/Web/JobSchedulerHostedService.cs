@@ -7,6 +7,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
     using Naos.Core.JobScheduling.Domain;
 
     public class JobSchedulerHostedService : IHostedService, IDisposable // TODO: or use BackgroundService? https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/multi-container-microservice-net-applications/background-tasks-with-ihostedservice#implementing-ihostedservice-with-a-custom-hosted-service-class-deriving-from-the-backgroundservice-base-class
@@ -34,7 +35,7 @@
                     null,
                     new DateTime(moment.Year, moment.Month, moment.Day, moment.Hour, moment.Minute, 59, 999, DateTimeKind.Utc) - moment, // trigger on the minute start
                     TimeSpan.FromMinutes(1));
-                this.logger.LogInformation($"JOB hosted service started (moment={moment.ToString("o")})");
+                this.logger.LogInformation($"{LogEventIdentifiers.JobScheduling} hosted service started (moment={moment.ToString("o")})");
             }
 
             return Task.CompletedTask;
@@ -42,14 +43,14 @@
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            this.logger.LogInformation("JOB hosted service stopping");
+            this.logger.LogInformation($"{LogEventIdentifiers.JobScheduling} hosted service stopping");
             this.enabled = false;
             this.schedulerTimer?.Change(Timeout.Infinite, 0);
 
             // suspend stopping schedular untill all tasks are done
             if (this.scheduler.IsRunning)
             {
-                this.logger.LogWarning("JOB hosted service will be stopped but is waiting on running jobs");
+                this.logger.LogWarning($"{LogEventIdentifiers.JobScheduling} hosted service will be stopped but is waiting on running jobs");
             }
 
             while (this.scheduler.IsRunning && !cancellationToken.IsCancellationRequested)
@@ -61,7 +62,7 @@
         public void Dispose()
         {
             this.schedulerTimer?.Dispose();
-            this.logger.LogInformation("JOB hosted service stopped");
+            this.logger.LogInformation($"{LogEventIdentifiers.JobScheduling} hosted service stopped");
         }
 
         private async void RunSchedulerAsync(object state)

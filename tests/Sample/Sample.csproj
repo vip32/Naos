@@ -12,7 +12,6 @@
     <Folder Include="Customers\Domain\Repositories\Decorators\" />
     <Folder Include="Customers\Infrastructure\" />
     <Folder Include="UserAccounts\App\Commands\" />
-    <Folder Include="UserAccounts\Infrastructure\EntityFramework\Migrations\" />
   </ItemGroup>
 
   <ItemGroup>

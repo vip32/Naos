@@ -15,5 +15,7 @@
         public DateTimeEpoch RegisterDate { get; set; }
 
         public string TenantId { get; set; }
+
+        public string Domain { get; set; }
     }
 }

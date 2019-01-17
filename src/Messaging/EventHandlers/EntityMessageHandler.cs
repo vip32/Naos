@@ -30,7 +30,7 @@
 
             using (this.logger.BeginScope(loggerState))
             {
-                this.logger.LogInformation("MESSAGE handle  (name={MessageName}, id={MessageId}, origin={MessageOrigin}) " + message.Entity.GetType().Name, message.GetType().PrettyName(), message.Id, message.Origin);
+                this.logger.LogInformation($"{LogEventIdentifiers.Messaging} handle (name={{MessageName}}, id={{MessageId}}, origin={{MessageOrigin}}) " + message.Entity.GetType().Name, message.GetType().PrettyName(), message.Id, message.Origin);
 
                 return Task.CompletedTask;
             }

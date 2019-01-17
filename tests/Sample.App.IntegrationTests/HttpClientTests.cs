@@ -6,6 +6,7 @@
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Http;
     using Naos.Core.App.Configuration;
+    using Naos.Core.Common;
     using Naos.Core.Common.Web;
     using Naos.Core.RequestCorrelation.App.Web;
     using Shouldly;
@@ -26,11 +27,11 @@
                 .AddHttpClient("default")
                     .AddHttpMessageHandler<HttpClientCorrelationHandler>();
                     //.AddHttpMessageHandler<HttpClientLogHandler>();
-            this.services.Replace(Microsoft.Extensions.DependencyInjection.ServiceDescriptor.Singleton<IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
+            this.services.Replace(ServiceDescriptor.Singleton<IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
 
             this.services
                 .AddNaosRequestCorrelation()
-                .AddNaosOperationsSerilog(configuration);
+                .AddNaosOperationsSerilog(configuration, correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}");
 
             this.ServiceProvider = this.services.BuildServiceProvider();
         }

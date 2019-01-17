@@ -4,6 +4,7 @@
     using System.Net.Http;
     using EnsureThat;
     using Humanizer;
+    using MediatR;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
@@ -36,8 +37,18 @@
             {
                 var signalRConfiguration = configuration.GetSection(section).Get<SignalRConfiguration>();
 
+                // HACK: get a registerd as scoped instance (mediator) inside a singleton instance
+                IMediator mediator = null;
+                //using (var scope = sp.CreateScope())
+                //{
+                //    mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                //}
+
+                mediator = sp.CreateScope().ServiceProvider.GetRequiredService<IMediator>(); // WARN: is not disposed
+
                 var result = new SignalRServerlessMessageBroker(
                         sp.GetRequiredService<ILogger<SignalRServerlessMessageBroker>>(),
+                        mediator,
                         new ServiceProviderMessageHandlerFactory(sp),
                         signalRConfiguration,
                         sp.GetRequiredService<IHttpClientFactory>(),

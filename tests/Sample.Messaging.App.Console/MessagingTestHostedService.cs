@@ -68,8 +68,8 @@
             for (int i = 1; i <= 2; i++)
             {
                 //Thread.Sleep(500);
-                this.messageBus.Publish(new TestMessage { Data = $"{i.ToString()}-{RandomGenerator.GenerateString(3, false).ToUpper()}" });
-                this.messageBus.Publish(new EntityMessage<StubEntity> { Entity = new StubEntity { FirstName = "John", LastName = $"{RandomGenerator.GenerateString(3, false).ToUpper()} ({i})" } });
+                this.messageBus.Publish(new TestMessage { Id = RandomGenerator.GenerateString(7, true), Data = $"{i.ToString()}-{RandomGenerator.GenerateString(3, false).ToUpper()}" });
+                this.messageBus.Publish(new EntityMessage<StubEntity> { Id = RandomGenerator.GenerateString(7, true), Entity = new StubEntity { FirstName = "John", LastName = $"{RandomGenerator.GenerateString(3, false).ToUpper()} ({i})" } });
             }
         }
     }

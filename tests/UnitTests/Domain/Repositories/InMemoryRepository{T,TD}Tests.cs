@@ -9,6 +9,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
     using EnsureThat;
     using FizzWare.NBuilder;
     using MediatR;
+    using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Domain;
     using Naos.Core.Domain.Repositories;
@@ -46,8 +47,10 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task FindOneEntity_Test()
         {
             // arrange
+            var logger = Substitute.For<ILogger<InMemoryRepository<StubEntity, StubDb>>>();
             var mediator = Substitute.For<IMediator>();
             var sut = new InMemoryRepository<StubEntity, StubDb>(
+                logger,
                 mediator,
                 e => e.Identifier,
                 new InMemoryContext<StubEntity>(this.entities),
@@ -66,9 +69,11 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task FindOneTenantEntity_Test()
         {
             // arrange
+            var logger = Substitute.For<ILogger<InMemoryRepository<StubEntity, StubDb>>>();
             var mediator = Substitute.For<IMediator>();
             var sut = new RepositorySpecificationDecorator<StubEntity>(
                 new InMemoryRepository<StubEntity, StubDb>( // decoratee
+                    logger,
                     mediator,
                     e => e.Identifier,
                     new InMemoryContext<StubEntity>(this.entities),
@@ -92,8 +97,10 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task FindAllEntities_Test()
         {
             // arrange
+            var logger = Substitute.For<ILogger<InMemoryRepository<StubEntity, StubDb>>>();
             var mediator = Substitute.For<IMediator>();
             var sut = new InMemoryRepository<StubEntity, StubDb>(
+                logger,
                 mediator,
                 e => e.Identifier,
                 new InMemoryContext<StubEntity>(this.entities),
@@ -113,9 +120,11 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task FindAllTenantEntities_Test() // TODO: move to own test class + mocks
         {
             // arrange
+            var logger = Substitute.For<ILogger<InMemoryRepository<StubEntity, StubDb>>>();
             var mediator = Substitute.For<IMediator>();
             var sut = new RepositorySpecificationDecorator<StubEntity>(
                 new InMemoryRepository<StubEntity, StubDb>( // decoratee
+                    logger,
                     mediator,
                     e => e.Identifier,
                     new InMemoryContext<StubEntity>(this.entities),
@@ -139,10 +148,12 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task FindAllTenantEntities2_Test() // TODO: move to own test class + mocks
         {
             // arrange
+            var logger = Substitute.For<ILogger<InMemoryRepository<StubEntity, StubDb>>>();
             var mediator = Substitute.For<IMediator>();
             var sut = new RepositoryTenantDecorator<StubEntity>(
                 this.tenantId,
                 new InMemoryRepository<StubEntity, StubDb>( // decoratee
+                    logger,
                     mediator,
                     e => e.Identifier,
                     new InMemoryContext<StubEntity>(this.entities),
@@ -188,8 +199,10 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task FindMappedEntitiesWithSpecification_Test()
         {
             // arrange
+            var logger = Substitute.For<ILogger<InMemoryRepository<StubEntity, StubDb>>>();
             var mediator = Substitute.For<IMediator>();
             var sut = new InMemoryRepository<StubEntity, StubDb>(
+                logger,
                 mediator,
                 e => e.Identifier,
                 new InMemoryContext<StubEntity>(this.entities),
@@ -243,8 +256,10 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task FindMappedEntityOne_Test()
         {
             // arrange
+            var logger = Substitute.For<ILogger<InMemoryRepository<StubEntity, StubDb>>>();
             var mediator = Substitute.For<IMediator>();
             var sut = new InMemoryRepository<StubEntity, StubDb>(
+                logger,
                 mediator,
                 e => e.Identifier,
                 new InMemoryContext<StubEntity>(this.entities),

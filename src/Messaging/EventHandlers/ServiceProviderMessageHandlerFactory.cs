@@ -2,6 +2,7 @@
 {
     using System;
     using EnsureThat;
+    using Microsoft.Extensions.DependencyInjection;
 
     public class ServiceProviderMessageHandlerFactory : IMessageHandlerFactory
     {
@@ -25,8 +26,14 @@
         /// <returns></returns>
         public object Create(Type messageHandlerType)
         {
-            //return ActivatorUtilities.CreateInstance(this.serviceProvider, messageHandlerType);
-            return this.serviceProvider.GetService(messageHandlerType);
+            // in case of scoping (singleton needs scoped lifetime) issues
+            //using (var scope = this.serviceProvider.CreateScope())
+            //{
+            //    var scopedProvider = scope.ServiceProvider;
+            //    return scopedProvider.GetService(messageHandlerType);
+            //}
+
+            return ActivatorUtilities.CreateInstance(this.serviceProvider, messageHandlerType);
         }
     }
 }

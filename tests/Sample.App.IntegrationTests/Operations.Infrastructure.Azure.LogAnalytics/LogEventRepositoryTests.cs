@@ -3,6 +3,7 @@
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Core.App.Configuration;
+    using Naos.Core.Common;
     using Naos.Core.Operations.Domain.Repositories;
     using Shouldly;
     using Xunit;
@@ -16,7 +17,7 @@
             var configuration = NaosConfigurationFactory.CreateRoot();
 
             this.services
-                .AddNaosOperationsSerilog(configuration)
+                .AddNaosOperationsSerilog(configuration, correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}")
                 .AddNaosOperationsLogAnalytics(configuration)
                 .AddNaosJobScheduling();
 

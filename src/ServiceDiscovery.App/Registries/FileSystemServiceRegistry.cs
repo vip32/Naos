@@ -24,7 +24,6 @@
             this.logger = logger;
             this.configuration = configuration ?? new FileSystemServiceRegistryConfiguration();
             this.directory = this.GetDirectory(this.configuration);
-            this.logger.LogInformation("SERVICE discovery registrations watch (directory={Directory})", this.directory);
 
             // TODO: inject HealthStrategy which can validate the registrations
         }
@@ -36,7 +35,7 @@
             var fullFileName = Path.Combine(this.GetDirectory(this.configuration), $"registration_{id}.json.tmp");
             if (File.Exists(fullFileName))
             {
-                this.logger.LogInformation("SERVICE discovery registration delete (id={RegistrationId})", id);
+                this.logger.LogInformation($"{LogEventIdentifiers.ServiceDiscovery} registration delete (id={{RegistrationId}})", id);
 
                 File.Delete(fullFileName);
             }
@@ -51,7 +50,7 @@
 
             var fullFileNameTemp = Path.Combine(this.GetDirectory(this.configuration), $"registration_{registration.Id}.json.tmp");
             var fullFileName = Path.Combine(this.GetDirectory(this.configuration), $"registration_{registration.Id}.json");
-            this.logger.LogInformation("SERVICE discovery registration add (name={RegistrationName}, id={RegistrationId}, file={RegistrationFile})", registration.Name, registration.Id, fullFileName.SubstringFromLast(@"\"));
+            this.logger.LogInformation($"{LogEventIdentifiers.ServiceDiscovery} registration add (name={{RegistrationName}}, id={{RegistrationId}}, file={fullFileName.SubstringFromLast(@"\")})", registration.Name, registration.Id);
 
             if (File.Exists(fullFileNameTemp))
             {
@@ -81,6 +80,7 @@
             {
                 this.EnsureDirectory(this.directory);
                 this.RefreshRegistrations(this.directory);
+                this.logger.LogInformation($"{LogEventIdentifiers.ServiceDiscovery} registrations watch (directory={this.directory})");
 
                 this.watcher = new FileSystemWatcher(this.directory)
                 {
@@ -139,7 +139,7 @@
                 var registration = JsonConvert.DeserializeObject<ServiceRegistration>(this.ReadFile(fullPath));
                 if (registration != null)
                 {
-                    this.logger.LogInformation("SERVICE discovery registration refresh (name={RegistrationName}, id={RegistrationId}, file={RegistrationFile})", registration.Name, registration.Id, fullPath.SubstringFromLast(@"\"));
+                    this.logger.LogInformation($"{LogEventIdentifiers.ServiceDiscovery} registration refresh (name={{RegistrationName}}, id={{RegistrationId}}, file={fullPath.SubstringFromLast(@"\")})", registration.Name, registration.Id);
                     this.registrations.Add(registration);
                 }
             }

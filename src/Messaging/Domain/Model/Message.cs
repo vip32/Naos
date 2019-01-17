@@ -48,12 +48,12 @@
         public string CorrelationId { get; set; }
 
         /// <summary>
-        /// Gets or sets the origin of this event instance.
+        /// Gets or sets the origin service name of this <see cref="Message"/> instance.
         /// </summary>
         /// <value>
         /// The origin.
         /// </value>
-        public string Origin { get; set; }
+        public string Origin { get; set; } // Product.Capability
 
         /// <summary>
         /// Gets or sets the status.

@@ -19,7 +19,7 @@
             var configuration = NaosConfigurationFactory.CreateRoot();
 
             this.services
-                .AddNaosOperationsSerilog(configuration)
+                .AddNaosOperationsSerilog(configuration, correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}")
                 .AddNaosJobScheduling();
 
             this.services.AddScoped<StubProbe>();

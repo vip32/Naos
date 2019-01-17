@@ -4,7 +4,9 @@
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
+    using Naos.Core.App.Commands;
     using Naos.Core.App.Configuration;
+    using Naos.Core.Common;
     using Naos.Core.Infrastructure.EntityFramework;
     using Naos.Sample.UserAccounts.EntityFramework;
 
@@ -22,7 +24,7 @@
             // naos core registrations
             this.services
                 .AddMediatR()
-                .AddNaosOperationsSerilog(configuration)
+                .AddNaosOperationsSerilog(configuration, correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}")
                 .AddNaosOperationsLogAnalytics(configuration)
                 //.AddNaosMessagingFileSystem(configuration)
                 .AddNaosMessagingAzureServiceBus(configuration)
@@ -34,9 +36,14 @@
                 .AddSampleCustomers(configuration)
                 .AddSampleUserAccounts(configuration, dbContext: new UserAccountsContext(new DbContextOptionsBuilder().UseNaosSqlServer(configuration, "naos:sample:userAccounts:entityFramework").Options));
 
+            this.services.AddSingleton<ICommandBehavior, TrackCommandBehavior>();
+            //this.services.AddSingleton<ICommandBehavior, ServiceContextEnrichCommandBehavior>();
+            this.services.AddSingleton<ICommandBehavior, IdempotentCommandBehavior>();
+            this.services.AddSingleton<ICommandBehavior, PersistCommandBehavior>();
+
             this.ServiceProvider = this.services.BuildServiceProvider();
         }
 
-        public ServiceProvider ServiceProvider { get; private set; }
+        public ServiceProvider ServiceProvider { get; }
     }
 }

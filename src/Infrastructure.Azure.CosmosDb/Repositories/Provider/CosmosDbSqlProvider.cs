@@ -203,28 +203,15 @@
                     .AsEnumerable());
         }
 
-        public async Task<IEnumerable<T>> WhereAsync<TKey>(
+        public async Task<IEnumerable<T>> WhereAsync(
             Expression<Func<T, bool>> expression = null,
             IEnumerable<Expression<Func<T, bool>>> expressions = null,
             int count = 100,
-            Expression<Func<T, TKey>> orderExpression = null,
-            bool desc = false)
+            Expression<Func<T, object>> orderExpression = null,
+            bool orderDescending = false)
         {
+            // cosmos only supports single orderby https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/16883608-allow-multi-order-by
             // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
-            if (desc)
-            {
-                return await Task.FromResult(
-                    this.client.CreateDocumentQuery<T>(
-                        UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
-                        new FeedOptions { MaxItemCount = count, EnableCrossPartitionQuery = this.isPartitioned })
-                        .WhereExpression(expression)
-                        .WhereExpressions(expressions)
-                        .WhereExpressionIf(e => e.Discriminator == typeof(T).FullName, this.isMasterCollection)
-                        .TakeIf(count)
-                        .OrderByDescending(orderExpression)
-                        .AsEnumerable());
-            }
-
             return await Task.FromResult(
                 this.client.CreateDocumentQuery<T>(
                     UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
@@ -233,16 +220,19 @@
                     .WhereExpressions(expressions)
                     .WhereExpressionIf(e => e.Discriminator == typeof(T).FullName, this.isMasterCollection)
                     .TakeIf(count)
-                    .OrderBy(orderExpression)
+                    .OrderByIf(orderExpression, orderDescending)
                     .AsEnumerable());
         }
 
-        public async Task<IEnumerable<T>> WhereAsync<TKey>(
+        public async Task<IEnumerable<T>> WhereAsync(
             Expression<Func<T, bool>> expression,
             Expression<Func<T, T>> selector,
             int count = 100,
-            Expression<Func<T, TKey>> orderExpression = null)
+            Expression<Func<T, object>> orderExpression = null,
+            bool orderDescending = false)
         {
+            // cosmos only supports single orderby https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/16883608-allow-multi-order-by
+            // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
             return await Task.FromResult(
                 this.client.CreateDocumentQuery<T>(
                     UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
@@ -251,7 +241,7 @@
                     .WhereExpressionIf(e => e.Discriminator == typeof(T).FullName, this.isMasterCollection)
                     .Select(selector)
                     .TakeIf(count)
-                    .OrderBy(orderExpression)
+                    .OrderByIf(orderExpression, orderDescending)
                     .AsEnumerable());
         }
 

@@ -22,7 +22,7 @@
 
             using (this.logger.BeginScope(loggerState))
             {
-                this.logger.LogInformation("MESSAGE handle  (name={MessageName}, id={EventId}, origin={EventOrigin}) " + $"{message.Entity.FirstName} {message.Entity.LastName}", message.GetType().PrettyName(), message.Id, message.Origin);
+                this.logger.LogInformation($"{LogEventIdentifiers.AppCommand} handle  (name={{MessageName}}, id={{EventId}}, origin={{EventOrigin}}) " + $"{message.Entity.FirstName} {message.Entity.LastName}", message.GetType().PrettyName(), message.Id, message.Origin);
 
                 return Task.CompletedTask;
             }

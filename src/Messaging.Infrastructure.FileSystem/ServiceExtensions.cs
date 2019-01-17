@@ -3,6 +3,7 @@
     using System;
     using EnsureThat;
     using Humanizer;
+    using MediatR;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
@@ -32,8 +33,18 @@
             services.AddSingleton<ISubscriptionMap, SubscriptionMap>();
             services.AddSingleton<IMessageBroker>(sp =>
             {
+                // HACK: get a registerd as scoped instance (mediator) inside a singleton instance
+                IMediator mediator = null;
+                //using (var scope = sp.CreateScope())
+                //{
+                //    mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                //}
+
+                mediator = sp.CreateScope().ServiceProvider.GetRequiredService<IMediator>(); // WARN: is not disposed
+
                 var result = new FileSystemMessageBroker(
                         sp.GetRequiredService<ILogger<FileSystemMessageBroker>>(),
+                        mediator,
                         new ServiceProviderMessageHandlerFactory(sp),
                         configuration.GetSection(section).Get<FileSystemConfiguration>(),
                         map: sp.GetRequiredService<ISubscriptionMap>(),

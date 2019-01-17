@@ -28,12 +28,12 @@
 
             var loggerState = new Dictionary<string, object>
             {
-                [LogEventPropertyKeys.CorrelationId] = requestId
+                [LogEventPropertyKeys.CorrelationId] = correlationId
             };
 
             using (this.logger.BeginScope(loggerState))
             {
-                this.logger.LogDebug($"CLIENT http request   ({requestId}) added correlation headers");
+                this.logger.LogDebug($"{LogEventIdentifiers.OutboundRequest} http ({requestId}) added correlation headers");
 
                 request.Headers.Add("x-correlationid", correlationId);
                 request.Headers.Add("x-requestid", requestId);

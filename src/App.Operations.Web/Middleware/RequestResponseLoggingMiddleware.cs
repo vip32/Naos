@@ -47,26 +47,27 @@
                 var correlationId = context.GetCorrelationId();
                 var requestId = context.GetRequestId();
 
-                //var loggerState = new Dictionary<string, object> // again
-                //{
-                //    [LogEventPropertyKeys.CorrelationId] = correlationId,
-                //    [LogEventPropertyKeys.RequestId] = requestId
-                //};
-
-                //using (this.logger.BeginScope(loggerState))
-                //{
-                    this.LogRequest(context, correlationId, requestId);
-                    var timer = Stopwatch.StartNew();
-                    await this.next.Invoke(context).ConfigureAwait(false);
-                    timer.Stop();
-                    this.LogResponse(context, requestId, timer.Elapsed);
-                //}
+                this.LogRequest(context, correlationId, requestId);
+                var timer = Stopwatch.StartNew();
+                await this.next.Invoke(context).ConfigureAwait(false);
+                timer.Stop();
+                this.LogResponse(context, requestId, timer.Elapsed);
             }
         }
 
         private void LogRequest(HttpContext context, string correlationId, string requestId)
         {
-            this.logger.LogInformation($"SERVICE http request  ({requestId}) {context.Request.Method} {{Url}} ({correlationId})", new Uri(context.Request.GetDisplayUrl()));
+            var loggerState = new Dictionary<string, object>
+            {
+                [LogEventPropertyKeys.TrackType] = LogEventTrackTypeValues.Journal,
+                [LogEventPropertyKeys.TrackInboundRequest] = true
+            };
+
+            using (this.logger.BeginScope(loggerState))
+            {
+                this.logger.LogInformation($"{LogEventIdentifiers.InboundRequest} http ({requestId}) {context.Request.Method} {{Url}} ({correlationId})", new Uri(context.Request.GetDisplayUrl()));
+            }
+
             //if (context.HasServiceName())
             //{
             //    this.logger.LogInformation($"SERVICE http request  ({requestId}) service {context.GetServiceName()}");
@@ -74,7 +75,7 @@
 
             if (!context.Request.Headers.IsNullOrEmpty())
             {
-                this.logger.LogInformation($"SERVICE http request  ({requestId}) headers={string.Join("|", context.Request.Headers.Select(h => $"{h.Key}={h.Value}"))}");
+                this.logger.LogInformation($"{LogEventIdentifiers.InboundRequest} http ({requestId}) headers={string.Join("|", context.Request.Headers.Select(h => $"{h.Key}={h.Value}"))}");
             }
 
             //request.EnableRewind();
@@ -91,7 +92,7 @@
             //}
         }
 
-        private void LogResponse(HttpContext context, string requestId, System.TimeSpan elapsed)
+        private void LogResponse(HttpContext context, string requestId, TimeSpan elapsed)
         {
             var level = LogLevel.Information;
             if ((int)context.Response.StatusCode > 499)
@@ -105,10 +106,10 @@
 
             if (!context.Response.Headers.IsNullOrEmpty())
             {
-                this.logger.Log(level, $"SERVICE http response ({requestId}) headers={string.Join("|", context.Response.Headers.Select(h => $"{h.Key}={h.Value}"))}");
+                this.logger.Log(level, $"{LogEventIdentifiers.InboundResponse} http ({requestId}) headers={string.Join("|", context.Response.Headers.Select(h => $"{h.Key}={h.Value}"))}");
             }
 
-            this.logger.Log(level, $"SERVICE http response ({requestId}) {context.Request.Method} {{Url}} {{StatusCode}} ({ReasonPhrases.GetReasonPhrase(context.Response.StatusCode)}) -> took {elapsed.Humanize(3)}", new Uri(context.Request.GetDisplayUrl()), context.Response.StatusCode);
+            this.logger.Log(level, $"{LogEventIdentifiers.InboundResponse} http ({requestId}) {context.Request.Method} {{Url}} {{StatusCode}} ({ReasonPhrases.GetReasonPhrase(context.Response.StatusCode)}) -> took {elapsed.Humanize(3)}", new Uri(context.Request.GetDisplayUrl()), context.Response.StatusCode);
         }
 
         //private async Task LogResponseAsync(HttpContext context, string requestId)

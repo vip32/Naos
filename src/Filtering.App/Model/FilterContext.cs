@@ -10,7 +10,7 @@
     {
         public IEnumerable<Criteria> Criterias { get; set; }
 
-        public IEnumerable<OrderBy> OrderBy { get; set; }
+        public IEnumerable<Order> OrderBy { get; set; }
 
         public int? Skip { get; set; }
 

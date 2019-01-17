@@ -8,16 +8,19 @@
     using System.Text;
     using System.Threading.Tasks;
     using EnsureThat;
+    using MediatR;
     using Microsoft.AspNetCore.SignalR.Client;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Infrastructure.Azure;
+    using Naos.Core.Messaging.Domain;
     using Naos.Core.Messaging.Domain.Model;
     using Newtonsoft.Json;
 
     public class SignalRServerlessMessageBroker : IMessageBroker, IDisposable
     {
         private readonly ILogger<SignalRServerlessMessageBroker> logger;
+        private readonly IMediator mediator;
         private readonly IMessageHandlerFactory handlerFactory;
         private readonly SignalRConfiguration configuration;
         private readonly IHttpClientFactory httpClient;
@@ -29,20 +32,23 @@
 
         public SignalRServerlessMessageBroker(
             ILogger<SignalRServerlessMessageBroker> logger,
+            IMediator mediator,
             IMessageHandlerFactory handlerFactory,
             SignalRConfiguration configuration,
             IHttpClientFactory httpClient,
             ISubscriptionMap map = null,
             string filterScope = null,
-            string messageScope = "local") // message origin identifier
+            string messageScope = "local") // message origin service name
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
+            EnsureArg.IsNotNull(mediator, nameof(mediator));
             EnsureArg.IsNotNull(handlerFactory, nameof(handlerFactory));
             EnsureArg.IsNotNull(configuration, nameof(configuration));
             EnsureArg.IsNotNullOrEmpty(configuration.ConnectionString, nameof(configuration.ConnectionString));
             EnsureArg.IsNotNull(httpClient, nameof(httpClient));
 
             this.logger = logger;
+            this.mediator = mediator;
             this.handlerFactory = handlerFactory;
             this.configuration = configuration;
             this.httpClient = httpClient;
@@ -79,14 +85,21 @@
                 if (message.Id.IsNullOrEmpty())
                 {
                     message.Id = Guid.NewGuid().ToString();
-                    this.logger.LogDebug($"set messageId (id={message.Id})");
+                    this.logger.LogDebug($"{LogEventIdentifiers.Messaging} set message (id={message.Id})");
                 }
 
-                message.Origin = this.messageScope;
+                if (message.Origin.IsNullOrEmpty())
+                {
+                    message.Origin = this.messageScope;
+                    this.logger.LogDebug($"{LogEventIdentifiers.Messaging} set message (origin={message.Origin})");
+                }
+
+                // TODO: async publish!
+                /*await */ this.mediator.Publish(new MessagePublishDomainEvent(message)).GetAwaiter().GetResult(); /*.ConfigureAwait(false);*/
 
                 var messageName = /*message.Name*/ message.GetType().PrettyName();
 
-                this.logger.LogInformation("MESSAGE publish (name={MessageName}, id={MessageId}, service={Service})", message.GetType().PrettyName(), message.Id, this.messageScope);
+                this.logger.LogInformation($"{LogEventIdentifiers.Messaging} publish (name={{MessageName}}, id={{MessageId}}, origin={{MessageOrigin}})", message.GetType().PrettyName(), message.Id, message.Origin);
 
                 var url = $"{this.serviceUtils.Endpoint}/api/v1/hubs/{this.HubName}";
                 var request = new HttpRequestMessage(HttpMethod.Post, url);
@@ -105,7 +118,7 @@
                 var response = this.httpClient.CreateClient("default").SendAsync(request).GetAwaiter().GetResult(); // TODO: async!
                 if (response.StatusCode != HttpStatusCode.Accepted)
                 {
-                    this.logger.LogError("MESSAGE publish failed: HTTP statuscode {StatusCode} (name={MessageName}, id={MessageId}, service={Service})", response.StatusCode, message.GetType().PrettyName(), message.Id, this.messageScope);
+                    this.logger.LogError($"{LogEventIdentifiers.Messaging} publish failed: HTTP statuscode {{StatusCode}} (name={{MessageName}}, id={{MessageId}}, origin={{MessageOrigin}})", response.StatusCode, message.GetType().PrettyName(), message.Id, message.Origin);
                 }
             }
         }
@@ -118,7 +131,7 @@
 
             if (!this.map.Exists<TMessage>())
             {
-                this.logger.LogInformation("MESSAGE subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, endpoint={Endpoint}, hub={Hub})", typeof(TMessage).PrettyName(), this.messageScope, this.filterScope, typeof(THandler).Name, this.serviceUtils.Endpoint, this.HubName);
+                this.logger.LogInformation($"{LogEventIdentifiers.Messaging} subscribe (name={{MessageName}}, service={{Service}}, filterScope={{FilterScope}}, handler={{MessageHandlerType}}, endpoint={{Endpoint}}, hub={{Hub}})", typeof(TMessage).PrettyName(), this.messageScope, this.filterScope, typeof(THandler).Name, this.serviceUtils.Endpoint, this.HubName);
 
                 this.map.Add<TMessage, THandler>();
             }
@@ -135,7 +148,7 @@
                         };
                     }).Build();
 
-                this.logger.LogDebug($"signalr connection started (url={url})");
+                this.logger.LogDebug($"{LogEventIdentifiers.Messaging} signalr connection started (url={url})");
                 this.connection.StartAsync().GetAwaiter().GetResult();
             }
 
@@ -146,7 +159,7 @@
                 {
                     await this.ProcessMessage(n, m).ConfigureAwait(false);
                 });
-            this.logger.LogDebug($"signalr connection onmessage handler registered (name={messageName})");
+            this.logger.LogDebug($"{LogEventIdentifiers.Messaging} signalr connection onmessage handler registered (name={messageName})");
 
             return this;
         }
@@ -155,7 +168,7 @@
             where TMessage : Message
             where THandler : IMessageHandler<TMessage>
         {
-            this.connection?.StopAsync().GetAwaiter().GetResult();
+            this.connection?.StopAsync().GetAwaiter().GetResult(); // TODO: unregister from connection this.connection(messagename)
         }
 
         /// <summary>
@@ -179,9 +192,11 @@
                     }
 
                     var jsonMessage = JsonConvert.DeserializeObject(signalRMessage.ToString(), messageType);
-                    var message = jsonMessage as Domain.Model.Message;
+                    var message = jsonMessage as Message;
 
-                    this.logger.LogInformation("MESSAGE process (name={MessageName}, id={MessageId}, service={Service}, origin={MessageOrigin})",
+                    // TODO: async publish!
+                    /*await */ this.mediator.Publish(new MessageProcessDomainEvent(message, this.messageScope)).GetAwaiter().GetResult(); /*.ConfigureAwait(false);*/
+                    this.logger.LogInformation($"{LogEventIdentifiers.Messaging} process (name={{MessageName}}, id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}})",
                             messageType.PrettyName(), message?.Id, this.messageScope, message?.Origin);
 
                     // construct the handler by using the DI container
@@ -195,7 +210,7 @@
                     }
                     else
                     {
-                        this.logger.LogWarning("process message failed, message handler could not be created. is the handler registered in the service provider? (name={MessageName}, service={Service}, id={MessageId}, origin={MessageOrigin})",
+                        this.logger.LogWarning($"{LogEventIdentifiers.Messaging} process failed, message handler could not be created. is the handler registered in the service provider? (name={{MessageName}}, service={{Service}}, id={{MessageId}}, origin={{MessageOrigin}})",
                             messageType.PrettyName(), this.messageScope, message?.Id, message?.Origin);
                     }
                 }

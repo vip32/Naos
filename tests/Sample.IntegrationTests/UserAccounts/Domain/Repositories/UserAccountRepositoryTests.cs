@@ -1,10 +1,12 @@
 ﻿namespace Naos.Sample.IntegrationTests.UserAccounts.Domain
 {
+    using System.Linq;
     using System.Threading.Tasks;
     using Bogus;
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Core.Common;
     using Naos.Core.Domain.Repositories;
+    using Naos.Core.Domain.Specifications;
     using Naos.Sample.UserAccounts.Domain;
     using Shouldly;
     using Xunit;
@@ -24,6 +26,7 @@
                 .RuleFor(u => u.LastVisitDate, (f, u) => new DateTimeEpoch())
                 .RuleFor(u => u.RegisterDate, (f, u) => new DateTimeEpoch())
                 .RuleFor(u => u.TenantId, (f, u) => this.tenantId)
+                .RuleFor(u => u.Domain, (f, u) => f.PickRandom(new[] { "East", "West" }))
                 .RuleFor(u => u.VisitCount, (f, u) => 1);
         }
 
@@ -36,6 +39,20 @@
             // assert
             result.ShouldNotBeNull();
             result.ShouldNotBeEmpty();
+        }
+
+        [Fact]
+        public async Task FindAllAsync_WithOrder_Test()
+        {
+            // arrange/act
+            var result = await this.sut.FindAllAsync(
+                new FindOptions<UserAccount>(order: new OrderOption<UserAccount>(e => e.Domain))).ConfigureAwait(false);
+
+            // assert
+            result.ShouldNotBeNull();
+            result.ShouldNotBeEmpty();
+            result.First().Domain.ShouldBe("East");
+            result.Last().Domain.ShouldBe("West");
         }
 
         //[Fact]
@@ -62,38 +79,38 @@
         //    result.ShouldNotBeEmpty();
         //}
 
-        //[Fact]
-        //public async Task FindAllAsync_WithSpecification_Test()
-        //{
-        //    // arrange/act
-        //    var result = await this.sut.FindAllAsync(
-        //        new HasEastRegionSpecification()).ConfigureAwait(false);
+        [Fact]
+        public async Task FindAllAsync_WithSpecification_Test()
+        {
+            // arrange/act
+            var result = await this.sut.FindAllAsync(
+                new HasDomainSpecification("East")).ConfigureAwait(false);
 
-        //    // assert
-        //    result.ShouldNotBeNull();
-        //    result.ShouldNotBeEmpty();
+            // assert
+            result.ShouldNotBeNull();
+            result.ShouldNotBeEmpty();
 
-        //    // arrange/act
-        //    result = await this.sut.FindAllAsync(
-        //        new Specification<UserAccount>(e => e.Gender == "Male")).ConfigureAwait(false);
+            // arrange/act
+            result = await this.sut.FindAllAsync(
+                new Specification<UserAccount>(e => e.VisitCount > 0)).ConfigureAwait(false);
 
-        //    // assert
-        //    result.ShouldNotBeNull();
-        //    result.ShouldNotBeEmpty(); // fails because of gender enum (=0 instead of Male)
-        //}
+            // assert
+            result.ShouldNotBeNull();
+            result.ShouldNotBeEmpty(); // fails because of gender enum (=0 instead of Male)
+        }
 
-        //[Fact]
-        //public async Task FindAllAsync_WithAndSpecification_Test()
-        //{
-        //    // arrange/act
-        //    var result = await this.sut.FindAllAsync(
-        //            new HasEastRegionSpecification()
-        //            .And(new Specification<UserAccount>(e => e.Gender == "Male"))).ConfigureAwait(false);
+        [Fact]
+        public async Task FindAllAsync_WithAndSpecification_Test()
+        {
+            // arrange/act
+            var result = await this.sut.FindAllAsync(
+                    new HasDomainSpecification("East")
+                    .And(new Specification<UserAccount>(e => e.VisitCount > 0))).ConfigureAwait(false);
 
-        //    // assert
-        //    result.ShouldNotBeNull();
-        //    result.ShouldNotBeEmpty();
-        //}
+            // assert
+            result.ShouldNotBeNull();
+            result.ShouldNotBeEmpty();
+        }
 
         //[Fact]
         //public async Task FindAllAsync_WithOrSpecification_Test()

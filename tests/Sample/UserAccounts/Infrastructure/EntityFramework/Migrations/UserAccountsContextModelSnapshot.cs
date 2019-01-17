@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Naos.Sample.UserAccounts.EntityFramework;
 
 namespace Naos.Sample.UserAccounts.Infrastructure.EntityFramework.Migrations
@@ -14,7 +15,7 @@ namespace Naos.Sample.UserAccounts.Infrastructure.EntityFramework.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
+                .HasAnnotation("ProductVersion", "2.2.1-servicing-10028")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -22,6 +23,8 @@ namespace Naos.Sample.UserAccounts.Infrastructure.EntityFramework.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Domain");
 
                     b.Property<string>("Email");
 
@@ -40,7 +43,7 @@ namespace Naos.Sample.UserAccounts.Infrastructure.EntityFramework.Migrations
                 {
                     b.OwnsOne("Naos.Core.Domain.State", "State", b1 =>
                         {
-                            b1.Property<Guid?>("UserAccountId");
+                            b1.Property<Guid>("UserAccountId");
 
                             b1.Property<string>("CreatedBy");
 
@@ -96,6 +99,8 @@ namespace Naos.Sample.UserAccounts.Infrastructure.EntityFramework.Migrations
 
                             b1.Property<long>("UpdatedEpoch");
 
+                            b1.HasKey("UserAccountId");
+
                             b1.ToTable("UserAccountStates");
 
                             b1.HasOne("Naos.Sample.UserAccounts.Domain.UserAccount")
@@ -110,6 +115,8 @@ namespace Naos.Sample.UserAccounts.Infrastructure.EntityFramework.Migrations
 
                             b1.Property<DateTime>("DateTime");
 
+                            b1.HasKey("UserAccountId");
+
                             b1.ToTable("UserAccounts");
 
                             b1.HasOne("Naos.Sample.UserAccounts.Domain.UserAccount")
@@ -123,6 +130,8 @@ namespace Naos.Sample.UserAccounts.Infrastructure.EntityFramework.Migrations
                             b1.Property<Guid>("UserAccountId");
 
                             b1.Property<DateTime>("DateTime");
+
+                            b1.HasKey("UserAccountId");
 
                             b1.ToTable("UserAccounts");
 

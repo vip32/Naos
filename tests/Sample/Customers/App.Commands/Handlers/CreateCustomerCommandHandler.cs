@@ -29,7 +29,7 @@
         {
             request.Properties.AddOrUpdate(this.GetType().Name, true);
 
-            this.logger.LogInformation($"command: {request.GetType().Name} handled by {this.GetType().Name}");
+            this.logger.LogInformation($"{LogEventIdentifiers.AppCommand} {request.GetType().Name} (handler={this.GetType().Name})");
 
             if(!request.Customer.Region.EqualsAny(new[] { "East", "West" }))
             {
@@ -40,7 +40,7 @@
             request.Customer.SetCustomerNumber();
             request.Customer = await this.repository.InsertAsync(request.Customer).ConfigureAwait(false);
 
-            this.logger.LogInformation($"command: {request.GetType().Name} response: {request.Customer.Id}");
+            this.logger.LogInformation($"{LogEventIdentifiers.AppCommand} {request.GetType().Name} (response={request.Customer.Id})");
 
             // TODO: publish CreatedCustomer message (MessageBus)
 

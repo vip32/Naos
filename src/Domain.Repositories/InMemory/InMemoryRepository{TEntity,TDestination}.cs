@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using MediatR;
+    using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Domain.Specifications;
 
@@ -23,12 +24,13 @@
         private readonly Func<TDestination, object> idSelector;
 
         public InMemoryRepository(
+            ILogger<IRepository<TEntity>> logger,
             IMediator mediator,
             Func<TDestination, object> idSelector,
             InMemoryContext<TEntity> context,
             IRepositoryOptions options = null,
             IEnumerable<ISpecificationMapper<TEntity, TDestination>> specificationMappers = null)
-            : base(mediator, context, options)
+            : base(logger, mediator, context, options)
         {
             EnsureArg.IsNotNull(idSelector, nameof(idSelector));
             EnsureArg.IsNotNull(options?.Mapper, nameof(options.Mapper));

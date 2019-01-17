@@ -31,7 +31,7 @@
         }
 
         /// <summary>
-        /// Handles the specified request.
+        /// Handles the specified request. All behaviors will be called first.
         /// </summary>
         /// <param name="request">The request.</param>
         /// <param name="cancellationToken">The cancellation token.</param>

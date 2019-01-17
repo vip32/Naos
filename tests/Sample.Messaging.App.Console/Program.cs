@@ -2,10 +2,12 @@
 {
     using System;
     using System.Threading.Tasks;
+    using MediatR;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Hosting;
     using Naos.Core.App.Configuration;
+    using Naos.Core.Common;
     using Naos.Core.Common.Web;
     using Naos.Core.RequestCorrelation.App.Web;
 
@@ -27,16 +29,17 @@
                         .AddHttpMessageHandler<HttpClientLogHandler>();
                     //services.Replace(ServiceDescriptor.Singleton<Microsoft.Extensions.Http.IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
                     services.RemoveAll<Microsoft.Extensions.Http.IHttpMessageHandlerBuilderFilter>();
+                    services.AddMediatR();
 
                     // naos application services
                     services
                         .AddNaosRequestCorrelation()
-                        .AddNaosOperationsSerilog(configuration)
+                        .AddNaosOperationsSerilog(configuration, correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}")
                         //.AddNaosMessagingSignalR(configuration)
-                        .AddNaosMessagingFileSystem(configuration)
-                        //.AddNaosMessagingAzureServiceBus(
-                        //    configuration,
-                        //    subscriptionName: capabilities[new Random().Next(0, capabilities.Length)])
+                        //.AddNaosMessagingFileSystem(configuration)
+                        .AddNaosMessagingAzureServiceBus(
+                            configuration,
+                            subscriptionName: capabilities[new Random().Next(0, capabilities.Length)])
                         .AddSingleton<IHostedService, MessagingTestHostedService>();
                 });
 

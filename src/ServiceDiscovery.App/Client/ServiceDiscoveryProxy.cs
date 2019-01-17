@@ -40,11 +40,11 @@
             if (registration != null)
             {
                 httpClient.BaseAddress = new Uri($"{registration.Address}:{registration.Port}".TrimEnd(':'));
-                logger.LogInformation("CLIENT discovery httpclient (service={ServiceName}, tag={ServiceTag}, address={BaseAddress})", serviceName, serviceTag, httpClient.BaseAddress);
+                logger.LogInformation($"{LogEventIdentifiers.ServiceDiscovery} proxy (service={{ServiceName}}, tag={serviceTag}, address={httpClient.BaseAddress})", serviceName);
             }
             else
             {
-                logger.LogWarning("CLIENT discovery httpclient (name={ServiceName}, tag={ServiceTag}, address=not found in registry)", serviceName, serviceTag);
+                logger.LogWarning($"{LogEventIdentifiers.ServiceDiscovery} proxy (name={{ServiceName}}, tag={serviceTag}, address=not found in registry)", serviceName);
             }
 
             // TODO: get serviceregistration by name OR any of the tags

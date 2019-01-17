@@ -42,7 +42,7 @@
 
         public Task<bool> ExistsAsync(object id)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<LogEvent>> FindAllAsync(IFindOptions<LogEvent> options = null)
@@ -53,7 +53,7 @@
 LogEvents_Development_CL | where LogMessage_s != '' | 
 where TimeGenerated > ago(24h) and LogLevel_s != 'Verbose' | 
 order by Timestamp_t | 
-top 300 by Timestamp_t")).ConfigureAwait(false); // 100000
+top 100000 by Timestamp_t")).ConfigureAwait(false); // 100000
             response.EnsureSuccessStatusCode();
 
             return this.MapResponse(SerializationHelper.JsonDeserialize<LogAnalyticsResponse>(
@@ -62,17 +62,17 @@ top 300 by Timestamp_t")).ConfigureAwait(false); // 100000
 
         public Task<IEnumerable<LogEvent>> FindAllAsync(ISpecification<LogEvent> specification, IFindOptions<LogEvent> options = null)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public Task<IEnumerable<LogEvent>> FindAllAsync(IEnumerable<ISpecification<LogEvent>> specifications, IFindOptions<LogEvent> options = null)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public Task<LogEvent> FindOneAsync(object id)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         private HttpRequestMessage PrepareRequest(string query)

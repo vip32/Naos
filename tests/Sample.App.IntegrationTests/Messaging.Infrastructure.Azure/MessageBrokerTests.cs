@@ -2,6 +2,7 @@
 {
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Core.App.Configuration;
+    using Naos.Core.Common;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.Domain.Model;
     using Shouldly;
@@ -16,7 +17,7 @@
             var configuration = NaosConfigurationFactory.CreateRoot();
 
             this.services
-                .AddNaosOperationsSerilog(configuration)
+                .AddNaosOperationsSerilog(configuration, correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}")
                 //.AddNaosMessagingFileSystem(configuration)
                 .AddNaosMessagingAzureServiceBus(configuration);
 

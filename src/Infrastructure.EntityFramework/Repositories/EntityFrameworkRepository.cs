@@ -63,8 +63,9 @@
         public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null)
         {
             return await Task.FromResult(
-                    this.dbContext.Set<TEntity>().TakeIf(options?.Take).ToList()).ConfigureAwait(false);
-            // TODO: implement orderby (options)
+                    this.dbContext.Set<TEntity>()
+                            .TakeIf(options?.Take)
+                            .OrderIf(options).ToList()).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null)
@@ -73,8 +74,8 @@
                 this.dbContext.Set<TEntity>()
                             .WhereExpression(specification?.ToExpression())
                             .SkipIf(options?.Skip)
-                            .TakeIf(options?.Take).ToList()).ConfigureAwait(false);
-            // TODO: implement orderby (options)
+                            .TakeIf(options?.Take)
+                            .OrderIf(options).ToList()).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null)
@@ -86,8 +87,8 @@
                 this.dbContext.Set<TEntity>()
                             .WhereExpressions(expressions)
                             .SkipIf(options?.Skip)
-                            .TakeIf(options?.Take).ToList()).ConfigureAwait(false);
-            // TODO: implement orderby (options)
+                            .TakeIf(options?.Take)
+                            .OrderIf(options).ToList()).ConfigureAwait(false);
         }
 
         public async Task<TEntity> FindOneAsync(object id)
@@ -158,6 +159,7 @@
                 }
             }
 
+            this.logger.LogInformation($"{LogEventIdentifiers.DomainRepository} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}");
             this.dbContext.Set<TEntity>().Add(entity);
             await this.dbContext.SaveChangesAsync().ConfigureAwait(false);
 
@@ -172,6 +174,8 @@
                     await this.mediator.Publish(new EntityUpdatedDomainEvent(entity)).ConfigureAwait(false);
                 }
             }
+
+            this.logger.LogInformation($"{LogEventIdentifiers.DomainRepository} upserted entity: {entity.GetType().PrettyName()}, id: {entity.Id}, isNew: {isNew}");
 
 #pragma warning disable SA1008 // Opening parenthesis must be spaced correctly
             return isNew ? (entity, ActionResult.Inserted) : (entity, ActionResult.Updated);
@@ -188,6 +192,7 @@
             var entity = await this.dbContext.Set<TEntity>().FindAsync(id).ConfigureAwait(false);
             if (entity != null)
             {
+                this.logger.LogInformation($"{LogEventIdentifiers.DomainRepository} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}");
                 this.dbContext.Remove(entity);
 
                 if (this.Options?.PublishEvents != false)

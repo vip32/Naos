@@ -42,6 +42,20 @@
         }
 
         [Fact]
+        public async Task FindAllAsync_WithOrder_Test()
+        {
+            // arrange/act
+            var result = await this.sut.FindAllAsync(
+                new FindOptions<Customer>(order: new OrderOption<Customer>(e => e.Region))).ConfigureAwait(false);
+
+            // assert
+            result.ShouldNotBeNull();
+            result.ShouldNotBeEmpty();
+            result.First().Region.ShouldBe("East");
+            result.Last().Region.ShouldBe("West");
+        }
+
+        [Fact]
         public async Task FindAllAsync_WithOptions_Test()
         {
             // arrange/act

@@ -56,7 +56,7 @@
 
             var loggerState = new Dictionary<string, object>
             {
-                [LogEventPropertyKeys.CorrelationId] = correlationId, //"t " + correlationId.SubstringTillLast("-"),
+                [LogEventPropertyKeys.CorrelationId] = correlationId,
                 [LogEventPropertyKeys.RequestId] = requestId
             };
 
@@ -68,7 +68,7 @@
 
                 if (this.options.UpdateTraceIdentifier)
                 {
-                    this.logger.LogDebug($"SERVICE http request  ({requestId}) now has traceIdentifier {correlationId}, was {context.TraceIdentifier}"); // TODO: move to request logging middleware (operations)
+                    this.logger.LogDebug($"{LogEventIdentifiers.InboundRequest} http ({requestId}) now has traceIdentifier {correlationId}, was {context.TraceIdentifier}"); // TODO: move to request logging middleware (operations)
                     context.TraceIdentifier = correlationId;
                 }
 

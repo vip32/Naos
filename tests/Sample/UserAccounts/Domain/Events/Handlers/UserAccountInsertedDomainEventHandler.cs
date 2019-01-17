@@ -30,7 +30,7 @@
             {
                 if (this.CanHandle(notification))
                 {
-                    this.logger.LogInformation($"inserted entity: {notification.Entity.GetType().PrettyName()} handled by {this.GetType().PrettyName()}");
+                    this.logger.LogInformation($"{LogEventIdentifiers.DomainEvent} handle {notification.GetType().Name.SubstringTill("DomainEvent")} (entity={notification.Entity.GetType().PrettyName()}, handler={this.GetType().PrettyName()})");
 
                     // TODO: do something, trigger message (integration)
                 }
