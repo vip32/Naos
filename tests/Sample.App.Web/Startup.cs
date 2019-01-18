@@ -47,6 +47,14 @@
                 .AddHttpMessageHandler<HttpClientLogHandler>();
             services.Replace(ServiceDescriptor.Singleton<Microsoft.Extensions.Http.IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
 
+            // encapsulate this in AddNaosApiKeyAuthentication, it can also resolve the username/password through configuration (kv) and setup options
+            services.AddAuthentication("Basic")
+                .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>("Basic", s =>
+                    {
+                        s.UserName = "test";
+                        s.Password = "test";
+                    }); // dGVzdDp0ZXN0
+
             services
                 .AddMiddlewareAnalysis()
                 .AddHttpContextAccessor()
@@ -62,7 +70,8 @@
             // naos application services
             services
                 .AddNaosServiceContext(this.Configuration, "Product", "Capability", tags: new[] { "Customers", "UserAccounts", "Countries" })
-                .AddNaosServiceDiscoveryFileSystem(this.Configuration)
+                //.AddNaosServiceDiscoveryFileSystem(this.Configuration)
+                .AddNaosServiceDiscoveryConsul(this.Configuration)
                 .AddNaosRequestCorrelation()
                 .AddNaosRequestFiltering()
                 .AddNaosOperationsSerilog(this.Configuration)

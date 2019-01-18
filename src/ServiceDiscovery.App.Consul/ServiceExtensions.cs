@@ -23,7 +23,7 @@
         /// <param name="configuration"></param>
         /// <param name="section"></param>
         /// <returns></returns>
-        public static IServiceCollection AddNaosDiscoveryConsul(
+        public static IServiceCollection AddNaosServiceDiscoveryConsul(
             this IServiceCollection services,
             IConfiguration configuration,
             string section = "naos:serviceDiscovery")

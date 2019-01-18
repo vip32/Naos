@@ -26,6 +26,7 @@
             this.directory = this.GetDirectory(this.configuration);
 
             // TODO: inject HealthStrategy which can validate the registrations
+            this.logger.LogInformation($"{LogEventIdentifiers.ServiceDiscovery} filesystem active");
         }
 
         public Task DeRegisterAsync(string id)
@@ -35,7 +36,7 @@
             var fullFileName = Path.Combine(this.GetDirectory(this.configuration), $"registration_{id}.json.tmp");
             if (File.Exists(fullFileName))
             {
-                this.logger.LogInformation($"{LogEventIdentifiers.ServiceDiscovery} registration delete (id={{RegistrationId}})", id);
+                this.logger.LogInformation($"{LogEventIdentifiers.ServiceDiscovery} filesystem registration delete (id={{RegistrationId}})", id);
 
                 File.Delete(fullFileName);
             }
@@ -50,7 +51,7 @@
 
             var fullFileNameTemp = Path.Combine(this.GetDirectory(this.configuration), $"registration_{registration.Id}.json.tmp");
             var fullFileName = Path.Combine(this.GetDirectory(this.configuration), $"registration_{registration.Id}.json");
-            this.logger.LogInformation($"{LogEventIdentifiers.ServiceDiscovery} registration add (name={{RegistrationName}}, id={{RegistrationId}}, file={fullFileName.SubstringFromLast(@"\")})", registration.Name, registration.Id);
+            this.logger.LogInformation($"{LogEventIdentifiers.ServiceDiscovery} filesystem register (name={{RegistrationName}}, tags={string.Join("|", registration.Tags.NullToEmpty())}, id={{RegistrationId}}, file={fullFileName.SubstringFromLast(@"\")})", registration.Name, registration.Id);
 
             if (File.Exists(fullFileNameTemp))
             {
@@ -66,7 +67,6 @@
             {
                 streamWriter.Write(SerializationHelper.JsonSerialize(registration));
                 streamWriter.Flush();
-                streamWriter.Close();
             }
 
             File.Move(fullFileNameTemp, fullFileName); // rename file
@@ -80,7 +80,7 @@
             {
                 this.EnsureDirectory(this.directory);
                 this.RefreshRegistrations(this.directory);
-                this.logger.LogInformation($"{LogEventIdentifiers.ServiceDiscovery} registrations watch (directory={this.directory})");
+                this.logger.LogInformation($"{LogEventIdentifiers.ServiceDiscovery} filesystem registrations watch (directory={this.directory})");
 
                 this.watcher = new FileSystemWatcher(this.directory)
                 {
@@ -139,7 +139,7 @@
                 var registration = JsonConvert.DeserializeObject<ServiceRegistration>(this.ReadFile(fullPath));
                 if (registration != null)
                 {
-                    this.logger.LogInformation($"{LogEventIdentifiers.ServiceDiscovery} registration refresh (name={{RegistrationName}}, id={{RegistrationId}}, file={fullPath.SubstringFromLast(@"\")})", registration.Name, registration.Id);
+                    this.logger.LogInformation($"{LogEventIdentifiers.ServiceDiscovery} filesystem registrations refresh (name={{RegistrationName}}, id={{RegistrationId}}, file={fullPath.SubstringFromLast(@"\")})", registration.Name, registration.Id);
                     this.registrations.Add(registration);
                 }
             }

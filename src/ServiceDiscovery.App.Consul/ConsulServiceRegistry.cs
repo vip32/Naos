@@ -6,6 +6,7 @@
     using EnsureThat;
     using global::Consul;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
 
     public class ConsulServiceRegistry : IServiceRegistry
     {
@@ -19,17 +20,20 @@
 
             this.logger = logger;
             this.client = client;
+
+            this.logger.LogInformation($"{LogEventIdentifiers.ServiceDiscovery} consul active");
         }
 
         public async Task DeRegisterAsync(string id)
         {
             try
             {
+                this.logger.LogInformation($"{LogEventIdentifiers.ServiceDiscovery} consul registration delete (id={{RegistrationId}})", id);
                 await this.client.Agent.ServiceDeregister(id);
             }
             catch
             {
-                this.logger.LogError($"consul failed deregistration {id}");
+                this.logger.LogError($"{LogEventIdentifiers.ServiceDiscovery} consul deregister failed {id}");
             }
         }
 
@@ -41,11 +45,16 @@
                 Name = registration.Name,
                 Address = registration.Address,
                 Port = registration.Port,
-                Tags = registration.Tags
+                Tags = registration.Tags,
+                Check = registration.Check == null ? null : new AgentServiceCheck
+                {
+                    HTTP = $"{registration.Address}:{registration.Port}".TrimEnd(':') + $"/{registration.Check.Route}".Replace("//", "/"),
+                    Interval = registration.Check.Interval
+                }
             };
 
+            this.logger.LogInformation($"{LogEventIdentifiers.ServiceDiscovery} consul register (name={{RegistrationName}}, tags={string.Join("|", registration.Tags.NullToEmpty())}, id={{RegistrationId}})", registration.Name, registration.Id);
             await this.client.Agent.ServiceDeregister(agentRegistration.ID);
-            this.logger.LogError($"consul registered {registration.Id}");
             await this.client.Agent.ServiceRegister(agentRegistration);
         }
 
@@ -56,7 +65,7 @@
             return services.Response.Values.Select(s => new ServiceRegistration
             {
                 Id = s.ID,
-                // Name = s., not available?
+                Name = s.Service,
                 Address = s.Address,
                 Port = s.Port,
                 Tags = s.Tags

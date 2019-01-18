@@ -13,5 +13,7 @@
         public int Port { get; set; }
 
         public string[] Tags { get; set; }
+
+        public ServiceRegistrationCheck Check { get; set; } = new ServiceRegistrationCheck();
     }
 }

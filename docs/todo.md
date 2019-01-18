@@ -26,7 +26,11 @@ Documentation
   Diagrams for Messaging
   Diagrams for Scheduling
 
-
+Service
+  Simple static KV apikey middleware/AuthenticationHandler to quickly protect services without oauth/oidc/jwt https://stackoverflow.com/questions/45798325/net-core-web-api-key
+      > custom AuthenticationHandler http://blogs.lessthandot.com/index.php/uncategorized/adding-user-managed-api-keys-to-asp-net-core-2-w-cosmos-db/
+  Api versioning
+  Request Rate limiting https://github.com/stefanprodan/AspNetCoreRateLimit
 
 
 
@@ -118,9 +122,10 @@ service: task scheduler (coravel) https://github.com/jamesmh/coravel/blob/master
 service: service registry (steeltoe) https://thenewstack.io/steeltoe-modernize-net-apps-for-a-microservices-architecture/
                                      https://steeltoe.io/docs/steeltoe-discovery/
 
-service: service discovery (consul) https://www.codeproject.com/Articles/1248381/Microservices-Service-Discovery
+service: service discovery (consul)https://www.codeproject.com/Articles/1248381/Microservices-Service-Discovery
                                    http://michaco.net/blog/ServiceDiscoveryAndHealthChecksInAspNetCoreWithConsul
                                    https://open.microsoft.com/2018/10/04/use-case-modern-service-discovery-consul-azure-part-1/
+                           docker run -p 8500:8500 consul agent -dev -ui -client=0.0.0.0 -bind=127.0.0.1  (https://stackoverflow.com/questions/41228968/accessing-consul-ui-running-in-docker-on-osx)
          service discovery reverse proxy https://auth0.com/blog/building-a-reverse-proxy-in-dot-net-core/
 
 operations: log analytics dashboard (operations) https://blogs.technet.microsoft.com/livedevopsinjapan/2017/08/23/log-analytics-log-search-rest-api-for-c/   
