@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.App.Web
+﻿namespace Naos.Core.Authentication.App.Web
 {
     using System;
     using System.Net.Http.Headers;

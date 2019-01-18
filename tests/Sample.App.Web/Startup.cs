@@ -15,6 +15,7 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.App.Configuration;
     using Naos.Core.App.Web;
+    using Naos.Core.Authentication.App.Web;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
     using Naos.Core.JobScheduling.App;
@@ -48,12 +49,12 @@
             services.Replace(ServiceDescriptor.Singleton<Microsoft.Extensions.Http.IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
 
             // encapsulate this in AddNaosApiKeyAuthentication, it can also resolve the username/password through configuration (kv) and setup options
-            services.AddAuthentication("Basic")
-                .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>("Basic", s =>
-                    {
-                        s.UserName = "test";
-                        s.Password = "test";
-                    }); // dGVzdDp0ZXN0
+            //services.AddAuthentication("Basic")
+            //    .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>("Basic", s =>
+            //        {
+            //            s.UserName = "test";
+            //            s.Password = "test";
+            //        }); // dGVzdDp0ZXN0
 
             services
                 .AddMiddlewareAnalysis()

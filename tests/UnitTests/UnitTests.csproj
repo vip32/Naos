@@ -34,7 +34,6 @@
     <ProjectReference Include="..\..\src\App.ExceptionHandling.Web\App.Exceptions.Web.csproj" />
     <ProjectReference Include="..\..\src\App.Operations.Serilog\App.Operations.Serilog.csproj" />
     <ProjectReference Include="..\..\src\App.Operations.Web\App.Operations.Web.csproj" />
-    <ProjectReference Include="..\..\src\App.Web\App.Web.csproj" />
     <ProjectReference Include="..\..\src\App\App.csproj" />
     <ProjectReference Include="..\..\src\Common.Web.Extensions\Common.Web.Extensions.csproj" />
     <ProjectReference Include="..\..\src\Common.Web\Common.Web.csproj" />
