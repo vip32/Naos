@@ -51,18 +51,9 @@
             services.AddSingleton<ISubscriptionMap, SubscriptionMap>();
             services.AddSingleton<IMessageBroker>(sp =>
             {
-                // HACK: get a registerd as scoped instance (mediator) inside a singleton instance
-                IMediator mediator = null;
-                //using (var scope = sp.CreateScope())
-                //{
-                //    mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-                //}
-
-                mediator = sp.CreateScope().ServiceProvider.GetRequiredService<IMediator>(); // WARN: is not disposed
-
                 var result = new ServiceBusMessageBroker(
                         sp.GetRequiredService<ILogger<ServiceBusMessageBroker>>(),
-                        mediator,
+                        (IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)),
                         sp.GetRequiredService<IServiceBusProvider>(),
                         new ServiceProviderMessageHandlerFactory(sp),
                         map: sp.GetRequiredService<ISubscriptionMap>(),
