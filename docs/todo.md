@@ -27,8 +27,6 @@ Documentation
   Diagrams for Scheduling
 
 Service
-  Simple static KV apikey middleware/AuthenticationHandler to quickly protect services without oauth/oidc/jwt https://stackoverflow.com/questions/45798325/net-core-web-api-key
-      > custom AuthenticationHandler http://blogs.lessthandot.com/index.php/uncategorized/adding-user-managed-api-keys-to-asp-net-core-2-w-cosmos-db/
   Api versioning
   Request Rate limiting https://github.com/stefanprodan/AspNetCoreRateLimit
 
