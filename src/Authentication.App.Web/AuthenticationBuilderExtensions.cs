@@ -11,13 +11,25 @@
         public static AuthenticationBuilder AddApiKey(this AuthenticationBuilder builder)
             => builder.AddApiKey(AuthenticationKeys.ApiKeyScheme, _ => { });
 
-        public static AuthenticationBuilder AddApiKey(this AuthenticationBuilder builder, Action<ApiKeyAuthenticationOptions> configureOptions)
-            => builder.AddApiKey(AuthenticationKeys.ApiKeyScheme, configureOptions);
+        public static AuthenticationBuilder AddApiKey(this AuthenticationBuilder builder, Action<AuthenticationHandlerOptions> options)
+            => builder.AddApiKey(AuthenticationKeys.ApiKeyScheme, options);
 
-        public static AuthenticationBuilder AddApiKey(this AuthenticationBuilder builder, string authenticationScheme, Action<ApiKeyAuthenticationOptions> configureOptions)
-            => builder.AddApiKey(authenticationScheme, "API Key", configureOptions);
+        public static AuthenticationBuilder AddApiKey(this AuthenticationBuilder builder, string authenticationScheme, Action<AuthenticationHandlerOptions> options)
+            => builder.AddApiKey(authenticationScheme, authenticationScheme, options);
 
-        public static AuthenticationBuilder AddApiKey(this AuthenticationBuilder builder, string authenticationScheme, string displayName, Action<ApiKeyAuthenticationOptions> configureOptions)
-            => builder.AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(authenticationScheme, displayName, configureOptions);
+        public static AuthenticationBuilder AddApiKey(this AuthenticationBuilder builder, string authenticationScheme, string displayName, Action<AuthenticationHandlerOptions> options)
+            => builder.AddScheme<AuthenticationHandlerOptions, ApiKeyAuthenticationHandler>(authenticationScheme, displayName, options);
+
+        public static AuthenticationBuilder AddBasic(this AuthenticationBuilder builder)
+            => builder.AddBasic(AuthenticationKeys.BasicScheme, _ => { });
+
+        public static AuthenticationBuilder AddBasic(this AuthenticationBuilder builder, Action<AuthenticationHandlerOptions> options)
+            => builder.AddBasic(AuthenticationKeys.BasicScheme, options);
+
+        public static AuthenticationBuilder AddBasic(this AuthenticationBuilder builder, string authenticationScheme, Action<AuthenticationHandlerOptions> options)
+            => builder.AddBasic(authenticationScheme, authenticationScheme, options);
+
+        public static AuthenticationBuilder AddBasic(this AuthenticationBuilder builder, string authenticationScheme, string displayName, Action<AuthenticationHandlerOptions> options)
+            => builder.AddScheme<AuthenticationHandlerOptions, BasicAuthenticationHandler>(authenticationScheme, displayName, options);
     }
 }

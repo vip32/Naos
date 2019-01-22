@@ -3,12 +3,15 @@
     using System.Diagnostics;
     using System.Linq;
     using System.Threading;
+    using System.Threading.Tasks;
     using MediatR;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Diagnostics.HealthChecks;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Authorization;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -48,14 +51,6 @@
                 .AddHttpMessageHandler<HttpClientLogHandler>();
             services.Replace(ServiceDescriptor.Singleton<Microsoft.Extensions.Http.IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
 
-            // encapsulate this in AddNaosApiKeyAuthentication, it can also resolve the username/password through configuration (kv) and setup options
-            //services.AddAuthentication("Basic")
-            //    .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>("Basic", s =>
-            //        {
-            //            s.UserName = "test";
-            //            s.Password = "test";
-            //        }); // dGVzdDp0ZXN0
-
             services
                 .AddMiddlewareAnalysis()
                 .AddHttpContextAccessor()
@@ -63,14 +58,32 @@
                 //.AddHealthChecks()
                 //    .AddUrlGroup(new Uri("http://httpbin.org/status/200"), "default").Services
                 .AddSwaggerDocument(s => s.Description = "naos")
-                .AddMediatR() // singleton due to inmemory repository: c => c.AsSingleton()
-                .AddMvc()
+                .AddMediatR()
+                .AddMvc(o =>
+                    {
+                        var policy = new AuthorizationPolicyBuilder() // https://tahirnaushad.com/2017/08/28/asp-net-core-2-0-mvc-filters/
+                            .RequireAuthenticatedUser()
+                            .Build();
+                        o.Filters.Add(new AuthorizeFilter(policy));
+                    })
                     .AddJsonOptions(o => o.AddDefaultJsonSerializerSettings())
                     .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // naos application services
             services
                 .AddNaosServiceContext(this.Configuration, "Product", "Capability", tags: new[] { "Customers", "UserAccounts", "Countries" })
+                .AddNaosAuthenticationApiKeyStatic(this.Configuration, o =>
+                {
+                    o.IgnoreLocal = false;
+                    o.Events = new AuthenticationHandlerEvents // optional
+                    {
+                        OnChallenge = context =>
+                        {
+                            Trace.TraceError("ohoh api");
+                            return Task.CompletedTask;
+                        }
+                    };
+                })
                 //.AddNaosServiceDiscoveryFileSystem(this.Configuration)
                 .AddNaosServiceDiscoveryConsul(this.Configuration)
                 .AddNaosRequestCorrelation()
@@ -154,6 +167,7 @@
             //    s.UIPath = "/health/ui";
             //});
 
+            app.UseAuthentication();
             app.UseMvc();
         }
     }

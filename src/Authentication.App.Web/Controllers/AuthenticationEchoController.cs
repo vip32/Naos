@@ -1,0 +1,39 @@
+﻿namespace Naos.Core.Authentication.App.Web.Controllers
+{
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Security.Principal;
+    using EnsureThat;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
+
+    [Route("api/echo/authentication")]
+    [ApiController]
+    public class AuthenticationEchoController : ControllerBase // or use normal middleware?  https://stackoverflow.com/questions/47617994/how-to-use-a-controller-in-another-assembly-in-asp-net-core-mvc-2-0?rq=1
+    {
+        private readonly ILogger<AuthenticationEchoController> logger;
+
+        public AuthenticationEchoController(
+            ILogger<AuthenticationEchoController> logger)
+        {
+            EnsureArg.IsNotNull(logger, nameof(logger));
+
+            this.logger = logger;
+        }
+
+        [HttpGet]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public ActionResult<object> Get()
+        {
+            return this.Ok(new
+            {
+                this.HttpContext.User?.Identity?.Name,
+                this.HttpContext.User?.Identity?.IsAuthenticated,
+                this.HttpContext.User?.Identity?.AuthenticationType,
+                Claims = this.HttpContext.User?.Claims.NullToEmpty().Select(c => new { c.Type, c.Value })
+            });
+        }
+    }
+}

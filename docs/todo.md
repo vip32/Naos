@@ -68,6 +68,7 @@ polly logging ctx https://github.com/stevejgordon/PollyLoggingContextSample
 multi tenant (tenancy) https://github.com/Finbuckle/Finbuckle.MultiTenant
 role based authorization / access control http://jasonwatmore.com/post/2019/01/08/aspnet-core-22-role-based-authorization-tutorial-with-example-api
 attr based decorators https://app.pluralsight.com/player?course=cqrs-in-practice&author=vladimir-khorikov&name=22d61509-b7ab-4268-96f1-258bc8a95b99&clip=5&mode=live
+azure easy auth https://docs.microsoft.com/en-us/azure/app-service/overview-authentication-authorization?view=aspnetcore-2.2 & https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-auth-aad
 
 inter service JSON RPC http://www.jsonrpc.org/specification
                        service-bus: https://github.com/Azure/azure-service-bus/tree/master/samples/DotNet/Microsoft.Azure.ServiceBus/QueuesRequestResponse

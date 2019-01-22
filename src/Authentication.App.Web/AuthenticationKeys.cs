@@ -3,11 +3,15 @@
     /// <summary>
     /// Default values used by API key authentication.
     /// </summary>
-    public static class AuthenticationKeys
+    public struct AuthenticationKeys
     {
         /// <summary>
         /// Default value for AuthenticationScheme
         /// </summary>
         public const string ApiKeyScheme = "ApiKey";
+
+        public const string BasicScheme = "Basic";
+
+        public const string AuthorizationHeaderName = "Authorization";
     }
 }

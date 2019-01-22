@@ -64,7 +64,7 @@
                     context.Response.StatusCode = 200; // TODO: however a 404 will be logged
                     context.Response.ContentType = ContentType.JSON.ToValue();
                     await context.Response.WriteAsync(JsonConvert.SerializeObject(
-                        new RootResponse
+                        new EchoResponse
                         {
                             Service = serviceDescriptor,
                             Request = new Dictionary<string, string> // TODO: replace with RequestCorrelationContext
@@ -84,6 +84,7 @@
                                 ["swagger"] = $"{context.Request.Uri()}swagger/v1/swagger.json",
                                 ["health"] = $"{context.Request.Uri()}health",
                                 ["echo"] = $"{context.Request.Uri()}echo",
+                                ["echo-authentication"] = $"{context.Request.Uri()}api/echo/authentication",
                                 ["echo-messaging"] = $"{context.Request.Uri()}api/echo/messaging",
                                 ["echo-correlation"] = $"{context.Request.Uri()}api/echo/correlation",
                                 ["echo-servicecontext"] = $"{context.Request.Uri()}api/echo/servicecontext",
@@ -104,7 +105,7 @@
             }
         }
 
-        private class RootResponse
+        private class EchoResponse
         {
             public ServiceDescriptor Service { get; set; }
 

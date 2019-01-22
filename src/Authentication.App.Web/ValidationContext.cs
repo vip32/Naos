@@ -3,13 +3,11 @@
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Http;
 
-    public class ValidationContext : ResultContext<ApiKeyAuthenticationOptions>
+    public class ValidationContext : ResultContext<AuthenticationHandlerOptions>
     {
-        public ValidationContext(HttpContext context, AuthenticationScheme scheme, ApiKeyAuthenticationOptions options)
+        public ValidationContext(HttpContext context, AuthenticationScheme scheme, AuthenticationHandlerOptions options)
             : base(context, scheme, options)
         {
         }
-
-        public string ApiKey { get; set; }
     }
 }
