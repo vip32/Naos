@@ -85,13 +85,13 @@
                 if (message.Id.IsNullOrEmpty())
                 {
                     message.Id = Guid.NewGuid().ToString();
-                    this.logger.LogDebug($"{LogEventIdentifiers.Messaging} set message (id={message.Id})");
+                    this.logger.LogDebug($"{{LogKey}} set message (id={message.Id})", LogEventKeys.Messaging);
                 }
 
                 if (message.Origin.IsNullOrEmpty())
                 {
                     message.Origin = this.messageScope;
-                    this.logger.LogDebug($"{LogEventIdentifiers.Messaging} set message (origin={message.Origin})");
+                    this.logger.LogDebug($"{{LogKey}} set message (origin={message.Origin})", LogEventKeys.Messaging);
                 }
 
                 // TODO: async publish!
@@ -99,7 +99,8 @@
 
                 var messageName = /*message.Name*/ message.GetType().PrettyName();
 
-                this.logger.LogInformation($"{LogEventIdentifiers.Messaging} publish (name={{MessageName}}, id={{MessageId}}, origin={{MessageOrigin}})", message.GetType().PrettyName(), message.Id, message.Origin);
+                this.logger.LogInformation("{LogKey} publish (name={MessageName}, id={MessageId}, origin={MessageOrigin})",
+                    LogEventKeys.Messaging, message.GetType().PrettyName(), message.Id, message.Origin);
 
                 var url = $"{this.serviceUtils.Endpoint}/api/v1/hubs/{this.HubName}";
                 var request = new HttpRequestMessage(HttpMethod.Post, url);
@@ -118,7 +119,8 @@
                 var response = this.httpClient.CreateClient("default").SendAsync(request).GetAwaiter().GetResult(); // TODO: async!
                 if (response.StatusCode != HttpStatusCode.Accepted)
                 {
-                    this.logger.LogError($"{LogEventIdentifiers.Messaging} publish failed: HTTP statuscode {{StatusCode}} (name={{MessageName}}, id={{MessageId}}, origin={{MessageOrigin}})", response.StatusCode, message.GetType().PrettyName(), message.Id, message.Origin);
+                    this.logger.LogError("{LogKey} publish failed: HTTP statuscode {StatusCode} (name={MessageName}, id={MessageId}, origin={MessageOrigin})",
+                        LogEventKeys.Messaging, response.StatusCode, message.GetType().PrettyName(), message.Id, message.Origin);
                 }
             }
         }
@@ -131,7 +133,8 @@
 
             if (!this.map.Exists<TMessage>())
             {
-                this.logger.LogInformation($"{LogEventIdentifiers.Messaging} subscribe (name={{MessageName}}, service={{Service}}, filterScope={{FilterScope}}, handler={{MessageHandlerType}}, endpoint={{Endpoint}}, hub={{Hub}})", typeof(TMessage).PrettyName(), this.messageScope, this.filterScope, typeof(THandler).Name, this.serviceUtils.Endpoint, this.HubName);
+                this.logger.LogInformation("{LogKey} subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, endpoint={Endpoint}, hub={Hub})",
+                    LogEventKeys.Messaging, typeof(TMessage).PrettyName(), this.messageScope, this.filterScope, typeof(THandler).Name, this.serviceUtils.Endpoint, this.HubName);
 
                 this.map.Add<TMessage, THandler>();
             }
@@ -148,7 +151,7 @@
                         };
                     }).Build();
 
-                this.logger.LogDebug($"{LogEventIdentifiers.Messaging} signalr connection started (url={url})");
+                this.logger.LogDebug($"{{LogKey}} signalr connection started (url={url})", LogEventKeys.Messaging);
                 this.connection.StartAsync().GetAwaiter().GetResult();
             }
 
@@ -159,7 +162,7 @@
                 {
                     await this.ProcessMessage(n, m).ConfigureAwait(false);
                 });
-            this.logger.LogDebug($"{LogEventIdentifiers.Messaging} signalr connection onmessage handler registered (name={messageName})");
+            this.logger.LogDebug($"{{LogKey}} signalr connection onmessage handler registered (name={messageName})", LogEventKeys.Messaging);
 
             return this;
         }
@@ -196,8 +199,8 @@
 
                     // TODO: async publish!
                     /*await */ this.mediator.Publish(new MessageProcessDomainEvent(message, this.messageScope)).GetAwaiter().GetResult(); /*.ConfigureAwait(false);*/
-                    this.logger.LogInformation($"{LogEventIdentifiers.Messaging} process (name={{MessageName}}, id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}})",
-                            messageType.PrettyName(), message?.Id, this.messageScope, message?.Origin);
+                    this.logger.LogInformation("{LogKey} process (name={MessageName}, id={MessageId}, service={Service}, origin={MessageOrigin})",
+                            LogEventKeys.Messaging, messageType.PrettyName(), message?.Id, this.messageScope, message?.Origin);
 
                     // construct the handler by using the DI container
                     var handler = this.handlerFactory.Create(subscription.HandlerType); // should not be null, did you forget to register your generic handler (EntityMessageHandler<T>)
@@ -210,8 +213,8 @@
                     }
                     else
                     {
-                        this.logger.LogWarning($"{LogEventIdentifiers.Messaging} process failed, message handler could not be created. is the handler registered in the service provider? (name={{MessageName}}, service={{Service}}, id={{MessageId}}, origin={{MessageOrigin}})",
-                            messageType.PrettyName(), this.messageScope, message?.Id, message?.Origin);
+                        this.logger.LogWarning("{LogKey} process failed, message handler could not be created. is the handler registered in the service provider? (name={MessageName}, service={Service}, id={MessageId}, origin={MessageOrigin})",
+                            LogEventKeys.Messaging, messageType.PrettyName(), this.messageScope, message?.Id, message?.Origin);
                     }
                 }
 
@@ -219,7 +222,7 @@
             }
             else
             {
-                this.logger.LogDebug($"unprocessed: {messageName}");
+                this.logger.LogDebug($"{{LogKey}} unprocessed: {messageName}", LogEventKeys.Messaging);
             }
 
             return processed;

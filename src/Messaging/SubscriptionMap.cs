@@ -81,7 +81,7 @@
         public IReadOnlyDictionary<string, IEnumerable<SubscriptionDetails>> GetAll()
         {
             var result = new Dictionary<string, IEnumerable<SubscriptionDetails>>();
-            foreach(var i in this.map.NullToEmpty())
+            foreach(var i in this.map.Safe())
             {
                 result.Add(i.Key, i.Value.AsEnumerable());
             }
@@ -102,7 +102,7 @@
         /// </summary>
         /// <param name="messageName">Name of the message.</param>
         /// <returns></returns>
-        public IEnumerable<SubscriptionDetails> GetAll(string messageName) => this.map[messageName].NullToEmpty();
+        public IEnumerable<SubscriptionDetails> GetAll(string messageName) => this.map[messageName].Safe();
 
         /// <summary>
         /// Does this instance exist in the map.

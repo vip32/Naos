@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.App.Exceptions.Web
+﻿namespace Naos.Core.Commands.Exceptions.Web
 {
     public class ExceptionHandlerMiddlewareOptions
     {

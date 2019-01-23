@@ -3,7 +3,7 @@
     using System;
     using EnsureThat;
     using Microsoft.Extensions.Options;
-    using Naos.Core.App.Correlation.App.Web;
+    using Naos.Core.Commands.Correlation.App.Web;
     using Naos.Core.RequestCorrelation.App;
 
     /// <summary>

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
     using EnsureThat;
@@ -9,6 +10,8 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
+    using Naos.Core.Domain.Specifications;
+    using Naos.Core.Filtering.App;
     using Naos.Core.RequestCorrelation.App;
     using Naos.Sample.Countries.Domain;
 
@@ -18,11 +21,13 @@
     {
         private readonly ILogger<CountriesController> logger;
         private readonly ICountryRepository repository;
+        private readonly FilterContext filterContext;
         private readonly ICorrelationContextAccessor correlationContext;
 
         public CountriesController(
             ILogger<CountriesController> logger,
             ICountryRepository repository,
+            IFilterContextAccessor filterContext,
             ICorrelationContextAccessor correlationContext)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
@@ -31,6 +36,7 @@
 
             this.logger = logger;
             this.repository = repository;
+            this.filterContext = filterContext?.Context;
             this.correlationContext = correlationContext;
         }
 
@@ -42,7 +48,8 @@
         {
             this.logger.LogInformation($"hello from {this.GetType().Name} >> {this.correlationContext.Context?.CorrelationId}");
 
-            return this.Ok(await this.repository.FindAllAsync().ConfigureAwait(false));
+            return this.Ok(await this.repository.FindAllAsync(
+                this.filterContext.GetCritertiasSpecification<Country>()).ConfigureAwait(false));
         }
 
         [HttpGet]

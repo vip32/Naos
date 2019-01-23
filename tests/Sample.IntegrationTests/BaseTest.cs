@@ -4,8 +4,8 @@
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
-    using Naos.Core.App.Commands;
-    using Naos.Core.App.Configuration;
+    using Naos.Core.Commands.App;
+    using Naos.Core.Commands.Configuration;
     using Naos.Core.Common;
     using Naos.Core.Infrastructure.EntityFramework;
     using Naos.Sample.UserAccounts.EntityFramework;

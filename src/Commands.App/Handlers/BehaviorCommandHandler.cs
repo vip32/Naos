@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.App.Commands
+﻿namespace Naos.Core.Commands.App
 {
     using System.Collections.Generic;
     using System.Threading;
@@ -11,7 +11,7 @@
     /// </summary>
     /// <typeparam name="TRequest">The type of the request.</typeparam>
     /// <typeparam name="TResponse">Return value of the wrapped command handler</typeparam>
-    /// <seealso cref="Commands.BaseCommandHandler{TRequest, TResponse}" />
+    /// <seealso cref="App.BaseCommandHandler{TRequest, TResponse}" />
     /// <seealso cref="MediatR.IRequestHandler{CommandRequest{TResponse}, CommandResponse{TResponse}}" />
     public abstract class BehaviorCommandHandler<TRequest, TResponse>
         : BaseCommandHandler<TRequest, TResponse>
@@ -38,7 +38,7 @@
         /// <returns></returns>
         public override async Task<CommandResponse<TResponse>> Handle(TRequest request, CancellationToken cancellationToken)
         {
-            foreach (var behavior in this.behaviors.NullToEmpty())
+            foreach (var behavior in this.behaviors.Safe())
             {
                 var behaviorResult = await behavior.ExecuteAsync(request).ConfigureAwait(false);
                 if (behaviorResult.Cancelled) // abort if this behavior did not succeed

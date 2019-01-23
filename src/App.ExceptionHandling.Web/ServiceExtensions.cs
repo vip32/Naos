@@ -3,7 +3,7 @@
     using System;
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
-    using Naos.Core.App.Exceptions.Web;
+    using Naos.Core.Commands.Exceptions.Web;
 
     public static class ServiceExtensions
     {

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.App.Commands
+﻿namespace Naos.Core.Commands.App
 {
     using System.Threading;
     using System.Threading.Tasks;

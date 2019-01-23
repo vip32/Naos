@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.App.Correlation.App.Web
+﻿namespace Naos.Core.Commands.Correlation.App.Web
 {
     using System;
     using System.Collections.Generic;
@@ -68,7 +68,7 @@
 
                 if (this.options.UpdateTraceIdentifier)
                 {
-                    this.logger.LogDebug($"{LogEventIdentifiers.InboundRequest} http ({requestId}) now has traceIdentifier {correlationId}, was {context.TraceIdentifier}"); // TODO: move to request logging middleware (operations)
+                    this.logger.LogDebug($"{{LogKey}} http ({requestId}) now has traceIdentifier {correlationId}, was {context.TraceIdentifier}", LogEventKeys.InboundRequest); // TODO: move to request logging middleware (operations)
                     context.TraceIdentifier = correlationId;
                 }
 

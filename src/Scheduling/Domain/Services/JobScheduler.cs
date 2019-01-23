@@ -41,7 +41,7 @@
             EnsureArg.IsNotNull(job, nameof(job));
 
             registration.Key = registration.Key ?? HashAlgorithm.ComputeHash(job);
-            this.logger.LogInformation($"{LogEventIdentifiers.JobScheduling} registration (key={{JobKey}}, cron={registration.Cron}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")}, enabled={registration.Enabled})", registration.Key);
+            this.logger.LogInformation($"{{LogKey}} registration (key={{JobKey}}, cron={registration.Cron}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")}, enabled={registration.Enabled})", LogEventKeys.JobScheduling, registration.Key);
 
             var item = this.Settings.Registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(registration.Key));
             if (item.Key != null)
@@ -83,7 +83,7 @@
             }
             else
             {
-                this.logger.LogInformation($"{LogEventIdentifiers.JobScheduling} does not known registration with key {{JobKey}} registered", key);
+                this.logger.LogInformation("{LogKey} does not known registration with key {JobKey} registered", LogEventKeys.JobScheduling, key);
             }
         }
 
@@ -96,7 +96,7 @@
             }
             else
             {
-                this.logger.LogInformation($"{LogEventIdentifiers.JobScheduling} does not know registration with key {{JobKey}} registered", key);
+                this.logger.LogInformation("{LogKey} does not know registration with key {JobKey} registered", LogEventKeys.JobScheduling, key);
             }
         }
 
@@ -116,10 +116,10 @@
             }
 
             Interlocked.Increment(ref this.activeCount);
-            this.logger.LogInformation($"{LogEventIdentifiers.JobScheduling} run started (activeCount=#{this.activeCount}, moment={moment.ToString("o")})");
+            this.logger.LogInformation($"{{LogKey}} run started (activeCount=#{this.activeCount}, moment={moment.ToString("o")})", LogEventKeys.JobScheduling);
             await this.ExecuteJobsAsync(moment).ConfigureAwait(false);
             Interlocked.Decrement(ref this.activeCount);
-            this.logger.LogInformation($"{LogEventIdentifiers.JobScheduling} run finished (activeCount=#{this.activeCount})");
+            this.logger.LogInformation($"{{LogKey}} run finished (activeCount=#{this.activeCount})", LogEventKeys.JobScheduling);
         }
 
         private async Task ExecuteJobsAsync(DateTime moment)
@@ -135,7 +135,7 @@
 
             if (dueJobs.IsNullOrEmpty())
             {
-                this.logger.LogInformation($"{LogEventIdentifiers.JobScheduling} run has no due jobs at moment {moment.ToString("o")}");
+                this.logger.LogInformation($"{{LogKey}} run has no due jobs at moment {moment.ToString("o")}", LogEventKeys.JobScheduling);
             }
 
             await Task.WhenAll(dueJobs).ConfigureAwait(false); // really wait for completion (await)?
@@ -150,9 +150,9 @@
                     async Task Execute()
                     {
                         // TODO: publish domain event (job started)
-                        this.logger.LogInformation($"{LogEventIdentifiers.JobScheduling} started (key={{JobKey}}, type={job.GetType().PrettyName()}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")})", registration.Key);
+                        this.logger.LogInformation($"{{LogKey}} started (key={{JobKey}}, type={job.GetType().PrettyName()}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")})", LogEventKeys.JobScheduling, registration.Key);
                         await job.ExecuteAsync(cancellationToken, args).ConfigureAwait(false);
-                        this.logger.LogInformation($"{LogEventIdentifiers.JobScheduling} finished (key={{JobKey}}, type={job.GetType().PrettyName()})", registration.Key);
+                        this.logger.LogInformation($"{{LogKey}} finished (key={{JobKey}}, type={job.GetType().PrettyName()})", LogEventKeys.JobScheduling, registration.Key);
                         // TODO: publish domain event (job finished)
                     }
 
@@ -171,7 +171,7 @@
                         }
                         else
                         {
-                            this.logger.LogWarning($"{LogEventIdentifiers.JobScheduling} already executing (key={{JobKey}}, type={job.GetType().PrettyName()})", registration.Key);
+                            this.logger.LogWarning($"{{LogKey}} already executing (key={{JobKey}}, type={job.GetType().PrettyName()})", LogEventKeys.JobScheduling, registration.Key);
                         }
                     }
                     else
@@ -182,13 +182,13 @@
                 catch (OperationCanceledException ex)
                 {
                     // TODO: publish domain event (job failed)
-                    this.logger.LogWarning(ex, $"{LogEventIdentifiers.JobScheduling} canceled (key={{JobKey}}), type={job.GetType().PrettyName()})", registration.Key);
+                    this.logger.LogWarning(ex, $"{{LogKey}} canceled (key={{JobKey}}), type={job.GetType().PrettyName()})", LogEventKeys.JobScheduling, registration.Key);
                     //this.errorHandler?.Invoke(ex);
                 }
                 catch (Exception ex)
                 {
                     // TODO: publish domain event (job failed)
-                    this.logger.LogError(ex.InnerException ?? ex, $"{LogEventIdentifiers.JobScheduling} failed (key={{JobKey}}), type={job.GetType().PrettyName()})", registration.Key);
+                    this.logger.LogError(ex.InnerException ?? ex, $"{{LogKey}} failed (key={{JobKey}}), type={job.GetType().PrettyName()})", LogEventKeys.JobScheduling, registration.Key);
                     this.errorHandler?.Invoke(ex.InnerException ?? ex);
                 }
             }

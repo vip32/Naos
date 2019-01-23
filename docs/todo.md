@@ -46,9 +46,12 @@ xunit configuration https://weblog.west-wind.com/posts/2018/Feb/18/Accessing-Con
 validation : entity.Validate(handler)
 ef sqlite + inmemory : https://www.thereformedprogrammer.net/using-in-memory-databases-for-unit-testing-ef-core-applications/
 webapi test + jwt https://www.domstamand.com/testing-a-webapi-in-net-core-with-integration-tests/
+embedded dashboard https://github.com/dotnetcore/CAP/blob/develop/src/DotNetCore.CAP/Dashboard/RazorPageDispatcher.cs
 host multiple mvc apps https://damienbod.com/2018/12/01/using-mvc-asp-net-core-apps-in-a-host-asp-net-core-app/
 file repo https://github.com/selmaohneh/Repository/tree/master/Repository.FileRepository
+mongo repo https://github.com/grandnode/grandnode/blob/develop/Grand.Data/MongoDBRepository.cs
 properties https://github.com/schotime/NPoco/blob/master/src/NPoco/PocoExpando.cs
+roslyn compiler https://github.com/grandnode/grandnode/blob/develop/Grand.Core/Roslyn/RoslynCompiler.cs
 spec mapping with visitor https://fabiomarreco.github.io/blog/2018/specificationpattern-with-entityframework/
 cqrs (customer changed events) https://www.pluralsight.com/courses/cqrs-in-practice
 spec vs cqrs https://enterprisecraftsmanship.com/2018/11/06/cqrs-vs-specification-pattern/
@@ -76,6 +79,8 @@ inter service JSON RPC http://www.jsonrpc.org/specification
                        https://github.com/httpjsonrpcnet/httpjsonrpcnet
                        https://www.rabbitmq.com/tutorials/tutorial-six-python.html
                        http://gigi.nullneuron.net/gigilabs/abstracting-rabbitmq-rpc-with-taskcompletionsource/
+                       https://github.com/OctopusDeploy/Halibut
+                       https://github.com/Cysharp/MagicOnion
 
 code coverage https://github.com/tonerdo/coverlet + https://codecov.io/gh/vip32/Naos.Core
 api problem details https://www.strathweb.com/2018/07/centralized-exception-handling-and-request-validation-in-asp-net-core/

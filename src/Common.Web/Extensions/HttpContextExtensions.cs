@@ -29,7 +29,7 @@
                 context.Items.Remove("correlationId");
             }
 
-            context.Items.Add("correlationId", value);
+            context.Items.Add("correlationId", value); // or use context.Features?
         }
 
         public static string GetCorrelationId(this HttpContext context)
@@ -65,7 +65,7 @@
                 context.Items.Remove("requestId");
             }
 
-            context.Items.Add("requestId", value);
+            context.Items.Add("requestId", value); // or use context.Features?
         }
 
         public static string GetRequestId(this HttpContext context)
@@ -101,7 +101,7 @@
                 context.Items.Remove("serviceName");
             }
 
-            context.Items.Add("serviceName", value);
+            context.Items.Add("serviceName", value); // or use context.Features?
         }
 
         public static string GetServiceName(this HttpContext context)

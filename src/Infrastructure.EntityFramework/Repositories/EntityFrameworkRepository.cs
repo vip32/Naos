@@ -81,7 +81,7 @@
         public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null)
         {
             var specificationsArray = specifications as ISpecification<TEntity>[] ?? specifications.ToArray();
-            var expressions = specificationsArray.NullToEmpty().Select(s => s.ToExpression());
+            var expressions = specificationsArray.Safe().Select(s => s.ToExpression());
 
             return await Task.FromResult(
                 this.dbContext.Set<TEntity>()
@@ -159,7 +159,7 @@
                 }
             }
 
-            this.logger.LogInformation($"{LogEventIdentifiers.DomainRepository} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}");
+            this.logger.LogInformation($"{{LogKey}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogEventKeys.DomainRepository);
             this.dbContext.Set<TEntity>().Add(entity);
             await this.dbContext.SaveChangesAsync().ConfigureAwait(false);
 
@@ -175,7 +175,7 @@
                 }
             }
 
-            this.logger.LogInformation($"{LogEventIdentifiers.DomainRepository} upserted entity: {entity.GetType().PrettyName()}, id: {entity.Id}, isNew: {isNew}");
+            this.logger.LogInformation($"{{LogKey}} upserted entity: {entity.GetType().PrettyName()}, id: {entity.Id}, isNew: {isNew}", LogEventKeys.DomainRepository);
 
 #pragma warning disable SA1008 // Opening parenthesis must be spaced correctly
             return isNew ? (entity, ActionResult.Inserted) : (entity, ActionResult.Updated);
@@ -192,7 +192,7 @@
             var entity = await this.dbContext.Set<TEntity>().FindAsync(id).ConfigureAwait(false);
             if (entity != null)
             {
-                this.logger.LogInformation($"{LogEventIdentifiers.DomainRepository} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}");
+                this.logger.LogInformation($"{{LogKey}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogEventKeys.DomainRepository);
                 this.dbContext.Remove(entity);
 
                 if (this.Options?.PublishEvents != false)

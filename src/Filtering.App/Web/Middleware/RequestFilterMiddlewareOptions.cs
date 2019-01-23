@@ -1,9 +1,9 @@
-﻿namespace Naos.Core.App.Filtering.App.Web
+﻿namespace Naos.Core.Commands.Filtering.App.Web
 {
     /// <summary>
     /// Options for criteria.
     /// </summary>
-    public class FilterMiddlewareOptions
+    public class RequestFilterMiddlewareOptions
     {
         private const string DefaultCriteriaQueryStringKey = "q";
         private const string DefaultOrderByQueryStringKey = "order";

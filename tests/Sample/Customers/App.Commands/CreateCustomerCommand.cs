@@ -2,7 +2,7 @@
 {
     using FluentValidation;
     using FluentValidation.Results;
-    using Naos.Core.App.Commands;
+    using Naos.Core.Commands.App;
     using Naos.Sample.Customers.Domain;
 
     public class CreateCustomerCommand : CommandRequest<string>

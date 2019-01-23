@@ -31,7 +31,7 @@
             services.AddSingleton<IHostedService, ServiceDiscoveryHostedService>();
             services.TryAddSingleton<IServiceRegistry>(sp => new FileSystemServiceRegistry(
                 sp.GetRequiredService<ILogger<FileSystemServiceRegistry>>(), configuration.GetSection($"{section}:registry:fileSystem").Get<FileSystemServiceRegistryConfiguration>()));
-            services.TryAddSingleton<IServiceDiscoveryClient, ServiceDiscoveryClient>();
+            services.TryAddSingleton<IServiceRegistryClient, ServiceRegistryClient>();
 
             return services;
         }

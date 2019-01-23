@@ -1,9 +1,9 @@
-﻿namespace Naos.Core.UnitTests.App.Commands.Handlers.Behaviors
+﻿namespace Naos.Core.UnitTests.Commands.App.Handlers.Behaviors
 {
     using System.Threading.Tasks;
     using FluentValidation;
     using FluentValidation.Results;
-    using Naos.Core.App.Commands;
+    using Naos.Core.Commands.App;
     using Xunit;
 
     public class ValidateCommandBehaviorTests

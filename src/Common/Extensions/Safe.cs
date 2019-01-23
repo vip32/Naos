@@ -7,14 +7,15 @@
     public static partial class Extensions
     {
         /// <summary>
-        /// Converts a null list to an empty list. avoids null ref exceptions
+        /// Converts a null list to an empty list. Also clears out possible 'null' items
+        /// Avoids null ref exceptions
         /// </summary>
         /// <typeparam name="TSource">the source</typeparam>
         /// <param name="source">the source collection</param>
         /// <returns>collection of sources</returns>
-        public static IEnumerable<TSource> NullToEmpty<TSource>(this IEnumerable<TSource> source)
+        public static IEnumerable<TSource> Safe<TSource>(this IEnumerable<TSource> source)
         {
-            return source ?? Enumerable.Empty<TSource>();
+            return (source ?? Enumerable.Empty<TSource>()).Where(i => i != null);
         }
 
         public static string NullToEmpty(this string source)
@@ -23,14 +24,15 @@
         }
 
         /// <summary>
-        /// Converts an null list to an empty list. avoids null ref exceptions
+        /// Converts an null list to an empty list. Also clears out possible 'null' items
+        /// Avoids null ref exceptions
         /// </summary>
         /// <typeparam name="TSource">the source</typeparam>
         /// <param name="source">the source collection</param>
         /// <returns>collection of sources</returns>
-        public static ICollection<TSource> NullToEmpty<TSource>(this ICollection<TSource> source)
+        public static ICollection<TSource> Safe<TSource>(this ICollection<TSource> source)
         {
-            return source ?? new Collection<TSource>();
+            return (source ?? new Collection<TSource>()).Where(i => i != null).ToList();
         }
 
         /// <summary>
@@ -40,7 +42,7 @@
         /// <typeparam name="TValue">the source value type</typeparam>
         /// <param name="source">the source collection</param>
         /// <returns>collection of sources</returns>
-        public static IDictionary<TKey, TValue> NullToEmpty<TKey, TValue>(this IDictionary<TKey, TValue> source)
+        public static IDictionary<TKey, TValue> Safe<TKey, TValue>(this IDictionary<TKey, TValue> source)
         {
             return source ?? new Dictionary<TKey, TValue>();
         }

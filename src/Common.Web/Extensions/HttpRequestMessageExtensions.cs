@@ -238,7 +238,7 @@
                 return source;
             }
 
-            foreach (var value in items.NullToEmpty())
+            foreach (var value in items.Safe())
             {
                 source.WithHeader(value.Key, value.Value as string, allowEmptyValue);
             }
@@ -253,7 +253,7 @@
                 return source;
             }
 
-            foreach (var value in items.NullToEmpty())
+            foreach (var value in items.Safe())
             {
                 source.WithHeader(value.Key, value.Value as string, allowEmptyValue);
             }
@@ -268,7 +268,7 @@
                 return source;
             }
 
-            foreach (var value in items.NullToEmpty())
+            foreach (var value in items.Safe())
             {
                 source.WithHeader(value.Key, value.Value, allowEmptyValue);
             }
@@ -283,7 +283,7 @@
                 return source;
             }
 
-            foreach (var value in items.NullToEmpty())
+            foreach (var value in items.Safe())
             {
                 source.WithHeader(value.Key, value.Value, allowEmptyValue);
             }

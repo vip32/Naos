@@ -12,12 +12,12 @@
 
         public InMemoryContext(List<TEntity> entities)
         {
-            this.Entities = entities.NullToEmpty().ToList();
+            this.Entities = entities.Safe().ToList();
         }
 
         public InMemoryContext(IEnumerable<TEntity> entities)
         {
-            this.Entities = entities.NullToEmpty().ToList();
+            this.Entities = entities.Safe().ToList();
         }
 
         public List<TEntity> Entities { get; set; } = new List<TEntity>();

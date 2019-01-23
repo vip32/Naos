@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.App.Exceptions.Web
+﻿namespace Naos.Core.Commands.Exceptions.Web
 {
     using System;
     using System.Net;
@@ -37,7 +37,7 @@
                         Detail = hideDetails ? null : validationException.Message,
                         Type = hideDetails ? null : validationException.GetType().FullPrettyName(),
                     };
-                    validationException.Errors.NullToEmpty().ForEach(f => details.Errors.Add(f.PropertyName, new[] { f.ToString() }));
+                    validationException.Errors.Safe().ForEach(f => details.Errors.Add(f.PropertyName, new[] { f.ToString() }));
 
                     this.logger?.LogWarning($"SERVICE http request  ({requestId}) {details.Title} [{validationException.GetType().PrettyName()}] {validationException.Message}");
 

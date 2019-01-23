@@ -34,19 +34,19 @@
         {
             try
             {
-                this.Logger.LogInformation($"{LogEventIdentifiers.Authentication} basic handle");
+                this.Logger.LogInformation("{LogKey} basic handle", LogEventKeys.Authentication);
 
                 if (this.Request.Host.Host.SafeEquals("localhost") && this.Options.IgnoreLocal)
                 {
                     // ignore for localhost
                     var identity = new ClaimsIdentity(
-                        this.Options.Claims.NullToEmpty().Select(c => new Claim(c.Key, c.Value))
+                        this.Options.Claims.Safe().Select(c => new Claim(c.Key, c.Value))
                         .Insert(new Claim(ClaimTypes.AuthenticationMethod, AuthenticationKeys.ApiKeyScheme))
                         .Insert(new Claim(ClaimTypes.Name, ClaimsIdentity.DefaultIssuer))
                         .DistinctBy(c => c.Type),
                         this.Scheme.Name);
                     var ticket = new AuthenticationTicket(new ClaimsPrincipal(identity), this.Scheme.Name);
-                    this.Logger.LogInformation($"{LogEventIdentifiers.Authentication} basic authenticated (name={identity.Name})");
+                    this.Logger.LogInformation($"{{LogKey}} basic authenticated (name={identity.Name})", LogEventKeys.Authentication);
 
                     return AuthenticateResult.Success(ticket);
                 }
@@ -97,21 +97,21 @@
                 if (Authenticated)
                 {
                     var identity = new ClaimsIdentity(
-                        this.Options.Claims.NullToEmpty().Select(c => new Claim(c.Key, c.Value)).Concat(Claims.NullToEmpty())
+                        this.Options.Claims.Safe().Select(c => new Claim(c.Key, c.Value)).Concat(Claims.Safe())
                             .Insert(new Claim(ClaimTypes.AuthenticationMethod, AuthenticationKeys.ApiKeyScheme)).DistinctBy(c => c.Type),
                         this.Scheme.Name);
                     var ticket = new AuthenticationTicket(new ClaimsPrincipal(identity), this.Scheme.Name);
-                    this.Logger.LogInformation($"{LogEventIdentifiers.Authentication} basic authenticated (name={identity.Name})");
+                    this.Logger.LogInformation($"{{LogKey}} basic authenticated (name={identity.Name})", LogEventKeys.Authentication);
 
                     return AuthenticateResult.Success(ticket);
                 }
 
-                this.Logger.LogWarning($"{LogEventIdentifiers.Authentication} basic not authenticated");
+                this.Logger.LogWarning("{LogKey} basic not authenticated", LogEventKeys.Authentication);
                 return AuthenticateResult.NoResult();
             }
             catch (Exception ex)
             {
-                this.Logger.LogError(ex, $"{LogEventIdentifiers.Authentication}{ex.Message}");
+                this.Logger.LogError(ex, $"{{LogKey}} {ex.Message}", LogEventKeys.Authentication);
                 var context = new ErrorContext(this.Context, this.Scheme, this.Options) { Exception = ex };
                 if (this.Events != null)
                 {

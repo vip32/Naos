@@ -82,8 +82,10 @@
 
                 result.Add(new Criteria(
                     name.Trim(),
-                    Enum.TryParse(@operator, true, out CriteriaOperator e) ? e : CriteriaOperator.Eq,
-                    (value.Contains(":") ? value.SubstringFrom(":") : value).Trim().EmptyToNull()));
+                    CriteriaOperatorExtensions.FromAbbreviation(@operator),
+                    //Enum.TryParse(@operator, true, out CriteriaOperator e) ? e : CriteriaOperator.Eq,
+                    (value.Contains(":") ? value.SubstringFrom(":") : value).Trim().EmptyToNull(),
+                    this.IsNumeric(value)));
             }
 
             return result;
@@ -113,5 +115,7 @@
 
             return result;
         }
+
+        private bool IsNumeric(string value) => value.NullToEmpty().All(char.IsDigit);
     }
 }

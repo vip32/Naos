@@ -4,7 +4,7 @@
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.App;
+    using Naos.Core.Commands;
 
     [Route("api/echo/servicecontext")]
     [ApiController]

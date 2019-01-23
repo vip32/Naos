@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.App.Configuration
+﻿namespace Naos.Core.Commands.Configuration
 {
     using Microsoft.Extensions.Configuration;
 

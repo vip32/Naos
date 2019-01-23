@@ -50,7 +50,7 @@
         public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null)
         {
             return await this.decoratee.FindAllAsync(
-                new[] { this.specification }.Concat(specifications.NullToEmpty()),
+                new[] { this.specification }.Concat(specifications.Safe()),
                 options).ConfigureAwait(false);
         }
 

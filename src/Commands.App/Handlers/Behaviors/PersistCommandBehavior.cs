@@ -1,10 +1,9 @@
-﻿namespace Naos.Core.App.Commands
+﻿namespace Naos.Core.Commands.App
 {
     using System.Threading.Tasks;
     using EnsureThat;
-    using FluentValidation;
 
-    public class ValidateCommandBehavior : ICommandBehavior
+    public class PersistCommandBehavior : ICommandBehavior
     {
         /// <summary>
         /// Executes this behavior for the specified command
@@ -15,14 +14,9 @@
         public async Task<CommandBehaviorResult> ExecuteAsync<TResponse>(CommandRequest<TResponse> command)
         {
             EnsureArg.IsNotNull(command);
-
-            var result = command.Validate();
-            if (!result.IsValid)
-            {
-                // instead of cancel, throw an exception
-                // TODO: log validation errors
-                throw new ValidationException($"{command.GetType().Name} has validation errors", result.Errors);
-            }
+            // TODO: implement
+            // - check if command exists in repo
+            // - if not add to repo, return CommandBehaviorResult
 
             return await Task.FromResult(new CommandBehaviorResult()).ConfigureAwait(false);
         }

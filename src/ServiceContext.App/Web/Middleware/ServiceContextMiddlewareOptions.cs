@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.ServiceDiscovery.App.Web
+﻿namespace Naos.Core.ServiceContext.App.Web
 {
     public class ServiceContextMiddlewareOptions
     {

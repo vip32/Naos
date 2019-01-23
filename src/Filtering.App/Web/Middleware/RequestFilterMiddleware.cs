@@ -1,10 +1,11 @@
-﻿namespace Naos.Core.App.Filtering.App.Web
+﻿namespace Naos.Core.Commands.Filtering.App.Web
 {
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
+    using Naos.Core.Common;
     using Naos.Core.Common.Web;
     using Naos.Core.Filtering.App;
 
@@ -12,30 +13,30 @@
     /// Middleware which attempts to reads / creates a Correlation ID that can then be used in logs and
     /// passed to upstream requests.
     /// </summary>
-    public class FilterMiddleware
+    public class RequestFilterMiddleware
     {
         private readonly RequestDelegate next;
-        private readonly ILogger<FilterMiddleware> logger;
-        private readonly FilterMiddlewareOptions options;
+        private readonly ILogger<RequestFilterMiddleware> logger;
+        private readonly RequestFilterMiddlewareOptions options;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FilterMiddleware"/> class.
+        /// Initializes a new instance of the <see cref="RequestFilterMiddleware"/> class.
         /// Creates a new instance of the FilterMiddleware.
         /// </summary>
         /// <param name="next">The next middleware in the pipeline.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="options">The configuration options.</param>
-        public FilterMiddleware(
+        public RequestFilterMiddleware(
             RequestDelegate next,
-            ILogger<FilterMiddleware> logger,
-            IOptions<FilterMiddlewareOptions> options)
+            ILogger<RequestFilterMiddleware> logger,
+            IOptions<RequestFilterMiddlewareOptions> options)
         {
             EnsureArg.IsNotNull(next, nameof(next));
             EnsureArg.IsNotNull(logger, nameof(logger));
 
             this.next = next;
             this.logger = logger;
-            this.options = options.Value ?? new FilterMiddlewareOptions();
+            this.options = options.Value ?? new RequestFilterMiddlewareOptions();
         }
 
         /// <summary>
@@ -49,7 +50,7 @@
             var filterContext = contextFactory.Create(context?.Request, this.options.CriteriaQueryStringKey, this.options.OrderByQueryStringKey, this.options.SkipQueryStringKey, this.options.TakeQueryStringKey);
             if (filterContext.Enabled)
             {
-                this.logger.LogInformation($"SERVICE http request  ({context.GetRequestId()}) filter={{@FilterContext}}", filterContext);
+                this.logger.LogInformation($"{{LogKey}} http ({context.GetRequestId()}) filter={{@FilterContext}}", LogEventKeys.InboundRequest, filterContext);
             }
 
             await this.next(context);

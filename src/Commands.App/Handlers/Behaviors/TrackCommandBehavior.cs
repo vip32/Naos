@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.App.Commands
+﻿namespace Naos.Core.Commands.App
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -35,7 +35,7 @@
 
             using (this.logger.BeginScope(loggerState))
             {
-                this.logger.LogInformation($"{LogEventIdentifiers.AppCommand} {command.GetType().Name.SubstringTill("Command")}");
+                this.logger.LogInformation($"{{LogKey}} {command.GetType().Name.SubstringTill("Command")}", LogEventKeys.AppCommand);
             }
 
             return await Task.FromResult(new CommandBehaviorResult()).ConfigureAwait(false);

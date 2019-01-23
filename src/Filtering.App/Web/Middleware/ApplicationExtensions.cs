@@ -3,7 +3,7 @@
     using System;
     using EnsureThat;
     using Microsoft.Extensions.Options;
-    using Naos.Core.App.Filtering.App.Web;
+    using Naos.Core.Commands.Filtering.App.Web;
     using Naos.Core.Filtering.App;
 
     /// <summary>
@@ -20,7 +20,7 @@
         {
             EnsureArg.IsNotNull(app, nameof(app));
 
-            return app.UseNaosFiltering(new FilterMiddlewareOptions());
+            return app.UseNaosFiltering(new RequestFilterMiddlewareOptions());
         }
 
         /// <summary>
@@ -29,7 +29,7 @@
         /// <param name="app"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public static IApplicationBuilder UseNaosFiltering(this IApplicationBuilder app, FilterMiddlewareOptions options)
+        public static IApplicationBuilder UseNaosFiltering(this IApplicationBuilder app, RequestFilterMiddlewareOptions options)
         {
             EnsureArg.IsNotNull(app, nameof(app));
             EnsureArg.IsNotNull(options, nameof(options));
@@ -39,7 +39,7 @@
                 throw new InvalidOperationException($"Unable to find the required services. You must call the {nameof(Microsoft.Extensions.DependencyInjection.ServiceExtensions.AddNaosRequestFiltering)} method in ConfigureServices in the application startup code.");
             }
 
-            return app.UseMiddleware<FilterMiddleware>(Options.Create(options));
+            return app.UseMiddleware<RequestFilterMiddleware>(Options.Create(options));
         }
     }
 }

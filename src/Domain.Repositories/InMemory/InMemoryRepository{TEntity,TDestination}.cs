@@ -48,9 +48,9 @@
         /// <returns></returns>
         public override async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null)
         {
-            var result = this.context.Entities.NullToEmpty().Select(d => this.Options.Mapper.Map<TDestination>(d)); // work on destination objects
+            var result = this.context.Entities.Safe().Select(d => this.Options.Mapper.Map<TDestination>(d)); // work on destination objects
 
-            foreach (var specification in specifications.NullToEmpty())
+            foreach (var specification in specifications.Safe())
             {
                 result = result.Where(this.EnsurePredicate(specification)); // translate specification to destination predicate
             }
@@ -71,7 +71,7 @@
                 return default;
             }
 
-            var result = this.context.Entities.NullToEmpty().Select(d => this.Options.Mapper.Map<TDestination>(d)) // work on destination objects
+            var result = this.context.Entities.Safe().Select(d => this.Options.Mapper.Map<TDestination>(d)) // work on destination objects
                 .SingleOrDefault(e => this.idSelector(e).Equals(id)); // TODO: use HasIdSpecification + MapExpression (makes idSelector obsolete)
             // return (await this.FindAllAsync(new HasIdSpecification<TEntity>(id))).FirstOrDefault();
 
@@ -85,7 +85,7 @@
 
         protected new Func<TDestination, bool> EnsurePredicate(ISpecification<TEntity> specification)
         {
-            foreach(var specificationMapper in this.specificationMappers.NullToEmpty())
+            foreach(var specificationMapper in this.specificationMappers.Safe())
             {
                 if (specificationMapper.CanHandle(specification))
                 {

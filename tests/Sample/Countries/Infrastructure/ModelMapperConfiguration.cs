@@ -41,7 +41,7 @@
         {
             public string Resolve(Country source, DbCountry destination, string destMember, ResolutionContext context)
             {
-                return source.LanguageCodes.NullToEmpty().ToString(";");
+                return source.LanguageCodes.Safe().ToString(";");
             }
 
             public IEnumerable<string> Resolve(DbCountry source, Country destination, IEnumerable<string> destMember, ResolutionContext context)

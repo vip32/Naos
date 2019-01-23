@@ -16,9 +16,9 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.App.Configuration;
-    using Naos.Core.App.Web;
     using Naos.Core.Authentication.App.Web;
+    using Naos.Core.Commands.Configuration;
+    using Naos.Core.Commands.Web;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
     using Naos.Core.JobScheduling.App;
@@ -54,17 +54,12 @@
             services
                 .AddMiddlewareAnalysis()
                 .AddHttpContextAccessor()
-                //.AddHealthChecksUI()
-                //.AddHealthChecks()
-                //    .AddUrlGroup(new Uri("http://httpbin.org/status/200"), "default").Services
                 .AddSwaggerDocument(s => s.Description = "naos")
                 .AddMediatR()
                 .AddMvc(o =>
                     {
-                        var policy = new AuthorizationPolicyBuilder() // https://tahirnaushad.com/2017/08/28/asp-net-core-2-0-mvc-filters/
-                            .RequireAuthenticatedUser()
-                            .Build();
-                        o.Filters.Add(new AuthorizeFilter(policy));
+                        // https://tahirnaushad.com/2017/08/28/asp-net-core-2-0-mvc-filters/ or use controller attribute (Authorize)
+                        o.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build()));
                     })
                     .AddJsonOptions(o => o.AddDefaultJsonSerializerSettings())
                     .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -74,7 +69,6 @@
                 .AddNaosServiceContext(this.Configuration, "Product", "Capability", tags: new[] { "Customers", "UserAccounts", "Countries" })
                 .AddNaosAuthenticationApiKeyStatic(this.Configuration, o =>
                 {
-                    o.IgnoreLocal = false;
                     o.Events = new AuthenticationHandlerEvents // optional
                     {
                         OnChallenge = context =>
@@ -90,7 +84,7 @@
                 .AddNaosRequestFiltering()
                 .AddNaosOperationsSerilog(this.Configuration)
                 .AddNaosOperationsLogAnalytics(this.Configuration)
-                .AddNaosExceptionHandling(/*env.IsProduction()*/)
+                .AddNaosExceptionHandling()
                 .AddNaosJobScheduling(s => s
                     //.SetEnabled(false)
                     .Register<DummyJob>("job1", Cron.Minutely(), (j) => j.LogMessageAsync("+++ hello from job1 +++", CancellationToken.None))
@@ -131,6 +125,7 @@
             app.UseHttpsRedirection()
                .UseNaosRequestCorrelation()
                .UseNaosServiceContext()
+               .UseNaosServicePoweredBy()
                .UseNaosOperationsRequestResponseLogging()
                .UseNaosRequestFiltering()
                .UseNaosExceptionHandling();

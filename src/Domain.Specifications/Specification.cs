@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq.Expressions;
+    using Jokenizer.Net;
 
     public /*abstract*/ class Specification<T> : ISpecification<T>
     {
@@ -15,6 +16,12 @@
         public Specification(Expression<Func<T, bool>> expression)
         {
             this.expression = expression;
+        }
+
+        public Specification(string expression)
+        {
+            this.expression = Evaluator.ToLambda<T, bool>(
+                Tokenizer.Parse($"(t) => t.{expression}"));
         }
 
         public virtual Expression<Func<T, bool>> ToExpression()

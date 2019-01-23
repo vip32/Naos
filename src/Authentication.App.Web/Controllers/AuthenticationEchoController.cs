@@ -32,7 +32,7 @@
                 this.HttpContext.User?.Identity?.Name,
                 this.HttpContext.User?.Identity?.IsAuthenticated,
                 this.HttpContext.User?.Identity?.AuthenticationType,
-                Claims = this.HttpContext.User?.Claims.NullToEmpty().Select(c => new { c.Type, c.Value })
+                Claims = this.HttpContext.User?.Claims.Safe().Select(c => new { c.Type, c.Value })
             });
         }
     }

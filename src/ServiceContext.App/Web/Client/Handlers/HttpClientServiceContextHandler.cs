@@ -7,7 +7,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.App;
+    using Naos.Core.Commands;
     using Naos.Core.Common;
 
     public class HttpClientServiceContextHandler : DelegatingHandler

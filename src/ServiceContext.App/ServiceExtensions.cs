@@ -14,7 +14,7 @@
     public static class ServiceExtensions
     {
         /// <summary>
-        /// Adds required services to support the Discovery functionality.
+        /// Adds required services to support the service context functionality.
         /// </summary>
         /// <param name="services"></param>
         /// <param name="configuration"></param>
@@ -52,13 +52,13 @@
             version = version ?? serviceContextConfiguration?.Version ?? "1.0.0";
             tags = tags ?? serviceContextConfiguration?.Tags;
 
-            if (!tags.Any())
+            if (!tags.SafeAny())
             {
                 tags = new[] { capabilityName }; // tags are used for service discovery too
             }
 
             services.AddTransient<HttpClientServiceContextHandler>();
-            services.AddSingleton(sp => new Naos.Core.App.ServiceDescriptor
+            services.AddSingleton(sp => new Naos.Core.Commands.ServiceDescriptor
             {
                 Product = productName ?? AppDomain.CurrentDomain.FriendlyName.SubstringTillLast("."),
                 Capability = capabilityName ?? AppDomain.CurrentDomain.FriendlyName.SubstringFromLast("."),

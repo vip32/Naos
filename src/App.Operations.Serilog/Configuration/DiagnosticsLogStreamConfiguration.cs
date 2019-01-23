@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.App.Operations.Serilog
+﻿namespace Naos.Core.Commands.Operations.Serilog
 {
     public class DiagnosticsLogStreamConfiguration : LogFileConfiguration
     {

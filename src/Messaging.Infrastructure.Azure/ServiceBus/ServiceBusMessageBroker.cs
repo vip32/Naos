@@ -78,11 +78,11 @@
 
             if (!this.map.Exists<TMessage>())
             {
-                this.logger.LogInformation($"{LogEventIdentifiers.AppCommand} subscribe (name={{MessageName}}, service={{Service}}, filterScope={{FilterScope}}, handler={{MessageHandlerType}}, entityPath={{EntityPath}})", messageName, this.messageScope, this.filterScope, typeof(THandler).Name, this.provider.EntityPath);
+                this.logger.LogInformation("{LogKey} subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, entityPath={EntityPath})", LogEventKeys.AppCommand, messageName, this.messageScope, this.filterScope, typeof(THandler).Name, this.provider.EntityPath);
 
                 try
                 {
-                    this.logger.LogInformation($"{LogEventIdentifiers.AppCommand} servicebus add subscription rule: {ruleName} (name={messageName}, type={typeof(TMessage).Name})");
+                    this.logger.LogInformation($"{{LogKey}} servicebus add subscription rule: {ruleName} (name={messageName}, type={typeof(TMessage).Name})", LogEventKeys.AppCommand);
                     this.client.AddRuleAsync(new RuleDescription
                     {
                         Filter = new CorrelationFilter { Label = messageName, To = this.filterScope }, // filterscope ist used to lock the rule for a specific machine
@@ -91,7 +91,7 @@
                 }
                 catch (ServiceBusException)
                 {
-                    this.logger.LogDebug($"{LogEventIdentifiers.AppCommand} servicebus found subscription rule: {ruleName}");
+                    this.logger.LogDebug($"{{LogKey}} servicebus found subscription rule: {ruleName}", LogEventKeys.AppCommand);
                 }
 
                 this.map.Add<TMessage, THandler>();
@@ -122,13 +122,13 @@
                 if (message.Id.IsNullOrEmpty())
                 {
                     message.Id = Guid.NewGuid().ToString();
-                    this.logger.LogDebug($"{LogEventIdentifiers.Messaging} set message (id={message.Id})");
+                    this.logger.LogDebug($"{{LogKey}} set message (id={message.Id})", LogEventKeys.Messaging);
                 }
 
                 if (message.Origin.IsNullOrEmpty())
                 {
                     message.Origin = this.messageScope;
-                    this.logger.LogDebug($"{LogEventIdentifiers.Messaging} set message (origin={message.Origin})");
+                    this.logger.LogDebug($"{{LogKey}} set message (origin={message.Origin})", LogEventKeys.Messaging);
                 }
 
                 // TODO: async publish!
@@ -136,7 +136,7 @@
 
                 var messageName = /*message.Name*/ message.GetType().PrettyName();
 
-                this.logger.LogInformation($"{LogEventIdentifiers.Messaging} publish (name={{MessageName}}, id={{MessageId}}, origin={{MessageOrigin}})", messageName, message.Id, message.Origin);
+                this.logger.LogInformation("{LogKey} publish (name={MessageName}, id={MessageId}, origin={MessageOrigin})", LogEventKeys.Messaging, messageName, message.Id, message.Origin);
 
                 // TODO: really need non-async Result?
                 var serviceBusMessage = new Message
@@ -165,11 +165,11 @@
             var messageName = typeof(TMessage).PrettyName();
             string ruleName = this.GetRuleName(messageName);
 
-            this.logger.LogInformation($"{LogEventIdentifiers.Messaging} (name={{MessageName}}, orgin={{MessageOrigin}}, filterScope={{FilterScope}}, handler={{MessageHandlerType}})", messageName, this.messageScope, this.filterScope, typeof(THandler).Name);
+            this.logger.LogInformation("{LogKey} (name={MessageName}, orgin={MessageOrigin}, filterScope={FilterScope}, handler={MessageHandlerType})", LogEventKeys.Messaging, messageName, this.messageScope, this.filterScope, typeof(THandler).Name);
 
             try
             {
-                this.logger.LogInformation($"{LogEventIdentifiers.Messaging} servicebus remove subscription rule: {ruleName}");
+                this.logger.LogInformation($"{{LogKey}} servicebus remove subscription rule: {ruleName}", LogEventKeys.Messaging);
                 this.client
                  .RemoveRuleAsync(ruleName)
                  .GetAwaiter()
@@ -177,7 +177,7 @@
             }
             catch (MessagingEntityNotFoundException)
             {
-                this.logger.LogDebug($"{LogEventIdentifiers.Messaging} servicebus subscription rule not found: {ruleName}");
+                this.logger.LogDebug($"{{LogKey}} servicebus subscription rule not found: {ruleName}", LogEventKeys.Messaging);
             }
 
             this.map.Remove<TMessage, THandler>();
@@ -215,7 +215,7 @@
                     MaxAutoRenewDuration = new TimeSpan(0, 5, 0)
                 });
 
-            this.logger.LogInformation($"{LogEventIdentifiers.Messaging} servicebus handler registered");
+            this.logger.LogInformation("{LogKey} servicebus handler registered", LogEventKeys.Messaging);
         }
 
         /// <summary>
@@ -257,8 +257,8 @@
 
                         // TODO: async publish!
                         /*await */ this.mediator.Publish(new MessageProcessDomainEvent(message, this.messageScope)).GetAwaiter().GetResult(); /*.ConfigureAwait(false);*/
-                        this.logger.LogInformation($"{LogEventIdentifiers.Messaging} process (name={{MessageName}}, id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}})",
-                            serviceBusMessage.Label, message?.Id, this.messageScope, message.Origin);
+                        this.logger.LogInformation("{LogKey} process (name={MessageName}, id={MessageId}, service={Service}, origin={MessageOrigin})",
+                            LogEventKeys.Messaging, serviceBusMessage.Label, message?.Id, this.messageScope, message.Origin);
 
                         // construct the handler by using the DI container
                         var handler = this.handlerFactory.Create(subscription.HandlerType); // should not be null, did you forget to register your generic handler (EntityMessageHandler<T>)
@@ -271,8 +271,8 @@
                         }
                         else
                         {
-                            this.logger.LogWarning($"{LogEventIdentifiers.Messaging} process failed, message handler could not be created. is the handler registered in the service provider? (name={{MessageName}}, service={{Service}}, id={{MessageId}}, origin={{MessageOrigin}})",
-                                serviceBusMessage.Label, this.messageScope, jsonMessage.AsJToken().GetStringPropertyByToken("id"), message.Origin);
+                            this.logger.LogWarning("{LogKey} process failed, message handler could not be created. is the handler registered in the service provider? (name={MessageName}, service={Service}, id={MessageId}, origin={MessageOrigin})",
+                                LogEventKeys.Messaging, serviceBusMessage.Label, this.messageScope, jsonMessage.AsJToken().GetStringPropertyByToken("id"), message.Origin);
                         }
                     }
                 }
@@ -281,7 +281,7 @@
             }
             else
             {
-                this.logger.LogDebug($"{LogEventIdentifiers.Messaging} unprocessed: {messageName}");
+                this.logger.LogDebug($"{{LogKey}} unprocessed: {messageName}", LogEventKeys.Messaging);
             }
 
             return processed;
@@ -292,7 +292,7 @@
             this.provider.EnsureSubscription(topicName, subscriptionName);
             this.client = new SubscriptionClient(provider.ConnectionStringBuilder, subscriptionName);
 
-            this.logger.LogInformation($"{LogEventIdentifiers.Messaging} servicebus initialize (topic={topicName}, subscription={subscriptionName})");
+            this.logger.LogInformation($"{{LogKey}} servicebus initialize (topic={topicName}, subscription={subscriptionName})", LogEventKeys.Messaging);
 
             try
             {
@@ -310,7 +310,7 @@
         private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs args)
         {
             var context = args.ExceptionReceivedContext;
-            this.logger.LogWarning($"{LogEventIdentifiers.Messaging} servicebus handler error: topic={context?.EntityPath}, action={context?.Action}, endpoint={context?.Endpoint}, {args.Exception?.Message}");
+            this.logger.LogWarning($"{{LogKey}} servicebus handler error: topic={context?.EntityPath}, action={context?.Action}, endpoint={context?.Endpoint}, {args.Exception?.Message}", LogEventKeys.Messaging);
             return Task.CompletedTask;
         }
     }

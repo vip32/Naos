@@ -39,7 +39,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.App.Web", "tests\Sam
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Messaging.App.Console", "tests\Sample.Messaging.App.Console\Sample.Messaging.App.Console.csproj", "{633DD43F-BB9B-4DB3-8D77-9C63B96FC352}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Commands", "src\App.Commands\App.Commands.csproj", "{D199A34D-6FE9-48A7-BDEE-3F01572BF3D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commands.App", "src\Commands.App\Commands.App.csproj", "{D199A34D-6FE9-48A7-BDEE-3F01572BF3D4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.Infrastructure.Azure", "src\Messaging.Infrastructure.Azure\Messaging.Infrastructure.Azure.csproj", "{BD63E3F7-598B-470E-B33D-1EF4D446DF6B}"
 EndProject
@@ -117,7 +117,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Commands", "Commands", "{9D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Authentication", "Authentication", "{308F0FC7-0C35-4068-AB33-69A8991BFEBB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authentication.App.Web", "src\Authentication.App.Web\Authentication.App.Web.csproj", "{0D98719A-BC1D-4C82-A4D6-98B91FF65AA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authentication.App.Web", "src\Authentication.App.Web\Authentication.App.Web.csproj", "{0D98719A-BC1D-4C82-A4D6-98B91FF65AA6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

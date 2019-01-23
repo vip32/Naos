@@ -40,7 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Countries\App.Commands\Handlers\" />
+    <Folder Include="Countries\Commands.App\Handlers\" />
     <Folder Include="Countries\App.Web\" />
     <Folder Include="Countries\App\" />
     <Folder Include="Countries\Domain\Model\" />
@@ -51,7 +51,7 @@
     <Folder Include="Customers\Domain\Model\" />
     <Folder Include="Customers\Domain\Specifications\" />
     <Folder Include="Customers\Infrastructure\" />
-    <Folder Include="UserAccounts\App.Commands\" />
+    <Folder Include="UserAccounts\Commands.App\" />
     <Folder Include="UserAccounts\App.Web\" />
     <Folder Include="UserAccounts\App\" />
     <Folder Include="UserAccounts\Domain\Events\Handlers\" />
@@ -61,6 +61,6 @@
   </ItemGroup>
 
   <ItemGroup>
-      
+
   </ItemGroup>
 </Project>

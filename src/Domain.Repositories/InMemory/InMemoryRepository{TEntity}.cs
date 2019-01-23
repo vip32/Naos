@@ -80,7 +80,7 @@
         {
             var result = this.context.Entities.AsEnumerable();
 
-            foreach (var specification in specifications.NullToEmpty())
+            foreach (var specification in specifications.Safe())
             {
                 result = result.Where(this.EnsurePredicate(specification));
             }
@@ -180,7 +180,7 @@
                 }
             }
 
-            this.logger.LogInformation($"{LogEventIdentifiers.DomainRepository} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}");
+            this.logger.LogInformation($"{{LogKey}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogEventKeys.DomainRepository);
             // TODO: map to destination
             //this.entities = this.entities.Where(e => !e.Id.Equals(entity.Id)).Concat(new[] { entity }).ToList();
             if (this.context.Entities.Contains(entity))
@@ -202,7 +202,7 @@
                 }
             }
 
-            this.logger.LogInformation($"{LogEventIdentifiers.DomainRepository} upserted entity: {entity.GetType().PrettyName()}, id: {entity.Id}, isNew: {isNew}");
+            this.logger.LogInformation($"{{LogKey}} upserted entity: {entity.GetType().PrettyName()}, id: {entity.Id}, isNew: {isNew}", LogEventKeys.DomainRepository);
 
 #pragma warning disable SA1008 // Opening parenthesis must be spaced correctly
             return isNew ? (entity, ActionResult.Inserted) : (entity, ActionResult.Updated);
@@ -230,7 +230,7 @@
                     await this.mediator.Publish(new EntityDeleteDomainEvent(entity)).ConfigureAwait(false);
                 }
 
-                this.logger.LogInformation($"{LogEventIdentifiers.DomainRepository} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}");
+                this.logger.LogInformation($"{{LogKey}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogEventKeys.DomainRepository);
                 this.context.Entities.Remove(entity);
 
                 if (this.Options?.PublishEvents != false)
@@ -262,7 +262,7 @@
                 await this.mediator.Publish(new EntityDeleteDomainEvent(entity)).ConfigureAwait(false);
             }
 
-            this.logger.LogInformation($"{LogEventIdentifiers.DomainRepository} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}");
+            this.logger.LogInformation($"{{LogKey}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogEventKeys.DomainRepository);
             this.context.Entities.Remove(entity);
 
             if (this.Options?.PublishEvents != false)

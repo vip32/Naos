@@ -7,7 +7,7 @@
     using global::Serilog.Events;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.App.Operations.Serilog;
+    using Naos.Core.Commands.Operations.Serilog;
     using Naos.Core.Common;
     using Naos.Core.Infrastructure.Azure;
     using Naos.Core.Operations.Infrastructure.Azure.LogAnalytics;
@@ -57,7 +57,7 @@
 
             var factory = new LoggerFactory();
             factory.AddSerilog(Log.Logger);
-            Log.Logger.Debug($"{LogEventIdentifiers.Operations} logging initialized: serilog");
+            Log.Logger.Debug("{LogKey} logging initialized: serilog", LogEventKeys.Operations);
             return factory;
         }
 

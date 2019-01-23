@@ -73,7 +73,7 @@
             var order = (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order).FirstOrDefault(); // cosmos only supports single orderby
             var entities = await this.provider
                 .WhereAsync(
-                    expressions: specifications.NullToEmpty().Select(s => s.ToExpression().Expand()), // expand fixes Invoke in expression
+                    expressions: specifications.Safe().Select(s => s.ToExpression().Expand()), // expand fixes Invoke in expression
                     count: options?.Take ?? -1, // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
                     orderExpression: order?.Expression,
                     orderDescending: order?.Direction == OrderDirection.Descending).ConfigureAwait(false);
@@ -149,7 +149,7 @@
                 }
             }
 
-            this.logger.LogInformation($"{LogEventIdentifiers.DomainRepository} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}");
+            this.logger.LogInformation($"{{LogKey}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogEventKeys.DomainRepository);
             var result = await this.provider.UpsertAsync(entity).ConfigureAwait(false);
             entity = result;
 
@@ -167,7 +167,7 @@
                 }
             }
 
-            this.logger.LogInformation($"{LogEventIdentifiers.DomainRepository} upserted entity: {result.GetType().PrettyName()}, id: {result.Id}, isNew: {isNew}");
+            this.logger.LogInformation($"{{LogKey}} upserted entity: {result.GetType().PrettyName()}, id: {result.Id}, isNew: {isNew}", LogEventKeys.DomainRepository);
 #pragma warning disable SA1008 // Opening parenthesis must be spaced correctly
             return isNew ? (result, ActionResult.Inserted) : (result, ActionResult.Updated);
 #pragma warning restore SA1008 // Opening parenthesis must be spaced correctly
@@ -188,7 +188,7 @@
                     await this.mediator.Publish(new EntityDeleteDomainEvent(entity)).ConfigureAwait(false);
                 }
 
-                this.logger.LogInformation($"{LogEventIdentifiers.DomainRepository} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}");
+                this.logger.LogInformation($"{{LogKey}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogEventKeys.DomainRepository);
                 await this.provider.DeleteByIdAsync(id as string).ConfigureAwait(false);
 
                 if (this.Options?.PublishEvents != false)

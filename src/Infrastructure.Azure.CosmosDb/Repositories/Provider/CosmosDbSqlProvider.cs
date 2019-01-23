@@ -11,12 +11,15 @@
     using Microsoft.Azure.Documents;
     using Microsoft.Azure.Documents.Client;
     using Microsoft.Azure.Documents.Linq;
+    using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
     using Naos.Core.Domain;
     using Newtonsoft.Json;
 
     public class CosmosDbSqlProvider<T> : ICosmosDbSqlProvider<T>
         where T : IDiscriminated
     {
+        private readonly ILogger<CosmosDbSqlProvider<T>> logger;
         private readonly IDocumentClient client;
         private readonly string databaseId;
         private readonly AsyncLazy<Database> database;
@@ -27,6 +30,7 @@
         private AsyncLazy<DocumentCollection> documentCollection;
 
         public CosmosDbSqlProvider(
+            ILogger<CosmosDbSqlProvider<T>> logger,
             IDocumentClient client,
             string databaseId,
             Func<string> collectionIdFactory = null,
@@ -35,9 +39,11 @@
             //Expression<Func<T, object>> idNameFactory = null,
             bool isMasterCollection = true)
         {
+            EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(client, nameof(client));
             EnsureArg.IsNotNullOrEmpty(databaseId, nameof(databaseId));
 
+            this.logger = logger;
             this.client = client;
             this.databaseId = databaseId;
             this.database = new AsyncLazy<Database>(async () => await this.GetOrCreateDatabaseAsync().ConfigureAwait(false));
@@ -194,13 +200,14 @@
 
         public async Task<IEnumerable<T>> WhereAsync(Expression<Func<T, bool>> expression) // TODO: shouldn't this return IEnumerable<T>?
         {
-            return await Task.FromResult(
-                this.client.CreateDocumentQuery<T>(
+            var query = this.client.CreateDocumentQuery<T>(
                     UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
                     new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned })
                     .WhereExpression(expression)
                     .WhereExpressionIf(e => e.Discriminator == typeof(T).FullName, this.isMasterCollection)
-                    .AsEnumerable());
+                    .AsEnumerable();
+            this.logger.LogInformation($"{{LogKey}} sql={query}", LogEventKeys.DomainRepository);
+            return await Task.FromResult(query);
         }
 
         public async Task<IEnumerable<T>> WhereAsync(
@@ -212,8 +219,7 @@
         {
             // cosmos only supports single orderby https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/16883608-allow-multi-order-by
             // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
-            return await Task.FromResult(
-                this.client.CreateDocumentQuery<T>(
+            var query = this.client.CreateDocumentQuery<T>(
                     UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
                     new FeedOptions { MaxItemCount = count, EnableCrossPartitionQuery = this.isPartitioned })
                     .WhereExpression(expression)
@@ -221,7 +227,9 @@
                     .WhereExpressionIf(e => e.Discriminator == typeof(T).FullName, this.isMasterCollection)
                     .TakeIf(count)
                     .OrderByIf(orderExpression, orderDescending)
-                    .AsEnumerable());
+                    .AsEnumerable();
+            this.logger.LogInformation($"{{LogKey}} sql={query}", LogEventKeys.DomainRepository);
+            return await Task.FromResult(query);
         }
 
         public async Task<IEnumerable<T>> WhereAsync(
@@ -233,7 +241,7 @@
         {
             // cosmos only supports single orderby https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/16883608-allow-multi-order-by
             // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
-            return await Task.FromResult(
+            var query =
                 this.client.CreateDocumentQuery<T>(
                     UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
                     new FeedOptions { MaxItemCount = count, EnableCrossPartitionQuery = this.isPartitioned })
@@ -242,7 +250,9 @@
                     .Select(selector)
                     .TakeIf(count)
                     .OrderByIf(orderExpression, orderDescending)
-                    .AsEnumerable());
+                    .AsEnumerable();
+            this.logger.LogInformation($"{{LogKey}} sql={query}", LogEventKeys.DomainRepository);
+            return await Task.FromResult(query);
         }
 
         public async Task<IQueryable<T>> QueryAsync(int count = 100)

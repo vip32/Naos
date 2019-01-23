@@ -24,20 +24,21 @@
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            this.logger.LogInformation($"{LogEventIdentifiers.Messaging} hosted service started");
+            this.logger.LogInformation("{LogKey} hosted service started", LogEventKeys.Messaging);
 
             return Task.CompletedTask;
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
+            this.logger.LogInformation("{LogKey} hosted service stopped", LogEventKeys.Messaging);
+
             return Task.CompletedTask;
         }
 
         public void Dispose()
         {
             //this.broker?.Dispose();
-            this.logger.LogInformation($"{LogEventIdentifiers.Messaging} hosted service stopped");
         }
     }
 }

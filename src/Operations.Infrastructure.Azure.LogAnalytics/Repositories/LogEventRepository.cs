@@ -95,7 +95,7 @@ top 100000 by Timestamp_t")).ConfigureAwait(false); // 100000
             if (responseContent?.Tables.IsNullOrEmpty() == false)
             {
                 var table = responseContent.Tables[0];
-                var keys = table.Columns.NullToEmpty().Select(
+                var keys = table.Columns.Safe().Select(
                     c => c.ColumnName.NullToEmpty().Replace("LogProperties_", string.Empty).SubstringTillLast("_")).ToList();
 
                 if (!table.Rows.IsNullOrEmpty())

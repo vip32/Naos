@@ -47,7 +47,7 @@
 
                 using (this.logger.BeginScope(loggerState))
                 {
-                    this.logger.LogInformation($"{LogEventIdentifiers.DomainEvent} {notification.GetType().Name.SubstringTill("DomainEvent")} (message={notification.Message?.GetType().PrettyName()}, id={notification.Message?.Id}, origin={notification.Message?.Origin})");
+                    this.logger.LogInformation($"{{LogKey}} {notification.GetType().Name.SubstringTill("DomainEvent")} (message={notification.Message?.GetType().PrettyName()}, id={notification.Message?.Id}, origin={notification.Message?.Origin})", LogEventKeys.DomainEvent);
                 }
             });
         }
@@ -69,7 +69,7 @@
 
                 using (this.logger.BeginScope(loggerState))
                 {
-                    this.logger.LogInformation($"{LogEventIdentifiers.DomainEvent} {notification.GetType().Name.SubstringTill("DomainEvent")} (message={notification.Message?.GetType().PrettyName()}, id={notification.Message?.Id}, service={notification.MessageScope}, origin={notification.Message?.Origin})");
+                    this.logger.LogInformation($"{{LogKey}} {notification.GetType().Name.SubstringTill("DomainEvent")} (message={notification.Message?.GetType().PrettyName()}, id={notification.Message?.Id}, service={notification.MessageScope}, origin={notification.Message?.Origin})", LogEventKeys.DomainEvent);
                 }
             });
         }

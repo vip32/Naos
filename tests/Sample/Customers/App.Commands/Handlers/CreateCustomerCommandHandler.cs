@@ -6,7 +6,7 @@
     using EnsureThat;
     using MediatR;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.App.Commands;
+    using Naos.Core.Commands.App;
     using Naos.Core.Common;
     using Naos.Sample.Customers.Domain;
 
@@ -29,7 +29,7 @@
         {
             request.Properties.AddOrUpdate(this.GetType().Name, true);
 
-            this.logger.LogInformation($"{LogEventIdentifiers.AppCommand} {request.GetType().Name} (handler={this.GetType().Name})");
+            this.logger.LogInformation($"{{LogKey}} {request.GetType().Name} (handler={this.GetType().Name})", LogEventKeys.AppCommand);
 
             if(!request.Customer.Region.EqualsAny(new[] { "East", "West" }))
             {
@@ -40,7 +40,7 @@
             request.Customer.SetCustomerNumber();
             request.Customer = await this.repository.InsertAsync(request.Customer).ConfigureAwait(false);
 
-            this.logger.LogInformation($"{LogEventIdentifiers.AppCommand} {request.GetType().Name} (response={request.Customer.Id})");
+            this.logger.LogInformation($"{{LogKey}} {request.GetType().Name} (response={request.Customer.Id})", LogEventKeys.AppCommand);
 
             // TODO: publish CreatedCustomer message (MessageBus)
 

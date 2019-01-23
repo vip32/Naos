@@ -2,7 +2,7 @@
 {
     using EnsureThat;
     using Microsoft.Extensions.Options;
-    using Naos.Core.App.Operations.Web;
+    using Naos.Core.Commands.Operations.Web;
 
     /// <summary>
     /// Extension methods for the correlation middleware.

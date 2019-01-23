@@ -3,8 +3,8 @@
     using System;
     using EnsureThat;
     using Microsoft.Extensions.Options;
-    using Naos.Core.App;
-    using Naos.Core.ServiceDiscovery.App.Web;
+    using Naos.Core.Commands;
+    using Naos.Core.ServiceContext.App.Web;
 
     /// <summary>
     /// Extension methods for the correlation middleware.
@@ -40,6 +40,32 @@
             }
 
             return app.UseMiddleware<ServiceContextMiddleware>(Options.Create(options));
+        }
+
+        /// <summary>
+        /// Enables poweredby response headers for the API request.
+        /// </summary>
+        /// <param name="app"></param>
+        /// <returns></returns>
+        public static IApplicationBuilder UseNaosServicePoweredBy(this IApplicationBuilder app)
+        {
+            EnsureArg.IsNotNull(app, nameof(app));
+
+            return app.UseNaosServicePoweredBy(new ServicePoweredByMiddlewareOptions());
+        }
+
+        /// <summary>
+        /// Enables poweredby response headers for the API request.
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public static IApplicationBuilder UseNaosServicePoweredBy(this IApplicationBuilder app, ServicePoweredByMiddlewareOptions options)
+        {
+            EnsureArg.IsNotNull(app, nameof(app));
+            EnsureArg.IsNotNull(options, nameof(options));
+
+            return app.UseMiddleware<ServicePoweredByMiddleware>(Options.Create(options));
         }
     }
 }

@@ -63,13 +63,13 @@
                 if (message.Id.IsNullOrEmpty())
                 {
                     message.Id = Guid.NewGuid().ToString();
-                    this.logger.LogDebug($"{LogEventIdentifiers.Messaging} set message (id={message.Id})");
+                    this.logger.LogDebug($"{{LogKey}} set message (id={message.Id})", LogEventKeys.Messaging);
                 }
 
                 if (message.Origin.IsNullOrEmpty())
                 {
                     message.Origin = this.messageScope;
-                    this.logger.LogDebug($"{LogEventIdentifiers.Messaging} set message (origin={message.Origin})");
+                    this.logger.LogDebug($"{{LogKey}} set message (origin={message.Origin})", LogEventKeys.Messaging);
                 }
 
                 // TODO: async publish!
@@ -81,7 +81,7 @@
                 var directory = this.GetDirectory(messageName, this.filterScope);
                 this.EnsureDirectory(directory);
 
-                this.logger.LogInformation($"{LogEventIdentifiers.Messaging} publish (name={{MessageName}}, id={{MessageId}}, origin={{MessageOrigin}})", message.GetType().PrettyName(), message.Id, message.Origin);
+                this.logger.LogInformation("{LogKey} publish (name={MessageName}, id={MessageId}, origin={MessageOrigin})", LogEventKeys.Messaging, message.GetType().PrettyName(), message.Id, message.Origin);
 
                 var fullFileName = Path.Combine(this.GetDirectory(messageName, this.filterScope), $"message_{message.Id}_{this.messageScope}.json.tmp");
                 using (var streamWriter = File.CreateText(fullFileName))
@@ -106,7 +106,7 @@
                 if (!this.watchers.ContainsKey(messageName))
                 {
                     var directory = this.GetDirectory(messageName, this.filterScope);
-                    this.logger.LogInformation($"{LogEventIdentifiers.Messaging} subscribe (name={{MessageName}}, service={{Service}}, filterScope={{FilterScope}}, handler={{MessageHandlerType}}, watch={{Directory}})", typeof(TMessage).PrettyName(), this.messageScope, this.filterScope, typeof(THandler).Name, directory);
+                    this.logger.LogInformation("{LogKey} subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, watch={Directory})", LogEventKeys.Messaging, typeof(TMessage).PrettyName(), this.messageScope, this.filterScope, typeof(THandler).Name, directory);
                     this.EnsureDirectory(directory);
 
                     var watcher = new FileSystemWatcher(directory)
@@ -122,7 +122,7 @@
                     };
 
                     this.watchers.Add(messageName, watcher);
-                    this.logger.LogDebug($"{LogEventIdentifiers.Messaging} filesystem onrenamed handler registered (name={{messageName}})");
+                    this.logger.LogDebug("{LogKey} filesystem onrenamed handler registered (name={messageName})", LogEventKeys.Messaging, typeof(TMessage).PrettyName());
 
                     this.map.Add<TMessage, THandler>(messageName);
                 }
@@ -170,8 +170,8 @@
 
                     // TODO: async publish!
                     /*await */ this.mediator.Publish(new MessageProcessDomainEvent(message, this.messageScope)).GetAwaiter().GetResult(); /*.ConfigureAwait(false);*/
-                    this.logger.LogInformation($"{LogEventIdentifiers.Messaging} process (name={{MessageName}}, id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}})",
-                            messageType.PrettyName(), message?.Id, this.messageScope, message.Origin);
+                    this.logger.LogInformation("{LogKey} process (name={MessageName}, id={MessageId}, service={Service}, origin={MessageOrigin})",
+                            LogEventKeys.Messaging, messageType.PrettyName(), message?.Id, this.messageScope, message.Origin);
 
                     // construct the handler by using the DI container
                     var handler = this.handlerFactory.Create(subscription.HandlerType); // should not be null, did you forget to register your generic handler (EntityMessageHandler<T>)
@@ -184,8 +184,8 @@
                     }
                     else
                     {
-                        this.logger.LogWarning($"{LogEventIdentifiers.Messaging} process failed, message handler could not be created. is the handler registered in the service provider? (name={{MessageName}}, service={{Service}}, id={{MessageId}}, origin={{MessageOrigin}})",
-                            messageType.PrettyName(), this.messageScope, message?.Id, message.Origin);
+                        this.logger.LogWarning("{LogKey} process failed, message handler could not be created. is the handler registered in the service provider? (name={MessageName}, service={Service}, id={MessageId}, origin={MessageOrigin})",
+                            LogEventKeys.Messaging, messageType.PrettyName(), this.messageScope, message?.Id, message.Origin);
                     }
                 }
 
@@ -193,7 +193,7 @@
             }
             else
             {
-                this.logger.LogDebug($"{LogEventIdentifiers.Messaging} unprocessed: {messageName}");
+                this.logger.LogDebug($"{{LogKey}} unprocessed: {messageName}", LogEventKeys.Messaging);
             }
 
             return processed;

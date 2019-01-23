@@ -5,7 +5,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Http;
-    using Naos.Core.App.Configuration;
+    using Naos.Core.Commands.Configuration;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
     using Naos.Core.RequestCorrelation.App.Web;

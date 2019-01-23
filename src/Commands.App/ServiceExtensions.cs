@@ -1,7 +1,7 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
-    using Naos.Core.App.Commands;
+    using Naos.Core.Commands.App;
 
     public static class ServiceExtensions
     {

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.App
+﻿namespace Naos.Core.Commands
 {
     public class RuntimeDescriptor // APP layer?
     {

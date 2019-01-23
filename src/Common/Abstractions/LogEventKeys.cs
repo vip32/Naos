@@ -1,15 +1,14 @@
 ﻿namespace Naos.Core.Common
 {
-    public struct LogEventIdentifiers
+    public struct LogEventKeys
     {
         public const string InboundRequest = "INBREQ";
         public const string InboundResponse = "INBRES";
         public const string OutboundRequest = "OUTREQ";
         public const string OutboundResponse = "OUTRES";
-
-        public const string AppCommand = "APCMND";
-        public const string DomainRepository = "DOREPO";
-        public const string DomainEvent = "DOEVNT";
+        public const string AppCommand = "APPCMD";
+        public const string DomainRepository = "DOMREP";
+        public const string DomainEvent = "DOMEVT";
         public const string Messaging = "MESSAG";
         public const string JobScheduling = "JOBSCH";
         public const string ServiceDiscovery = "SVCDSC";

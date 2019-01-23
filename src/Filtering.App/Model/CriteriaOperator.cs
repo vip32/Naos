@@ -5,31 +5,49 @@
         /// <summary>
         /// Equal to
         /// </summary>
-        Eq = 10,
+        [CriteriaOperatorMetadata(Value = "==", Abbreviation = "eq")]
+        Equal = 10,
 
         /// <summary>
         /// Greater than
         /// </summary>
-        Gt = 20,
+        [CriteriaOperatorMetadata(Value = ">", Abbreviation = "gt")]
+        GreaterThan = 20,
 
         /// <summary>
         /// Greater than or equal to
         /// </summary>
-        Gte = 21,
+        [CriteriaOperatorMetadata(Value = ">=", Abbreviation = "gte")]
+        GreaterThanOrEqual = 21,
 
         /// <summary>
         /// Less than
         /// </summary>
-        Lt = 30,
+        [CriteriaOperatorMetadata(Value = "<", Abbreviation = "lt")]
+        LessThan = 30,
 
         /// <summary>
         /// Less than or equal to
         /// </summary>
-        Lte = 31,
+        [CriteriaOperatorMetadata(Value = "<=", Abbreviation = "lte")]
+        LessThanOrEqual = 31,
 
         /// <summary>
-        /// Like
+        /// Contains
         /// </summary>
-        Contains = 40
+        [CriteriaOperatorMetadata(Value = "Contains", IsFunction = true, Abbreviation = "ct")]
+        Contains = 40,
+
+        /// <summary>
+        /// StartsWith
+        /// </summary>
+        [CriteriaOperatorMetadata(Value = "StartsWith", IsFunction = true, Abbreviation = "sw")]
+        StartsWith = 41,
+
+        /// <summary>
+        /// EndsWith
+        /// </summary>
+        [CriteriaOperatorMetadata(Value = "EndsWith", IsFunction = true, Abbreviation = "ew")]
+        EndsWith = 42
     }
 }

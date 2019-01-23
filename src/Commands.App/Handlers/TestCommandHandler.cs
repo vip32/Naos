@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.App.Commands
+﻿namespace Naos.Core.Commands.App
 {
     using System.Collections.Generic;
     using System.Threading;
@@ -9,7 +9,7 @@
     /// Test handler for the <see cref="TRequest" /> command request, response result is always true
     /// </summary>
     /// <typeparam name="TRequest">The type of the request.</typeparam>
-    /// <seealso cref="Commands.BehaviorCommandHandler{TRequest, bool}" />
+    /// <seealso cref="App.BehaviorCommandHandler{TRequest, bool}" />
     public class TestCommandHandler<TRequest> : BehaviorCommandHandler<TRequest, bool>
         where TRequest : CommandRequest<bool>
     {

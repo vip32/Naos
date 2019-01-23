@@ -92,7 +92,7 @@
 
         public DateTime? LastActionDate =>
             new List<DateTime?> { this.CreatedDate, this.UpdatedDate, this.DeletedDate.HasValue ? this.DeletedDate.Value : default(DateTime?)/*, this.LastAccessedDate*/ }
-            .Where(d => d != null).NullToEmpty().Max();
+            .Where(d => d != null).Safe().Max();
 
         /// <summary>
         /// Gets a value indicating whether determines whether this instance is active.

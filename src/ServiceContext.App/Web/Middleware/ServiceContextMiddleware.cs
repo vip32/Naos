@@ -1,12 +1,13 @@
-﻿namespace Naos.Core.ServiceDiscovery.App.Web
+﻿namespace Naos.Core.ServiceContext.App.Web
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
-    using Naos.Core.App;
+    using Naos.Core.Commands;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
     using Newtonsoft.Json;
@@ -59,7 +60,7 @@
                 //this.logger.LogInformation($"SERVICE http request  ({context.GetRequestId()}) service={serviceDescriptor.Name}, tags={string.Join("|", serviceDescriptor.Tags.NullToEmpty())}");
                 await this.next(context);
 
-                if (context.Request.Path == "/" && this.options.RootEnabled) // root
+                if (context.Request.Path == "/" && this.options.RootEnabled) // root middleware
                 {
                     context.Response.StatusCode = 200; // TODO: however a 404 will be logged
                     context.Response.ContentType = ContentType.JSON.ToValue();
@@ -67,10 +68,13 @@
                         new EchoResponse
                         {
                             Service = serviceDescriptor,
-                            Request = new Dictionary<string, string> // TODO: replace with RequestCorrelationContext
+                            Request = new Dictionary<string, object> // TODO: replace with RequestCorrelationContext
                             {
-                                ["CorrelationId"] = context.GetCorrelationId(),
-                                ["RequestId"] = context.GetRequestId(),
+                                ["correlationId"] = context.GetCorrelationId(),
+                                ["requestId"] = context.GetRequestId(),
+                                ["isLocal"] = context.Request.IsLocal(),
+                                ["host"] = System.Net.Dns.GetHostName(),
+                                ["ip"] = (await System.Net.Dns.GetHostAddressesAsync(System.Net.Dns.GetHostName())).Select(i => i.ToString()).Where(i => i.Contains("."))
                                 //["userIdentity"] = serviceContext.UserIdentity,
                                 //["username"] = serviceContext.Username
                             },
@@ -87,6 +91,7 @@
                                 ["echo-authentication"] = $"{context.Request.Uri()}api/echo/authentication",
                                 ["echo-messaging"] = $"{context.Request.Uri()}api/echo/messaging",
                                 ["echo-correlation"] = $"{context.Request.Uri()}api/echo/correlation",
+                                ["echo-requestfiltering"] = $"{context.Request.Uri()}api/echo/filter?q=name=eq:naos,epoch=lt:12345",
                                 ["echo-servicecontext"] = $"{context.Request.Uri()}api/echo/servicecontext",
                                 ["echo-servicediscovery"] = $"{context.Request.Uri()}api/echo/servicediscovery",
                             }
@@ -109,7 +114,7 @@
         {
             public ServiceDescriptor Service { get; set; }
 
-            public Dictionary<string, string> Request { get; set; }
+            public Dictionary<string, object> Request { get; set; }
 
             public RuntimeDescriptor Runtime { get; set; }
 

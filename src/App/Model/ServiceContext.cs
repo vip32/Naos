@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.App
+﻿namespace Naos.Core.Commands
 {
     public class ServiceContext // TODO: or is this pure App layer
     {

@@ -59,7 +59,7 @@
 
             if (!request.Headers.IsNullOrEmpty())
             {
-                this.WriteLog($"{LogEventIdentifiers.OutboundRequest} http ({requestId}) headers={string.Join("|", request.Headers.Select(h => $"{h.Key}={string.Join("|", h.Value)}"))}");
+                this.WriteLog($"{{LogKey}} http ({requestId}) headers={string.Join("|", request.Headers.Select(h => $"{h.Key}={string.Join("|", h.Value)}"))}", args: LogEventKeys.OutboundRequest);
             }
 
             var loggerState = new Dictionary<string, object>
@@ -70,7 +70,7 @@
 
             using (this.logger.BeginScope(loggerState))
             {
-                this.WriteLog($"{LogEventIdentifiers.OutboundRequest} http ({requestId}) {request?.Method} {{Url}} ({correlationId})", args: new object[] { request.RequestUri });
+                this.WriteLog($"{{LogKey}} http ({requestId}) {request?.Method} {{Url}} ({correlationId})", args: new object[] { request.RequestUri, LogEventKeys.OutboundRequest });
             }
         }
 
@@ -94,10 +94,10 @@
 
             if (!response.Headers.IsNullOrEmpty())
             {
-                this.WriteLog($"{LogEventIdentifiers.OutboundResponse} http ({requestId}) headers={string.Join("|", response.Headers.Select(h => $"{h.Key}={string.Join("|", h.Value)}"))}", level: level);
+                this.WriteLog($"{{LogKey}} http ({requestId}) headers={string.Join("|", response.Headers.Select(h => $"{h.Key}={string.Join("|", h.Value)}"))}", level: level, args: LogEventKeys.OutboundResponse);
             }
 
-            this.WriteLog($"{LogEventIdentifiers.OutboundResponse} http ({requestId}) {response.RequestMessage.Method} {{Url}} {{StatusCode}} ({response.StatusCode}) -> took {elapsed.Humanize(3)}", null, level, args: new object[] { response.RequestMessage.RequestUri, (int)response.StatusCode });
+            this.WriteLog($"{{LogKey}} http ({requestId}) {response.RequestMessage.Method} {{Url}} {{StatusCode}} ({response.StatusCode}) -> took {elapsed.Humanize(3)}", null, level, args: new object[] { response.RequestMessage.RequestUri, (int)response.StatusCode, LogEventKeys.OutboundResponse });
         }
 
         private void WriteLog(string message, Exception exception = null, LogLevel level = LogLevel.Information, params object[] args)

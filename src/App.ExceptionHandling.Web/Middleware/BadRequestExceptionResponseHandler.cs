@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.App.Exceptions.Web
+﻿namespace Naos.Core.Commands.Exceptions.Web
 {
     using System;
     using System.Linq;
@@ -38,7 +38,7 @@
                         Type = hideDetails ? null : badRequestException.GetType().FullPrettyName(),
                     };
 
-                    foreach(var item in badRequestException.ModelState.NullToEmpty())
+                    foreach(var item in badRequestException.ModelState.Safe())
                     {
                         details.Errors.Add(item.Key, item.Value.Errors.Select(e => e.ErrorMessage).ToArray());
                     }

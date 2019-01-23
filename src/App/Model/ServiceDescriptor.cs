@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.App
+﻿namespace Naos.Core.Commands
 {
     using System.Linq;
 

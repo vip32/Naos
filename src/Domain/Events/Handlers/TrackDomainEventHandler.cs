@@ -37,7 +37,7 @@
 
                 using (this.logger.BeginScope(loggerState))
                 {
-                    this.logger.LogInformation($"{LogEventIdentifiers.DomainEvent} {notification.GetType().Name.SubstringTill("DomainEvent")}");
+                    this.logger.LogInformation($"{{LogKey}} {notification.GetType().Name.SubstringTill("DomainEvent")}", LogEventKeys.DomainEvent);
                 }
             });
         }

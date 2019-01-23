@@ -9,7 +9,7 @@
     using Microsoft.AspNetCore.Hosting.Server.Features;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.App;
+    using Naos.Core.Commands;
     using Naos.Core.Common;
 
     public class ServiceDiscoveryHostedService : IHostedService
@@ -47,6 +47,8 @@
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
+            this.logger.LogInformation("{LogKey} hosted service started", LogEventKeys.ServiceDiscovery);
+
             this.cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             // https://github.com/cecilphillip/aspnet-servicediscovery-patterns/blob/master/self_registration/src/SchoolAPI/Infrastructure/ConsulHostedService.cs
             if (this.serviceAddress.IsNullOrEmpty())
@@ -70,6 +72,7 @@
                     Tags = this.serviceDescriptor.Tags
                 };
 
+                //this.logger.LogInformation($"{LogEventIdentifiers.ServiceDiscovery} register (name={{RegistrationName}}, address={registration.FullAddress})", registration.Name);
                 this.registry.RegisterAsync(registration);
                 this.registered = true;
             }
@@ -83,6 +86,8 @@
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
+            this.logger.LogInformation("{LogKey} hosted service stopped", LogEventKeys.ServiceDiscovery);
+
             this.cts.Cancel();
 
             if (this.registered)

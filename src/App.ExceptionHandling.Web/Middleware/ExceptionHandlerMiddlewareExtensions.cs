@@ -2,7 +2,7 @@
 {
     using EnsureThat;
     using Microsoft.Extensions.Options;
-    using Naos.Core.App.Exceptions.Web;
+    using Naos.Core.Commands.Exceptions.Web;
 
     public static class ExceptionHandlerMiddlewareExtensions
     {

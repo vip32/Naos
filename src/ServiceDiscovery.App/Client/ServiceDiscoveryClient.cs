@@ -1,32 +1,62 @@
 ﻿namespace Naos.Core.ServiceDiscovery.App
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Threading.Tasks;
+    using System.Net.Http;
     using EnsureThat;
+    using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
 
-    public class ServiceDiscoveryClient : IServiceDiscoveryClient
+    public abstract class ServiceDiscoveryClient // TODO: actual this is the 'client'
     {
-        private readonly IServiceRegistry registry;
-
-        public ServiceDiscoveryClient(IServiceRegistry registry)
+        public ServiceDiscoveryClient(
+            ILogger<ServiceDiscoveryClient> logger,
+            HttpClient httpClient,
+            IServiceRegistryClient discoveryClient,
+            string serviceName = null,
+            string serviceTag = null)
         {
-            EnsureArg.IsNotNull(registry, nameof(registry));
+            EnsureArg.IsNotNull(httpClient, nameof(httpClient)); // TYPED CLIENT > https://docs.microsoft.com/en-us/aspnet/core/fundamentals/http-requests?view=aspnetcore-2.2
+            EnsureArg.IsNotNull(logger, nameof(logger));
+            EnsureArg.IsNotNull(discoveryClient, nameof(discoveryClient));
 
-            this.registry = registry;
+            if(serviceName.IsNullOrEmpty() && serviceTag.IsNullOrEmpty())
+            {
+                throw new ArgumentNullException("ServiceName and ServiceTag both cannot be null or empty");
+            }
+
+            var registrations = discoveryClient.ServicesAsync().Result;
+            if (!serviceName.IsNullOrEmpty())
+            {
+                registrations = registrations?.Where(r => r.Name?.Equals(serviceName, StringComparison.OrdinalIgnoreCase) == true);
+            }
+
+            if (!serviceTag.IsNullOrEmpty())
+            {
+                registrations = registrations?.Where(r => serviceTag.EqualsAny(r.Tags));
+            }
+
+            var registration = registrations?.FirstOrDefault();
+            if (registration != null)
+            {
+                httpClient.BaseAddress = new Uri($"{registration.Address}:{registration.Port}".TrimEnd(':'));
+                logger.LogInformation($"{{LogKey}} proxy (service={{ServiceName}}, tag={serviceTag}, address={httpClient.BaseAddress})", LogEventKeys.ServiceDiscovery, serviceName);
+            }
+            else
+            {
+                logger.LogWarning($"{{LogKey}} proxy (name={{ServiceName}}, tag={serviceTag}, address=not found in registry)", LogEventKeys.ServiceDiscovery, serviceName);
+            }
+
+            // TODO: get serviceregistration by name OR any of the tags
+
+            //else
+            //{
+            //    throw new Exception("no active service registrations found");
+            //}
+
+            this.HttpClient = httpClient;
         }
 
-        public async Task<IEnumerable<ServiceRegistration>> ServicesAsync()
-        {
-            return (await this.registry.RegistrationsAsync()).NullToEmpty();
-        }
-
-        public async Task<IEnumerable<ServiceRegistration>> ServicesAsync(string name)
-        {
-            return (await this.registry.RegistrationsAsync()).NullToEmpty()
-                .Where(r => r.Name?.Equals(name, StringComparison.OrdinalIgnoreCase) == true);
-        }
+        public HttpClient HttpClient { get; }
     }
 }

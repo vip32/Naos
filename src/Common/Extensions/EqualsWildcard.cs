@@ -54,7 +54,7 @@
                 return false;
             }
 
-            foreach (var value in values.NullToEmpty())
+            foreach (var value in values.Safe())
             {
                 if (value == null)
                 {

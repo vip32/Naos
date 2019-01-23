@@ -2,7 +2,7 @@
 {
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
-    using Naos.Core.App.Configuration;
+    using Naos.Core.Commands.Configuration;
     using Naos.Core.Common;
     using Naos.Core.Operations.Domain.Repositories;
     using Shouldly;

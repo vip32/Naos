@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.App.Operations.Web
+﻿namespace Naos.Core.Commands.Operations.Web
 {
     using System;
     using System.Collections.Generic;
@@ -65,7 +65,7 @@
 
             using (this.logger.BeginScope(loggerState))
             {
-                this.logger.LogInformation($"{LogEventIdentifiers.InboundRequest} http ({requestId}) {context.Request.Method} {{Url}} ({correlationId})", new Uri(context.Request.GetDisplayUrl()));
+                this.logger.LogInformation($"{{LogKey}} http ({requestId}) {context.Request.Method} {{Url}} ({correlationId})", LogEventKeys.InboundRequest, new Uri(context.Request.GetDisplayUrl()));
             }
 
             //if (context.HasServiceName())
@@ -75,7 +75,7 @@
 
             if (!context.Request.Headers.IsNullOrEmpty())
             {
-                this.logger.LogInformation($"{LogEventIdentifiers.InboundRequest} http ({requestId}) headers={string.Join("|", context.Request.Headers.Select(h => $"{h.Key}={h.Value}"))}");
+                this.logger.LogInformation($"{{LogKey}} http ({requestId}) headers={string.Join("|", context.Request.Headers.Select(h => $"{h.Key}={h.Value}"))}", LogEventKeys.InboundRequest);
             }
 
             //request.EnableRewind();
@@ -106,10 +106,10 @@
 
             if (!context.Response.Headers.IsNullOrEmpty())
             {
-                this.logger.Log(level, $"{LogEventIdentifiers.InboundResponse} http ({requestId}) headers={string.Join("|", context.Response.Headers.Select(h => $"{h.Key}={h.Value}"))}");
+                this.logger.Log(level, $"{{LogKey}} http ({requestId}) headers={string.Join("|", context.Response.Headers.Select(h => $"{h.Key}={h.Value}"))}", LogEventKeys.InboundResponse);
             }
 
-            this.logger.Log(level, $"{LogEventIdentifiers.InboundResponse} http ({requestId}) {context.Request.Method} {{Url}} {{StatusCode}} ({ReasonPhrases.GetReasonPhrase(context.Response.StatusCode)}) -> took {elapsed.Humanize(3)}", new Uri(context.Request.GetDisplayUrl()), context.Response.StatusCode);
+            this.logger.Log(level, $"{{LogKey}} http ({requestId}) {context.Request.Method} {{Url}} {{StatusCode}} ({ReasonPhrases.GetReasonPhrase(context.Response.StatusCode)}) -> took {elapsed.Humanize(3)}", LogEventKeys.InboundResponse, new Uri(context.Request.GetDisplayUrl()), context.Response.StatusCode);
         }
 
         //private async Task LogResponseAsync(HttpContext context, string requestId)

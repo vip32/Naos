@@ -21,19 +21,19 @@
             this.logger = logger;
             this.client = client;
 
-            this.logger.LogInformation($"{LogEventIdentifiers.ServiceDiscovery} consul active");
+            this.logger.LogInformation("{LogKey} consul active", LogEventKeys.ServiceDiscovery);
         }
 
         public async Task DeRegisterAsync(string id)
         {
             try
             {
-                this.logger.LogInformation($"{LogEventIdentifiers.ServiceDiscovery} consul registration delete (id={{RegistrationId}})", id);
+                this.logger.LogInformation("{LogKey} consul registration delete (id={RegistrationId})", LogEventKeys.ServiceDiscovery, id);
                 await this.client.Agent.ServiceDeregister(id);
             }
             catch
             {
-                this.logger.LogError($"{LogEventIdentifiers.ServiceDiscovery} consul deregister failed {id}");
+                this.logger.LogError($"{{LogKey}} consul deregister failed {id}", LogEventKeys.ServiceDiscovery);
             }
         }
 
@@ -48,14 +48,15 @@
                 Tags = registration.Tags,
                 Check = registration.Check == null ? null : new AgentServiceCheck
                 {
-                    HTTP = $"{registration.Address}:{registration.Port}".TrimEnd(':') + $"/{registration.Check.Route}".Replace("//", "/"),
+                    HTTP = registration.FullAddress + $"/{registration.Check.Route}".Replace("//", "/"),
                     Interval = registration.Check.Interval
                 }
             };
 
-            this.logger.LogInformation($"{LogEventIdentifiers.ServiceDiscovery} consul register (name={{RegistrationName}}, tags={string.Join("|", registration.Tags.NullToEmpty())}, id={{RegistrationId}})", registration.Name, registration.Id);
-            await this.client.Agent.ServiceDeregister(agentRegistration.ID);
-            await this.client.Agent.ServiceRegister(agentRegistration);
+            this.logger.LogInformation($"{{LogKey}} register consul (name={{RegistrationName}}, tags={string.Join("|", registration.Tags.Safe())}, id={{RegistrationId}}, address={registration.FullAddress})", LogEventKeys.ServiceDiscovery, registration.Name, registration.Id);
+            await this.client.Agent.ServiceDeregister(agentRegistration.ID).ConfigureAwait(false);
+            var result = await this.client.Agent.ServiceRegister(agentRegistration).ConfigureAwait(false);
+            this.logger.LogInformation($"{{LogKey}} register consul {result.StatusCode} (name={{RegistrationName}}, id={{RegistrationId}})", LogEventKeys.ServiceDiscovery, registration.Name, registration.Id);
         }
 
         public async Task<IEnumerable<ServiceRegistration>> RegistrationsAsync()

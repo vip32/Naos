@@ -2,7 +2,7 @@
 {
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
-    using Naos.Core.App.Configuration;
+    using Naos.Core.Commands.Configuration;
     using Serilog;
 
     public static class Program
@@ -18,7 +18,26 @@
                 {
                     NaosConfigurationFactory.Extend(config);
                 })
+                //.UseUrls($"https://localhost:{GetNextAvailablePort()}")
                 .UseStartup<Startup>()
                 .UseSerilog();
+
+        //private static int GetNextAvailablePort()
+        //{
+        //    var l = new System.Net.Sockets.TcpListener(System.Net.IPAddress.Loopback, 0);
+        //    var port = 0;
+        //    try
+        //    {
+        //        l.Start();
+        //        port = ((System.Net.IPEndPoint)l.LocalEndpoint).Port;
+        //        l.Stop();
+        //        l.Server.Dispose();
+        //    }
+        //    catch
+        //    { /*do nothing */
+        //    }
+
+        //    return port;
+        //}
     }
 }

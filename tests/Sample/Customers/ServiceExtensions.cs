@@ -24,7 +24,7 @@
             var cosmosDbConfiguration = configuration.GetSection(section).Get<CosmosDbConfiguration>();
             Ensure.That(cosmosDbConfiguration).IsNotNull();
 
-            services.AddHttpClient<UserAccountsProxy>()
+            services.AddHttpClient<UserAccountsClient>()
                 .AddHttpMessageHandler<HttpClientCorrelationHandler>()
                 .AddHttpMessageHandler<HttpClientServiceContextHandler>()
                 .AddHttpMessageHandler<HttpClientLogHandler>();
@@ -40,6 +40,7 @@
                                 sp.GetRequiredService<ILogger<CustomerRepository>>(), // TODO: obsolete
                                 sp.GetRequiredService<IMediator>(),
                                 new CosmosDbSqlProvider<Customer>(
+                                    logger: sp.GetRequiredService<ILogger<CosmosDbSqlProvider<Customer>>>(),
                                     client: CosmosDbClient.Create(cosmosDbConfiguration.ServiceEndpointUri, cosmosDbConfiguration.AuthKeyOrResourceToken),
                                     databaseId: cosmosDbConfiguration.DatabaseId,
                                     collectionIdFactory: () => cosmosDbConfiguration.CollectionId,
@@ -56,7 +57,7 @@
                         s.PrimaryKey = cosmosDbConfiguration.AuthKeyOrResourceToken;
                     },
                     name: "Customers-cosmosdb")
-                    .AddServiceDiscoveryProxy<UserAccountsProxy>();
+                    .AddServiceDiscoveryProxy<UserAccountsClient>();
 
             return services;
         }

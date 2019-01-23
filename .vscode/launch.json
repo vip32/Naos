@@ -9,7 +9,7 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "${workspaceFolder}/tests/Sample.Messaging.App.Console/bin/Debug/netcoreapp2.1/Naos.Core.Sample.Messaging.App.Console.dll",
+      "program": "${workspaceFolder}/tests/Sample.Messaging.App.Console/bin/Debug/netcoreapp2.2/Naos.Core.Sample.Messaging.App.Console.dll",
       "args": [],
       "cwd": "${workspaceFolder}",
       "console": "internalConsole",
@@ -24,7 +24,7 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "${workspaceFolder}/tests/Sample.App.Web/bin/Debug/netcoreapp2.1/Naos.Sample.App.Web.dll",
+      "program": "${workspaceFolder}/tests/Sample.App.Web/bin/Debug/netcoreapp2.2/Naos.Sample.App.Web.dll",
       "args": [],
       "cwd": "${workspaceFolder}",
       "stopAtEntry": false,
@@ -34,7 +34,7 @@
         "args": "${auto-detect-url}",
         "windows": {
           "command": "cmd.exe",
-          "args": "/C start ${auto-detect-url}/swagger"
+          "args": "/C start ${auto-detect-url}" // /swagger
         },
         "osx": {
           "command": "open"

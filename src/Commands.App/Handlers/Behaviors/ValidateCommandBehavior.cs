@@ -1,9 +1,10 @@
-﻿namespace Naos.Core.App.Commands
+﻿namespace Naos.Core.Commands.App
 {
     using System.Threading.Tasks;
     using EnsureThat;
+    using FluentValidation;
 
-    public class IdempotentCommandBehavior : ICommandBehavior
+    public class ValidateCommandBehavior : ICommandBehavior
     {
         /// <summary>
         /// Executes this behavior for the specified command
@@ -15,12 +16,15 @@
         {
             EnsureArg.IsNotNull(command);
 
-            // TODO: implement
-            // - check if command exists in repo
-            // - if so return CommandBehaviorResult cancelled = true + reason
+            var result = command.Validate();
+            if (!result.IsValid)
+            {
+                // instead of cancel, throw an exception
+                // TODO: log validation errors
+                throw new ValidationException($"{command.GetType().Name} has validation errors", result.Errors);
+            }
 
             return await Task.FromResult(new CommandBehaviorResult()).ConfigureAwait(false);
-            //return await Task.FromResult(new BehaviorResult("command already handled")).ConfigureAwait(false);
         }
     }
 }

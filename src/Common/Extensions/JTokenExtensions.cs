@@ -111,7 +111,7 @@
             try
             {
                 var results = source.SelectTokens(path);
-                return results.NullToEmpty().Select(r => r.Value<T>());
+                return results.Safe().Select(r => r.Value<T>());
             }
             catch (Exception)
             {

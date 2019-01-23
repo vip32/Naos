@@ -9,6 +9,7 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
+    using Naos.Core.Filtering.App;
     using Naos.Core.RequestCorrelation.App;
     using Naos.Sample.Customers.App.Client;
     using Naos.Sample.Customers.Domain;
@@ -19,14 +20,16 @@
     {
         private readonly ILogger<CustomersController> logger;
         private readonly ICustomerRepository repository;
+        private readonly FilterContext filterContext;
         private readonly ICorrelationContextAccessor correlationContext;
-        private readonly UserAccountsProxy userAccountsProxy;
+        private readonly UserAccountsClient userAccountsProxy;
 
         public CustomersController(
             ILogger<CustomersController> logger,
             ICustomerRepository repository,
+            IFilterContextAccessor filterContext,
             ICorrelationContextAccessor correlationContext,
-            UserAccountsProxy userAccountsProxy)
+            UserAccountsClient userAccountsProxy)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(repository, nameof(repository));
@@ -35,6 +38,7 @@
 
             this.logger = logger;
             this.repository = repository;
+            this.filterContext = filterContext?.Context;
             this.correlationContext = correlationContext;
             this.userAccountsProxy = userAccountsProxy;
         }
@@ -49,7 +53,8 @@
 
             //var response = await this.userAccountsProxy.HttpClient.GetAsync("/echo").ConfigureAwait(false);
 
-            return this.Ok(await this.repository.FindAllAsync().ConfigureAwait(false));
+            return this.Ok(await this.repository.FindAllAsync(
+                this.filterContext.GetCritertiasSpecification<Customer>()).ConfigureAwait(false));
         }
 
         [HttpGet]

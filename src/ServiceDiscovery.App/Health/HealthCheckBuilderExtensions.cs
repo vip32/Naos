@@ -10,7 +10,7 @@
     public static class HealthCheckBuilderExtensions
     {
         public static IHealthChecksBuilder AddServiceDiscoveryProxy<T>(this IHealthChecksBuilder builder, string name = null, string route = "echo", HealthStatus? failureStatus = null, IEnumerable<string> tags = null)
-            where T : ServiceDiscoveryProxy
+            where T : ServiceDiscoveryClient
         {
             name = name ?? typeof(T).Name;
             if (name.EndsWith("Proxy", StringComparison.OrdinalIgnoreCase))
@@ -26,7 +26,7 @@
         }
 
         private static UriHealthCheck CreateHealthCheck<T>(IServiceProvider sp, string name, string route)
-            where T : ServiceDiscoveryProxy
+            where T : ServiceDiscoveryClient
         {
             var proxy = sp.GetRequiredService<T>();
             if(proxy == null)
