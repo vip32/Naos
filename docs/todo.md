@@ -1,11 +1,13 @@
 TODO:
 
-Operations 
-  Dashboard for journal logevents (domainevents/commands/....)
+Inmemory Repo
+  use concurrentdict instead of list https://github.com/SharpRepository/SharpRepository/blob/develop/SharpRepository.InMemoryRepository/InMemoryRepositoryBase.cs
 
 Filtering
-  Convert filter to expresion (specification) so it can be used by the repositories
   Convert order/skip/take to FindOptions for repositories
+
+Operations 
+  Dashboard for journal logevents (domainevents/commands/....)
 
 Operations
   Logevents filtering (correlationId, since, till) API > LAna query
@@ -16,6 +18,7 @@ Commands
 
 Repositories
   Decorator setup with scrutor Decorators (services.Decorate) https://github.com/khellang/Scrutor
+  Caching decorator https://github.com/thangchung/awesome-dotnet-core#caching
 
 ServiceDiscovery
   Reverse proxy (router)
