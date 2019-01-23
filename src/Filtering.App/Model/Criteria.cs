@@ -7,7 +7,11 @@
 
     public class Criteria
     {
-        public Criteria(string name, CriteriaOperator @operator, object value, bool isNumeric = false)
+        public Criteria(
+            string name,
+            CriteriaOperator @operator,
+            object value,
+            bool isNumeric = false)
         {
             EnsureArg.IsNotNullOrEmpty(name);
 
