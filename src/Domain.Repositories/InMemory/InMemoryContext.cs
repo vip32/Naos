@@ -1,5 +1,6 @@
 ﻿namespace Naos.Core.Domain.Repositories
 {
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using Naos.Core.Common;
@@ -12,14 +13,20 @@
 
         public InMemoryContext(List<TEntity> entities)
         {
-            this.Entities = entities.Safe().ToList();
+            foreach(var entity in entities.Safe())
+            {
+                this.Entities.Add(entity);
+            }
         }
 
         public InMemoryContext(IEnumerable<TEntity> entities)
         {
-            this.Entities = entities.Safe().ToList();
+            foreach (var entity in entities.Safe())
+            {
+                this.Entities.Add(entity);
+            }
         }
 
-        public List<TEntity> Entities { get; set; } = new List<TEntity>();
+        public ConcurrentBag<TEntity> Entities { get; set; } = new ConcurrentBag<TEntity>(); // TODO: use ConcurrentDictionary/ConcurrentBag
     }
 }

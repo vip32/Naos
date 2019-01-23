@@ -102,7 +102,6 @@
             }
 
             var result = this.context.Entities.FirstOrDefault(x => x.Id.Equals(id));
-
             if (this.Options?.Mapper != null && result != null)
             {
                 return this.Options.Mapper.Map<TEntity>(result);
@@ -185,7 +184,7 @@
             //this.entities = this.entities.Where(e => !e.Id.Equals(entity.Id)).Concat(new[] { entity }).ToList();
             if (this.context.Entities.Contains(entity))
             {
-                this.context.Entities.Remove(entity);
+                this.context.Entities.TryTake(out TEntity existingEntity);
             }
 
             this.context.Entities.Add(entity);
@@ -231,7 +230,7 @@
                 }
 
                 this.logger.LogInformation($"{{LogKey}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogEventKeys.DomainRepository);
-                this.context.Entities.Remove(entity);
+                this.context.Entities.TryTake(out entity);
 
                 if (this.Options?.PublishEvents != false)
                 {
@@ -263,7 +262,7 @@
             }
 
             this.logger.LogInformation($"{{LogKey}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogEventKeys.DomainRepository);
-            this.context.Entities.Remove(entity);
+            this.context.Entities.TryTake(out entity);
 
             if (this.Options?.PublishEvents != false)
             {
