@@ -31,19 +31,22 @@
 
         public Expression<Func<T, bool>> ToExpression<T>()
         {
+            return Evaluator.ToLambda<T, bool>(Tokenizer.Parse(this.ToString()));
+        }
+
+        public override string ToString()
+        {
             var quote = this.IsNumeric ? string.Empty : "\"";
 
             if (this.Operator.IsFunction())
             {
                 // function based operator
-                return Evaluator.ToLambda<T, bool>(
-                    Tokenizer.Parse($"(t) => t.{this.Name}.{this.Operator.ToValue()}({quote}{this.Value}{quote})"));
+                return $"(t) => t.{this.Name}.{this.Operator.ToValue()}({quote}{this.Value}{quote})";
             }
             else
             {
                 // standard operators
-                return Evaluator.ToLambda<T, bool>(
-                    Tokenizer.Parse($"(t) => t.{this.Name}{this.Operator.ToValue()}{quote}{this.Value}{quote}"));
+                return $"(t) => t.{this.Name}{this.Operator.ToValue()}{quote}{this.Value}{quote}";
             }
         }
     }

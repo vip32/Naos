@@ -48,6 +48,12 @@
         /// EndsWith
         /// </summary>
         [CriteriaOperatorMetadata(Value = "EndsWith", IsFunction = true, Abbreviation = "ew")]
-        EndsWith = 42
+        EndsWith = 42,
+
+        ///// <summary>
+        ///// EndsWith
+        ///// </summary>
+        //[CriteriaOperatorMetadata(Value = "Between", IsFunction = true, Abbreviation = "btw", Template="VAL1,VAL2")]
+        //Between = 43
     }
 }
