@@ -7,7 +7,7 @@
 
     public static class ServiceExtensions
     {
-        public static IServiceCollection AddNaosExceptionHandling(
+        public static IServiceCollection AddNaosServiceExceptions(
             this IServiceCollection services,
             bool hideDetails = false,
             ExceptionHandlerMiddlewareOptions options = null)

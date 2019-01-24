@@ -28,7 +28,7 @@
         {
             var expression = this.mapper
                 .MapExpression<Expression<Func<TDestination, bool>>>(specification.ToExpression());
-            return expression.Compile();
+            return expression.Compile(); // replace wit CompileFast()? https://github.com/dadhi/FastExpressionCompiler
         }
     }
 }

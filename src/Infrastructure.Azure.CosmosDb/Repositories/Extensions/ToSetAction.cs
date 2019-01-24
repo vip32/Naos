@@ -22,7 +22,7 @@
             var param = Expression.Parameter(typeof(string), "value");
             var set = Expression.Lambda<Action<T, string>>(
                 Expression.Assign(member, param), source.Parameters[0], param);
-            return set.Compile();
+            return set.Compile(); // replace wit CompileFast()? https://github.com/dadhi/FastExpressionCompiler
         }
 
         /// <summary>
@@ -42,7 +42,7 @@
             var param = Expression.Parameter(typeof(int), "value");
             var set = Expression.Lambda<Action<T, int>>(
                 Expression.Assign(member, param), source.Parameters[0], param);
-            return set.Compile();
+            return set.Compile(); // replace wit CompileFast()? https://github.com/dadhi/FastExpressionCompiler
         }
 
         /// <summary>
@@ -62,7 +62,7 @@
             var param = Expression.Parameter(typeof(DateTime?), "value");
             var set = Expression.Lambda<Action<T, DateTime?>>(
                 Expression.Assign(member, param), source.Parameters[0], param);
-            return set.Compile();
+            return set.Compile(); // replace wit CompileFast()? https://github.com/dadhi/FastExpressionCompiler
         }
     }
 }

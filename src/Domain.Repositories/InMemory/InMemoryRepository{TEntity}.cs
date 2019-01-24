@@ -297,7 +297,7 @@
             {
                 orderedResult = orderedResult == null
                     ? order.Direction == OrderDirection.Ascending
-                        ? result.OrderBy(order.Expression.Compile())
+                        ? result.OrderBy(order.Expression.Compile()) // replace wit CompileFast()? https://github.com/dadhi/FastExpressionCompiler
                         : result.OrderByDescending(order.Expression.Compile())
                     : order.Direction == OrderDirection.Ascending
                         ? orderedResult.ThenBy(order.Expression.Compile())

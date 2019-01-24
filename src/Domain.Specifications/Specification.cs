@@ -31,7 +31,7 @@
 
         public Func<T, bool> ToPredicate()
         {
-            return this.ToExpression().Compile();
+            return this.ToExpression().Compile(); // replace wit CompileFast()? https://github.com/dadhi/FastExpressionCompiler
         }
 
         //public Predicate<T> Predicate()

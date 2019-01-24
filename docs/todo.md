@@ -6,6 +6,9 @@ Inmemory Repo
 Filtering
   Convert order/skip/take to FindOptions for repositories
 
+Better Guard (+snippets)
+  https://github.com/safakgur/guard/tree/master
+
 Operations 
   Dashboard for journal logevents (domainevents/commands/....)
 
@@ -33,6 +36,12 @@ Service
   Api versioning
   Request Rate limiting https://github.com/stefanprodan/AspNetCoreRateLimit
 
+KeyVault cache (peristent)
+  improve local service startup (due to vault requests)
+  https://github.com/SanderSade/Sander.KeyVaultCache 
+  refactor as KeyVaultClientDecorator and override GetSecretWithHttpMessagesAsync() with cache functionality
+  https://github.com/MichaCo/CacheManager
+  https://github.com/maldworth/CacheManager.FileCaching/tree/develop
 
 ================================================================================
 

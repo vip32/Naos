@@ -117,7 +117,7 @@
                     ? order.Direction == OrderDirection.Ascending
                         ? result.OrderBy(this.Options.Mapper.MapExpression<Expression<Func<TDestination, object>>>(order.Expression).Compile())
                         : result.OrderByDescending(this.Options.Mapper.MapExpression<Expression<Func<TDestination, object>>>(order.Expression).Compile())
-                    : order.Direction == OrderDirection.Ascending
+                    : order.Direction == OrderDirection.Ascending // replace wit CompileFast()? https://github.com/dadhi/FastExpressionCompiler
                         ? orderedResult.ThenBy(this.Options.Mapper.MapExpression<Expression<Func<TDestination, object>>>(order.Expression).Compile())
                         : orderedResult.ThenByDescending(this.Options.Mapper.MapExpression<Expression<Func<TDestination, object>>>(order.Expression).Compile());
             }

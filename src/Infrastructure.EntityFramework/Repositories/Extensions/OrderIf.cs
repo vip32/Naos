@@ -20,7 +20,7 @@
             {
                     orderedResult = orderedResult == null
                             ? order.Direction == OrderDirection.Ascending
-                                ? source.OrderBy(order.Expression.Compile())
+                                ? source.OrderBy(order.Expression.Compile()) // replace wit CompileFast()? https://github.com/dadhi/FastExpressionCompiler
                                 : source.OrderByDescending(order.Expression.Compile())
                             : order.Direction == OrderDirection.Ascending
                                 ? orderedResult.ThenBy(order.Expression.Compile())

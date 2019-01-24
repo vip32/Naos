@@ -84,7 +84,7 @@
                 .AddNaosRequestFiltering()
                 .AddNaosOperationsSerilog(this.Configuration)
                 .AddNaosOperationsLogAnalytics(this.Configuration)
-                .AddNaosExceptionHandling()
+                .AddNaosServiceExceptions()
                 .AddNaosJobScheduling(s => s
                     //.SetEnabled(false)
                     .Register<DummyJob>("job1", Cron.Minutely(), (j) => j.LogMessageAsync("+++ hello from job1 +++", CancellationToken.None))

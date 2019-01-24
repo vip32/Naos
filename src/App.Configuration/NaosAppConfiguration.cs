@@ -1,5 +1,6 @@
 ﻿namespace Naos.Core.Commands.Configuration
 {
+    using Microsoft.Azure.KeyVault;
     using Microsoft.Extensions.Configuration;
 
     public class NaosAppConfiguration
