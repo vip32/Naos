@@ -84,7 +84,7 @@ A service client makes a request to a router, which is responsible for service d
 - ServiceClient
 - Health
 
-![overview2](docs/Naos%20-%20Service%20Discovery%20Overview%20-%20Server-side.png)
+![overview2](docs/Naos%20–%20Service%20Discovery%20Overview%20-%20Server-side.png)
 
 # Operations
 
