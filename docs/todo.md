@@ -9,7 +9,7 @@ Filtering
 Better Guard (+snippets)
   https://github.com/safakgur/guard/tree/master
 
-Operations 
+Operations
   Dashboard for journal logevents (domainevents/commands/....)
 
 Operations
@@ -38,7 +38,7 @@ Service
 
 KeyVault cache (peristent)
   improve local service startup (due to vault requests)
-  https://github.com/SanderSade/Sander.KeyVaultCache 
+  https://github.com/SanderSade/Sander.KeyVaultCache
   refactor as KeyVaultClientDecorator and override GetSecretWithHttpMessagesAsync() with cache functionality
   https://github.com/MichaCo/CacheManager
   https://github.com/maldworth/CacheManager.FileCaching/tree/develop
@@ -58,6 +58,8 @@ xunit configuration https://weblog.west-wind.com/posts/2018/Feb/18/Accessing-Con
 validation : entity.Validate(handler)
 ef sqlite + inmemory : https://www.thereformedprogrammer.net/using-in-memory-databases-for-unit-testing-ef-core-applications/
 webapi test + jwt https://www.domstamand.com/testing-a-webapi-in-net-core-with-integration-tests/
+webapi caching (client/server) https://github.com/aliostad/CacheCow#getting-started---client
+nested app https://github.com/damianh/AspNetCoreNestedApps
 embedded dashboard https://github.com/dotnetcore/CAP/blob/develop/src/DotNetCore.CAP/Dashboard/RazorPageDispatcher.cs
 host multiple mvc apps https://damienbod.com/2018/12/01/using-mvc-asp-net-core-apps-in-a-host-asp-net-core-app/
 file repo https://github.com/selmaohneh/Repository/tree/master/Repository.FileRepository
@@ -73,11 +75,12 @@ idea: configuration validation https://www.stevejgordon.co.uk/asp-net-core-2-2-o
 graphql? https://fullstackmark.com/post/17/building-a-graphql-api-with-aspnet-core-2-and-entity-framework-core
 workflow https://github.com/danielgerlag/workflow-core
 web exception handling https://github.com/JosephWoodward/GlobalExceptionHandlerDotNet
-app service docker container (rabbitmq?) https://docs.microsoft.com/en-us/azure/app-service/containers/tutorial-custom-docker-image 
+app service docker container (rabbitmq?) https://docs.microsoft.com/en-us/azure/app-service/containers/tutorial-custom-docker-image
 exception enricher demistify https://github.com/nblumhardt/serilog-enrichers-demystify
 identity provider example https://alejandroruizvarela.blogspot.com/2018/11/aspnet-core-identity-with-cosmos-db.html
 correlationid https://www.stevejgordon.co.uk/asp-net-core-correlation-ids
 polly logging ctx https://github.com/stevejgordon/PollyLoggingContextSample
+paged console https://github.com/damianh/EasyConsoleStd
 multi tenant (tenancy) https://github.com/Finbuckle/Finbuckle.MultiTenant
 role based authorization / access control http://jasonwatmore.com/post/2019/01/08/aspnet-core-22-role-based-authorization-tutorial-with-example-api
 attr based decorators https://app.pluralsight.com/player?course=cqrs-in-practice&author=vladimir-khorikov&name=22d61509-b7ab-4268-96f1-258bc8a95b99&clip=5&mode=live
@@ -85,7 +88,7 @@ azure easy auth https://docs.microsoft.com/en-us/azure/app-service/overview-auth
 
 inter service JSON RPC http://www.jsonrpc.org/specification
                        service-bus: https://github.com/Azure/azure-service-bus/tree/master/samples/DotNet/Microsoft.Azure.ServiceBus/QueuesRequestResponse
-                       https://github.com/ipjohnson/EasyRpc (incl authorization, client, dotnet di, messagepack transport) 
+                       https://github.com/ipjohnson/EasyRpc (incl authorization, client, dotnet di, messagepack transport)
                        https://github.com/alexanderkozlenko/aspnetcore-json-rpc (simple, only http transport) + client https://github.com/alexanderkozlenko/json-rpc-client
                        https://github.com/edjCase/JsonRpc
                        https://github.com/httpjsonrpcnet/httpjsonrpcnet
@@ -144,8 +147,8 @@ service: service discovery (consul)https://www.codeproject.com/Articles/1248381/
                            docker run -p 8500:8500 consul agent -dev -ui -client=0.0.0.0 -bind=127.0.0.1  (https://stackoverflow.com/questions/41228968/accessing-consul-ui-running-in-docker-on-osx)
          service discovery reverse proxy https://auth0.com/blog/building-a-reverse-proxy-in-dot-net-core/
 
-operations: log analytics dashboard (operations) https://blogs.technet.microsoft.com/livedevopsinjapan/2017/08/23/log-analytics-log-search-rest-api-for-c/   
-            https://techcommunity.microsoft.com/t5/Azure-Log-Analytics/Authenticate-with-client-credentials-Log-Analytics/td-p/104996  
+operations: log analytics dashboard (operations) https://blogs.technet.microsoft.com/livedevopsinjapan/2017/08/23/log-analytics-log-search-rest-api-for-c/
+            https://techcommunity.microsoft.com/t5/Azure-Log-Analytics/Authenticate-with-client-credentials-Log-Analytics/td-p/104996
             https://dev.int.loganalytics.io/documentation/1-Tutorials/Direct-API
 operations: log analytics rest api (repo) https://dev.loganalytics.io/reference
 operations: logevent repos (1-loganalytics, 2-cosmosdb) + specifications (ForCorrelationId, Since, Till, etc...)
@@ -157,7 +160,7 @@ operations: signalr https://github.com/dmitry26/Serilog.Sinks.SignalR.NetCore (c
 scheduling: cron is due but check with optional Specification<DateTime> if the job should really run (maybe only on business days, or other datetime logic)
 
 messaging: azure storage queue messagebroker implementation
-messaging: transport alternatives https://github.com/rebus-org/RebusSamples/tree/master/PubSub 
+messaging: transport alternatives https://github.com/rebus-org/RebusSamples/tree/master/PubSub
 
 http://localhost:15672/ (rabbitmq)
 https://localhost:44347/api/values (billing)

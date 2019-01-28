@@ -5,8 +5,10 @@
     /// </summary>
     public class ServiceDiscoveryConfiguration
     {
-        public bool Enabled { get; set; }
+        public bool Enabled { get; set; } = true;
 
-        public string[] Addresses { get; set; }
+        public string[] ServiceAddresses { get; set; }
+
+        public string RemoteAddress { get; set; } // optional router address
     }
 }

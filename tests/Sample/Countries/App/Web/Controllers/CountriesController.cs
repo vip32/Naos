@@ -44,7 +44,7 @@
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
         public async Task<ActionResult<IEnumerable<Country>>> Get()
         {
-            this.logger.LogInformation($"hello from {this.GetType().Name} >> {this.correlationContext.Context?.CorrelationId}");
+            this.logger.LogInformation($"+++ hello from {this.GetType().Name} >> {this.correlationContext.Context?.CorrelationId}");
 
             return this.Ok(await this.repository.FindAllAsync(
                 this.filterContext.GetCritertiasSpecification<Country>()).ConfigureAwait(false));

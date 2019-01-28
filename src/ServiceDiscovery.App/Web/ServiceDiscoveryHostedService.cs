@@ -42,7 +42,7 @@
             this.registry = registry;
             this.server = server;
             this.serviceDescriptor = serviceDescriptor;
-            this.serviceAddress = this.configuration.Addresses?.FirstOrDefault();
+            this.serviceAddress = this.configuration.ServiceAddresses?.FirstOrDefault();
         }
 
         public Task StartAsync(CancellationToken cancellationToken)

@@ -13,6 +13,6 @@
         public const string JobScheduling = "JOBSCH";
         public const string ServiceDiscovery = "SVCDSC";
         public const string Operations = "OPRTNS";
-        public const string Authentication = "AUTHENT";
+        public const string Authentication = "AUTHNT";
     }
 }

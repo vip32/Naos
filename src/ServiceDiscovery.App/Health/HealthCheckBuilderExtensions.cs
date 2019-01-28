@@ -9,13 +9,18 @@
 
     public static class HealthCheckBuilderExtensions
     {
-        public static IHealthChecksBuilder AddServiceDiscoveryProxy<T>(this IHealthChecksBuilder builder, string name = null, string route = "echo", HealthStatus? failureStatus = null, IEnumerable<string> tags = null)
+        public static IHealthChecksBuilder AddServiceDiscoveryProxy<T>(
+            this IHealthChecksBuilder builder,
+            string name = null,
+            string route = "echo",
+            HealthStatus? failureStatus = null,
+            IEnumerable<string> tags = null)
             where T : ServiceDiscoveryClient
         {
             name = name ?? typeof(T).Name;
-            if (name.EndsWith("Proxy", StringComparison.OrdinalIgnoreCase))
+            if (name.EndsWith("Client", StringComparison.OrdinalIgnoreCase))
             {
-                name = name.Replace("Proxy", "-proxy", StringComparison.OrdinalIgnoreCase);
+                name = name.Replace("Client", "-client", StringComparison.OrdinalIgnoreCase);
             }
 
             return builder.Add(new HealthCheckRegistration(
@@ -31,17 +36,17 @@
             var proxy = sp.GetRequiredService<T>();
             if(proxy == null)
             {
-                throw new NaosException($"Health: ServiceDiscovery proxy '{typeof(T)}' not found, please add with service.AddHttpClient<ServiceDiscoveryProxy>()");
+                throw new NaosException($"Health: ServiceDiscovery client '{typeof(T)}' not found, please add with service.AddHttpClient<ServiceDiscoveryProxy>()");
             }
 
             var options = new UriHealthCheckOptions();
             var address = proxy.HttpClient?.BaseAddress?.ToString();
             if (address.IsNullOrEmpty())
             {
-                throw new NaosException($"Health: ServiceDiscovery proxy '{typeof(T)}' address not found, registration inactive (due to health) or missing from registry?");
+                throw new NaosException($"Health: ServiceDiscovery client '{typeof(T)}' address not found, registration inactive (due to health) or missing from registry?");
             }
 
-            options.AddUri(new Uri($"{address.TrimEnd('/')}/{route}"));
+            options.AddUri(new Uri(new Uri(address.Remove("router")), route));
 
             //var httpClientFactory = sp.GetRequiredService<System.Net.Http.IHttpClientFactory>();
             return new UriHealthCheck(options, () => proxy.HttpClient); // httpClientFactory.CreateClient(name)

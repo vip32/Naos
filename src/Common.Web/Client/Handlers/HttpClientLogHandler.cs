@@ -70,7 +70,7 @@
 
             using (this.logger.BeginScope(loggerState))
             {
-                this.WriteLog($"{{LogKey}} http ({requestId}) {request?.Method} {{Url}} ({correlationId})", args: new object[] { request.RequestUri, LogEventKeys.OutboundRequest });
+                this.WriteLog($"{{LogKey}} http ({requestId}) {request?.Method} {{Url}} ({correlationId})", args: new object[] { LogEventKeys.OutboundRequest, request.RequestUri });
             }
         }
 
@@ -97,7 +97,7 @@
                 this.WriteLog($"{{LogKey}} http ({requestId}) headers={string.Join("|", response.Headers.Select(h => $"{h.Key}={string.Join("|", h.Value)}"))}", level: level, args: LogEventKeys.OutboundResponse);
             }
 
-            this.WriteLog($"{{LogKey}} http ({requestId}) {response.RequestMessage.Method} {{Url}} {{StatusCode}} ({response.StatusCode}) -> took {elapsed.Humanize(3)}", null, level, args: new object[] { response.RequestMessage.RequestUri, (int)response.StatusCode, LogEventKeys.OutboundResponse });
+            this.WriteLog($"{{LogKey}} http ({requestId}) {response.RequestMessage.Method} {{Url}} {{StatusCode}} ({response.StatusCode}) -> took {elapsed.Humanize(3)}", null, level, args: new object[] { LogEventKeys.OutboundResponse, response.RequestMessage.RequestUri, (int)response.StatusCode});
         }
 
         private void WriteLog(string message, Exception exception = null, LogLevel level = LogLevel.Information, params object[] args)

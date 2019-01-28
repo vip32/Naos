@@ -267,7 +267,7 @@
         }
     }
 
-    public class StubHasTenantSpecification : HasTenantSpecification<StubEntity> // TODO: this should be mocked
+    public class StubHasTenantSpecification : HasTenantSpecification<StubEntity> // omTODO: this should be mocked
     {
         public StubHasTenantSpecification(string tenantId)
             : base(tenantId)

@@ -28,6 +28,7 @@
     using Naos.Core.ServiceContext.App.Web;
     using Newtonsoft.Json;
     using NSwag.AspNetCore;
+    using ProxyKit;
 
     public class Startup
     {
@@ -56,6 +57,11 @@
                 .AddHttpContextAccessor()
                 .AddSwaggerDocument(s => s.Description = "naos")
                 .AddMediatR()
+                .AddProxy(o =>
+                {
+                    //o.ConfigurePrimaryHttpMessageHandler(c => c.GetRequiredService<HttpClientLogHandler>());
+                    //o.AddHttpMessageHandler<HttpClientLogHandler>();
+                })
                 .AddMvc(o =>
                     {
                         // https://tahirnaushad.com/2017/08/28/asp-net-core-2-0-mvc-filters/ or use controller attribute (Authorize)
@@ -86,7 +92,7 @@
                 .AddNaosOperationsLogAnalytics(this.Configuration)
                 .AddNaosServiceExceptions()
                 .AddNaosJobScheduling(s => s
-                    //.SetEnabled(false)
+                    .SetEnabled(false)
                     .Register<DummyJob>("job1", Cron.Minutely(), (j) => j.LogMessageAsync("+++ hello from job1 +++", CancellationToken.None))
                     .Register<DummyJob>("job2", Cron.MinuteInterval(2), j => j.LogMessageAsync("+++ hello from job2 +++", CancellationToken.None, true), enabled: false)
                     .Register<DummyJob>("longjob33", Cron.Minutely(), j => j.LongRunningAsync("+++ hello from longjob3 +++", CancellationToken.None)))
@@ -99,7 +105,8 @@
                 .AddNaosMessagingAzureServiceBus(
                     this.Configuration,
                     s => s.Subscribe<TestMessage, TestMessageHandler>())
-                .AddNaosAppCommands();
+                .AddNaosAppCommands()
+                .AddNaosServiceDiscoveryRouter(this.Configuration);
 
             // naos sample product registrations
             services
@@ -128,7 +135,8 @@
                .UseNaosServicePoweredBy()
                .UseNaosOperationsRequestResponseLogging()
                .UseNaosRequestFiltering()
-               .UseNaosExceptionHandling();
+               .UseNaosExceptionHandling()
+               .UseNaosServiceDiscoveryRouter();
 
             app.UseSwagger();
             app.UseSwaggerUi3();

@@ -51,6 +51,7 @@
     <ProjectReference Include="..\..\src\Scheduling\JobScheduling.csproj" />
     <ProjectReference Include="..\..\src\ServiceContext.App\ServiceContext.App.csproj" />
     <ProjectReference Include="..\..\src\ServiceDiscovery.App.Consul\ServiceDiscovery.App.Consul.csproj" />
+    <ProjectReference Include="..\..\src\ServiceDiscovery.App.Web.Router\ServiceDiscovery.App.Web.Router.csproj" />
     <ProjectReference Include="..\..\src\ServiceDiscovery.App\ServiceDiscovery.App.csproj" />
     <ProjectReference Include="..\Sample.App\Sample.App.csproj" />
     <ProjectReference Include="..\Sample\Sample.csproj" />

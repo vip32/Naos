@@ -20,7 +20,7 @@
         public int? Take { get; set; }
 
         public bool Enabled
-            => !(this.Criterias.IsNullOrEmpty() && this.OrderBy.IsNullOrEmpty() && this.Skip.HasValue && this.Take.HasValue);
+            => !this.Criterias.IsNullOrEmpty() || !this.OrderBy.IsNullOrEmpty() || this.Skip.HasValue || this.Take.HasValue;
 
         //// <summary>
         //// Converts the <see cref="IEnumerable<Criteria>"/> to a specification

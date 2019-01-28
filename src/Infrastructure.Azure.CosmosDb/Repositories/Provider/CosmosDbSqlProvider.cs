@@ -206,7 +206,7 @@
                     .WhereExpression(expression)
                     .WhereExpressionIf(e => e.Discriminator == typeof(T).FullName, this.isMasterCollection)
                     .AsEnumerable();
-            this.logger.LogInformation($"{{LogKey}} sql={query}", LogEventKeys.DomainRepository);
+            this.logger.LogInformation($"{{LogKey}} sql={query.ToString().Replace("{", string.Empty).Replace("}", string.Empty)}", LogEventKeys.DomainRepository);
             return await Task.FromResult(query);
         }
 
@@ -228,7 +228,7 @@
                     .TakeIf(count)
                     .OrderByIf(orderExpression, orderDescending)
                     .AsEnumerable();
-            this.logger.LogInformation($"{{LogKey}} sql={query}", LogEventKeys.DomainRepository);
+            this.logger.LogInformation($"{{LogKey}} sql={query.ToString().Replace("{", string.Empty).Replace("}", string.Empty)}", LogEventKeys.DomainRepository);
             return await Task.FromResult(query);
         }
 
@@ -251,7 +251,7 @@
                     .TakeIf(count)
                     .OrderByIf(orderExpression, orderDescending)
                     .AsEnumerable();
-            this.logger.LogInformation($"{{LogKey}} sql={query}", LogEventKeys.DomainRepository);
+            this.logger.LogInformation($"{{LogKey}} sql={query.ToString().Replace("{", string.Empty).Replace("}", string.Empty)}", LogEventKeys.DomainRepository);
             return await Task.FromResult(query);
         }
 

@@ -16,7 +16,9 @@
         private List<ServiceRegistration> registrations = new List<ServiceRegistration>();
         private FileSystemWatcher watcher;
 
-        public FileSystemServiceRegistry(ILogger<FileSystemServiceRegistry> logger, FileSystemServiceRegistryConfiguration configuration)
+        public FileSystemServiceRegistry(
+            ILogger<FileSystemServiceRegistry> logger,
+            FileSystemServiceRegistryConfiguration configuration)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(configuration, nameof(configuration));

@@ -7,6 +7,7 @@
     public class DistributedMutext : IMutex
     {
         // TODO: use https://github.com/madelson/DistributedLock for sql based cross machine locking
+        // or https://github.com/Erwinvandervalk/SqlStreamStore.Locking
         private readonly ILogger<DistributedMutext> logger;
         private readonly DateTime moment;
 

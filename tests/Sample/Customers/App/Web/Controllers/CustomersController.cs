@@ -22,25 +22,25 @@
         private readonly ICustomerRepository repository;
         private readonly FilterContext filterContext;
         private readonly ICorrelationContextAccessor correlationContext;
-        private readonly UserAccountsClient userAccountsProxy;
+        private readonly UserAccountsClient userAccountsClient;
 
         public CustomersController(
             ILogger<CustomersController> logger,
             ICustomerRepository repository,
             IFilterContextAccessor filterContext,
             ICorrelationContextAccessor correlationContext,
-            UserAccountsClient userAccountsProxy)
+            UserAccountsClient userAccountsClient)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(repository, nameof(repository));
             EnsureArg.IsNotNull(correlationContext, nameof(correlationContext));
-            EnsureArg.IsNotNull(userAccountsProxy, nameof(userAccountsProxy));
+            EnsureArg.IsNotNull(userAccountsClient, nameof(userAccountsClient));
 
             this.logger = logger;
             this.repository = repository;
             this.filterContext = filterContext?.Context;
             this.correlationContext = correlationContext;
-            this.userAccountsProxy = userAccountsProxy;
+            this.userAccountsClient = userAccountsClient;
         }
 
         [HttpGet]
@@ -49,9 +49,9 @@
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
         public async Task<ActionResult<IEnumerable<Customer>>> Get()
         {
-            this.logger.LogInformation($"hello from {this.GetType().Name} >> {this.correlationContext.Context?.CorrelationId}");
+            this.logger.LogInformation($"+++ hello from {this.GetType().Name} >> {this.correlationContext.Context?.CorrelationId}");
 
-            //var response = await this.userAccountsProxy.HttpClient.GetAsync("/echo").ConfigureAwait(false);
+            var response = await this.userAccountsClient.HttpClient.GetAsync("api/useraccounts").ConfigureAwait(false);
 
             return this.Ok(await this.repository.FindAllAsync(
                 this.filterContext.GetCritertiasSpecification<Customer>()).ConfigureAwait(false));
