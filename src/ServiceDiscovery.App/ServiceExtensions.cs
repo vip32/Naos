@@ -8,6 +8,7 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.ServiceDiscovery.App;
     using Naos.Core.ServiceDiscovery.App.Web;
+    //using ProxyKit;
 
     /// <summary>
     /// Extensions on the <see cref="IServiceCollection"/>.
@@ -28,13 +29,12 @@
         {
             EnsureArg.IsNotNull(services, nameof(services));
 
-            services.AddSingleton(sp => configuration.GetSection(section).Get<ServiceDiscoveryConfiguration>());
-            services.AddSingleton<IHostedService, ServiceDiscoveryHostedService>();
+            services.TryAddSingleton(sp => configuration.GetSection(section).Get<ServiceDiscoveryConfiguration>());
+            services.TryAddSingleton<IHostedService, ServiceDiscoveryHostedService>();
             services.TryAddSingleton<IServiceRegistry>(sp =>
                 new FileSystemServiceRegistry(
                     sp.GetRequiredService<ILogger<FileSystemServiceRegistry>>(),
                     configuration.GetSection($"{section}:registry:fileSystem").Get<FileSystemServiceRegistryConfiguration>()));
-
             services.TryAddSingleton<IServiceRegistryClient, ServiceRegistryClient>();
 
             return services;
@@ -47,22 +47,30 @@
         /// <param name="configuration"></param>
         /// <param name="section"></param>
         /// <returns></returns>
-        public static IServiceCollection AddNaosServiceDiscoveryRouter(
+        public static IServiceCollection AddNaosServiceDiscoveryRemote(
             this IServiceCollection services,
             IConfiguration configuration,
             string section = "naos:serviceDiscovery")
         {
             EnsureArg.IsNotNull(services, nameof(services));
 
-            services.AddSingleton(sp => configuration.GetSection(section).Get<ServiceDiscoveryConfiguration>());
-            services.AddSingleton<IHostedService, ServiceDiscoveryHostedService>();
+            //services.AddProxy(o =>
+            //{
+            //    //o.ConfigurePrimaryHttpMessageHandler(c => c.GetRequiredService<HttpClientLogHandler>());
+            //    //o.AddHttpMessageHandler<HttpClientLogHandler>();
+            //});
+
+            // client needs remote registry
+            services.TryAddSingleton(sp => configuration.GetSection(section).Get<ServiceDiscoveryConfiguration>());
+            services.TryAddSingleton<IHostedService, ServiceDiscoveryHostedService>();
             services.TryAddSingleton<IServiceRegistry>(sp =>
                 new RemoteServiceRegistry(
                     sp.GetRequiredService<ILogger<RemoteServiceRegistry>>(),
-                    sp.GetRequiredService<HttpClient>(),
+                    sp.GetRequiredService<IHttpClientFactory>().CreateClient(),
                     configuration.GetSection($"{section}:registry:remote").Get<RemoteServiceRegistryConfiguration>()));
-
             services.TryAddSingleton<IServiceRegistryClient, ServiceRegistryClient>();
+
+            // router service needs different registry!
 
             return services;
         }

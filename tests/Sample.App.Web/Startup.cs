@@ -85,7 +85,8 @@
                     };
                 })
                 //.AddNaosServiceDiscoveryFileSystem(this.Configuration)
-                .AddNaosServiceDiscoveryConsul(this.Configuration)
+                //.AddNaosServiceDiscoveryConsul(this.Configuration)
+                .AddNaosServiceDiscoveryRemote(this.Configuration)
                 .AddNaosRequestCorrelation()
                 .AddNaosRequestFiltering()
                 .AddNaosOperationsSerilog(this.Configuration)
@@ -105,8 +106,7 @@
                 .AddNaosMessagingAzureServiceBus(
                     this.Configuration,
                     s => s.Subscribe<TestMessage, TestMessageHandler>())
-                .AddNaosAppCommands()
-                .AddNaosServiceDiscoveryRouter(this.Configuration);
+                .AddNaosAppCommands();
 
             // naos sample product registrations
             services
