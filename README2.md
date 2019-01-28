@@ -73,7 +73,7 @@ A service client retrieves the list of available service instances from the serv
 - Health: periodically check registered services
 - Registries: FileSystem, Consul (TODO:CosmosDb/Azure Storage Table)
 
-![overview1](docs/Naos%20-%20Service%20Discovery%20Overview%20-%20Client-side.png)
+![overview1](docs/Naos%20–%20Service%20Discovery%20Overview%20-%20Client-side.png)
 
 ## Server-side
 
