@@ -24,7 +24,7 @@
         public static IServiceCollection AddNaosOperationsSerilog(
             this IServiceCollection services,
             IConfiguration configuration,
-            string environment = "Development",
+            string environment = null,
             string correlationId = null,
             //string serviceDescriptor = "naos",
             LoggerConfiguration loggerConfiguration = null)
@@ -33,7 +33,7 @@
 
             internalConfiguration = configuration;
             internalLoggerConfiguration = loggerConfiguration;
-            internalEnvironment = environment;
+            internalEnvironment = environment ?? Environment.GetEnvironmentVariable(EnvironmentKeys.Environment) ?? "Production";
             internalCorrelationId = correlationId;
             //internalServiceDescriptor = serviceDescriptor;
 

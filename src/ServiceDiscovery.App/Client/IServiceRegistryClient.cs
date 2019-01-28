@@ -7,6 +7,6 @@
     {
         Task<IEnumerable<ServiceRegistration>> ServicesAsync();
 
-        Task<IEnumerable<ServiceRegistration>> ServicesAsync(string name);
+        Task<IEnumerable<ServiceRegistration>> ServicesAsync(string name, string tag);
     }
 }

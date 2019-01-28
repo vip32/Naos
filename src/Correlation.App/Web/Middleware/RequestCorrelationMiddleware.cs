@@ -1,6 +1,5 @@
 ﻿namespace Naos.Core.Commands.Correlation.App.Web
 {
-    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using EnsureThat;

@@ -39,6 +39,7 @@
     <ProjectReference Include="..\..\src\App\App.csproj" />
     <ProjectReference Include="..\..\src\Authentication.App.Web\Authentication.App.Web.csproj" />
     <ProjectReference Include="..\..\src\Common\Common.csproj" />
+    <ProjectReference Include="..\..\src\Configuration.App\Configuration.App.csproj" />
     <ProjectReference Include="..\..\src\Correlation.App\RequestCorrelation.App.csproj" />
     <ProjectReference Include="..\..\src\Filtering.App\RequestFiltering.App.csproj" />
     <ProjectReference Include="..\..\src\Messaging.Infrastructure.Azure.SignalR\Messaging.Infrastructure.Azure.SignalR.csproj" />

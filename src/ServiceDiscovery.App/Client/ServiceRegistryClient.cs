@@ -9,24 +9,35 @@
 
     public class ServiceRegistryClient : IServiceRegistryClient
     {
-        private readonly IServiceRegistry registry;
+        private readonly IServiceRegistry registryClient;
 
-        public ServiceRegistryClient(IServiceRegistry registry)
+        public ServiceRegistryClient(IServiceRegistry registryClient)
         {
-            EnsureArg.IsNotNull(registry, nameof(registry));
+            EnsureArg.IsNotNull(registryClient, nameof(registryClient));
 
-            this.registry = registry;
+            this.registryClient = registryClient;
         }
 
         public async Task<IEnumerable<ServiceRegistration>> ServicesAsync()
         {
-            return (await this.registry.RegistrationsAsync()).Safe();
+            return (await this.registryClient.RegistrationsAsync()).Safe();
         }
 
-        public async Task<IEnumerable<ServiceRegistration>> ServicesAsync(string name)
+        public async Task<IEnumerable<ServiceRegistration>> ServicesAsync(string name, string tag)
         {
-            return (await this.registry.RegistrationsAsync()).Safe()
-                .Where(r => r.Name?.Equals(name, StringComparison.OrdinalIgnoreCase) == true);
+            var registrations = await this.registryClient.RegistrationsAsync().ConfigureAwait(false);
+
+            if (!name.IsNullOrEmpty())
+            {
+                registrations = registrations?.Where(r => r.Name?.Equals(name, StringComparison.OrdinalIgnoreCase) == true);
+            }
+
+            if (!tag.IsNullOrEmpty())
+            {
+                registrations = registrations?.Where(r => tag.EqualsAny(r.Tags));
+            }
+
+            return registrations;
         }
     }
 }

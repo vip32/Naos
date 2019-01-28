@@ -12,34 +12,28 @@
         public ServiceDiscoveryClient(
             ILogger<ServiceDiscoveryClient> logger,
             HttpClient httpClient,
-            IServiceRegistryClient discoveryClient,
+            IServiceRegistryClient registryClient,
             string serviceName = null,
             string serviceTag = null)
         {
             EnsureArg.IsNotNull(httpClient, nameof(httpClient)); // TYPED CLIENT > https://docs.microsoft.com/en-us/aspnet/core/fundamentals/http-requests?view=aspnetcore-2.2
             EnsureArg.IsNotNull(logger, nameof(logger));
-            EnsureArg.IsNotNull(discoveryClient, nameof(discoveryClient));
+            EnsureArg.IsNotNull(registryClient, nameof(registryClient));
 
             if(serviceName.IsNullOrEmpty() && serviceTag.IsNullOrEmpty())
             {
-                throw new ArgumentNullException("ServiceName and ServiceTag both cannot be null or empty");
+                throw new ArgumentNullException("serviceName and serviceTag arguments cannot both be null or empty");
             }
 
-            var registrations = discoveryClient.ServicesAsync().Result;
-            if (!serviceName.IsNullOrEmpty())
-            {
-                registrations = registrations?.Where(r => r.Name?.Equals(serviceName, StringComparison.OrdinalIgnoreCase) == true);
-            }
-
-            if (!serviceTag.IsNullOrEmpty())
-            {
-                registrations = registrations?.Where(r => serviceTag.EqualsAny(r.Tags));
-            }
-
-            var registration = registrations?.FirstOrDefault();
+            var registration = registryClient.ServicesAsync(serviceName, serviceTag).Result?.FirstOrDefault();
             if (registration != null)
             {
                 httpClient.BaseAddress = new Uri($"{registration.Address}:{registration.Port}".TrimEnd(':'));
+
+                // following are used by possible router to forward to correct instance
+                //httpClient.DefaultRequestHeaders.Add("X-ServiceName", serviceName);
+                //httpClient.DefaultRequestHeaders.Add("X-ServiceTag", serviceTag);
+
                 logger.LogInformation($"{{LogKey}} proxy (service={{ServiceName}}, tag={serviceTag}, address={httpClient.BaseAddress})", LogEventKeys.ServiceDiscovery, serviceName);
             }
             else

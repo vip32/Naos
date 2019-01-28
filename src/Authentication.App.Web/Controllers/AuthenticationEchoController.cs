@@ -1,9 +1,7 @@
 ﻿namespace Naos.Core.Authentication.App.Web.Controllers
 {
-    using System.Collections.Generic;
     using System.Linq;
     using System.Net;
-    using System.Security.Principal;
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;

@@ -26,8 +26,11 @@
 
         public async Task DeRegisterAsync(string id)
         {
+            EnsureArg.IsNotNullOrEmpty(id, nameof(id));
+
             try
             {
+                id = id.Replace(" ", string.Empty);
                 this.logger.LogInformation("{LogKey} consul registration delete (id={RegistrationId})", LogEventKeys.ServiceDiscovery, id);
                 await this.client.Agent.ServiceDeregister(id);
             }
@@ -39,9 +42,14 @@
 
         public async Task RegisterAsync(ServiceRegistration registration)
         {
+            EnsureArg.IsNotNull(registration, nameof(registration));
+            EnsureArg.IsNotNullOrEmpty(registration.Id, nameof(registration.Id));
+            EnsureArg.IsNotNullOrEmpty(registration.Name, nameof(registration.Name));
+
+            registration.Id = registration.Id.Replace(" ", string.Empty);
             var agentRegistration = new AgentServiceRegistration()
             {
-                ID = registration.Id,
+                ID = registration.Id.Replace(" ", string.Empty),
                 Name = registration.Name,
                 Address = registration.Address,
                 Port = registration.Port,

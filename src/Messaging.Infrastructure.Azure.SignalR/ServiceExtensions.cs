@@ -44,7 +44,7 @@
                         signalRConfiguration,
                         sp.GetRequiredService<IHttpClientFactory>(),
                         map: sp.GetRequiredService<ISubscriptionMap>(),
-                        filterScope: Environment.GetEnvironmentVariable("ASPNETCORE_ISLOCAL").ToBool()
+                        filterScope: Environment.GetEnvironmentVariable(EnvironmentKeys.IsLocal).ToBool()
                             ? Environment.MachineName.Humanize().Dehumanize().ToLower()
                             : string.Empty,
                         messageScope: messageScope); // PRODUCT.CAPABILITY;

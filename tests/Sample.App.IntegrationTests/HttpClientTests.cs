@@ -5,9 +5,9 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Http;
-    using Naos.Core.Commands.Configuration;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
+    using Naos.Core.Configuration;
     using Naos.Core.RequestCorrelation.App.Web;
     using Shouldly;
     using Xunit;
@@ -18,7 +18,7 @@
 
         public HttpClientTests()
         {
-            var configuration = NaosConfigurationFactory.CreateRoot();
+            var configuration = NaosConfigurationFactory.Create();
 
             this.services.AddTransient<HttpClientCorrelationHandler>();
             this.services.AddTransient<HttpClientLogHandler>();

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Commands.Configuration
+﻿namespace Naos.Core.Configuration
 {
     using System;
     using System.Collections.Generic;

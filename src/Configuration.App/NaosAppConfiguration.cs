@@ -1,6 +1,5 @@
-﻿namespace Naos.Core.Commands.Configuration
+﻿namespace Naos.Core.Configuration
 {
-    using Microsoft.Azure.KeyVault;
     using Microsoft.Extensions.Configuration;
 
     public class NaosAppConfiguration
@@ -12,7 +11,7 @@
         public virtual void Bind(string section)
         {
             NaosConfigurationFactory
-                .CreateRoot()
+                .Create()
                 .GetSection(section)
                 .Bind(this);
         }

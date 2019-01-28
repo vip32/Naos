@@ -1,8 +1,6 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
-    using System.Diagnostics;
-    using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Configuration;
     using Naos.Core.Authentication.App.Web;

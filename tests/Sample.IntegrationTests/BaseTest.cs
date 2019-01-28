@@ -5,8 +5,8 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Core.Commands.App;
-    using Naos.Core.Commands.Configuration;
     using Naos.Core.Common;
+    using Naos.Core.Configuration;
     using Naos.Core.Infrastructure.EntityFramework;
     using Naos.Sample.UserAccounts.EntityFramework;
 
@@ -16,10 +16,10 @@
 
         protected BaseTest()
         {
-            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
-            Environment.SetEnvironmentVariable("ASPNETCORE_ISLOCAL", "True");
+            Environment.SetEnvironmentVariable(EnvironmentKeys.Environment, "Development");
+            Environment.SetEnvironmentVariable(EnvironmentKeys.IsLocal, "True");
 
-            var configuration = NaosConfigurationFactory.CreateRoot();
+            var configuration = NaosConfigurationFactory.Create();
 
             // naos core registrations
             this.services

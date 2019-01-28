@@ -17,10 +17,10 @@
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Authentication.App.Web;
-    using Naos.Core.Commands.Configuration;
     using Naos.Core.Commands.Web;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
+    using Naos.Core.Configuration;
     using Naos.Core.JobScheduling.App;
     using Naos.Core.JobScheduling.Domain;
     using Naos.Core.Messaging;
@@ -35,7 +35,7 @@
 
         public Startup(ILogger<Startup> logger)
         {
-            this.Configuration = NaosConfigurationFactory.CreateRoot();
+            this.Configuration = NaosConfigurationFactory.Create();
             this.logger = logger;
         }
 

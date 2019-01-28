@@ -34,7 +34,7 @@
                     new MessagingHostedService(sp.GetRequiredService<ILogger<MessagingHostedService>>(), sp));
 
             var serviceBusConfiguration = configuration.GetSection(section).Get<ServiceBusConfiguration>();
-            serviceBusConfiguration.EntityPath = topicName ?? $"{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}-Naos.Messaging";
+            serviceBusConfiguration.EntityPath = topicName ?? $"{Environment.GetEnvironmentVariable(EnvironmentKeys.Environment) ?? "Production"}-Naos.Messaging";
             services.AddSingleton<IServiceBusProvider>(sp =>
             {
                 if (serviceBusConfiguration?.Enabled == true)
@@ -58,7 +58,7 @@
                         new ServiceProviderMessageHandlerFactory(sp),
                         map: sp.GetRequiredService<ISubscriptionMap>(),
                         subscriptionName: subscriptionName ?? AppDomain.CurrentDomain.FriendlyName, // PRODUCT.CAPABILITY
-                        filterScope: Environment.GetEnvironmentVariable("ASPNETCORE_ISLOCAL").ToBool()
+                        filterScope: Environment.GetEnvironmentVariable(EnvironmentKeys.IsLocal).ToBool()
                             ? Environment.MachineName.Humanize().Dehumanize().ToLower()
                             : string.Empty);
 

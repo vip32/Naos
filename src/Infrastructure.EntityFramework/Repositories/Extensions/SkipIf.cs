@@ -2,8 +2,6 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Naos.Core.Common;
-    using Naos.Core.Domain.Repositories;
 
     public static partial class Extensions
     {

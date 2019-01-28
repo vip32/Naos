@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Naos.Core.ServiceDiscovery.App.Web.Router</AssemblyName>
+    <RootNamespace>Naos.Core.ServiceDiscovery.App.Web.Router</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ProxyKit" Version="1.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common.Web\Common.Web.csproj" />
+    <ProjectReference Include="..\ServiceDiscovery.App\ServiceDiscovery.App.csproj" />
+  </ItemGroup>
+
+</Project>

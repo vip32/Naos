@@ -6,16 +6,16 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Hosting;
-    using Naos.Core.Commands.Configuration;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
+    using Naos.Core.Configuration;
     using Naos.Core.RequestCorrelation.App.Web;
 
     public static class Program
     {
         public static async Task Main(string[] args)
         {
-            var configuration = NaosConfigurationFactory.CreateRoot();
+            var configuration = NaosConfigurationFactory.Create();
             string[] capabilities = { $"{AppDomain.CurrentDomain.FriendlyName}-A", $"{AppDomain.CurrentDomain.FriendlyName}-B", $"{AppDomain.CurrentDomain.FriendlyName}-C" };
 
             var builder = new HostBuilder()

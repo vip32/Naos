@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
     using EnsureThat;
@@ -10,7 +9,6 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
-    using Naos.Core.Domain.Specifications;
     using Naos.Core.Filtering.App;
     using Naos.Core.RequestCorrelation.App;
     using Naos.Sample.Countries.Domain;

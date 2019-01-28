@@ -1,7 +1,6 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
-    using System.Linq;
     using EnsureThat;
     using Microsoft.Extensions.Configuration;
     using Naos.Core.Common;

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Commands.Configuration
+﻿namespace Naos.Core.Configuration
 {
     using System;
     using Microsoft.Extensions.Configuration;
@@ -24,7 +24,7 @@
             return CreateBuilder(basePath, args, config);
         }
 
-        public static IConfigurationRoot CreateRoot(string basePath = null, string[] args = null)
+        public static IConfigurationRoot Create(string basePath = null, string[] args = null)
         {
             return CreateBuilder(basePath, args).Build();
         }

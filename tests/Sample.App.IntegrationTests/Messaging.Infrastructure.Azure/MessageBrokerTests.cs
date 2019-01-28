@@ -1,8 +1,8 @@
 ﻿namespace Naos.Sample.App.IntegrationTests.Messaging.Infrastructure.Azure
 {
     using Microsoft.Extensions.DependencyInjection;
-    using Naos.Core.Commands.Configuration;
     using Naos.Core.Common;
+    using Naos.Core.Configuration;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.Domain.Model;
     using Shouldly;
@@ -14,7 +14,7 @@
 
         public MessageBrokerTests()
         {
-            var configuration = NaosConfigurationFactory.CreateRoot();
+            var configuration = NaosConfigurationFactory.Create();
 
             this.services
                 .AddNaosOperationsSerilog(configuration, correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}")
