@@ -11,7 +11,7 @@
     using ProxyKit;
 
     /// <summary>
-    /// Extension methods for the correlation middleware.
+    /// Extension methods for the service discovery router middleware.
     /// </summary>
     public static class ApplicationExtensions
     {
