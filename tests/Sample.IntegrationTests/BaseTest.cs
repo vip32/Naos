@@ -24,11 +24,12 @@
             // naos core registrations
             this.services
                 .AddMediatR()
-                .AddNaosOperationsSerilog(configuration, correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}")
-                .AddNaosOperationsLogAnalytics(configuration)
-                //.AddNaosMessagingFileSystem(configuration)
-                .AddNaosMessagingAzureServiceBus(configuration)
-                .AddNaosAppCommands();
+                .AddNaos(configuration, "Product", "Capability")
+                    .AddOperationsSerilog(correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}")
+                    .AddOperationsLogAnalytics()
+                    //.AddMessagingFileSystem()
+                    .AddMessagingAzureServiceBus()
+                    .AddAppCommands();
 
             // naos sample registrations
             this.services

@@ -21,27 +21,26 @@
 
         //private static string internalServiceDescriptor;
 
-        public static IServiceCollection AddNaosOperationsSerilog(
-            this IServiceCollection services,
-            IConfiguration configuration,
+        public static ServiceConfigurationContext AddOperationsSerilog(
+            this ServiceConfigurationContext context,
             string environment = null,
             string correlationId = null,
             //string serviceDescriptor = "naos",
             LoggerConfiguration loggerConfiguration = null)
         {
-            EnsureArg.IsNotNull(services, nameof(services));
+            EnsureArg.IsNotNull(context, nameof(context));
 
-            internalConfiguration = configuration;
+            internalConfiguration = context.Configuration;
             internalLoggerConfiguration = loggerConfiguration;
             internalEnvironment = environment ?? Environment.GetEnvironmentVariable(EnvironmentKeys.Environment) ?? "Production";
             internalCorrelationId = correlationId;
             //internalServiceDescriptor = serviceDescriptor;
 
-            services.AddSingleton(sp => CreateLoggerFactory());
-            services.AddSingleton(typeof(ILogger<>), typeof(LoggingAdapter<>));
-            services.AddSingleton(typeof(Logging.ILogger), typeof(LoggingAdapter));
+            context.Services.AddSingleton(sp => CreateLoggerFactory());
+            context.Services.AddSingleton(typeof(ILogger<>), typeof(LoggingAdapter<>));
+            context.Services.AddSingleton(typeof(Logging.ILogger), typeof(LoggingAdapter));
 
-            return services;
+            return context;
         }
 
         private static ILoggerFactory CreateLoggerFactory()

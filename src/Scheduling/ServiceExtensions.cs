@@ -9,12 +9,12 @@
 
     public static class ServiceExtensions
     {
-        public static IServiceCollection AddNaosJobScheduling(
-        this IServiceCollection services,
+        public static ServiceConfigurationContext AddJobScheduling(
+        this ServiceConfigurationContext context,
         Action<JobSchedulerSettings> setupAction = null,
         string section = "naos:scheduling")
         {
-            EnsureArg.IsNotNull(services, nameof(services));
+            EnsureArg.IsNotNull(context, nameof(context));
 
             //container.RegisterSingleton<IHostedService>(() =>
             //{
@@ -25,7 +25,7 @@
 
             // TODO: temporary solution to get the scheduler hosted service to run (with its dependencies)
             // https://stackoverflow.com/questions/50394666/injecting-simple-injector-components-into-ihostedservice-with-asp-net-core-2-0#
-            services.AddSingleton<Hosting.IHostedService>(sp =>
+            context.Services.AddSingleton<Hosting.IHostedService>(sp =>
                     new JobSchedulerHostedService(sp.GetRequiredService<ILogger<JobSchedulerHostedService>>(), sp));
 
             //container.RegisterSingleton<IJobScheduler>(() =>
@@ -43,7 +43,7 @@
             //    return result;
             //});
 
-            services.AddSingleton<IJobScheduler>(sp =>
+            context.Services.AddSingleton<IJobScheduler>(sp =>
             {
                 var settings = new JobSchedulerSettings(
                     sp.GetRequiredService<ILogger<JobSchedulerSettings>>(),
@@ -56,7 +56,7 @@
                     settings);
             });
 
-            return services;
+            return context;
         }
     }
 }

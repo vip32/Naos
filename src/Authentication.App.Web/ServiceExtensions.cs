@@ -7,40 +7,49 @@
 
     public static class ServiceExtensions
     {
-        public static IServiceCollection AddNaosAuthenticationApiKeyStatic(
-        this IServiceCollection services,
-        IConfiguration configuration,
-        Action<AuthenticationHandlerOptions> options = null,
-        string section = "naos:authentication:apikey:static")
+        //o =>
+        //{
+        //    o.Events = new AuthenticationHandlerEvents // optional
+        //    {
+        //        OnChallenge = context =>
+        //        {
+        //            Trace.TraceError("ohoh api");
+        //            return Task.CompletedTask;
+        //        }
+        //    };
+        //}
+        public static ServiceConfigurationContext AddAuthenticationApiKeyStatic(
+            this ServiceConfigurationContext context,
+            Action<AuthenticationHandlerOptions> options = null,
+            string section = "naos:authentication:apikey:static")
         {
-            EnsureArg.IsNotNull(services, nameof(services));
+            EnsureArg.IsNotNull(context, nameof(context));
 
-            var serviceConfiguration = configuration.GetSection(section).Get<ApiKeyStaticValidationServiceConfiguration>();
-            services.AddSingleton<IAuthenticationService, ApiKeyStaticValidationService>(sp => new ApiKeyStaticValidationService(serviceConfiguration));
+            var serviceConfiguration = context.Configuration.GetSection(section).Get<ApiKeyStaticValidationServiceConfiguration>();
+            context.Services.AddSingleton<IAuthenticationService, ApiKeyStaticValidationService>(sp => new ApiKeyStaticValidationService(serviceConfiguration));
 
-            services
+            context.Services
                 .AddAuthentication(AuthenticationKeys.ApiKeyScheme)
                 .AddApiKey(options);
 
-            return services;
+            return context;
         }
 
-        public static IServiceCollection AddNaosAuthenticationBasicStatic(
-        this IServiceCollection services,
-        IConfiguration configuration,
-        Action<AuthenticationHandlerOptions> options = null,
-        string section = "naos:authentication:basic:static")
+        public static ServiceConfigurationContext AddAuthenticationBasicStatic(
+            this ServiceConfigurationContext context,
+            Action<AuthenticationHandlerOptions> options = null,
+            string section = "naos:authentication:basic:static")
         {
-            EnsureArg.IsNotNull(services, nameof(services));
+            EnsureArg.IsNotNull(context, nameof(context));
 
-            var serviceConfiguration = configuration.GetSection(section).Get<BasicStaticValidationServiceConfiguration>();
-            services.AddSingleton<IAuthenticationService, BasicStaticValidationService>(sp => new BasicStaticValidationService(serviceConfiguration));
+            var serviceConfiguration = context.Configuration.GetSection(section).Get<BasicStaticValidationServiceConfiguration>();
+            context.Services.AddSingleton<IAuthenticationService, BasicStaticValidationService>(sp => new BasicStaticValidationService(serviceConfiguration));
 
-            services
+            context.Services
                 .AddAuthentication(AuthenticationKeys.BasicScheme)
                 .AddBasic(options);
 
-            return services;
+            return context;
         }
     }
 }

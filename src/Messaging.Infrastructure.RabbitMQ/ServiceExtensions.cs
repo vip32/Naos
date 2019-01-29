@@ -11,32 +11,31 @@
 
     public static class ServiceExtensions
     {
-        public static IServiceCollection AddNaosMessagingRabbitMQ(
-            this IServiceCollection services,
-            IConfiguration configuration,
+        public static ServiceConfigurationContext AddMessagingRabbitMQ(
+            this ServiceConfigurationContext context,
             Action<IMessageBroker> setupAction = null,
             string section = "naos:messaging:rabbitMQ",
             IEnumerable<Assembly> assemblies = null)
         {
-            EnsureArg.IsNotNull(services, nameof(services));
+            EnsureArg.IsNotNull(context, nameof(context));
 
-            services.Scan(scan => scan // https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/
+            context.Services.Scan(scan => scan // https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/
                .FromExecutingAssembly()
                .FromApplicationDependencies(a => !a.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) && !a.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase))
                .AddClasses(classes => classes.AssignableTo(typeof(IMessageHandler<>)), true));
 
-            services.AddSingleton<IMessageBroker>(sp =>
+            context.Services.AddSingleton<IMessageBroker>(sp =>
             {
                 var result = new RabbitMQMessageBroker(
                         sp.GetRequiredService<ILogger<RabbitMQMessageBroker>>(),
-                        configuration.GetSection(section).Get<RabbitMQConfiguration>(),
+                        context.Configuration.GetSection(section).Get<RabbitMQConfiguration>(),
                         new ServiceProviderMessageHandlerFactory(sp));
 
                 setupAction?.Invoke(result);
                 return result;
             });
 
-            return services;
+            return context;
         }
     }
 }

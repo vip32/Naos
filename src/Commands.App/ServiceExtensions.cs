@@ -5,14 +5,16 @@
 
     public static class ServiceExtensions
     {
-        public static IServiceCollection AddNaosAppCommands(
-            this IServiceCollection services)
+        public static ServiceConfigurationContext AddAppCommands(
+            this ServiceConfigurationContext context)
         {
-            return services
+            context.Services
                 .Scan(scan => scan // https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/
                     .FromExecutingAssembly()
                     .FromApplicationDependencies(a => !a.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) && !a.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase))
                     .AddClasses(classes => classes.AssignableTo(typeof(ICommandBehavior)), true));
+
+            return context;
         }
     }
 }

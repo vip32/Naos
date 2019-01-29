@@ -36,7 +36,9 @@
         /// <param name="app"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public static IApplicationBuilder UseNaosServiceDiscoveryRouter(this IApplicationBuilder app, ServiceDiscoveryRouterMiddlewareOptions options)
+        public static IApplicationBuilder UseNaosServiceDiscoveryRouter(
+            this IApplicationBuilder app,
+            ServiceDiscoveryRouterMiddlewareOptions options)
         {
             EnsureArg.IsNotNull(app, nameof(app));
             EnsureArg.IsNotNull(options, nameof(options));
@@ -44,7 +46,7 @@
             app.RunProxy("/router", async context =>
             {
                 var logger = app.ApplicationServices.GetRequiredService<ILogger>();
-                var client = app.ApplicationServices.GetRequiredService<IServiceRegistryClient>();
+                var registryClient = app.ApplicationServices.GetRequiredService<RouterContext>().RegistryClient;
 
                 // read headers for service/tag
                 var isFoundName = context.Request.Headers.TryGetValue(ServiceDiscoveryRouterHeaders.ServiceName, out var serviceName);
@@ -52,15 +54,17 @@
 
                 if (!isFoundName && !isFoundTag)
                 {
+                    context.Response.StatusCode = 400;
                     throw new NaosException($"Router cannot find a service registration based on the provided information (serviceName={serviceName}, serviceTag={serviceTag})");
                     // = 400 bad request (router headers missing)
                 }
 
-                var registrations = await client.ServicesAsync(serviceName, serviceTag).ConfigureAwait(false);
+                var registrations = await registryClient.RegistrationsAsync(serviceName, serviceTag).ConfigureAwait(false);
                 var registration = registrations.FirstOrDefault(); // todo: do some kind random/roundrobin
 
                 if (registration == null)
                 {
+                    context.Response.StatusCode = 502;
                     throw new NaosException($"Router cannot find a service registration based on the provided information (serviceName={serviceName}, serviceTag={serviceTag})");
                     // = 404? 502? https://errorcodespro.com/what-is-http-error-502-bad-gateway/
                 }

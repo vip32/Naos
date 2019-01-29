@@ -7,16 +7,15 @@
 
     public static class ServiceExtensions
     {
-        public static IServiceCollection AddNaosServiceExceptions(
-            this IServiceCollection services,
+        public static ServiceConfigurationContext AddServiceExceptions(
+            this ServiceConfigurationContext context,
             bool hideDetails = false,
             ExceptionHandlerMiddlewareOptions options = null)
         {
-            EnsureArg.IsNotNull(services, nameof(services));
+            EnsureArg.IsNotNull(context, nameof(context));
 
-            return services
+            context.Services
                 .AddSingleton(options ?? new ExceptionHandlerMiddlewareOptions() { HideDetails = hideDetails })
-
                 .Scan(scan => scan // https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/
                     .FromExecutingAssembly()
                     .FromApplicationDependencies(a => !a.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) && !a.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase))
@@ -29,6 +28,8 @@
                 {
                     o.SuppressModelStateInvalidFilter = true;
                 });
+
+            return context;
         }
     }
 }

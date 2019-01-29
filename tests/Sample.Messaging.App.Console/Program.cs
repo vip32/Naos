@@ -16,7 +16,7 @@
         public static async Task Main(string[] args)
         {
             var configuration = NaosConfigurationFactory.Create();
-            string[] capabilities = { $"{AppDomain.CurrentDomain.FriendlyName}-A", $"{AppDomain.CurrentDomain.FriendlyName}-B", $"{AppDomain.CurrentDomain.FriendlyName}-C" };
+            string[] capabilities = { "CapabilityA", "CapabilityB", "CapabilityC" };
 
             var builder = new HostBuilder()
                 .ConfigureServices((context, services) =>
@@ -33,13 +33,15 @@
 
                     // naos application services
                     services
-                        .AddNaosRequestCorrelation()
-                        .AddNaosOperationsSerilog(configuration, correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}")
-                        //.AddNaosMessagingSignalR(configuration)
-                        //.AddNaosMessagingFileSystem(configuration)
-                        .AddNaosMessagingAzureServiceBus(
-                            configuration,
-                            subscriptionName: capabilities[new Random().Next(0, capabilities.Length)])
+                        .AddNaos(configuration, "Product", capabilities[new Random().Next(0, capabilities.Length)])
+                            .AddRequestCorrelation()
+                            .AddOperationsSerilog(correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}")
+                            .AddMessagingSignalR()
+                            .AddMessagingFileSystem()
+                            .AddMessagingAzureServiceBus();
+
+                    // naos sample product registrations
+                    services
                         .AddSingleton<IHostedService, MessagingTestHostedService>();
                 });
 

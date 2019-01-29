@@ -9,16 +9,15 @@
 
     public static class ServiceExtensions
     {
-        public static IServiceCollection AddNaosOperationsLogAnalytics(
-            this IServiceCollection services,
-            IConfiguration configuration,
+        public static ServiceConfigurationContext AddOperationsLogAnalytics(
+            this ServiceConfigurationContext context,
             string section = "naos:operations:azureLogAnalytics")
         {
-            EnsureArg.IsNotNull(services, nameof(services));
+            EnsureArg.IsNotNull(context, nameof(context));
 
-            services.AddSingleton<ILogEventRepository>(sp =>
+            context.Services.AddSingleton<ILogEventRepository>(sp =>
             {
-                var logAnalyticsConfiguration = configuration.GetSection(section).Get<LogAnalyticsConfiguration>();
+                var logAnalyticsConfiguration = context.Configuration.GetSection(section).Get<LogAnalyticsConfiguration>();
 
                 // authenticate api https://dev.int.loganalytics.io/documentation/1-Tutorials/ARM-API
                 var token = new AuthenticationContext(
@@ -37,7 +36,7 @@
                     logAnalyticsConfiguration.WorkspaceName);
             }/*, Lifestyle.Scoped*/);
 
-            return services;
+            return context;
         }
     }
 }

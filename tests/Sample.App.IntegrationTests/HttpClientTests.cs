@@ -30,8 +30,9 @@
             this.services.Replace(ServiceDescriptor.Singleton<IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
 
             this.services
-                .AddNaosRequestCorrelation()
-                .AddNaosOperationsSerilog(configuration, correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}");
+                .AddNaos(configuration, "Product", "Capability")
+                    .AddRequestCorrelation()
+                    .AddOperationsSerilog(correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}");
 
             this.ServiceProvider = this.services.BuildServiceProvider();
         }

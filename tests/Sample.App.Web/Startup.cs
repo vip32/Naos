@@ -28,7 +28,6 @@
     using Naos.Core.ServiceContext.App.Web;
     using Newtonsoft.Json;
     using NSwag.AspNetCore;
-    using ProxyKit;
 
     public class Startup
     {
@@ -57,56 +56,41 @@
                 .AddHttpContextAccessor()
                 .AddSwaggerDocument(s => s.Description = "naos")
                 .AddMediatR()
-                .AddProxy(o =>
-                {
-                    //o.ConfigurePrimaryHttpMessageHandler(c => c.GetRequiredService<HttpClientLogHandler>());
-                    //o.AddHttpMessageHandler<HttpClientLogHandler>();
-                })
                 .AddMvc(o =>
                     {
                         // https://tahirnaushad.com/2017/08/28/asp-net-core-2-0-mvc-filters/ or use controller attribute (Authorize)
                         o.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build()));
                     })
                     .AddJsonOptions(o => o.AddDefaultJsonSerializerSettings())
+                    .AddControllersAsServices() // https://andrewlock.net/controller-activation-and-dependency-injection-in-asp-net-core-mvc/
                     .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // naos application services
             services
-                .AddNaosServiceContext(this.Configuration, "Product", "Capability", tags: new[] { "Customers", "UserAccounts", "Countries" })
-                .AddNaosAuthenticationApiKeyStatic(this.Configuration, o =>
-                {
-                    o.Events = new AuthenticationHandlerEvents // optional
-                    {
-                        OnChallenge = context =>
-                        {
-                            Trace.TraceError("ohoh api");
-                            return Task.CompletedTask;
-                        }
-                    };
-                })
-                //.AddNaosServiceDiscoveryFileSystem(this.Configuration)
-                //.AddNaosServiceDiscoveryConsul(this.Configuration)
-                .AddNaosServiceDiscoveryRemote(this.Configuration)
-                .AddNaosRequestCorrelation()
-                .AddNaosRequestFiltering()
-                .AddNaosOperationsSerilog(this.Configuration)
-                .AddNaosOperationsLogAnalytics(this.Configuration)
-                .AddNaosServiceExceptions()
-                .AddNaosJobScheduling(s => s
-                    .SetEnabled(false)
-                    .Register<DummyJob>("job1", Cron.Minutely(), (j) => j.LogMessageAsync("+++ hello from job1 +++", CancellationToken.None))
-                    .Register<DummyJob>("job2", Cron.MinuteInterval(2), j => j.LogMessageAsync("+++ hello from job2 +++", CancellationToken.None, true), enabled: false)
-                    .Register<DummyJob>("longjob33", Cron.Minutely(), j => j.LongRunningAsync("+++ hello from longjob3 +++", CancellationToken.None)))
-                //.AddNaosMessagingFileSystem(
-                //    this.Configuration,
-                //    s => s.Subscribe<TestMessage, TestMessageHandler>())
-                //.AddNaosMessagingSignalR(
-                //    this.Configuration,
-                //    s => s.Subscribe<TestMessage, TestMessageHandler>())
-                .AddNaosMessagingAzureServiceBus(
-                    this.Configuration,
-                    s => s.Subscribe<TestMessage, TestMessageHandler>())
-                .AddNaosAppCommands();
+                .AddNaos(this.Configuration,
+                    "Product", "Capability", new[] { "Customers", "UserAccounts", "Countries" })
+                    .AddServiceContext()
+                    .AddAuthenticationApiKeyStatic()
+                    .AddRequestCorrelation()
+                    .AddRequestFiltering()
+                    .AddServiceExceptions()
+                    .AddAppCommands()
+                    .AddOperationsSerilog()
+                    .AddOperationsLogAnalytics()
+                    //.AddSwaggerDocument() // s.Description = Product.Capability
+                    .AddJobScheduling(s => s
+                        .SetEnabled(false)
+                        .Register<DummyJob>("job1", Cron.Minutely(), (j) => j.LogMessageAsync("+++ hello from job1 +++", CancellationToken.None))
+                        .Register<DummyJob>("job2", Cron.MinuteInterval(2), j => j.LogMessageAsync("+++ hello from job2 +++", CancellationToken.None, true), enabled: false)
+                        .Register<DummyJob>("longjob33", Cron.Minutely(), j => j.LongRunningAsync("+++ hello from longjob3 +++", CancellationToken.None)))
+                    .AddMessagingAzureServiceBus(s => s
+                        .Subscribe<TestMessage, TestMessageHandler>())
+                    //.AddMessagingFileSystem(
+                    //    s => s.Subscribe<TestMessage, TestMessageHandler>())
+                    //.AddMessagingSignalR(
+                    //    s => s.Subscribe<TestMessage, TestMessageHandler>())
+                    .AddServiceDiscoveryClientRemote()
+                    .AddServiceDiscoveryRouterFilesystem();
 
             // naos sample product registrations
             services

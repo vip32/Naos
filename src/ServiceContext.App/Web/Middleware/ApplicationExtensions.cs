@@ -36,7 +36,7 @@
 
             if (app.ApplicationServices.GetService(typeof(ServiceDescriptor)) == null)
             {
-                throw new InvalidOperationException($"Unable to find the required services. You must call the {nameof(Microsoft.Extensions.DependencyInjection.ServiceExtensions.AddNaosServiceContext)} method in ConfigureServices in the application startup code.");
+                throw new InvalidOperationException($"Unable to find the required services. You must call the AddServiceContext method in ConfigureServices in the application startup code.");
             }
 
             return app.UseMiddleware<ServiceContextMiddleware>(Options.Create(options));

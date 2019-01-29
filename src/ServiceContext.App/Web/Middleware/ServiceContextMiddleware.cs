@@ -90,6 +90,7 @@
                                 ["echo"] = $"{context.Request.Uri()}echo",
                                 ["echo-authentication"] = $"{context.Request.Uri()}api/echo/authentication",
                                 ["echo-messaging"] = $"{context.Request.Uri()}api/echo/messaging",
+                                ["echo-router"] = $"{context.Request.Uri()}api/echo/router",
                                 ["echo-correlation"] = $"{context.Request.Uri()}api/echo/correlation",
                                 ["echo-requestfiltering"] = $"{context.Request.Uri()}api/echo/filter?q=name=eq:naos,epoch=lt:12345",
                                 ["echo-servicecontext"] = $"{context.Request.Uri()}api/echo/servicecontext",

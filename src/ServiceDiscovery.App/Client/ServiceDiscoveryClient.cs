@@ -32,7 +32,7 @@
                     throw new ArgumentNullException("serviceName and serviceTag arguments cannot both be null or empty");
                 }
 
-                var registration = registryClient.ServicesAsync(serviceName, serviceTag).Result?.FirstOrDefault();
+                var registration = registryClient.RegistrationsAsync(serviceName, serviceTag).Result?.FirstOrDefault();
                 if (registration != null)
                 {
                     httpClient.BaseAddress = new Uri($"{registration.Address}:{registration.Port}".TrimEnd(':'));

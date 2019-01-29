@@ -15,28 +15,26 @@
 
     public static class ServiceExtensions
     {
-        public static IServiceCollection AddNaosMessagingSignalR(
-            this IServiceCollection services,
-            IConfiguration configuration,
+        public static ServiceConfigurationContext AddMessagingSignalR(
+            this ServiceConfigurationContext context,
             Action<IMessageBroker> setupAction = null,
             string messageScope = null,
             string section = "naos:messaging:signalr")
         {
-            EnsureArg.IsNotNull(services, nameof(services));
+            EnsureArg.IsNotNull(context, nameof(context));
 
-            services.Scan(scan => scan // https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/
+            context.Services.Scan(scan => scan // https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/
                 .FromExecutingAssembly()
                 .FromApplicationDependencies(a => !a.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) && !a.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase))
                 .AddClasses(classes => classes.AssignableTo(typeof(IMessageHandler<>)), true));
 
-            services.AddSingleton<Hosting.IHostedService>(sp =>
+            context.Services.AddSingleton<Hosting.IHostedService>(sp =>
                     new MessagingHostedService(sp.GetRequiredService<ILogger<MessagingHostedService>>(), sp));
 
-            services.AddSingleton<ISubscriptionMap, SubscriptionMap>();
-            services.AddSingleton<IMessageBroker>(sp =>
+            context.Services.AddSingleton<ISubscriptionMap, SubscriptionMap>();
+            context.Services.AddSingleton<IMessageBroker>(sp =>
             {
-                var signalRConfiguration = configuration.GetSection(section).Get<SignalRConfiguration>();
-
+                var signalRConfiguration = context.Configuration.GetSection(section).Get<SignalRConfiguration>();
                 var result = new SignalRServerlessMessageBroker(
                         sp.GetRequiredService<ILogger<SignalRServerlessMessageBroker>>(),
                         (IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)),
@@ -53,7 +51,7 @@
                 return result;
             });
 
-            return services;
+            return context;
         }
     }
 }

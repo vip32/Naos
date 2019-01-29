@@ -17,9 +17,10 @@
             var configuration = NaosConfigurationFactory.Create();
 
             this.services
-                .AddNaosOperationsSerilog(configuration, correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}")
-                .AddNaosOperationsLogAnalytics(configuration)
-                .AddNaosJobScheduling();
+                .AddNaos(configuration, "Product", "Capability")
+                    .AddOperationsSerilog(correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}")
+                    .AddOperationsLogAnalytics()
+                    .AddJobScheduling();
 
             this.ServiceProvider = this.services.BuildServiceProvider();
         }

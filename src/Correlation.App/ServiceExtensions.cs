@@ -13,17 +13,18 @@
         /// <summary>
         /// Adds required services to support the Correlation ID functionality.
         /// </summary>
-        /// <param name="services"></param>
+        /// <param name="context"></param>
         /// <returns></returns>
-        public static IServiceCollection AddNaosRequestCorrelation(this IServiceCollection services)
+        public static ServiceConfigurationContext AddRequestCorrelation(
+            this ServiceConfigurationContext context)
         {
-            EnsureArg.IsNotNull(services, nameof(services));
+            EnsureArg.IsNotNull(context, nameof(context));
 
-            services.TryAddSingleton<ICorrelationContextAccessor, CorrelationContextAccessor>();
-            services.TryAddTransient<ICorrelationContextFactory, CorrelationContextFactory>();
-            services.AddTransient<HttpClientCorrelationHandler>();
+            context.Services.TryAddSingleton<ICorrelationContextAccessor, CorrelationContextAccessor>();
+            context.Services.TryAddTransient<ICorrelationContextFactory, CorrelationContextFactory>();
+            context.Services.AddTransient<HttpClientCorrelationHandler>();
 
-            return services;
+            return context;
         }
     }
 }

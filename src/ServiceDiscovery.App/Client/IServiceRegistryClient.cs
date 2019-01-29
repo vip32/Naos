@@ -5,8 +5,12 @@
 
     public interface IServiceRegistryClient
     {
-        Task<IEnumerable<ServiceRegistration>> ServicesAsync();
+        Task RegisterAsync(ServiceRegistration registration);
 
-        Task<IEnumerable<ServiceRegistration>> ServicesAsync(string name, string tag);
+        Task DeRegisterAsync(string id);
+
+        Task<IEnumerable<ServiceRegistration>> RegistrationsAsync();
+
+        Task<IEnumerable<ServiceRegistration>> RegistrationsAsync(string name, string tag);
     }
 }

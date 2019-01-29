@@ -7,25 +7,39 @@
     using EnsureThat;
     using Naos.Core.Common;
 
-    public class ServiceRegistryClient : IServiceRegistryClient
+    public class ServiceRegistryClient : IServiceRegistryClient // acts as a facade for IServiceRegistry
     {
-        private readonly IServiceRegistry registryClient;
+        private readonly IServiceRegistry registry;
 
-        public ServiceRegistryClient(IServiceRegistry registryClient)
+        public ServiceRegistryClient(IServiceRegistry registry)
         {
-            EnsureArg.IsNotNull(registryClient, nameof(registryClient));
+            EnsureArg.IsNotNull(registry, nameof(registry));
 
-            this.registryClient = registryClient;
+            this.registry = registry;
         }
 
-        public async Task<IEnumerable<ServiceRegistration>> ServicesAsync()
+        public async Task DeRegisterAsync(string id)
         {
-            return (await this.registryClient.RegistrationsAsync()).Safe();
+            EnsureArg.IsNotNullOrEmpty(id, nameof(id));
+
+            await this.registry.DeRegisterAsync(id).ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<ServiceRegistration>> ServicesAsync(string name, string tag)
+        public async Task RegisterAsync(ServiceRegistration registration)
         {
-            var registrations = await this.registryClient.RegistrationsAsync().ConfigureAwait(false);
+            EnsureArg.IsNotNull(registration, nameof(registration));
+
+            await this.registry.RegisterAsync(registration).ConfigureAwait(false);
+        }
+
+        public async Task<IEnumerable<ServiceRegistration>> RegistrationsAsync()
+        {
+            return (await this.registry.RegistrationsAsync()).Safe();
+        }
+
+        public async Task<IEnumerable<ServiceRegistration>> RegistrationsAsync(string name, string tag)
+        {
+            var registrations = await this.registry.RegistrationsAsync().ConfigureAwait(false);
 
             if (!name.IsNullOrEmpty())
             {

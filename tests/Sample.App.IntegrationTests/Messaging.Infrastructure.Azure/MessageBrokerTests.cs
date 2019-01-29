@@ -17,9 +17,10 @@
             var configuration = NaosConfigurationFactory.Create();
 
             this.services
-                .AddNaosOperationsSerilog(configuration, correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}")
-                //.AddNaosMessagingFileSystem(configuration)
-                .AddNaosMessagingAzureServiceBus(configuration);
+                .AddNaos(configuration, "Product", "Capability")
+                    .AddOperationsSerilog(correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}")
+                    //.AddMessagingFileSystem()
+                    .AddMessagingAzureServiceBus();
 
             this.ServiceProvider = this.services.BuildServiceProvider();
         }

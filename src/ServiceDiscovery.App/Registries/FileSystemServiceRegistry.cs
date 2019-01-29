@@ -48,6 +48,8 @@
 
         public Task RegisterAsync(ServiceRegistration registration)
         {
+            EnsureArg.IsNotNull(registration, nameof(registration));
+
             // store message in specific (Discovery) folder
             this.EnsureDirectory(this.directory);
 

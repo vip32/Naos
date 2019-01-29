@@ -36,7 +36,7 @@
 
             if (app.ApplicationServices.GetService(typeof(IFilterContextFactory)) == null)
             {
-                throw new InvalidOperationException($"Unable to find the required services. You must call the {nameof(Microsoft.Extensions.DependencyInjection.ServiceExtensions.AddNaosRequestFiltering)} method in ConfigureServices in the application startup code.");
+                throw new InvalidOperationException($"Unable to find the required services. You must call the AddRequestFiltering method in ConfigureServices in the application startup code.");
             }
 
             return app.UseMiddleware<RequestFilterMiddleware>(Options.Create(options));

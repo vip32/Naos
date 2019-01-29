@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\App\App.csproj" />
     <ProjectReference Include="..\Infrastructure.Azure.CosmosDb\Infrastructure.Azure.CosmosDb.csproj" />
     <ProjectReference Include="..\Infrastructure.Azure.ServiceBus\Infrastructure.Azure.ServiceBus.csproj" />
     <ProjectReference Include="..\Messaging\Messaging.csproj" />

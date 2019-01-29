@@ -6,15 +6,15 @@
 
     public static class ServiceExtensions
     {
-        public static IServiceCollection AddNaosRequestFiltering(
-            this IServiceCollection services)
+        public static ServiceConfigurationContext AddRequestFiltering(
+            this ServiceConfigurationContext context)
         {
-            EnsureArg.IsNotNull(services, nameof(services));
+            EnsureArg.IsNotNull(context, nameof(context));
 
-            services.TryAddSingleton<IFilterContextAccessor, FilterContextAccessor>();
-            services.TryAddTransient<IFilterContextFactory, FilterContextFactory>();
+            context.Services.TryAddSingleton<IFilterContextAccessor, FilterContextAccessor>();
+            context.Services.TryAddTransient<IFilterContextFactory, FilterContextFactory>();
 
-            return services;
+            return context;
         }
     }
 }

@@ -16,7 +16,7 @@
     {
         private readonly ILogger<ServiceDiscoveryHostedService> logger;
         private readonly ServiceDiscoveryConfiguration configuration;
-        private readonly IServiceRegistry registry;
+        private readonly IServiceRegistryClient registryClient;
         private readonly IServer server;
         private readonly ServiceDescriptor serviceDescriptor;
         private string serviceAddress;
@@ -27,19 +27,19 @@
         public ServiceDiscoveryHostedService(
             ILogger<ServiceDiscoveryHostedService> logger,
             ServiceDiscoveryConfiguration configuration,
-            IServiceRegistry registry,
+            IServiceRegistryClient registryClient,
             IServer server,
             ServiceDescriptor serviceDescriptor)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(configuration, nameof(configuration));
-            EnsureArg.IsNotNull(registry, nameof(registry));
+            EnsureArg.IsNotNull(registryClient, nameof(registryClient));
             EnsureArg.IsNotNull(server, nameof(server));
             EnsureArg.IsNotNull(serviceDescriptor, nameof(serviceDescriptor));
 
             this.logger = logger;
             this.configuration = configuration;
-            this.registry = registry;
+            this.registryClient = registryClient;
             this.server = server;
             this.serviceDescriptor = serviceDescriptor;
             this.serviceAddress = this.configuration.ServiceAddresses?.FirstOrDefault();
@@ -73,7 +73,7 @@
                 };
 
                 //this.logger.LogInformation($"{LogEventIdentifiers.ServiceDiscovery} register (name={{RegistrationName}}, address={registration.FullAddress})", registration.Name);
-                this.registry.RegisterAsync(registration);
+                this.registryClient.RegisterAsync(registration);
                 this.registered = true;
             }
             else
@@ -92,7 +92,7 @@
 
             if (this.registered)
             {
-                this.registry.DeRegisterAsync(this.registrationId);
+                this.registryClient.DeRegisterAsync(this.registrationId);
             }
 
             return Task.CompletedTask;

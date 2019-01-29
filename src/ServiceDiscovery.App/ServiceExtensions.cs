@@ -18,41 +18,38 @@
         /// <summary>
         /// Adds required services to support the Discovery functionality.
         /// </summary>
-        /// <param name="services"></param>
-        /// <param name="configuration"></param>
+        /// <param name="context"></param>
         /// <param name="section"></param>
         /// <returns></returns>
-        public static IServiceCollection AddNaosServiceDiscoveryFileSystem(
-            this IServiceCollection services,
-            IConfiguration configuration,
+        public static ServiceConfigurationContext AddServiceDiscoveryClientFileSystem(
+            this ServiceConfigurationContext context,
             string section = "naos:serviceDiscovery")
         {
-            EnsureArg.IsNotNull(services, nameof(services));
+            EnsureArg.IsNotNull(context, nameof(context));
 
-            services.TryAddSingleton(sp => configuration.GetSection(section).Get<ServiceDiscoveryConfiguration>());
-            services.TryAddSingleton<IHostedService, ServiceDiscoveryHostedService>();
-            services.TryAddSingleton<IServiceRegistry>(sp =>
+            context.Services.TryAddSingleton(sp => context.Configuration.GetSection(section).Get<ServiceDiscoveryConfiguration>());
+            context.Services.TryAddSingleton<IHostedService, ServiceDiscoveryHostedService>();
+            context.Services.TryAddSingleton<IServiceRegistry>(sp =>
                 new FileSystemServiceRegistry(
                     sp.GetRequiredService<ILogger<FileSystemServiceRegistry>>(),
-                    configuration.GetSection($"{section}:registry:fileSystem").Get<FileSystemServiceRegistryConfiguration>()));
-            services.TryAddSingleton<IServiceRegistryClient, ServiceRegistryClient>();
+                    context.Configuration.GetSection($"{section}:registry:fileSystem").Get<FileSystemServiceRegistryConfiguration>()));
+            context.Services.TryAddSingleton<IServiceRegistryClient>(sp =>
+                new ServiceRegistryClient(sp.GetRequiredService<IServiceRegistry>()));
 
-            return services;
+            return context;
         }
 
         /// <summary>
         /// Adds required services to support the Discovery functionality.
         /// </summary>
-        /// <param name="services"></param>
-        /// <param name="configuration"></param>
+        /// <param name="context"></param>
         /// <param name="section"></param>
         /// <returns></returns>
-        public static IServiceCollection AddNaosServiceDiscoveryRemote(
-            this IServiceCollection services,
-            IConfiguration configuration,
+        public static ServiceConfigurationContext AddServiceDiscoveryClientRemote(
+            this ServiceConfigurationContext context,
             string section = "naos:serviceDiscovery")
         {
-            EnsureArg.IsNotNull(services, nameof(services));
+            EnsureArg.IsNotNull(context, nameof(context));
 
             //services.AddProxy(o =>
             //{
@@ -61,18 +58,19 @@
             //});
 
             // client needs remote registry
-            services.TryAddSingleton(sp => configuration.GetSection(section).Get<ServiceDiscoveryConfiguration>());
-            services.TryAddSingleton<IHostedService, ServiceDiscoveryHostedService>();
-            services.TryAddSingleton<IServiceRegistry>(sp =>
+            context.Services.TryAddSingleton(sp => context.Configuration.GetSection(section).Get<ServiceDiscoveryConfiguration>());
+            context.Services.TryAddSingleton<IHostedService, ServiceDiscoveryHostedService>();
+            context.Services.TryAddSingleton<IServiceRegistry>(sp =>
                 new RemoteServiceRegistry(
                     sp.GetRequiredService<ILogger<RemoteServiceRegistry>>(),
                     sp.GetRequiredService<IHttpClientFactory>().CreateClient(),
-                    configuration.GetSection($"{section}:registry:remote").Get<RemoteServiceRegistryConfiguration>()));
-            services.TryAddSingleton<IServiceRegistryClient, ServiceRegistryClient>();
+                    context.Configuration.GetSection($"{section}:registry:remote").Get<RemoteServiceRegistryConfiguration>()));
+            context.Services.TryAddSingleton<IServiceRegistryClient>(sp =>
+                new ServiceRegistryClient(sp.GetRequiredService<IServiceRegistry>()));
 
             // router service needs different registry!
 
-            return services;
+            return context;
         }
     }
 }

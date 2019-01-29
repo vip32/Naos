@@ -4,6 +4,17 @@
 
     public class ServiceDescriptor // APP layer?
     {
+        public ServiceDescriptor()
+        {
+        }
+
+        public ServiceDescriptor(string product, string capability, string[] tags = null)
+        {
+            this.Product = product;
+            this.Capability = capability;
+            this.Tags = tags;
+        }
+
         public string Name => $"{this.Product}.{this.Capability}";
 
         public string Product { get; set; }

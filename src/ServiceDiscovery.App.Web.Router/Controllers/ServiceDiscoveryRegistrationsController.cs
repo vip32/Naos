@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Authentication.App.Web.Controllers
+﻿namespace Naos.Core.ServiceDiscovery.App.Web.Controllers
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -10,27 +10,24 @@
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
     using Naos.Core.ServiceDiscovery.App;
+    using Naos.Core.ServiceDiscovery.App.Web.Router;
 
-    [Route("api/registrations")]
+    [Route("api/router/registrations")]
     [ApiController]
-    public class RegistrationsController : ControllerBase // or use normal middleware?  https://stackoverflow.com/questions/47617994/how-to-use-a-controller-in-another-assembly-in-asp-net-core-mvc-2-0?rq=1
+    public class ServiceDiscoveryRegistrationsController : ControllerBase // or use normal middleware?  https://stackoverflow.com/questions/47617994/how-to-use-a-controller-in-another-assembly-in-asp-net-core-mvc-2-0?rq=1
     {
-        private readonly ILogger<RegistrationsController> logger;
-        private readonly IServiceRegistryClient registryClient;
-        private readonly IServiceRegistry registry;
+        private readonly ILogger<ServiceDiscoveryRegistrationsController> logger;
+        private readonly RouterContext context;
 
-        public RegistrationsController(
-            ILogger<RegistrationsController> logger,
-            IServiceRegistryClient registryClient,
-            IServiceRegistry registry)
+        public ServiceDiscoveryRegistrationsController(
+            ILogger<ServiceDiscoveryRegistrationsController> logger,
+            RouterContext context)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
-            EnsureArg.IsNotNull(registryClient, nameof(registryClient));
-            EnsureArg.IsNotNull(registry, nameof(registry));
+            EnsureArg.IsNotNull(context, nameof(context));
 
             this.logger = logger;
-            this.registryClient = registryClient;
-            this.registry = registry;
+            this.context = context;
         }
 
         [HttpGet]
@@ -39,7 +36,7 @@
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
         public async Task<ActionResult<IEnumerable<ServiceRegistration>>> Get([FromQuery] string name, [FromQuery] string tag)
         {
-            return this.Ok(await this.registryClient.ServicesAsync(name, tag).ConfigureAwait(false));
+            return this.Ok(await this.context.RegistryClient.RegistrationsAsync(name, tag).ConfigureAwait(false));
         }
 
         [HttpPost]
@@ -56,8 +53,8 @@
                 throw new BadRequestException(this.ModelState);
             }
 
-            bool exists = (await this.registry.RegistrationsAsync().ConfigureAwait(false)).Any(r => r.Id.Equals(model.Id));
-            await this.registry.RegisterAsync(model).ConfigureAwait(false);
+            bool exists = (await this.context.RegistryClient.RegistrationsAsync().ConfigureAwait(false)).Any(r => r.Id.Equals(model.Id));
+            await this.context.RegistryClient.RegisterAsync(model).ConfigureAwait(false);
             if (exists)
             {
                 return this.Accepted(this.Url.Action(nameof(this.Get), new { id = model.Id }), model);
@@ -82,12 +79,12 @@
                 throw new BadRequestException("Model id cannot be empty");
             }
 
-            if (!(await this.registry.RegistrationsAsync().ConfigureAwait(false)).Any(r => r.Id.Equals(id)))
+            if (!(await this.context.RegistryClient.RegistrationsAsync().ConfigureAwait(false)).Any(r => r.Id.Equals(id)))
             {
                 return this.NotFound(); // TODO: throw notfoundexception?
             }
 
-            await this.registry.DeRegisterAsync(id).ConfigureAwait(false);
+            await this.context.RegistryClient.DeRegisterAsync(id).ConfigureAwait(false);
             return this.NoContent();
         }
     }

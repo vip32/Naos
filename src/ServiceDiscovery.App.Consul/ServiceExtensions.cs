@@ -19,28 +19,26 @@
         /// <summary>
         /// Adds required services to support the Discovery functionality.
         /// </summary>
-        /// <param name="services"></param>
-        /// <param name="configuration"></param>
+        /// <param name="context"></param>
         /// <param name="section"></param>
         /// <returns></returns>
-        public static IServiceCollection AddNaosServiceDiscoveryConsul(
-            this IServiceCollection services,
-            IConfiguration configuration,
+        public static ServiceConfigurationContext AddServiceDiscoveryClientConsul(
+            this ServiceConfigurationContext context,
             string section = "naos:serviceDiscovery")
         {
-            EnsureArg.IsNotNull(services, nameof(services));
+            EnsureArg.IsNotNull(context, nameof(context));
 
-            services.AddSingleton(sp => configuration.GetSection(section).Get<ServiceDiscoveryConfiguration>());
-            services.AddSingleton<IHostedService, ServiceDiscoveryHostedService>();
-            services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(c =>
+            context.Services.AddSingleton(sp => context.Configuration.GetSection(section).Get<ServiceDiscoveryConfiguration>());
+            context.Services.AddSingleton<IHostedService, ServiceDiscoveryHostedService>();
+            context.Services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(c =>
             {
-                c.Address = new Uri(configuration.GetSection($"{section}:registry:consul").Get<ConsulServiceRegistryConfiguration>().Address);
+                c.Address = new Uri(context.Configuration.GetSection($"{section}:registry:consul").Get<ConsulServiceRegistryConfiguration>().Address);
             }));
-            services.TryAddSingleton<IServiceRegistry>(sp => new ConsulServiceRegistry(
+            context.Services.TryAddSingleton<IServiceRegistry>(sp => new ConsulServiceRegistry(
                 sp.GetRequiredService<ILogger<ConsulServiceRegistry>>(), sp.GetRequiredService<IConsulClient>()));
-            services.TryAddSingleton<IServiceRegistryClient, ServiceRegistryClient>();
+            context.Services.TryAddSingleton<IServiceRegistryClient, ServiceRegistryClient>();
 
-            return services;
+            return context;
         }
     }
 }

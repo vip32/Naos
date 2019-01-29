@@ -19,8 +19,9 @@
             var configuration = NaosConfigurationFactory.Create();
 
             this.services
-                .AddNaosOperationsSerilog(configuration, correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}")
-                .AddNaosJobScheduling();
+                .AddNaos(configuration, "Product", "Capability")
+                    .AddOperationsSerilog(correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}")
+                    .AddJobScheduling();
 
             this.services.AddScoped<StubProbe>();
 

@@ -32,19 +32,19 @@
         {
             EnsureArg.IsNotNullOrEmpty(id, nameof(id));
 
-            await this.httpClient.DeleteAsync($"api/registrations/{id}").ConfigureAwait(false);
+            await this.httpClient.DeleteAsync($"api/router/registrations/{id}").ConfigureAwait(false);
         }
 
         public async Task RegisterAsync(ServiceRegistration registration)
         {
             EnsureArg.IsNotNull(registration, nameof(registration));
 
-            await this.httpClient.PostAsync("api/registrations", new JsonContent(registration)).ConfigureAwait(false);
+            await this.httpClient.PostAsync("api/router/registrations", new JsonContent(registration)).ConfigureAwait(false);
         }
 
         public Task<IEnumerable<ServiceRegistration>> RegistrationsAsync()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }
