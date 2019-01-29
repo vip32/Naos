@@ -57,7 +57,7 @@
                         s.PrimaryKey = cosmosDbConfiguration.AuthKeyOrResourceToken;
                     },
                     name: "Customers-cosmosdb")
-                    .AddServiceDiscoveryProxy<UserAccountsClient>();
+                    .AddServiceDiscoveryClient<UserAccountsClient>();
 
             return services;
         }

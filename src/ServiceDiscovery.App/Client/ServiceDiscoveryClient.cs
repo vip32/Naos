@@ -36,11 +36,6 @@
                 if (registration != null)
                 {
                     httpClient.BaseAddress = new Uri($"{registration.Address}:{registration.Port}".TrimEnd(':'));
-
-                    // following are used by possible router to forward to correct instance
-                    //httpClient.DefaultRequestHeaders.Add("X-ServiceName", serviceName);
-                    //httpClient.DefaultRequestHeaders.Add("X-ServiceTag", serviceTag);
-
                     logger.LogInformation($"{{LogKey}} proxy (service={{ServiceName}}, tag={serviceTag}, serviceAddress={httpClient.BaseAddress})", LogEventKeys.ServiceDiscovery, serviceName);
                 }
                 else

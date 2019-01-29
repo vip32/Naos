@@ -9,7 +9,7 @@
 
     public static class HealthCheckBuilderExtensions
     {
-        public static IHealthChecksBuilder AddServiceDiscoveryProxy<T>(
+        public static IHealthChecksBuilder AddServiceDiscoveryClient<T>(
             this IHealthChecksBuilder builder,
             string name = null,
             string route = "echo",
@@ -23,33 +23,33 @@
                 name = name.Replace("Client", "-client", StringComparison.OrdinalIgnoreCase);
             }
 
-            return builder.Add(new HealthCheckRegistration(
-                name,
-                sp => CreateHealthCheck<T>(sp, name, route),
-                failureStatus,
-                tags));
+            return builder.Add(
+                new HealthCheckRegistration(
+                    name,
+                    sp => CreateHealthCheck<T>(sp, name, route),
+                    failureStatus,
+                    tags));
         }
 
         private static UriHealthCheck CreateHealthCheck<T>(IServiceProvider sp, string name, string route)
             where T : ServiceDiscoveryClient
         {
-            var proxy = sp.GetRequiredService<T>();
-            if(proxy == null)
+            var serviceClient = sp.GetRequiredService<T>();
+            if(serviceClient == null)
             {
                 throw new NaosException($"Health: ServiceDiscovery client '{typeof(T)}' not found, please add with service.AddHttpClient<ServiceDiscoveryProxy>()");
             }
 
             var options = new UriHealthCheckOptions();
-            var address = proxy.HttpClient?.BaseAddress?.ToString();
+            var address = serviceClient.HttpClient?.BaseAddress?.ToString();
             if (address.IsNullOrEmpty())
             {
                 throw new NaosException($"Health: ServiceDiscovery client '{typeof(T)}' address not found, registration inactive (due to health) or missing from registry?");
             }
 
-            options.AddUri(new Uri(new Uri(address.Remove("router")), route));
+            options.AddUri(new Uri(new Uri(address/*.Remove("router")*/), route));
 
-            //var httpClientFactory = sp.GetRequiredService<System.Net.Http.IHttpClientFactory>();
-            return new UriHealthCheck(options, () => proxy.HttpClient); // httpClientFactory.CreateClient(name)
+            return new UriHealthCheck(options, () => serviceClient.HttpClient);
         }
     }
 }
