@@ -1,6 +1,5 @@
 ﻿namespace Naos.Core.Messaging.Domain
 {
-    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
@@ -9,7 +8,7 @@
     using Naos.Core.Domain;
 
     public class TrackMessageDomainEventHandler
-        : IDomainEventHandler<MessagePublishDomainEvent>, IDomainEventHandler<MessageProcessDomainEvent>
+        : IDomainEventHandler<MessagePublishDomainEvent>, IDomainEventHandler<MessageHandleDomainEvent>
     {
         private readonly ILogger<TrackMessageDomainEventHandler> logger;
 
@@ -25,7 +24,7 @@
             return true;
         }
 
-        public bool CanHandle(MessageProcessDomainEvent notification)
+        public bool CanHandle(MessageHandleDomainEvent notification)
         {
             return true;
         }
@@ -39,20 +38,11 @@
                     return;
                 }
 
-                var loggerState = new Dictionary<string, object>
-                {
-                    [LogEventPropertyKeys.TrackType] = LogEventTrackTypeValues.Journal,
-                    [LogEventPropertyKeys.TrackMessage] = true
-                };
-
-                using (this.logger.BeginScope(loggerState))
-                {
-                    this.logger.LogInformation($"{{LogKey}} {notification.GetType().Name.SubstringTill("DomainEvent")} (message={notification.Message?.GetType().PrettyName()}, id={notification.Message?.Id}, origin={notification.Message?.Origin})", LogEventKeys.DomainEvent);
-                }
+                this.logger.LogJournal(LogEventPropertyKeys.TrackPublishMessage, $"{{LogKey:l}} publish {notification.GetType().Name.SubstringTill("DomainEvent")} (message={notification.Message?.GetType().PrettyName()}, id={notification.Message?.Id}, origin={notification.Message?.Origin})", args: LogEventKeys.DomainEvent);
             });
         }
 
-        public async Task Handle(MessageProcessDomainEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(MessageHandleDomainEvent notification, CancellationToken cancellationToken)
         {
             await Task.Run(() =>
             {
@@ -61,16 +51,7 @@
                     return;
                 }
 
-                var loggerState = new Dictionary<string, object>
-                {
-                    [LogEventPropertyKeys.TrackType] = LogEventTrackTypeValues.Journal,
-                    [LogEventPropertyKeys.TrackMessage] = true
-                };
-
-                using (this.logger.BeginScope(loggerState))
-                {
-                    this.logger.LogInformation($"{{LogKey}} {notification.GetType().Name.SubstringTill("DomainEvent")} (message={notification.Message?.GetType().PrettyName()}, id={notification.Message?.Id}, service={notification.MessageScope}, origin={notification.Message?.Origin})", LogEventKeys.DomainEvent);
-                }
+                this.logger.LogJournal(LogEventPropertyKeys.TrackHandleMessage, $"{{LogKey:l}} handle {notification.GetType().Name.SubstringTill("DomainEvent")} (message={notification.Message?.GetType().PrettyName()}, id={notification.Message?.Id}, service={notification.MessageScope}, origin={notification.Message?.Origin})", args: LogEventKeys.DomainEvent);
             });
         }
     }

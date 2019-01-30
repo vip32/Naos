@@ -30,7 +30,7 @@
             {
                 if (this.CanHandle(notification))
                 {
-                    this.logger.LogInformation($"{{LogKey}} handle {notification.GetType().Name.SubstringTill("DomainEvent")} (entity={notification.Entity.GetType().PrettyName()}, handler={this.GetType().PrettyName()})", LogEventKeys.DomainEvent);
+                    this.logger.LogInformation($"{{LogKey:l}} handle {notification.GetType().Name.SubstringTill("DomainEvent")} (entity={notification.Entity.GetType().PrettyName()}, handler={this.GetType().PrettyName()})", LogEventKeys.DomainEvent);
 
                     // TODO: do something, trigger message (integration)
                 }

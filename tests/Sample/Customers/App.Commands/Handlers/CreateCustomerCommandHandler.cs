@@ -16,7 +16,7 @@
         private readonly ICustomerRepository repository;
 
         public CreateCustomerCommandHandler(ILogger<CreateCustomerCommandHandler> logger, IMediator mediator, IEnumerable<ICommandBehavior> behaviors, ICustomerRepository repository)
-            : base(mediator, behaviors)
+            : base(logger, mediator, behaviors)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(repository, nameof(repository));
@@ -27,9 +27,11 @@
 
         public override async Task<CommandResponse<string>> HandleRequest(CreateCustomerCommand request, CancellationToken cancellationToken)
         {
+            this.Logger.LogJournal(LogEventPropertyKeys.TrackHandleCommand, $"{{LogKey:l}} handle {request.GetType().Name.SubstringTill("Command")}", args: LogEventKeys.AppCommand);
+
             request.Properties.AddOrUpdate(this.GetType().Name, true);
 
-            this.logger.LogInformation($"{{LogKey}} {request.GetType().Name} (handler={this.GetType().Name})", LogEventKeys.AppCommand);
+            this.logger.LogInformation($"{{LogKey:l}} {request.GetType().Name} (handler={this.GetType().Name})", LogEventKeys.AppCommand);
 
             if(!request.Customer.Region.EqualsAny(new[] { "East", "West" }))
             {
@@ -40,7 +42,7 @@
             request.Customer.SetCustomerNumber();
             request.Customer = await this.repository.InsertAsync(request.Customer).ConfigureAwait(false);
 
-            this.logger.LogInformation($"{{LogKey}} {request.GetType().Name} (response={request.Customer.Id})", LogEventKeys.AppCommand);
+            this.logger.LogInformation($"{{LogKey:l}} {request.GetType().Name} (response={request.Customer.Id})", LogEventKeys.AppCommand);
 
             // TODO: publish CreatedCustomer message (MessageBus)
 

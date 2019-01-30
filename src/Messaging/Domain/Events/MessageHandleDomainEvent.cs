@@ -3,14 +3,14 @@
     using Naos.Core.Domain;
     using Naos.Core.Messaging.Domain.Model;
 
-    public class MessageProcessDomainEvent : IDomainEvent
+    public class MessageHandleDomainEvent : IDomainEvent
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MessageProcessDomainEvent"/> class.
+        /// Initializes a new instance of the <see cref="MessageHandleDomainEvent"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="messageScope">The messageScope (servicename).</param>
-        public MessageProcessDomainEvent(Message message, string messageScope)
+        public MessageHandleDomainEvent(Message message, string messageScope)
         {
             this.Message = message;
             this.MessageScope = messageScope;

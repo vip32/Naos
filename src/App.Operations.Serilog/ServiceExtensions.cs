@@ -56,7 +56,7 @@
 
             var factory = new LoggerFactory();
             factory.AddSerilog(Log.Logger);
-            Log.Logger.Debug("{LogKey} logging initialized: serilog", LogEventKeys.Operations);
+            Log.Logger.Debug("{LogKey:l} logging initialized: serilog", LogEventKeys.Operations);
             return factory;
         }
 
@@ -68,6 +68,7 @@
                 .MinimumLevel.Override("HealthChecks.UI", LogEventLevel.Information)
                 .MinimumLevel.Override("System.Net.Http.HttpClient", LogEventLevel.Warning)
                 .Enrich.With(new ExceptionEnricher())
+                .Enrich.With(new TicksEnricher())
                 .Enrich.WithProperty(LogEventPropertyKeys.Environment, internalEnvironment)
                 //.Enrich.WithProperty("ServiceDescriptor", internalServiceDescriptor)
                 .Enrich.FromLogContext()

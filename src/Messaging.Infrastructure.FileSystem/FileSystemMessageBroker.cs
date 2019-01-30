@@ -63,17 +63,18 @@
                 if (message.Id.IsNullOrEmpty())
                 {
                     message.Id = Guid.NewGuid().ToString();
-                    this.logger.LogDebug($"{{LogKey}} set message (id={message.Id})", LogEventKeys.Messaging);
+                    this.logger.LogDebug($"{{LogKey:l}} set message (id={message.Id})", LogEventKeys.Messaging);
                 }
 
                 if (message.Origin.IsNullOrEmpty())
                 {
                     message.Origin = this.messageScope;
-                    this.logger.LogDebug($"{{LogKey}} set message (origin={message.Origin})", LogEventKeys.Messaging);
+                    this.logger.LogDebug($"{{LogKey:l}} set message (origin={message.Origin})", LogEventKeys.Messaging);
                 }
 
                 // TODO: async publish!
-                /*await */ this.mediator.Publish(new MessagePublishDomainEvent(message)).GetAwaiter().GetResult(); /*.ConfigureAwait(false);*/
+                /*await */
+                this.mediator.Publish(new MessagePublishDomainEvent(message)).GetAwaiter().GetResult(); /*.ConfigureAwait(false);*/
 
                 var messageName = /*message.Name*/ message.GetType().PrettyName(false);
 
@@ -81,14 +82,14 @@
                 var directory = this.GetDirectory(messageName, this.filterScope);
                 this.EnsureDirectory(directory);
 
-                this.logger.LogInformation("{LogKey} publish (name={MessageName}, id={MessageId}, origin={MessageOrigin})", LogEventKeys.Messaging, message.GetType().PrettyName(), message.Id, message.Origin);
+                this.logger.LogInformation("{LogKey:l} publish (name={MessageName}, id={MessageId}, origin={MessageOrigin})", LogEventKeys.Messaging, message.GetType().PrettyName(), message.Id, message.Origin);
 
                 var fullFileName = Path.Combine(this.GetDirectory(messageName, this.filterScope), $"message_{message.Id}_{this.messageScope}.json.tmp");
                 using (var streamWriter = File.CreateText(fullFileName))
                 {
                     streamWriter.Write(SerializationHelper.JsonSerialize(message));
                     streamWriter.Flush();
-                    streamWriter.Close();
+                    //streamWriter.Close();
                 }
 
                 File.Move(fullFileName, fullFileName.SubstringTillLast(".")); // rename file
@@ -106,7 +107,7 @@
                 if (!this.watchers.ContainsKey(messageName))
                 {
                     var directory = this.GetDirectory(messageName, this.filterScope);
-                    this.logger.LogInformation("{LogKey} subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, watch={Directory})", LogEventKeys.Messaging, typeof(TMessage).PrettyName(), this.messageScope, this.filterScope, typeof(THandler).Name, directory);
+                    this.logger.LogInformation("{LogKey:l} subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, watch={Directory})", LogEventKeys.Messaging, typeof(TMessage).PrettyName(), this.messageScope, this.filterScope, typeof(THandler).Name, directory);
                     this.EnsureDirectory(directory);
 
                     var watcher = new FileSystemWatcher(directory)
@@ -122,7 +123,7 @@
                     };
 
                     this.watchers.Add(messageName, watcher);
-                    this.logger.LogDebug("{LogKey} filesystem onrenamed handler registered (name={messageName})", LogEventKeys.Messaging, typeof(TMessage).PrettyName());
+                    this.logger.LogDebug("{LogKey:l} filesystem onrenamed handler registered (name={messageName})", LogEventKeys.Messaging, typeof(TMessage).PrettyName());
 
                     this.map.Add<TMessage, THandler>(messageName);
                 }
@@ -168,9 +169,7 @@
                         message.Origin = fullPath.SubstringFromLast("_").SubstringTillLast("."); // read metadata from filename
                     }
 
-                    // TODO: async publish!
-                    /*await */ this.mediator.Publish(new MessageProcessDomainEvent(message, this.messageScope)).GetAwaiter().GetResult(); /*.ConfigureAwait(false);*/
-                    this.logger.LogInformation("{LogKey} process (name={MessageName}, id={MessageId}, service={Service}, origin={MessageOrigin})",
+                    this.logger.LogInformation("{LogKey:l} process (name={MessageName}, id={MessageId}, service={Service}, origin={MessageOrigin})",
                             LogEventKeys.Messaging, messageType.PrettyName(), message?.Id, this.messageScope, message.Origin);
 
                     // construct the handler by using the DI container
@@ -180,11 +179,13 @@
                     var method = concreteType.GetMethod("Handle");
                     if (handler != null && method != null)
                     {
+                        // TODO: async publish!
+                        await this.mediator.Publish(new MessageHandleDomainEvent(message, this.messageScope)).ConfigureAwait(false);
                         await (Task)method.Invoke(handler, new object[] { jsonMessage as object });
                     }
                     else
                     {
-                        this.logger.LogWarning("{LogKey} process failed, message handler could not be created. is the handler registered in the service provider? (name={MessageName}, service={Service}, id={MessageId}, origin={MessageOrigin})",
+                        this.logger.LogWarning("{LogKey:l} process failed, message handler could not be created. is the handler registered in the service provider? (name={MessageName}, service={Service}, id={MessageId}, origin={MessageOrigin})",
                             LogEventKeys.Messaging, messageType.PrettyName(), this.messageScope, message?.Id, message.Origin);
                     }
                 }
@@ -193,7 +194,7 @@
             }
             else
             {
-                this.logger.LogDebug($"{{LogKey}} unprocessed: {messageName}", LogEventKeys.Messaging);
+                this.logger.LogDebug($"{{LogKey:l}} unprocessed: {messageName}", LogEventKeys.Messaging);
             }
 
             return processed;

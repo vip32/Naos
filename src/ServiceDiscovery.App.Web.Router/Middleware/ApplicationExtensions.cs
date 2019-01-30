@@ -5,10 +5,8 @@
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.Options;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
-    using Naos.Core.ServiceDiscovery.App;
     using Naos.Core.ServiceDiscovery.App.Web;
     using Naos.Core.ServiceDiscovery.App.Web.Router;
     using ProxyKit;
@@ -72,7 +70,7 @@
                 // TODO: how is api/registrations NOT forwarded? based on missing router headers?
                 // TODO: round robin https://github.com/damianh/ProxyKit/blob/master/src/Recipes/05_RoundRobin.cs
                 var upstreamHost = new Uri($"{registration.Address}:{registration.Port}");
-                logger.LogInformation($"{{LogKey}} router {{Url}} >> {{Host}} (service={{ServiceName}}, tag={serviceTag})", LogEventKeys.ServiceDiscovery, context.Request.Uri(), upstreamHost, registration.Name);
+                logger.LogInformation($"{{LogKey:l}} router {{Url}} >> {{Host}} (service={{ServiceName}}, tag={serviceTag})", LogEventKeys.ServiceDiscovery, context.Request.Uri(), upstreamHost, registration.Name);
                 return await context
                     .ForwardTo(upstreamHost)
                     .Log(logger)

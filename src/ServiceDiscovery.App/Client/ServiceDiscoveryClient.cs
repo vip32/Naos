@@ -36,11 +36,11 @@
                 if (registration != null)
                 {
                     httpClient.BaseAddress = new Uri($"{registration.Address}:{registration.Port}".TrimEnd(':'));
-                    logger.LogInformation($"{{LogKey}} proxy (service={{ServiceName}}, tag={serviceTag}, serviceAddress={httpClient.BaseAddress})", LogEventKeys.ServiceDiscovery, serviceName);
+                    logger.LogInformation($"{{LogKey:l}} proxy (service={{ServiceName}}, tag={serviceTag}, serviceAddress={httpClient.BaseAddress})", LogEventKeys.ServiceDiscovery, serviceName);
                 }
                 else
                 {
-                    logger.LogWarning($"{{LogKey}} proxy (name={{ServiceName}}, tag={serviceTag}, address=not found in registry)", LogEventKeys.ServiceDiscovery, serviceName);
+                    logger.LogWarning($"{{LogKey:l}} proxy (name={{ServiceName}}, tag={serviceTag}, address=not found in registry)", LogEventKeys.ServiceDiscovery, serviceName);
                 }
             }
             else
@@ -52,7 +52,7 @@
                 httpClient.DefaultRequestHeaders.Add(ServiceDiscoveryRouterHeaders.ServiceName, serviceName);
                 httpClient.DefaultRequestHeaders.Add(ServiceDiscoveryRouterHeaders.ServiceTag, serviceTag);
 
-                logger.LogInformation($"{{LogKey}} router (service={{ServiceName}}, tag={serviceTag}, remoteAddress={httpClient.BaseAddress})", LogEventKeys.ServiceDiscovery, serviceName);
+                logger.LogInformation($"{{LogKey:l}} router (service={{ServiceName}}, tag={serviceTag}, remoteAddress={httpClient.BaseAddress})", LogEventKeys.ServiceDiscovery, serviceName);
             }
 
             // TODO: get serviceregistration by name OR any of the tags

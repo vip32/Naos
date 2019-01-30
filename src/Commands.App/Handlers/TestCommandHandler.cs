@@ -4,6 +4,8 @@
     using System.Threading;
     using System.Threading.Tasks;
     using MediatR;
+    using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
 
     /// <summary>
     /// Test handler for the <see cref="TRequest" /> command request, response result is always true
@@ -13,8 +15,8 @@
     public class TestCommandHandler<TRequest> : BehaviorCommandHandler<TRequest, bool>
         where TRequest : CommandRequest<bool>
     {
-        public TestCommandHandler(IMediator mediator, IEnumerable<ICommandBehavior> behaviors)
-            : base(mediator, behaviors)
+        public TestCommandHandler(ILogger<TestCommandHandler<TRequest>> logger, IMediator mediator, IEnumerable<ICommandBehavior> behaviors)
+            : base(logger, mediator, behaviors)
         {
         }
 
@@ -26,6 +28,8 @@
         /// <returns></returns>
         public override async Task<CommandResponse<bool>> HandleRequest(TRequest request, CancellationToken cancellationToken)
         {
+            this.Logger.LogJournal(LogEventPropertyKeys.TrackHandleCommand, $"{{LogKey:l}} handle {typeof(TRequest).Name.SubstringTill("Command")}", args: LogEventKeys.AppCommand);
+
             return await Task.FromResult(new CommandResponse<bool>
             {
                 Result = true

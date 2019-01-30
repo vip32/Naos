@@ -113,7 +113,7 @@
             EnsureArg.IsNotNull(job, nameof(job));
 
             registration.Key = registration.Key ?? HashAlgorithm.ComputeHash(job);
-            this.logger.LogInformation($"{{LogKey}} registration (key={{JobKey}}, cron={registration.Cron}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")}, enabled={registration.Enabled})", LogEventKeys.JobScheduling, registration.Key);
+            this.logger.LogInformation($"{{LogKey:l}} registration (key={{JobKey}}, cron={registration.Cron}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")}, enabled={registration.Enabled})", LogEventKeys.JobScheduling, registration.Key);
 
             var item = this.Registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(registration.Key));
             if (item.Key != null)

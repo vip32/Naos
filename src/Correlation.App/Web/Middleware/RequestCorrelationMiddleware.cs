@@ -67,7 +67,7 @@
 
                 if (this.options.UpdateTraceIdentifier)
                 {
-                    this.logger.LogDebug($"{{LogKey}} http ({requestId}) now has traceIdentifier {correlationId}, was {context.TraceIdentifier}", LogEventKeys.InboundRequest); // TODO: move to request logging middleware (operations)
+                    this.logger.LogDebug($"{{LogKey:l}} http ({requestId}) now has traceIdentifier {correlationId}, was {context.TraceIdentifier}", LogEventKeys.InboundRequest); // TODO: move to request logging middleware (operations)
                     context.TraceIdentifier = correlationId;
                 }
 

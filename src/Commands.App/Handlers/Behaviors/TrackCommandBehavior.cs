@@ -1,6 +1,5 @@
 ﻿namespace Naos.Core.Commands.App
 {
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
@@ -27,17 +26,7 @@
         {
             EnsureArg.IsNotNull(command);
 
-            var loggerState = new Dictionary<string, object>
-            {
-                [LogEventPropertyKeys.TrackType] = LogEventTrackTypeValues.Journal,
-                [LogEventPropertyKeys.TrackCommand] = true
-            };
-
-            using (this.logger.BeginScope(loggerState))
-            {
-                this.logger.LogInformation($"{{LogKey}} {command.GetType().Name.SubstringTill("Command")}", LogEventKeys.AppCommand);
-            }
-
+            this.logger.LogJournal(LogEventPropertyKeys.TrackSendCommand, $"{{LogKey:l}} send {command.GetType().Name.SubstringTill("Command")}", args: LogEventKeys.AppCommand);
             return await Task.FromResult(new CommandBehaviorResult()).ConfigureAwait(false);
         }
     }

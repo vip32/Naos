@@ -159,7 +159,7 @@
                 }
             }
 
-            this.logger.LogInformation($"{{LogKey}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogEventKeys.DomainRepository);
+            this.logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogEventKeys.DomainRepository);
             this.dbContext.Set<TEntity>().Add(entity);
             await this.dbContext.SaveChangesAsync().ConfigureAwait(false);
 
@@ -175,7 +175,7 @@
                 }
             }
 
-            this.logger.LogInformation($"{{LogKey}} upserted entity: {entity.GetType().PrettyName()}, id: {entity.Id}, isNew: {isNew}", LogEventKeys.DomainRepository);
+            this.logger.LogInformation($"{{LogKey:l}} upserted entity: {entity.GetType().PrettyName()}, id: {entity.Id}, isNew: {isNew}", LogEventKeys.DomainRepository);
 
 #pragma warning disable SA1008 // Opening parenthesis must be spaced correctly
             return isNew ? (entity, ActionResult.Inserted) : (entity, ActionResult.Updated);
@@ -192,7 +192,7 @@
             var entity = await this.dbContext.Set<TEntity>().FindAsync(id).ConfigureAwait(false);
             if (entity != null)
             {
-                this.logger.LogInformation($"{{LogKey}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogEventKeys.DomainRepository);
+                this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogEventKeys.DomainRepository);
                 this.dbContext.Remove(entity);
 
                 if (this.Options?.PublishEvents != false)

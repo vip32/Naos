@@ -35,7 +35,7 @@
                     null,
                     new DateTime(moment.Year, moment.Month, moment.Day, moment.Hour, moment.Minute, 59, 999, DateTimeKind.Utc) - moment, // trigger on the minute start
                     TimeSpan.FromMinutes(1));
-                this.logger.LogInformation($"{{LogKey}} hosted service started (moment={moment.ToString("o")})", LogEventKeys.JobScheduling);
+                this.logger.LogInformation($"{{LogKey:l}} hosted service started (moment={moment.ToString("o")})", LogEventKeys.JobScheduling);
             }
 
             return Task.CompletedTask;
@@ -43,14 +43,14 @@
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            this.logger.LogInformation("{LogKey} hosted service stopping", LogEventKeys.JobScheduling);
+            this.logger.LogInformation("{LogKey:l} hosted service stopping", LogEventKeys.JobScheduling);
             this.enabled = false;
             this.schedulerTimer?.Change(Timeout.Infinite, 0);
 
             // suspend stopping schedular untill all tasks are done
             if (this.scheduler.IsRunning)
             {
-                this.logger.LogWarning("{LogKey} hosted service will be stopped but is waiting on running jobs", LogEventKeys.JobScheduling);
+                this.logger.LogWarning("{LogKey:l} hosted service will be stopped but is waiting on running jobs", LogEventKeys.JobScheduling);
             }
 
             while (this.scheduler.IsRunning && !cancellationToken.IsCancellationRequested)
@@ -62,7 +62,7 @@
         public void Dispose()
         {
             this.schedulerTimer?.Dispose();
-            this.logger.LogInformation("{LogKey} hosted service stopped", LogEventKeys.JobScheduling);
+            this.logger.LogInformation("{LogKey:l} hosted service stopped", LogEventKeys.JobScheduling);
         }
 
         private async void RunSchedulerAsync(object state)

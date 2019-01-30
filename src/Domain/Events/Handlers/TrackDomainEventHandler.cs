@@ -1,6 +1,5 @@
 ﻿namespace Naos.Sample.Customers.Domain
 {
-    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
@@ -28,18 +27,7 @@
         public async Task Handle(IDomainEvent notification, CancellationToken cancellationToken)
         {
             await Task.Run(() =>
-            {
-                var loggerState = new Dictionary<string, object>
-                {
-                    [LogEventPropertyKeys.TrackType] = LogEventTrackTypeValues.Journal,
-                    [LogEventPropertyKeys.TrackDomainEvent] = true
-                };
-
-                using (this.logger.BeginScope(loggerState))
-                {
-                    this.logger.LogInformation($"{{LogKey}} {notification.GetType().Name.SubstringTill("DomainEvent")}", LogEventKeys.DomainEvent);
-                }
-            });
+                this.logger.LogJournal(LogEventPropertyKeys.TrackSendDomainEvent, $"{{LogKey:l}} {notification.GetType().Name.SubstringTill("DomainEvent")}", args: LogEventKeys.DomainEvent));
         }
     }
 }

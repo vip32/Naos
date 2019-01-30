@@ -34,7 +34,7 @@
         {
             try
             {
-                this.Logger.LogInformation("{LogKey} apikey handle", LogEventKeys.Authentication);
+                this.Logger.LogInformation("{LogKey:l} apikey handle", LogEventKeys.Authentication);
 
                 if (this.Request.Host.Host.SafeEquals("localhost") && this.Options.IgnoreLocal)
                 {
@@ -46,7 +46,7 @@
                         .DistinctBy(c => c.Type),
                         this.Scheme.Name);
                     var ticket = new AuthenticationTicket(new ClaimsPrincipal(identity), this.Scheme.Name);
-                    this.Logger.LogInformation($"{{LogKey}} apikey authenticated (name={identity.Name})", LogEventKeys.Authentication);
+                    this.Logger.LogInformation($"{{LogKey:l}} apikey authenticated (name={identity.Name})", LogEventKeys.Authentication);
 
                     return AuthenticateResult.Success(ticket);
                 }
@@ -101,17 +101,17 @@
                             .Insert(new Claim(ClaimTypes.AuthenticationMethod, AuthenticationKeys.ApiKeyScheme)).DistinctBy(c => c.Type),
                         this.Scheme.Name);
                     var ticket = new AuthenticationTicket(new ClaimsPrincipal(identity), this.Scheme.Name);
-                    this.Logger.LogInformation($"{{LogKey}} apikey authenticated (name={identity.Name})", LogEventKeys.Authentication);
+                    this.Logger.LogInformation($"{{LogKey:l}} apikey authenticated (name={identity.Name})", LogEventKeys.Authentication);
 
                     return AuthenticateResult.Success(ticket);
                 }
 
-                this.Logger.LogWarning("{LogKey} apikey not authenticated", LogEventKeys.Authentication);
+                this.Logger.LogWarning("{LogKey:l} apikey not authenticated", LogEventKeys.Authentication);
                 return AuthenticateResult.Fail("not authenticated");
             }
             catch (Exception ex)
             {
-                this.Logger.LogError(ex, $"{{LogKey}} {ex.Message}", LogEventKeys.Authentication);
+                this.Logger.LogError(ex, $"{{LogKey:l}} {ex.Message}", LogEventKeys.Authentication);
                 var context = new ErrorContext(this.Context, this.Scheme, this.Options) { Exception = ex };
                 if (this.Events != null)
                 {

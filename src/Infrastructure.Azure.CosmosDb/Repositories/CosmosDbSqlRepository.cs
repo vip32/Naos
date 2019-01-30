@@ -149,7 +149,7 @@
                 }
             }
 
-            this.logger.LogInformation($"{{LogKey}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogEventKeys.DomainRepository);
+            this.logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogEventKeys.DomainRepository);
             var result = await this.provider.UpsertAsync(entity).ConfigureAwait(false);
             entity = result;
 
@@ -167,7 +167,7 @@
                 }
             }
 
-            this.logger.LogInformation($"{{LogKey}} upserted entity: {result.GetType().PrettyName()}, id: {result.Id}, isNew: {isNew}", LogEventKeys.DomainRepository);
+            this.logger.LogInformation($"{{LogKey:l}} upserted entity: {result.GetType().PrettyName()}, id: {result.Id}, isNew: {isNew}", LogEventKeys.DomainRepository);
 #pragma warning disable SA1008 // Opening parenthesis must be spaced correctly
             return isNew ? (result, ActionResult.Inserted) : (result, ActionResult.Updated);
 #pragma warning restore SA1008 // Opening parenthesis must be spaced correctly
@@ -188,7 +188,7 @@
                     await this.mediator.Publish(new EntityDeleteDomainEvent(entity)).ConfigureAwait(false);
                 }
 
-                this.logger.LogInformation($"{{LogKey}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogEventKeys.DomainRepository);
+                this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogEventKeys.DomainRepository);
                 await this.provider.DeleteByIdAsync(id as string).ConfigureAwait(false);
 
                 if (this.Options?.PublishEvents != false)

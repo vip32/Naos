@@ -4,7 +4,6 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Naos.Core.ServiceDiscovery.App;
-    using Naos.Core.ServiceDiscovery.App.Web.Controllers;
     using Naos.Core.ServiceDiscovery.App.Web.Router;
     using ProxyKit;
 

@@ -3,7 +3,6 @@
     using System.Diagnostics;
     using System.Linq;
     using System.Threading;
-    using System.Threading.Tasks;
     using MediatR;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Builder;
@@ -16,7 +15,6 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Authentication.App.Web;
     using Naos.Core.Commands.Web;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;

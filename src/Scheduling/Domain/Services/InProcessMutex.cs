@@ -33,7 +33,7 @@
                 {
                     item.Locked = false;
                     item.ExpireDate = null;
-                    this.logger?.LogDebug($"{{LogKey}} lock released (key={key})", LogEventKeys.JobScheduling);
+                    this.logger?.LogDebug($"{{LogKey:l}} lock released (key={key})", LogEventKeys.JobScheduling);
                 }
             }
         }
@@ -85,7 +85,7 @@
                     });
             }
 
-            this.logger?.LogDebug($"{{LogKey}} lock created (key={key}, timeout({new TimeSpan(0, timeoutMinutes, 0).ToString("c")}))", LogEventKeys.JobScheduling);
+            this.logger?.LogDebug($"{{LogKey:l}} lock created (key={key}, timeout({new TimeSpan(0, timeoutMinutes, 0).ToString("c")}))", LogEventKeys.JobScheduling);
 
             return true;
         }

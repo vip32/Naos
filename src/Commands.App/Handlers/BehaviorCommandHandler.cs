@@ -4,7 +4,9 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Common;
+    using EnsureThat;
     using MediatR;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// A base implementation for handling application commands and ensuring all behaviors are executed with proper responses (not cancelled)
@@ -22,13 +24,19 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="BehaviorCommandHandler{TRequest, TResponse}" /> class.
         /// </summary>
+        /// <param name="logger">The logger.</param>
         /// <param name="mediator">The mediator.</param>
         /// <param name="behaviors">The behaviors.</param>
-        protected BehaviorCommandHandler(IMediator mediator, IEnumerable<ICommandBehavior> behaviors)
+        protected BehaviorCommandHandler(ILogger logger, IMediator mediator, IEnumerable<ICommandBehavior> behaviors)
             : base(mediator)
         {
+            EnsureArg.IsNotNull(logger, nameof(logger));
+
+            this.Logger = logger;
             this.behaviors = behaviors;
         }
+
+        public ILogger Logger { get; }
 
         /// <summary>
         /// Handles the specified request. All behaviors will be called first.
@@ -47,6 +55,8 @@
                     return new CommandResponse<TResponse>(behaviorResult.CancelledReason);
                 }
             }
+
+            this.Logger.LogJournal(LogEventPropertyKeys.TrackHandleCommand, $"{{LogKey:l}} handle {typeof(TRequest).Name.SubstringTill("Command")}", args: LogEventKeys.AppCommand);
 
             return await this.HandleRequest(request, cancellationToken).ConfigureAwait(false);
         }

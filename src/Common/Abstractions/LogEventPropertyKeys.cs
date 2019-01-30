@@ -2,20 +2,26 @@
 {
     public struct LogEventPropertyKeys
     {
-        public const string CorrelationId = "naos_corid";
-        public const string RequestId = "naos_reqid";
-        public const string TenantId = "naos_tntid";
-        public const string Environment = "naos_env";
+        public const string CorrelationId = "ns_corid";
+        public const string RequestId = "ns_reqid";
+        public const string TenantId = "ns_tntid";
+        public const string Environment = "ns_env";
 
-        public const string ServiceProduct = "naos_svcprod";
-        public const string ServiceCapability = "naos_svccapa";
-        public const string ServiceName = "naos_svcname";
+        public const string ServiceProduct = "ns_svcprod";
+        public const string ServiceCapability = "ns_svccapa";
+        public const string ServiceName = "ns_svcname";
 
-        public const string TrackType = "naos_trcktyp";
-        public const string TrackDomainEvent = "naos_trckdom";
-        public const string TrackCommand = "naos_trckcom";
-        public const string TrackMessage = "naos_trckmsg";
-        public const string TrackInboundRequest = "naos_trckibr";
-        public const string TrackOutboundRequest = "naos_trckobr";
+        public const string TrackType = "ns_trktyp";
+        public const string TrackMisc = "ns_trkmsc";
+        public const string TrackSendDomainEvent = "ns_trksdm";
+        public const string TrackHandleDomainEvent = "ns_trkhdm";
+        public const string TrackSendCommand = "ns_trkscm";
+        public const string TrackHandleCommand = "ns_trkhcm";
+        public const string TrackPublishMessage = "ns_trkpmg";
+        public const string TrackHandleMessage = "ns_trkhmg";
+        public const string TrackInboundRequest = "ns_trkirq";
+        public const string TrackInboundResponse = "ns_trkirs";
+        public const string TrackOutboundRequest = "ns_trkorq";
+        public const string TrackOutboundResponse = "ns_trkors";
     }
 }

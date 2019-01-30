@@ -13,7 +13,7 @@
                 return;
             }
 
-            logEvent.AddPropertyIfAbsent(new LogEventProperty("Ticks", new ScalarValue(DateTime.UtcNow.Ticks)));
+            logEvent.AddPropertyIfAbsent(new LogEventProperty("ns_ticks", new ScalarValue(DateTime.UtcNow.Ticks)));
         }
     }
 }
