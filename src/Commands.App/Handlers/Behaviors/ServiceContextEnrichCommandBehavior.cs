@@ -22,11 +22,11 @@
         /// Executes this behavior for the specified command, adds service context information to command
         /// </summary>
         /// <typeparam name="TResponse">The type of the response.</typeparam>
-        /// <param name="command">The command.</param>
+        /// <param name="request">The command.</param>
         /// <returns></returns>
-        public async Task<CommandBehaviorResult> ExecuteAsync<TResponse>(CommandRequest<TResponse> command)
+        public async Task<CommandBehaviorResult> ExecuteAsync<TResponse>(CommandRequest<TResponse> request)
         {
-            EnsureArg.IsNotNull(command);
+            EnsureArg.IsNotNull(request);
 
             //command.Update(this.serviceContext.RequestId, this.serviceContext.CorrelationId);
 

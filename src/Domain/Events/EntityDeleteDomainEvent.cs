@@ -1,6 +1,6 @@
 ﻿namespace Naos.Core.Domain
 {
-    public class EntityDeleteDomainEvent : IDomainEvent
+    public class EntityDeleteDomainEvent : DomainEvent
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EntityDeleteDomainEvent"/> class.

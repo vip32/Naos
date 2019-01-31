@@ -3,13 +3,13 @@
     using Naos.Core.Domain;
     using Naos.Core.Messaging.Domain.Model;
 
-    public class MessagePublishDomainEvent : IDomainEvent
+    public class MessagePublishedDomainEvent : DomainEvent
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MessagePublishDomainEvent"/> class.
+        /// Initializes a new instance of the <see cref="MessagePublishedDomainEvent"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
-        public MessagePublishDomainEvent(Message message)
+        public MessagePublishedDomainEvent(Message message)
         {
             this.Message = message;
         }

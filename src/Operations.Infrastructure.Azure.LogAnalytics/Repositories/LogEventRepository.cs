@@ -47,18 +47,26 @@
 
         public async Task<IEnumerable<LogEvent>> FindAllAsync(IFindOptions<LogEvent> options = null)
         {
+            var epoch = DateTime.UtcNow.AddDays(-1).ToEpoch(); // should come from filtercontext
+            var ticks = new DateTimeEpoch(epoch).DateTime.Ticks; // calculate ticks
+            var query = $@"
+LogEvents_Development_CL | where LogMessage_s != '' | 
+where LogLevel_s != 'Verbose' and LogProperties_ns_ticks_d > {ticks} and LogProperties_ns_trktyp_s == 'journal' |
+order by LogProperties_ns_ticks_d desc";
+
             // query docs: https://docs.microsoft.com/en-us/azure/log-analytics/query-language/get-started-queries
             var response = await this.httpClient.SendAsync(
-                this.PrepareRequest(@"
-LogEvents_Development_CL | where LogMessage_s != '' | 
-where TimeGenerated > ago(24h) and LogLevel_s != 'Verbose' | 
-order by Timestamp_t | 
-top 100000 by Timestamp_t")).ConfigureAwait(false); // 100000
+                this.PrepareRequest(query)).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
             return this.MapResponse(SerializationHelper.JsonDeserialize<LogAnalyticsResponse>(
                 await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false))).ToList();
         }
+
+//LogEvents_Development_CL | where LogMessage_s != '' |
+//where TimeGenerated > ago(24h) and LogLevel_s != 'Verbose' |
+//order by Timestamp_t |
+//top 100000 by Timestamp_t
 
         public Task<IEnumerable<LogEvent>> FindAllAsync(ISpecification<LogEvent> specification, IFindOptions<LogEvent> options = null)
         {

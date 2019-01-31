@@ -2,7 +2,7 @@ variables:
   solution: "**/*.sln"
   buildConfiguration: "Release"
   codecovToken: "$(codecov.token)"
-  group: vars
+  group: vars # azure pipelines variable group https://docs.microsoft.com/en-us/azure/devops/pipelines/library/variable-groups?view=azdevops&tabs=yaml
 
 # https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/?view=vsts
 
@@ -26,8 +26,8 @@ steps:
   - task: DotNetCoreCLI@2
     displayName: "dotnet build"
     env:
-        "naos__secrets__vault__clientId": $(key-vault-clientId)
-        "naos__secrets__vault__clientSecret": $(key-vault-clientSecret)
+        "naos__secrets__vault__clientId": $(key-vault-clientId) # from vars group
+        "naos__secrets__vault__clientSecret": $(key-vault-clientSecret) # from vars group
         "naos__secrets__vault__name": "naos"
     inputs:
       projects: "$(solution)"

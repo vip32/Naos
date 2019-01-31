@@ -19,6 +19,8 @@
         public const string TrackHandleCommand = "ns_trkhcm";
         public const string TrackPublishMessage = "ns_trkpmg";
         public const string TrackHandleMessage = "ns_trkhmg";
+        public const string TrackStartJob = "ns_trksjb";
+        public const string TrackFinishJob = "ns_trkfjb";
         public const string TrackInboundRequest = "ns_trkirq";
         public const string TrackInboundResponse = "ns_trkirs";
         public const string TrackOutboundRequest = "ns_trkorq";

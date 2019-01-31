@@ -8,8 +8,8 @@
         /// Executes this behavior for the specified command
         /// </summary>
         /// <typeparam name="TResponse"></typeparam>
-        /// <param name="command">The command applied to this behavior.</param>
+        /// <param name="request">The command request applied to this behavior.</param>
         /// <returns></returns>
-        Task<CommandBehaviorResult> ExecuteAsync<TResponse>(CommandRequest<TResponse> command);
+        Task<CommandBehaviorResult> ExecuteAsync<TResponse>(CommandRequest<TResponse> request);
     }
 }

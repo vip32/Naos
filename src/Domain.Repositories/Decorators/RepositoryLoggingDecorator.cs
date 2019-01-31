@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
     using Naos.Core.Domain.Specifications;
 
     public class RepositoryLoggingDecorator<TEntity> : IRepository<TEntity>
@@ -43,11 +44,21 @@
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null)
         {
+            if(specification != null)
+            {
+                this.logger.LogDebug($"{LogEventKeys.DomainRepository} specification: {specification.ToString()}");
+            }
+
             return await this.decoratee.FindAllAsync(specification, options).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null)
         {
+            foreach(var specification in specifications.Safe())
+            {
+                this.logger.LogDebug($"{LogEventKeys.DomainRepository} specification: {specification.ToString()}");
+            }
+
             return await this.decoratee.FindAllAsync(specifications, options).ConfigureAwait(false);
         }
 

@@ -11,6 +11,9 @@
     {
         protected CommandRequest()
         {
+            this.Id = Guid.NewGuid().ToString();
+            this.CorrelationId = Guid.NewGuid().ToString();
+            this.Identifier = RandomGenerator.GenerateString(5, false);
             this.Created = DateTime.UtcNow;
         }
 
@@ -20,10 +23,13 @@
 
             this.Id = id;
             this.CorrelationId = correlationId;
+            this.Identifier = RandomGenerator.GenerateString(5, false);
             this.Created = DateTime.UtcNow;
         }
 
         public string Id { get; private set; }
+
+        public string Identifier { get; }
 
         public string CorrelationId { get; private set; }
 

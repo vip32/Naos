@@ -31,7 +31,12 @@
 
         public Func<T, bool> ToPredicate()
         {
-            return this.ToExpression().Compile(); // replace wit CompileFast()? https://github.com/dadhi/FastExpressionCompiler
+            if (this.expression != null)
+            {
+                return this.ToExpression()?.Compile(); // replace wit CompileFast()? https://github.com/dadhi/FastExpressionCompiler
+            }
+
+            return null;
         }
 
         //public Predicate<T> Predicate()
@@ -79,6 +84,16 @@
         public ISpecification<T> Not()
         {
             return new NotSpecification<T>(this);
+        }
+
+        public override string ToString()
+        {
+            if(this.expression != null)
+            {
+                return this.ToExpression()?.ToString();
+            }
+
+            return null;
         }
     }
 }

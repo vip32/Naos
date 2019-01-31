@@ -4,6 +4,7 @@
     using System.Linq;
     using Cronos;
     using EnsureThat;
+    using Naos.Core.Common;
 
     public class JobRegistration
     {
@@ -19,6 +20,7 @@
             this.IsReentrant = isReentrant;
             this.Timeout = timeout ?? new TimeSpan(0, 20, 0);
             this.Enabled = enabled;
+            this.Identifier = RandomGenerator.GenerateString(5, false);
             if (cron.Count(char.IsWhiteSpace) == 4) // mi ho da mo yy
             {
                 this.cronExpression = CronExpression.Parse(this.Cron, CronFormat.Standard);
@@ -30,6 +32,8 @@
         }
 
         public string Key { get; set; }
+
+        public string Identifier { get; }
 
         public string Cron { get; }
 

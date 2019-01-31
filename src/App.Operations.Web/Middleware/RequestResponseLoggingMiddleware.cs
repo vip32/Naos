@@ -56,16 +56,16 @@
 
         private void LogRequest(HttpContext context, string correlationId, string requestId)
         {
-            this.logger.LogJournal(LogEventPropertyKeys.TrackInboundRequest, $"{{LogKey:l}} http ({requestId}) {context.Request.Method} {{Url}} ({correlationId})", args: new object[] { LogEventKeys.InboundRequest, new Uri(context.Request.GetDisplayUrl()) });
+            this.logger.LogJournal(LogEventPropertyKeys.TrackInboundRequest, $"{{LogKey:l}} [{requestId}] http {context.Request.Method} {{Url}} ({correlationId})", args: new object[] { LogEventKeys.InboundRequest, new Uri(context.Request.GetDisplayUrl()) });
 
             //if (context.HasServiceName())
             //{
-            //    this.logger.LogInformation($"SERVICE http request  ({requestId}) service {context.GetServiceName()}");
+            //    this.logger.LogInformation($"SERVICE [{requestId}] http request service {context.GetServiceName()}");
             //}
 
             if (!context.Request.Headers.IsNullOrEmpty())
             {
-                this.logger.LogInformation($"{{LogKey:l}} http ({requestId}) headers={string.Join("|", context.Request.Headers.Select(h => $"{h.Key}={h.Value}"))}", LogEventKeys.InboundRequest);
+                this.logger.LogInformation($"{{LogKey:l}} [{requestId}] http headers={string.Join("|", context.Request.Headers.Select(h => $"{h.Key}={h.Value}"))}", LogEventKeys.InboundRequest);
             }
 
             //request.EnableRewind();
@@ -96,10 +96,10 @@
 
             if (!context.Response.Headers.IsNullOrEmpty())
             {
-                this.logger.Log(level, $"{{LogKey:l}} http ({requestId}) headers={string.Join("|", context.Response.Headers.Select(h => $"{h.Key}={h.Value}"))}", LogEventKeys.InboundResponse);
+                this.logger.Log(level, $"{{LogKey:l}} [{requestId}] http headers={string.Join("|", context.Response.Headers.Select(h => $"{h.Key}={h.Value}"))}", LogEventKeys.InboundResponse);
             }
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackInboundResponse, $"{{LogKey:l}} http ({requestId}) {context.Request.Method} {{Url}} {{StatusCode}} ({ReasonPhrases.GetReasonPhrase(context.Response.StatusCode)}) -> took {elapsed.Humanize(3)}", level, args: new object[] { LogEventKeys.InboundResponse, new Uri(context.Request.GetDisplayUrl()), context.Response.StatusCode });
+            this.logger.LogJournal(LogEventPropertyKeys.TrackInboundResponse, $"{{LogKey:l}} [{requestId}] http {context.Request.Method} {{Url}} {{StatusCode}} ({ReasonPhrases.GetReasonPhrase(context.Response.StatusCode)}) -> took {elapsed.Humanize(3)}", level, args: new object[] { LogEventKeys.InboundResponse, new Uri(context.Request.GetDisplayUrl()), context.Response.StatusCode });
         }
 
         //private async Task LogResponseAsync(HttpContext context, string requestId)

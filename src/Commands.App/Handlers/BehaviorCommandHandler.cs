@@ -56,7 +56,7 @@
                 }
             }
 
-            this.Logger.LogJournal(LogEventPropertyKeys.TrackHandleCommand, $"{{LogKey:l}} handle {typeof(TRequest).Name.SubstringTill("Command")}", args: LogEventKeys.AppCommand);
+            this.Logger.LogJournal(LogEventPropertyKeys.TrackHandleCommand, $"{{LogKey:l}} [{request.Identifier}] handle {typeof(TRequest).Name.SubstringTill("Command")}", args: LogEventKeys.AppCommand);
 
             return await this.HandleRequest(request, cancellationToken).ConfigureAwait(false);
         }

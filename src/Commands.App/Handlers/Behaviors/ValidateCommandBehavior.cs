@@ -10,18 +10,18 @@
         /// Executes this behavior for the specified command
         /// </summary>
         /// <typeparam name="TResponse">The type of the response.</typeparam>
-        /// <param name="command">The command.</param>
+        /// <param name="request">The command.</param>
         /// <returns></returns>
-        public async Task<CommandBehaviorResult> ExecuteAsync<TResponse>(CommandRequest<TResponse> command)
+        public async Task<CommandBehaviorResult> ExecuteAsync<TResponse>(CommandRequest<TResponse> request)
         {
-            EnsureArg.IsNotNull(command);
+            EnsureArg.IsNotNull(request);
 
-            var result = command.Validate();
+            var result = request.Validate();
             if (!result.IsValid)
             {
                 // instead of cancel, throw an exception
                 // TODO: log validation errors
-                throw new ValidationException($"{command.GetType().Name} has validation errors", result.Errors);
+                throw new ValidationException($"{request.GetType().Name} has validation errors", result.Errors);
             }
 
             return await Task.FromResult(new CommandBehaviorResult()).ConfigureAwait(false);

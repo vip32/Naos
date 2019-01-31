@@ -48,6 +48,11 @@
             var result = await this.sut.FindAllAsync(
                 new FindOptions<Customer>(order: new OrderOption<Customer>(e => e.Region))).ConfigureAwait(false);
 
+            // collection indexing should be changed
+            // "kind": "Range",
+            // "dataType": "String",  <<< while order is based on string field
+            // "precision": -1
+
             // assert
             result.ShouldNotBeNull();
             result.ShouldNotBeEmpty();

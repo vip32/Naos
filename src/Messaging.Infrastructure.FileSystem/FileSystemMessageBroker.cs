@@ -74,7 +74,7 @@
 
                 // TODO: async publish!
                 /*await */
-                this.mediator.Publish(new MessagePublishDomainEvent(message)).GetAwaiter().GetResult(); /*.ConfigureAwait(false);*/
+                this.mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.ConfigureAwait(false);*/
 
                 var messageName = /*message.Name*/ message.GetType().PrettyName(false);
 
@@ -180,7 +180,7 @@
                     if (handler != null && method != null)
                     {
                         // TODO: async publish!
-                        await this.mediator.Publish(new MessageHandleDomainEvent(message, this.messageScope)).ConfigureAwait(false);
+                        await this.mediator.Publish(new MessageHandledDomainEvent(message, this.messageScope)).ConfigureAwait(false);
                         await (Task)method.Invoke(handler, new object[] { jsonMessage as object });
                     }
                     else

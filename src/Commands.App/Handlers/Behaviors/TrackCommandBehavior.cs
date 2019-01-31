@@ -20,13 +20,13 @@
         /// Executes this behavior for the specified command
         /// </summary>
         /// <typeparam name="TResponse">The type of the response.</typeparam>
-        /// <param name="command">The command.</param>
+        /// <param name="request">The command.</param>
         /// <returns></returns>
-        public async Task<CommandBehaviorResult> ExecuteAsync<TResponse>(CommandRequest<TResponse> command)
+        public async Task<CommandBehaviorResult> ExecuteAsync<TResponse>(CommandRequest<TResponse> request)
         {
-            EnsureArg.IsNotNull(command);
+            EnsureArg.IsNotNull(request);
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackSendCommand, $"{{LogKey:l}} send {command.GetType().Name.SubstringTill("Command")}", args: LogEventKeys.AppCommand);
+            this.logger.LogJournal(LogEventPropertyKeys.TrackSendCommand, $"{{LogKey:l}} [{request.Identifier}] send {request.GetType().Name.SubstringTill("Command")}", args: LogEventKeys.AppCommand);
             return await Task.FromResult(new CommandBehaviorResult()).ConfigureAwait(false);
         }
     }

@@ -150,9 +150,9 @@
                     async Task Execute()
                     {
                         // TODO: publish domain event (job started)
-                        this.logger.LogInformation($"{{LogKey:l}} started (key={{JobKey}}, type={job.GetType().PrettyName()}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")})", LogEventKeys.JobScheduling, registration.Key);
+                        this.logger.LogJournal(LogEventPropertyKeys.TrackStartJob, $"{{LogKey:l}} [{registration.Identifier}] job started (key={{JobKey}}, type={job.GetType().PrettyName()}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")})", args: new[] { LogEventKeys.JobScheduling, registration.Key });
                         await job.ExecuteAsync(cancellationToken, args).ConfigureAwait(false);
-                        this.logger.LogInformation($"{{LogKey:l}} finished (key={{JobKey}}, type={job.GetType().PrettyName()})", LogEventKeys.JobScheduling, registration.Key);
+                        this.logger.LogJournal(LogEventPropertyKeys.TrackFinishJob, $"{{LogKey:l}} [{registration.Identifier}] job finished (key={{JobKey}}, type={job.GetType().PrettyName()})", args: new[] { LogEventKeys.JobScheduling, registration.Key });
                         // TODO: publish domain event (job finished)
                     }
 

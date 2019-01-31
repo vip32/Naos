@@ -76,7 +76,7 @@
                         Type = this.options.HideDetails ? null : ex.GetType().PrettyName(),
                     };
 
-                    this.logger?.LogError(ex, $"SERVICE http request  ({context.GetRequestId()}) {details.Title} [{ex.GetType().PrettyName()}] {ex.Message}");
+                    this.logger?.LogError(ex, $"{LogEventKeys.OutboundResponse} [{context.GetRequestId()}] http request {details.Title} [{ex.GetType().PrettyName()}] {ex.Message}");
 
                     context.Response.StatusCode = 500;
                     context.Response.WriteJson(details, contentType: ContentType.JSONPROBLEM);

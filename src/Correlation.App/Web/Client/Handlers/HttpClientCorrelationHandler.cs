@@ -33,7 +33,7 @@
 
             using (this.logger.BeginScope(loggerState))
             {
-                this.logger.LogDebug($"{{LogKey:l}} http ({requestId}) added correlation headers", LogEventKeys.OutboundRequest);
+                this.logger.LogDebug($"{{LogKey:l}} [{requestId}] http added correlation headers", LogEventKeys.OutboundRequest);
 
                 request.Headers.Add("x-correlationid", correlationId);
                 request.Headers.Add("x-requestid", requestId);

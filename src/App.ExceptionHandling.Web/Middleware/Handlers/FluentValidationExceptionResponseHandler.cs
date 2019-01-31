@@ -39,7 +39,7 @@
                     };
                     validationException.Errors.Safe().ForEach(f => details.Errors.Add(f.PropertyName, new[] { f.ToString() }));
 
-                    this.logger?.LogWarning($"SERVICE http request  ({requestId}) {details.Title} [{validationException.GetType().PrettyName()}] {validationException.Message}");
+                    this.logger?.LogWarning($"{LogEventKeys.OutboundResponse} [{requestId}] http request {details.Title} [{validationException.GetType().PrettyName()}] {validationException.Message}");
 
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                     context.Response.WriteJson(details, contentType: ContentType.JSONPROBLEM);

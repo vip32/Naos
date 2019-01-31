@@ -17,5 +17,7 @@
         ISpecification<T> And(ISpecification<T> specification);
 
         ISpecification<T> Not();
+
+        string ToString();
     }
 }

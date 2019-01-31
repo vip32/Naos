@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.IO;
     using System.Linq;
     using System.Linq.Expressions;
@@ -37,7 +38,8 @@
             string collectionPartitionKey = null,
             int collectionOfferThroughput = 400,
             //Expression<Func<T, object>> idNameFactory = null,
-            bool isMasterCollection = true)
+            bool isMasterCollection = true,
+            IndexingPolicy indexingPolicy = null)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(client, nameof(client));
@@ -60,9 +62,31 @@
             }
 
             this.documentCollection = new AsyncLazy<DocumentCollection>(async () => await this.GetOrCreateCollectionAsync(collectionPartitionKey, collectionOfferThroughput).ConfigureAwait(false));
-            if (this.documentCollection.Value.Result?.PartitionKey?.Paths?.Any() == true)
+            if (this.documentCollection.Value.Result != null)
             {
-                this.isPartitioned = true;
+                if (this.documentCollection.Value.Result.PartitionKey?.Paths?.Any() == true)
+                {
+                    this.isPartitioned = true;
+                }
+
+                if (indexingPolicy == null)
+                {
+                    // change the default indexingPolicy so ORDER BY works better with string fields
+                    // https://github.com/Azure/azure-cosmos-dotnet-v2/blob/2e9a48b6a446b47dd6182606c8608d439b88b683/samples/code-samples/IndexManagement/Program.cs#L305-L340
+                    indexingPolicy = new IndexingPolicy();
+                    indexingPolicy.IncludedPaths.Add(
+                        new IncludedPath
+                        {
+                            Path = "/*",
+                            Indexes = new Collection<Index>()
+                            {
+                                new RangeIndex(DataType.Number) { Precision = -1 },
+                                new RangeIndex(DataType.String) { Precision = -1 } // needed for orderby on strings
+                            }
+                        });
+                }
+
+                this.documentCollection.Value.Result.IndexingPolicy = indexingPolicy;
             }
 
             //if (idNameFactory != null)

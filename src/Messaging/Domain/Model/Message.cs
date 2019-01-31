@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.Messaging.Domain.Model
 {
     using System;
+    using Naos.Core.Common;
     using Naos.Core.Domain;
     using Newtonsoft.Json;
 
@@ -13,6 +14,7 @@
         public Message()
         {
             this.Id = Guid.NewGuid().ToString();
+            this.Identifier = RandomGenerator.GenerateString(5, false);
         }
 
         /// <summary>
@@ -38,6 +40,11 @@
         /// The type of the entity.
         /// </value>
         public string Discriminator => this.GetType().FullName;
+
+        /// <summary>
+        /// Gets or sets the short identifier for this message
+        /// </summary>
+        public string Identifier { get; set; }
 
         /// <summary>
         /// Gets or sets the correlation identifier.
