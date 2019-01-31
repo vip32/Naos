@@ -8,9 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Countries\App.Commands\" />
+    <Folder Include="Countries\App.Queries\" />
     <Folder Include="Customers\Domain\Repositories\Decorators\" />
     <Folder Include="Customers\Infrastructure\" />
-    <Folder Include="UserAccounts\App\Commands\" />
+    <Folder Include="Customers\App.Queries\" />
+    <Folder Include="UserAccounts\App.Commands\" />
+    <Folder Include="UserAccounts\App.Queries\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -23,5 +23,10 @@
             var notepression = Expression.Not(expression.Body);
             return Expression.Lambda<Func<T, bool>>(notepression, expression.Parameters.Single());
         }
+
+        public override string ToString()
+        {
+            return this.ToExpression()?.ToString();
+        }
     }
 }

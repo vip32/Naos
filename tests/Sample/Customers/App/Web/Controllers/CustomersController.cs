@@ -54,7 +54,7 @@
             var response = await this.userAccountsClient.HttpClient.GetAsync("api/useraccounts").ConfigureAwait(false);
 
             return this.Ok(await this.repository.FindAllAsync(
-                this.filterContext.GetCritertiasSpecification<Customer>()).ConfigureAwait(false));
+                this.filterContext.GetSpecifications<Customer>()).ConfigureAwait(false));
         }
 
         [HttpGet]

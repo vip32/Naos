@@ -32,5 +32,10 @@
             //return Expression.Lambda<Func<T, bool>>(orExpression, leftExpression.Parameters.Single());
             return Expression.Lambda<Func<T, bool>>(orExpression, leftExpression.Parameters);
         }
+
+        public override string ToString()
+        {
+            return this.ToExpression()?.ToString();
+        }
     }
 }

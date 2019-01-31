@@ -14,14 +14,14 @@
 
         public string OutputTemplate { get; set; }
 
-        public int FileSizeLimitBytes { get; set; } = 1_000_000;
+        public long? FileSizeLimitBytes { get; set; } //= 1000000; // 1000000 = 1 MB
 
-        public bool RollOnFileSizeLimit { get; set; } = true;
+        public bool RollOnFileSizeLimit { get; set; } = false;
 
-        public string RollingInterval { get; set; } = "Infinite"; // Year, Month, Day, Hour, Minute
+        public string RollingInterval { get; set; } = "Day"; // Year, Month, Day, Hour, Minute, Infinite
 
-        public bool Shared { get; set; }
+        public bool Shared { get; set; } = true; // prevent multiple log files, true means slower due to write locks
 
-        public int FlushToDiskIntervalSeconds { get; set; } = 1;
+        public int? FlushToDiskIntervalSeconds { get; set; }
     }
 }

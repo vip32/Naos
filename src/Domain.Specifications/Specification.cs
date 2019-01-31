@@ -31,19 +31,8 @@
 
         public Func<T, bool> ToPredicate()
         {
-            if (this.expression != null)
-            {
-                return this.ToExpression()?.Compile(); // replace wit CompileFast()? https://github.com/dadhi/FastExpressionCompiler
-            }
-
-            return null;
+            return this.ToExpression()?.Compile(); // replace wit CompileFast()? https://github.com/dadhi/FastExpressionCompiler
         }
-
-        //public Predicate<T> Predicate()
-        //{
-        //    var func = this.Expression().Compile();
-        //    return t => func(t);
-        //}
 
         public bool IsSatisfiedBy(T entity)
         {

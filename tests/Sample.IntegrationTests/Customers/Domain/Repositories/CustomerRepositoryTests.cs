@@ -109,8 +109,18 @@
         {
             // arrange/act
             var result = await this.sut.FindAllAsync(
-                    new HasEastRegionSpecification()
-                    .And(new Specification<Customer>(e => e.Gender == "Male"))).ConfigureAwait(false);
+                new HasEastRegionSpecification()
+                .And(new Specification<Customer>(e => e.Gender == "Male"))).ConfigureAwait(false);
+
+            // assert
+            result.ShouldNotBeNull();
+            result.ShouldNotBeEmpty();
+
+            result = await this.sut.FindAllAsync(new[]
+            {
+                new HasEastRegionSpecification(),
+                new Specification<Customer>(e => e.Gender == "Male")
+            }).ConfigureAwait(false);
 
             // assert
             result.ShouldNotBeNull();

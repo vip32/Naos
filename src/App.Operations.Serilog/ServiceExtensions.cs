@@ -109,12 +109,12 @@
                 // https://github.com/serilog/serilog-aspnetcore
                 loggerConfiguration.WriteTo.File(
                     fullFileName,
-                    //outputTemplate: diagnosticsLogStreamConfiguration.OutputTemplate "{Timestamp:yyyy-MM-dd HH:mm:ss}|{Level} => {CorrelationId} => {Service}::{SourceContext}{NewLine}    {Message}{NewLine}{Exception}",
+                    //outputTemplate: logFileConfiguration.OutputTemplate "{Timestamp:yyyy-MM-dd HH:mm:ss}|{Level} => {CorrelationId} => {Service}::{SourceContext}{NewLine}    {Message}{NewLine}{Exception}",
                     fileSizeLimitBytes: logFileConfiguration.FileSizeLimitBytes,
                     rollOnFileSizeLimit: logFileConfiguration.RollOnFileSizeLimit,
-                    rollingInterval: (RollingInterval)Enum.Parse(typeof(RollingInterval), logFileConfiguration.RollingInterval),
+                    rollingInterval: (RollingInterval)Enum.Parse(typeof(RollingInterval), logFileConfiguration.RollingInterval), // TODO: use tryparse
                     shared: logFileConfiguration.Shared,
-                    flushToDiskInterval: TimeSpan.FromSeconds(logFileConfiguration.FlushToDiskIntervalSeconds));
+                    flushToDiskInterval: logFileConfiguration.FlushToDiskIntervalSeconds.HasValue ? TimeSpan.FromSeconds(logFileConfiguration.FlushToDiskIntervalSeconds.Value) : default(TimeSpan?));
             }
 
             // TODO: split this more so the sinks become better composable
@@ -127,8 +127,9 @@
                     //outputTemplate: diagnosticsLogStreamConfiguration.OutputTemplate "{Timestamp:yyyy-MM-dd HH:mm:ss}|{Level} => {CorrelationId} => {Service}::{SourceContext}{NewLine}    {Message}{NewLine}{Exception}",
                     fileSizeLimitBytes: diagnosticsLogStreamConfiguration.FileSizeLimitBytes,
                     rollOnFileSizeLimit: diagnosticsLogStreamConfiguration.RollOnFileSizeLimit,
+                    rollingInterval: (RollingInterval)Enum.Parse(typeof(RollingInterval), logFileConfiguration.RollingInterval), // TODO: use tryparse
                     shared: diagnosticsLogStreamConfiguration.Shared,
-                    flushToDiskInterval: TimeSpan.FromSeconds(diagnosticsLogStreamConfiguration.FlushToDiskIntervalSeconds));
+                    flushToDiskInterval: diagnosticsLogStreamConfiguration.FlushToDiskIntervalSeconds.HasValue ? TimeSpan.FromSeconds(diagnosticsLogStreamConfiguration.FlushToDiskIntervalSeconds.Value) : default(TimeSpan?));
             }
 
             // TODO: split this more so the sinks become better composable

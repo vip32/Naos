@@ -51,8 +51,10 @@
             var ticks = new DateTimeEpoch(epoch).DateTime.Ticks; // calculate ticks
             var query = $@"
 LogEvents_Development_CL | where LogMessage_s != '' | 
-where LogLevel_s != 'Verbose' and LogProperties_ns_ticks_d > {ticks} and LogProperties_ns_trktyp_s == 'journal' |
+where LogLevel_s != 'Verbose' and LogProperties_ns_ticks_d > {ticks} |
 order by LogProperties_ns_ticks_d desc";
+
+            // and LogProperties_ns_trktyp_s == 'journal'
 
             // query docs: https://docs.microsoft.com/en-us/azure/log-analytics/query-language/get-started-queries
             var response = await this.httpClient.SendAsync(

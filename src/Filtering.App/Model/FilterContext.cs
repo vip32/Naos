@@ -27,21 +27,32 @@
         //// </summary>
         //// <typeparam name="T">The type of the entity.</typeparam>
         //// <returns></returns>
-        public Specification<T> GetCritertiasSpecification<T>()
+        public IEnumerable<Specification<T>> GetSpecifications<T>()
         {
-            if (!this.Criterias.IsNullOrEmpty())
+            var result = new List<Specification<T>>();
+            foreach (var criteria in this.Criterias.Safe())
             {
-                var specification = new Specification<T>(this.Criterias.First().ToExpression<T>());
-                foreach (var criteria in this.Criterias.Where(c => c != this.Criterias.First()))
-                {
-                    specification.And(new Specification<T>(criteria.ToExpression<T>())); // for now only AND is supported, could be read from criteria
-                }
-
-                return specification;
+                result.Add(new Specification<T>(criteria.ToExpression<T>()));
             }
 
-            return null;
+            return result;
         }
+
+        //public Specification<T> GetCritertiasSpecification<T>()
+        //{
+        //    if (!this.Criterias.IsNullOrEmpty())
+        //    {
+        //        var specification = new Specification<T>(this.Criterias.First().ToExpression<T>());
+        //        foreach (var criteria in this.Criterias.Where(c => c != this.Criterias.First()))
+        //        {
+        //            specification.And(new Specification<T>(criteria.ToExpression<T>())); // for now only AND is supported, could be read from criteria
+        //        }
+
+        //        return specification;
+        //    }
+
+        //    return null;
+        //}
 
         public IFindOptions<T> GetFindOptions<T>()
         {

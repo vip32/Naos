@@ -1,3 +1,35 @@
+Service
+- Aggregate
+----------------
+Customers
+- Customers (msg:CustomerCreated)
+
+Sales 
+- Orders, Details, Products (msg:OrderCreated, msg:ProductOrdered)
+
+Support
+- Notifications (handle:OrderCreated, OrderShipped)
+
+Catalog
+- Products (msg:ProductDeleted)
+- Categories
+
+Users
+- UserAccounts (handle:CustomerCreated)
+
+Fulfillment
+- Orders, (msg:OrderShipped)
+- ProductStock, ProductReservation (handle:ProductOrdered, ProductDeleted)
+
+
+
+
+- Employees, 
+- Shipper
+
+Marketing
+
+
 TODO:
 
 Inmemory Repo

@@ -104,8 +104,19 @@
         {
             // arrange/act
             var result = await this.sut.FindAllAsync(
-                    new HasDomainSpecification("East")
-                    .And(new Specification<UserAccount>(e => e.VisitCount > 0))).ConfigureAwait(false);
+                new HasDomainSpecification("East")
+                .And(new Specification<UserAccount>(e => e.VisitCount > 0))).ConfigureAwait(false);
+
+            // assert
+            result.ShouldNotBeNull();
+            result.ShouldNotBeEmpty();
+
+            result = await this.sut.FindAllAsync(new[]
+            {
+                //new HasDomainSpecification("East"),
+                new HasEastDomainSpecification(),
+                new Specification<UserAccount>(e => e.VisitCount > 0)
+            }).ConfigureAwait(false);
 
             // assert
             result.ShouldNotBeNull();

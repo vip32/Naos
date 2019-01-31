@@ -9,6 +9,7 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
+    using Naos.Core.Filtering.App;
     using Naos.Core.RequestCorrelation.App;
     using Naos.Sample.UserAccounts.Domain;
 
@@ -18,11 +19,13 @@
     {
         private readonly ILogger<UserAccountsController> logger;
         private readonly IUserAccountRepository repository;
+        private readonly FilterContext filterContext;
         private readonly ICorrelationContextAccessor correlationContext;
 
         public UserAccountsController(
             ILogger<UserAccountsController> logger,
             IUserAccountRepository repository,
+            IFilterContextAccessor filterContext,
             ICorrelationContextAccessor correlationContext)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
@@ -31,6 +34,7 @@
 
             this.logger = logger;
             this.repository = repository;
+            this.filterContext = filterContext?.Context;
             this.correlationContext = correlationContext;
         }
 
@@ -42,7 +46,8 @@
         {
             this.logger.LogInformation($"+++ hello from {this.GetType().Name} >> {this.correlationContext.Context?.CorrelationId}");
 
-            return this.Ok(await this.repository.FindAllAsync().ConfigureAwait(false));
+            return this.Ok(await this.repository.FindAllAsync(
+                this.filterContext.GetSpecifications<UserAccount>()).ConfigureAwait(false));
         }
 
         [HttpGet]
