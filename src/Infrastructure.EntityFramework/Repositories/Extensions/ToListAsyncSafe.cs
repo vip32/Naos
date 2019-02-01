@@ -2,12 +2,13 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.EntityFrameworkCore;
 
     public static partial class Extensions
     {
-        public static Task<List<TSource>> ToListAsyncSafe<TSource>(this IQueryable<TSource> source)
+        public static Task<List<TSource>> ToListAsyncSafe<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken = default)
         {
             if (source == null)
             {
@@ -19,7 +20,7 @@
                 return Task.FromResult(source.ToList());
             }
 
-            return source.ToListAsync();
+            return source.ToListAsync(cancellationToken);
         }
     }
 }
