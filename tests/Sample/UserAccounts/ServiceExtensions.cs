@@ -38,7 +38,12 @@
             });
 
             var entityFrameworkConfiguration = configuration?.GetSection(section).Get<EntityFrameworkConfiguration>();
-            services.AddDbContext<UserAccountsContext>(options => options.UseNaosSqlServer(entityFrameworkConfiguration.ConnectionString)); // needed for migrations:add/update
+            services.AddDbContext<UserAccountsContext>(o =>
+            {
+                o.UseLoggerFactory(services.BuildServiceProvider().GetRequiredService<ILoggerFactory>());
+                o.UseNaosSqlServer(entityFrameworkConfiguration.ConnectionString);
+            });
+
             services.AddHealthChecks()
                 .AddSqlServer(entityFrameworkConfiguration.ConnectionString, name: "UserAccounts-sqlserver");
 
