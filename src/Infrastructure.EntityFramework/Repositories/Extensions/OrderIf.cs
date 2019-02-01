@@ -31,22 +31,5 @@
 
             return orderedResult != null ? orderedResult.AsQueryable() : source;
         }
-
-#pragma warning disable SA1201 // Elements must appear in the correct order
-        public static Task<List<TSource>> ToListAsyncSafe<TSource>(this IQueryable<TSource> source)
-#pragma warning restore SA1201 // Elements must appear in the correct order
-        {
-            if (source == null)
-            {
-                throw new System.ArgumentNullException(nameof(source));
-            }
-
-            if (!(source is IAsyncEnumerable<TSource>))
-            {
-                return Task.FromResult(source.ToList());
-            }
-
-            return source.ToListAsync();
-        }
     }
 }
