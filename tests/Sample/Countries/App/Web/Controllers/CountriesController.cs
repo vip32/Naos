@@ -47,7 +47,8 @@
             this.logger.LogInformation($"+++ hello from {this.GetType().Name} >> {this.correlationContext.Context?.CorrelationId}");
 
             return this.Ok(await this.repository.FindAllAsync(
-                this.filterContext.GetSpecifications<Country>()).ConfigureAwait(false));
+                this.filterContext.GetSpecifications<Country>(),
+                this.filterContext.GetFindOptions<Country>()).ConfigureAwait(false));
         }
 
         [HttpGet]

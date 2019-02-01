@@ -2,15 +2,14 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading.Tasks;
-    using Microsoft.EntityFrameworkCore;
     using Naos.Core.Common;
     using Naos.Core.Domain.Repositories;
 
     public static partial class Extensions
     {
-        public static IQueryable<T> OrderIf<T>(
-            this IQueryable<T> source, IFindOptions<T> options)
+        public static IQueryable<T> OrderByIf<T>(
+            this IQueryable<T> source,
+            IFindOptions<T> options)
         {
             if (options == null)
             {

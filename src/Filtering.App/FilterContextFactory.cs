@@ -34,7 +34,7 @@
             var result = new FilterContext
             {
                 Criterias = this.BuildCriterias(request, criteriaQueryStringKey),
-                OrderBy = this.BuildOrder(request, orderByQueryStringKey),
+                Orders = this.BuildOrders(request, orderByQueryStringKey),
                 Skip = request?.Query?.FirstOrDefault(p => p.Key.Equals(skipQueryStringKey, StringComparison.OrdinalIgnoreCase)).Value.FirstOrDefault().ToNullableInt(),
                 Take = request?.Query?.FirstOrDefault(p => p.Key.Equals(takeQueryStringKey, StringComparison.OrdinalIgnoreCase)).Value.FirstOrDefault().ToNullableInt()
             };
@@ -91,7 +91,7 @@
             return result;
         }
 
-        private IEnumerable<Order> BuildOrder(HttpRequest request, string orderByQueryStringKey)
+        private IEnumerable<Order> BuildOrders(HttpRequest request, string orderByQueryStringKey)
         {
             if (request?.Query?.ContainsKey(orderByQueryStringKey) == false)
             {

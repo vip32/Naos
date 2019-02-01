@@ -65,7 +65,7 @@
         {
             return await this.dbContext.Set<TEntity>()
                             .TakeIf(options?.Take)
-                            .OrderIf(options).ToListAsyncSafe(cancellationToken).ConfigureAwait(false);
+                            .OrderByIf(options).ToListAsyncSafe(cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
@@ -74,7 +74,7 @@
                             .WhereExpression(specification?.ToExpression())
                             .SkipIf(options?.Skip)
                             .TakeIf(options?.Take)
-                            .OrderIf(options).ToListAsyncSafe(cancellationToken).ConfigureAwait(false);
+                            .OrderByIf(options).ToListAsyncSafe(cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
@@ -86,7 +86,7 @@
                             .WhereExpressions(expressions)
                             .SkipIf(options?.Skip)
                             .TakeIf(options?.Take)
-                            .OrderIf(options).ToListAsyncSafe(cancellationToken).ConfigureAwait(false);
+                            .OrderByIf(options).ToListAsyncSafe(cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<TEntity> FindOneAsync(object id)

@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using Jokenizer.Net;
     using Naos.Core.Common;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Domain.Specifications;
@@ -13,14 +14,14 @@
     {
         public IEnumerable<Criteria> Criterias { get; set; } = Enumerable.Empty<Criteria>();
 
-        public IEnumerable<Order> OrderBy { get; set; } = Enumerable.Empty<Order>();
+        public IEnumerable<Order> Orders { get; set; } = Enumerable.Empty<Order>();
 
         public int? Skip { get; set; }
 
         public int? Take { get; set; }
 
         public bool Enabled
-            => !this.Criterias.IsNullOrEmpty() || !this.OrderBy.IsNullOrEmpty() || this.Skip.HasValue || this.Take.HasValue;
+            => !this.Criterias.IsNullOrEmpty() || !this.Orders.IsNullOrEmpty() || this.Skip.HasValue || this.Take.HasValue;
 
         //// <summary>
         //// Converts the <see cref="IEnumerable<Criteria>"/> to a specification
@@ -56,12 +57,25 @@
 
         public IFindOptions<T> GetFindOptions<T>()
         {
-            return null; // TODO: implement
+            return new FindOptions<T>(orders: this.GetOrderOptions<T>());
         }
 
         public IEnumerable<OrderOption<T>> GetOrderOptions<T>()
         {
-            return null; // TODO: implement
+            var result = new List<OrderOption<T>>();
+            foreach (var order in this.Orders)
+            {
+                var expr = Evaluator.ToLambda<T, bool>(Tokenizer.Parse($"(t) => t.{order.Name} == \"blah\""));
+                var expr1 = Evaluator.ToLambda<T, bool>(Tokenizer.Parse($"(t) => t.{order.Name} == 123"));
+                var expr3 = Evaluator.ToLambda<T, string>(Tokenizer.Parse($"(t) => t.{order.Name}"));
+                //var expr2 = Evaluator.ToLambda<T, object>(Tokenizer.Parse($"(t) => t.{order.Name}"));
+
+                result.Add(new OrderOption<T>(
+                    Evaluator.ToLambda<T, object>(Tokenizer.Parse($"(t) => t.{order.Name}")),
+                    order.Direction == OrderDirection.Asc ? Domain.Repositories.OrderDirection.Ascending : Domain.Repositories.OrderDirection.Descending));
+            }
+
+            return result;
         }
     }
 }

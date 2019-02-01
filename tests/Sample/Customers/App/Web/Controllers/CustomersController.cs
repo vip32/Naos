@@ -51,10 +51,11 @@
         {
             this.logger.LogInformation($"+++ hello from {this.GetType().Name} >> {this.correlationContext.Context?.CorrelationId}");
 
-            var response = await this.userAccountsClient.HttpClient.GetAsync("api/useraccounts").ConfigureAwait(false);
+            //var response = await this.userAccountsClient.HttpClient.GetAsync("api/useraccounts").ConfigureAwait(false);
 
             return this.Ok(await this.repository.FindAllAsync(
-                this.filterContext.GetSpecifications<Customer>()).ConfigureAwait(false));
+                this.filterContext.GetSpecifications<Customer>(),
+                this.filterContext.GetFindOptions<Customer>()).ConfigureAwait(false));
         }
 
         [HttpGet]
