@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
+    using Naos.Core.Common;
 
     /// <summary>
     /// Various options to specify the <see cref="IRepository{T}" /> find operations
@@ -43,5 +44,7 @@
         public IEnumerable<OrderOption<T>> Orders { get; set; }
 
         public IEnumerable<Expression<Func<T, object>>> Includes { get; set; }
+
+        public bool HasOrders() => this.Order != null || this.Orders.SafeAny();
     }
 }

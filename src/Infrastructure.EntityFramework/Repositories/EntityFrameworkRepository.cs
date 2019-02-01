@@ -63,30 +63,58 @@
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            return await this.dbContext.Set<TEntity>()
-                            .TakeIf(options?.Take)
-                            .OrderByIf(options).ToListAsyncSafe(cancellationToken).ConfigureAwait(false);
+            if (options?.HasOrders() == true)
+            {
+                return await this.dbContext.Set<TEntity>()
+                    .TakeIf(options?.Take)
+                    .OrderByIf(options).ToListAsyncSafe(cancellationToken).ConfigureAwait(false);
+            }
+            else
+            {
+                return await this.dbContext.Set<TEntity>()
+                    .TakeIf(options?.Take).ToListAsyncSafe(cancellationToken).ConfigureAwait(false);
+            }
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            return await this.dbContext.Set<TEntity>()
-                            .WhereExpression(specification?.ToExpression())
-                            .SkipIf(options?.Skip)
-                            .TakeIf(options?.Take)
-                            .OrderByIf(options).ToListAsyncSafe(cancellationToken).ConfigureAwait(false);
+            if (options?.HasOrders() == true)
+            {
+                return await this.dbContext.Set<TEntity>()
+                    .WhereExpression(specification?.ToExpression())
+                    .SkipIf(options?.Skip)
+                    .TakeIf(options?.Take)
+                    .OrderByIf(options).ToListAsyncSafe(cancellationToken).ConfigureAwait(false);
+            }
+            else
+            {
+                return await this.dbContext.Set<TEntity>()
+                    .WhereExpression(specification?.ToExpression())
+                    .SkipIf(options?.Skip)
+                    .TakeIf(options?.Take).ToListAsyncSafe(cancellationToken).ConfigureAwait(false);
+            }
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
-        { // CancellationToken cancellationToken = default
+        {
             var specificationsArray = specifications as ISpecification<TEntity>[] ?? specifications.ToArray();
             var expressions = specificationsArray.Safe().Select(s => s.ToExpression());
 
-            return await this.dbContext.Set<TEntity>()
-                            .WhereExpressions(expressions)
-                            .SkipIf(options?.Skip)
-                            .TakeIf(options?.Take)
-                            .OrderByIf(options).ToListAsyncSafe(cancellationToken).ConfigureAwait(false);
+            if (options?.HasOrders() == true)
+            {
+                return await this.dbContext.Set<TEntity>()
+                    .WhereExpressions(expressions)
+                    .SkipIf(options?.Skip)
+                    .TakeIf(options?.Take)
+                    .OrderByIf(options).ToListAsyncSafe(cancellationToken).ConfigureAwait(false);
+            }
+            else
+            {
+                return await this.dbContext.Set<TEntity>()
+                    .WhereExpressions(expressions)
+                    .SkipIf(options?.Skip)
+                    .TakeIf(options?.Take).ToListAsyncSafe(cancellationToken).ConfigureAwait(false);
+            }
         }
 
         public async Task<TEntity> FindOneAsync(object id)

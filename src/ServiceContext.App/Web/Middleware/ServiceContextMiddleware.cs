@@ -95,6 +95,12 @@
                                 ["echo-requestfiltering"] = $"{context.Request.Uri()}api/echo/filter?q=name=eq:naos,epoch=lt:12345",
                                 ["echo-servicecontext"] = $"{context.Request.Uri()}api/echo/servicecontext",
                                 ["echo-servicediscovery"] = $"{context.Request.Uri()}api/echo/servicediscovery",
+                                ["sample-countries1"] = $"{context.Request.Uri()}api/countries?q=name=Belgium&order=name&take=1",
+                                ["sample-countries2"] = $"{context.Request.Uri()}api/countries?q=name=Belgium",
+                                ["sample-customers1"] = $"{context.Request.Uri()}api/customers?q=region=East,state.updatedEpoch=gte:1548951481&order=lastName",
+                                ["sample-customers2"] = $"{context.Request.Uri()}api/customers?q=region=East,state.updatedEpoch=gte:1548951481",
+                                ["sample-useraccounts1"] = $"{context.Request.Uri()}api/useraccounts?q=visitCount=gte:1&order=email&take=10",
+                                ["sample-useraccounts2"] = $"{context.Request.Uri()}api/useraccounts?q=visitCount=gte:1",
                             }
                         }, DefaultJsonSerializerSettings.Create())).ConfigureAwait(false);
                 }

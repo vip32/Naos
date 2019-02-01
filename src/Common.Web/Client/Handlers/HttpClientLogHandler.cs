@@ -61,7 +61,7 @@
                 this.WriteLog($"{{LogKey:l}} [{requestId}] http headers={string.Join("|", request.Headers.Select(h => $"{h.Key}={string.Join("|", h.Value)}"))}", args: LogEventKeys.OutboundRequest);
             }
 
-            this.WriteLog($"{{LogKey:l}} [{requestId}] http {request?.Method} {{Url}} ({correlationId})", journalType: LogEventPropertyKeys.TrackOutboundRequest, args: new object[] { LogEventKeys.OutboundRequest, request.RequestUri });
+            this.WriteLog($"{{LogKey:l}} [{requestId}] http {request?.Method} {{Url:l}} ({correlationId})", journalType: LogEventPropertyKeys.TrackOutboundRequest, args: new object[] { LogEventKeys.OutboundRequest, request.RequestUri });
         }
 
         protected async Task LogHttpResponse(HttpResponseMessage response, string requestId, TimeSpan elapsed)
@@ -87,7 +87,7 @@
                 this.WriteLog($"{{LogKey:l}} [{requestId}] http headers={string.Join("|", response.Headers.Select(h => $"{h.Key}={string.Join("|", h.Value)}"))}", level: level, args: LogEventKeys.OutboundResponse);
             }
 
-            this.WriteLog($"{{LogKey:l}} [{requestId}] http {response.RequestMessage.Method} {{Url}} {{StatusCode}} ({response.StatusCode}) -> took {elapsed.Humanize(3)}", null, level, journalType: LogEventPropertyKeys.TrackOutboundResponse, args: new object[] { LogEventKeys.OutboundResponse, response.RequestMessage.RequestUri, (int)response.StatusCode});
+            this.WriteLog($"{{LogKey:l}} [{requestId}] http {response.RequestMessage.Method} {{Url:l}} {{StatusCode}} ({response.StatusCode}) -> took {elapsed.Humanize(3)}", null, level, journalType: LogEventPropertyKeys.TrackOutboundResponse, args: new object[] { LogEventKeys.OutboundResponse, response.RequestMessage.RequestUri, (int)response.StatusCode});
         }
 
         private void WriteLog(string message, Exception exception = null, LogLevel level = LogLevel.Information, string journalType = null, params object[] args)

@@ -5,7 +5,7 @@
     public class HasEastDomainSpecification : Specification<UserAccount>
     {
         public HasEastDomainSpecification()
-            : base(e => e.Domain == "East")
+            : base(e => e.AdAccount.Domain == "East")
         {
         }
     }

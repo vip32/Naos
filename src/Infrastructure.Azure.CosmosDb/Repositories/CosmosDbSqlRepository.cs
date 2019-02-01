@@ -52,7 +52,6 @@
                     count: options?.Take ?? -1, // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
                     orderExpression: order?.Expression,
                     orderDescending: order?.Direction == OrderDirection.Descending).ConfigureAwait(false);
-            // TODO: implement orderby (options)
             return entities.ToList();
         }
 
@@ -65,7 +64,6 @@
                     count: options?.Take ?? -1, // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
                     orderExpression: order?.Expression,
                     orderDescending: order?.Direction == OrderDirection.Descending).ConfigureAwait(false);
-            // TODO: implement orderby (options)
             return entities.ToList();
         }
 
@@ -89,7 +87,6 @@
             }
 
             return await this.provider.GetByIdAsync(id as string);
-            //return await this.provider.FirstOrDefaultAsync(o => o.Id == id).ConfigureAwait(false);
         }
 
         public async Task<bool> ExistsAsync(object id)

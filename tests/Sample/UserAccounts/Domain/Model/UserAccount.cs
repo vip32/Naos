@@ -16,6 +16,6 @@
 
         public string TenantId { get; set; }
 
-        public string Domain { get; set; }
+        public AdAccount AdAccount { get; set; }
     }
 }

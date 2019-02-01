@@ -27,6 +27,7 @@
         {
             //modelBuilder.HasDefaultSchema("Development"); // TODO: this is too static, as the migration contains the environment (fixed)
             //modelBuilder.Entity<UserAccount>().Ignore(e => e.State); // TODO: map the state
+
             modelBuilder.Entity<UserAccount>().OwnsOne(e => e.State, od =>
             {
                 //od.OwnsOne(typeof(DateTimeEpoch), "CreatedDate");
@@ -48,6 +49,7 @@
 
             modelBuilder.Entity<UserAccount>().OwnsOne(e => e.LastVisitDate);
             modelBuilder.Entity<UserAccount>().OwnsOne(e => e.RegisterDate);
+            modelBuilder.Entity<UserAccount>().OwnsOne(u => u.AdAccount);
         }
     }
 }

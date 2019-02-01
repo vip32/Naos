@@ -19,5 +19,7 @@
         IEnumerable<OrderOption<T>> Orders { get; set; }
 
         IEnumerable<Expression<Func<T, object>>> Includes { get; set; }
+
+        bool HasOrders();
     }
 }

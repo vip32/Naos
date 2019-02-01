@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Jokenizer.Net;
     using Naos.Core.Common;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Domain.Specifications;
@@ -57,21 +56,16 @@
 
         public IFindOptions<T> GetFindOptions<T>()
         {
-            return new FindOptions<T>(orders: this.GetOrderOptions<T>());
+            return new FindOptions<T>(skip: this.Skip, take: this.Take, orders: this.GetOrderOptions<T>());
         }
 
         public IEnumerable<OrderOption<T>> GetOrderOptions<T>()
         {
             var result = new List<OrderOption<T>>();
-            foreach (var order in this.Orders)
+            foreach (var order in this.Orders.Safe().Where(o => !o.Name.IsNullOrEmpty()))
             {
-                var expr = Evaluator.ToLambda<T, bool>(Tokenizer.Parse($"(t) => t.{order.Name} == \"blah\""));
-                var expr1 = Evaluator.ToLambda<T, bool>(Tokenizer.Parse($"(t) => t.{order.Name} == 123"));
-                var expr3 = Evaluator.ToLambda<T, string>(Tokenizer.Parse($"(t) => t.{order.Name}"));
-                //var expr2 = Evaluator.ToLambda<T, object>(Tokenizer.Parse($"(t) => t.{order.Name}"));
-
                 result.Add(new OrderOption<T>(
-                    Evaluator.ToLambda<T, object>(Tokenizer.Parse($"(t) => t.{order.Name}")),
+                    ExpressionHelper.GetExpression<T>(order.Name),
                     order.Direction == OrderDirection.Asc ? Domain.Repositories.OrderDirection.Ascending : Domain.Repositories.OrderDirection.Descending));
             }
 

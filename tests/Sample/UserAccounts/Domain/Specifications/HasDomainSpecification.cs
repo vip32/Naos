@@ -5,7 +5,7 @@
     public class HasDomainSpecification : Specification<UserAccount>
     {
         public HasDomainSpecification(string domain)
-            : base(e => e.Domain == domain)
+            : base(e => e.AdAccount.Domain == domain)
         {
         }
     }

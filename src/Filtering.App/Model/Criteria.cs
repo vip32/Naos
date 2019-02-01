@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.Filtering.App
 {
     using System;
+    using System.Linq;
     using System.Linq.Expressions;
     using EnsureThat;
     using Jokenizer.Net;
@@ -11,14 +12,14 @@
             string name,
             CriteriaOperator @operator,
             object value,
-            bool isNumeric = false)
+            bool? isNumeric = null)
         {
             EnsureArg.IsNotNullOrEmpty(name);
 
             this.Name = name;
             this.Operator = @operator;
-            this.Value = value;
-            this.IsNumeric = isNumeric;
+            this.Value = value ?? new object();
+            this.IsNumeric = isNumeric ?? value.ToString().All(char.IsDigit);
         }
 
         public string Name { get; }

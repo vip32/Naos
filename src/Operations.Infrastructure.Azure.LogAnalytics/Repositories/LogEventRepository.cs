@@ -51,9 +51,12 @@
             var epoch = DateTime.UtcNow.AddDays(-1).ToEpoch(); // should come from filtercontext
             var ticks = new DateTimeEpoch(epoch).DateTime.Ticks; // calculate ticks
             var query = $@"
-LogEvents_Development_CL | where LogMessage_s != '' | 
-where LogLevel_s != 'Verbose' and LogProperties_ns_ticks_d > {ticks} |
-order by LogProperties_ns_ticks_d desc";
+LogEvents_Development_CL | 
+where LogMessage_s != '' and 
+  LogLevel_s != 'Verbose' and 
+  LogProperties_ns_ticks_d > {ticks} |
+order by LogProperties_ns_ticks_d desc |
+limit 1000";
 
             // and LogProperties_ns_trktyp_s == 'journal'
 

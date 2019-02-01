@@ -21,12 +21,13 @@
         public UserAccountRepositoryTests()
         {
             this.sut = this.ServiceProvider.GetService<IUserAccountRepository>();
+            var domains = new[] { "East", "West" };
             this.entityFaker = new Faker<UserAccount>() //https://github.com/bchavez/Bogus
                 .RuleFor(u => u.Email, (f, u) => f.Internet.Email())
                 .RuleFor(u => u.LastVisitDate, (f, u) => new DateTimeEpoch())
                 .RuleFor(u => u.RegisterDate, (f, u) => new DateTimeEpoch())
                 .RuleFor(u => u.TenantId, (f, u) => this.tenantId)
-                .RuleFor(u => u.Domain, (f, u) => f.PickRandom(new[] { "East", "West" }))
+                .RuleFor(u => u.AdAccount, (f, u) => AdAccount.For(f.PickRandom(new[] { "East", "West" }) + $"\\{f.System.Random.AlphaNumeric(5)}"))
                 .RuleFor(u => u.VisitCount, (f, u) => 1);
         }
 
@@ -46,13 +47,13 @@
         {
             // arrange/act
             var result = await this.sut.FindAllAsync(
-                new FindOptions<UserAccount>(order: new OrderOption<UserAccount>(e => e.Domain))).ConfigureAwait(false);
+                new FindOptions<UserAccount>(order: new OrderOption<UserAccount>(e => e.AdAccount.Domain))).ConfigureAwait(false);
 
             // assert
             result.ShouldNotBeNull();
             result.ShouldNotBeEmpty();
-            result.First().Domain.ShouldBe("East");
-            result.Last().Domain.ShouldBe("West");
+            result.First().AdAccount.Domain.ShouldBe("East");
+            result.Last().AdAccount.Domain.ShouldBe("West");
         }
 
         //[Fact]
