@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
+    using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
     using Naos.Core.Common;
@@ -45,7 +46,7 @@
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<LogEvent>> FindAllAsync(IFindOptions<LogEvent> options = null)
+        public async Task<IEnumerable<LogEvent>> FindAllAsync(IFindOptions<LogEvent> options = null, CancellationToken cancellationToken = default)
         {
             var epoch = DateTime.UtcNow.AddDays(-1).ToEpoch(); // should come from filtercontext
             var ticks = new DateTimeEpoch(epoch).DateTime.Ticks; // calculate ticks
@@ -58,7 +59,8 @@ order by LogProperties_ns_ticks_d desc";
 
             // query docs: https://docs.microsoft.com/en-us/azure/log-analytics/query-language/get-started-queries
             var response = await this.httpClient.SendAsync(
-                this.PrepareRequest(query)).ConfigureAwait(false);
+                this.PrepareRequest(query),
+                cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
             return this.MapResponse(SerializationHelper.JsonDeserialize<LogAnalyticsResponse>(
@@ -70,12 +72,12 @@ order by LogProperties_ns_ticks_d desc";
 //order by Timestamp_t |
 //top 100000 by Timestamp_t
 
-        public Task<IEnumerable<LogEvent>> FindAllAsync(ISpecification<LogEvent> specification, IFindOptions<LogEvent> options = null)
+        public Task<IEnumerable<LogEvent>> FindAllAsync(ISpecification<LogEvent> specification, IFindOptions<LogEvent> options = null, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<LogEvent>> FindAllAsync(IEnumerable<ISpecification<LogEvent>> specifications, IFindOptions<LogEvent> options = null)
+        public Task<IEnumerable<LogEvent>> FindAllAsync(IEnumerable<ISpecification<LogEvent>> specifications, IFindOptions<LogEvent> options = null, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

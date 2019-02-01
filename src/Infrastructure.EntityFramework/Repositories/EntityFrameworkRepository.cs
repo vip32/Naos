@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using Domain;
     using EnsureThat;
@@ -60,23 +61,23 @@
 
         protected IRepositoryOptions Options { get; }
 
-        public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null)
+        public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
             return await this.dbContext.Set<TEntity>()
                             .TakeIf(options?.Take)
-                            .OrderIf(options).ToListAsyncSafe().ConfigureAwait(false);
+                            .OrderIf(options).ToListAsyncSafe(cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null)
+        public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
             return await this.dbContext.Set<TEntity>()
                             .WhereExpression(specification?.ToExpression())
                             .SkipIf(options?.Skip)
                             .TakeIf(options?.Take)
-                            .OrderIf(options).ToListAsyncSafe().ConfigureAwait(false);
+                            .OrderIf(options).ToListAsyncSafe(cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null)
+        public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         { // CancellationToken cancellationToken = default
             var specificationsArray = specifications as ISpecification<TEntity>[] ?? specifications.ToArray();
             var expressions = specificationsArray.Safe().Select(s => s.ToExpression());
@@ -85,7 +86,7 @@
                             .WhereExpressions(expressions)
                             .SkipIf(options?.Skip)
                             .TakeIf(options?.Take)
-                            .OrderIf(options).ToListAsyncSafe(/*cancellationToken*/).ConfigureAwait(false);
+                            .OrderIf(options).ToListAsyncSafe(cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<TEntity> FindOneAsync(object id)

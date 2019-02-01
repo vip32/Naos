@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.Domain.Repositories
 {
     using System.Collections.Generic;
+    using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
     using Naos.Core.Domain.Specifications;
@@ -32,19 +33,19 @@
             return await this.decoratee.ExistsAsync(id).ConfigureAwait(false);
         }
 
-        public virtual async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null)
+        public virtual async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            return await this.decoratee.FindAllAsync(options).ConfigureAwait(false);
+            return await this.decoratee.FindAllAsync(options, cancellationToken).ConfigureAwait(false);
         }
 
-        public virtual async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null)
+        public virtual async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            return await this.decoratee.FindAllAsync(specification, options).ConfigureAwait(false);
+            return await this.decoratee.FindAllAsync(specification, options, cancellationToken).ConfigureAwait(false);
         }
 
-        public virtual async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null)
+        public virtual async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            return await this.decoratee.FindAllAsync(specifications, options).ConfigureAwait(false);
+            return await this.decoratee.FindAllAsync(specifications, options, cancellationToken).ConfigureAwait(false);
         }
 
         public virtual async Task<TEntity> FindOneAsync(object id)

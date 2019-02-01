@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.Domain.Repositories
 {
     using System.Collections.Generic;
+    using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
@@ -37,17 +38,17 @@
             return await this.decoratee.ExistsAsync(id).ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null)
+        public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
             foreach (var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
             {
                 this.logger.LogDebug($"{LogEventKeys.DomainRepository} order: {order.Expression?.ToString()}");
             }
 
-            return await this.decoratee.FindAllAsync(options).ConfigureAwait(false);
+            return await this.decoratee.FindAllAsync(options, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null)
+        public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
             if (specification != null)
             {
@@ -59,10 +60,10 @@
                 this.logger.LogDebug($"{LogEventKeys.DomainRepository} order: {order.Expression?.ToString()}");
             }
 
-            return await this.decoratee.FindAllAsync(specification, options).ConfigureAwait(false);
+            return await this.decoratee.FindAllAsync(specification, options, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null)
+        public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
             foreach (var specification in specifications.Safe())
             {
@@ -74,7 +75,7 @@
                 this.logger.LogDebug($"{LogEventKeys.DomainRepository} order: {order.Expression?.ToString()}");
             }
 
-            return await this.decoratee.FindAllAsync(specifications, options).ConfigureAwait(false);
+            return await this.decoratee.FindAllAsync(specifications, options, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<TEntity> FindOneAsync(object id)

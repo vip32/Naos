@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
     using MediatR;
@@ -45,8 +46,9 @@
         /// </summary>
         /// <param name="specifications">The specifications.</param>
         /// <param name="options">The options.</param>
+        /// <param name="cancellationToken">The cancellationToken.</param>
         /// <returns></returns>
-        public override async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null)
+        public override async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
             var result = this.context.Entities.Safe().Select(d => this.Options.Mapper.Map<TDestination>(d)); // work on destination objects
 

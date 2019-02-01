@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
     using MediatR;
@@ -51,10 +52,11 @@
         /// Finds all asynchronous.
         /// </summary>
         /// <param name="options">The options.</param>
+        /// <param name="cancellationToken">The cancellationToken.</param>
         /// <returns></returns>
-        public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null)
+        public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            return await this.FindAllAsync(specifications: null, options: options).ConfigureAwait(false);
+            return await this.FindAllAsync(specifications: null, options: options, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -62,12 +64,13 @@
         /// </summary>
         /// <param name="specification">The specification.</param>
         /// <param name="options">The options.</param>
+        /// /// <param name="cancellationToken">The cancellationToken.</param>
         /// <returns></returns>
-        public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null)
+        public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
             return specification == null
                 ? await this.FindAllAsync(specifications: null, options: options).ConfigureAwait(false)
-                : await this.FindAllAsync(new[] { specification }, options).ConfigureAwait(false);
+                : await this.FindAllAsync(new[] { specification }, options, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -75,8 +78,9 @@
         /// </summary>
         /// <param name="specifications">The specifications.</param>
         /// <param name="options">The options.</param>
+        /// /// <param name="cancellationToken">The cancellationToken.</param>
         /// <returns></returns>
-        public virtual async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null)
+        public virtual async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
             var result = this.context.Entities.AsEnumerable();
 
@@ -85,7 +89,7 @@
                 result = result.Where(this.EnsurePredicate(specification));
             }
 
-            return await Task.FromResult(this.FindAll(result, options).ToList()).ConfigureAwait(false);
+            return await Task.FromResult(this.FindAll(result, options, cancellationToken).ToList()).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -278,7 +282,7 @@
             return specification.ToPredicate();
         }
 
-        protected virtual IEnumerable<TEntity> FindAll(IEnumerable<TEntity> entities, IFindOptions<TEntity> options = null)
+        protected virtual IEnumerable<TEntity> FindAll(IEnumerable<TEntity> entities, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
             var result = entities;
 

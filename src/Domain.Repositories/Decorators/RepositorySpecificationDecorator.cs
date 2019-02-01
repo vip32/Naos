@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
     using Naos.Core.Common;
@@ -37,21 +38,21 @@
             return await this.decoratee.ExistsAsync(id).ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null)
+        public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            return await this.FindAllAsync(new List<ISpecification<TEntity>>(), options).ConfigureAwait(false);
+            return await this.FindAllAsync(new List<ISpecification<TEntity>>(), options, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null)
+        public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            return await this.FindAllAsync(new List<ISpecification<TEntity>>(new[] { specification }), options).ConfigureAwait(false);
+            return await this.FindAllAsync(new List<ISpecification<TEntity>>(new[] { specification }), options, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null)
+        public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
             return await this.decoratee.FindAllAsync(
                 new[] { this.specification }.Concat(specifications.Safe()),
-                options).ConfigureAwait(false);
+                options, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<TEntity> FindOneAsync(object id)
