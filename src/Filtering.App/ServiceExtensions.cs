@@ -3,6 +3,7 @@
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Naos.Core.RequestFiltering.App;
+    using Naos.Core.RequestFiltering.App.Web;
 
     public static class ServiceExtensions
     {

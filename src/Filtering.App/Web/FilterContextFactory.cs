@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.RequestFiltering.App
+﻿namespace Naos.Core.RequestFiltering.App.Web
 {
     using System;
     using System.Collections.Generic;

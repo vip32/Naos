@@ -3,8 +3,7 @@
     using System;
     using EnsureThat;
     using Microsoft.Extensions.Options;
-    using Naos.Core.Commands.Filtering.App.Web;
-    using Naos.Core.RequestFiltering.App;
+    using Naos.Core.RequestFiltering.App.Web;
 
     /// <summary>
     /// Extension methods for the correlation middleware.

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Commands.Filtering.App.Web
+﻿namespace Naos.Core.RequestFiltering.App.Web
 {
     /// <summary>
     /// Options for criteria.

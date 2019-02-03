@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Commands.Filtering.App.Web
+﻿namespace Naos.Core.RequestFiltering.App.Web
 {
     using System.Threading.Tasks;
     using EnsureThat;
@@ -8,6 +8,7 @@
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
     using Naos.Core.RequestFiltering.App;
+    using Naos.Core.RequestFiltering.App.Web;
 
     /// <summary>
     /// Middleware which attempts to reads / creates a Correlation ID that can then be used in logs and
