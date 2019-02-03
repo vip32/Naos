@@ -2,7 +2,7 @@
 {
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection.Extensions;
-    using Naos.Core.Filtering.App;
+    using Naos.Core.RequestFiltering.App;
 
     public static class ServiceExtensions
     {

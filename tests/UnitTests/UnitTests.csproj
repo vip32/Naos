@@ -79,6 +79,7 @@
     <Folder Include="App.Web\" />
     <Folder Include="Infrastructure.CosmosDb\" />
     <Folder Include="Correlation\" />
+    <Folder Include="RequestFiltering\" />
   </ItemGroup>
 
   <ItemGroup>
