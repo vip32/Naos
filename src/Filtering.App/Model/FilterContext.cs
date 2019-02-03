@@ -38,6 +38,11 @@
             return result;
         }
 
+        public IFindOptions<T> GetFindOptions<T>()
+        {
+            return FindOptionsFactory.Create<T>(this);
+        }
+
         //public Specification<T> GetCritertiasSpecification<T>()
         //{
         //    if (!this.Criterias.IsNullOrEmpty())
@@ -53,20 +58,5 @@
 
         //    return null;
         //}
-
-        public IFindOptions<T> GetFindOptions<T>() => new FindOptions<T>(skip: this.Skip, take: this.Take, orders: this.GetOrderOptions<T>());
-
-        private IEnumerable<OrderOption<T>> GetOrderOptions<T>()
-        {
-            var result = new List<OrderOption<T>>();
-            foreach (var order in this.Orders.Safe().Where(o => !o.Name.IsNullOrEmpty()))
-            {
-                result.Add(new OrderOption<T>(
-                    ExpressionHelper.GetExpression<T>(order.Name),
-                    order.Direction == OrderDirection.Asc ? Domain.Repositories.OrderDirection.Ascending : Domain.Repositories.OrderDirection.Descending));
-            }
-
-            return result;
-        }
     }
 }
