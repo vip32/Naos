@@ -27,7 +27,7 @@
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public ActionResult<FilterContext> Get()
         {
-            return this.Ok(this.filterContext.Context);
+            return this.Ok(this.filterContext?.Context);
         }
     }
 }
