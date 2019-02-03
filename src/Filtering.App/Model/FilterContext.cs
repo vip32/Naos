@@ -54,12 +54,9 @@
         //    return null;
         //}
 
-        public IFindOptions<T> GetFindOptions<T>()
-        {
-            return new FindOptions<T>(skip: this.Skip, take: this.Take, orders: this.GetOrderOptions<T>());
-        }
+        public IFindOptions<T> GetFindOptions<T>() => new FindOptions<T>(skip: this.Skip, take: this.Take, orders: this.GetOrderOptions<T>());
 
-        public IEnumerable<OrderOption<T>> GetOrderOptions<T>()
+        private IEnumerable<OrderOption<T>> GetOrderOptions<T>()
         {
             var result = new List<OrderOption<T>>();
             foreach (var order in this.Orders.Safe().Where(o => !o.Name.IsNullOrEmpty()))
