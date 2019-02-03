@@ -23,40 +23,23 @@
             => !this.Criterias.IsNullOrEmpty() || !this.Orders.IsNullOrEmpty() || this.Skip.HasValue || this.Take.HasValue;
 
         //// <summary>
-        //// Converts the <see cref="IEnumerable<Criteria>"/> to a specification
+        //// Converts the <see cref="FilterContext"/> to a list of specifications
         //// </summary>
         //// <typeparam name="T">The type of the entity.</typeparam>
         //// <returns></returns>
         public IEnumerable<Specification<T>> GetSpecifications<T>()
         {
-            var result = new List<Specification<T>>();
-            foreach (var criteria in this.Criterias.Safe())
-            {
-                result.Add(new Specification<T>(criteria.ToExpression<T>()));
-            }
-
-            return result;
+            return SpecificationsFactory.Create<T>(this);
         }
 
+        //// <summary>
+        //// Converts the <see cref="FilterContext"/> to a <see cref="IFindOptions<T>"/>
+        //// </summary>
+        //// <typeparam name="T">The type of the entity.</typeparam>
+        //// <returns></returns>
         public IFindOptions<T> GetFindOptions<T>()
         {
             return FindOptionsFactory.Create<T>(this);
         }
-
-        //public Specification<T> GetCritertiasSpecification<T>()
-        //{
-        //    if (!this.Criterias.IsNullOrEmpty())
-        //    {
-        //        var specification = new Specification<T>(this.Criterias.First().ToExpression<T>());
-        //        foreach (var criteria in this.Criterias.Where(c => c != this.Criterias.First()))
-        //        {
-        //            specification.And(new Specification<T>(criteria.ToExpression<T>())); // for now only AND is supported, could be read from criteria
-        //        }
-
-        //        return specification;
-        //    }
-
-        //    return null;
-        //}
     }
 }
