@@ -14,14 +14,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\App\App.csproj" />
+    <ProjectReference Include="..\Configuration.App\Configuration.App.csproj" />
     <ProjectReference Include="..\Domain.Repositories\Domain.Repositories.csproj" />
     <ProjectReference Include="..\Infrastructure.Azure.Configuration\Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\Operations\Operations.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-      
+
   </ItemGroup>
 
 </Project>

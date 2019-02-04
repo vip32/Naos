@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common.Web\Common.Web.csproj" />
+    <ProjectReference Include="..\Configuration.App\Configuration.App.csproj" />
   </ItemGroup>
 
   <ItemGroup>

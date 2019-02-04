@@ -3,7 +3,7 @@
     using System.Threading.Tasks;
     using FluentValidation;
     using FluentValidation.Results;
-    using Naos.Core.Commands.App;
+    using Naos.Core.Commands.Domain;
     using Xunit;
 
     public class ValidateCommandBehaviorTests

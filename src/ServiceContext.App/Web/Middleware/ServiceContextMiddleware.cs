@@ -123,7 +123,7 @@
 
             public Dictionary<string, object> Request { get; set; }
 
-            public RuntimeDescriptor Runtime { get; set; }
+            //public RuntimeDescriptor Runtime { get; set; }
 
             public IDictionary<string, string> Actions { get; set; }
         }

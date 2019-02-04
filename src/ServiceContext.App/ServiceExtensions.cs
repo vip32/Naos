@@ -30,13 +30,12 @@
             }
 
             context.Services.AddTransient<HttpClientServiceContextHandler>();
-            context.Services.AddSingleton(sp => new Naos.Core.Commands.ServiceDescriptor
-            {
-                Product = context.Descriptor.Product, // ?? AppDomain.CurrentDomain.FriendlyName.SubstringTillLast("."),
-                Capability = context.Descriptor.Capability, // ?? AppDomain.CurrentDomain.FriendlyName.SubstringFromLast("."),
-                Version = context.Descriptor.Version, // read from fileversion?
-                Tags = context.Descriptor.Tags
-            });
+            context.Services.AddSingleton(sp =>
+                new Naos.Core.Common.ServiceDescriptor(
+                    context.Descriptor.Product,
+                    context.Descriptor.Capability,
+                    context.Descriptor.Version,
+                    context.Descriptor.Tags));
 
             return context;
         }

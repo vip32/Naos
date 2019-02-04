@@ -27,32 +27,11 @@
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="NSwag.AspNetCore" Version="12.0.13" />
     <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
-    <PackageReference Include="Ben.Demystifier" Version="0.1.3" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="6.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Commands.App\Commands.App.csproj" />
-    <ProjectReference Include="..\..\src\App.ExceptionHandling.Web\App.Exceptions.Web.csproj" />
-    <ProjectReference Include="..\..\src\App.Operations.Serilog\App.Operations.Serilog.csproj" />
-    <ProjectReference Include="..\..\src\App.Operations.Web\App.Operations.Web.csproj" />
     <ProjectReference Include="..\..\src\App\App.csproj" />
-    <ProjectReference Include="..\..\src\Authentication.App.Web\Authentication.App.Web.csproj" />
-    <ProjectReference Include="..\..\src\Common\Common.csproj" />
-    <ProjectReference Include="..\..\src\Configuration.App\Configuration.App.csproj" />
-    <ProjectReference Include="..\..\src\Correlation.App\RequestCorrelation.App.csproj" />
-    <ProjectReference Include="..\..\src\Filtering.App\RequestFiltering.App.csproj" />
-    <ProjectReference Include="..\..\src\Messaging.Infrastructure.Azure.SignalR\Messaging.Infrastructure.Azure.SignalR.csproj" />
-    <ProjectReference Include="..\..\src\Messaging.Infrastructure.Azure\Messaging.Infrastructure.Azure.csproj" />
-    <ProjectReference Include="..\..\src\Messaging.Infrastructure.FileSystem\Messaging.Infrastructure.FileSystem.csproj" />
-    <ProjectReference Include="..\..\src\Messaging\Messaging.csproj" />
-    <ProjectReference Include="..\..\src\Operations.Infrastructure.Azure.LogAnalytics\Operations.Infrastructure.Azure.LogAnalytics.csproj" />
-    <ProjectReference Include="..\..\src\Scheduling.App.Web\JobScheduling.App.Web.csproj" />
-    <ProjectReference Include="..\..\src\Scheduling\JobScheduling.csproj" />
-    <ProjectReference Include="..\..\src\ServiceContext.App\ServiceContext.App.csproj" />
-    <ProjectReference Include="..\..\src\ServiceDiscovery.App.Consul\ServiceDiscovery.App.Consul.csproj" />
-    <ProjectReference Include="..\..\src\ServiceDiscovery.App.Web.Router\ServiceDiscovery.App.Web.Router.csproj" />
-    <ProjectReference Include="..\..\src\ServiceDiscovery.App\ServiceDiscovery.App.csproj" />
     <ProjectReference Include="..\Sample.App\Sample.App.csproj" />
     <ProjectReference Include="..\Sample\Sample.csproj" />
   </ItemGroup>

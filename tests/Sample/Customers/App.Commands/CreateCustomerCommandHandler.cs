@@ -6,7 +6,7 @@
     using EnsureThat;
     using MediatR;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Commands.App;
+    using Naos.Core.Commands.Domain;
     using Naos.Core.Common;
     using Naos.Sample.Customers.Domain;
 

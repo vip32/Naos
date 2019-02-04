@@ -47,7 +47,7 @@
                 .AddHttpMessageHandler<HttpClientCorrelationHandler>()
                 .AddHttpMessageHandler<HttpClientServiceContextHandler>()
                 .AddHttpMessageHandler<HttpClientLogHandler>();
-            services.Replace(ServiceDescriptor.Singleton<Microsoft.Extensions.Http.IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
+            services.Replace(Microsoft.Extensions.DependencyInjection.ServiceDescriptor.Singleton<Microsoft.Extensions.Http.IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
 
             services
                 .AddMiddlewareAnalysis()
@@ -72,15 +72,17 @@
                     .AddRequestCorrelation()
                     .AddRequestFiltering()
                     .AddServiceExceptions()
-                    .AddAppCommands()
+                    .AddCommands()
+                    //.AddQueries()
                     .AddOperationsSerilog()
                     .AddOperationsLogAnalytics()
-                    //.AddSwaggerDocument() // s.Description = Product.Capability
+                    //.AddSwaggerDocument() // s.Description = Product.Capability\
                     .AddJobScheduling(s => s
-                        .SetEnabled(false)
+                        .SetEnabled(true)
                         .Register<DummyJob>("job1", Cron.Minutely(), (j) => j.LogMessageAsync("+++ hello from job1 +++", CancellationToken.None))
                         .Register<DummyJob>("job2", Cron.MinuteInterval(2), j => j.LogMessageAsync("+++ hello from job2 +++", CancellationToken.None, true), enabled: false)
                         .Register<DummyJob>("longjob33", Cron.Minutely(), j => j.LongRunningAsync("+++ hello from longjob3 +++", CancellationToken.None)))
+                    .AddJobSchedulingWeb()
                     .AddMessagingAzureServiceBus(s => s
                         .Subscribe<TestMessage, TestMessageHandler>())
                     //.AddMessagingFileSystem(

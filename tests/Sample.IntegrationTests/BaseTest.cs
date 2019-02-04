@@ -4,7 +4,7 @@
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
-    using Naos.Core.Commands.App;
+    using Naos.Core.Commands.Domain;
     using Naos.Core.Common;
     using Naos.Core.Configuration;
     using Naos.Core.Infrastructure.EntityFramework;
@@ -29,7 +29,7 @@
                     .AddOperationsLogAnalytics()
                     //.AddMessagingFileSystem()
                     .AddMessagingAzureServiceBus()
-                    .AddAppCommands();
+                    .AddCommands();
 
             // naos sample registrations
             this.services

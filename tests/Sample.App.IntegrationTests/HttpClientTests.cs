@@ -27,7 +27,7 @@
                 .AddHttpClient("default")
                     .AddHttpMessageHandler<HttpClientCorrelationHandler>();
                     //.AddHttpMessageHandler<HttpClientLogHandler>();
-            this.services.Replace(ServiceDescriptor.Singleton<IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
+            this.services.Replace(Microsoft.Extensions.DependencyInjection.ServiceDescriptor.Singleton<IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
 
             this.services
                 .AddNaos(configuration, "Product", "Capability")

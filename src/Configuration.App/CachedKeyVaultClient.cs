@@ -8,7 +8,7 @@
     using Microsoft.Azure.KeyVault.Models;
     using Microsoft.Rest.Azure;
 
-    public class CachedKeyVaultClient : KeyVaultClient
+    public class CachedKeyVaultClient : KeyVaultClient // TODO: move to Infrastructure.Azure
     {
         public CachedKeyVaultClient(AuthenticationCallback authenticationCallback, params System.Net.Http.DelegatingHandler[] handlers)
             : base(authenticationCallback, handlers)

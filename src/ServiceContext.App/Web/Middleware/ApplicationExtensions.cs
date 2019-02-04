@@ -4,6 +4,7 @@
     using EnsureThat;
     using Microsoft.Extensions.Options;
     using Naos.Core.Commands;
+    using Naos.Core.Common;
     using Naos.Core.ServiceContext.App.Web;
 
     /// <summary>
@@ -36,7 +37,7 @@
 
             if (app.ApplicationServices.GetService(typeof(ServiceDescriptor)) == null)
             {
-                throw new InvalidOperationException($"Unable to find the required services. You must call the AddServiceContext method in ConfigureServices in the application startup code.");
+                throw new InvalidOperationException("Unable to find the required services. You must call the AddServiceContext method in ConfigureServices in the application startup code.");
             }
 
             return app.UseMiddleware<ServiceContextMiddleware>(Options.Create(options));

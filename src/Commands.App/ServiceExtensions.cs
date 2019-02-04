@@ -1,11 +1,11 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
-    using Naos.Core.Commands.App;
+    using Naos.Core.Commands.Domain;
 
     public static class ServiceExtensions
     {
-        public static ServiceConfigurationContext AddAppCommands(
+        public static ServiceConfigurationContext AddCommands(
             this ServiceConfigurationContext context)
         {
             context.Services
