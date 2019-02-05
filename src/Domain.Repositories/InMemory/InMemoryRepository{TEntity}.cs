@@ -242,34 +242,34 @@
                 return ActionResult.None;
             }
 
-            this.@lock.ExitWriteLock();
-            try
+            var entity = this.context.Entities.FirstOrDefault(x => x.Id.Equals(id));
+            if (entity != null)
             {
-                var entity = this.context.Entities.FirstOrDefault(x => x.Id.Equals(id));
-                if (entity != null)
+                if (this.Options?.PublishEvents != false)
                 {
-                    if (this.Options?.PublishEvents != false)
-                    {
-                        await this.mediator.Publish(new EntityDeleteDomainEvent(entity)).ConfigureAwait(false);
-                    }
-
-                    this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogEventKeys.DomainRepository);
-                    this.context.Entities.Remove(entity);
-
-                    if (this.Options?.PublishEvents != false)
-                    {
-                        await this.mediator.Publish(new EntityDeletedDomainEvent(entity)).ConfigureAwait(false);
-                    }
-
-                    return ActionResult.Deleted;
+                    await this.mediator.Publish(new EntityDeleteDomainEvent(entity)).ConfigureAwait(false);
                 }
 
-                return ActionResult.None;
+                this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogEventKeys.DomainRepository);
+                this.@lock.EnterWriteLock();
+                try
+                {
+                    this.context.Entities.Remove(entity);
+                }
+                finally
+                {
+                    this.@lock.ExitWriteLock();
+                }
+
+                if (this.Options?.PublishEvents != false)
+                {
+                    await this.mediator.Publish(new EntityDeletedDomainEvent(entity)).ConfigureAwait(false);
+                }
+
+                return ActionResult.Deleted;
             }
-            finally
-            {
-                this.@lock.ExitWriteLock();
-            }
+
+            return ActionResult.None;
         }
 
         /// <summary>
@@ -285,28 +285,29 @@
                 return ActionResult.None;
             }
 
-            this.@lock.ExitWriteLock();
+            if (this.Options?.PublishEvents != false)
+            {
+                await this.mediator.Publish(new EntityDeleteDomainEvent(entity)).ConfigureAwait(false);
+            }
+
+            this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogEventKeys.DomainRepository);
+
+            this.@lock.EnterWriteLock();
             try
             {
-                if (this.Options?.PublishEvents != false)
-                {
-                    await this.mediator.Publish(new EntityDeleteDomainEvent(entity)).ConfigureAwait(false);
-                }
-
-                this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogEventKeys.DomainRepository);
                 this.context.Entities.Remove(entity);
-
-                if (this.Options?.PublishEvents != false)
-                {
-                    await this.mediator.Publish(new EntityDeletedDomainEvent(entity)).ConfigureAwait(false);
-                }
-
-                return ActionResult.Deleted; // TODO: check if something actually got delete
             }
             finally
             {
                 this.@lock.ExitWriteLock();
             }
+
+            if (this.Options?.PublishEvents != false)
+            {
+                await this.mediator.Publish(new EntityDeletedDomainEvent(entity)).ConfigureAwait(false);
+            }
+
+            return ActionResult.Deleted; // TODO: check if something actually got delete
         }
 
         protected virtual Func<TEntity, bool> EnsurePredicate(ISpecification<TEntity> specification)
