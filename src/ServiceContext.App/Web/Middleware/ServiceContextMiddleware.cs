@@ -7,7 +7,6 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
-    using Naos.Core.Commands;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
     using Newtonsoft.Json;
@@ -92,7 +91,7 @@
                                 ["echo-messaging"] = $"{context.Request.Uri()}api/echo/messaging",
                                 ["echo-router"] = $"{context.Request.Uri()}api/echo/router",
                                 ["echo-correlation"] = $"{context.Request.Uri()}api/echo/correlation",
-                                ["echo-requestfiltering"] = $"{context.Request.Uri()}api/echo/filter?q=name=eq:naos,epoch=lt:12345",
+                                ["echo-requestfiltering"] = $"{context.Request.Uri()}api/echo/filter?q=name=eq:naos,epoch=lt:12345&order=name",
                                 ["echo-servicecontext"] = $"{context.Request.Uri()}api/echo/servicecontext",
                                 ["echo-servicediscovery"] = $"{context.Request.Uri()}api/echo/servicediscovery",
                                 ["sample-countries1"] = $"{context.Request.Uri()}api/countries?q=name=Belgium&order=name&take=1",

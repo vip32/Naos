@@ -165,7 +165,7 @@
                 }
             }
 
-            this.logger.LogInformation($"{{LogKey:l}} upserted entity: {result.GetType().PrettyName()}, id: {result.Id}, isNew: {isNew}", LogEventKeys.DomainRepository);
+            //this.logger.LogInformation($"{{LogKey:l}} upserted entity: {result.GetType().PrettyName()}, id: {result.Id}, isNew: {isNew}", LogEventKeys.DomainRepository);
 #pragma warning disable SA1008 // Opening parenthesis must be spaced correctly
             return isNew ? (result, ActionResult.Inserted) : (result, ActionResult.Updated);
 #pragma warning restore SA1008 // Opening parenthesis must be spaced correctly

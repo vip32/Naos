@@ -1,5 +1,6 @@
 ﻿namespace Naos.Core.RequestFiltering.App
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Naos.Core.Common;
@@ -22,9 +23,16 @@
             var result = new List<OrderOption<T>>();
             foreach (var order in filterContext.Orders.Safe().Where(o => !o.Name.IsNullOrEmpty()))
             {
-                result.Add(new OrderOption<T>(
-                    ExpressionHelper.GetExpression<T>(order.Name),
-                    order.Direction == OrderDirection.Asc ? Domain.Repositories.OrderDirection.Ascending : Domain.Repositories.OrderDirection.Descending));
+                try
+                {
+                    result.Add(new OrderOption<T>(
+                        ExpressionHelper.GetExpression<T>(order.Name),
+                        order.Direction == OrderDirection.Asc ? Domain.Repositories.OrderDirection.Ascending : Domain.Repositories.OrderDirection.Descending));
+                }
+                catch (ArgumentException ex)
+                {
+                    throw new NaosClientFormatException(ex.Message, ex);
+                }
             }
 
             return result;

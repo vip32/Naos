@@ -10,15 +10,15 @@
     using Naos.Core.Common.Web;
     using Naos.Core.JobScheduling.Domain;
 
-    [Route("api/[controller]")]
+    [Route("api/jobs")]
     [ApiController]
-    public class JobsController : ControllerBase
+    public class NaosJobsController : ControllerBase
     {
-        private readonly ILogger<JobRegistrationsController> logger;
+        private readonly ILogger<NaosJobRegistrationsController> logger;
         private readonly IJobScheduler jobScheduler;
 
-        public JobsController(
-            ILogger<JobRegistrationsController> logger,
+        public NaosJobsController(
+            ILogger<NaosJobRegistrationsController> logger,
             IJobScheduler jobScheduler)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));

@@ -10,13 +10,13 @@
 
     [Route("api/echo/router")]
     [ApiController]
-    public class ServiceDiscoveryRouterEchoController : ControllerBase // or use normal middleware?  https://stackoverflow.com/questions/47617994/how-to-use-a-controller-in-another-assembly-in-asp-net-core-mvc-2-0?rq=1
+    public class NaosServiceDiscoveryRouterEchoController : ControllerBase // or use normal middleware?  https://stackoverflow.com/questions/47617994/how-to-use-a-controller-in-another-assembly-in-asp-net-core-mvc-2-0?rq=1
     {
-        private readonly ILogger<ServiceDiscoveryRouterEchoController> logger;
+        private readonly ILogger<NaosServiceDiscoveryRouterEchoController> logger;
         private readonly RouterContext context;
 
-        public ServiceDiscoveryRouterEchoController(
-            ILogger<ServiceDiscoveryRouterEchoController> logger,
+        public NaosServiceDiscoveryRouterEchoController(
+            ILogger<NaosServiceDiscoveryRouterEchoController> logger,
             RouterContext context)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));

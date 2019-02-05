@@ -9,12 +9,12 @@
 
     [Route("api/echo/authentication")]
     [ApiController]
-    public class AuthenticationEchoController : ControllerBase // or use normal middleware?  https://stackoverflow.com/questions/47617994/how-to-use-a-controller-in-another-assembly-in-asp-net-core-mvc-2-0?rq=1
+    public class NaosAuthenticationEchoController : ControllerBase // or use normal middleware?  https://stackoverflow.com/questions/47617994/how-to-use-a-controller-in-another-assembly-in-asp-net-core-mvc-2-0?rq=1
     {
-        private readonly ILogger<AuthenticationEchoController> logger;
+        private readonly ILogger<NaosAuthenticationEchoController> logger;
 
-        public AuthenticationEchoController(
-            ILogger<AuthenticationEchoController> logger)
+        public NaosAuthenticationEchoController(
+            ILogger<NaosAuthenticationEchoController> logger)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
 

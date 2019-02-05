@@ -95,7 +95,9 @@
 
         public async Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
         {
-            return await this.decoratee.UpsertAsync(entity).ConfigureAwait(false);
+            var result = await this.decoratee.UpsertAsync(entity).ConfigureAwait(false);
+            this.logger.LogInformation($"{{LogKey:l}} upserted entity: {result.GetType().PrettyName()}, id: {result.entity.Id}, action: {result.action.ToDescription()}", LogEventKeys.DomainRepository);
+            return result;
         }
     }
 }

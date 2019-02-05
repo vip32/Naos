@@ -9,14 +9,14 @@
 
     [Route("api/echo/messaging")]
     [ApiController]
-    public class MessagingEchoController : ControllerBase // or use normal middleware?  https://stackoverflow.com/questions/47617994/how-to-use-a-controller-in-another-assembly-in-asp-net-core-mvc-2-0?rq=1
+    public class NaosMessagingEchoController : ControllerBase // or use normal middleware?  https://stackoverflow.com/questions/47617994/how-to-use-a-controller-in-another-assembly-in-asp-net-core-mvc-2-0?rq=1
     {
-        private readonly ILogger<MessagingEchoController> logger;
+        private readonly ILogger<NaosMessagingEchoController> logger;
         private readonly IMessageBroker messageBroker;
         private readonly ISubscriptionMap subscriptionMap;
 
-        public MessagingEchoController(
-            ILogger<MessagingEchoController> logger,
+        public NaosMessagingEchoController(
+            ILogger<NaosMessagingEchoController> logger,
             IMessageBroker messageBroker,
             ISubscriptionMap subscriptionMap)
         {

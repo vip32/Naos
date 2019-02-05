@@ -3,7 +3,6 @@
     using System;
     using EnsureThat;
     using Microsoft.Extensions.Options;
-    using Naos.Core.Commands;
     using Naos.Core.Common;
     using Naos.Core.ServiceContext.App.Web;
 

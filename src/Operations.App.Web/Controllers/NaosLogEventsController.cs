@@ -14,13 +14,13 @@
 
     [Route("api/operations/[controller]")]
     [ApiController]
-    public class LogEventsController : ControllerBase // or use normal middleware?  https://stackoverflow.com/questions/47617994/how-to-use-a-controller-in-another-assembly-in-asp-net-core-mvc-2-0?rq=1
+    public class NaosLogEventsController : ControllerBase // or use normal middleware?  https://stackoverflow.com/questions/47617994/how-to-use-a-controller-in-another-assembly-in-asp-net-core-mvc-2-0?rq=1
     {
-        private readonly ILogger<LogEventsController> logger;
+        private readonly ILogger<NaosLogEventsController> logger;
         private readonly ILogEventRepository repository;
 
-        public LogEventsController(
-            ILogger<LogEventsController> logger,
+        public NaosLogEventsController(
+            ILogger<NaosLogEventsController> logger,
             ILogEventRepository repository)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));

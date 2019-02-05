@@ -124,7 +124,7 @@
                 return null;
             }
 
-            return await this.dbContext.Set<TEntity>().FindAsync(id).ConfigureAwait(false);
+            return await this.dbContext.Set<TEntity>().FindAsync(this.ConvertEntityId(id)).ConfigureAwait(false);
         }
 
         public async Task<bool> ExistsAsync(object id)
@@ -201,8 +201,7 @@
                 }
             }
 
-            this.logger.LogInformation($"{{LogKey:l}} upserted entity: {entity.GetType().PrettyName()}, id: {entity.Id}, isNew: {isNew}", LogEventKeys.DomainRepository);
-
+            //this.logger.LogInformation($"{{LogKey:l}} upserted entity: {entity.GetType().PrettyName()}, id: {entity.Id}, isNew: {isNew}", LogEventKeys.DomainRepository);
 #pragma warning disable SA1008 // Opening parenthesis must be spaced correctly
             return isNew ? (entity, ActionResult.Inserted) : (entity, ActionResult.Updated);
 #pragma warning restore SA1008 // Opening parenthesis must be spaced correctly
@@ -215,7 +214,7 @@
                 return ActionResult.None;
             }
 
-            var entity = await this.dbContext.Set<TEntity>().FindAsync(id).ConfigureAwait(false);
+            var entity = await this.FindOneAsync(id).ConfigureAwait(false);
             if (entity != null)
             {
                 this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogEventKeys.DomainRepository);
@@ -247,6 +246,25 @@
             }
 
             return await this.DeleteAsync(entity.Id).ConfigureAwait(false);
+        }
+
+        private object ConvertEntityId(object value)
+        {
+            try
+            {
+                if (typeof(TEntity).GetProperty("Id")?.PropertyType == typeof(Guid) && value?.GetType() == typeof(string))
+                {
+                    // string to guid conversion
+                    value = Guid.Parse(value.ToString());
+                }
+            }
+            catch(FormatException ex)
+            {
+                throw new NaosClientFormatException(ex.Message, ex);
+            }
+
+            // TODO: more conversions needed? int?
+            return value;
         }
     }
 }

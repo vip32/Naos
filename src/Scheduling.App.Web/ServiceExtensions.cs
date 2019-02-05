@@ -1,6 +1,5 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
-    using System;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
     using Naos.Core.JobScheduling.App.Web;

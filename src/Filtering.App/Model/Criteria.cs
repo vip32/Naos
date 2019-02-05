@@ -38,7 +38,6 @@
         public override string ToString()
         {
             var quote = this.IsNumeric ? string.Empty : "\"";
-
             if (this.Operator.IsFunction())
             {
                 // function based operator

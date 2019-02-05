@@ -1,5 +1,6 @@
 ﻿namespace Naos.Core.RequestFiltering.App
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Naos.Core.Common;
@@ -17,7 +18,14 @@
             var result = new List<Specification<T>>();
             foreach (var criteria in filterContext.Criterias.Safe())
             {
-                result.Add(new Specification<T>(criteria.ToExpression<T>()));
+                try
+                {
+                    result.Add(new Specification<T>(criteria.ToExpression<T>()));
+                }
+                catch (ArgumentException ex)
+                {
+                    throw new NaosClientFormatException(ex.Message, ex);
+                }
             }
 
             return result;

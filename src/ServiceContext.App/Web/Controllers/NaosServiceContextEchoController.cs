@@ -8,13 +8,13 @@
 
     [Route("api/echo/servicecontext")]
     [ApiController]
-    public class ServiceContextEchoController : ControllerBase // or use normal middleware?  https://stackoverflow.com/questions/47617994/how-to-use-a-controller-in-another-assembly-in-asp-net-core-mvc-2-0?rq=1
+    public class NaosServiceContextEchoController : ControllerBase // or use normal middleware?  https://stackoverflow.com/questions/47617994/how-to-use-a-controller-in-another-assembly-in-asp-net-core-mvc-2-0?rq=1
     {
-        private readonly ILogger<ServiceContextEchoController> logger;
+        private readonly ILogger<NaosServiceContextEchoController> logger;
         private readonly ServiceDescriptor serviceContext;
 
-        public ServiceContextEchoController(
-            ILogger<ServiceContextEchoController> logger,
+        public NaosServiceContextEchoController(
+            ILogger<NaosServiceContextEchoController> logger,
             ServiceDescriptor serviceContext)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));

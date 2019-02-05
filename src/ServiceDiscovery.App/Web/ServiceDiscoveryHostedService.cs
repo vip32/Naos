@@ -9,7 +9,6 @@
     using Microsoft.AspNetCore.Hosting.Server.Features;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Commands;
     using Naos.Core.Common;
 
     public class ServiceDiscoveryHostedService : IHostedService
