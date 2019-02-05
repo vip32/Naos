@@ -3,6 +3,15 @@ variables:
   buildConfiguration: "Release"
   codecovToken: "$(codecov.token)"
   group: vars # azure pipelines variable group https://docs.microsoft.com/en-us/azure/devops/pipelines/library/variable-groups?view=azdevops&tabs=yaml
+trigger:
+- master
+- refs/tags/v*
+
+resources:
+- repo: self
+  fetchDepth: 1
+pool:
+  vmImage: ubuntu-16.04
 
 # https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/?view=vsts
 
