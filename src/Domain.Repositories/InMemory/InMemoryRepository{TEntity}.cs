@@ -22,6 +22,7 @@
         protected readonly InMemoryContext<TEntity> context;
         protected readonly ILogger<IRepository<TEntity>> logger;
         private readonly IMediator mediator;
+        private ReaderWriterLockSlim @lock = new ReaderWriterLockSlim();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InMemoryRepository{T}" /> class.
@@ -105,14 +106,22 @@
                 return default;
             }
 
-            var result = this.context.Entities.FirstOrDefault(x => x.Id.Equals(id));
-
-            if (this.Options?.Mapper != null && result != null)
+            this.@lock.EnterReadLock();
+            try
             {
-                return this.Options.Mapper.Map<TEntity>(result);
-            }
+                var result = this.context.Entities.FirstOrDefault(x => x.Id.Equals(id));
 
-            return await Task.FromResult(result);
+                if (this.Options?.Mapper != null && result != null)
+                {
+                    return this.Options.Mapper.Map<TEntity>(result);
+                }
+
+                return await Task.FromResult(result);
+            }
+            finally
+            {
+                this.@lock.ExitReadLock();
+            }
         }
 
         /// <summary>
@@ -187,12 +196,20 @@
             this.logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogEventKeys.DomainRepository);
             // TODO: map to destination
             //this.entities = this.entities.Where(e => !e.Id.Equals(entity.Id)).Concat(new[] { entity }).ToList();
-            if (this.context.Entities.Contains(entity))
+            this.@lock.EnterWriteLock();
+            try
             {
-                this.context.Entities.Remove(entity);
-            }
+                if (this.context.Entities.Contains(entity))
+                {
+                    this.context.Entities.Remove(entity);
+                }
 
-            this.context.Entities.Add(entity);
+                this.context.Entities.Add(entity);
+            }
+            finally
+            {
+                this.@lock.ExitWriteLock();
+            }
 
             if (this.Options?.PublishEvents != false)
             {
@@ -225,26 +242,34 @@
                 return ActionResult.None;
             }
 
-            var entity = this.context.Entities.FirstOrDefault(x => x.Id.Equals(id));
-            if (entity != null)
+            this.@lock.ExitWriteLock();
+            try
             {
-                if (this.Options?.PublishEvents != false)
+                var entity = this.context.Entities.FirstOrDefault(x => x.Id.Equals(id));
+                if (entity != null)
                 {
-                    await this.mediator.Publish(new EntityDeleteDomainEvent(entity)).ConfigureAwait(false);
+                    if (this.Options?.PublishEvents != false)
+                    {
+                        await this.mediator.Publish(new EntityDeleteDomainEvent(entity)).ConfigureAwait(false);
+                    }
+
+                    this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogEventKeys.DomainRepository);
+                    this.context.Entities.Remove(entity);
+
+                    if (this.Options?.PublishEvents != false)
+                    {
+                        await this.mediator.Publish(new EntityDeletedDomainEvent(entity)).ConfigureAwait(false);
+                    }
+
+                    return ActionResult.Deleted;
                 }
 
-                this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogEventKeys.DomainRepository);
-                this.context.Entities.Remove(entity);
-
-                if (this.Options?.PublishEvents != false)
-                {
-                    await this.mediator.Publish(new EntityDeletedDomainEvent(entity)).ConfigureAwait(false);
-                }
-
-                return ActionResult.Deleted;
+                return ActionResult.None;
             }
-
-            return ActionResult.None;
+            finally
+            {
+                this.@lock.ExitWriteLock();
+            }
         }
 
         /// <summary>
@@ -260,20 +285,28 @@
                 return ActionResult.None;
             }
 
-            if (this.Options?.PublishEvents != false)
+            this.@lock.ExitWriteLock();
+            try
             {
-                await this.mediator.Publish(new EntityDeleteDomainEvent(entity)).ConfigureAwait(false);
+                if (this.Options?.PublishEvents != false)
+                {
+                    await this.mediator.Publish(new EntityDeleteDomainEvent(entity)).ConfigureAwait(false);
+                }
+
+                this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogEventKeys.DomainRepository);
+                this.context.Entities.Remove(entity);
+
+                if (this.Options?.PublishEvents != false)
+                {
+                    await this.mediator.Publish(new EntityDeletedDomainEvent(entity)).ConfigureAwait(false);
+                }
+
+                return ActionResult.Deleted; // TODO: check if something actually got delete
             }
-
-            this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogEventKeys.DomainRepository);
-            this.context.Entities.Remove(entity);
-
-            if (this.Options?.PublishEvents != false)
+            finally
             {
-                await this.mediator.Publish(new EntityDeletedDomainEvent(entity)).ConfigureAwait(false);
+                this.@lock.ExitWriteLock();
             }
-
-            return ActionResult.Deleted; // TODO: check if something actually got delete
         }
 
         protected virtual Func<TEntity, bool> EnsurePredicate(ISpecification<TEntity> specification)
@@ -283,41 +316,50 @@
 
         protected virtual IEnumerable<TEntity> FindAll(IEnumerable<TEntity> entities, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            var result = entities;
+            this.@lock.EnterReadLock();
 
-            if (options?.Skip.HasValue == true && options.Skip.Value > 0)
+            try
             {
-                result = result.Skip(options.Skip.Value);
-            }
+                var result = entities;
 
-            if (options?.Take.HasValue == true && options.Take.Value > 0)
+                if (options?.Skip.HasValue == true && options.Skip.Value > 0)
+                {
+                    result = result.Skip(options.Skip.Value);
+                }
+
+                if (options?.Take.HasValue == true && options.Take.Value > 0)
+                {
+                    result = result.Take(options.Take.Value);
+                }
+
+                IOrderedEnumerable<TEntity> orderedResult = null;
+                foreach (var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
+                {
+                    orderedResult = orderedResult == null
+                        ? order.Direction == OrderDirection.Ascending
+                            ? result.OrderBy(order.Expression.Compile()) // replace wit CompileFast()? https://github.com/dadhi/FastExpressionCompiler
+                            : result.OrderByDescending(order.Expression.Compile())
+                        : order.Direction == OrderDirection.Ascending
+                            ? orderedResult.ThenBy(order.Expression.Compile())
+                            : orderedResult.ThenByDescending(order.Expression.Compile());
+                }
+
+                if (orderedResult != null)
+                {
+                    result = orderedResult;
+                }
+
+                if (this.Options?.Mapper != null && result != null)
+                {
+                    return result.Select(r => this.Options.Mapper.Map<TEntity>(r));
+                }
+
+                return result;
+            }
+            finally
             {
-                result = result.Take(options.Take.Value);
+                this.@lock.ExitReadLock();
             }
-
-            IOrderedEnumerable<TEntity> orderedResult = null;
-            foreach (var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
-            {
-                orderedResult = orderedResult == null
-                    ? order.Direction == OrderDirection.Ascending
-                        ? result.OrderBy(order.Expression.Compile()) // replace wit CompileFast()? https://github.com/dadhi/FastExpressionCompiler
-                        : result.OrderByDescending(order.Expression.Compile())
-                    : order.Direction == OrderDirection.Ascending
-                        ? orderedResult.ThenBy(order.Expression.Compile())
-                        : orderedResult.ThenByDescending(order.Expression.Compile());
-            }
-
-            if(orderedResult != null)
-            {
-                result = orderedResult;
-            }
-
-            if (this.Options?.Mapper != null && result != null)
-            {
-                return result.Select(r => this.Options.Mapper.Map<TEntity>(r));
-            }
-
-            return result;
         }
 
         private void EnsureId(TEntity entity) // TODO: move this to seperate class (IdentityGenerator)
