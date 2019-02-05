@@ -1,7 +1,9 @@
 ﻿namespace Naos.Sample.App.Web
 {
+    using System;
     using System.Diagnostics;
     using System.Linq;
+    using System.Net.Http;
     using System.Threading;
     using MediatR;
     using Microsoft.AspNetCore.Authorization;
@@ -26,6 +28,8 @@
     using Naos.Core.ServiceContext.App.Web;
     using Newtonsoft.Json;
     using NSwag.AspNetCore;
+    using Polly;
+    using Polly.Extensions.Http;
 
     public class Startup
     {
@@ -44,6 +48,38 @@
             // framework application services
             services.AddTransient<HttpClientLogHandler>();
             services.AddHttpClient("default")
+                .AddPolicyHandler((serviceProvider, request) =>
+                    HttpPolicyExtensions.HandleTransientHttpError()
+                        .WaitAndRetryAsync(
+                            3,
+                            sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
+                            onRetry: (outcome, timespan, retryAttempt, context) =>
+                            {
+                                serviceProvider.GetService<ILogger<HttpClient>>()
+                                    .LogWarning($"delaying for {timespan.TotalMilliseconds}ms, then making retry {retryAttempt}");
+                            }))
+                .AddPolicyHandler((serviceProvider, request) =>
+                    HttpPolicyExtensions.HandleTransientHttpError()
+                        .CircuitBreakerAsync(
+                            3,
+                            durationOfBreak: TimeSpan.FromSeconds(30),
+                            onBreak: (response, state) =>
+                            {
+                                serviceProvider.GetService<ILogger<HttpClient>>().LogWarning($"break circuit ({state}): {response.Exception.GetFullMessage()}");
+                            },
+                            onReset: () =>
+                            {
+                                serviceProvider.GetService<ILogger<HttpClient>>().LogInformation("reset circuit");
+                            }))
+                //.AddTransientHttpErrorPolicy(builder => builder.WaitAndRetryAsync(new[]
+                //{
+                //    TimeSpan.FromSeconds(1),
+                //    TimeSpan.FromSeconds(5),
+                //    TimeSpan.FromSeconds(10)
+                //}))
+                //.AddTransientHttpErrorPolicy(builder => builder.CircuitBreakerAsync(
+                //    handledEventsAllowedBeforeBreaking: 3,
+                //    durationOfBreak: TimeSpan.FromSeconds(30)))
                 .AddHttpMessageHandler<HttpClientCorrelationHandler>()
                 .AddHttpMessageHandler<HttpClientServiceContextHandler>()
                 .AddHttpMessageHandler<HttpClientLogHandler>();
