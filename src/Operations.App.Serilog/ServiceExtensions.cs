@@ -36,8 +36,8 @@
             internalCorrelationId = correlationId;
             //internalServiceDescriptor = serviceDescriptor;
 
-            var fac = CreateLoggerFactory();
-            context.Services.AddSingleton(sp => fac);
+            var loggerFactory = CreateLoggerFactory();
+            context.Services.AddSingleton(sp => loggerFactory);
             context.Services.AddSingleton(typeof(ILogger<>), typeof(LoggingAdapter<>));
             context.Services.AddSingleton(typeof(Logging.ILogger), typeof(LoggingAdapter));
 
