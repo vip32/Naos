@@ -1,6 +1,5 @@
 ﻿namespace Naos.Core.FileStorage.Domain
 {
-    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Text;
@@ -9,7 +8,6 @@
     using EnsureThat;
     using Naos.Core.Common;
     using Naos.Core.Common.Serialization;
-    using Naos.Core.FileStorage.Domain;
 
     public static class Extensions
     {
