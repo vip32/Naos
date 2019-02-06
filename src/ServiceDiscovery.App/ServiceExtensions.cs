@@ -2,6 +2,7 @@
 {
     using System.Net.Http;
     using EnsureThat;
+    using Microsoft.AspNetCore.Hosting.Server;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Hosting;
@@ -27,13 +28,13 @@
         {
             EnsureArg.IsNotNull(context, nameof(context));
 
-            context.Services.TryAddSingleton(sp => context.Configuration.GetSection(section).Get<ServiceDiscoveryConfiguration>());
-            context.Services.TryAddSingleton<IHostedService, ServiceDiscoveryHostedService>();
-            context.Services.TryAddSingleton<IServiceRegistry>(sp =>
+            context.Services.AddSingleton(sp => context.Configuration.GetSection(section).Get<ServiceDiscoveryConfiguration>());
+            context.Services.AddSingleton<IHostedService, ServiceDiscoveryHostedService>();
+            context.Services.AddSingleton<IServiceRegistry>(sp =>
                 new FileSystemServiceRegistry(
                     sp.GetRequiredService<ILogger<FileSystemServiceRegistry>>(),
                     context.Configuration.GetSection($"{section}:registry:fileSystem").Get<FileSystemServiceRegistryConfiguration>()));
-            context.Services.TryAddSingleton<IServiceRegistryClient>(sp =>
+            context.Services.AddSingleton<IServiceRegistryClient>(sp =>
                 new ServiceRegistryClient(sp.GetRequiredService<IServiceRegistry>()));
 
             return context;
@@ -51,24 +52,16 @@
         {
             EnsureArg.IsNotNull(context, nameof(context));
 
-            //services.AddProxy(o =>
-            //{
-            //    //o.ConfigurePrimaryHttpMessageHandler(c => c.GetRequiredService<HttpClientLogHandler>());
-            //    //o.AddHttpMessageHandler<HttpClientLogHandler>();
-            //});
-
             // client needs remote registry
-            context.Services.TryAddSingleton(sp => context.Configuration.GetSection(section).Get<ServiceDiscoveryConfiguration>());
-            context.Services.TryAddSingleton<IHostedService, ServiceDiscoveryHostedService>();
-            context.Services.TryAddSingleton<IServiceRegistry>(sp =>
+            context.Services.AddSingleton(sp => context.Configuration.GetSection(section).Get<ServiceDiscoveryConfiguration>());
+            context.Services.AddSingleton<IHostedService, ServiceDiscoveryHostedService>();
+            context.Services.AddSingleton<IServiceRegistry>(sp =>
                 new RemoteServiceRegistry(
                     sp.GetRequiredService<ILogger<RemoteServiceRegistry>>(),
                     sp.GetRequiredService<IHttpClientFactory>().CreateClient(),
                     context.Configuration.GetSection($"{section}:registry:remote").Get<RemoteServiceRegistryConfiguration>()));
-            context.Services.TryAddSingleton<IServiceRegistryClient>(sp =>
+            context.Services.AddSingleton<IServiceRegistryClient>(sp =>
                 new ServiceRegistryClient(sp.GetRequiredService<IServiceRegistry>()));
-
-            // router service needs different registry!
 
             return context;
         }

@@ -17,9 +17,12 @@
         private bool enabled = true; // TODO: start/stop from outside https://stackoverflow.com/questions/51469881/asp-net-core-ihostedservice-manual-start-stop-pause
         private Timer schedulerTimer;
 
-        public JobSchedulerHostedService(ILogger<JobSchedulerHostedService> logger, IServiceProvider serviceProvider)
+        public JobSchedulerHostedService(
+            ILogger<JobSchedulerHostedService> logger,
+            IServiceProvider serviceProvider)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
+            EnsureArg.IsNotNull(serviceProvider, nameof(serviceProvider));
 
             this.logger = logger;
             this.scheduler = serviceProvider.GetRequiredService<IJobScheduler>();

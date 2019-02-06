@@ -14,9 +14,12 @@
         private readonly ILogger<MessagingHostedService> logger;
         private readonly IMessageBroker broker;
 
-        public MessagingHostedService(ILogger<MessagingHostedService> logger, IServiceProvider serviceProvider)
+        public MessagingHostedService(
+            ILogger<MessagingHostedService> logger,
+            IServiceProvider serviceProvider)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
+            EnsureArg.IsNotNull(serviceProvider, nameof(serviceProvider));
 
             this.logger = logger;
             this.broker = serviceProvider.GetRequiredService<IMessageBroker>();

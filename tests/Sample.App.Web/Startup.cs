@@ -126,8 +126,9 @@
                     //    s => s.Subscribe<TestMessage, TestMessageHandler>())
                     //.AddMessagingSignalR(
                     //    s => s.Subscribe<TestMessage, TestMessageHandler>())
-                    .AddServiceDiscoveryClientRemote()
-                    .AddServiceDiscoveryRouterFilesystem();
+                    .AddServiceDiscoveryClientFileSystem();
+                    //.AddServiceDiscoveryClientRemote()
+                    //.AddServiceDiscoveryRouterFilesystem();
 
             // naos sample product registrations
             services

@@ -7,17 +7,18 @@
     using EnsureThat;
     using Microsoft.AspNetCore.Hosting.Server;
     using Microsoft.AspNetCore.Hosting.Server.Features;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
 
-    public class ServiceDiscoveryHostedService : IHostedService
+    public class ServiceDiscoveryHostedService : IHostedService, IDisposable
     {
         private readonly ILogger<ServiceDiscoveryHostedService> logger;
         private readonly ServiceDiscoveryConfiguration configuration;
         private readonly IServiceRegistryClient registryClient;
         private readonly IServer server;
-        private readonly ServiceDescriptor serviceDescriptor;
+        private readonly Common.ServiceDescriptor serviceDescriptor;
         private string serviceAddress;
         private CancellationTokenSource cts;
         private string registrationId;
@@ -28,7 +29,7 @@
             ServiceDiscoveryConfiguration configuration,
             IServiceRegistryClient registryClient,
             IServer server,
-            ServiceDescriptor serviceDescriptor)
+            Common.ServiceDescriptor serviceDescriptor)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(configuration, nameof(configuration));
@@ -95,6 +96,10 @@
             }
 
             return Task.CompletedTask;
+        }
+
+        public void Dispose()
+        {
         }
     }
 }
