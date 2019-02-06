@@ -16,7 +16,7 @@
         public DataDictionary(IEnumerable<KeyValuePair<string, object>> items)
             : base(StringComparer.OrdinalIgnoreCase)
         {
-            foreach (var item in items)
+            foreach (var item in items.Safe())
             {
                 this.Add(item.Key, item.Value);
             }
@@ -119,11 +119,11 @@
             return this.GetStringValue(name, string.Empty);
         }
 
-        public string GetStringValue(string name, string @default)
+        public string GetStringValue(string name, string defaultValue)
         {
             if (!this.TryGetValue(name, out object value))
             {
-                return @default;
+                return defaultValue;
             }
 
             if (value is string)
