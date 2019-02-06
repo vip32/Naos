@@ -4,6 +4,7 @@
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
     using System.Xml.Linq;
     using Microsoft.Extensions.Logging;
@@ -74,6 +75,8 @@
                 Assert.Null(fileInfo);
 
                 var startTime = DateTime.UtcNow;
+                Thread.Sleep(1000);
+
                 string path = $"folder\\{Guid.NewGuid()}-nested.txt";
                 Assert.True(await storage.SaveFileContentsAsync(path, "test"));
                 fileInfo = await storage.GetFileInformationAsync(path);
