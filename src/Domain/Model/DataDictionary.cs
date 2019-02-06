@@ -91,20 +91,20 @@
                 return defaultValue;
             }
 
-            object data = this[key];
-            if (data is T)
+            object value = this[key];
+            if (value is T)
             {
-                return (T)data;
+                return (T)value;
             }
 
-            if (data == null)
+            if (value == null)
             {
                 return defaultValue;
             }
 
             try
             {
-                return data.ToType<T>();
+                return value.ToType<T>();
             }
             catch
             {
