@@ -204,7 +204,7 @@
         {
             if (searchPattern == null || string.IsNullOrEmpty(searchPattern) || searchPattern == "*")
             {
-                this.logger.LogInformation($"{{LogKey}} delete folder: {this.Folder}", LogEventKeys.FileStorage);
+                this.logger.LogInformation($"{{LogKey:l}} delete folder: {this.Folder}", LogEventKeys.FileStorage);
                 Directory.Delete(this.Folder, true);
                 return Task.FromResult(0);
             }
@@ -232,7 +232,7 @@
 
             foreach (string file in Directory.EnumerateFiles(this.Folder, searchPattern, SearchOption.AllDirectories))
             {
-                this.logger.LogInformation($"{{LogKey}} delete file: {file}", LogEventKeys.FileStorage);
+                this.logger.LogInformation($"{{LogKey:l}} delete file: {file}", LogEventKeys.FileStorage);
                 File.Delete(file);
                 count++;
             }
@@ -283,7 +283,7 @@
             string directory = Path.GetDirectoryName(filePath);
             if (directory != null)
             {
-                this.logger.LogInformation($"{{LogKey}} create directory: {directory}", LogEventKeys.FileStorage);
+                this.logger.LogInformation($"{{LogKey:l}} create directory: {directory}", LogEventKeys.FileStorage);
                 Directory.CreateDirectory(directory);
             }
 

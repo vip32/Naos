@@ -13,7 +13,7 @@
         private readonly ILogger<FileSystemServiceRegistry> logger;
         private readonly FileSystemServiceRegistryConfiguration configuration;
         private readonly string directory;
-        private List<ServiceRegistration> registrations = new List<ServiceRegistration>();
+        private readonly List<ServiceRegistration> registrations = new List<ServiceRegistration>();
         private FileSystemWatcher watcher;
 
         public FileSystemServiceRegistry(
@@ -35,12 +35,12 @@
         {
             EnsureArg.IsNotNullOrEmpty(id, nameof(id));
 
-            var fullFileName = Path.Combine(this.GetDirectory(this.configuration), $"registration_{id}.json.tmp");
-            if (File.Exists(fullFileName))
+            var path = Path.Combine(this.directory, $"registration_{id}.json.tmp");
+            if (File.Exists(path))
             {
                 this.logger.LogInformation("{LogKey:l} filesystem registration delete (id={RegistrationId})", LogEventKeys.ServiceDiscovery, id);
 
-                File.Delete(fullFileName);
+                File.Delete(path);
             }
 
             return Task.CompletedTask;
@@ -53,28 +53,28 @@
             // store message in specific (Discovery) folder
             this.EnsureDirectory(this.directory);
 
-            var fullFileNameTemp = Path.Combine(this.GetDirectory(this.configuration), $"registration_{registration.Id}.json.tmp");
-            var fullFileName = Path.Combine(this.GetDirectory(this.configuration), $"registration_{registration.Id}.json");
-            this.logger.LogInformation($"{{LogKey:l}} register filesystem (name={{RegistrationName}}, tags={string.Join("|", registration.Tags.Safe())}, id={{RegistrationId}}, address={registration.FullAddress}, file={fullFileName.SubstringFromLast(@"\")})",
+            var pathTemp = Path.Combine(this.directory, $"registration_{registration.Id}.json.tmp");
+            var path = Path.Combine(this.directory, $"registration_{registration.Id}.json");
+            this.logger.LogInformation($"{{LogKey:l}} register filesystem (name={{RegistrationName}}, tags={string.Join("|", registration.Tags.Safe())}, id={{RegistrationId}}, address={registration.FullAddress}, file={path.SubstringFromLast(@"\")})",
                 LogEventKeys.ServiceDiscovery, registration.Name, registration.Id);
 
-            if (File.Exists(fullFileNameTemp))
+            if (File.Exists(pathTemp))
             {
-                File.Delete(fullFileNameTemp);
+                File.Delete(pathTemp);
             }
 
-            if (File.Exists(fullFileName))
+            if (File.Exists(path))
             {
-                File.Delete(fullFileName);
+                File.Delete(path);
             }
 
-            using (var streamWriter = File.CreateText(fullFileNameTemp))
+            using (var streamWriter = File.CreateText(pathTemp))
             {
                 streamWriter.Write(SerializationHelper.JsonSerialize(registration));
                 streamWriter.Flush();
             }
 
-            File.Move(fullFileNameTemp, fullFileName); // rename file
+            File.Move(pathTemp, path); // rename file
 
             return Task.CompletedTask;
         }
@@ -126,7 +126,7 @@
             }
         }
 
-        private string ReadFile(string fullPath)
+        private string GetFileContents(string fullPath)
         {
             //System.Threading.Thread.Sleep(200); // this helps with locked files
             using (var reader = new StreamReader(File.Open(fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)))
@@ -139,12 +139,12 @@
         {
             this.registrations.Clear();
 
-            foreach (var fullPath in Directory.GetFiles(directory))
+            foreach (var path in Directory.GetFiles(directory))
             {
-                var registration = JsonConvert.DeserializeObject<ServiceRegistration>(this.ReadFile(fullPath));
+                var registration = JsonConvert.DeserializeObject<ServiceRegistration>(this.GetFileContents(path));
                 if (registration != null)
                 {
-                    this.logger.LogInformation($"{{LogKey:l}} filesystem registrations refresh (name={{RegistrationName}}, id={{RegistrationId}}, file={fullPath.SubstringFromLast(@"\")})",
+                    this.logger.LogInformation($"{{LogKey:l}} filesystem registrations refresh (name={{RegistrationName}}, id={{RegistrationId}}, file={path.SubstringFromLast(@"\")})",
                         LogEventKeys.ServiceDiscovery, registration.Name, registration.Id);
                     this.registrations.Add(registration);
                 }

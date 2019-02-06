@@ -201,7 +201,7 @@
                 var keys = this.storage.Keys.Where(k => regex.IsMatch(k)).Select(k => this.storage[k].Item1).ToList();
                 foreach (var key in keys)
                 {
-                    this.logger.LogInformation($"{{LogKey}} delete file: {key.Path}", LogEventKeys.FileStorage);
+                    this.logger.LogInformation($"{{LogKey:l}} delete file: {key.Path}", LogEventKeys.FileStorage);
                     this.storage.Remove(key.Path);
                     count++;
                 }

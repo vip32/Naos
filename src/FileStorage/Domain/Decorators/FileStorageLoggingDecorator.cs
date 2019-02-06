@@ -29,7 +29,7 @@
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
-            this.logger.LogInformation($"{{LogKey}} get file stream: {path}", LogEventKeys.FileStorage);
+            this.logger.LogInformation($"{{LogKey:l}} get file stream: {path}", LogEventKeys.FileStorage);
             return this.Decoratee.GetFileStreamAsync(path, cancellationToken);
         }
 
@@ -37,7 +37,7 @@
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
-            this.logger.LogInformation($"{{LogKey}} get file info: {path}", LogEventKeys.FileStorage);
+            this.logger.LogInformation($"{{LogKey:l}} get file info: {path}", LogEventKeys.FileStorage);
             return await this.GetFileInformationAsync(path);
         }
 
@@ -45,7 +45,7 @@
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
-            this.logger.LogInformation($"{{LogKey}} exists file: {path}", LogEventKeys.FileStorage);
+            this.logger.LogInformation($"{{LogKey:l}} exists file: {path}", LogEventKeys.FileStorage);
             return this.Decoratee.ExistsAsync(path);
         }
 
@@ -54,7 +54,7 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
             EnsureArg.IsNotNull(stream, nameof(stream));
 
-            this.logger.LogInformation($"{{LogKey}} save file: {path}", LogEventKeys.FileStorage);
+            this.logger.LogInformation($"{{LogKey:l}} save file: {path}", LogEventKeys.FileStorage);
             return this.Decoratee.SaveFileAsync(path, stream, cancellationToken);
         }
 
@@ -63,7 +63,7 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
             EnsureArg.IsNotNullOrEmpty(newPath, nameof(newPath));
 
-            this.logger.LogInformation($"{{LogKey}} rename file: {path} > {newPath}", LogEventKeys.FileStorage);
+            this.logger.LogInformation($"{{LogKey:l}} rename file: {path} > {newPath}", LogEventKeys.FileStorage);
             return this.Decoratee.RenameFileAsync(path, newPath, cancellationToken);
         }
 
@@ -72,7 +72,7 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
             EnsureArg.IsNotNullOrEmpty(targetPath, nameof(targetPath));
 
-            this.logger.LogInformation($"{{LogKey}} copy file: {path} > {targetPath}", LogEventKeys.FileStorage);
+            this.logger.LogInformation($"{{LogKey:l}} copy file: {path} > {targetPath}", LogEventKeys.FileStorage);
             return this.Decoratee.CopyFileAsync(path, targetPath, cancellationToken);
         }
 
@@ -80,19 +80,19 @@
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
-            this.logger.LogInformation($"{{LogKey}} delete file: {path}", LogEventKeys.FileStorage);
+            this.logger.LogInformation($"{{LogKey:l}} delete file: {path}", LogEventKeys.FileStorage);
             return this.Decoratee.DeleteFileAsync(path, cancellationToken);
         }
 
         public Task<int> DeleteFilesAsync(string searchPattern = null, CancellationToken cancellationToken = default)
         {
-            this.logger.LogInformation($"{{LogKey}} delete file: {searchPattern}", LogEventKeys.FileStorage);
+            this.logger.LogInformation($"{{LogKey:l}} delete file: {searchPattern}", LogEventKeys.FileStorage);
             return this.Decoratee.DeleteFilesAsync(searchPattern, cancellationToken);
         }
 
         public async Task<PagedResults> GetPagedFileListAsync(int pageSize = 100, string searchPattern = null, CancellationToken cancellationToken = default)
         {
-            this.logger.LogInformation($"{{LogKey}} get files: {searchPattern}", LogEventKeys.FileStorage);
+            this.logger.LogInformation($"{{LogKey:l}} get files: {searchPattern}", LogEventKeys.FileStorage);
             return await this.GetPagedFileListAsync(pageSize, searchPattern, cancellationToken);
         }
 

@@ -141,7 +141,7 @@
 
             foreach (var file in files) // batch?
             {
-                this.logger.LogInformation($"{{LogKey}} delete file: {file.Path}", LogEventKeys.FileStorage);
+                this.logger.LogInformation($"{{LogKey:l}} delete file: {file.Path}", LogEventKeys.FileStorage);
                 await this.DeleteFileAsync(file.Path, cancellationToken).AnyContext();
                 count++;
             }
