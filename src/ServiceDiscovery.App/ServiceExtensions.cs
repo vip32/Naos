@@ -2,9 +2,7 @@
 {
     using System.Net.Http;
     using EnsureThat;
-    using Microsoft.AspNetCore.Hosting.Server;
     using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Naos.Core.ServiceDiscovery.App;
