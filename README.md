@@ -262,4 +262,12 @@ The same registries as Client-side can be used in the router.
 - Jobs
 - Schedules
 
+# FileStorage
+
+- Folder
+- Azure Storage
+- InMemory
+- SSH
+
+
 # (Workflow)
