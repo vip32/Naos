@@ -78,27 +78,17 @@
                     this.logger.LogDebug($"{{LogKey:l}} set message (origin={message.Origin})", LogEventKeys.Messaging);
                 }
 
-                // TODO: async publish!
-                /*await */
-                this.mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.AnyContext();*/
-
-                var messageName = /*message.Name*/ message.GetType().PrettyName(false);
-
                 // store message in specific (Message) folder
-                var directory = this.GetDirectory(messageName, this.filterScope);
-                this.EnsureDirectory(directory);
-
                 this.logger.LogInformation("{LogKey:l} publish (name={MessageName}, id={MessageId}, origin={MessageOrigin})", LogEventKeys.Messaging, message.GetType().PrettyName(), message.Id, message.Origin);
-
-                var fullFileName = Path.Combine(this.GetDirectory(messageName, this.filterScope), $"message_{message.Id}_{this.messageScope}.json.tmp");
-                using (var streamWriter = File.CreateText(fullFileName))
+                var messageName = /*message.Name*/ message.GetType().PrettyName(false);
+                var path = Path.Combine(this.GetDirectory(messageName, this.filterScope), $"message_{message.Id}_{this.messageScope}.json.tmp");
+                if (this.fileStorage.SaveFileObjectAsync(path, message).Result)
                 {
-                    streamWriter.Write(SerializationHelper.JsonSerialize(message));
-                    streamWriter.Flush();
-                    //streamWriter.Close();
+                    this.fileStorage.RenameFileAsync(path, path.SubstringTillLast("."));
                 }
 
-                File.Move(fullFileName, fullFileName.SubstringTillLast(".")); // rename file
+                // TODO: async publish!
+                /*await */ this.mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.AnyContext();*/
             }
         }
 
@@ -112,11 +102,11 @@
             {
                 if (!this.watchers.ContainsKey(messageName))
                 {
-                    var directory = this.GetDirectory(messageName, this.filterScope);
-                    this.logger.LogInformation("{LogKey:l} subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, watch={Directory})", LogEventKeys.Messaging, typeof(TMessage).PrettyName(), this.messageScope, this.filterScope, typeof(THandler).Name, directory);
-                    this.EnsureDirectory(directory);
+                    var path = this.GetDirectory(messageName, this.filterScope);
+                    this.logger.LogInformation("{LogKey:l} subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, watch={Directory})", LogEventKeys.Messaging, typeof(TMessage).PrettyName(), this.messageScope, this.filterScope, typeof(THandler).Name, path);
+                    this.EnsureDirectory(path);
 
-                    var watcher = new FileSystemWatcher(directory)
+                    var watcher = new FileSystemWatcher(path)
                     {
                         NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite,
                         EnableRaisingEvents = true,
@@ -149,13 +139,13 @@
         /// <summary>
         /// Processes the message by invoking the message handler.
         /// </summary>
-        /// <param name="fullPath"></param>
+        /// <param name="path"></param>
         /// <returns></returns>
-        private async Task<bool> ProcessMessage(string fullPath)
+        private async Task<bool> ProcessMessage(string path)
         {
             var processed = false;
-            var messageName = fullPath.SubstringTillLast(@"\").SubstringFromLast(@"\");
-            var messageBody = this.ReadFile(fullPath);
+            var messageName = path.SubstringTillLast(@"\").SubstringFromLast(@"\");
+            var messageBody = this.GetFileContents(path);
 
             if (this.map.Exists(messageName))
             {
@@ -172,7 +162,7 @@
                     if (message?.Origin.IsNullOrEmpty() == true)
                     {
                         //message.CorrelationId = jsonMessage.AsJToken().GetStringPropertyByToken("CorrelationId");
-                        message.Origin = fullPath.SubstringFromLast("_").SubstringTillLast("."); // read metadata from filename
+                        message.Origin = path.SubstringFromLast("_").SubstringTillLast("."); // read metadata from filename
                     }
 
                     this.logger.LogInformation("{LogKey:l} process (name={MessageName}, id={MessageId}, service={Service}, origin={MessageOrigin})",
@@ -219,13 +209,10 @@
             }
         }
 
-        private string ReadFile(string fullPath)
+        private string GetFileContents(string path)
         {
             System.Threading.Thread.Sleep(this.configuration.ProcessDelay); // this helps with locked files
-            using (var reader = new StreamReader(File.Open(fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)))
-            {
-                return reader.ReadToEnd();
-            }
+            return this.fileStorage.GetFileContentsAsync(path).Result;
         }
     }
 }

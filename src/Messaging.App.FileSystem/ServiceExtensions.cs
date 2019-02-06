@@ -1,12 +1,15 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
+    using System.IO;
     using EnsureThat;
     using Humanizer;
     using MediatR;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
+    using Naos.Core.Common.Serialization;
+    using Naos.Core.FileStorage.Domain;
     using Naos.Core.FileStorage.Infrastructure.FileSystem;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.App.Web;
@@ -34,13 +37,16 @@
             context.Services.AddSingleton<IMessageBroker>(sp =>
             {
                 var fileSystemConfiguration = context.Configuration.GetSection(section).Get<FileSystemConfiguration>();
+                fileSystemConfiguration.Folder = fileSystemConfiguration.Folder.EmptyToNull() ?? Path.GetTempPath();
                 var result = new FileSystemMessageBroker(
                         sp.GetRequiredService<ILogger<FileSystemMessageBroker>>(),
                         (IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)),
                         new ServiceProviderMessageHandlerFactory(sp),
-                        new FolderFileStorage(
-                            sp.GetRequiredService<ILogger<FolderFileStorage>>(),
-                            new FolderFileStorageOptions { Folder = fileSystemConfiguration.Folder }),
+                        new FileStorageLoggingDecorator(
+                            sp.GetRequiredService<ILogger<FileStorageLoggingDecorator>>(),
+                            new FolderFileStorage(
+                                sp.GetRequiredService<ILogger<FolderFileStorage>>(),
+                                new FolderFileStorageOptions { Folder = fileSystemConfiguration.Folder, Serializer = new JsonNetSerializer() })),
                         fileSystemConfiguration,
                         map: sp.GetRequiredService<ISubscriptionMap>(),
                         filterScope: Environment.GetEnvironmentVariable(EnvironmentKeys.IsLocal).ToBool()

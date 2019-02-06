@@ -10,7 +10,7 @@
 
         public JsonNetSerializer(JsonSerializerSettings settings = null)
         {
-            this.serializer = JsonSerializer.Create(settings ?? new JsonSerializerSettings());
+            this.serializer = JsonSerializer.Create(settings ?? DefaultJsonSerializerSettings.Create());
         }
 
         public void Serialize(object data, Stream outputStream)

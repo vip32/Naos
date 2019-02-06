@@ -14,6 +14,6 @@
         public const string ServiceDiscovery = "SVCDSC";
         public const string Operations = "OPRTNS";
         public const string Authentication = "AUTHNT";
-        public const string FileStorage = "FILSTOR";
+        public const string FileStorage = "FILSTR";
     }
 }
