@@ -22,14 +22,14 @@
         {
             EnsureArg.IsNotNullOrEmpty(id, nameof(id));
 
-            await this.registry.DeRegisterAsync(id).ConfigureAwait(false);
+            await this.registry.DeRegisterAsync(id).AnyContext();
         }
 
         public async Task RegisterAsync(ServiceRegistration registration)
         {
             EnsureArg.IsNotNull(registration, nameof(registration));
 
-            await this.registry.RegisterAsync(registration).ConfigureAwait(false);
+            await this.registry.RegisterAsync(registration).AnyContext();
         }
 
         public async Task<IEnumerable<ServiceRegistration>> RegistrationsAsync()
@@ -39,7 +39,7 @@
 
         public async Task<IEnumerable<ServiceRegistration>> RegistrationsAsync(string name, string tag)
         {
-            var registrations = await this.registry.RegistrationsAsync().ConfigureAwait(false);
+            var registrations = await this.registry.RegistrationsAsync().AnyContext();
 
             if (!name.IsNullOrEmpty())
             {

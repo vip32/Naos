@@ -35,7 +35,7 @@
         public async Task FindAllAsync_Test()
         {
             // arrange/act
-            var result = await this.sut.FindAllAsync().ConfigureAwait(false);
+            var result = await this.sut.FindAllAsync().AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -47,7 +47,7 @@
         {
             // arrange/act
             var result = await this.sut.FindAllAsync(
-                new FindOptions<UserAccount>(order: new OrderOption<UserAccount>(e => e.AdAccount.Domain))).ConfigureAwait(false);
+                new FindOptions<UserAccount>(order: new OrderOption<UserAccount>(e => e.AdAccount.Domain))).AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -61,7 +61,7 @@
         //{
         //    // arrange/act
         //    var result = await this.sut.FindAllAsync(
-        //        new FindOptions<UserAccount>(take: 3)).ConfigureAwait(false);
+        //        new FindOptions<UserAccount>(take: 3)).AnyContext();
 
         //    // assert
         //    result.ShouldNotBeNull();
@@ -73,7 +73,7 @@
         //public async Task FindAllAsync_WithTenantExtension_Test()
         //{
         //    // arrange/act
-        //    var result = await this.sut.FindAllAsync(this.tenantId, default).ConfigureAwait(false);
+        //    var result = await this.sut.FindAllAsync(this.tenantId, default).AnyContext();
 
         //    // assert
         //    result.ShouldNotBeNull();
@@ -85,7 +85,7 @@
         {
             // arrange/act
             var result = await this.sut.FindAllAsync(
-                new HasDomainSpecification("East")).ConfigureAwait(false);
+                new HasDomainSpecification("East")).AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -93,7 +93,7 @@
 
             // arrange/act
             result = await this.sut.FindAllAsync(
-                new Specification<UserAccount>(e => e.VisitCount > 0)).ConfigureAwait(false);
+                new Specification<UserAccount>(e => e.VisitCount > 0)).AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -106,7 +106,7 @@
             // arrange/act
             var result = await this.sut.FindAllAsync(
                 new HasDomainSpecification("East")
-                .And(new Specification<UserAccount>(e => e.VisitCount > 0))).ConfigureAwait(false);
+                .And(new Specification<UserAccount>(e => e.VisitCount > 0))).AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -117,7 +117,7 @@
                 //new HasDomainSpecification("East"),
                 new HasEastDomainSpecification(),
                 new Specification<UserAccount>(e => e.VisitCount > 0)
-            }).ConfigureAwait(false);
+            }).AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -130,7 +130,7 @@
         //    // arrange/act
         //    var result = await this.sut.FindAllAsync(
         //            new HasEastRegionSpecification()
-        //            .Or(new Specification<UserAccount>(e => e.Gender == "Male"))).ConfigureAwait(false);
+        //            .Or(new Specification<UserAccount>(e => e.Gender == "Male"))).AnyContext();
 
         //    // assert
         //    result.ShouldNotBeNull();
@@ -144,7 +144,7 @@
         //    var result = await this.sut.FindAllAsync(
         //            new HasEastRegionSpecification()
         //            .And(new Specification<UserAccount>(e => e.Gender == "Male")
-        //            .Not())).ConfigureAwait(false);
+        //            .Not())).AnyContext();
 
         //    // assert
         //    result.ShouldNotBeNull();
@@ -160,7 +160,7 @@
         //        {
         //            new HasEastRegionSpecification(),
         //            new Specification<UserAccount>(e => e.Gender == "Male")
-        //        }).ConfigureAwait(false);
+        //        }).AnyContext();
 
         //    // assert
         //    result.ShouldNotBeNull();
@@ -172,10 +172,10 @@
         //{
         //    // arrange
         //    var entities = await this.sut.FindAllAsync(
-        //        new FindOptions<UserAccount>(take: 1)).ConfigureAwait(false);
+        //        new FindOptions<UserAccount>(take: 1)).AnyContext();
 
         //    // act
-        //    var result = await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).ConfigureAwait(false);
+        //    var result = await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).AnyContext();
 
         //    // assert
         //    result.ShouldNotBeNull();
@@ -186,7 +186,7 @@
         //public async Task InsertAsync_Test()
         //{
         //    // arrange/act
-        //    var result = await this.sut.InsertAsync(this.entityFaker.Generate()).ConfigureAwait(false);
+        //    var result = await this.sut.InsertAsync(this.entityFaker.Generate()).AnyContext();
 
         //    // assert
         //    result.ShouldNotBeNull();
@@ -199,7 +199,7 @@
             for (int i = 1; i < 10; i++)
             {
                 // arrange/act
-                var result = await this.sut.UpsertAsync(this.entityFaker.Generate()).ConfigureAwait(false);
+                var result = await this.sut.UpsertAsync(this.entityFaker.Generate()).AnyContext();
 
                 // assert
                 result.action.ShouldNotBe(ActionResult.None);
@@ -217,11 +217,11 @@
         //{
         //    // arrange
         //    var entities = await this.sut.FindAllAsync(
-        //        new FindOptions<UserAccount>(take: 1)).ConfigureAwait(false);
+        //        new FindOptions<UserAccount>(take: 1)).AnyContext();
 
         //    // act
-        //    await this.sut.DeleteAsync(entities.FirstOrDefault()).ConfigureAwait(false);
-        //    var result = await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).ConfigureAwait(false);
+        //    await this.sut.DeleteAsync(entities.FirstOrDefault()).AnyContext();
+        //    var result = await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).AnyContext();
 
         //    // assert
         //    result.ShouldBeNull();

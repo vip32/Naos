@@ -48,7 +48,7 @@
                 return this.NotFound(); // TODO: throw notfoundexception?
             }
 
-            await this.jobScheduler.TriggerAsync(key).ConfigureAwait(false);
+            await this.jobScheduler.TriggerAsync(key).AnyContext();
             return this.Accepted();
         }
     }

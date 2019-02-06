@@ -57,7 +57,7 @@
                     // = 400 bad request (router headers missing)
                 }
 
-                var registrations = await registryClient.RegistrationsAsync(serviceName, serviceTag).ConfigureAwait(false);
+                var registrations = await registryClient.RegistrationsAsync(serviceName, serviceTag).AnyContext();
                 var registration = registrations.FirstOrDefault(); // todo: do some kind random/roundrobin
 
                 if (registration == null)

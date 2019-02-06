@@ -110,7 +110,7 @@
                 };
             }
 
-            return await Task.Run(() => this.registrations.DistinctBy(r => r.Id)).ConfigureAwait(false);
+            return await Task.Run(() => this.registrations.DistinctBy(r => r.Id)).AnyContext();
         }
 
         private string GetDirectory(FileSystemServiceRegistryConfiguration configuration)

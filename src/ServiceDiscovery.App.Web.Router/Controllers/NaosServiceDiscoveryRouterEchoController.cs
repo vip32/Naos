@@ -6,6 +6,7 @@
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
     using Naos.Core.ServiceDiscovery.App.Web.Router;
 
     [Route("api/echo/router")]
@@ -30,7 +31,7 @@
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<ServiceRegistration>>> Get()
         {
-            return this.Ok(await this.context.RegistryClient.RegistrationsAsync().ConfigureAwait(false));
+            return this.Ok(await this.context.RegistryClient.RegistrationsAsync().AnyContext());
         }
     }
 }

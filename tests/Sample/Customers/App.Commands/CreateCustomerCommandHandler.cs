@@ -40,7 +40,7 @@
             }
 
             request.Customer.SetCustomerNumber();
-            request.Customer = await this.repository.InsertAsync(request.Customer).ConfigureAwait(false);
+            request.Customer = await this.repository.InsertAsync(request.Customer).AnyContext();
 
             this.logger.LogInformation($"{{LogKey:l}} {request.GetType().Name} (response={request.Customer.Id})", LogEventKeys.AppCommand);
 

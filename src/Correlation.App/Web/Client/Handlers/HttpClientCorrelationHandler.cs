@@ -38,7 +38,7 @@
                 request.Headers.Add("x-correlationid", correlationId);
                 request.Headers.Add("x-requestid", requestId);
 
-                var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+                var response = await base.SendAsync(request, cancellationToken).AnyContext();
 
                 response.Headers.Add("x-correlationid", correlationId);
                 response.Headers.Add("x-requestid", requestId);

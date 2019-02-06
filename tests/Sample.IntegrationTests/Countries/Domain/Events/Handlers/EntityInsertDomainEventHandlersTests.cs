@@ -3,6 +3,7 @@
     using System.Threading.Tasks;
     using MediatR;
     using Microsoft.Extensions.DependencyInjection;
+    using Naos.Core.Common;
     using Naos.Core.Domain;
     using Naos.Sample.Countries.Domain;
     using Shouldly;
@@ -18,14 +19,14 @@
             var entity = new Country { Code = "CodaA", Name = "Name1" };
 
             // act
-            await mediator.Publish(new EntityInsertDomainEvent(entity)).ConfigureAwait(false);
+            await mediator.Publish(new EntityInsertDomainEvent(entity)).AnyContext();
 
             // assert
             entity.IdentifierHash.ShouldNotBeNull();
             entity.State.CreatedDate.ShouldNotBeNull();
             entity.State.UpdatedDate.ShouldNotBeNull();
 
-            await mediator.Publish(new EntityInsertedDomainEvent(entity)).ConfigureAwait(false);
+            await mediator.Publish(new EntityInsertedDomainEvent(entity)).AnyContext();
             // > CustomerInsertedDomainEventHandler
         }
     }

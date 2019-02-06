@@ -51,7 +51,7 @@
                 .WhereAsync(
                     count: options?.Take ?? -1, // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
                     orderExpression: order?.Expression,
-                    orderDescending: order?.Direction == OrderDirection.Descending).ConfigureAwait(false);
+                    orderDescending: order?.Direction == OrderDirection.Descending).AnyContext();
             return entities.ToList();
         }
 
@@ -63,7 +63,7 @@
                     expression: specification?.ToExpression().Expand(), // expand fixes Invoke in expression
                     count: options?.Take ?? -1, // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
                     orderExpression: order?.Expression,
-                    orderDescending: order?.Direction == OrderDirection.Descending).ConfigureAwait(false);
+                    orderDescending: order?.Direction == OrderDirection.Descending).AnyContext();
             return entities.ToList();
         }
 
@@ -75,7 +75,7 @@
                     expressions: specifications.Safe().Select(s => s.ToExpression().Expand()), // expand fixes Invoke in expression
                     count: options?.Take ?? -1, // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
                     orderExpression: order?.Expression,
-                    orderDescending: order?.Direction == OrderDirection.Descending).ConfigureAwait(false);
+                    orderDescending: order?.Direction == OrderDirection.Descending).AnyContext();
             return entities.ToList();
         }
 
@@ -106,7 +106,7 @@
         /// <returns></returns>
         public async Task<TEntity> InsertAsync(TEntity entity)
         {
-            var result = await this.UpsertAsync(entity).ConfigureAwait(false);
+            var result = await this.UpsertAsync(entity).AnyContext();
             return result.entity;
         }
 
@@ -117,7 +117,7 @@
         /// <returns></returns>
         public async Task<TEntity> UpdateAsync(TEntity entity)
         {
-            var result = await this.UpsertAsync(entity).ConfigureAwait(false);
+            var result = await this.UpsertAsync(entity).AnyContext();
             return result.entity;
         }
 
@@ -133,35 +133,35 @@
                 return (default, ActionResult.None);
             }
 
-            bool isNew = entity.Id.IsDefault() || !await this.ExistsAsync(entity.Id).ConfigureAwait(false);
+            bool isNew = entity.Id.IsDefault() || !await this.ExistsAsync(entity.Id).AnyContext();
 
             if (this.Options?.PublishEvents != false)
             {
                 if (isNew)
                 {
-                    await this.mediator.Publish(new EntityInsertDomainEvent(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityInsertDomainEvent(entity)).AnyContext();
                 }
                 else
                 {
-                    await this.mediator.Publish(new EntityUpdateDomainEvent(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityUpdateDomainEvent(entity)).AnyContext();
                 }
             }
 
             this.logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogEventKeys.DomainRepository);
-            var result = await this.provider.UpsertAsync(entity).ConfigureAwait(false);
+            var result = await this.provider.UpsertAsync(entity).AnyContext();
             entity = result;
 
             if (this.Options?.PublishEvents != false)
             {
                 if (isNew)
                 {
-                    //await this.mediator.Publish(new EntityInsertedDomainEvent<IEntity>(result)).ConfigureAwait(false);
-                    await this.mediator.Publish(new EntityInsertedDomainEvent(result)).ConfigureAwait(false);
+                    //await this.mediator.Publish(new EntityInsertedDomainEvent<IEntity>(result)).AnyContext();
+                    await this.mediator.Publish(new EntityInsertedDomainEvent(result)).AnyContext();
                 }
                 else
                 {
-                    //await this.mediator.Publish(new EntityUpdatedDomainEvent<IEntity>(result)).ConfigureAwait(false);
-                    await this.mediator.Publish(new EntityUpdatedDomainEvent(result)).ConfigureAwait(false);
+                    //await this.mediator.Publish(new EntityUpdatedDomainEvent<IEntity>(result)).AnyContext();
+                    await this.mediator.Publish(new EntityUpdatedDomainEvent(result)).AnyContext();
                 }
             }
 
@@ -178,20 +178,20 @@
                 return ActionResult.None;
             }
 
-            var entity = await this.FindOneAsync(id).ConfigureAwait(false);
+            var entity = await this.FindOneAsync(id).AnyContext();
             if (entity != null)
             {
                 if (this.Options?.PublishEvents != false)
                 {
-                    await this.mediator.Publish(new EntityDeleteDomainEvent(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityDeleteDomainEvent(entity)).AnyContext();
                 }
 
                 this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogEventKeys.DomainRepository);
-                await this.provider.DeleteByIdAsync(id as string).ConfigureAwait(false);
+                await this.provider.DeleteByIdAsync(id as string).AnyContext();
 
                 if (this.Options?.PublishEvents != false)
                 {
-                    await this.mediator.Publish(new EntityDeletedDomainEvent(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityDeletedDomainEvent(entity)).AnyContext();
                 }
 
                 return ActionResult.Deleted;
@@ -207,7 +207,7 @@
                 return ActionResult.None;
             }
 
-            return await this.DeleteAsync(entity.Id).ConfigureAwait(false);
+            return await this.DeleteAsync(entity.Id).AnyContext();
         }
     }
 }

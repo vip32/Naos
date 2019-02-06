@@ -45,7 +45,7 @@
         public async Task FindAllAsync_Test()
         {
             var sut = this.ServiceProvider.GetService<ILogEventRepository>();
-            var result = await sut.FindAllAsync().ConfigureAwait(false);
+            var result = await sut.FindAllAsync().AnyContext();
 
             result.ShouldNotBeNull();
             result.ShouldNotBeEmpty();

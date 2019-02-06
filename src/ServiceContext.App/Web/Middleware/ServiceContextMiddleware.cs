@@ -101,13 +101,13 @@
                                 ["sample-useraccounts1"] = $"{context.Request.Uri()}api/useraccounts?q=visitCount=gte:1&order=email&take=10",
                                 ["sample-useraccounts2"] = $"{context.Request.Uri()}api/useraccounts?q=visitCount=gte:1",
                             }
-                        }, DefaultJsonSerializerSettings.Create())).ConfigureAwait(false);
+                        }, DefaultJsonSerializerSettings.Create())).AnyContext();
                 }
                 else if (context.Request.Path == "/echo" && this.options.EchoEnabled)
                 {
                     context.Response.ContentType = ContentType.TEXT.ToValue();
                     context.Response.StatusCode = 200;
-                    await context.Response.WriteAsync(" ").ConfigureAwait(false);
+                    await context.Response.WriteAsync(" ").AnyContext();
                 }
                 else if (context.Request.Path == "/error")
                 {

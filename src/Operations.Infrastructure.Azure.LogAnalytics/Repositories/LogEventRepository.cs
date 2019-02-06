@@ -63,11 +63,11 @@ limit 1000";
             // query docs: https://docs.microsoft.com/en-us/azure/log-analytics/query-language/get-started-queries
             var response = await this.httpClient.SendAsync(
                 this.PrepareRequest(query),
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken).AnyContext();
             response.EnsureSuccessStatusCode();
 
             return this.MapResponse(SerializationHelper.JsonDeserialize<LogAnalyticsResponse>(
-                await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false))).ToList();
+                await response.Content.ReadAsByteArrayAsync().AnyContext())).ToList();
         }
 
 //LogEvents_Development_CL | where LogMessage_s != '' |

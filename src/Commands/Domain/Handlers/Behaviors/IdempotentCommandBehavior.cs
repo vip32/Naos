@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
     using EnsureThat;
+    using Naos.Core.Common;
 
     public class IdempotentCommandBehavior : ICommandBehavior
     {
@@ -19,8 +20,8 @@
             // - check if command exists in repo
             // - if so return CommandBehaviorResult cancelled = true + reason
 
-            return await Task.FromResult(new CommandBehaviorResult()).ConfigureAwait(false);
-            //return await Task.FromResult(new BehaviorResult("command already handled")).ConfigureAwait(false);
+            return await Task.FromResult(new CommandBehaviorResult()).AnyContext();
+            //return await Task.FromResult(new BehaviorResult("command already handled")).AnyContext();
         }
     }
 }

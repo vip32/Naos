@@ -30,7 +30,7 @@
 
 //            //command.Update(this.serviceContext.RequestId, this.serviceContext.CorrelationId);
 
-//            return await Task.FromResult(new CommandBehaviorResult()).ConfigureAwait(false);
+//            return await Task.FromResult(new CommandBehaviorResult()).AnyContext();
 //        }
 //    }
 //}

@@ -7,6 +7,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
+    using Naos.Core.FileStorage.Infrastructure.FileSystem;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.App.Web;
     using Naos.Core.Messaging.Infrastructure.FileSystem;
@@ -32,11 +33,15 @@
             context.Services.AddSingleton<ISubscriptionMap, SubscriptionMap>();
             context.Services.AddSingleton<IMessageBroker>(sp =>
             {
+                var fileSystemConfiguration = context.Configuration.GetSection(section).Get<FileSystemConfiguration>();
                 var result = new FileSystemMessageBroker(
                         sp.GetRequiredService<ILogger<FileSystemMessageBroker>>(),
                         (IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)),
                         new ServiceProviderMessageHandlerFactory(sp),
-                        context.Configuration.GetSection(section).Get<FileSystemConfiguration>(),
+                        new FolderFileStorage(
+                            sp.GetRequiredService<ILogger<FolderFileStorage>>(),
+                            new FolderFileStorageOptions { Folder = fileSystemConfiguration.Folder }),
+                        fileSystemConfiguration,
                         map: sp.GetRequiredService<ISubscriptionMap>(),
                         filterScope: Environment.GetEnvironmentVariable(EnvironmentKeys.IsLocal).ToBool()
                             ? Environment.MachineName.Humanize().Dehumanize().ToLower()

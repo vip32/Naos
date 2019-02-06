@@ -23,7 +23,7 @@
             var entity = new Customer { FirstName = "FirstName1", LastName = "LastName1" };
 
             // act
-            await mediator.Publish(domainEvent).ConfigureAwait(false);
+            await mediator.Publish(domainEvent).AnyContext();
 
             // assert
             domainEvent.Properties.ShouldContainKey(typeof(FirstStubDomainEventHandler).Name);

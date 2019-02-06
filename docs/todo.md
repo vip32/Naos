@@ -123,7 +123,7 @@ azure easy auth https://docs.microsoft.com/en-us/azure/app-service/overview-auth
 signalr client-server streaming https://docs.microsoft.com/en-us/aspnet/core/signalr/streaming?view=aspnetcore-2.2
                                 core 3 https://blogs.msdn.microsoft.com/webdev/2019/01/29/aspnet-core-3-preview-2/
 file storage abstraction https://github.com/FoundatioFx/Foundatio#file-storage
-
+metrics (AppMetrics)     https://github.com/FoundatioFx/Foundatio#metrics
 inter service JSON RPC http://www.jsonrpc.org/specification
                        service-bus: https://github.com/Azure/azure-service-bus/tree/master/samples/DotNet/Microsoft.Azure.ServiceBus/QueuesRequestResponse
                        https://github.com/ipjohnson/EasyRpc (incl authorization, client, dotnet di, messagepack transport)
@@ -152,6 +152,7 @@ identity.b2c
 messaging: message broker based on rabittmq (for local usage)
 messaging: in memory provider https://docs.microsoft.com/en-us/dotnet/standard/io/memory-mapped-files
                               https://dotnetcodr.com/2015/11/18/messaging-through-memory-mapped-files-in-net-c/
+                              (single process) https://github.com/FoundatioFx/Foundatio/blob/master/src/Foundatio/Messaging/InMemoryMessageBus.cs
 messaging: redis              https://github.com/FoundatioFx/Foundatio.Redis/blob/master/src/Foundatio.Redis/Messaging/RedisMessageBus.cs
 
 criteria:

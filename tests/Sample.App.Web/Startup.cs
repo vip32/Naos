@@ -16,6 +16,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
+    using Microsoft.Extensions.Http;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Commands.Web;
     using Naos.Core.Common;
@@ -83,7 +84,7 @@
                 .AddHttpMessageHandler<HttpClientCorrelationHandler>()
                 .AddHttpMessageHandler<HttpClientServiceContextHandler>()
                 .AddHttpMessageHandler<HttpClientLogHandler>();
-            services.Replace(Microsoft.Extensions.DependencyInjection.ServiceDescriptor.Singleton<Microsoft.Extensions.Http.IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
+            services.Replace(Microsoft.Extensions.DependencyInjection.ServiceDescriptor.Singleton<IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
 
             services
                 .AddMiddlewareAnalysis()

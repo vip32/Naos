@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Naos.Core.FileStorage.Infrastructure.FileSystem</AssemblyName>
+    <RootNamespace>Naos.Core.FileStorage.Infrastructure.FileSystem</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FileStorage\FileStorage.csproj" />
+    <ProjectReference Include="..\Common.Serialization\Common.Serialization.csproj" />
+  </ItemGroup>
+
+</Project>

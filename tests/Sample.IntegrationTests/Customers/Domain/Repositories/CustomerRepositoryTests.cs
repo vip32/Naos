@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using Bogus;
     using Microsoft.Extensions.DependencyInjection;
+    using Naos.Core.Common;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Domain.Specifications;
     using Naos.Sample.Customers.Domain;
@@ -34,7 +35,7 @@
         public async Task FindAllAsync_Test()
         {
             // arrange/act
-            var result = await this.sut.FindAllAsync().ConfigureAwait(false);
+            var result = await this.sut.FindAllAsync().AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -46,7 +47,7 @@
         {
             // arrange/act
             var result = await this.sut.FindAllAsync(
-                new FindOptions<Customer>(order: new OrderOption<Customer>(e => e.Region))).ConfigureAwait(false);
+                new FindOptions<Customer>(order: new OrderOption<Customer>(e => e.Region))).AnyContext();
 
             // collection indexing should be changed
             // "kind": "Range",
@@ -65,7 +66,7 @@
         {
             // arrange/act
             var result = await this.sut.FindAllAsync(
-                new FindOptions<Customer>(take: 3)).ConfigureAwait(false);
+                new FindOptions<Customer>(take: 3)).AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -77,7 +78,7 @@
         public async Task FindAllAsync_WithTenantExtension_Test()
         {
             // arrange/act
-            var result = await this.sut.FindAllAsync(this.tenantId, default).ConfigureAwait(false);
+            var result = await this.sut.FindAllAsync(this.tenantId, default).AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -89,7 +90,7 @@
         {
             // arrange/act
             var result = await this.sut.FindAllAsync(
-                new HasEastRegionSpecification()).ConfigureAwait(false);
+                new HasEastRegionSpecification()).AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -97,7 +98,7 @@
 
             // arrange/act
             result = await this.sut.FindAllAsync(
-                new Specification<Customer>(e => e.Gender == "Male")).ConfigureAwait(false);
+                new Specification<Customer>(e => e.Gender == "Male")).AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -110,7 +111,7 @@
             // arrange/act
             var result = await this.sut.FindAllAsync(
                 new HasEastRegionSpecification()
-                .And(new Specification<Customer>(e => e.Gender == "Male"))).ConfigureAwait(false);
+                .And(new Specification<Customer>(e => e.Gender == "Male"))).AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -120,7 +121,7 @@
             {
                 new HasEastRegionSpecification(),
                 new Specification<Customer>(e => e.Gender == "Male")
-            }).ConfigureAwait(false);
+            }).AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -133,7 +134,7 @@
             // arrange/act
             var result = await this.sut.FindAllAsync(
                     new HasEastRegionSpecification()
-                    .Or(new Specification<Customer>(e => e.Gender == "Male"))).ConfigureAwait(false);
+                    .Or(new Specification<Customer>(e => e.Gender == "Male"))).AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -147,7 +148,7 @@
             var result = await this.sut.FindAllAsync(
                     new HasEastRegionSpecification()
                     .And(new Specification<Customer>(e => e.Gender == "Male")
-                    .Not())).ConfigureAwait(false);
+                    .Not())).AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -163,7 +164,7 @@
                 {
                     new HasEastRegionSpecification(),
                     new Specification<Customer>(e => e.Gender == "Male")
-                }).ConfigureAwait(false);
+                }).AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -175,10 +176,10 @@
         {
             // arrange
             var entities = await this.sut.FindAllAsync(
-                new FindOptions<Customer>(take: 1)).ConfigureAwait(false);
+                new FindOptions<Customer>(take: 1)).AnyContext();
 
             // act
-            var result = await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).ConfigureAwait(false);
+            var result = await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -189,7 +190,7 @@
         public async Task InsertAsync_Test()
         {
             // arrange/act
-            var result = await this.sut.InsertAsync(this.entityFaker.Generate()).ConfigureAwait(false);
+            var result = await this.sut.InsertAsync(this.entityFaker.Generate()).AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -206,7 +207,7 @@
             for (int i = 1; i < 10; i++)
             {
                 // arrange/act
-                var result = await this.sut.UpsertAsync(this.entityFaker.Generate()).ConfigureAwait(false);
+                var result = await this.sut.UpsertAsync(this.entityFaker.Generate()).AnyContext();
 
                 // assert
                 result.action.ShouldNotBe(ActionResult.None);
@@ -224,11 +225,11 @@
         {
             // arrange
             var entities = await this.sut.FindAllAsync(
-                new FindOptions<Customer>(take: 1)).ConfigureAwait(false);
+                new FindOptions<Customer>(take: 1)).AnyContext();
 
             // act
-            await this.sut.DeleteAsync(entities.FirstOrDefault()).ConfigureAwait(false);
-            var result = await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).ConfigureAwait(false);
+            await this.sut.DeleteAsync(entities.FirstOrDefault()).AnyContext();
+            var result = await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).AnyContext();
 
             // assert
             result.ShouldBeNull();

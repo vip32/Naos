@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using EnsureThat;
+    using Naos.Core.Common;
     using Naos.Core.Domain.Specifications;
 
     public static partial class Extensions
@@ -26,7 +27,7 @@
 
             return await source.FindAllAsync(
                 HasTenantSpecification<TEntity>.Factory.Create(tenantId),
-                options).ConfigureAwait(false);
+                options).AnyContext();
         }
 
         /// <summary>
@@ -54,7 +55,7 @@
                     specification,
                     HasTenantSpecification<TEntity>.Factory.Create(tenantId)
                 },
-                options).ConfigureAwait(false);
+                options).AnyContext();
         }
 
         /// <summary>
@@ -83,7 +84,7 @@
                 {
                     HasTenantSpecification<TEntity>.Factory.Create(tenantId)
                 },
-                options).ConfigureAwait(false);
+                options).AnyContext();
         }
     }
 }

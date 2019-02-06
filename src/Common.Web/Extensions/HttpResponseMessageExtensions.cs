@@ -130,7 +130,7 @@
                 return defaultValue;
             }
 
-            return await source.Content.ReadAsStringAsync().ConfigureAwait(false);
+            return await source.Content.ReadAsStringAsync().AnyContext();
         }
 
         public static async Task<Stream> ReadAsStreamAsync(this HttpResponseMessage source)
@@ -140,7 +140,7 @@
                 return null;
             }
 
-            return await source.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            return await source.Content.ReadAsStreamAsync().AnyContext();
         }
 
         public static async Task<T> ReadAsAsync<T>(this HttpResponseMessage source)
@@ -150,7 +150,7 @@
                 return default;
             }
 
-            return await source.Content.ReadAsJsonAsync<T>().ConfigureAwait(false);
+            return await source.Content.ReadAsJsonAsync<T>().AnyContext();
         }
 
         public static async Task<T> ReadAsJsonAsync<T>(this HttpContent content)

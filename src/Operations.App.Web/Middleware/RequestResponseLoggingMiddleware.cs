@@ -39,7 +39,7 @@
         {
             if (context.Request.Path.Value.EqualsWildcardAny(this.options.PathBlackListPatterns))
             {
-                await this.next.Invoke(context).ConfigureAwait(false);
+                await this.next.Invoke(context).AnyContext();
             }
             else
             {
@@ -48,7 +48,7 @@
 
                 this.LogRequest(context, correlationId, requestId);
                 var timer = Stopwatch.StartNew();
-                await this.next.Invoke(context).ConfigureAwait(false);
+                await this.next.Invoke(context).AnyContext();
                 timer.Stop();
                 this.LogResponse(context, requestId, timer.Elapsed);
             }

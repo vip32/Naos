@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
     using EnsureThat;
+    using Naos.Core.Common;
 
     public class PersistCommandBehavior : ICommandBehavior
     {
@@ -18,7 +19,7 @@
             // - check if command exists in repo
             // - if not add to repo, return CommandBehaviorResult
 
-            return await Task.FromResult(new CommandBehaviorResult()).ConfigureAwait(false);
+            return await Task.FromResult(new CommandBehaviorResult()).AnyContext();
         }
     }
 }

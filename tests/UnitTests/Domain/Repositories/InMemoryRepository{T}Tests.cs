@@ -46,7 +46,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             var sut = new InMemoryRepository<StubEntityString>(logger, mediator, new InMemoryContext<StubEntityString>(this.entities));
 
             // act
-            var result = await sut.FindAllAsync().ConfigureAwait(false);
+            var result = await sut.FindAllAsync().AnyContext();
 
             // assert
             Assert.False(result.IsNullOrEmpty());
@@ -64,7 +64,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                 new Specification<StubEntityString>(t => t.TenantId == this.tenantId)); // = decoratee
 
             // act
-            var result = await sut.FindAllAsync().ConfigureAwait(false);
+            var result = await sut.FindAllAsync().AnyContext();
 
             // assert
             Assert.False(result.IsNullOrEmpty());
@@ -80,24 +80,24 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             var sut = new InMemoryRepository<StubEntityString>(logger, mediator, new InMemoryContext<StubEntityString>(this.entities));
 
             // act/assert
-            var result = await sut.FindAllAsync(new StubHasNameSpecification(this.entities.First().FirstName)).ConfigureAwait(false);
+            var result = await sut.FindAllAsync(new StubHasNameSpecification(this.entities.First().FirstName)).AnyContext();
 
             Assert.False(result.IsNullOrEmpty());
             Assert.Equal(this.entities.First().FirstName, result.FirstOrDefault()?.FirstName);
 
-            result = await sut.FindAllAsync(new HasTenantSpecification<StubEntityString>(this.tenantId)).ConfigureAwait(false);
+            result = await sut.FindAllAsync(new HasTenantSpecification<StubEntityString>(this.tenantId)).AnyContext();
 
             Assert.False(result.IsNullOrEmpty());
             Assert.Equal(20, result.Count());
 
             result = await sut.FindAllAsync(
                 new HasTenantSpecification<StubEntityString>(this.tenantId),
-                new FindOptions<StubEntityString>(take: 5, orderExpression: e => e.Country)).ConfigureAwait(false);
+                new FindOptions<StubEntityString>(take: 5, orderExpression: e => e.Country)).AnyContext();
 
             Assert.False(result.IsNullOrEmpty());
             Assert.Equal(5, result.Count());
 
-            result = await sut.FindAllAsync(this.tenantId, default).ConfigureAwait(false); // tenant extension method
+            result = await sut.FindAllAsync(this.tenantId, default).AnyContext(); // tenant extension method
 
             Assert.False(result.IsNullOrEmpty());
             Assert.Equal(20, result.Count());
@@ -117,7 +117,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                 {
                     new StubHasNameSpecification(this.entities.First().FirstName), // And
                     new HasTenantSpecification<StubEntityString>(this.tenantId)
-                }).ConfigureAwait(false);
+                }).AnyContext();
 
             Assert.False(result.IsNullOrEmpty());
             Assert.Equal("FirstName1", result.FirstOrDefault()?.FirstName);
@@ -127,7 +127,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                 {
                     new StubHasNameSpecification(this.entities.First().FirstName), // And
                     new StubHasNameSpecification("Unknown")
-                }).ConfigureAwait(false);
+                }).AnyContext();
 
             Assert.True(result.IsNullOrEmpty());
         }
@@ -143,7 +143,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             // act
             var findResults = await sut.FindAllAsync(
                 new StubHasNameSpecification(this.entities.First().FirstName)
-                .And(new HasTenantSpecification<StubEntityString>(this.tenantId))).ConfigureAwait(false);
+                .And(new HasTenantSpecification<StubEntityString>(this.tenantId))).AnyContext();
 
             // assert
             Assert.False(findResults.IsNullOrEmpty());
@@ -161,7 +161,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             // act
             var findResults = await sut.FindAllAsync(
                 new StubHasNameSpecification(this.entities.First().FirstName)
-                .Or(new StubHasNameSpecification(this.entities.Last().FirstName))).ConfigureAwait(false);
+                .Or(new StubHasNameSpecification(this.entities.Last().FirstName))).AnyContext();
 
             // assert
             Assert.False(findResults.IsNullOrEmpty());
@@ -182,7 +182,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             var findResults = await sut.FindAllAsync(
                 new HasTenantSpecification<StubEntityString>(this.tenantId)
                 .And(new StubHasNameSpecification(this.entities.First().FirstName)
-                    .Not())).ConfigureAwait(false);
+                    .Not())).AnyContext();
 
             // assert
             Assert.False(findResults.IsNullOrEmpty());
@@ -199,12 +199,12 @@ namespace Naos.Core.UnitTests.Domain.Repositories
 
             // act/assert
             var id = this.entities.First().Id;
-            var result = await sut.FindOneAsync(id).ConfigureAwait(false);
+            var result = await sut.FindOneAsync(id).AnyContext();
 
             Assert.NotNull(result);
             Assert.Equal(this.entities.First().FirstName, result.FirstName);
 
-            result = await sut.FindAsync(id, this.tenantId).ConfigureAwait(false);
+            result = await sut.FindAsync(id, this.tenantId).AnyContext();
 
             Assert.NotNull(result);
             Assert.Equal(this.entities.First().FirstName, result.FirstName);
@@ -219,12 +219,12 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             var sut = new InMemoryRepository<StubEntityGuid>(logger, mediator, new InMemoryContext<StubEntityGuid>(this.entitiesGuid));
 
             // act/assert
-            var result = await sut.FindOneAsync(this.entitiesGuid.First().Id).ConfigureAwait(false);
+            var result = await sut.FindOneAsync(this.entitiesGuid.First().Id).AnyContext();
 
             Assert.NotNull(result);
             Assert.Equal(this.entities.First().FirstName, result.FirstName);
 
-            result = await sut.FindAsync(this.entitiesGuid.First().Id, this.tenantId).ConfigureAwait(false);
+            result = await sut.FindAsync(this.entitiesGuid.First().Id, this.tenantId).AnyContext();
 
             Assert.NotNull(result);
             Assert.Equal(this.entities.First().FirstName, result.FirstName);
@@ -244,9 +244,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                 FirstName = "FirstName99",
                 Id = "Id99",
                 TenantId = this.tenantId
-            }).ConfigureAwait(false);
+            }).AnyContext();
 
-            var findResult = await sut.FindOneAsync("Id99").ConfigureAwait(false);
+            var findResult = await sut.FindOneAsync("Id99").AnyContext();
 
             // assert
             Assert.Equal(ActionResult.Inserted, result.action);
@@ -271,9 +271,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             {
                 FirstName = "FirstName88",
                 TenantId = this.tenantId
-            }).ConfigureAwait(false);
+            }).AnyContext();
 
-            var findResult = await sut.FindOneAsync(result.entity.Id).ConfigureAwait(false);
+            var findResult = await sut.FindOneAsync(result.entity.Id).AnyContext();
 
             // assert
             Assert.Equal(ActionResult.Inserted, result.action);
@@ -301,9 +301,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                 FirstName = "FirstName77",
                 LastName = "LastName77",
                 TenantId = this.tenantId
-            }).ConfigureAwait(false);
+            }).AnyContext();
 
-            var findResult = await sut.FindOneAsync("Id1").ConfigureAwait(false);
+            var findResult = await sut.FindOneAsync("Id1").AnyContext();
 
             // assert
             Assert.Equal(ActionResult.Updated, result.action);
@@ -327,8 +327,8 @@ namespace Naos.Core.UnitTests.Domain.Repositories
 
             // act
             var id = this.entities.First().Id;
-            await sut.DeleteAsync(id).ConfigureAwait(false);
-            var entity = await sut.FindOneAsync(id).ConfigureAwait(false);
+            await sut.DeleteAsync(id).AnyContext();
+            var entity = await sut.FindOneAsync(id).AnyContext();
 
             // assert
             Assert.Null(entity);
@@ -345,8 +345,8 @@ namespace Naos.Core.UnitTests.Domain.Repositories
 
             // act
             var entity = this.entities.FirstOrDefault(e => e.FirstName == this.entities.First().FirstName);
-            await sut.DeleteAsync(entity).ConfigureAwait(false);
-            entity = await sut.FindOneAsync(entity.Id).ConfigureAwait(false);
+            await sut.DeleteAsync(entity).AnyContext();
+            entity = await sut.FindOneAsync(entity.Id).AnyContext();
 
             // assert
             Assert.Null(entity);

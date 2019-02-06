@@ -6,6 +6,7 @@
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
 
     [Route("api/echo/servicediscovery")]
     [ApiController]
@@ -28,7 +29,7 @@
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<ServiceRegistration>>> Get()
         {
-            return this.Ok(await this.registry.RegistrationsAsync().ConfigureAwait(false));
+            return this.Ok(await this.registry.RegistrationsAsync().AnyContext());
         }
     }
 }

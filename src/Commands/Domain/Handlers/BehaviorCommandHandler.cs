@@ -48,7 +48,7 @@
         {
             foreach (var behavior in this.behaviors.Safe())
             {
-                var behaviorResult = await behavior.ExecuteAsync(request).ConfigureAwait(false);
+                var behaviorResult = await behavior.ExecuteAsync(request).AnyContext();
                 if (behaviorResult.Cancelled) // abort if this behavior did not succeed
                 {
                     // TODO: log reason
@@ -58,7 +58,7 @@
 
             this.Logger.LogJournal(LogEventPropertyKeys.TrackHandleCommand, $"{{LogKey:l}} [{request.Identifier}] handle {typeof(TRequest).Name.SubstringTill("Command")}", args: LogEventKeys.AppCommand);
 
-            return await this.HandleRequest(request, cancellationToken).ConfigureAwait(false);
+            return await this.HandleRequest(request, cancellationToken).AnyContext();
         }
     }
 }

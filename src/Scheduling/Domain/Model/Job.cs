@@ -4,6 +4,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
+    using Naos.Core.Common;
 
     public class Job : IJob
     {
@@ -63,18 +64,18 @@
         // Schedule - Message
         public virtual async Task ExecuteAsync(string[] args = null)
         {
-            await this.ExecuteAsync(CancellationToken.None, args).ConfigureAwait(false);
+            await this.ExecuteAsync(CancellationToken.None, args).AnyContext();
         }
 
         public virtual async Task ExecuteAsync(CancellationToken cancellationToken = default, string[] args = null)
         {
             if(this.task != null)
             {
-                await this.task(args).ConfigureAwait(false);
+                await this.task(args).AnyContext();
             }
             else if (this.task2 != null)
             {
-                await this.task2(cancellationToken, args).ConfigureAwait(false);
+                await this.task2(cancellationToken, args).AnyContext();
             }
             else if (this.action2 != null)
             {

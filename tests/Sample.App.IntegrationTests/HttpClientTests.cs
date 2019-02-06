@@ -52,7 +52,7 @@
         {
             var sut = this.ServiceProvider.GetService<IHttpClientFactory>().CreateClient("default");
 
-            var response = await sut.PostAsync("http://mockbin.org/request", null).ConfigureAwait(false);
+            var response = await sut.PostAsync("http://mockbin.org/request", null).AnyContext();
 
             sut.ShouldNotBeNull();
             response.StatusCode.ShouldBe(System.Net.HttpStatusCode.OK);

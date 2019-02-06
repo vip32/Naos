@@ -8,6 +8,8 @@
 
   <ItemGroup>
 
+    <ProjectReference Include="..\FileStorage\FileStorage.csproj" />
+
     <ProjectReference Include="..\Messaging\Messaging.csproj" />
   </ItemGroup>
 

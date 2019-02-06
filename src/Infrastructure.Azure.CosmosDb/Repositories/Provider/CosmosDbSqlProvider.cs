@@ -48,7 +48,7 @@
             this.logger = logger;
             this.client = client;
             this.databaseId = databaseId;
-            this.database = new AsyncLazy<Database>(async () => await this.GetOrCreateDatabaseAsync().ConfigureAwait(false));
+            this.database = new AsyncLazy<Database>(async () => await this.GetOrCreateDatabaseAsync().AnyContext());
 
             this.isMasterCollection = isMasterCollection;
             if (collectionIdFactory != null)
@@ -61,7 +61,7 @@
                 this.collectionId = isMasterCollection ? "master" : typeof(T).Name;
             }
 
-            this.documentCollection = new AsyncLazy<DocumentCollection>(async () => await this.GetOrCreateCollectionAsync(collectionPartitionKey, collectionOfferThroughput).ConfigureAwait(false));
+            this.documentCollection = new AsyncLazy<DocumentCollection>(async () => await this.GetOrCreateCollectionAsync(collectionPartitionKey, collectionOfferThroughput).AnyContext());
             if (this.documentCollection.Value.Result != null)
             {
                 if (this.documentCollection.Value.Result.PartitionKey?.Paths?.Any() == true)
@@ -144,11 +144,11 @@
             if (!this.isMasterCollection)
             {
                 var result = await this.client.DeleteDocumentCollectionAsync(
-                    UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId)).ConfigureAwait(false);
+                    UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId)).AnyContext();
 
                 bool isSuccess = result.StatusCode == HttpStatusCode.NoContent;
 
-                this.documentCollection = new AsyncLazy<DocumentCollection>(async () => await this.GetOrCreateCollectionAsync().ConfigureAwait(false));
+                this.documentCollection = new AsyncLazy<DocumentCollection>(async () => await this.GetOrCreateCollectionAsync().AnyContext());
                 return isSuccess;
             }
 
@@ -165,7 +165,7 @@
             try
             {
                 var result = await this.client.DeleteDocumentAsync(
-                    UriFactory.CreateDocumentUri(this.databaseId, this.collectionId, id)).ConfigureAwait(false);
+                    UriFactory.CreateDocumentUri(this.databaseId, this.collectionId, id)).AnyContext();
 
                 return result.StatusCode == HttpStatusCode.NoContent;
             }
@@ -184,7 +184,7 @@
         {
             var doc = await this.client.UpsertDocumentAsync(
                 UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId),
-                entity).ConfigureAwait(false);
+                entity).AnyContext();
             return JsonConvert.DeserializeObject<T>(doc.Resource.ToString());
         }
 
@@ -335,7 +335,7 @@
 
         public async Task<IEnumerable<string>> GetAttachmentIdsAsync(string id)
         {
-            var doc = await this.GetDocumentById(id).ConfigureAwait(false);
+            var doc = await this.GetDocumentById(id).AnyContext();
             if (doc == null)
             {
                 return new List<string>();
@@ -352,7 +352,7 @@
 
         public async Task<IEnumerable<Attachment>> GetAttachmentsAsync(string id)
         {
-            var doc = await this.GetDocumentById(id).ConfigureAwait(false);
+            var doc = await this.GetDocumentById(id).AnyContext();
             if (doc == null)
             {
                 return new List<Attachment>();
@@ -363,7 +363,7 @@
 
         public async Task<Attachment> GetAttachmentByIdAsync(string id, string attachmentId)
         {
-            var doc = await this.GetDocumentById(id).ConfigureAwait(false);
+            var doc = await this.GetDocumentById(id).AnyContext();
             if (doc == null)
             {
                 return null;
@@ -375,13 +375,13 @@
 
         public async Task<Stream> GetAttachmentStreamByIdAsync(string id, string attachmentId)
         {
-            var attachment = await this.GetAttachmentByIdAsync(id, attachmentId).ConfigureAwait(false);
+            var attachment = await this.GetAttachmentByIdAsync(id, attachmentId).AnyContext();
             if (attachment == null)
             {
                 return null;
             }
 
-            var media = await this.client.ReadMediaAsync(attachment.MediaLink).ConfigureAwait(false);
+            var media = await this.client.ReadMediaAsync(attachment.MediaLink).AnyContext();
             return media?.Media;
         }
 
@@ -391,8 +391,8 @@
 
             var doc = await this.client.UpsertDocumentAsync(
                 UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId),
-                entity).ConfigureAwait(false);
-            await this.client.UpsertAttachmentAsync(doc.Resource.SelfLink, stream, new MediaOptions { ContentType = contentType, Slug = attachmentId }).ConfigureAwait(false);
+                entity).AnyContext();
+            await this.client.UpsertAttachmentAsync(doc.Resource.SelfLink, stream, new MediaOptions { ContentType = contentType, Slug = attachmentId }).AnyContext();
             return JsonConvert.DeserializeObject<T>(doc.Resource.ToString());
         }
 
@@ -437,7 +437,7 @@
                 documentCollection = await this.client.CreateDocumentCollectionAsync(
                     UriFactory.CreateDatabaseUri(this.databaseId).ToString(),
                     documentCollection,
-                    requestOptions).ConfigureAwait(false);
+                    requestOptions).AnyContext();
             }
 
             return documentCollection;
@@ -450,7 +450,7 @@
             if (result == null)
             {
                 result = await this.client.CreateDatabaseAsync(
-                    new Database { Id = this.databaseId }).ConfigureAwait(false);
+                    new Database { Id = this.databaseId }).AnyContext();
             }
 
             return result;

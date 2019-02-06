@@ -78,7 +78,7 @@
                         throw new NaosException($"Cannot create job instance for type {typeof(T).PrettyName()}.");
                     }
 
-                    await job.ExecuteAsync(t, a).ConfigureAwait(false);
+                    await job.ExecuteAsync(t, a).AnyContext();
                 }));
         }
 

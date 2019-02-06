@@ -31,7 +31,7 @@
             await this.LogHttpRequest(request, correlationId, requestId);
 
             var timer = Stopwatch.StartNew();
-            var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            var response = await base.SendAsync(request, cancellationToken).AnyContext();
             timer.Stop();
 
             await this.LogHttpResponse(response, requestId, timer.Elapsed);
@@ -53,7 +53,7 @@
             var content = string.Empty;
             if (request?.Content != null)
             {
-                content = await this.GetRequestContent(request).ConfigureAwait(false);
+                content = await this.GetRequestContent(request).AnyContext();
             }
 
             if (!request.Headers.IsNullOrEmpty())
@@ -79,7 +79,7 @@
             var content = string.Empty;
             if (response?.Content != null)
             {
-                content = await this.GetResponseContent(response).ConfigureAwait(false);
+                content = await this.GetResponseContent(response).AnyContext();
             }
 
             if (!response.Headers.IsNullOrEmpty())

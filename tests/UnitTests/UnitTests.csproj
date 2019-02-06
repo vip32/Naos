@@ -43,6 +43,10 @@
     <ProjectReference Include="..\..\src\Domain.Specifications\Domain.Specifications.csproj" />
     <ProjectReference Include="..\..\src\Domain\Domain.csproj" />
     <ProjectReference Include="..\..\src\Exceptions.App.Web\Exceptions.App.Web.csproj" />
+    <ProjectReference Include="..\..\src\FileStorage.Infrastructure.Azure\FileStorage.Infrastructure.Azure.csproj" />
+    <ProjectReference Include="..\..\src\FileStorage.Infrastructure.FileSystem\FileStorage.Infrastructure.FileSystem.csproj" />
+    <ProjectReference Include="..\..\src\FileStorage.Infrastructure.Ssh\FileStorage.Infrastructure.Ssh.csproj" />
+    <ProjectReference Include="..\..\src\FileStorage\FileStorage.csproj" />
     <ProjectReference Include="..\..\src\Filtering.App\RequestFiltering.App.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure.Azure.Arm\Infrastructure.Azure.Arm.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure.Azure.Configuration\Infrastructure.Azure.csproj" />

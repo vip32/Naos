@@ -4,6 +4,7 @@
     using Bogus;
     using MediatR;
     using Microsoft.Extensions.DependencyInjection;
+    using Naos.Core.Common;
     using Naos.Sample.Customers.App;
     using Naos.Sample.Customers.Domain;
     using Shouldly;
@@ -35,7 +36,7 @@
             var command = new CreateCustomerCommand(entity);
 
             // act
-            var response = await this.mediator.Send(command).ConfigureAwait(false);
+            var response = await this.mediator.Send(command).AnyContext();
 
             // assert
             response.ShouldNotBeNull();
@@ -57,7 +58,7 @@
             var command = new CreateCustomerCommand(entity);
 
             // act
-            var response = await this.mediator.Send(command).ConfigureAwait(false);
+            var response = await this.mediator.Send(command).AnyContext();
 
             // assert
             response.ShouldNotBeNull();

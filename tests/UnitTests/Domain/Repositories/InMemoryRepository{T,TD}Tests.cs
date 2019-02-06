@@ -58,7 +58,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                     new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())));
 
             // act
-            var result = await sut.FindOneAsync("Id99").ConfigureAwait(false);
+            var result = await sut.FindOneAsync("Id99").AnyContext();
 
             // assert
             Assert.NotNull(result);
@@ -86,7 +86,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                 new Specification<StubEntity>(t => t.TenantId == this.tenantId));
 
             // act
-            var result = await sut.FindOneAsync("Id99").ConfigureAwait(false);
+            var result = await sut.FindOneAsync("Id99").AnyContext();
 
             // assert
             Assert.NotNull(result);
@@ -108,7 +108,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                     new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())));
 
             // act
-            var result = await sut.FindAllAsync().ConfigureAwait(false);
+            var result = await sut.FindAllAsync().AnyContext();
 
             // assert
             Assert.NotNull(result);
@@ -137,7 +137,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                 new Specification<StubEntity>(t => t.TenantId == this.tenantId));
 
             // act
-            var result = await sut.FindAllAsync().ConfigureAwait(false);
+            var result = await sut.FindAllAsync().AnyContext();
 
             // assert
             Assert.False(result.IsNullOrEmpty());
@@ -165,7 +165,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                     }));
 
             // act
-            var result = await sut.FindAllAsync().ConfigureAwait(false);
+            var result = await sut.FindAllAsync().AnyContext();
 
             // assert
             Assert.False(result.IsNullOrEmpty());
@@ -216,9 +216,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             // act
             var result = await sut.FindAllAsync(
                 new StubHasNameSpecification("John", "Doe"),
-                new FindOptions<StubEntity>(orderExpression: e => e.Country )).ConfigureAwait(false); // domain layer
+                new FindOptions<StubEntity>(orderExpression: e => e.Country )).AnyContext(); // domain layer
             //var result = await sut.FindAllAsync(
-            //    new StubHasIdSpecification("Id99")).ConfigureAwait(false); // domain layer
+            //    new StubHasIdSpecification("Id99")).AnyContext(); // domain layer
 
             // assert
             Assert.NotNull(result);
@@ -242,8 +242,8 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         //    // act
         //    var result = await sut.FindAllAsync(
         //        new HasIdSpecification<StubEntity>("Id99"),
-        //        new FindOptions<StubEntity> { OrderBy = e => e.Country }).ConfigureAwait(false); // domain layer
-        //        //new StubHasIdSpecification("Id99")).ConfigureAwait(false); // domain layer
+        //        new FindOptions<StubEntity> { OrderBy = e => e.Country }).AnyContext(); // domain layer
+        //        //new StubHasIdSpecification("Id99")).AnyContext(); // domain layer
 
         //    // assert
         //    Assert.NotNull(result);
@@ -268,7 +268,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                 new[] { /*new StubHasNameSpecificationMapper(),*/ new AutoMapperSpecificationMapper<StubEntity, StubDb>(StubEntityMapperConfiguration.Create()) }); // infrastructure layer
 
             // act
-            var result = await sut.FindOneAsync("Id99").ConfigureAwait(false);
+            var result = await sut.FindOneAsync("Id99").AnyContext();
 
             // assert
             Assert.NotNull(result);

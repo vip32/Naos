@@ -8,6 +8,7 @@
     using MediatR;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
+    using Naos.Core.FileStorage.Domain;
     using Naos.Core.Messaging.Domain;
     using Naos.Core.Messaging.Domain.Model;
     using Newtonsoft.Json;
@@ -17,6 +18,7 @@
         private readonly ILogger<FileSystemMessageBroker> logger;
         private readonly IMediator mediator;
         private readonly IMessageHandlerFactory handlerFactory;
+        private readonly IFileStorage fileStorage;
         private readonly FileSystemConfiguration configuration;
         private readonly ISubscriptionMap map;
         private readonly string filterScope;
@@ -27,6 +29,7 @@
             ILogger<FileSystemMessageBroker> logger,
             IMediator mediator,
             IMessageHandlerFactory handlerFactory,
+            IFileStorage fileStorage,
             FileSystemConfiguration configuration = null,
             ISubscriptionMap map = null,
             string filterScope = null,
@@ -35,10 +38,12 @@
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(mediator, nameof(mediator));
             EnsureArg.IsNotNull(handlerFactory, nameof(handlerFactory));
+            EnsureArg.IsNotNull(fileStorage, nameof(fileStorage));
 
             this.logger = logger;
             this.mediator = mediator;
             this.handlerFactory = handlerFactory;
+            this.fileStorage = fileStorage;
             this.configuration = configuration ?? new FileSystemConfiguration();
             this.map = map ?? new SubscriptionMap();
             this.filterScope = filterScope;
@@ -48,6 +53,7 @@
         public void Publish(Message message)
         {
             EnsureArg.IsNotNull(message, nameof(message));
+
             if (message.CorrelationId.IsNullOrEmpty())
             {
                 message.CorrelationId = RandomGenerator.GenerateString(13, true); //Guid.NewGuid().ToString().Replace("-", string.Empty);
@@ -74,7 +80,7 @@
 
                 // TODO: async publish!
                 /*await */
-                this.mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.ConfigureAwait(false);*/
+                this.mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.AnyContext();*/
 
                 var messageName = /*message.Name*/ message.GetType().PrettyName(false);
 
@@ -180,7 +186,7 @@
                     if (handler != null && method != null)
                     {
                         // TODO: async publish!
-                        await this.mediator.Publish(new MessageHandledDomainEvent(message, this.messageScope)).ConfigureAwait(false);
+                        await this.mediator.Publish(new MessageHandledDomainEvent(message, this.messageScope)).AnyContext();
                         await (Task)method.Invoke(handler, new object[] { jsonMessage as object });
                     }
                     else

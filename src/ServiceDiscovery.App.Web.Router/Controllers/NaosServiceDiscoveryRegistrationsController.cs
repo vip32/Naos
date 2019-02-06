@@ -36,7 +36,7 @@
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
         public async Task<ActionResult<IEnumerable<ServiceRegistration>>> Get([FromQuery] string name, [FromQuery] string tag)
         {
-            return this.Ok(await this.context.RegistryClient.RegistrationsAsync(name, tag).ConfigureAwait(false));
+            return this.Ok(await this.context.RegistryClient.RegistrationsAsync(name, tag).AnyContext());
         }
 
         [HttpPost]
@@ -53,8 +53,8 @@
                 throw new BadRequestException(this.ModelState);
             }
 
-            bool exists = (await this.context.RegistryClient.RegistrationsAsync().ConfigureAwait(false)).Any(r => r.Id.Equals(model.Id));
-            await this.context.RegistryClient.RegisterAsync(model).ConfigureAwait(false);
+            bool exists = (await this.context.RegistryClient.RegistrationsAsync().AnyContext()).Any(r => r.Id.Equals(model.Id));
+            await this.context.RegistryClient.RegisterAsync(model).AnyContext();
             if (exists)
             {
                 return this.Accepted(this.Url.Action(nameof(this.Get), new { id = model.Id }), model);
@@ -79,12 +79,12 @@
                 throw new BadRequestException("Model id cannot be empty");
             }
 
-            if (!(await this.context.RegistryClient.RegistrationsAsync().ConfigureAwait(false)).Any(r => r.Id.Equals(id)))
+            if (!(await this.context.RegistryClient.RegistrationsAsync().AnyContext()).Any(r => r.Id.Equals(id)))
             {
                 return this.NotFound(); // TODO: throw notfoundexception?
             }
 
-            await this.context.RegistryClient.DeRegisterAsync(id).ConfigureAwait(false);
+            await this.context.RegistryClient.DeRegisterAsync(id).AnyContext();
             return this.NoContent();
         }
     }

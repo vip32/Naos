@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
     using EnsureThat;
+    using Naos.Core.Common;
     using Naos.Core.Domain.Specifications;
 
     public static partial class Extensions
@@ -22,7 +23,7 @@
         {
             EnsureArg.IsNotNullOrEmpty(tenantId);
 
-            var entity = await source.FindOneAsync(id).ConfigureAwait(false);
+            var entity = await source.FindOneAsync(id).AnyContext();
             if(entity != null && new HasTenantSpecification<TEntity>(tenantId).IsSatisfiedBy(entity))
             {
                 return entity;

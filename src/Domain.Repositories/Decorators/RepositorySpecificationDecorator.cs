@@ -25,54 +25,54 @@
 
         public async Task<ActionResult> DeleteAsync(object id)
         {
-            return await this.decoratee.DeleteAsync(id).ConfigureAwait(false);
+            return await this.decoratee.DeleteAsync(id).AnyContext();
         }
 
         public async Task<ActionResult> DeleteAsync(TEntity entity)
         {
-            return await this.decoratee.DeleteAsync(entity).ConfigureAwait(false);
+            return await this.decoratee.DeleteAsync(entity).AnyContext();
         }
 
         public async Task<bool> ExistsAsync(object id)
         {
-            return await this.decoratee.ExistsAsync(id).ConfigureAwait(false);
+            return await this.decoratee.ExistsAsync(id).AnyContext();
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            return await this.FindAllAsync(new List<ISpecification<TEntity>>(), options, cancellationToken).ConfigureAwait(false);
+            return await this.FindAllAsync(new List<ISpecification<TEntity>>(), options, cancellationToken).AnyContext();
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            return await this.FindAllAsync(new List<ISpecification<TEntity>>(new[] { specification }), options, cancellationToken).ConfigureAwait(false);
+            return await this.FindAllAsync(new List<ISpecification<TEntity>>(new[] { specification }), options, cancellationToken).AnyContext();
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
             return await this.decoratee.FindAllAsync(
                 new[] { this.specification }.Concat(specifications.Safe()),
-                options, cancellationToken).ConfigureAwait(false);
+                options, cancellationToken).AnyContext();
         }
 
         public async Task<TEntity> FindOneAsync(object id)
         {
-            return await this.decoratee.FindOneAsync(id).ConfigureAwait(false); // TODO: (tenant) this.specification?
+            return await this.decoratee.FindOneAsync(id).AnyContext(); // TODO: (tenant) this.specification?
         }
 
         public async Task<TEntity> InsertAsync(TEntity entity)
         {
-            return await this.decoratee.InsertAsync(entity).ConfigureAwait(false);
+            return await this.decoratee.InsertAsync(entity).AnyContext();
         }
 
         public async Task<TEntity> UpdateAsync(TEntity entity)
         {
-            return await this.decoratee.UpdateAsync(entity).ConfigureAwait(false);
+            return await this.decoratee.UpdateAsync(entity).AnyContext();
         }
 
         public async Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
         {
-            return await this.decoratee.UpsertAsync(entity).ConfigureAwait(false);
+            return await this.decoratee.UpsertAsync(entity).AnyContext();
         }
     }
 }

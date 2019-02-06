@@ -3,6 +3,7 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using FluentValidation;
+    using Naos.Core.Common;
 
     public class ValidateCommandBehavior : ICommandBehavior
     {
@@ -24,7 +25,7 @@
                 throw new ValidationException($"{request.GetType().Name} has validation errors", result.Errors);
             }
 
-            return await Task.FromResult(new CommandBehaviorResult()).ConfigureAwait(false);
+            return await Task.FromResult(new CommandBehaviorResult()).AnyContext();
         }
     }
 }

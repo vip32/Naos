@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
+    using Naos.Core.Common;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Domain.Specifications;
     using Naos.Sample.Countries.Domain;
@@ -25,7 +26,7 @@
         public async Task FindAllAsync_Test()
         {
             // arrange/act
-            var result = await this.sut.FindAllAsync().ConfigureAwait(false);
+            var result = await this.sut.FindAllAsync().AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -37,7 +38,7 @@
         {
             // arrange/act
             var result = await this.sut.FindAllAsync(
-                new FindOptions<Country>(take: 2)).ConfigureAwait(false);
+                new FindOptions<Country>(take: 2)).AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -50,7 +51,7 @@
         //{
         //    // causes issues when used in mapped repos <TEntity, TDesitination>, Unable to cast object of type 'xxxDto' to type 'Naos.Core.Domain.ITenantEntity'. better use the tenant decorator for this
         //    // arrange/act
-        //    var result = await this.sut.FindAllAsync(this.tenantId, default).ConfigureAwait(false);
+        //    var result = await this.sut.FindAllAsync(this.tenantId, default).AnyContext();
 
         //    // assert
         //    result.ShouldNotBeNull();
@@ -62,7 +63,7 @@
         {
             // arrange/act
             var result = await this.sut.FindAllAsync(
-                new HasNameSpecification("Germany")).ConfigureAwait(false);
+                new HasNameSpecification("Germany")).AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -77,7 +78,7 @@
             // arrange/act
             var result = await this.sut.FindAllAsync(
                     new HasNameSpecification("Germany")
-                    .And(new HasCodeSpecification("de"))).ConfigureAwait(false);
+                    .And(new HasCodeSpecification("de"))).AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -92,7 +93,7 @@
             // arrange/act
             var result = await this.sut.FindAllAsync(
                     new HasNameSpecification("Germany")
-                    .Or(new HasCodeSpecification("nl"))).ConfigureAwait(false);
+                    .Or(new HasCodeSpecification("nl"))).AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -107,7 +108,7 @@
             var result = await this.sut.FindAllAsync(
                     new HasNameSpecification("Germany")
                     .And(new HasCodeSpecification("nl")
-                    .Not())).ConfigureAwait(false);
+                    .Not())).AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -125,7 +126,7 @@
                 {
                     new HasNameSpecification("Germany"),
                     new HasCodeSpecification("de")
-                }).ConfigureAwait(false);
+                }).AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -139,10 +140,10 @@
         {
             // arrange
             var entities = await this.sut.FindAllAsync(
-                new FindOptions<Country>(take: 1)).ConfigureAwait(false);
+                new FindOptions<Country>(take: 1)).AnyContext();
 
             // act
-            var result = await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).ConfigureAwait(false);
+            var result = await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -154,7 +155,7 @@
         {
             // arrange/act
             var result = await this.sut.InsertAsync(
-                new Country { Code = "fr", LanguageCodes = new[] { "fr-fr" }, Name = "France", TenantId = this.tenantId, Id = "fr" }).ConfigureAwait(false);
+                new Country { Code = "fr", LanguageCodes = new[] { "fr-fr" }, Name = "France", TenantId = this.tenantId, Id = "fr" }).AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -167,7 +168,7 @@
             using (var scope = this.ServiceProvider.CreateScope())
             {
                 var sut2 = scope.ServiceProvider.GetService<ICountryRepository>();
-                var entity = await sut2.FindOneAsync("fr").ConfigureAwait(false);
+                var entity = await sut2.FindOneAsync("fr").AnyContext();
 
                 entity.ShouldNotBeNull();
                 entity.Id.ShouldBe("fr");
@@ -180,7 +181,7 @@
         //    for (int i = 1; i < 10; i++)
         //    {
         //        // arrange/act
-        //        var result = await this.sut.UpsertAsync(this.entityFaker.Generate()).ConfigureAwait(false);
+        //        var result = await this.sut.UpsertAsync(this.entityFaker.Generate()).AnyContext();
 
         //        // assert
         //        result.action.ShouldNotBe(UpsertAction.None);
@@ -194,11 +195,11 @@
         //{
         //    // arrange
         //    var entities = await this.sut.FindAllAsync(
-        //        new FindOptions<Customer>(take: 1)).ConfigureAwait(false);
+        //        new FindOptions<Customer>(take: 1)).AnyContext();
 
         //    // act
-        //    await this.sut.DeleteAsync(entities.FirstOrDefault()).ConfigureAwait(false);
-        //    var result = await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).ConfigureAwait(false);
+        //    await this.sut.DeleteAsync(entities.FirstOrDefault()).AnyContext();
+        //    var result = await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).AnyContext();
 
         //    // assert
         //    result.ShouldBeNull();

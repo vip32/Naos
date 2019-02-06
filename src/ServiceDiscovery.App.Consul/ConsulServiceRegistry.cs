@@ -62,14 +62,14 @@
             };
 
             this.logger.LogInformation($"{{LogKey:l}} register consul (name={{RegistrationName}}, tags={string.Join("|", registration.Tags.Safe())}, id={{RegistrationId}}, address={registration.FullAddress})", LogEventKeys.ServiceDiscovery, registration.Name, registration.Id);
-            await this.client.Agent.ServiceDeregister(agentRegistration.ID).ConfigureAwait(false);
-            var result = await this.client.Agent.ServiceRegister(agentRegistration).ConfigureAwait(false);
+            await this.client.Agent.ServiceDeregister(agentRegistration.ID).AnyContext();
+            var result = await this.client.Agent.ServiceRegister(agentRegistration).AnyContext();
             this.logger.LogInformation($"{{LogKey:l}} register consul {result.StatusCode} (name={{RegistrationName}}, id={{RegistrationId}})", LogEventKeys.ServiceDiscovery, registration.Name, registration.Id);
         }
 
         public async Task<IEnumerable<ServiceRegistration>> RegistrationsAsync()
         {
-            var services = await this.client.Agent.Services().ConfigureAwait(false);
+            var services = await this.client.Agent.Services().AnyContext();
 
             return services.Response.Values.Select(s => new ServiceRegistration
             {

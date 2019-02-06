@@ -95,7 +95,7 @@
                 }
 
                 // TODO: async publish!
-                /*await */ this.mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.ConfigureAwait(false);*/
+                /*await */ this.mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.AnyContext();*/
 
                 var messageName = /*message.Name*/ message.GetType().PrettyName();
 
@@ -160,7 +160,7 @@
                 messageName,
                 async (string n, object m) =>
                 {
-                    await this.ProcessMessage(n, m).ConfigureAwait(false);
+                    await this.ProcessMessage(n, m).AnyContext();
                 });
             this.logger.LogDebug($"{{LogKey:l}} signalr connection onmessage handler registered (name={messageName})", LogEventKeys.Messaging);
 
@@ -207,7 +207,7 @@
                     var method = concreteType.GetMethod("Handle");
                     if (handler != null && method != null)
                     {
-                        await this.mediator.Publish(new MessageHandledDomainEvent(message, this.messageScope)).ConfigureAwait(false);
+                        await this.mediator.Publish(new MessageHandledDomainEvent(message, this.messageScope)).AnyContext();
                         await (Task)method.Invoke(handler, new object[] { jsonMessage as object });
                     }
                     else

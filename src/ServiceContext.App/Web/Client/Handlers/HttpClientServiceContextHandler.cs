@@ -37,7 +37,7 @@
                 }
             }
 
-            return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            return await base.SendAsync(request, cancellationToken).AnyContext();
         }
     }
 }

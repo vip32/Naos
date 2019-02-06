@@ -33,7 +33,7 @@
             return await Task.FromResult(new CommandResponse<bool>
             {
                 Result = true
-            }).ConfigureAwait(false);
+            }).AnyContext();
         }
     }
 }

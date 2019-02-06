@@ -1,0 +1,21 @@
+﻿namespace Naos.Core.FileStorage.Infrastructure.Ssh
+{
+    using System.IO;
+    using Naos.Core.Common.Serialization;
+    using Renci.SshNet;
+
+    public class SshNetFileStorageOptions
+    {
+        public string ConnectionString { get; set; }
+
+        public string Proxy { get; set; }
+
+        public ProxyTypes ProxyType { get; set; }
+
+        public Stream PrivateKey { get; set; }
+
+        public string PrivateKeyPassPhrase { get; set; }
+
+        public ISerializer Serializer { get; set; }
+    }
+}

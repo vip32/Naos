@@ -25,17 +25,17 @@
 
         public async Task<ActionResult> DeleteAsync(object id)
         {
-            return await this.decoratee.DeleteAsync(id).ConfigureAwait(false);
+            return await this.decoratee.DeleteAsync(id).AnyContext();
         }
 
         public async Task<ActionResult> DeleteAsync(TEntity entity)
         {
-            return await this.decoratee.DeleteAsync(entity).ConfigureAwait(false);
+            return await this.decoratee.DeleteAsync(entity).AnyContext();
         }
 
         public async Task<bool> ExistsAsync(object id)
         {
-            return await this.decoratee.ExistsAsync(id).ConfigureAwait(false);
+            return await this.decoratee.ExistsAsync(id).AnyContext();
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
@@ -45,7 +45,7 @@
                 this.logger.LogDebug($"{LogEventKeys.DomainRepository} order: {order.Expression?.ToString()}");
             }
 
-            return await this.decoratee.FindAllAsync(options, cancellationToken).ConfigureAwait(false);
+            return await this.decoratee.FindAllAsync(options, cancellationToken).AnyContext();
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
@@ -60,7 +60,7 @@
                 this.logger.LogDebug($"{LogEventKeys.DomainRepository} order: {order.Expression?.ToString()}");
             }
 
-            return await this.decoratee.FindAllAsync(specification, options, cancellationToken).ConfigureAwait(false);
+            return await this.decoratee.FindAllAsync(specification, options, cancellationToken).AnyContext();
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
@@ -75,27 +75,27 @@
                 this.logger.LogDebug($"{LogEventKeys.DomainRepository} order: {order.Expression?.ToString()}");
             }
 
-            return await this.decoratee.FindAllAsync(specifications, options, cancellationToken).ConfigureAwait(false);
+            return await this.decoratee.FindAllAsync(specifications, options, cancellationToken).AnyContext();
         }
 
         public async Task<TEntity> FindOneAsync(object id)
         {
-            return await this.decoratee.FindOneAsync(id).ConfigureAwait(false);
+            return await this.decoratee.FindOneAsync(id).AnyContext();
         }
 
         public async Task<TEntity> InsertAsync(TEntity entity)
         {
-            return await this.decoratee.InsertAsync(entity).ConfigureAwait(false);
+            return await this.decoratee.InsertAsync(entity).AnyContext();
         }
 
         public async Task<TEntity> UpdateAsync(TEntity entity)
         {
-            return await this.decoratee.UpdateAsync(entity).ConfigureAwait(false);
+            return await this.decoratee.UpdateAsync(entity).AnyContext();
         }
 
         public async Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
         {
-            var result = await this.decoratee.UpsertAsync(entity).ConfigureAwait(false);
+            var result = await this.decoratee.UpsertAsync(entity).AnyContext();
             this.logger.LogInformation($"{{LogKey:l}} upserted entity: {result.GetType().PrettyName()}, id: {result.entity.Id}, action: {result.action.ToDescription()}", LogEventKeys.DomainRepository);
             return result;
         }

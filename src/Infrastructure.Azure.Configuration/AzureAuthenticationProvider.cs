@@ -10,7 +10,7 @@
 //            return await new AuthenticationContext($"https://login.microsoftonline.com/{tenantId}", false)
 //                .AcquireTokenAsync(
 //                    resource ?? "https://management.azure.com",
-//                    new ClientCredential(clientId, clientSecret)).ConfigureAwait(false);
+//                    new ClientCredential(clientId, clientSecret)).AnyContext();
 //        }
 //    }
 //}

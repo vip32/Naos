@@ -27,7 +27,7 @@
             EnsureArg.IsNotNull(request);
 
             this.logger.LogJournal(LogEventPropertyKeys.TrackSendCommand, $"{{LogKey:l}} [{request.Identifier}] send {request.GetType().Name.SubstringTill("Command")}", args: LogEventKeys.AppCommand);
-            return await Task.FromResult(new CommandBehaviorResult()).ConfigureAwait(false);
+            return await Task.FromResult(new CommandBehaviorResult()).AnyContext();
         }
     }
 }

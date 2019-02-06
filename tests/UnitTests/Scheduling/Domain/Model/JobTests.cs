@@ -3,6 +3,7 @@
     using System;
     using System.Threading;
     using System.Threading.Tasks;
+    using Naos.Core.Common;
     using Naos.Core.JobScheduling.Domain;
     using Shouldly;
     using Xunit;
@@ -21,8 +22,8 @@
             });
 
             // act
-            await sut.ExecuteAsync(new[] { "a" }).ConfigureAwait(false);
-            await sut.ExecuteAsync(new[] { "a" }).ConfigureAwait(false);
+            await sut.ExecuteAsync(new[] { "a" }).AnyContext();
+            await sut.ExecuteAsync(new[] { "a" }).AnyContext();
 
             // assert
             count.ShouldBe(2);
@@ -41,8 +42,8 @@
                 }));
 
             // act
-            await sut.ExecuteAsync(new[] { "a" }).ConfigureAwait(false);
-            await sut.ExecuteAsync(new[] { "a" }).ConfigureAwait(false);
+            await sut.ExecuteAsync(new[] { "a" }).AnyContext();
+            await sut.ExecuteAsync(new[] { "a" }).AnyContext();
 
             // assert
             count.ShouldBe(2);
@@ -56,8 +57,8 @@
             var sut = new StubJob(probe);
 
             // act
-            await sut.ExecuteAsync(new[] { "a" }).ConfigureAwait(false);
-            await sut.ExecuteAsync(new[] { "a" }).ConfigureAwait(false);
+            await sut.ExecuteAsync(new[] { "a" }).AnyContext();
+            await sut.ExecuteAsync(new[] { "a" }).AnyContext();
 
             // assert
             probe.Count.ShouldBe(2);
@@ -117,7 +118,7 @@
 
                         Thread.Sleep(200);
                     }
-                }, cancellationToken).ConfigureAwait(false);
+                }, cancellationToken).AnyContext();
             }
         }
 

@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using MediatR;
+    using Naos.Core.Common;
 
     /// <summary>
     /// A base implementation for handling application commands
@@ -36,7 +37,7 @@
         /// <returns></returns>
         public virtual async Task<CommandResponse<TResponse>> Handle(TRequest request, CancellationToken cancellationToken)
         {
-            return await this.HandleRequest(request, cancellationToken).ConfigureAwait(false);
+            return await this.HandleRequest(request, cancellationToken).AnyContext();
         }
 
         /// <summary>
@@ -56,7 +57,7 @@
         //{
         //    EnsureArg.IsNotNull(domainEvent, nameof(domainEvent));
 
-        //    await this.mediator.Publish(domainEvent).ConfigureAwait(false);
+        //    await this.mediator.Publish(domainEvent).AnyContext();
         //}
     }
 }

@@ -67,12 +67,12 @@
             {
                 return await this.dbContext.Set<TEntity>()
                     .TakeIf(options?.Take)
-                    .OrderByIf(options).ToListAsyncSafe(cancellationToken).ConfigureAwait(false);
+                    .OrderByIf(options).ToListAsyncSafe(cancellationToken).AnyContext();
             }
             else
             {
                 return await this.dbContext.Set<TEntity>()
-                    .TakeIf(options?.Take).ToListAsyncSafe(cancellationToken).ConfigureAwait(false);
+                    .TakeIf(options?.Take).ToListAsyncSafe(cancellationToken).AnyContext();
             }
         }
 
@@ -84,14 +84,14 @@
                     .WhereExpression(specification?.ToExpression())
                     .SkipIf(options?.Skip)
                     .TakeIf(options?.Take)
-                    .OrderByIf(options).ToListAsyncSafe(cancellationToken).ConfigureAwait(false);
+                    .OrderByIf(options).ToListAsyncSafe(cancellationToken).AnyContext();
             }
             else
             {
                 return await this.dbContext.Set<TEntity>()
                     .WhereExpression(specification?.ToExpression())
                     .SkipIf(options?.Skip)
-                    .TakeIf(options?.Take).ToListAsyncSafe(cancellationToken).ConfigureAwait(false);
+                    .TakeIf(options?.Take).ToListAsyncSafe(cancellationToken).AnyContext();
             }
         }
 
@@ -106,14 +106,14 @@
                     .WhereExpressions(expressions)
                     .SkipIf(options?.Skip)
                     .TakeIf(options?.Take)
-                    .OrderByIf(options).ToListAsyncSafe(cancellationToken).ConfigureAwait(false);
+                    .OrderByIf(options).ToListAsyncSafe(cancellationToken).AnyContext();
             }
             else
             {
                 return await this.dbContext.Set<TEntity>()
                     .WhereExpressions(expressions)
                     .SkipIf(options?.Skip)
-                    .TakeIf(options?.Take).ToListAsyncSafe(cancellationToken).ConfigureAwait(false);
+                    .TakeIf(options?.Take).ToListAsyncSafe(cancellationToken).AnyContext();
             }
         }
 
@@ -124,7 +124,7 @@
                 return null;
             }
 
-            return await this.dbContext.Set<TEntity>().FindAsync(this.ConvertEntityId(id)).ConfigureAwait(false);
+            return await this.dbContext.Set<TEntity>().FindAsync(this.ConvertEntityId(id)).AnyContext();
         }
 
         public async Task<bool> ExistsAsync(object id)
@@ -144,7 +144,7 @@
         /// <returns></returns>
         public async Task<TEntity> InsertAsync(TEntity entity)
         {
-            var result = await this.UpsertAsync(entity).ConfigureAwait(false);
+            var result = await this.UpsertAsync(entity).AnyContext();
             return result.entity;
         }
 
@@ -155,7 +155,7 @@
         /// <returns></returns>
         public async Task<TEntity> UpdateAsync(TEntity entity)
         {
-            var result = await this.UpsertAsync(entity).ConfigureAwait(false);
+            var result = await this.UpsertAsync(entity).AnyContext();
             return result.entity;
         }
 
@@ -171,33 +171,33 @@
                 return (null, ActionResult.None);
             }
 
-            bool isNew = entity.Id.IsDefault() || !await this.ExistsAsync(entity.Id).ConfigureAwait(false);
+            bool isNew = entity.Id.IsDefault() || !await this.ExistsAsync(entity.Id).AnyContext();
 
             if (this.Options?.PublishEvents != false)
             {
                 if (isNew)
                 {
-                    await this.mediator.Publish(new EntityInsertDomainEvent(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityInsertDomainEvent(entity)).AnyContext();
                 }
                 else
                 {
-                    await this.mediator.Publish(new EntityUpdateDomainEvent(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityUpdateDomainEvent(entity)).AnyContext();
                 }
             }
 
             this.logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogEventKeys.DomainRepository);
             this.dbContext.Set<TEntity>().Add(entity);
-            await this.dbContext.SaveChangesAsync().ConfigureAwait(false);
+            await this.dbContext.SaveChangesAsync().AnyContext();
 
             if (this.Options?.PublishEvents != false)
             {
                 if (isNew)
                 {
-                    await this.mediator.Publish(new EntityInsertedDomainEvent(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityInsertedDomainEvent(entity)).AnyContext();
                 }
                 else
                 {
-                    await this.mediator.Publish(new EntityUpdatedDomainEvent(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityUpdatedDomainEvent(entity)).AnyContext();
                 }
             }
 
@@ -214,7 +214,7 @@
                 return ActionResult.None;
             }
 
-            var entity = await this.FindOneAsync(id).ConfigureAwait(false);
+            var entity = await this.FindOneAsync(id).AnyContext();
             if (entity != null)
             {
                 this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogEventKeys.DomainRepository);
@@ -222,14 +222,14 @@
 
                 if (this.Options?.PublishEvents != false)
                 {
-                    await this.mediator.Publish(new EntityDeleteDomainEvent(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityDeleteDomainEvent(entity)).AnyContext();
                 }
 
                 await this.dbContext.SaveChangesAsync();
 
                 if (this.Options?.PublishEvents != false)
                 {
-                    await this.mediator.Publish(new EntityDeletedDomainEvent(entity)).ConfigureAwait(false);
+                    await this.mediator.Publish(new EntityDeletedDomainEvent(entity)).AnyContext();
                 }
 
                 return ActionResult.Deleted;
@@ -245,7 +245,7 @@
                 return ActionResult.None;
             }
 
-            return await this.DeleteAsync(entity.Id).ConfigureAwait(false);
+            return await this.DeleteAsync(entity.Id).AnyContext();
         }
 
         private object ConvertEntityId(object value)

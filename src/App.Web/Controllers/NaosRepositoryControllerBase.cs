@@ -35,7 +35,7 @@
 
             return this.Ok(await this.Repository.FindAllAsync(
                 this.FilterContext?.GetSpecifications<TEntity>(),
-                this.FilterContext?.GetFindOptions<TEntity>()).ConfigureAwait(false));
+                this.FilterContext?.GetFindOptions<TEntity>()).AnyContext());
         }
 
         [HttpGet]
@@ -57,7 +57,7 @@
                 throw new ArgumentException("-1 not allowed"); // trigger an exception to test exception handling
             }
 
-            var model = await this.Repository.FindOneAsync(id).ConfigureAwait(false);
+            var model = await this.Repository.FindOneAsync(id).AnyContext();
             if (model == null)
             {
                 return this.NotFound(); // TODO: throw notfoundexception?
@@ -90,12 +90,12 @@
                 throw new BadRequestException(this.ModelState);
             }
 
-            if (!await this.Repository.ExistsAsync(id).ConfigureAwait(false))
+            if (!await this.Repository.ExistsAsync(id).AnyContext())
             {
                 return this.NotFound(); // TODO: throw notfoundexception?
             }
 
-            model = await this.Repository.UpdateAsync(model).ConfigureAwait(false);
+            model = await this.Repository.UpdateAsync(model).AnyContext();
             return this.Accepted(this.Url.Action(nameof(this.Get), new { id = model.Id }), model);
         }
 
@@ -112,12 +112,12 @@
                 throw new BadRequestException(this.ModelState);
             }
 
-            if (await this.Repository.ExistsAsync(model.Id).ConfigureAwait(false))
+            if (await this.Repository.ExistsAsync(model.Id).AnyContext())
             {
                 throw new BadRequestException($"Model with id {model.Id} already exists");
             }
 
-            model = await this.Repository.InsertAsync(model).ConfigureAwait(false);
+            model = await this.Repository.InsertAsync(model).AnyContext();
             return this.CreatedAtAction(nameof(this.Get), new { id = model.Id }, model);
         }
 
@@ -135,12 +135,12 @@
                 throw new BadRequestException("Model id cannot be empty");
             }
 
-            if (!await this.Repository.ExistsAsync(id).ConfigureAwait(false))
+            if (!await this.Repository.ExistsAsync(id).AnyContext())
             {
                 return this.NotFound(); // TODO: throw notfoundexception?
             }
 
-            await this.Repository.DeleteAsync(id).ConfigureAwait(false);
+            await this.Repository.DeleteAsync(id).AnyContext();
             return this.NoContent();
         }
     }

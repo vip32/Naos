@@ -4,6 +4,7 @@
     using FluentValidation;
     using FluentValidation.Results;
     using Naos.Core.Commands.Domain;
+    using Naos.Core.Common;
     using Xunit;
 
     public class ValidateCommandBehaviorTests
@@ -24,7 +25,7 @@
         {
             // arrange/act
             var ex = await Assert.ThrowsAsync<ValidationException>(() =>
-                new ValidateCommandBehavior().ExecuteAsync(new StubCommand(null))).ConfigureAwait(false);
+                new ValidateCommandBehavior().ExecuteAsync(new StubCommand(null))).AnyContext();
 
             // assert
             Assert.Contains("has validation errors", ex.Message);

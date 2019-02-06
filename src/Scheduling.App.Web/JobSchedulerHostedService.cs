@@ -69,7 +69,7 @@
         {
             if (this.enabled)
             {
-                await this.scheduler.RunAsync().ConfigureAwait(false);
+                await this.scheduler.RunAsync().AnyContext();
             }
         }
     }

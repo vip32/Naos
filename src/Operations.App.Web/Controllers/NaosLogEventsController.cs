@@ -9,6 +9,7 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
     using Naos.Core.Operations.Domain;
     using Naos.Core.Operations.Domain.Repositories;
 
@@ -39,10 +40,10 @@
             //var acceptHeader = this.HttpContext.Request.Headers.GetValue("Accept");
             //if (acceptHeader.ContainsAny(new[] { ContentType.HTML.ToValue(), ContentType.HTM.ToValue() }))
             //{
-            //    return await this.GetHtmlAsync().ConfigureAwait(false);
+            //    return await this.GetHtmlAsync().AnyContext();
             //}
 
-            return this.Ok(await this.GetJsonAsync().ConfigureAwait(false));
+            return this.Ok(await this.GetJsonAsync().AnyContext());
         }
 
         [HttpGet]
@@ -58,7 +59,7 @@
 
         private async Task<IEnumerable<LogEvent>> GetJsonAsync()
         {
-            return await this.repository.FindAllAsync().ConfigureAwait(false);
+            return await this.repository.FindAllAsync().AnyContext();
         }
 
         private async Task GetHtmlAsync()
@@ -101,7 +102,7 @@
 <body>");
             try
             {
-                var logEvents = await this.repository.FindAllAsync().ConfigureAwait(false);
+                var logEvents = await this.repository.FindAllAsync().AnyContext();
                 foreach (var logEvent in logEvents)
                 {
                     var levelColor = "lime";
