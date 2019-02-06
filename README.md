@@ -260,7 +260,11 @@ The same registries as Client-side can be used in the router.
 # JobScheduling
 
 - Jobs
+  - Registration
+  - REST Api
 - Schedules
+  - Cron
+
 
 # FileStorage
 
