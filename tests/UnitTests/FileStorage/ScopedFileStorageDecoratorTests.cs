@@ -105,7 +105,7 @@
             return new FileStorageScopedDecorator(
                 new FolderFileStorage(o => o
                     .LoggerFactory(Substitute.For<ILoggerFactory>())
-                    .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "tests"))),
+                    .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "tests_scoped"))),
                 "scoped");
         }
     }

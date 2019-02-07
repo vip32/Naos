@@ -104,7 +104,7 @@
         {
             return new FolderFileStorage(o => o
                     .LoggerFactory(Substitute.For<ILoggerFactory>())
-                    .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "tests"))); //o => o.Folder("|DataDirectory|\\temp"));
+                    .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "tests_normal"))); //o => o.Folder("|DataDirectory|\\temp"));
         }
     }
 }
