@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
     using MediatR;
@@ -211,7 +212,7 @@
 
         private string GetFileContents(string path)
         {
-            System.Threading.Thread.Sleep(this.configuration.ProcessDelay); // this helps with locked files
+            Thread.Sleep(this.configuration.ProcessDelay); // this helps with locked files
             return this.fileStorage.GetFileContentsAsync(path).Result;
         }
     }

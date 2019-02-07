@@ -119,8 +119,7 @@
             await newBlob.StartCopyAsync(oldBlob, null, null, null, null, cancellationToken).AnyContext();
             while (newBlob.CopyState.Status == CopyStatus.Pending)
             {
-                Thread.Sleep(50);
-                //await SystemClock.SleepAsync(50, cancellationToken).AnyContext();
+                await Task.Delay(50, cancellationToken).AnyContext();
             }
 
             return newBlob.CopyState.Status == CopyStatus.Success;

@@ -125,6 +125,7 @@ signalr client-server streaming https://docs.microsoft.com/en-us/aspnet/core/sig
 file storage abstraction https://github.com/FoundatioFx/Foundatio#file-storage
 metrics (AppMetrics)     https://github.com/FoundatioFx/Foundatio#metrics
 inter service JSON RPC http://www.jsonrpc.org/specification
+                       on hold till MS stabalizes this (gRPC): https://github.com/grpc/grpc-dotnet
                        service-bus: https://github.com/Azure/azure-service-bus/tree/master/samples/DotNet/Microsoft.Azure.ServiceBus/QueuesRequestResponse
                        https://github.com/ipjohnson/EasyRpc (incl authorization, client, dotnet di, messagepack transport)
                        https://github.com/alexanderkozlenko/aspnetcore-json-rpc (simple, only http transport) + client https://github.com/alexanderkozlenko/json-rpc-client
