@@ -105,9 +105,9 @@
 
             if (!string.IsNullOrWhiteSpace(connectionString))
             {
-                return new AzureFileStorage(
-                    Substitute.For<ILogger<AzureFileStorage>>(),
-                    o => o.ConnectionString(connectionString));
+                return new AzureFileStorage(o => o
+                    .LoggerFactory(Substitute.For<ILoggerFactory>())
+                    .ConnectionString(connectionString));
             }
 
             return null;

@@ -21,11 +21,11 @@
         private readonly ConnectionInfo connectionInfo;
         private readonly SftpClient client;
 
-        public SshNetFileStorage(ILogger<SshNetFileStorage> logger, SshNetFileStorageOptions options)
+        public SshNetFileStorage(SshNetFileStorageOptions options)
         {
-            EnsureArg.IsNotNull(logger, nameof(logger));
+            EnsureArg.IsNotNull(options.LoggerFactory, nameof(options.LoggerFactory));
 
-            this.logger = logger;
+            this.logger = options.LoggerFactory.CreateLogger<SshNetFileStorage>();
             options = options ?? new SshNetFileStorageOptions();
             this.Serializer = options.Serializer ?? DefaultSerializer.Instance;
 
@@ -34,7 +34,7 @@
         }
 
         public SshNetFileStorage(ILogger<SshNetFileStorage> logger, Builder<SshNetFileStorageOptionsBuilder, SshNetFileStorageOptions> config)
-            : this(logger, config(new SshNetFileStorageOptionsBuilder()).Build())
+            : this(config(new SshNetFileStorageOptionsBuilder()).Build())
         {
         }
 

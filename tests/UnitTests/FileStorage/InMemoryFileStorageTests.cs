@@ -100,7 +100,7 @@
 
         protected override IFileStorage GetStorage()
         {
-            return new InMemoryFileStorage(Substitute.For<ILogger<InMemoryFileStorage>>());
+            return new InMemoryFileStorage(o => o.LoggerFactory(Substitute.For<ILoggerFactory>()));
         }
     }
 }

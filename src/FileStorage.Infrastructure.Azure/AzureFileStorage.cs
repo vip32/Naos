@@ -21,11 +21,11 @@
         private readonly CloudBlobContainer container;
         private readonly ISerializer serializer;
 
-        public AzureFileStorage(ILogger<AzureFileStorage> logger, AzureFileStorageOptions options)
+        public AzureFileStorage(AzureFileStorageOptions options)
         {
-            EnsureArg.IsNotNull(logger, nameof(logger));
+            EnsureArg.IsNotNull(options.LoggerFactory, nameof(options.LoggerFactory));
 
-            this.logger = logger;
+            this.logger = options.LoggerFactory.CreateLogger<AzureFileStorage>();
             options = options ?? new AzureFileStorageOptions();
             this.Serializer = options.Serializer ?? DefaultSerializer.Instance;
 
@@ -36,8 +36,8 @@
             this.serializer = options.Serializer ?? DefaultSerializer.Instance;
         }
 
-        public AzureFileStorage(ILogger<AzureFileStorage> logger, Builder<AzureFileStorageOptionsBuilder, AzureFileStorageOptions> config)
-            : this(logger, config(new AzureFileStorageOptionsBuilder()).Build())
+        public AzureFileStorage(Builder<AzureFileStorageOptionsBuilder, AzureFileStorageOptions> config)
+            : this(config(new AzureFileStorageOptionsBuilder()).Build())
         {
         }
 

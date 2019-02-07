@@ -409,12 +409,10 @@
         public virtual void CanUseDataDirectory()
         {
             const string DATA_DIRECTORY_QUEUE_FOLDER = @"|DataDirectory|\Queue";
-            var logger = Substitute.For<ILogger<FolderFileStorage>>();
-
             var storage = new FolderFileStorage(
-                logger,
                 new FolderFileStorageOptions
                 {
+                    LoggerFactory = Substitute.For<ILoggerFactory>(),
                     Folder = DATA_DIRECTORY_QUEUE_FOLDER
                 });
             Assert.NotNull(storage.Folder);

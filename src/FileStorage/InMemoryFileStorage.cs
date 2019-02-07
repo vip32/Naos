@@ -19,16 +19,11 @@
         private readonly Dictionary<string, Tuple<FileInformation, byte[]>> storage = new Dictionary<string, Tuple<FileInformation, byte[]>>(StringComparer.OrdinalIgnoreCase);
         private readonly object @lock = new object();
 
-        public InMemoryFileStorage(ILogger<InMemoryFileStorage> logger)
-            : this(logger, new InMemoryFileStorageOptions())
+        public InMemoryFileStorage(InMemoryFileStorageOptions options)
         {
-        }
+            EnsureArg.IsNotNull(options.LoggerFactory, nameof(options.LoggerFactory));
 
-        public InMemoryFileStorage(ILogger<InMemoryFileStorage> logger, InMemoryFileStorageOptions options)
-        {
-            EnsureArg.IsNotNull(logger, nameof(logger));
-
-            this.logger = logger;
+            this.logger = options.LoggerFactory.CreateLogger<InMemoryFileStorage>();
             options = options ?? new InMemoryFileStorageOptions();
             this.Serializer = options.Serializer ?? DefaultSerializer.Instance;
 
@@ -36,8 +31,8 @@
             this.MaxFiles = options.MaxFiles;
         }
 
-        public InMemoryFileStorage(ILogger<InMemoryFileStorage> logger, Builder<InMemoryFileStorageOptionsBuilder, InMemoryFileStorageOptions> config)
-            : this(logger, config(new InMemoryFileStorageOptionsBuilder()).Build())
+        public InMemoryFileStorage(Builder<InMemoryFileStorageOptionsBuilder, InMemoryFileStorageOptions> config)
+            : this(config(new InMemoryFileStorageOptionsBuilder()).Build())
         {
         }
 

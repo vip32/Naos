@@ -17,11 +17,11 @@
         private readonly ILogger<FolderFileStorage> logger;
         private readonly object @lock = new object();
 
-        public FolderFileStorage(ILogger<FolderFileStorage> logger, FolderFileStorageOptions options)
+        public FolderFileStorage(FolderFileStorageOptions options)
         {
-            EnsureArg.IsNotNull(logger, nameof(logger));
+            EnsureArg.IsNotNull(options.LoggerFactory, nameof(options.LoggerFactory));
 
-            this.logger = logger;
+            this.logger = options.LoggerFactory.CreateLogger<FolderFileStorage>();
             options = options ?? new FolderFileStorageOptions();
             this.Serializer = options.Serializer ?? DefaultSerializer.Instance;
 
@@ -41,8 +41,8 @@
             Directory.CreateDirectory(folder);
         }
 
-        public FolderFileStorage(ILogger<FolderFileStorage> logger, Builder<FolderFileStorageOptionsBuilder, FolderFileStorageOptions> config)
-            : this(logger, config(new FolderFileStorageOptionsBuilder()).Build())
+        public FolderFileStorage(Builder<FolderFileStorageOptionsBuilder, FolderFileStorageOptions> config)
+            : this(config(new FolderFileStorageOptionsBuilder()).Build())
         {
         }
 

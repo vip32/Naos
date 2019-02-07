@@ -44,9 +44,10 @@
                         new ServiceProviderMessageHandlerFactory(sp),
                         new FileStorageLoggingDecorator(
                             sp.GetRequiredService<ILogger<FileStorageLoggingDecorator>>(),
-                            new FolderFileStorage(
-                                sp.GetRequiredService<ILogger<FolderFileStorage>>(),
-                                new FolderFileStorageOptions { Folder = fileSystemConfiguration.Folder, Serializer = new JsonNetSerializer() })),
+                            new FolderFileStorage(o => o
+                                .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
+                                .Folder(fileSystemConfiguration.Folder)
+                                .Serializer(new JsonNetSerializer()))),
                         fileSystemConfiguration,
                         map: sp.GetRequiredService<ISubscriptionMap>(),
                         filterScope: Environment.GetEnvironmentVariable(EnvironmentKeys.IsLocal).ToBool()
