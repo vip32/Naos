@@ -6,29 +6,29 @@
 
     public static class Extensions
     {
-        public static T Deserialize<T>(this ISerializer serializer, Stream data)
+        public static T Deserialize<T>(this ISerializer source, Stream data)
         {
-            return (T)serializer.Deserialize(data, typeof(T));
+            return (T)source.Deserialize(data, typeof(T));
         }
 
-        public static T Deserialize<T>(this ISerializer serializer, byte[] data)
+        public static T Deserialize<T>(this ISerializer source, byte[] data)
         {
-            return (T)serializer.Deserialize(new MemoryStream(data), typeof(T));
+            return (T)source.Deserialize(new MemoryStream(data), typeof(T));
         }
 
-        public static object Deserialize(this ISerializer serializer, byte[] data, Type objectType)
+        public static object Deserialize(this ISerializer source, byte[] data, Type type)
         {
-            return serializer.Deserialize(new MemoryStream(data), objectType);
+            return source.Deserialize(new MemoryStream(data), type);
         }
 
-        public static T Deserialize<T>(this ISerializer serializer, string data)
+        public static T Deserialize<T>(this ISerializer source, string data)
         {
             byte[] bytes;
             if (data == null)
             {
                 bytes = Array.Empty<byte>();
             }
-            else if (serializer is ITextSerializer)
+            else if (source is ITextSerializer)
             {
                 bytes = Encoding.UTF8.GetBytes(data);
             }
@@ -37,17 +37,17 @@
                 bytes = Convert.FromBase64String(data);
             }
 
-            return (T)serializer.Deserialize(new MemoryStream(bytes), typeof(T));
+            return (T)source.Deserialize(new MemoryStream(bytes), typeof(T));
         }
 
-        public static object Deserialize(this ISerializer serializer, string data, Type objectType)
+        public static object Deserialize(this ISerializer source, string data, Type type)
         {
             byte[] bytes;
             if (data == null)
             {
                 bytes = Array.Empty<byte>();
             }
-            else if (serializer is ITextSerializer)
+            else if (source is ITextSerializer)
             {
                 bytes = Encoding.UTF8.GetBytes(data);
             }
@@ -56,18 +56,18 @@
                 bytes = Convert.FromBase64String(data);
             }
 
-            return serializer.Deserialize(new MemoryStream(bytes), objectType);
+            return source.Deserialize(new MemoryStream(bytes), type);
         }
 
-        public static string SerializeToString<T>(this ISerializer serializer, T value)
+        public static string SerializeToString<T>(this ISerializer source, T value)
         {
             if (value == null)
             {
                 return null;
             }
 
-            var bytes = serializer.SerializeToBytes(value);
-            if (serializer is ITextSerializer)
+            var bytes = source.SerializeToBytes(value);
+            if (source is ITextSerializer)
             {
                 return Encoding.UTF8.GetString(bytes);
             }
@@ -75,7 +75,7 @@
             return Convert.ToBase64String(bytes);
         }
 
-        public static byte[] SerializeToBytes<T>(this ISerializer serializer, T value)
+        public static byte[] SerializeToBytes<T>(this ISerializer source, T value)
         {
             if (value == null)
             {
@@ -83,7 +83,7 @@
             }
 
             var stream = new MemoryStream();
-            serializer.Serialize(value, stream);
+            source.Serialize(value, stream);
 
             return stream.ToArray();
         }
