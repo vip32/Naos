@@ -107,10 +107,7 @@
             {
                 return new AzureFileStorage(
                     Substitute.For<ILogger<AzureFileStorage>>(),
-                    new AzureFileStorageOptions
-                    {
-                        ConnectionString = connectionString
-                    });
+                    o => o.ConnectionString(connectionString));
             }
 
             return null;

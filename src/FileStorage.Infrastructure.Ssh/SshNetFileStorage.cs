@@ -33,6 +33,11 @@
             this.client = new SftpClient(this.connectionInfo);
         }
 
+        public SshNetFileStorage(ILogger<SshNetFileStorage> logger, Builder<SshNetFileStorageOptionsBuilder, SshNetFileStorageOptions> config)
+            : this(logger, config(new SshNetFileStorageOptionsBuilder()).Build())
+        {
+        }
+
         public ISerializer Serializer { get; }
 
         public async Task<Stream> GetFileStreamAsync(string path, CancellationToken cancellationToken = default)

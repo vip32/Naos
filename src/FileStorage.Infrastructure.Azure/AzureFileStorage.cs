@@ -36,6 +36,11 @@
             this.serializer = options.Serializer ?? DefaultSerializer.Instance;
         }
 
+        public AzureFileStorage(ILogger<AzureFileStorage> logger, Builder<AzureFileStorageOptionsBuilder, AzureFileStorageOptions> config)
+            : this(logger, config(new AzureFileStorageOptionsBuilder()).Build())
+        {
+        }
+
         public ISerializer Serializer { get; }
 
         public async Task<Stream> GetFileStreamAsync(string path, CancellationToken cancellationToken = default)

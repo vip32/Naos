@@ -36,6 +36,11 @@
             this.MaxFiles = options.MaxFiles;
         }
 
+        public InMemoryFileStorage(ILogger<InMemoryFileStorage> logger, Builder<InMemoryFileStorageOptionsBuilder, InMemoryFileStorageOptions> config)
+            : this(logger, config(new InMemoryFileStorageOptionsBuilder()).Build())
+        {
+        }
+
         public long MaxFileSize { get; }
 
         public long MaxFiles { get; }

@@ -41,6 +41,11 @@
             Directory.CreateDirectory(folder);
         }
 
+        public FolderFileStorage(ILogger<FolderFileStorage> logger, Builder<FolderFileStorageOptionsBuilder, FolderFileStorageOptions> config)
+            : this(logger, config(new FolderFileStorageOptionsBuilder()).Build())
+        {
+        }
+
         public ISerializer Serializer { get; }
 
         public string Folder { get; }

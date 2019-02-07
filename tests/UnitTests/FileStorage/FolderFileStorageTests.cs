@@ -1,5 +1,6 @@
 ﻿namespace Naos.Core.UnitTests.FileStorage
 {
+    using System.IO;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
     using Naos.Core.FileStorage.Domain;
@@ -103,10 +104,8 @@
         {
             return new FolderFileStorage(
                 Substitute.For<ILogger<FolderFileStorage>>(),
-                new FolderFileStorageOptions
-                {
-                    Folder = "|DataDirectory|\\temp"
-                });
+                o => o.Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "tests")));
+                //o => o.Folder("|DataDirectory|\\temp"));
         }
     }
 }

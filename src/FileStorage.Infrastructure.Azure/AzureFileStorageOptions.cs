@@ -1,5 +1,6 @@
 ﻿namespace Naos.Core.FileStorage.Infrastructure.Azure
 {
+    using Naos.Core.Common;
     using Naos.Core.Common.Serialization;
 
     public class AzureFileStorageOptions

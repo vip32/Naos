@@ -1,5 +1,6 @@
 ﻿namespace Naos.Core.UnitTests.FileStorage
 {
+    using System.IO;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
     using Naos.Core.FileStorage.Domain;
@@ -104,10 +105,7 @@
             return new FileStorageScopedDecorator(
                 new FolderFileStorage(
                     Substitute.For<ILogger<FolderFileStorage>>(),
-                    new FolderFileStorageOptions
-                    {
-                        Folder = "|DataDirectory|\\temp2"
-                    }),
+                    o => o.Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "tests"))),
                 "scoped");
         }
     }
