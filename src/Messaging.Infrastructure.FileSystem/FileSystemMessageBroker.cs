@@ -26,7 +26,7 @@
         private readonly string messageScope;
         private readonly IDictionary<string, FileSystemWatcher> watchers = new Dictionary<string, FileSystemWatcher>();
 
-        public FileSystemMessageBroker(
+        public FileSystemMessageBroker( // TODO: use OptionsBuilder here
             ILogger<FileSystemMessageBroker> logger,
             IMediator mediator,
             IMessageHandlerFactory handlerFactory,

@@ -30,7 +30,7 @@
         private readonly ServiceUtils serviceUtils;
         private HubConnection connection;
 
-        public SignalRServerlessMessageBroker(
+        public SignalRServerlessMessageBroker( // TODO: use OptionsBuilder here
             ILogger<SignalRServerlessMessageBroker> logger,
             IMediator mediator,
             IMessageHandlerFactory handlerFactory,

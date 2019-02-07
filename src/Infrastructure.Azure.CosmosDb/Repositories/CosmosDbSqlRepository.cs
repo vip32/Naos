@@ -26,11 +26,11 @@
         /// <param name="mediator">The mediator.</param>
         /// <param name="provider">The provider.</param>
         /// <param name="options">The options.</param>
-        public CosmosDbSqlRepository(
+        public CosmosDbSqlRepository( // TODO: use OptionsBuilder here
             ILogger<IRepository<TEntity>> logger,
             IMediator mediator,
             ICosmosDbSqlProvider<TEntity> provider,
-            IRepositoryOptions options = null)
+            IRepositoryOptions options = null) // TODO: move to OptionsBuilder
         {
             EnsureArg.IsNotNull(logger, nameof(mediator));
             EnsureArg.IsNotNull(mediator, nameof(mediator));

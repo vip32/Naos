@@ -1,10 +1,11 @@
 ﻿namespace Naos.Core.FileStorage.Infrastructure.Ssh
 {
     using System.IO;
+    using Naos.Core.Common;
     using Naos.Core.Common.Serialization;
     using Renci.SshNet;
 
-    public class SshNetFileStorageOptions
+    public class SshNetFileStorageOptions : BaseOptions
     {
         public string ConnectionString { get; set; }
 

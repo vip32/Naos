@@ -3,7 +3,8 @@
     using Naos.Core.Common;
     using Naos.Core.Common.Serialization;
 
-    public class InMemoryFileStorageOptionsBuilder : OptionsBuilder<InMemoryFileStorageOptions>
+    public class InMemoryFileStorageOptionsBuilder :
+        BaseOptionsBuilder<InMemoryFileStorageOptions, InMemoryFileStorageOptionsBuilder>
     {
         public InMemoryFileStorageOptionsBuilder Folder(long maxFileSize)
         {

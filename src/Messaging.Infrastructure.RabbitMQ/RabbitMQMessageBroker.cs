@@ -10,7 +10,10 @@
         private readonly RabbitMQConfiguration configuration;
         private readonly IMessageHandlerFactory handlerFactory;
 
-        public RabbitMQMessageBroker(ILogger<RabbitMQMessageBroker> logger, RabbitMQConfiguration configuration, IMessageHandlerFactory handlerFactory)
+        public RabbitMQMessageBroker( // // TODO: use OptionsBuilder here
+            ILogger<RabbitMQMessageBroker> logger,
+            RabbitMQConfiguration configuration,
+            IMessageHandlerFactory handlerFactory)
         {
             EnsureThat.EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureThat.EnsureArg.IsNotNull(configuration, nameof(configuration));

@@ -7,7 +7,8 @@
     using Naos.Core.Common.Serialization;
     using Renci.SshNet;
 
-    public class SshNetFileStorageOptionsBuilder : OptionsBuilder<SshNetFileStorageOptions>
+    public class SshNetFileStorageOptionsBuilder :
+        BaseOptionsBuilder<SshNetFileStorageOptions, SshNetFileStorageOptionsBuilder>
     {
         public SshNetFileStorageOptionsBuilder ConnectionString(string connectionString)
         {

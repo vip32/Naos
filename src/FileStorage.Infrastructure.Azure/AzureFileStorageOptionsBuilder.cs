@@ -3,7 +3,8 @@
     using Naos.Core.Common;
     using Naos.Core.Common.Serialization;
 
-    public class AzureFileStorageOptionsBuilder : OptionsBuilder<AzureFileStorageOptions>
+    public class AzureFileStorageOptionsBuilder :
+        BaseOptionsBuilder<AzureFileStorageOptions, AzureFileStorageOptionsBuilder>
     {
         public AzureFileStorageOptionsBuilder ConnectionString(string connectionString)
         {

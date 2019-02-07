@@ -35,7 +35,7 @@
         /// <param name="subscriptionName">Name of the subscription.</param>
         /// <param name="filterScope">Name of the scope.</param>
         /// <param name="messageScope">The message scope.</param>
-        public ServiceBusMessageBroker(
+        public ServiceBusMessageBroker( // TODO: use OptionsBuilder here
             ILogger<ServiceBusMessageBroker> logger,
             IMediator mediator,
             IServiceBusProvider provider,

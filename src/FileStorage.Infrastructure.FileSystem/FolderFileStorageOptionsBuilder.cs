@@ -3,7 +3,8 @@
     using Naos.Core.Common;
     using Naos.Core.Common.Serialization;
 
-    public class FolderFileStorageOptionsBuilder : OptionsBuilder<FolderFileStorageOptions>
+    public class FolderFileStorageOptionsBuilder :
+        BaseOptionsBuilder<FolderFileStorageOptions, FolderFileStorageOptionsBuilder>
     {
         public FolderFileStorageOptionsBuilder Folder(string folder)
         {
