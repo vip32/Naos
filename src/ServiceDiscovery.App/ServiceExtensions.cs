@@ -17,7 +17,7 @@
     {
         public static ServiceConfigurationContext AddServiceDiscovery(
             this ServiceConfigurationContext context,
-            Action<ServiceDiscoveryOptions> setupAction)
+            Action<ServiceDiscoveryOptions> setupAction = null)
         {
             setupAction?.Invoke(new ServiceDiscoveryOptions(context));
 

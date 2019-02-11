@@ -7,7 +7,7 @@
     {
         public static ServiceConfigurationContext AddMessaging(
             this ServiceConfigurationContext context,
-            Action<MessagingOptions> setupAction)
+            Action<MessagingOptions> setupAction = null)
         {
             setupAction?.Invoke(new MessagingOptions(context));
 
