@@ -7,6 +7,11 @@
 
     public static class ServiceExtensions
     {
+        /// <summary>
+        /// Adds required services to support the request filtering functionality.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public static ServiceConfigurationContext AddRequestFiltering(
             this ServiceConfigurationContext context)
         {

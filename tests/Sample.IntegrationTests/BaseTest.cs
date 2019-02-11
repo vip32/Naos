@@ -30,13 +30,11 @@
                     //.AddMessaging(o => o.AddFileSystemBroker());
                     //.AddMessaging(o => o.AddSignalRBroker());
                     .AddMessaging(o => o.AddServiceBusBroker())
-                    .AddCommands();
-
-            // naos sample registrations
-            this.services
-                .AddSampleCountries()
-                .AddSampleCustomers(configuration)
-                .AddSampleUserAccounts(configuration, dbContext: new UserAccountsContext(new DbContextOptionsBuilder().UseNaosSqlServer(configuration, "naos:sample:userAccounts:entityFramework").Options));
+                    .AddCommands()
+                    .AddServices(o => o
+                        .AddSampleCountries()
+                        .AddSampleCustomers()
+                        .AddSampleUserAccounts(dbContext: new UserAccountsContext(new DbContextOptionsBuilder().UseNaosSqlServer(configuration, "naos:sample:userAccounts:entityFramework").Options)));
 
             this.services.AddSingleton<ICommandBehavior, TrackCommandBehavior>();
             //this.services.AddSingleton<ICommandBehavior, ServiceContextEnrichCommandBehavior>();

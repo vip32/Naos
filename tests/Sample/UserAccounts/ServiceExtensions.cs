@@ -4,6 +4,7 @@
     using MediatR;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Configuration.App;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Infrastructure.EntityFramework;
     using Naos.Sample.UserAccounts.Domain;
@@ -11,20 +12,20 @@
 
     public static partial class ServiceExtensions
     {
-        public static IServiceCollection AddSampleUserAccounts(
-            this IServiceCollection services,
-            IConfiguration configuration,
+        public static ServiceOptions AddSampleUserAccounts(
+            this ServiceOptions options,
             string section = "naos:sample:userAccounts:entityFramework",
             UserAccountsContext dbContext = null)
         {
-            EnsureArg.IsNotNull(services, nameof(services));
+            EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
             if (dbContext != null)
             {
-                services.AddSingleton(dbContext); // cross wiring, warning this will be a singleton (not scoped)
+                options.Context.Services.AddSingleton(dbContext); // cross wiring, warning this will be a singleton (not scoped)
             }
 
-            services.AddScoped<IUserAccountRepository>(sp =>
+            options.Context.Services.AddScoped<IUserAccountRepository>(sp =>
             {
                 return new UserAccountRepository(
                     new RepositoryLoggingDecorator<UserAccount>(
@@ -37,17 +38,18 @@
                                 sp.GetRequiredService<UserAccountsContext>()))));
             });
 
-            var entityFrameworkConfiguration = configuration?.GetSection(section).Get<EntityFrameworkConfiguration>();
-            services.AddDbContext<UserAccountsContext>(o =>
+            var entityFrameworkConfiguration = options.Context.Configuration?.GetSection(section).Get<EntityFrameworkConfiguration>();
+            options.Context.AddTag("UserAccounts");
+            options.Context.Services.AddDbContext<UserAccountsContext>(o =>
             {
-                o.UseLoggerFactory(services.BuildServiceProvider().GetRequiredService<ILoggerFactory>());
+                o.UseLoggerFactory(options.Context.Services.BuildServiceProvider().GetRequiredService<ILoggerFactory>());
                 o.UseNaosSqlServer(entityFrameworkConfiguration.ConnectionString);
             });
 
-            services.AddHealthChecks()
+            options.Context.Services.AddHealthChecks()
                 .AddSqlServer(entityFrameworkConfiguration.ConnectionString, name: "UserAccounts-sqlserver");
 
-            return services;
+            return options;
         }
     }
 }

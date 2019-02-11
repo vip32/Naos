@@ -5,6 +5,11 @@
 
     public static class ServiceExtensions
     {
+        /// <summary>
+        /// Adds required services to support the command handling functionality.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public static ServiceConfigurationContext AddCommands(
             this ServiceConfigurationContext context)
         {

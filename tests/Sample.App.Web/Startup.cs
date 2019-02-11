@@ -102,8 +102,11 @@
 
             // naos application services
             services
-                .AddNaos(this.Configuration,
-                    "Product", "Capability", new[] { "Customers", "UserAccounts", "Countries" })
+                .AddNaos(this.Configuration, "Product", "Capability", new[] { "All" })
+                    .AddServices(s => s
+                        .AddSampleCountries()
+                        .AddSampleCustomers()
+                        .AddSampleUserAccounts())
                     .AddServiceContext()
                     .AddAuthenticationApiKeyStatic()
                     .AddRequestCorrelation()
@@ -127,15 +130,9 @@
                             .Subscribe<TestMessage, TestMessageHandler>()))
                     .AddServiceDiscovery(o => o
                         //.AddConsulClientRegistry());
-                        //.AddFilesystemRouterRegistry()
-                        //.AddRemoteRouterClientRegistry()
+                        //.AddFilesystemRouterRegistry();
+                        //.AddRemoteRouterClientRegistry();
                         .AddFileSystemClientRegistry());
-
-            // naos sample product registrations
-            services
-                .AddSampleCountries()
-                .AddSampleCustomers(this.Configuration)
-                .AddSampleUserAccounts(this.Configuration);
 
             // TODO: need to find a way to start the MessageBroker (done by resolving the IMessageBroker somewhere, HostedService? like scheduling)
         }

@@ -5,6 +5,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common.Web;
+    using Naos.Core.Configuration.App;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Infrastructure.Azure.CosmosDb;
     using Naos.Core.RequestCorrelation.App.Web;
@@ -14,22 +15,23 @@
 
     public static partial class ServiceExtensions
     {
-        public static IServiceCollection AddSampleCustomers(
-            this IServiceCollection services,
-            IConfiguration configuration,
+        public static ServiceOptions AddSampleCustomers(
+            this ServiceOptions options,
             string section = "naos:sample:customers:cosmosDb")
         {
-            EnsureArg.IsNotNull(services, nameof(services));
+            EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            var cosmosDbConfiguration = configuration.GetSection(section).Get<CosmosDbConfiguration>();
+            options.Context.AddTag("Customers");
+            var cosmosDbConfiguration = options.Context.Configuration?.GetSection(section).Get<CosmosDbConfiguration>();
             Ensure.That(cosmosDbConfiguration).IsNotNull();
 
-            services.AddHttpClient<UserAccountsClient>()
+            options.Context.Services.AddHttpClient<UserAccountsClient>()
                 .AddHttpMessageHandler<HttpClientCorrelationHandler>()
                 .AddHttpMessageHandler<HttpClientServiceContextHandler>()
                 .AddHttpMessageHandler<HttpClientLogHandler>();
 
-            services.AddScoped<ICustomerRepository>(sp =>
+            options.Context.Services.AddScoped<ICustomerRepository>(sp =>
             {
                 return new CustomerRepository(
                     new RepositoryLoggingDecorator<Customer>(
@@ -49,7 +51,7 @@
                                     isMasterCollection: cosmosDbConfiguration.IsMasterCollection)))));
             });
 
-            services
+            options.Context.Services
                 .AddHealthChecks()
                     .AddDocumentDb(s =>
                     {
@@ -59,7 +61,7 @@
                     name: "Customers-cosmosdb")
                     .AddServiceDiscoveryClient<UserAccountsClient>();
 
-            return services;
+            return options;
         }
     }
 }

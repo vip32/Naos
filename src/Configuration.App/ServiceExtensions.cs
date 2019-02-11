@@ -1,5 +1,6 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
+    using System;
     using EnsureThat;
     using Microsoft.Extensions.Configuration;
     using Naos.Core.Configuration.App;
@@ -14,6 +15,7 @@
         /// </summary>
         /// <param name="services"></param>
         /// <param name="configuration"></param>
+        /// <param name="setupAction"></param>
         /// <param name="product"></param>
         /// <param name="capability"></param>
         /// <param name="tags"></param>
@@ -25,13 +27,13 @@
             string product = null,
             string capability = null,
             string[] tags = null,
+            Action<ServiceOptions> setupAction = null,
             string section = "naos")
         {
             EnsureArg.IsNotNull(services, nameof(services));
-            EnsureArg.IsNotNull(configuration, nameof(configuration));
 
-            var naosConfiguration = configuration.GetSection(section).Get<NaosConfiguration>();
-            return new ServiceConfigurationContext
+            var naosConfiguration = configuration?.GetSection(section).Get<NaosConfiguration>();
+            var context = new ServiceConfigurationContext
             {
                 Services = services,
                 Configuration = configuration,
@@ -40,6 +42,17 @@
                     capability ?? naosConfiguration.Product,
                     tags: tags ?? naosConfiguration.Tags),
             };
+            setupAction?.Invoke(new ServiceOptions(context));
+            return context;
+        }
+
+        public static ServiceConfigurationContext AddServices(
+            this ServiceConfigurationContext context,
+            Action<ServiceOptions> setupAction = null)
+        {
+            setupAction?.Invoke(new ServiceOptions(context));
+
+            return context;
         }
     }
 }

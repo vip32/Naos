@@ -4,6 +4,7 @@
     using EnsureThat;
     using MediatR;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Configuration.App;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Domain.Repositories.AutoMapper;
     using Naos.Sample.Countries.Domain;
@@ -11,19 +12,21 @@
 
     public static partial class ServiceExtensions
     {
-        public static IServiceCollection AddSampleCountries(
-            this IServiceCollection services)
+        public static ServiceOptions AddSampleCountries(
+            this ServiceOptions options)
         {
-            EnsureArg.IsNotNull(services, nameof(services));
+            EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            services.AddSingleton(sp => new InMemoryContext<Country>(new[]
+            options.Context.AddTag("Countries");
+            options.Context.Services.AddSingleton(sp => new InMemoryContext<Country>(new[]
             {
                 new Country { Code = "de", LanguageCodes = new[] {"de-de" }, Name = "Germany", TenantId = "naos_sample_test", Id = "de" },
                 new Country { Code = "nl", LanguageCodes = new[] {"nl-nl" }, Name = "Netherlands", TenantId = "naos_sample_test", Id = "nl" },
                 new Country { Code = "be", LanguageCodes = new[] {"fr-be", "nl-be" }, Name = "Belgium", TenantId = "naos_sample_test", Id = "be" },
             }.ToList()));
 
-            services.AddScoped<ICountryRepository>(sp =>
+            options.Context.Services.AddScoped<ICountryRepository>(sp =>
             {
                 return new CountryRepository(
                     new RepositoryLoggingDecorator<Country>(
@@ -42,7 +45,7 @@
                                     new[] { new AutoMapperSpecificationMapper<Country, DbCountry>(ModelMapperConfiguration.Create()) })))));
             });
 
-            return services;
+            return options;
         }
     }
 }

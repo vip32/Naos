@@ -7,6 +7,13 @@
 
     public static class ServiceExtensions
     {
+        /// <summary>
+        /// Adds required services to support the exception handling functionality.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="hideDetails"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
         public static ServiceConfigurationContext AddServiceExceptions(
             this ServiceConfigurationContext context,
             bool hideDetails = false,

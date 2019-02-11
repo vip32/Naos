@@ -11,7 +11,7 @@
     public static class ServiceExtensions
     {
         /// <summary>
-        /// Adds required services to support the Correlation ID functionality.
+        /// Adds required services to support the request correlation functionality.
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
