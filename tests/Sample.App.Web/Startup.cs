@@ -126,9 +126,11 @@
                         //.AddRabbitMQ(s => s
                         .AddServiceBusBroker(s => s
                             .Subscribe<TestMessage, TestMessageHandler>()))
-                    .AddServiceDiscoveryClientFileSystem();
-                    //.AddServiceDiscoveryClientRemote()
-                    //.AddServiceDiscoveryRouterFilesystem();
+                    .AddServiceDiscovery(o => o
+                        //.AddConsulClientRegistry());
+                        //.AddFilesystemRouterRegistry()
+                        //.AddRemoteRouterClientRegistry()
+                        .AddFileSystemClientRegistry());
 
             // naos sample product registrations
             services

@@ -15,28 +15,29 @@
         /// <summary>
         /// Adds required services to support the Discovery functionality.
         /// </summary>
-        /// <param name="context"></param>
+        /// <param name="options"></param>
         /// <param name="section"></param>
         /// <returns></returns>
-        public static ServiceConfigurationContext AddServiceDiscoveryRouterFilesystem(
-            this ServiceConfigurationContext context,
+        public static ServiceDiscoveryOptions AddFilesystemRouterRegistry(
+            this ServiceDiscoveryOptions options,
             string section = "naos:serviceDiscovery")
         {
-            EnsureArg.IsNotNull(context, nameof(context));
+            EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            context.Services.AddProxy(o =>
+            options.Context.Services.AddProxy(o =>
             {
                 //o.ConfigurePrimaryHttpMessageHandler(c => c.GetRequiredService<HttpClientLogHandler>());
                 //o.AddHttpMessageHandler<HttpClientLogHandler>();
             });
 
-            context.Services.AddSingleton(sp => new RouterContext(
+            options.Context.Services.AddSingleton(sp => new RouterContext(
                 new ServiceRegistryClient(
                     new FileSystemServiceRegistry(
                     sp.GetRequiredService<ILogger<FileSystemServiceRegistry>>(),
-                    context.Configuration.GetSection($"{section}:registry:fileSystem").Get<FileSystemServiceRegistryConfiguration>()))));
+                    options.Context.Configuration?.GetSection($"{section}:registry:fileSystem").Get<FileSystemServiceRegistryConfiguration>()))));
 
-            return context;
+            return options;
         }
     }
 }
