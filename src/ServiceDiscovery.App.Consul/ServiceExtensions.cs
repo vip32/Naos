@@ -29,7 +29,6 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            options.Context.Services.AddSingleton(sp => options.Context.Configuration?.GetSection(section).Get<ServiceDiscoveryConfiguration>());
             options.Context.Services.AddSingleton<IHostedService, ServiceDiscoveryHostedService>();
             options.Context.Services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(c =>
             {
