@@ -42,7 +42,6 @@
                                 //.AddRabbitMQBroker());
                                 .AddServiceBusBroker());
 
-                    // naos sample product registrations
                     services
                         .AddSingleton<IHostedService, MessagingTestHostedService>();
                 });
