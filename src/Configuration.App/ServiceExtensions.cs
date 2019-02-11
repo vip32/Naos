@@ -15,10 +15,10 @@
         /// </summary>
         /// <param name="services"></param>
         /// <param name="configuration"></param>
-        /// <param name="setupAction"></param>
         /// <param name="product"></param>
         /// <param name="capability"></param>
         /// <param name="tags"></param>
+        /// <param name="setupAction"></param>
         /// <param name="section"></param>
         /// <returns></returns>
         public static ServiceConfigurationContext AddNaos(
