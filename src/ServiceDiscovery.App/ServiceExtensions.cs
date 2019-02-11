@@ -17,8 +17,11 @@
     {
         public static INaosBuilder AddServiceDiscovery(
             this INaosBuilder context,
-            Action<ServiceDiscoveryOptions> setupAction = null)
+            Action<ServiceDiscoveryOptions> setupAction = null,
+            string section = "naos:serviceDiscovery")
         {
+            context.Services.AddSingleton(sp => context.Configuration?.GetSection(section).Get<ServiceDiscoveryConfiguration>());
+
             setupAction?.Invoke(new ServiceDiscoveryOptions(context));
 
             return context;
@@ -37,7 +40,6 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            options.Context.Services.AddSingleton(sp => options.Context.Configuration?.GetSection(section).Get<ServiceDiscoveryConfiguration>());
             options.Context.Services.AddSingleton<IHostedService, ServiceDiscoveryHostedService>();
             options.Context.Services.AddSingleton<IServiceRegistry>(sp =>
                 new FileSystemServiceRegistry(
@@ -63,7 +65,6 @@
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
             // client needs remote registry
-            options.Context.Services.AddSingleton(sp => options.Context.Configuration?.GetSection(section).Get<ServiceDiscoveryConfiguration>());
             options.Context.Services.AddSingleton<IHostedService, ServiceDiscoveryHostedService>();
             options.Context.Services.AddSingleton<IServiceRegistry>(sp =>
                 new RemoteServiceRegistry(

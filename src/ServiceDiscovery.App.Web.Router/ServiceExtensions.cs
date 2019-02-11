@@ -34,8 +34,8 @@
             options.Context.Services.AddSingleton(sp => new RouterContext(
                 new ServiceRegistryClient(
                     new FileSystemServiceRegistry(
-                    sp.GetRequiredService<ILogger<FileSystemServiceRegistry>>(),
-                    options.Context.Configuration?.GetSection($"{section}:registry:fileSystem").Get<FileSystemServiceRegistryConfiguration>()))));
+                        sp.GetRequiredService<ILogger<FileSystemServiceRegistry>>(),
+                        options.Context.Configuration?.GetSection($"{section}:registry:fileSystem").Get<FileSystemServiceRegistryConfiguration>()))));
 
             return options;
         }
