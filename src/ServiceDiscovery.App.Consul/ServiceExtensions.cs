@@ -36,7 +36,6 @@
             }));
             options.Context.Services.TryAddSingleton<IServiceRegistry>(sp => new ConsulServiceRegistry(
                 sp.GetRequiredService<ILogger<ConsulServiceRegistry>>(), sp.GetRequiredService<IConsulClient>()));
-            options.Context.Services.TryAddSingleton<IServiceRegistryClient, ServiceRegistryClient>();
 
             return options;
         }

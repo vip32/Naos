@@ -21,6 +21,8 @@
             string section = "naos:serviceDiscovery")
         {
             context.Services.AddSingleton(sp => context.Configuration?.GetSection(section).Get<ServiceDiscoveryConfiguration>());
+            context.Services.AddSingleton<IServiceRegistryClient>(sp =>
+                new ServiceRegistryClient(sp.GetRequiredService<IServiceRegistry>()));
 
             setupAction?.Invoke(new ServiceDiscoveryOptions(context));
 
@@ -45,8 +47,6 @@
                 new FileSystemServiceRegistry(
                     sp.GetRequiredService<ILogger<FileSystemServiceRegistry>>(),
                     options.Context.Configuration?.GetSection($"{section}:registry:fileSystem").Get<FileSystemServiceRegistryConfiguration>()));
-            options.Context.Services.AddSingleton<IServiceRegistryClient>(sp =>
-                new ServiceRegistryClient(sp.GetRequiredService<IServiceRegistry>()));
 
             return options;
         }
@@ -71,8 +71,6 @@
                     sp.GetRequiredService<ILogger<RemoteServiceRegistry>>(),
                     sp.GetRequiredService<IHttpClientFactory>().CreateClient(),
                     options.Context.Configuration?.GetSection($"{section}:registry:remote").Get<RemoteServiceRegistryConfiguration>()));
-            options.Context.Services.AddSingleton<IServiceRegistryClient>(sp =>
-                new ServiceRegistryClient(sp.GetRequiredService<IServiceRegistry>()));
 
             return options;
         }
