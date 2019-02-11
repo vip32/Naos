@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Configuration.App\Configuration.App.csproj" />
     <ProjectReference Include="..\Messaging.App.Web\Messaging.App.Web.csproj" />
+    <ProjectReference Include="..\Messaging.App\Messaging.App.csproj" />
     <ProjectReference Include="..\Messaging.Infrastructure.Azure\Messaging.Infrastructure.Azure.csproj" />
   </ItemGroup>
 

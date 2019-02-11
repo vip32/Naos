@@ -12,31 +12,33 @@
     using Naos.Core.FileStorage.Domain;
     using Naos.Core.FileStorage.Infrastructure.FileSystem;
     using Naos.Core.Messaging;
+    using Naos.Core.Messaging.App;
     using Naos.Core.Messaging.App.Web;
     using Naos.Core.Messaging.Infrastructure;
 
     public static class ServiceExtensions
     {
-        public static ServiceConfigurationContext AddMessagingFileSystem(
-            this ServiceConfigurationContext context,
+        public static MessagingOptions AddFileSystemBroker(
+            this MessagingOptions options,
             Action<IMessageBroker> setupAction = null,
             string messageScope = null,
             string section = "naos:messaging:fileSystem")
         {
-            EnsureArg.IsNotNull(context, nameof(context));
+            EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            context.Services.Scan(scan => scan // https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/
+            options.Context.Services.Scan(scan => scan // https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/
                 .FromExecutingAssembly()
                 .FromApplicationDependencies(a => !a.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) && !a.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase))
                 .AddClasses(classes => classes.AssignableTo(typeof(IMessageHandler<>)), true));
 
-            context.Services.AddSingleton<Hosting.IHostedService>(sp =>
+            options.Context.Services.AddSingleton<Hosting.IHostedService>(sp =>
                     new MessagingHostedService(sp.GetRequiredService<ILogger<MessagingHostedService>>(), sp));
 
-            context.Services.AddSingleton<ISubscriptionMap, SubscriptionMap>();
-            context.Services.AddSingleton<IMessageBroker>(sp =>
+            options.Context.Services.AddSingleton<ISubscriptionMap, SubscriptionMap>();
+            options.Context.Services.AddSingleton<IMessageBroker>(sp =>
             {
-                var fileSystemConfiguration = context.Configuration.GetSection(section).Get<FileSystemConfiguration>();
+                var fileSystemConfiguration = options.Context.Configuration.GetSection(section).Get<FileSystemConfiguration>();
                 fileSystemConfiguration.Folder = fileSystemConfiguration.Folder.EmptyToNull() ?? Path.GetTempPath();
                 var result = new FileSystemMessageBroker(o => o
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
@@ -59,7 +61,7 @@
                 return result;
             });
 
-            return context;
+            return options;
         }
     }
 }

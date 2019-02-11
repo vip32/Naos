@@ -120,12 +120,12 @@
                         .Register<DummyJob>("job2", Cron.MinuteInterval(2), j => j.LogMessageAsync("+++ hello from job2 +++", CancellationToken.None, true), enabled: false)
                         .Register<DummyJob>("longjob33", Cron.Minutely(), j => j.LongRunningAsync("+++ hello from longjob3 +++", CancellationToken.None)))
                     .AddJobSchedulingWeb()
-                    .AddMessagingAzureServiceBus(s => s
-                        .Subscribe<TestMessage, TestMessageHandler>())
-                    //.AddMessagingFileSystem(
-                    //    s => s.Subscribe<TestMessage, TestMessageHandler>())
-                    //.AddMessagingSignalR(
-                    //    s => s.Subscribe<TestMessage, TestMessageHandler>())
+                    .AddMessaging(o => o
+                        //.AddFileSystemBroker(s => s
+                        //.AddSignalRBroker(s => s
+                        //.AddRabbitMQ(s => s
+                        .AddServiceBusBroker(s => s
+                            .Subscribe<TestMessage, TestMessageHandler>()))
                     .AddServiceDiscoveryClientFileSystem();
                     //.AddServiceDiscoveryClientRemote()
                     //.AddServiceDiscoveryRouterFilesystem();

@@ -36,8 +36,12 @@
                         .AddNaos(configuration, "Product", capabilities[new Random().Next(0, capabilities.Length)])
                             .AddRequestCorrelation()
                             .AddOperationsSerilog(correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}")
+                            .AddMessaging(o => o
+                                //.AddFileSystemBroker());
+                                //.AddSignalRBroker());
+                                //.AddRabbitMQ());
+                                .AddServiceBusBroker());
                             //.AddMessagingSignalR()
-                            .AddMessagingAzureServiceBus();
                             //.AddMessagingFileSystem();
 
                     // naos sample product registrations

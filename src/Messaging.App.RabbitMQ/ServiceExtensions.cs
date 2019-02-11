@@ -7,35 +7,37 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Messaging;
+    using Naos.Core.Messaging.App;
     using Naos.Core.Messaging.Infrastructure.RabbitMQ;
 
     public static class ServiceExtensions
     {
-        public static ServiceConfigurationContext AddMessagingRabbitMQ(
-            this ServiceConfigurationContext context,
+        public static MessagingOptions AddRabbitMQ(
+            this MessagingOptions options,
             Action<IMessageBroker> setupAction = null,
             string section = "naos:messaging:rabbitMQ",
             IEnumerable<Assembly> assemblies = null)
         {
-            EnsureArg.IsNotNull(context, nameof(context));
+            EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            context.Services.Scan(scan => scan // https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/
+            options.Context.Services.Scan(scan => scan // https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/
                .FromExecutingAssembly()
                .FromApplicationDependencies(a => !a.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) && !a.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase))
                .AddClasses(classes => classes.AssignableTo(typeof(IMessageHandler<>)), true));
 
-            context.Services.AddSingleton<IMessageBroker>(sp =>
+            options.Context.Services.AddSingleton<IMessageBroker>(sp =>
             {
                 var result = new RabbitMQMessageBroker(o => o
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
-                    .Configuration(context.Configuration.GetSection(section).Get<RabbitMQConfiguration>())
+                    .Configuration(options.Context.Configuration.GetSection(section).Get<RabbitMQConfiguration>())
                     .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp)));
 
                 setupAction?.Invoke(result);
                 return result;
             });
 
-            return context;
+            return options;
         }
     }
 }

@@ -10,31 +10,33 @@
     using Naos.Core.Common;
     using Naos.Core.Infrastructure.Azure.ServiceBus;
     using Naos.Core.Messaging;
+    using Naos.Core.Messaging.App;
     using Naos.Core.Messaging.App.Web;
     using Naos.Core.Messaging.Infrastructure.Azure;
 
     public static class ServiceExtensions
     {
-        public static ServiceConfigurationContext AddMessagingAzureServiceBus(
-            this ServiceConfigurationContext context,
+        public static MessagingOptions AddServiceBusBroker(
+            this MessagingOptions options,
             Action<IMessageBroker> setupAction = null,
             string topicName = null,
             string subscriptionName = null,
             string section = "naos:messaging:serviceBus")
         {
-            EnsureArg.IsNotNull(context, nameof(context));
+            EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            context.Services.Scan(scan => scan // https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/
+            options.Context.Services.Scan(scan => scan // https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/
                 .FromExecutingAssembly()
                 .FromApplicationDependencies(a => !a.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) && !a.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase))
                 .AddClasses(classes => classes.AssignableTo(typeof(IMessageHandler<>)), true));
 
-            context.Services.AddSingleton<Hosting.IHostedService>(sp =>
+            options.Context.Services.AddSingleton<Hosting.IHostedService>(sp =>
                     new MessagingHostedService(sp.GetRequiredService<ILogger<MessagingHostedService>>(), sp));
 
-            var serviceBusConfiguration = context.Configuration.GetSection(section).Get<ServiceBusConfiguration>();
+            var serviceBusConfiguration = options.Context.Configuration.GetSection(section).Get<ServiceBusConfiguration>();
             serviceBusConfiguration.EntityPath = topicName ?? $"{Environment.GetEnvironmentVariable(EnvironmentKeys.Environment) ?? "Production"}-Naos.Messaging";
-            context.Services.AddSingleton<IServiceBusProvider>(sp =>
+            options.Context.Services.AddSingleton<IServiceBusProvider>(sp =>
             {
                 if (serviceBusConfiguration?.Enabled == true)
                 {
@@ -47,8 +49,8 @@
                 throw new NotImplementedException("no messaging servicebus is enabled");
             });
 
-            context.Services.AddSingleton<ISubscriptionMap, SubscriptionMap>();
-            context.Services.AddSingleton<IMessageBroker>(sp =>
+            options.Context.Services.AddSingleton<ISubscriptionMap, SubscriptionMap>();
+            options.Context.Services.AddSingleton<IMessageBroker>(sp =>
             {
                 var result = new ServiceBusMessageBroker(o => o
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
@@ -56,7 +58,7 @@
                     .Provider(sp.GetRequiredService<IServiceBusProvider>())
                     .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
                     .Map(sp.GetRequiredService<ISubscriptionMap>())
-                    .SubscriptionName(subscriptionName ?? context.Descriptor.Name) //AppDomain.CurrentDomain.FriendlyName, // PRODUCT.CAPABILITY
+                    .SubscriptionName(subscriptionName ?? options.Context.Descriptor.Name) //AppDomain.CurrentDomain.FriendlyName, // PRODUCT.CAPABILITY
                     .FilterScope(Environment.GetEnvironmentVariable(EnvironmentKeys.IsLocal).ToBool()
                             ? Environment.MachineName.Humanize().Dehumanize().ToLower()
                             : string.Empty));
@@ -65,10 +67,10 @@
                 return result;
             }); // scope the messagebus messages to the local machine, so local events are handled locally
 
-            context.Services.AddHealthChecks()
+            options.Context.Services.AddHealthChecks()
                 .AddAzureServiceBusTopic(serviceBusConfiguration.ConnectionString, serviceBusConfiguration.EntityPath, "messaging-servicebus");
 
-            return context;
+            return options;
         }
     }
 }

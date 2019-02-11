@@ -27,8 +27,9 @@
                 .AddNaos(configuration, "Product", "Capability")
                     .AddOperationsSerilog(correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}")
                     .AddOperationsLogAnalytics()
-                    //.AddMessagingFileSystem()
-                    .AddMessagingAzureServiceBus()
+                    //.AddMessaging(o => o.AddFileSystemBroker());
+                    //.AddMessaging(o => o.AddSignalRBroker());
+                    .AddMessaging(o => o.AddServiceBusBroker())
                     .AddCommands();
 
             // naos sample registrations

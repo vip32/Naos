@@ -21,8 +21,9 @@
                 .AddMediatR()
                 .AddNaos(configuration, "Product", "Capability")
                     .AddOperationsSerilog(correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}")
-                    //.AddMessagingFileSystem()
-                    .AddMessagingAzureServiceBus();
+                    //.AddMessaging(o => o.AddFileSystemBroker());
+                    //.AddMessaging(o => o.AddSignalRBroker());
+                    .AddMessaging(o => o.AddServiceBusBroker());
 
             this.ServiceProvider = this.services.BuildServiceProvider();
         }

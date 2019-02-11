@@ -19,6 +19,7 @@
     <ProjectReference Include="..\Messaging.App.FileSystem\Messaging.App.FileSystem.csproj" />
     <ProjectReference Include="..\Messaging.App.RabbitMQ\Messaging.App.RabbitMQ.csproj" />
     <ProjectReference Include="..\Messaging.App.Web\Messaging.App.Web.csproj" />
+    <ProjectReference Include="..\Messaging.App\Messaging.App.csproj" />
     <ProjectReference Include="..\Operations.App.Serilog\Operations.App.Serilog.csproj" />
     <ProjectReference Include="..\Operations.App.Web\Operations.App.Web.csproj" />
     <ProjectReference Include="..\Scheduling.App.Web\JobScheduling.App.Web.csproj" />

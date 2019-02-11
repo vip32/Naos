@@ -10,31 +10,33 @@
     using Naos.Core.Common;
     using Naos.Core.Infrastructure.Azure;
     using Naos.Core.Messaging;
+    using Naos.Core.Messaging.App;
     using Naos.Core.Messaging.App.Web;
     using Naos.Core.Messaging.Infrastructure.Azure;
 
     public static class ServiceExtensions
     {
-        public static ServiceConfigurationContext AddMessagingSignalR(
-            this ServiceConfigurationContext context,
+        public static MessagingOptions AddSignalRBroker(
+            this MessagingOptions options,
             Action<IMessageBroker> setupAction = null,
             string messageScope = null,
             string section = "naos:messaging:signalr")
         {
-            EnsureArg.IsNotNull(context, nameof(context));
+            EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            context.Services.Scan(scan => scan // https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/
+            options.Context.Services.Scan(scan => scan // https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/
                 .FromExecutingAssembly()
                 .FromApplicationDependencies(a => !a.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) && !a.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase))
                 .AddClasses(classes => classes.AssignableTo(typeof(IMessageHandler<>)), true));
 
-            context.Services.AddSingleton<Hosting.IHostedService>(sp =>
+            options.Context.Services.AddSingleton<Hosting.IHostedService>(sp =>
                     new MessagingHostedService(sp.GetRequiredService<ILogger<MessagingHostedService>>(), sp));
 
-            context.Services.AddSingleton<ISubscriptionMap, SubscriptionMap>();
-            context.Services.AddSingleton<IMessageBroker>(sp =>
+            options.Context.Services.AddSingleton<ISubscriptionMap, SubscriptionMap>();
+            options.Context.Services.AddSingleton<IMessageBroker>(sp =>
             {
-                var signalRConfiguration = context.Configuration.GetSection(section).Get<SignalRConfiguration>();
+                var signalRConfiguration = options.Context.Configuration.GetSection(section).Get<SignalRConfiguration>();
                 var result = new SignalRServerlessMessageBroker(o => o
                         .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                         .Mediator((IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)))
@@ -51,7 +53,7 @@
                 return result;
             });
 
-            return context;
+            return options;
         }
     }
 }
