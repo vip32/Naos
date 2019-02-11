@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Messaging.Infrastructure.FileSystem
+﻿namespace Naos.Core.Messaging.Infrastructure
 {
     using System.IO;
 

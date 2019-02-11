@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Messaging.Infrastructure.Azure.SignalR
+﻿namespace Naos.Core.Messaging.Infrastructure.Azure
 {
     using System;
     using System.Collections.Generic;
@@ -30,32 +30,29 @@
         private readonly ServiceUtils serviceUtils;
         private HubConnection connection;
 
-        public SignalRServerlessMessageBroker( // TODO: use OptionsBuilder here
-            ILogger<SignalRServerlessMessageBroker> logger,
-            IMediator mediator,
-            IMessageHandlerFactory handlerFactory,
-            SignalRConfiguration configuration,
-            IHttpClientFactory httpClient,
-            ISubscriptionMap map = null,
-            string filterScope = null,
-            string messageScope = "local") // message origin service name
+        public SignalRServerlessMessageBroker(SignalRServerlessMessageBrokerOptions options)
         {
-            EnsureArg.IsNotNull(logger, nameof(logger));
-            EnsureArg.IsNotNull(mediator, nameof(mediator));
-            EnsureArg.IsNotNull(handlerFactory, nameof(handlerFactory));
-            EnsureArg.IsNotNull(configuration, nameof(configuration));
-            EnsureArg.IsNotNullOrEmpty(configuration.ConnectionString, nameof(configuration.ConnectionString));
-            EnsureArg.IsNotNull(httpClient, nameof(httpClient));
+            EnsureArg.IsNotNull(options.LoggerFactory, nameof(options.LoggerFactory));
+            EnsureArg.IsNotNull(options.Mediator, nameof(options.Mediator));
+            EnsureArg.IsNotNull(options.HandlerFactory, nameof(options.HandlerFactory));
+            EnsureArg.IsNotNull(options.Configuration, nameof(options.Configuration));
+            EnsureArg.IsNotNullOrEmpty(options.Configuration.ConnectionString, nameof(options.Configuration.ConnectionString));
+            EnsureArg.IsNotNull(options.HttpClient, nameof(options.HttpClient));
 
-            this.logger = logger;
-            this.mediator = mediator;
-            this.handlerFactory = handlerFactory;
-            this.configuration = configuration;
-            this.httpClient = httpClient;
-            this.map = map ?? new SubscriptionMap();
-            this.filterScope = filterScope;
-            this.messageScope = messageScope ?? AppDomain.CurrentDomain.FriendlyName;
+            this.logger = options.LoggerFactory.CreateLogger<SignalRServerlessMessageBroker>();
+            this.mediator = options.Mediator;
+            this.handlerFactory = options.HandlerFactory;
+            this.configuration = options.Configuration;
+            this.httpClient = options.HttpClient;
+            this.map = options.Map ?? new SubscriptionMap();
+            this.filterScope = options.FilterScope;
+            this.messageScope = options.MessageScope ?? AppDomain.CurrentDomain.FriendlyName;
             this.serviceUtils = new ServiceUtils(this.configuration.ConnectionString);
+        }
+
+        public SignalRServerlessMessageBroker(Builder<SignalRServerlessMessageBrokerOptionsBuilder, SignalRServerlessMessageBrokerOptions> config)
+            : this(config(new SignalRServerlessMessageBrokerOptionsBuilder()).Build())
+        {
         }
 
         private string HubName => this.filterScope.IsNullOrEmpty() ? "naos_messaging".ToLower() : $"naos_messaging_{this.filterScope}".ToLower();

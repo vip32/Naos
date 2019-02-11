@@ -11,7 +11,7 @@
     using Naos.Core.Infrastructure.Azure;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.App.Web;
-    using Naos.Core.Messaging.Infrastructure.Azure.SignalR;
+    using Naos.Core.Messaging.Infrastructure.Azure;
 
     public static class ServiceExtensions
     {
@@ -35,17 +35,17 @@
             context.Services.AddSingleton<IMessageBroker>(sp =>
             {
                 var signalRConfiguration = context.Configuration.GetSection(section).Get<SignalRConfiguration>();
-                var result = new SignalRServerlessMessageBroker(
-                        sp.GetRequiredService<ILogger<SignalRServerlessMessageBroker>>(),
-                        (IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)),
-                        new ServiceProviderMessageHandlerFactory(sp),
-                        signalRConfiguration,
-                        sp.GetRequiredService<IHttpClientFactory>(),
-                        map: sp.GetRequiredService<ISubscriptionMap>(),
-                        filterScope: Environment.GetEnvironmentVariable(EnvironmentKeys.IsLocal).ToBool()
+                var result = new SignalRServerlessMessageBroker(o => o
+                        .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
+                        .Mediator((IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)))
+                        .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
+                        .Configuration(signalRConfiguration)
+                        .HttpClient(sp.GetRequiredService<IHttpClientFactory>())
+                        .Map(sp.GetRequiredService<ISubscriptionMap>())
+                        .FilterScope(Environment.GetEnvironmentVariable(EnvironmentKeys.IsLocal).ToBool()
                             ? Environment.MachineName.Humanize().Dehumanize().ToLower()
-                            : string.Empty,
-                        messageScope: messageScope); // PRODUCT.CAPABILITY;
+                            : string.Empty)
+                        .MessageScope(messageScope));
 
                 setupAction?.Invoke(result);
                 return result;

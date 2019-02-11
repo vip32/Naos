@@ -11,7 +11,7 @@
     using Naos.Core.Infrastructure.Azure.ServiceBus;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.App.Web;
-    using Naos.Core.Messaging.Infrastructure.Azure.ServiceBus;
+    using Naos.Core.Messaging.Infrastructure.Azure;
 
     public static class ServiceExtensions
     {
@@ -50,16 +50,16 @@
             context.Services.AddSingleton<ISubscriptionMap, SubscriptionMap>();
             context.Services.AddSingleton<IMessageBroker>(sp =>
             {
-                var result = new ServiceBusMessageBroker(
-                        sp.GetRequiredService<ILogger<ServiceBusMessageBroker>>(),
-                        (IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)),
-                        sp.GetRequiredService<IServiceBusProvider>(),
-                        new ServiceProviderMessageHandlerFactory(sp),
-                        map: sp.GetRequiredService<ISubscriptionMap>(),
-                        subscriptionName: subscriptionName ?? context.Descriptor.Name, //AppDomain.CurrentDomain.FriendlyName, // PRODUCT.CAPABILITY
-                        filterScope: Environment.GetEnvironmentVariable(EnvironmentKeys.IsLocal).ToBool()
+                var result = new ServiceBusMessageBroker(o => o
+                    .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
+                    .Mediator((IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)))
+                    .Provider(sp.GetRequiredService<IServiceBusProvider>())
+                    .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
+                    .Map(sp.GetRequiredService<ISubscriptionMap>())
+                    .SubscriptionName(subscriptionName ?? context.Descriptor.Name) //AppDomain.CurrentDomain.FriendlyName, // PRODUCT.CAPABILITY
+                    .FilterScope(Environment.GetEnvironmentVariable(EnvironmentKeys.IsLocal).ToBool()
                             ? Environment.MachineName.Humanize().Dehumanize().ToLower()
-                            : string.Empty);
+                            : string.Empty));
 
                 setupAction?.Invoke(result);
                 return result;

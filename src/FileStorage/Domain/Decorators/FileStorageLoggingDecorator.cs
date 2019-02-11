@@ -12,12 +12,12 @@
     {
         private readonly ILogger<FileStorageLoggingDecorator> logger;
 
-        public FileStorageLoggingDecorator(ILogger<FileStorageLoggingDecorator> logger, IFileStorage decoratee)
+        public FileStorageLoggingDecorator(ILoggerFactory loggerFactory, IFileStorage decoratee)
         {
-            EnsureArg.IsNotNull(logger, nameof(logger));
+            EnsureArg.IsNotNull(loggerFactory, nameof(loggerFactory));
             EnsureArg.IsNotNull(decoratee, nameof(decoratee));
 
-            this.logger = logger;
+            this.logger = loggerFactory.CreateLogger<FileStorageLoggingDecorator>();
             this.Decoratee = decoratee;
         }
 

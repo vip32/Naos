@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Messaging.Infrastructure.Azure.ServiceBus
+﻿namespace Naos.Core.Messaging.Infrastructure.Azure
 {
     using System;
     using System.Collections.Generic;
@@ -25,42 +25,33 @@
         private SubscriptionClient client;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ServiceBusMessageBroker" /> class.
+        /// Initializes a new instance of the <see cref="ServiceBusMessageBroker"/> class.
         /// </summary>
-        /// <param name="logger">The logger.</param>
-        /// <param name="mediator">The mediator.</param>
-        /// <param name="provider">The connection.</param>
-        /// <param name="map">The map.</param>
-        /// <param name="handlerFactory">The service provider.</param>
-        /// <param name="subscriptionName">Name of the subscription.</param>
-        /// <param name="filterScope">Name of the scope.</param>
-        /// <param name="messageScope">The message scope.</param>
-        public ServiceBusMessageBroker( // TODO: use OptionsBuilder here
-            ILogger<ServiceBusMessageBroker> logger,
-            IMediator mediator,
-            IServiceBusProvider provider,
-            IMessageHandlerFactory handlerFactory,
-            string subscriptionName,
-            ISubscriptionMap map = null,
-            string filterScope = null,
-            string messageScope = null)
+        /// <param name="options">The options.</param>
+        public ServiceBusMessageBroker(ServiceBusMessageBrokerOptions options)
         {
-            EnsureArg.IsNotNull(logger, nameof(logger));
-            EnsureArg.IsNotNull(mediator, nameof(mediator));
-            EnsureArg.IsNotNull(provider, nameof(provider));
-            EnsureArg.IsNotNull(handlerFactory, nameof(handlerFactory));
-            EnsureArg.IsNotNullOrEmpty(subscriptionName, nameof(subscriptionName));
+            EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.LoggerFactory, nameof(options.LoggerFactory));
+            EnsureArg.IsNotNull(options.Mediator, nameof(options.Mediator));
+            EnsureArg.IsNotNull(options.Provider, nameof(options.Provider));
+            EnsureArg.IsNotNull(options.HandlerFactory, nameof(options.HandlerFactory));
+            EnsureArg.IsNotNullOrEmpty(options.SubscriptionName, nameof(options.SubscriptionName));
 
-            this.logger = logger;
-            this.mediator = mediator;
-            this.provider = provider;
-            this.map = map ?? new SubscriptionMap();
-            this.handlerFactory = handlerFactory;
-            this.filterScope = filterScope; // for machine scope
-            this.messageScope = messageScope ?? subscriptionName; // message origin service name
+            this.logger = options.LoggerFactory.CreateLogger<ServiceBusMessageBroker>();
+            this.mediator = options.Mediator;
+            this.provider = options.Provider;
+            this.map = options.Map ?? new SubscriptionMap();
+            this.handlerFactory = options.HandlerFactory;
+            this.filterScope = options.FilterScope; // for machine scope
+            this.messageScope = options.MessageScope ?? options.SubscriptionName; // message origin service name
 
-            this.InitializeClient(provider, provider.ConnectionStringBuilder.EntityPath, subscriptionName);
+            this.InitializeClient(this.provider, this.provider.ConnectionStringBuilder.EntityPath, options.SubscriptionName);
             this.RegisterMessageHandler();
+        }
+
+        public ServiceBusMessageBroker(Builder<ServiceBusMessageBrokerOptionsBuilder, ServiceBusMessageBrokerOptions> config)
+            : this(config(new ServiceBusMessageBrokerOptionsBuilder()).Build())
+        {
         }
 
         /// <summary>

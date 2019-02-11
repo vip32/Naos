@@ -37,8 +37,8 @@
                             .AddRequestCorrelation()
                             .AddOperationsSerilog(correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}")
                             //.AddMessagingSignalR()
-                            //.AddMessagingAzureServiceBus()
-                            .AddMessagingFileSystem();
+                            .AddMessagingAzureServiceBus();
+                            //.AddMessagingFileSystem();
 
                     // naos sample product registrations
                     services

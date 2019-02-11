@@ -1,12 +1,8 @@
 ﻿namespace Naos.Core.UnitTests.Common.Serialization
 {
-    using System;
     using System.Collections.Generic;
-    using BenchmarkDotNet.Attributes;
-    using Microsoft.Extensions.Logging;
     using Naos.Core.Common.Serialization;
     using Xunit;
-    using Xunit.Abstractions;
 
     public abstract class SerializerTestsBase
     {

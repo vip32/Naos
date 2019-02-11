@@ -1,9 +1,13 @@
 ﻿namespace Naos.Core.Common
 {
-    using Microsoft.Extensions.Logging;
-
     public static class OptionsBuilderExtensions
     {
+        /// <summary>
+        /// Provides acces to the target options for the specified builder.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="builder">The builder.</param>
+        /// <returns></returns>
         public static T Target<T>(this IOptionsBuilder builder)
         {
             return (T)builder.Target;

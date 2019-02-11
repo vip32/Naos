@@ -26,10 +26,10 @@
 
             context.Services.AddSingleton<IMessageBroker>(sp =>
             {
-                var result = new RabbitMQMessageBroker(
-                        sp.GetRequiredService<ILogger<RabbitMQMessageBroker>>(),
-                        context.Configuration.GetSection(section).Get<RabbitMQConfiguration>(),
-                        new ServiceProviderMessageHandlerFactory(sp));
+                var result = new RabbitMQMessageBroker(o => o
+                    .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
+                    .Configuration(context.Configuration.GetSection(section).Get<RabbitMQConfiguration>())
+                    .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp)));
 
                 setupAction?.Invoke(result);
                 return result;

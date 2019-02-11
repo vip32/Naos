@@ -37,11 +37,8 @@
                         Detail = hideDetails ? null : !badRequestException.ModelState.IsNullOrEmpty() ? "See errors property for more details" : badRequestException.Message,
                         Type = hideDetails ? null : badRequestException.GetType().FullPrettyName(),
                     };
-
-                    foreach(var item in badRequestException.ModelState.Safe())
-                    {
-                        details.Errors.Add(item.Key, item.Value.Errors.Select(e => e.ErrorMessage).ToArray());
-                    }
+                    badRequestException.ModelState.Safe()
+                        .ForEach(i => details.Errors.Add(i.Key, i.Value.Errors.Select(e => e.ErrorMessage).ToArray()));
 
                     this.logger?.LogWarning($"{LogEventKeys.InboundResponse} [{requestId}] http request  {details.Title} [{badRequestException.GetType().PrettyName()}] {badRequestException.Message}");
 

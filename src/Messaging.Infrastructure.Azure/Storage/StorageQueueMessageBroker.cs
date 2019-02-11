@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Messaging.Infrastructure.Azure.Storage
+﻿namespace Naos.Core.Messaging.Infrastructure.Azure
 {
     using EnsureThat;
     using Microsoft.Extensions.Logging;

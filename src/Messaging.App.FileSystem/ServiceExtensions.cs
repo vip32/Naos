@@ -13,7 +13,7 @@
     using Naos.Core.FileStorage.Infrastructure.FileSystem;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.App.Web;
-    using Naos.Core.Messaging.Infrastructure.FileSystem;
+    using Naos.Core.Messaging.Infrastructure;
 
     public static class ServiceExtensions
     {
@@ -38,22 +38,22 @@
             {
                 var fileSystemConfiguration = context.Configuration.GetSection(section).Get<FileSystemConfiguration>();
                 fileSystemConfiguration.Folder = fileSystemConfiguration.Folder.EmptyToNull() ?? Path.GetTempPath();
-                var result = new FileSystemMessageBroker(
-                        sp.GetRequiredService<ILogger<FileSystemMessageBroker>>(),
-                        (IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)),
-                        new ServiceProviderMessageHandlerFactory(sp),
-                        new FileStorageLoggingDecorator(
-                            sp.GetRequiredService<ILogger<FileStorageLoggingDecorator>>(),
-                            new FolderFileStorage(o => o
-                                .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
-                                .Folder(fileSystemConfiguration.Folder)
-                                .Serializer(new JsonNetSerializer()))),
-                        fileSystemConfiguration,
-                        map: sp.GetRequiredService<ISubscriptionMap>(),
-                        filterScope: Environment.GetEnvironmentVariable(EnvironmentKeys.IsLocal).ToBool()
+                var result = new FileSystemMessageBroker(o => o
+                    .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
+                    .Mediator((IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)))
+                    .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
+                    .Storage(new FileStorageLoggingDecorator(
+                        sp.GetRequiredService<ILoggerFactory>(),
+                        new FolderFileStorage(s => s
+                            .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
+                            .Folder(fileSystemConfiguration.Folder)
+                            .Serializer(new JsonNetSerializer()))))
+                    .Configuration(fileSystemConfiguration)
+                    .Map(sp.GetRequiredService<ISubscriptionMap>())
+                    .FilterScope(Environment.GetEnvironmentVariable(EnvironmentKeys.IsLocal).ToBool()
                             ? Environment.MachineName.Humanize().Dehumanize().ToLower()
-                            : string.Empty,
-                        messageScope: messageScope); // PRODUCT.CAPABILITY;
+                            : string.Empty)
+                    .MessageScope(messageScope));
 
                 setupAction?.Invoke(result);
                 return result;

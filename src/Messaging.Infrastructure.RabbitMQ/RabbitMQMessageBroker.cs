@@ -2,6 +2,7 @@
 {
     using System;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
     using Naos.Core.Messaging.Domain.Model;
 
     public class RabbitMQMessageBroker : IMessageBroker
@@ -10,18 +11,20 @@
         private readonly RabbitMQConfiguration configuration;
         private readonly IMessageHandlerFactory handlerFactory;
 
-        public RabbitMQMessageBroker( // // TODO: use OptionsBuilder here
-            ILogger<RabbitMQMessageBroker> logger,
-            RabbitMQConfiguration configuration,
-            IMessageHandlerFactory handlerFactory)
+        public RabbitMQMessageBroker(RabbitMQMessageBrokerOptions options)
         {
-            EnsureThat.EnsureArg.IsNotNull(logger, nameof(logger));
-            EnsureThat.EnsureArg.IsNotNull(configuration, nameof(configuration));
-            EnsureThat.EnsureArg.IsNotNull(handlerFactory, nameof(handlerFactory));
+            EnsureThat.EnsureArg.IsNotNull(options.LoggerFactory, nameof(options.LoggerFactory));
+            EnsureThat.EnsureArg.IsNotNull(options.Configuration, nameof(options.Configuration));
+            EnsureThat.EnsureArg.IsNotNull(options.HandlerFactory, nameof(options.HandlerFactory));
 
-            this.logger = logger;
-            this.configuration = configuration;
-            this.handlerFactory = handlerFactory;
+            this.logger = options.LoggerFactory.CreateLogger<RabbitMQMessageBroker>();
+            this.configuration = options.Configuration;
+            this.handlerFactory = options.HandlerFactory;
+        }
+
+        public RabbitMQMessageBroker(Builder<RabbitMQMessageBrokerOptionsBuilder, RabbitMQMessageBrokerOptions> config)
+            : this(config(new RabbitMQMessageBrokerOptionsBuilder()).Build())
+        {
         }
 
         public void Publish(Message message)

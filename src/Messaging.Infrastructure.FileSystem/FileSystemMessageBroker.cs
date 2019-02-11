@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Messaging.Infrastructure.FileSystem
+﻿namespace Naos.Core.Messaging.Infrastructure
 {
     using System;
     using System.Collections.Generic;
@@ -26,29 +26,26 @@
         private readonly string messageScope;
         private readonly IDictionary<string, FileSystemWatcher> watchers = new Dictionary<string, FileSystemWatcher>();
 
-        public FileSystemMessageBroker( // TODO: use OptionsBuilder here
-            ILogger<FileSystemMessageBroker> logger,
-            IMediator mediator,
-            IMessageHandlerFactory handlerFactory,
-            IFileStorage fileStorage,
-            FileSystemConfiguration configuration = null,
-            ISubscriptionMap map = null,
-            string filterScope = null,
-            string messageScope = "local") // message origin service name
+        public FileSystemMessageBroker(FileSystemMessageBrokerOptions options)
         {
-            EnsureArg.IsNotNull(logger, nameof(logger));
-            EnsureArg.IsNotNull(mediator, nameof(mediator));
-            EnsureArg.IsNotNull(handlerFactory, nameof(handlerFactory));
-            EnsureArg.IsNotNull(fileStorage, nameof(fileStorage));
+            EnsureArg.IsNotNull(options.LoggerFactory, nameof(options.LoggerFactory));
+            EnsureArg.IsNotNull(options.Mediator, nameof(options.Mediator));
+            EnsureArg.IsNotNull(options.HandlerFactory, nameof(options.HandlerFactory));
+            EnsureArg.IsNotNull(options.Storage, nameof(options.Storage));
 
-            this.logger = logger;
-            this.mediator = mediator;
-            this.handlerFactory = handlerFactory;
-            this.fileStorage = fileStorage;
-            this.configuration = configuration ?? new FileSystemConfiguration();
-            this.map = map ?? new SubscriptionMap();
-            this.filterScope = filterScope;
-            this.messageScope = messageScope ?? AppDomain.CurrentDomain.FriendlyName;
+            this.logger = options.LoggerFactory.CreateLogger<FileSystemMessageBroker>();
+            this.mediator = options.Mediator;
+            this.handlerFactory = options.HandlerFactory;
+            this.fileStorage = options.Storage;
+            this.configuration = options.Configuration ?? new FileSystemConfiguration();
+            this.map = options.Map ?? new SubscriptionMap();
+            this.filterScope = options.FilterScope;
+            this.messageScope = options.MessageScope ?? AppDomain.CurrentDomain.FriendlyName;
+        }
+
+        public FileSystemMessageBroker(Builder<FileSystemMessageBrokerOptionsBuilder, FileSystemMessageBrokerOptions> config)
+            : this(config(new FileSystemMessageBrokerOptionsBuilder()).Build())
+        {
         }
 
         public void Publish(Message message)

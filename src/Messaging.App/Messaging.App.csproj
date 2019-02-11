@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Naos.Core.Messaging.App</AssemblyName>
+    <RootNamespace>Naos.Core.Messaging.App</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Configuration.App\Configuration.App.csproj" />
+  </ItemGroup>
+
+</Project>

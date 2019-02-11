@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Messaging.Infrastructure.Azure.SignalR
+﻿namespace Naos.Core.Messaging.Infrastructure.Azure
 {
     using System;
     using System.Collections.Generic;
@@ -7,7 +7,7 @@
     using System.Text;
     using Microsoft.IdentityModel.Tokens;
 
-    public class ServiceUtils
+    public class ServiceUtils // TODO: move to Authentication.Utility?
     {
         private const string EndpointProperty = "endpoint";
         private const string AccessKeyProperty = "accesskey";
