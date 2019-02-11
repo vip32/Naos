@@ -10,8 +10,8 @@
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        public static ServiceConfigurationContext AddCommands(
-            this ServiceConfigurationContext context)
+        public static INaosBuilder AddCommands(
+            this INaosBuilder context)
         {
             context.Services
                 .Scan(scan => scan // https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/

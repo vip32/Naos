@@ -12,8 +12,8 @@
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        public static ServiceConfigurationContext AddRequestFiltering(
-            this ServiceConfigurationContext context)
+        public static INaosBuilder AddRequestFiltering(
+            this INaosBuilder context)
         {
             EnsureArg.IsNotNull(context, nameof(context));
 

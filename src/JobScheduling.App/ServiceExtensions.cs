@@ -10,8 +10,8 @@
 
     public static class ServiceExtensions
     {
-        public static ServiceConfigurationContext AddJobScheduling(
-        this ServiceConfigurationContext context,
+        public static INaosBuilder AddJobScheduling(
+        this INaosBuilder context,
         Action<JobSchedulerOptions> setupAction = null,
         string section = "naos:scheduling")
         {

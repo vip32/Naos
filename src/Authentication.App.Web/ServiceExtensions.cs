@@ -18,8 +18,8 @@
         //        }
         //    };
         //}
-        public static ServiceConfigurationContext AddAuthenticationApiKeyStatic(
-            this ServiceConfigurationContext context,
+        public static INaosBuilder AddAuthenticationApiKeyStatic(
+            this INaosBuilder context,
             Action<AuthenticationHandlerOptions> options = null,
             string section = "naos:authentication:apikey:static")
         {
@@ -35,8 +35,8 @@
             return context;
         }
 
-        public static ServiceConfigurationContext AddAuthenticationBasicStatic(
-            this ServiceConfigurationContext context,
+        public static NaosBuilder AddAuthenticationBasicStatic(
+            this NaosBuilder context,
             Action<AuthenticationHandlerOptions> options = null,
             string section = "naos:authentication:basic:static")
         {

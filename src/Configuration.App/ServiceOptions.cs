@@ -4,11 +4,11 @@
 
     public class ServiceOptions
     {
-        public ServiceOptions(ServiceConfigurationContext context)
+        public ServiceOptions(INaosBuilder context)
         {
             this.Context = context;
         }
 
-        public ServiceConfigurationContext Context { get; }
+        public INaosBuilder Context { get; }
     }
 }

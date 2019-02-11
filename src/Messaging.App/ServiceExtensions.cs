@@ -5,8 +5,8 @@
 
     public static class ServiceExtensions
     {
-        public static ServiceConfigurationContext AddMessaging(
-            this ServiceConfigurationContext context,
+        public static INaosBuilder AddMessaging(
+            this INaosBuilder context,
             Action<MessagingOptions> setupAction = null)
         {
             setupAction?.Invoke(new MessagingOptions(context));

@@ -15,8 +15,8 @@
     /// </summary>
     public static class ServiceExtensions
     {
-        public static ServiceConfigurationContext AddServiceDiscovery(
-            this ServiceConfigurationContext context,
+        public static INaosBuilder AddServiceDiscovery(
+            this INaosBuilder context,
             Action<ServiceDiscoveryOptions> setupAction = null)
         {
             setupAction?.Invoke(new ServiceDiscoveryOptions(context));

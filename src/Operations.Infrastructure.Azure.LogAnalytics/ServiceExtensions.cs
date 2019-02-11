@@ -9,8 +9,8 @@
 
     public static class ServiceExtensions
     {
-        public static ServiceConfigurationContext AddOperationsLogAnalytics(
-            this ServiceConfigurationContext context,
+        public static INaosBuilder AddOperationsLogAnalytics(
+            this INaosBuilder context,
             string section = "naos:operations:azureLogAnalytics")
         {
             EnsureArg.IsNotNull(context, nameof(context));

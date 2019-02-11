@@ -21,8 +21,8 @@
 
         //private static string internalServiceDescriptor;
 
-        public static ServiceConfigurationContext AddOperationsSerilog(
-            this ServiceConfigurationContext context,
+        public static INaosBuilder AddOperationsSerilog(
+            this INaosBuilder context,
             string environment = null,
             string correlationId = null,
             //string serviceDescriptor = "naos",
