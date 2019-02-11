@@ -25,16 +25,16 @@
             this.services
                 .AddMediatR()
                 .AddNaos(configuration, "Product", "Capability")
+                    .AddServices(o => o
+                        .AddSampleCountries()
+                        .AddSampleCustomers()
+                        .AddSampleUserAccounts(dbContext: new UserAccountsContext(new DbContextOptionsBuilder().UseNaosSqlServer(configuration, "naos:sample:userAccounts:entityFramework").Options)))
                     .AddOperationsSerilog(correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}")
                     .AddOperationsLogAnalytics()
                     //.AddMessaging(o => o.AddFileSystemBroker());
                     //.AddMessaging(o => o.AddSignalRBroker());
                     .AddMessaging(o => o.AddServiceBusBroker())
-                    .AddCommands()
-                    .AddServices(o => o
-                        .AddSampleCountries()
-                        .AddSampleCustomers()
-                        .AddSampleUserAccounts(dbContext: new UserAccountsContext(new DbContextOptionsBuilder().UseNaosSqlServer(configuration, "naos:sample:userAccounts:entityFramework").Options)));
+                    .AddCommands();
 
             this.services.AddSingleton<ICommandBehavior, TrackCommandBehavior>();
             //this.services.AddSingleton<ICommandBehavior, ServiceContextEnrichCommandBehavior>();
