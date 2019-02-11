@@ -11,16 +11,16 @@
     using Naos.Core.Common;
     using Naos.Core.JobScheduling.Domain;
 
-    public class JobSchedulerSettings
+    public class JobSchedulerOptions
     {
-        private readonly ILogger<JobSchedulerSettings> logger;
+        private readonly ILogger<JobSchedulerOptions> logger;
         private readonly IJobFactory jobFactory;
 
-        public JobSchedulerSettings(ILogger<JobSchedulerSettings> logger, IJobFactory jobFactory)
+        public JobSchedulerOptions(ILoggerFactory loggerFactory, IJobFactory jobFactory)
         {
-            EnsureArg.IsNotNull(logger, nameof(logger));
+            EnsureArg.IsNotNull(loggerFactory, nameof(loggerFactory));
 
-            this.logger = logger;
+            this.logger = loggerFactory.CreateLogger<JobSchedulerOptions>();
             this.jobFactory = jobFactory; // what to do when null?
         }
 
@@ -28,39 +28,39 @@
 
         public IDictionary<JobRegistration, IJob> Registrations { get; } = new Dictionary<JobRegistration, IJob>();
 
-        public JobSchedulerSettings SetEnabled(bool enabled = true)
+        public JobSchedulerOptions SetEnabled(bool enabled = true)
         {
             this.Enabled = enabled;
             return this;
         }
 
-        public JobSchedulerSettings Register(string cron, Action<string[]> action, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true) // TODO: not really needed
+        public JobSchedulerOptions Register(string cron, Action<string[]> action, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true) // TODO: not really needed
         {
             return this.Register(new JobRegistration(null, cron, null, isReentrant, timeout, enabled), new Job(action));
         }
 
-        public JobSchedulerSettings Register(string key, string cron, Action<string[]> action, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
+        public JobSchedulerOptions Register(string key, string cron, Action<string[]> action, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
         {
             return this.Register(new JobRegistration(key, cron, null, isReentrant, timeout, enabled), new Job(action));
         }
 
-        public JobSchedulerSettings Register(string cron, Func<string[], Task> task, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
+        public JobSchedulerOptions Register(string cron, Func<string[], Task> task, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
         {
             return this.Register(new JobRegistration(null, cron, null, isReentrant, timeout, enabled), new Job(task));
         }
 
-        public JobSchedulerSettings Register(string key, string cron, Func<string[], Task> task, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
+        public JobSchedulerOptions Register(string key, string cron, Func<string[], Task> task, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
         {
             return this.Register(new JobRegistration(key, cron, null, isReentrant, timeout, enabled), new Job(task));
         }
 
-        public JobSchedulerSettings Register<T>(string cron, string[] args = null, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
+        public JobSchedulerOptions Register<T>(string cron, string[] args = null, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
             where T : IJob
         {
             return this.Register<T>(null, cron, args, isReentrant, timeout, enabled);
         }
 
-        public JobSchedulerSettings Register<T>(string key, string cron, string[] args = null, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
+        public JobSchedulerOptions Register<T>(string key, string cron, string[] args = null, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
             where T : IJob
         {
             if (!typeof(Job).IsAssignableFrom(typeof(T)))
@@ -82,7 +82,7 @@
                 }));
         }
 
-        public JobSchedulerSettings Register<T>(string key, string cron, Expression<Func<T, Task>> task, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
+        public JobSchedulerOptions Register<T>(string key, string cron, Expression<Func<T, Task>> task, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
         {
             EnsureArg.IsNotNull(task, nameof(task));
 
@@ -106,7 +106,7 @@
                 }));
         }
 
-        public JobSchedulerSettings Register(JobRegistration registration, IJob job)
+        public JobSchedulerOptions Register(JobRegistration registration, IJob job)
         {
             EnsureArg.IsNotNull(registration, nameof(registration));
             EnsureArg.IsNotNullOrEmpty(registration.Cron, nameof(registration.Cron));

@@ -15,24 +15,24 @@
         private int activeCount;
         private Action<Exception> errorHandler;
 
-        public JobScheduler(ILogger<JobScheduler> logger, IMutex mutex)
-            : this(logger, mutex, null)
+        public JobScheduler(ILoggerFactory loggerFactory, IMutex mutex)
+            : this(loggerFactory, mutex, null)
         {
         }
 
-        public JobScheduler(ILogger<JobScheduler> logger, IMutex mutex, JobSchedulerSettings settings)
+        public JobScheduler(ILoggerFactory loggerFactory, IMutex mutex, JobSchedulerOptions options)
         {
-            EnsureArg.IsNotNull(logger, nameof(logger));
-            EnsureArg.IsNotNull(settings, nameof(settings));
+            EnsureArg.IsNotNull(loggerFactory, nameof(loggerFactory));
+            EnsureArg.IsNotNull(options, nameof(options));
 
-            this.logger = logger;
+            this.logger = loggerFactory.CreateLogger<JobScheduler>();
             this.mutex = mutex ?? new InProcessMutex(null);
-            this.Settings = settings;
+            this.Options = options;
         }
 
         public bool IsRunning => this.activeCount > 0;
 
-        public JobSchedulerSettings Settings { get; }
+        public JobSchedulerOptions Options { get; }
 
         public IJobScheduler Register(JobRegistration registration, IJob job)
         {
@@ -43,13 +43,13 @@
             registration.Key = registration.Key ?? HashAlgorithm.ComputeHash(job);
             this.logger.LogInformation($"{{LogKey:l}} registration (key={{JobKey}}, cron={registration.Cron}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")}, enabled={registration.Enabled})", LogEventKeys.JobScheduling, registration.Key);
 
-            var item = this.Settings.Registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(registration.Key));
+            var item = this.Options.Registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(registration.Key));
             if (item.Key != null)
             {
-                this.Settings.Registrations.Remove(item.Key);
+                this.Options.Registrations.Remove(item.Key);
             }
 
-            this.Settings.Registrations.Add(registration, job);
+            this.Options.Registrations.Add(registration, job);
             return this;
         }
 
@@ -62,7 +62,7 @@
         {
             if (registration != null)
             {
-                this.Settings.Registrations.Remove(registration);
+                this.Options.Registrations.Remove(registration);
             }
 
             return this;
@@ -76,7 +76,7 @@
 
         public async Task TriggerAsync(string key, string[] args = null)
         {
-            var item = this.Settings.Registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(key));
+            var item = this.Options.Registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(key));
             if (item.Key != null)
             {
                 await this.TriggerAsync(key, new CancellationTokenSource(item.Key.Timeout).Token, args);
@@ -89,7 +89,7 @@
 
         public async Task TriggerAsync(string key, CancellationToken cancellationToken, string[] args = null)
         {
-            var item = this.Settings.Registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(key));
+            var item = this.Options.Registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(key));
             if (item.Key != null)
             {
                 await this.ExecuteJobAsync(item.Key, item.Value, cancellationToken, args ?? item.Key?.Args).AnyContext();
@@ -109,7 +109,7 @@
         {
             EnsureArg.IsTrue(moment.Kind == DateTimeKind.Utc);
 
-            if (!this.Settings.Enabled)
+            if (!this.Options.Enabled)
             {
                 //this.logger.LogDebug($"job scheduler run not started (enabled={this.Settings.Enabled})");
                 return;
@@ -124,7 +124,7 @@
 
         private async Task ExecuteJobsAsync(DateTime moment)
         {
-            var dueJobs = this.Settings.Registrations.Where(r => r.Key?.IsDue(moment) == true && r.Key.Enabled).Select(r =>
+            var dueJobs = this.Options.Registrations.Where(r => r.Key?.IsDue(moment) == true && r.Key.Enabled).Select(r =>
             {
                 var cts = new CancellationTokenSource(r.Key.Timeout);
                 return Task.Run(async () =>
@@ -196,7 +196,7 @@
 
         private JobRegistration GetRegistationByKey(string key)
         {
-            return this.Settings.Registrations.Where(r => r.Key.Key.SafeEquals(key)).Select(r => r.Key).FirstOrDefault();
+            return this.Options.Registrations.Where(r => r.Key.Key.SafeEquals(key)).Select(r => r.Key).FirstOrDefault();
         }
     }
 }

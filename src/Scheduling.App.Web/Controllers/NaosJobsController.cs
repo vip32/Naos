@@ -42,7 +42,7 @@
                 throw new BadRequestException("key cannot be empty");
             }
 
-            var model = this.jobScheduler.Settings.Registrations.Where(r => r.Key.Key.SafeEquals(key)).Select(r => r.Key).FirstOrDefault();
+            var model = this.jobScheduler.Options.Registrations.Where(r => r.Key.Key.SafeEquals(key)).Select(r => r.Key).FirstOrDefault();
             if (model == null)
             {
                 return this.NotFound(); // TODO: throw notfoundexception?

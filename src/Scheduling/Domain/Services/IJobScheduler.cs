@@ -8,7 +8,7 @@
     {
         bool IsRunning { get; }
 
-        JobSchedulerSettings Settings { get; }
+        JobSchedulerOptions Options { get; }
 
         IJobScheduler OnError(Action<Exception> errorHandler);
 

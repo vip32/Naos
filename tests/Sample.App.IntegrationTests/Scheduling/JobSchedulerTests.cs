@@ -50,7 +50,7 @@
             var sut = this.ServiceProvider.GetRequiredService<IJobScheduler>();
             var count = 0;
 
-            sut.Settings.Register("key1", "* 12 * * * *", (a) =>
+            sut.Options.Register("key1", "* 12 * * * *", (a) =>
             {
                 count++;
                 System.Diagnostics.Trace.WriteLine("+++ hello from task " + a);
@@ -70,7 +70,7 @@
             var sut = this.ServiceProvider.GetRequiredService<IJobScheduler>();
             var count = 0;
 
-            sut.Settings.Register("key1", "* 12 * * * *", async (a) =>
+            sut.Options.Register("key1", "* 12 * * * *", async (a) =>
                 await Task.Run(() =>
                 {
                     count++;
@@ -91,8 +91,8 @@
             var probe = this.ServiceProvider.GetRequiredService<StubProbe>();
             var sut = this.ServiceProvider.GetRequiredService<IJobScheduler>();
 
-            sut.Settings.Register<StubJob>("key1", "* 12 * * * *", new[] { "once" });
-            sut.Settings.Register<StubJob>("key2", "* 12 * * * *", new[] { "once" });
+            sut.Options.Register<StubJob>("key1", "* 12 * * * *", new[] { "once" });
+            sut.Options.Register<StubJob>("key2", "* 12 * * * *", new[] { "once" });
 
             // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
             var t1 = sut.TriggerAsync("key1");
@@ -109,7 +109,7 @@
             var probe = this.ServiceProvider.GetRequiredService<StubProbe>();
             var sut = this.ServiceProvider.GetRequiredService<IJobScheduler>();
 
-            sut.Settings.Register<StubJob>("key1", "* 12 * * * *", new[] { "once"});
+            sut.Options.Register<StubJob>("key1", "* 12 * * * *", new[] { "once"});
 
             // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
             var t1 = sut.TriggerAsync("key1");
@@ -126,7 +126,7 @@
             var probe = this.ServiceProvider.GetRequiredService<StubProbe>();
             var sut = this.ServiceProvider.GetRequiredService<IJobScheduler>();
 
-            sut.Settings
+            sut.Options
                 .Register<StubJob>("key1", "* 12 * * * *", new[] { "once" })
                 .Register<StubJob>("key2", "* 12 * * * *", new[] { "cancel" });
 
@@ -146,8 +146,8 @@
             var cts = new CancellationTokenSource();
             var sut = this.ServiceProvider.GetRequiredService<IJobScheduler>();
 
-            sut.Settings.Register<StubJob>("key1", "* 12 * * * *");
-            sut.Settings.Register<StubJob>("key2", "* 12 * * * *");
+            sut.Options.Register<StubJob>("key1", "* 12 * * * *");
+            sut.Options.Register<StubJob>("key2", "* 12 * * * *");
 
             // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
             cts.CancelAfter(TimeSpan.FromMilliseconds(250));
@@ -168,7 +168,7 @@
             var probe = this.ServiceProvider.GetRequiredService<StubProbe>();
             var sut = this.ServiceProvider.GetRequiredService<IJobScheduler>();
 
-            sut.Settings.Register<StubJob>("key1", "* 12 * * * *");
+            sut.Options.Register<StubJob>("key1", "* 12 * * * *");
 
             // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
             var t1 = sut.TriggerAsync("key1");
@@ -186,7 +186,7 @@
             var probe = this.ServiceProvider.GetRequiredService<StubProbe>();
             var sut = this.ServiceProvider.GetRequiredService<IJobScheduler>();
 
-            sut.Settings
+            sut.Options
                 .Register<StubCustomJob>("key1", "* 12 * * * *", (j) => j.MyExecuteAsync("arg1", probe, CancellationToken.None))
                 .Register<StubCustomJob>("key2", "* 12 * * * *", (j) => j.MyExecuteAsync("arg2", probe, CancellationToken.None));
 
