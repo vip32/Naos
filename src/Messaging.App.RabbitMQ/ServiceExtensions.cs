@@ -21,11 +21,6 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            options.Context.Services.Scan(scan => scan // https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/
-               .FromExecutingAssembly()
-               .FromApplicationDependencies(a => !a.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) && !a.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase))
-               .AddClasses(classes => classes.AssignableTo(typeof(IMessageHandler<>)), true));
-
             options.Context.Services.AddSingleton<IMessageBroker>(sp =>
             {
                 var result = new RabbitMQMessageBroker(o => o

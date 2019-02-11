@@ -26,14 +26,6 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            options.Context.Services.Scan(scan => scan // https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/
-                .FromExecutingAssembly()
-                .FromApplicationDependencies(a => !a.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) && !a.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase))
-                .AddClasses(classes => classes.AssignableTo(typeof(IMessageHandler<>)), true));
-
-            options.Context.Services.AddSingleton<Hosting.IHostedService>(sp =>
-                    new MessagingHostedService(sp.GetRequiredService<ILogger<MessagingHostedService>>(), sp));
-
             var serviceBusConfiguration = options.Context.Configuration.GetSection(section).Get<ServiceBusConfiguration>();
             serviceBusConfiguration.EntityPath = topicName ?? $"{Environment.GetEnvironmentVariable(EnvironmentKeys.Environment) ?? "Production"}-Naos.Messaging";
             options.Context.Services.AddSingleton<IServiceBusProvider>(sp =>
@@ -49,7 +41,6 @@
                 throw new NotImplementedException("no messaging servicebus is enabled");
             });
 
-            options.Context.Services.AddSingleton<ISubscriptionMap, SubscriptionMap>();
             options.Context.Services.AddSingleton<IMessageBroker>(sp =>
             {
                 var result = new ServiceBusMessageBroker(o => o
