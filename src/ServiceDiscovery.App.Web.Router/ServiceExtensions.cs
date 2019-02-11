@@ -18,7 +18,7 @@
         /// <param name="options"></param>
         /// <param name="section"></param>
         /// <returns></returns>
-        public static ServiceDiscoveryOptions AddFilesystemRouterRegistry(
+        public static ServiceDiscoveryOptions AddFileSystemRouterRegistry(
             this ServiceDiscoveryOptions options,
             string section = "naos:serviceDiscovery")
         {
