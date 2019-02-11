@@ -41,8 +41,6 @@
                                 //.AddSignalRBroker());
                                 //.AddRabbitMQ());
                                 .AddServiceBusBroker());
-                            //.AddMessagingSignalR()
-                            //.AddMessagingFileSystem();
 
                     // naos sample product registrations
                     services

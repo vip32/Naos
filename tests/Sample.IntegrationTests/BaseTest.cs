@@ -31,9 +31,10 @@
                         .AddSampleUserAccounts(dbContext: new UserAccountsContext(new DbContextOptionsBuilder().UseNaosSqlServer(configuration, "naos:sample:userAccounts:entityFramework").Options)))
                     .AddOperationsSerilog(correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}")
                     .AddOperationsLogAnalytics()
-                    //.AddMessaging(o => o.AddFileSystemBroker());
-                    //.AddMessaging(o => o.AddSignalRBroker());
-                    .AddMessaging(o => o.AddServiceBusBroker())
+                    .AddMessaging(o => o
+                        //.AddFileSystemBroker()
+                        //.AddSignalRBroker()
+                        .AddServiceBusBroker())
                     .AddCommands();
 
             this.services.AddSingleton<ICommandBehavior, TrackCommandBehavior>();
