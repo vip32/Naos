@@ -125,7 +125,7 @@
                     .AddMessaging(o => o
                         //.AddFileSystemBroker(s => s
                         //.AddSignalRBroker(s => s
-                        //.AddRabbitMQ(s => s
+                        //.AddRabbitMQBroker(s => s
                         .AddServiceBusBroker(s => s
                             .Subscribe<TestMessage, TestMessageHandler>()))
                     .AddServiceDiscovery(o => o

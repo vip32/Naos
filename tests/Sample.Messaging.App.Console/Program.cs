@@ -39,7 +39,7 @@
                             .AddMessaging(o => o
                                 //.AddFileSystemBroker());
                                 //.AddSignalRBroker());
-                                //.AddRabbitMQ());
+                                //.AddRabbitMQBroker());
                                 .AddServiceBusBroker());
 
                     // naos sample product registrations
