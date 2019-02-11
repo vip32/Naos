@@ -119,7 +119,6 @@
                         .Register<DummyJob>("job1", Cron.Minutely(), (j) => j.LogMessageAsync("+++ hello from job1 +++", CancellationToken.None))
                         .Register<DummyJob>("job2", Cron.MinuteInterval(2), j => j.LogMessageAsync("+++ hello from job2 +++", CancellationToken.None, true), enabled: false)
                         .Register<DummyJob>("longjob33", Cron.Minutely(), j => j.LongRunningAsync("+++ hello from longjob3 +++", CancellationToken.None)))
-                    .AddJobSchedulingWeb() // !!!!
                     .AddMessaging(o => o
                         //.AddFileSystemBroker(s => s
                         //.AddSignalRBroker(s => s

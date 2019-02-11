@@ -2,8 +2,10 @@
 {
     using System;
     using EnsureThat;
+    using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Naos.Core.JobScheduling;
+    using Naos.Core.JobScheduling.App;
     using Naos.Core.JobScheduling.Domain;
 
     public static class ServiceExtensions
@@ -27,6 +29,9 @@
                     new InProcessMutex(sp.GetRequiredService<ILogger<InProcessMutex>>()),
                     settings);
             });
+
+            context.Services.AddSingleton<IHostedService>(sp =>
+                new JobSchedulerHostedService(sp.GetRequiredService<ILogger<JobSchedulerHostedService>>(), sp));
 
             return context;
         }
