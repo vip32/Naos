@@ -2,7 +2,7 @@
 {
     using Microsoft.Extensions.Configuration;
 
-    public interface INaosBuilder
+    public interface INaosBuilderContext
     {
         IConfiguration Configuration { get; set; }
 
@@ -10,6 +10,6 @@
 
         IServiceCollection Services { get; set; }
 
-        INaosBuilder AddTag(string tag);
+        INaosBuilderContext AddTag(string tag);
     }
 }

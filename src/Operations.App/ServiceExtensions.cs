@@ -5,8 +5,8 @@
 
     public static class ServiceExtensions
     {
-        public static INaosBuilder AddOperations(
-            this INaosBuilder context,
+        public static INaosBuilderContext AddOperations(
+            this INaosBuilderContext context,
             Action<OperationsOptions> setupAction = null,
             string section = "naos:operations")
         {

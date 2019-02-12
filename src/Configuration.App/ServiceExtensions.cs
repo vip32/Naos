@@ -21,7 +21,7 @@
         /// <param name="setupAction"></param>
         /// <param name="section"></param>
         /// <returns></returns>
-        public static INaosBuilder AddNaos(
+        public static INaosBuilderContext AddNaos(
             this IServiceCollection services,
             IConfiguration configuration,
             string product = null,
@@ -33,7 +33,7 @@
             EnsureArg.IsNotNull(services, nameof(services));
 
             var naosConfiguration = configuration?.GetSection(section).Get<NaosConfiguration>();
-            var context = new NaosBuilder
+            var context = new NaosBuilderContext
             {
                 Services = services,
                 Configuration = configuration,
@@ -46,8 +46,8 @@
             return context;
         }
 
-        public static INaosBuilder AddServices(
-            this INaosBuilder context,
+        public static INaosBuilderContext AddServices(
+            this INaosBuilderContext context,
             Action<ServiceOptions> setupAction = null)
         {
             setupAction?.Invoke(new ServiceOptions(context));

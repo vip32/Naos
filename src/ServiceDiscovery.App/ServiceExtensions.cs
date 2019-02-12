@@ -15,8 +15,8 @@
     /// </summary>
     public static class ServiceExtensions
     {
-        public static INaosBuilder AddServiceDiscovery(
-            this INaosBuilder context,
+        public static INaosBuilderContext AddServiceDiscovery(
+            this INaosBuilderContext context,
             Action<ServiceDiscoveryOptions> setupAction = null,
             string section = "naos:serviceDiscovery")
         {

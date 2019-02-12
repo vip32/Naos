@@ -12,8 +12,8 @@
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        public static INaosBuilder AddRequestFiltering(
-            this INaosBuilder context)
+        public static INaosBuilderContext AddRequestFiltering(
+            this INaosBuilderContext context)
         {
             EnsureArg.IsNotNull(context, nameof(context));
 

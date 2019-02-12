@@ -14,8 +14,8 @@
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        public static INaosBuilder AddServiceContext(
-            this INaosBuilder context)
+        public static INaosBuilderContext AddServiceContext(
+            this INaosBuilderContext context)
         {
             EnsureArg.IsNotNull(context, nameof(context));
 

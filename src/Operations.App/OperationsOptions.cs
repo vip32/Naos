@@ -4,11 +4,11 @@
 
     public class OperationsOptions
     {
-        public OperationsOptions(INaosBuilder context)
+        public OperationsOptions(INaosBuilderContext context)
         {
             this.Context = context;
         }
 
-        public INaosBuilder Context { get; }
+        public INaosBuilderContext Context { get; }
     }
 }

@@ -4,11 +4,11 @@
 
     public class JobSchedulingOptions
     {
-        public JobSchedulingOptions(INaosBuilder context)
+        public JobSchedulingOptions(INaosBuilderContext context)
         {
             this.Context = context;
         }
 
-        public INaosBuilder Context { get; }
+        public INaosBuilderContext Context { get; }
     }
 }

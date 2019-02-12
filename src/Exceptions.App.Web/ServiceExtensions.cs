@@ -14,8 +14,8 @@
         /// <param name="hideDetails"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public static INaosBuilder AddServiceExceptions(
-            this INaosBuilder context,
+        public static INaosBuilderContext AddServiceExceptions(
+            this INaosBuilderContext context,
             bool hideDetails = false,
             ExceptionHandlerMiddlewareOptions options = null)
         {

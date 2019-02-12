@@ -15,8 +15,8 @@
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        public static INaosBuilder AddRequestCorrelation(
-            this INaosBuilder context)
+        public static INaosBuilderContext AddRequestCorrelation(
+            this INaosBuilderContext context)
         {
             EnsureArg.IsNotNull(context, nameof(context));
 

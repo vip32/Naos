@@ -7,8 +7,8 @@
 
     public static class ServiceExtensions
     {
-        public static INaosBuilder AddMessaging(
-            this INaosBuilder context,
+        public static INaosBuilderContext AddMessaging(
+            this INaosBuilderContext context,
             Action<MessagingOptions> setupAction = null)
         {
             context.Services.Scan(scan => scan // https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/
