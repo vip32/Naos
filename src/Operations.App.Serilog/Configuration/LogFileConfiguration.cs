@@ -10,7 +10,7 @@
 
         public string SubFolder { get; set; } = "naos_operations";
 
-        public string File { get; set; } = "naos.log";
+        public string File { get; set; }
 
         public string OutputTemplate { get; set; }
 

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Operations.Infrastructure.Azure.LogAnalytics.Repositories
+﻿namespace Naos.Core.Operations.Infrastructure.Azure.LogAnalytics
 {
     using System.Diagnostics;
 

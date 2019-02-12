@@ -22,6 +22,7 @@
     <ProjectReference Include="..\Messaging.App\Messaging.App.csproj" />
     <ProjectReference Include="..\Operations.App.Serilog\Operations.App.Serilog.csproj" />
     <ProjectReference Include="..\Operations.App.Web\Operations.App.Web.csproj" />
+    <ProjectReference Include="..\Operations.App\Operations.App.csproj" />
     <ProjectReference Include="..\Scheduling.App.Web\JobScheduling.App.Web.csproj" />
     <ProjectReference Include="..\ServiceContext.App\ServiceContext.App.csproj" />
     <ProjectReference Include="..\ServiceDiscovery.App.Consul\ServiceDiscovery.App.Consul.csproj" />

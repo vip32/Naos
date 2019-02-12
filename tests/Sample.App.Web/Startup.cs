@@ -114,8 +114,11 @@
                     .AddServiceExceptions()
                     .AddCommands()
                     //.AddQueries()
-                    .AddOperationsSerilog()
-                    .AddOperationsLogAnalytics()
+                    .AddOperations(o => o
+                        .AddLogging(l => l
+                            .AddFile()
+                            .AddAzureLogAnalytics())
+                        .AddLogAnalyticsDashboard())
                     //.AddSwaggerDocument() // s.Description = Product.Capability\
                     .AddJobScheduling(o => o
                         .SetEnabled(true)

@@ -3,22 +3,22 @@
     using EnsureThat;
     using Microsoft.Extensions.Configuration;
     using Microsoft.IdentityModel.Clients.ActiveDirectory;
+    using Naos.Core.Operations.App;
     using Naos.Core.Operations.Domain.Repositories;
     using Naos.Core.Operations.Infrastructure.Azure.LogAnalytics;
-    using Naos.Core.Operations.Infrastructure.Azure.LogAnalytics.Repositories;
 
     public static class ServiceExtensions
     {
-        public static INaosBuilder AddOperationsLogAnalytics(
-            this INaosBuilder context,
+        public static OperationsOptions AddLogAnalyticsDashboard(
+            this OperationsOptions options,
             string section = "naos:operations:azureLogAnalytics")
         {
-            EnsureArg.IsNotNull(context, nameof(context));
+            EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            context.Services.AddSingleton<ILogEventRepository>(sp =>
+            var logAnalyticsConfiguration = options.Context.Configuration?.GetSection(section).Get<LogAnalyticsConfiguration>();
+            options.Context.Services.AddScoped<ILogEventRepository>(sp =>
             {
-                var logAnalyticsConfiguration = context.Configuration.GetSection(section).Get<LogAnalyticsConfiguration>();
-
                 // authenticate api https://dev.int.loganalytics.io/documentation/1-Tutorials/ARM-API
                 var token = new AuthenticationContext(
                     $"https://login.microsoftonline.com/{logAnalyticsConfiguration.ApiAuthentication?.TenantId}", false)
@@ -36,7 +36,7 @@
                     logAnalyticsConfiguration.WorkspaceName);
             }/*, Lifestyle.Scoped*/);
 
-            return context;
+            return options;
         }
     }
 }

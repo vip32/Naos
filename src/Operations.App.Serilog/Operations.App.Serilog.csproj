@@ -22,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Infrastructure.Azure.Configuration\Infrastructure.Azure.csproj" />
+    <ProjectReference Include="..\Operations.App\Operations.App.csproj" />
     <ProjectReference Include="..\Operations.Infrastructure.Azure.LogAnalytics\Operations.Infrastructure.Azure.LogAnalytics.csproj" />
   </ItemGroup>
 

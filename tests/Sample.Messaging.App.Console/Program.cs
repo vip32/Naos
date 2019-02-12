@@ -35,7 +35,11 @@
                     services
                         .AddNaos(configuration, "Product", capabilities[new Random().Next(0, capabilities.Length)])
                             .AddRequestCorrelation()
-                            .AddOperationsSerilog(correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}")
+                            .AddOperations(o => o
+                                .AddLogging(l => l
+                                    .AddFile()
+                                    .AddAzureLogAnalytics(),
+                                    correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}"))
                             .AddMessaging(o => o
                                 //.AddFileSystemBroker());
                                 //.AddSignalRBroker());

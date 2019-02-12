@@ -11,7 +11,6 @@
     using Naos.Core.Infrastructure.Azure;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.App;
-    using Naos.Core.Messaging.App.Web;
     using Naos.Core.Messaging.Infrastructure.Azure;
 
     public static class ServiceExtensions

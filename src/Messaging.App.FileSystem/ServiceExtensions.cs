@@ -13,7 +13,6 @@
     using Naos.Core.FileStorage.Infrastructure.FileSystem;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.App;
-    using Naos.Core.Messaging.App.Web;
     using Naos.Core.Messaging.Infrastructure;
 
     public static class ServiceExtensions

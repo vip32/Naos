@@ -32,7 +32,8 @@
             this.services
                 .AddNaos(configuration, "Product", "Capability")
                     .AddRequestCorrelation()
-                    .AddOperationsSerilog(correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}");
+                    .AddOperations(o => o
+                        .AddLogging(correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}"));
 
             this.ServiceProvider = this.services.BuildServiceProvider();
         }

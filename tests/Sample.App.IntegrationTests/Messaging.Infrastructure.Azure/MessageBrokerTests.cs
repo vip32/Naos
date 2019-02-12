@@ -20,7 +20,8 @@
             this.services
                 .AddMediatR()
                 .AddNaos(configuration, "Product", "Capability")
-                    .AddOperationsSerilog(correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}")
+                    .AddOperations(o => o
+                        .AddLogging(correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}"))
                     .AddMessaging(o => o
                         //.AddFileSystemBroker()
                         //.AddSignalRBroker()
