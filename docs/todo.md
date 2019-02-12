@@ -101,6 +101,7 @@ webapi test + jwt https://www.domstamand.com/testing-a-webapi-in-net-core-with-i
 webapi caching (client/server) https://github.com/aliostad/CacheCow#getting-started---client
 nested app https://github.com/damianh/AspNetCoreNestedApps
 embedded dashboard https://github.com/dotnetcore/CAP/blob/develop/src/DotNetCore.CAP/Dashboard/RazorPageDispatcher.cs
+angular with netcore 2.2 https://www.codeproject.com/Articles/1274513/Angular-7-with-NET-Core-2-2-Global-Weather-Part-1
 host multiple mvc apps https://damienbod.com/2018/12/01/using-mvc-asp-net-core-apps-in-a-host-asp-net-core-app/
 file repo https://github.com/selmaohneh/Repository/tree/master/Repository.FileRepository
 mongo repo https://github.com/grandnode/grandnode/blob/develop/Grand.Data/MongoDBRepository.cs
