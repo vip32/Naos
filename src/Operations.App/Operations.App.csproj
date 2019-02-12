@@ -7,11 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Serilog" Version="2.8.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
+    <PackageReference Include="serilog" Version="2.8.0" />
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="2.0.0" />
+    <PackageReference Include="Serilog.Sinks.AzureDocumentDB" Version="4.0.0" />
+    <PackageReference Include="Serilog.Sinks.Debug" Version="1.0.1" />
+    <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
+    <PackageReference Include="Serilog.Sinks.Literate" Version="3.0.0" />
+    <PackageReference Include="Ben.Demystifier" Version="0.1.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Configuration.App\Configuration.App.csproj" />
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\Infrastructure.Azure.Configuration\Infrastructure.Azure.csproj" />
   </ItemGroup>
 
 </Project>

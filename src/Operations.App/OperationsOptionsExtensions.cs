@@ -6,7 +6,6 @@
     using global::Serilog.Events;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Commands.Operations.App.Serilog;
     using Naos.Core.Common;
     using Naos.Core.Operations.App;
 

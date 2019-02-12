@@ -66,9 +66,7 @@
     <ProjectReference Include="..\..\src\Messaging.Infrastructure.FileSystem\Messaging.Infrastructure.FileSystem.csproj" />
     <ProjectReference Include="..\..\src\Messaging.Infrastructure.RabbitMQ\Messaging.Infrastructure.RabbitMQ.csproj" />
     <ProjectReference Include="..\..\src\Messaging\Messaging.csproj" />
-    <ProjectReference Include="..\..\src\Operations.App.Serilog\Operations.App.Serilog.csproj" />
     <ProjectReference Include="..\..\src\Operations.App.Web\Operations.App.Web.csproj" />
-    <ProjectReference Include="..\..\src\Operations.Infrastructure.Azure.LogAnalytics\Operations.Infrastructure.Azure.LogAnalytics.csproj" />
     <ProjectReference Include="..\..\src\Operations\Operations.csproj" />
     <ProjectReference Include="..\..\src\Scheduling.App.Web\JobScheduling.App.Web.csproj" />
     <ProjectReference Include="..\..\src\Scheduling\JobScheduling.csproj" />

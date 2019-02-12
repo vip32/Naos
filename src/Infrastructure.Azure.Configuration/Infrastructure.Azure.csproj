@@ -6,8 +6,4 @@
     <RootNamespace>Naos.Core.Infrastructure.Azure</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-      
-  </ItemGroup>
-
 </Project>

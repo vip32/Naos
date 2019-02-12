@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Infrastructure.Azure.Configuration\Infrastructure.Azure.csproj" />
+    <ProjectReference Include="..\Operations.App\Operations.App.csproj" />
+    <ProjectReference Include="..\Operations.Infrastructure.Azure\Operations.Infrastructure.Azure.csproj" />
+    <ProjectReference Include="..\Operations\Operations.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Configuration\" />
+  </ItemGroup>
+
+</Project>

@@ -1,6 +1,6 @@
 ﻿namespace Naos.Core.Infrastructure.Azure.Ad
 {
-    public class AuthenticationConfiguration
+    public class AdAuthenticationConfiguration
     {
         public string TenantId { get; set; }
 

@@ -1,15 +1,15 @@
-﻿namespace Naos.Core.Commands.Operations.App.Serilog
+﻿namespace Naos.Core.Operations.App
 {
     using System;
     using Microsoft.Extensions.Logging;
 
-    public class LoggingAdapter<T> : ILogger<T>
+    public class LoggingAdapter : ILogger
     {
         private readonly ILogger adaptee;
 
         public LoggingAdapter(ILoggerFactory factory)
         {
-            this.adaptee = factory.CreateLogger<T>();
+            this.adaptee = factory.CreateLogger("default");
         }
 
         public IDisposable BeginScope<TState>(TState state)

@@ -5,11 +5,9 @@
     using EnsureThat;
     using global::Serilog;
     using Microsoft.Extensions.Configuration;
-    using Naos.Core.Commands.Operations.App.Serilog;
     using Naos.Core.Common;
     using Naos.Core.Infrastructure.Azure;
     using Naos.Core.Operations.App;
-    using Naos.Core.Operations.Infrastructure.Azure.LogAnalytics;
 
     public static class LoggingOptionsExtensions
     {
@@ -71,24 +69,6 @@
                     flushToDiskInterval: diagnosticsLogStreamConfiguration.FlushToDiskIntervalSeconds.HasValue ? TimeSpan.FromSeconds(diagnosticsLogStreamConfiguration.FlushToDiskIntervalSeconds.Value) : default(TimeSpan?));
 
                 options.Messages.Add($"{LogEventKeys.Operations} logging: diagnosticslogstream sink added (path={diagnosticsLogStreamConfiguration.File})");
-            }
-
-            return options;
-        }
-
-        public static LoggingOptions AddAzureApplicationInsights(this LoggingOptions options)
-        {
-            EnsureArg.IsNotNull(options, nameof(options));
-            EnsureArg.IsNotNull(options.Context, nameof(options.Context));
-
-            var appInsightsConfiguration = options.Context.Configuration?.GetSection("naos:operations:logEvents:azureApplicationInsights").Get<ApplicationInsightsConfiguration>();
-            if (appInsightsConfiguration?.Enabled == true
-                && appInsightsConfiguration?.ApplicationKey.IsNullOrEmpty() == false)
-            {
-                // configure the serilog sink
-                //options.LoggerConfiguration.WriteTo.AppInsights(appInsightsConfiguration.ApplicationKey);
-
-                options.Messages.Add($"{LogEventKeys.Operations} logging: azureapplicationinsightssink added (application={appInsightsConfiguration.ApplicationKey})");
             }
 
             return options;

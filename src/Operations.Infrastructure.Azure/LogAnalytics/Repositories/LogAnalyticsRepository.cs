@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Operations.Infrastructure.Azure.LogAnalytics
+﻿namespace Naos.Core.Operations.Infrastructure.Azure
 {
     using System;
     using System.Collections.Generic;
@@ -13,7 +13,7 @@
     using Naos.Core.Operations.Domain;
     using Naos.Core.Operations.Domain.Repositories;
 
-    public class LogEventRepository : ILogEventRepository
+    public class LogAnalyticsRepository : ILogEventRepository
     {
         private readonly HttpClient httpClient;
         private readonly string accessToken;
@@ -22,7 +22,7 @@
         private readonly string workspaceName;
         private readonly string logName;
 
-        public LogEventRepository(
+        public LogAnalyticsRepository(
             HttpClient httpClient,
             string accessToken,
             string subscriptionId,

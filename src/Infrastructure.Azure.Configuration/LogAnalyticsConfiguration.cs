@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Operations.Infrastructure.Azure.LogAnalytics
+﻿namespace Naos.Core.Infrastructure.Azure
 {
     using Naos.Core.Infrastructure.Azure.Ad;
 
@@ -10,7 +10,7 @@
 
         public string AuthenticationId { get; set; } // serilog
 
-        public AuthenticationConfiguration ApiAuthentication { get; set; } // repo
+        public AdAuthenticationConfiguration ApiAuthentication { get; set; } // repo
 
         public string SubscriptionId { get; set; } // repo
 

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Commands.Operations.App.Serilog
+﻿namespace Naos.Core.Operations.App
 {
     using System.Diagnostics;
     using global::Serilog.Core;

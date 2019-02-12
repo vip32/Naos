@@ -5,12 +5,31 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.IdentityModel.Clients.ActiveDirectory;
     using Naos.Core.Common;
+    using Naos.Core.Infrastructure.Azure;
     using Naos.Core.Operations.App;
     using Naos.Core.Operations.Domain.Repositories;
-    using Naos.Core.Operations.Infrastructure.Azure.LogAnalytics;
+    using Naos.Core.Operations.Infrastructure.Azure;
 
     public static class LoggingOptionsExtensions
     {
+        public static LoggingOptions AddAzureApplicationInsights(this LoggingOptions options)
+        {
+            EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.Context, nameof(options.Context));
+
+            var appInsightsConfiguration = options.Context.Configuration?.GetSection("naos:operations:logEvents:azureApplicationInsights").Get<ApplicationInsightsConfiguration>();
+            if (appInsightsConfiguration?.Enabled == true
+                && appInsightsConfiguration?.ApplicationKey.IsNullOrEmpty() == false)
+            {
+                // configure the serilog sink
+                //options.LoggerConfiguration.WriteTo.AppInsights(appInsightsConfiguration.ApplicationKey);
+
+                options.Messages.Add($"{LogEventKeys.Operations} logging: azureapplicationinsightssink added (application={appInsightsConfiguration.ApplicationKey})");
+            }
+
+            return options;
+        }
+
         public static LoggingOptions AddAzureLogAnalytics(this LoggingOptions options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
@@ -55,7 +74,7 @@
                             configuration.ApiAuthentication?.ClientId,
                             configuration.ApiAuthentication?.ClientSecret)).Result;
 
-                return new LogEventRepository(
+                return new LogAnalyticsRepository(
                     new System.Net.Http.HttpClient(), // TODO: resolve from container!
                     token?.AccessToken,
                     configuration.SubscriptionId,
