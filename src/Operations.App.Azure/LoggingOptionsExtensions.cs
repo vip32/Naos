@@ -1,5 +1,7 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
+    using System;
+    using System.IO;
     using EnsureThat;
     using global::Serilog;
     using Microsoft.Extensions.Configuration;
@@ -12,6 +14,37 @@
 
     public static class LoggingOptionsExtensions
     {
+        public static LoggingOptions AddAzureDiagnosticsLogStream(this LoggingOptions options)
+        {
+            EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.Context, nameof(options.Context));
+
+            var configuration = options.Context.Configuration?.GetSection("naos:operations:logEvents:azureDiagnosticsLogStream").Get<DiagnosticsLogStreamConfiguration>();
+            if (configuration?.Enabled == true)
+            {
+                // configure the serilog sink
+                // https://github.com/serilog/serilog-aspnetcore
+                var path = configuration.File.EmptyToNull() ?? $"LogEvents_[PRODUCT]_[CAPABILITY]_[ENVIRONMENT].log"
+                    .Replace("[ENVIRONMENT]", options.Environment)
+                    .Replace("[PRODUCT]", options.Context.Descriptor?.Product)
+                    .Replace("[CAPABILITY]", options.Context.Descriptor?.Capability);
+                path = Path.Combine(@"D:\home\LogFiles", path);
+
+                options.LoggerConfiguration.WriteTo.File(
+                    path,
+                    //outputTemplate: diagnosticsLogStreamConfiguration.OutputTemplate "{Timestamp:yyyy-MM-dd HH:mm:ss}|{Level} => {CorrelationId} => {Service}::{SourceContext}{NewLine}    {Message}{NewLine}{Exception}",
+                    fileSizeLimitBytes: configuration.FileSizeLimitBytes,
+                    rollOnFileSizeLimit: configuration.RollOnFileSizeLimit,
+                    rollingInterval: (RollingInterval)Enum.Parse(typeof(RollingInterval), configuration.RollingInterval), // TODO: use tryparse
+                    shared: true,
+                    flushToDiskInterval: configuration.FlushToDiskIntervalSeconds.HasValue ? TimeSpan.FromSeconds(configuration.FlushToDiskIntervalSeconds.Value) : TimeSpan.FromSeconds(1));
+
+                options.Messages.Add($"{LogEventKeys.Operations} logging: azurediagnosticslogstream sink added (path={path})");
+            }
+
+            return options;
+        }
+
         public static LoggingOptions AddAzureApplicationInsights(this LoggingOptions options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
