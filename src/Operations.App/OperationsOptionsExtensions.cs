@@ -44,14 +44,15 @@
             options.Context.Services.AddSingleton(sp =>
             {
                 var factory = CreateLoggerFactory();
-                foreach(var message in loggingOptions?.Messages.Safe())
-                {
-                    Log.Logger.Debug(message);
-                }
+                //foreach(var message in loggingOptions?.Messages.Safe())
+                //{
+                //    Log.Logger.Debug(message);
+                //}
                 return factory;
             });
             options.Context.Services.AddSingleton(typeof(ILogger<>), typeof(LoggingAdapter<>));
             options.Context.Services.AddSingleton(typeof(Logging.ILogger), typeof(LoggingAdapter));
+            options.Context.Messages.Add($"{LogEventKeys.General} naos builder: logging added");
 
             return options;
         }

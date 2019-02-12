@@ -102,7 +102,7 @@
 
             // naos application services
             services
-                .AddNaos(this.Configuration, "Product", "Capability", new[] { "All" })
+                .Naos(this.Configuration, "Product", "Capability", new[] { "All" })
                     .AddServices(s => s
                         .AddSampleCountries()
                         .AddSampleCustomers()

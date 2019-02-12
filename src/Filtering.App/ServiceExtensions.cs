@@ -2,6 +2,7 @@
 {
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection.Extensions;
+    using Naos.Core.Common;
     using Naos.Core.RequestFiltering.App;
     using Naos.Core.RequestFiltering.App.Web;
 
@@ -19,6 +20,8 @@
 
             context.Services.TryAddSingleton<IFilterContextAccessor, FilterContextAccessor>();
             context.Services.TryAddTransient<IFilterContextFactory, FilterContextFactory>();
+
+            context.Messages.Add($"{LogEventKeys.General} naos builder: request filtering added");
 
             return context;
         }

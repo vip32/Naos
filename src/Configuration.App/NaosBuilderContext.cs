@@ -1,5 +1,6 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
+    using System.Collections.Generic;
     using System.Linq;
     using Microsoft.Extensions.Configuration;
     using Naos.Core.Common;
@@ -11,6 +12,8 @@
         public Naos.Core.Common.ServiceDescriptor Descriptor { get; set; }
 
         public IConfiguration Configuration { get; set; }
+
+        public List<string> Messages { get; set; } = new List<string>();
 
         public INaosBuilderContext AddTag(string tag)
         {

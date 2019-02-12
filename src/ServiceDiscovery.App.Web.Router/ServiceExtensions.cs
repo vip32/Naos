@@ -3,6 +3,7 @@
     using EnsureThat;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
     using Naos.Core.ServiceDiscovery.App;
     using Naos.Core.ServiceDiscovery.App.Web.Router;
     using ProxyKit;
@@ -36,6 +37,8 @@
                     new FileSystemServiceRegistry(
                         sp.GetRequiredService<ILogger<FileSystemServiceRegistry>>(),
                         options.Context.Configuration?.GetSection($"{section}:registry:fileSystem").Get<FileSystemServiceRegistryConfiguration>()))));
+
+            options.Context.Messages.Add($"{LogEventKeys.General} naos builder: service discovery router added (registry={nameof(FileSystemServiceRegistry)})");
 
             return options;
         }

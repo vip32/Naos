@@ -2,6 +2,7 @@
 {
     using System;
     using Naos.Core.Commands.Domain;
+    using Naos.Core.Common;
 
     public static class ServiceExtensions
     {
@@ -18,6 +19,8 @@
                     .FromExecutingAssembly()
                     .FromApplicationDependencies(a => !a.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) && !a.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase))
                     .AddClasses(classes => classes.AssignableTo(typeof(ICommandBehavior)), true));
+
+            context.Messages.Add($"{LogEventKeys.General} naos builder: commands added"); // TODO: list available commands/handlers
 
             return context;
         }

@@ -4,6 +4,7 @@
     using MediatR;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
     using Naos.Core.Common.Web;
     using Naos.Core.Configuration.App;
     using Naos.Core.Domain.Repositories;
@@ -60,6 +61,8 @@
                     },
                     name: "Customers-cosmosdb")
                     .AddServiceDiscoveryClient<UserAccountsClient>();
+
+            options.Context.Messages.Add($"{LogEventKeys.General} naos builder: customers service added");
 
             return options;
         }

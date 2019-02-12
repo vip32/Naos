@@ -19,7 +19,7 @@
             var configuration = NaosConfigurationFactory.Create();
 
             this.services
-                .AddNaos(configuration, "Product", "Capability")
+                .Naos(configuration, "Product", "Capability")
                     .AddOperations(o => o
                         .AddLogging(correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}"))
                     .AddJobScheduling();

@@ -4,6 +4,7 @@
     using EnsureThat;
     using MediatR;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
     using Naos.Core.Configuration.App;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Domain.Repositories.AutoMapper;
@@ -44,6 +45,8 @@
                                         new AutoMapperEntityMapper(ModelMapperConfiguration.Create())),
                                     new[] { new AutoMapperSpecificationMapper<Country, DbCountry>(ModelMapperConfiguration.Create()) })))));
             });
+
+            options.Context.Messages.Add($"{LogEventKeys.General} naos builder: countries service added");
 
             return options;
         }

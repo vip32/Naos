@@ -6,6 +6,7 @@
     using EnsureThat;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.App;
     using Naos.Core.Messaging.Infrastructure.RabbitMQ;
@@ -31,6 +32,8 @@
                 setupAction?.Invoke(result);
                 return result;
             });
+
+            options.Context.Messages.Add($"{LogEventKeys.General} naos builder: messaging added (broker={nameof(RabbitMQMessageBroker)})");
 
             return options;
         }

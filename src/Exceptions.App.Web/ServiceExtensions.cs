@@ -4,6 +4,7 @@
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
     using Naos.Core.Commands.Exceptions.Web;
+    using Naos.Core.Common;
 
     public static class ServiceExtensions
     {
@@ -35,6 +36,8 @@
                 {
                     o.SuppressModelStateInvalidFilter = true;
                 });
+
+            context.Messages.Add($"{LogEventKeys.General} naos builder: service exceptions added");
 
             return context;
         }

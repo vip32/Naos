@@ -2,6 +2,7 @@
 {
     using System;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.App;
 
@@ -21,6 +22,8 @@
             context.Services.AddSingleton<ISubscriptionMap, SubscriptionMap>();
 
             setupAction?.Invoke(new MessagingOptions(context));
+
+            //context.Messages.Add($"{LogEventKeys.General} naos builder: messaging added");
 
             return context;
         }

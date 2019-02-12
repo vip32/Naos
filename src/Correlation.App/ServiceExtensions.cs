@@ -2,6 +2,7 @@
 {
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection.Extensions;
+    using Naos.Core.Common;
     using Naos.Core.RequestCorrelation.App;
     using Naos.Core.RequestCorrelation.App.Web;
 
@@ -23,6 +24,8 @@
             context.Services.TryAddSingleton<ICorrelationContextAccessor, CorrelationContextAccessor>();
             context.Services.TryAddTransient<ICorrelationContextFactory, CorrelationContextFactory>();
             context.Services.AddTransient<HttpClientCorrelationHandler>();
+
+            context.Messages.Add($"{LogEventKeys.General} naos builder: request correlation added");
 
             return context;
         }

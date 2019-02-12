@@ -4,6 +4,7 @@
     using MediatR;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
     using Naos.Core.Configuration.App;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Infrastructure.EntityFramework;
@@ -48,6 +49,8 @@
 
             options.Context.Services.AddHealthChecks()
                 .AddSqlServer(entityFrameworkConfiguration.ConnectionString, name: "UserAccounts-sqlserver");
+
+            options.Context.Messages.Add($"{LogEventKeys.General} naos builder: useraccounts service added");
 
             return options;
         }

@@ -33,7 +33,7 @@
 
                     // naos application services
                     services
-                        .AddNaos(configuration, "Product", capabilities[new Random().Next(0, capabilities.Length)])
+                        .Naos(configuration, "Product", capabilities[new Random().Next(0, capabilities.Length)])
                             .AddRequestCorrelation()
                             .AddOperations(o => o
                                 .AddLogging(l => l

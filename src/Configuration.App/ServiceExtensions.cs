@@ -3,6 +3,9 @@
     using System;
     using EnsureThat;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
     using Naos.Core.Configuration.App;
 
     /// <summary>
@@ -21,7 +24,7 @@
         /// <param name="setupAction"></param>
         /// <param name="section"></param>
         /// <returns></returns>
-        public static INaosBuilderContext AddNaos(
+        public static INaosBuilderContext Naos(
             this IServiceCollection services,
             IConfiguration configuration,
             string product = null,
@@ -43,6 +46,13 @@
                     tags: tags ?? naosConfiguration.Tags),
             };
             setupAction?.Invoke(new ServiceOptions(context));
+
+            var logger = services.BuildServiceProvider().GetRequiredService<ILoggerFactory>().CreateLogger("Naos");
+            foreach (var message in context.Messages.Safe())
+            {
+                logger.LogDebug(message);
+            }
+
             return context;
         }
 

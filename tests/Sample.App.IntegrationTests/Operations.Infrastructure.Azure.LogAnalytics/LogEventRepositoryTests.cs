@@ -17,7 +17,7 @@
             var configuration = NaosConfigurationFactory.Create();
 
             this.services
-                .AddNaos(configuration, "Product", "Capability")
+                .Naos(configuration, "Product", "Capability")
                     .AddOperations(o => o
                         .AddLogging(l => l
                             .AddAzureLogAnalytics(),

@@ -6,6 +6,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
     using Naos.Core.ServiceDiscovery.App;
     using Naos.Core.ServiceDiscovery.App.Web;
     //using ProxyKit;
@@ -25,6 +26,8 @@
                 new ServiceRegistryClient(sp.GetRequiredService<IServiceRegistry>()));
 
             setupAction?.Invoke(new ServiceDiscoveryOptions(context));
+
+            //context.Messages.Add($"{LogEventKeys.General} naos builder: service discovery added");
 
             return context;
         }
@@ -47,6 +50,8 @@
                 new FileSystemServiceRegistry(
                     sp.GetRequiredService<ILogger<FileSystemServiceRegistry>>(),
                     options.Context.Configuration?.GetSection($"{section}:registry:fileSystem").Get<FileSystemServiceRegistryConfiguration>()));
+
+            options.Context.Messages.Add($"{LogEventKeys.General} naos builder: service discovery added (registry={nameof(FileSystemServiceRegistry)})");
 
             return options;
         }
@@ -71,6 +76,8 @@
                     sp.GetRequiredService<ILogger<RemoteServiceRegistry>>(),
                     sp.GetRequiredService<IHttpClientFactory>().CreateClient(),
                     options.Context.Configuration?.GetSection($"{section}:registry:remote").Get<RemoteServiceRegistryConfiguration>()));
+
+            options.Context.Messages.Add($"{LogEventKeys.General} naos builder: service discovery added (registry={nameof(RemoteServiceRegistry)})");
 
             return options;
         }
