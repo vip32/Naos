@@ -21,5 +21,7 @@
         public int BufferSize { get; set; } = 10;
 
         public int BatchSize { get; set; } = 1;
+
+        public string LogName { get; set; }
     }
 }

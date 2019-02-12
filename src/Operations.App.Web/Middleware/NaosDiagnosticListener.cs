@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Commands.Operations.App.Web
+﻿namespace Naos.Core.Operations.App.Web
 {
     using System;
     using Microsoft.AspNetCore.Http;

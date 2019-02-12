@@ -19,8 +19,9 @@
             this.services
                 .AddNaos(configuration, "Product", "Capability")
                     .AddOperations(o => o
-                        .AddLogging(correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}")
-                        .AddLogAnalyticsDashboard())
+                        .AddLogging(l => l
+                            .AddAzureLogAnalytics(),
+                            correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}"))
                     .AddJobScheduling();
 
             this.ServiceProvider = this.services.BuildServiceProvider();

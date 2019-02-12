@@ -30,8 +30,7 @@
                         .AddSampleCustomers()
                         .AddSampleUserAccounts(dbContext: new UserAccountsContext(new DbContextOptionsBuilder().UseNaosSqlServer(configuration, "naos:sample:userAccounts:entityFramework").Options)))
                     .AddOperations(o => o
-                        .AddLogging(correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}")
-                        .AddLogAnalyticsDashboard())
+                        .AddLogging(correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}"))
                     .AddMessaging(o => o
                         //.AddFileSystemBroker()
                         //.AddSignalRBroker()

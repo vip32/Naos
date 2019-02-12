@@ -18,9 +18,9 @@
 
         public bool RollOnFileSizeLimit { get; set; } = false;
 
-        public string RollingInterval { get; set; } = "Day"; // Year, Month, Day, Hour, Minute, Infinite
+        public string RollingInterval { get; set; } = "Infinite"; // Year, Month, Day, Hour, Minute, Infinite
 
-        public bool Shared { get; set; } = true; // prevent multiple log files, true means slower due to write locks
+        public bool Shared { get; set; } = false; // prevent multiple log files, true means slower due to write locks
 
         public int? FlushToDiskIntervalSeconds { get; set; }
     }

@@ -20,25 +20,29 @@
         private readonly string subscriptionId;
         private readonly string resourceGroupName;
         private readonly string workspaceName;
+        private readonly string logName;
 
         public LogEventRepository(
             HttpClient httpClient,
             string accessToken,
             string subscriptionId,
             string resourceGroupName,
-            string workspaceName)
+            string workspaceName,
+            string logName)
         {
             EnsureArg.IsNotNullOrEmpty(accessToken, nameof(accessToken));
             EnsureArg.IsNotNull(httpClient, nameof(httpClient));
             EnsureArg.IsNotNullOrEmpty(subscriptionId, nameof(subscriptionId));
             EnsureArg.IsNotNullOrEmpty(resourceGroupName, nameof(resourceGroupName));
             EnsureArg.IsNotNullOrEmpty(workspaceName, nameof(workspaceName));
+            EnsureArg.IsNotNullOrEmpty(logName, nameof(logName));
 
             this.httpClient = httpClient;
             this.accessToken = accessToken;
             this.subscriptionId = subscriptionId;
             this.resourceGroupName = resourceGroupName;
             this.workspaceName = workspaceName;
+            this.logName = logName;
         }
 
         public Task<bool> ExistsAsync(object id)
@@ -51,7 +55,7 @@
             var epoch = DateTime.UtcNow.AddDays(-1).ToEpoch(); // should come from filtercontext
             var ticks = new DateTimeEpoch(epoch).DateTime.Ticks; // calculate ticks
             var query = $@"
-LogEvents_Development_CL | 
+{this.logName} | 
 where LogMessage_s != '' and 
   LogLevel_s != 'Verbose' and 
   LogProperties_ns_ticks_d > {ticks} |
@@ -111,7 +115,7 @@ limit 1000";
             {
                 var table = responseContent.Tables[0];
                 var keys = table.Columns.Safe().Select(
-                    c => c.ColumnName.NullToEmpty().Replace("LogProperties_", string.Empty).SubstringTillLast("_")).ToList();
+                    c => c.ColumnName.Safe().Replace("LogProperties_", string.Empty).SubstringTillLast("_")).ToList();
 
                 if (!table.Rows.IsNullOrEmpty())
                 {

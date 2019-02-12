@@ -136,6 +136,6 @@
             return result;
         }
 
-        private bool IsNumeric(string value) => value.NullToEmpty().All(char.IsDigit);
+        private bool IsNumeric(string value) => value.Safe().All(char.IsDigit);
     }
 }

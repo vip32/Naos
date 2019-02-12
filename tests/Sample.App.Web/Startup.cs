@@ -117,8 +117,7 @@
                     .AddOperations(o => o
                         .AddLogging(l => l
                             .AddFile()
-                            .AddAzureLogAnalytics())
-                        .AddLogAnalyticsDashboard())
+                            .AddAzureLogAnalytics()))
                     //.AddSwaggerDocument() // s.Description = Product.Capability\
                     .AddJobScheduling(o => o
                         .SetEnabled(true)

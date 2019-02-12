@@ -21,7 +21,11 @@
             var logFileConfiguration = options.Context.Configuration?.GetSection("naos:operations:logEvents:file").Get<LogFileConfiguration>();
             if (logFileConfiguration?.Enabled == true)
             {
-                var path = logFileConfiguration.File.EmptyToNull() ?? $"{options.Context.Descriptor.Name.Replace(".", "_")}.log"; // for local web root storage
+                // configure the serilog sink
+                var path = logFileConfiguration.File.EmptyToNull() ?? $"LogEvents_[PRODUCT]_[CAPABILITY]_[ENVIRONMENT].log"
+                    .Replace("[ENVIRONMENT]", options.Environment)
+                    .Replace("[PRODUCT]", options.Context.Descriptor?.Product)
+                    .Replace("[CAPABILITY]", options.Context.Descriptor?.Capability);
                 if (!logFileConfiguration.Folder.IsNullOrEmpty() && !logFileConfiguration.SubFolder.IsNullOrEmpty())
                 {
                     path = Path.Combine(logFileConfiguration.Folder, "naos_operations", path);
@@ -55,6 +59,7 @@
             var diagnosticsLogStreamConfiguration = options.Context.Configuration?.GetSection("naos:operations:logEvents:azureDiagnosticsLogStream").Get<DiagnosticsLogStreamConfiguration>();
             if (diagnosticsLogStreamConfiguration?.Enabled == true)
             {
+                // configure the serilog sink
                 // https://github.com/serilog/serilog-aspnetcore
                 options.LoggerConfiguration.WriteTo.File(
                     diagnosticsLogStreamConfiguration.File,
@@ -71,31 +76,6 @@
             return options;
         }
 
-        public static LoggingOptions AddAzureLogAnalytics(this LoggingOptions options)
-        {
-            EnsureArg.IsNotNull(options, nameof(options));
-            EnsureArg.IsNotNull(options.Context, nameof(options.Context));
-
-            var logAnalyticsConfiguration = options.Context.Configuration?.GetSection("naos:operations:azureLogAnalytics").Get<LogAnalyticsConfiguration>(); // TODO: move to operations:logevents:azureLogAnalytics
-            if (logAnalyticsConfiguration?.Enabled == true
-                && logAnalyticsConfiguration?.WorkspaceId.IsNullOrEmpty() == false
-                && logAnalyticsConfiguration?.AuthenticationId.IsNullOrEmpty() == false)
-            {
-                var logName = $"LogEvents_{options.Environment}";
-                options.LoggerConfiguration.WriteTo.AzureAnalytics(
-                    logAnalyticsConfiguration.WorkspaceId,
-                    logAnalyticsConfiguration.AuthenticationId,
-                    logName: logName,
-                    storeTimestampInUtc: true,
-                    logBufferSize: logAnalyticsConfiguration.BufferSize,
-                    batchSize: logAnalyticsConfiguration.BatchSize);
-
-                options.Messages.Add($"{LogEventKeys.Operations} logging: azureloganalytics sink added (name={logName}, workspace={logAnalyticsConfiguration.WorkspaceId})");
-            }
-
-            return options;
-        }
-
         public static LoggingOptions AddAzureApplicationInsights(this LoggingOptions options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
@@ -105,6 +85,7 @@
             if (appInsightsConfiguration?.Enabled == true
                 && appInsightsConfiguration?.ApplicationKey.IsNullOrEmpty() == false)
             {
+                // configure the serilog sink
                 //options.LoggerConfiguration.WriteTo.AppInsights(appInsightsConfiguration.ApplicationKey);
 
                 options.Messages.Add($"{LogEventKeys.Operations} logging: azureapplicationinsightssink added (application={appInsightsConfiguration.ApplicationKey})");

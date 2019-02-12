@@ -18,7 +18,7 @@
             return (source ?? Enumerable.Empty<TSource>()).Where(i => i != null);
         }
 
-        public static string NullToEmpty(this string source)
+        public static string Safe(this string source)
         {
             return source ?? string.Empty;
         }

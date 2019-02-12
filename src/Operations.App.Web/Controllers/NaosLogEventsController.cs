@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Commands.Operations.App.Web.Controllers
+﻿namespace Naos.Core.Operations.App.Web
 {
     using System;
     using System.Collections.Generic;
@@ -13,7 +13,7 @@
     using Naos.Core.Operations.Domain;
     using Naos.Core.Operations.Domain.Repositories;
 
-    [Route("api/operations/[controller]")]
+    [Route("api/operations/logevents")]
     [ApiController]
     public class NaosLogEventsController : ControllerBase // or use normal middleware?  https://stackoverflow.com/questions/47617994/how-to-use-a-controller-in-another-assembly-in-asp-net-core-mvc-2-0?rq=1
     {
