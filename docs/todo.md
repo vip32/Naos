@@ -37,6 +37,9 @@ OptionsBuilder instead of large ctors (for all non configration things like Mess
 NetCore 3.0 upgrade
  https://www.talkingdotnet.com/asp-net-core-3-0-app-with-net-core-3-preview-2-and-visual-studio-2019/
 
+Repositories
+  Use OptionsBuilder instead of many ctor arguments
+
 Inmemory Repo
   use concurrentdict instead of list https://github.com/SharpRepository/SharpRepository/blob/develop/SharpRepository.InMemoryRepository/InMemoryRepositoryBase.cs
 
