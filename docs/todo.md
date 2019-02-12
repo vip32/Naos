@@ -118,13 +118,13 @@ identity provider example https://alejandroruizvarela.blogspot.com/2018/11/aspne
 correlationid https://www.stevejgordon.co.uk/asp-net-core-correlation-ids
 polly logging ctx https://github.com/stevejgordon/PollyLoggingContextSample
 paged console https://github.com/damianh/EasyConsoleStd
+builder pattern https://code-maze.com/builder-design-pattern/ & https://code-maze.com/fluent-builder-recursive-generics/
 multi tenant (tenancy) https://github.com/Finbuckle/Finbuckle.MultiTenant
 role based authorization / access control http://jasonwatmore.com/post/2019/01/08/aspnet-core-22-role-based-authorization-tutorial-with-example-api
 attr based decorators https://app.pluralsight.com/player?course=cqrs-in-practice&author=vladimir-khorikov&name=22d61509-b7ab-4268-96f1-258bc8a95b99&clip=5&mode=live
 azure easy auth https://docs.microsoft.com/en-us/azure/app-service/overview-authentication-authorization?view=aspnetcore-2.2 & https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-auth-aad
 signalr client-server streaming https://docs.microsoft.com/en-us/aspnet/core/signalr/streaming?view=aspnetcore-2.2
                                 core 3 https://blogs.msdn.microsoft.com/webdev/2019/01/29/aspnet-core-3-preview-2/
-file storage abstraction https://github.com/FoundatioFx/Foundatio#file-storage
 metrics (AppMetrics)     https://github.com/FoundatioFx/Foundatio#metrics
 inter service JSON RPC http://www.jsonrpc.org/specification
                        on hold till MS stabalizes this (gRPC): https://github.com/grpc/grpc-dotnet
