@@ -50,14 +50,14 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            var appInsightsConfiguration = options.Context.Configuration?.GetSection("naos:operations:logEvents:azureApplicationInsights").Get<ApplicationInsightsConfiguration>();
-            if (appInsightsConfiguration?.Enabled == true
-                && appInsightsConfiguration?.ApplicationKey.IsNullOrEmpty() == false)
+            var configuration = options.Context.Configuration?.GetSection("naos:operations:logEvents:azureApplicationInsights").Get<ApplicationInsightsConfiguration>();
+            if (configuration?.Enabled == true
+                && configuration?.ApplicationKey.IsNullOrEmpty() == false)
             {
                 // configure the serilog sink
                 //options.LoggerConfiguration.WriteTo.AppInsights(appInsightsConfiguration.ApplicationKey);
 
-                options.Messages.Add($"{LogEventKeys.Operations} logging: azureapplicationinsightssink added (application={appInsightsConfiguration.ApplicationKey})");
+                options.Messages.Add($"{LogEventKeys.Operations} logging: azureapplicationinsightssink added (application={configuration.ApplicationKey})");
             }
 
             return options;
