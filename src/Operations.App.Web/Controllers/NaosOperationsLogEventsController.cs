@@ -4,38 +4,29 @@
     using System.Collections.Generic;
     using System.Net;
     using System.Threading.Tasks;
-    using EnsureThat;
     using Humanizer;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Logging;
+    using Naos.Core.App.Web.Controllers;
     using Naos.Core.Common;
     using Naos.Core.Operations.Domain;
     using Naos.Core.Operations.Domain.Repositories;
 
     [Route("api/operations/logevents")]
     [ApiController]
-    public class NaosLogEventsController : ControllerBase // or use normal middleware?  https://stackoverflow.com/questions/47617994/how-to-use-a-controller-in-another-assembly-in-asp-net-core-mvc-2-0?rq=1
+    public class NaosOperationsLogEventsController
+        : NaosReadOnlyRepositoryControllerBase<LogEvent, ILogEventRepository> // or use normal middleware?  https://stackoverflow.com/questions/47617994/how-to-use-a-controller-in-another-assembly-in-asp-net-core-mvc-2-0?rq=1
     {
-        private readonly ILogger<NaosLogEventsController> logger;
-        private readonly ILogEventRepository repository;
-
-        public NaosLogEventsController(
-            ILogger<NaosLogEventsController> logger,
-            ILogEventRepository repository)
+        public NaosOperationsLogEventsController(ILogEventRepository repository)
+            : base(repository)
         {
-            EnsureArg.IsNotNull(logger, nameof(logger));
-            EnsureArg.IsNotNull(repository, nameof(repository));
-
-            this.logger = logger;
-            this.repository = repository;
         }
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<IEnumerable<LogEvent>>> Get()
+        public override async Task<ActionResult<IEnumerable<LogEvent>>> Get()
         {
             //var acceptHeader = this.HttpContext.Request.Headers.GetValue("Accept");
             //if (acceptHeader.ContainsAny(new[] { ContentType.HTML.ToValue(), ContentType.HTM.ToValue() }))
@@ -59,7 +50,7 @@
 
         private async Task<IEnumerable<LogEvent>> GetJsonAsync()
         {
-            return await this.repository.FindAllAsync().AnyContext();
+            return await this.Repository.FindAllAsync().AnyContext();
         }
 
         private async Task GetHtmlAsync()
@@ -102,7 +93,7 @@
 <body>");
             try
             {
-                var logEvents = await this.repository.FindAllAsync().AnyContext();
+                var logEvents = await this.Repository.FindAllAsync().AnyContext();
                 foreach (var logEvent in logEvents)
                 {
                     var levelColor = "lime";
