@@ -15,6 +15,7 @@
         private static LoggerConfiguration internalLoggerConfiguration;
         private static string internalEnvironment;
         private static string internalCorrelationId;
+        private static ILoggerFactory factory;
 
         public static OperationsOptions AddLogging(
             this OperationsOptions options,
@@ -41,10 +42,11 @@
                 setupAction?.Invoke(loggingOptions);
             }
 
+            //options.Context.Services.AddSingleton(sp => CreateLoggerFactory());
             options.Context.Services.AddSingleton(sp =>
             {
                 var factory = CreateLoggerFactory();
-                //foreach(var message in loggingOptions?.Messages.Safe())
+                //foreach (var message in loggingOptions?.Messages.Safe())
                 //{
                 //    Log.Logger.Debug(message);
                 //}
@@ -59,10 +61,14 @@
 
         private static ILoggerFactory CreateLoggerFactory()
         {
-            Log.Logger = internalLoggerConfiguration.CreateLogger();
-            var factory = new LoggerFactory();
-            factory.AddSerilog(Log.Logger);
-            Log.Logger.Debug("{LogKey:l} logging: serilog initialized", LogEventKeys.Operations);
+            if(factory == null) // extra singleton because sometimes this is called multiple times. serilog does not like that
+            {
+                Log.Logger = internalLoggerConfiguration.CreateLogger();
+                factory = new LoggerFactory();
+                factory.AddSerilog(Log.Logger);
+                Log.Logger.Debug("{LogKey:l} logging: serilog initialized", LogEventKeys.Operations);
+            }
+
             return factory;
         }
 

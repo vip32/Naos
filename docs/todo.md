@@ -201,6 +201,9 @@ operations: log analytics rest api (repo) https://dev.loganalytics.io/reference
 operations: logevent repos (1-loganalytics, 2-cosmosdb) + specifications (ForCorrelationId, Since, Till, etc...)
 operations: render razor without mcv https://blogs.u2u.be/peter/post/using-razor-outside-of-mvc-for-building-custom-middleware-or-other-generation-stuff
                                      https://github.com/toddams/RazorLight
+            razor with ajax https://www.thereformedprogrammer.net/asp-net-core-razor-pages-how-to-implement-ajax-requests/
+            streamed json oboejs https://medium.com/@deaniusaur/how-to-stream-json-data-over-rest-with-observables-80e0571821d3
+                                 http://oboejs.com/examples#extracting-objects-from-the-json-stream
 operations: stream logevents https://www.tpeczek.com/2017/02/server-sent-events-sse-support-for.html
 operations: signalr https://github.com/dmitry26/Serilog.Sinks.SignalR.NetCore (console client example)
 

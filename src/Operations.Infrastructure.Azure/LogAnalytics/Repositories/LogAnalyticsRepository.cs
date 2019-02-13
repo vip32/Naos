@@ -7,6 +7,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
+    using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Domain.Specifications;
@@ -15,6 +16,7 @@
 
     public class LogAnalyticsRepository : ILogEventRepository
     {
+        private readonly ILogger<LogAnalyticsRepository> logger;
         private readonly HttpClient httpClient;
         private readonly string accessToken;
         private readonly string subscriptionId;
@@ -23,6 +25,7 @@
         private readonly string logName;
 
         public LogAnalyticsRepository(
+            ILoggerFactory loggerFactory,
             HttpClient httpClient,
             string accessToken,
             string subscriptionId,
@@ -30,6 +33,7 @@
             string workspaceName,
             string logName)
         {
+            EnsureArg.IsNotNull(loggerFactory, nameof(loggerFactory));
             EnsureArg.IsNotNullOrEmpty(accessToken, nameof(accessToken));
             EnsureArg.IsNotNull(httpClient, nameof(httpClient));
             EnsureArg.IsNotNullOrEmpty(subscriptionId, nameof(subscriptionId));
@@ -37,6 +41,7 @@
             EnsureArg.IsNotNullOrEmpty(workspaceName, nameof(workspaceName));
             EnsureArg.IsNotNullOrEmpty(logName, nameof(logName));
 
+            this.logger = loggerFactory.CreateLogger<LogAnalyticsRepository>();
             this.httpClient = httpClient;
             this.accessToken = accessToken;
             this.subscriptionId = subscriptionId;
@@ -50,21 +55,45 @@
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<LogEvent>> FindAllAsync(IFindOptions<LogEvent> options = null, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<LogEvent>> FindAllAsync(
+            IFindOptions<LogEvent> options = null,
+            CancellationToken cancellationToken = default)
         {
+            return await this.FindAllAsync(Enumerable.Empty<Specification<LogEvent>>(), null, CancellationToken.None);
+        }
+
+        public async Task<IEnumerable<LogEvent>> FindAllAsync(ISpecification<LogEvent> specification, IFindOptions<LogEvent> options = null, CancellationToken cancellationToken = default)
+        {
+            return await this.FindAllAsync(
+                new List<ISpecification<LogEvent>>(new[]
+                {
+                    specification
+                }), null, CancellationToken.None);
+        }
+
+        public async Task<IEnumerable<LogEvent>> FindAllAsync(IEnumerable<ISpecification<LogEvent>> specifications, IFindOptions<LogEvent> options = null, CancellationToken cancellationToken = default)
+        {
+            var s = specifications.FirstOrDefault()?.ToString();
+            var page = 1;
+            var pageSize = 100;
             var epoch = DateTime.UtcNow.AddDays(-1).ToEpoch(); // should come from filtercontext
             var ticks = new DateTimeEpoch(epoch).DateTime.Ticks; // calculate ticks
             var query = $@"
 {this.logName} | 
 where LogMessage_s != '' and 
   LogLevel_s != 'Verbose' and 
-  LogProperties_ns_ticks_d > {ticks} |
-order by LogProperties_ns_ticks_d desc |
-limit 1000";
+  LogProperties_{LogEventPropertyKeys.Ticks}_d > {ticks} |
+top 100 by LogProperties_{LogEventPropertyKeys.Ticks}_d desc
+//order by LogProperties_{LogEventPropertyKeys.Ticks}_d desc |
+//skip ({page}-1) * {pageSize} | top {pageSize}"; // 5000 = max
 
+            // limit 100 |
+
+            this.logger.LogInformation($"{{LogKey:l}} log analytics query: {query}", LogEventKeys.Operations); // TODO: move to request logging middleware (operations)
             // and LogProperties_ns_trktyp_s == 'journal'
 
             // query docs: https://docs.microsoft.com/en-us/azure/log-analytics/query-language/get-started-queries
+            //             https://docs.microsoft.com/en-us/azure/log-analytics/log-analytics-search-reference
             var response = await this.httpClient.SendAsync(
                 this.PrepareRequest(query),
                 cancellationToken).AnyContext();
@@ -72,21 +101,6 @@ limit 1000";
 
             return this.MapResponse(SerializationHelper.JsonDeserialize<LogAnalyticsResponse>(
                 await response.Content.ReadAsByteArrayAsync().AnyContext())).ToList();
-        }
-
-//LogEvents_Development_CL | where LogMessage_s != '' |
-//where TimeGenerated > ago(24h) and LogLevel_s != 'Verbose' |
-//order by Timestamp_t |
-//top 100000 by Timestamp_t
-
-        public Task<IEnumerable<LogEvent>> FindAllAsync(ISpecification<LogEvent> specification, IFindOptions<LogEvent> options = null, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<LogEvent>> FindAllAsync(IEnumerable<ISpecification<LogEvent>> specifications, IFindOptions<LogEvent> options = null, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
         }
 
         public Task<LogEvent> FindOneAsync(object id)
@@ -122,7 +136,8 @@ limit 1000";
                     foreach (var values in table.Rows)
                     {
                         var result = new LogEvent();
-                        foreach (var key in keys)
+                        foreach (var key in keys
+                            .Where(k => !k.EqualsAny(new[] { "TenantId", "SourceSystem", "TimeGenerated", "ConnectionId" })))
                         {
                             var value = values[keys.IndexOf(key)];
                             if (value != null && !string.IsNullOrEmpty(value.ToString()))
@@ -134,12 +149,22 @@ limit 1000";
                         result.Level = result.Properties.TryGetValue("LogLevel") as string;
                         result.Environment = result.Properties.TryGetValue(LogEventPropertyKeys.Environment) as string;
                         result.Message = result.Properties.TryGetValue("LogMessage") as string;
+                        result.Ticks = result.Properties.TryGetValue(LogEventPropertyKeys.Ticks).To<long>();
                         result.Timestamp = result.Properties.TryGetValue("Timestamp") is DateTime
                             ? (DateTime)result.Properties.TryGetValue("Timestamp")
                             : default;
                         result.CorrelationId = result.Properties.TryGetValue(LogEventPropertyKeys.CorrelationId) as string;
                         //result.ServiceDescriptor = result.Properties.TryGetValue("ServiceDescriptor") as string;
                         result.SourceContext = result.Properties.TryGetValue("SourceContext") as string;
+
+                        // remove some unneeded properties
+                        result.Properties.Remove("LogMessage");
+                        result.Properties.Remove("SourceContext");
+                        result.Properties.Remove("LogLevel");
+                        result.Properties.Remove("Timestamp");
+                        result.Properties.Remove("Scope");
+                        result.Properties.Remove(LogEventPropertyKeys.Ticks);
+                        result.Properties.Remove(LogEventPropertyKeys.Environment);
 
                         yield return result;
                     }

@@ -83,6 +83,7 @@
                                 // TODO: get these endpoints through DI for all active capabilities
                                 ["logevents-ui"] = $"{context.Request.Uri()}api/operations/logevents/dashboard",
                                 ["logevents"] = $"{context.Request.Uri()}api/operations/logevents",
+                                ["logevents2"] = $"{context.Request.Uri()}api/operations/logevents?q=Ticks=gt:636855734000000000,Environment=Development",
                                 ["swagger-ui"] = $"{context.Request.Uri()}swagger/index.html",
                                 ["swagger"] = $"{context.Request.Uri()}swagger/v1/swagger.json",
                                 ["health"] = $"{context.Request.Uri()}health",

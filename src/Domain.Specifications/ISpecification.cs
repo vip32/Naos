@@ -4,8 +4,9 @@
     using System.Linq.Expressions;
 
     public interface ISpecification<T>
-        //where T : class
     {
+        string Name { get; set; }
+
         Expression<Func<T, bool>> ToExpression();
 
         Func<T, bool> ToPredicate();

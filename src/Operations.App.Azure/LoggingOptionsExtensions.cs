@@ -5,6 +5,7 @@
     using EnsureThat;
     using global::Serilog;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Logging;
     using Microsoft.IdentityModel.Clients.ActiveDirectory;
     using Naos.Core.Common;
     using Naos.Core.Infrastructure.Azure;
@@ -108,6 +109,7 @@
                             configuration.ApiAuthentication?.ClientSecret)).Result;
 
                 return new LogAnalyticsRepository(
+                    sp.GetRequiredService<ILoggerFactory>(),
                     new System.Net.Http.HttpClient(), // TODO: resolve from container!
                     token?.AccessToken,
                     configuration.SubscriptionId,

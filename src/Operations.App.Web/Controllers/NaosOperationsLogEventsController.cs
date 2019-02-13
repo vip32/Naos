@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
     using Humanizer;
@@ -9,6 +10,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Naos.Core.App.Web.Controllers;
     using Naos.Core.Common;
+    using Naos.Core.Domain.Specifications;
     using Naos.Core.Operations.Domain;
     using Naos.Core.Operations.Domain.Repositories;
 
@@ -50,7 +52,8 @@
 
         private async Task<IEnumerable<LogEvent>> GetJsonAsync()
         {
-            return await this.Repository.FindAllAsync().AnyContext();
+            return await this.Repository.FindAllAsync(
+                this.FilterContext.GetSpecifications<LogEvent>()).AnyContext();
         }
 
         private async Task GetHtmlAsync()
@@ -93,7 +96,13 @@
 <body>");
             try
             {
-                var logEvents = await this.Repository.FindAllAsync().AnyContext();
+                var logEvents = await this.Repository.FindAllAsync(
+                    this.FilterContext.GetSpecifications<LogEvent>()).AnyContext();
+                //var v = 2212121;
+                //var spec = new Specification<LogEvent>(e => e.Ticks < 2212121);
+                //var logEvents2 = await this.Repository.FindAllAsync(
+                //    this.FilterContext.GetSpecifications<LogEvent>()).AnyContext();
+
                 foreach (var logEvent in logEvents)
                 {
                     var levelColor = "lime";

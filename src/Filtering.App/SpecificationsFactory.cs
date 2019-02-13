@@ -20,7 +20,7 @@
             {
                 try
                 {
-                    result.Add(new Specification<T>(criteria.ToExpression<T>()));
+                    result.Add(new Specification<T>(criteria.ToExpression<T>()){ Name = criteria.Name });
                 }
                 catch (ArgumentException ex)
                 {

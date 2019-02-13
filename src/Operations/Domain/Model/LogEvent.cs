@@ -39,6 +39,8 @@
 
         public DateTime Timestamp { get; set; }
 
+        public long Ticks { get; set; }
+
         public string CorrelationId { get; set; }
 
         public string ServiceDescriptor { get; set; }

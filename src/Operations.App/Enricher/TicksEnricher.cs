@@ -3,6 +3,7 @@
     using System;
     using global::Serilog.Core;
     using global::Serilog.Events;
+    using Naos.Core.Common;
 
     public class TicksEnricher : ILogEventEnricher
     {
@@ -13,7 +14,8 @@
                 return;
             }
 
-            logEvent.AddPropertyIfAbsent(new LogEventProperty("ns_ticks", new ScalarValue(DateTime.UtcNow.Ticks)));
+            logEvent.AddPropertyIfAbsent(
+                new LogEventProperty(LogEventPropertyKeys.Ticks, new ScalarValue(DateTime.UtcNow.Ticks)));
         }
     }
 }

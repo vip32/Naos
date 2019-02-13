@@ -1,8 +1,9 @@
 ﻿namespace Naos.Core.Domain.Specifications
 {
     using System;
+    using System.Linq.Dynamic.Core;
     using System.Linq.Expressions;
-    using Jokenizer.Net;
+    using Naos.Core.Common;
 
     public /*abstract*/ class Specification<T> : ISpecification<T>
     {
@@ -20,9 +21,15 @@
 
         public Specification(string expression)
         {
-            this.expression = Evaluator.ToLambda<T, bool>(
-                Tokenizer.Parse($"(t) => t.{expression}"));
+            this.expression = DynamicExpressionParser
+                .ParseLambda<T, bool>(ParsingConfig.Default, false, expression);
+
+            // jokenizer
+            //this.expression = Evaluator.ToLambda<T, bool>(
+            //    Tokenizer.Parse($"(t) => t.{expression}"));
         }
+
+        public string Name { get; set; }
 
         public virtual Expression<Func<T, bool>> ToExpression()
         {
@@ -79,7 +86,8 @@
         {
             if(this.expression != null)
             {
-                return this.ToExpression()?.ToString();
+                return this.ToExpression()?.ToString()
+                    .Replace("Param_0", "it").SubstringFrom("=> ");
             }
 
             return null;

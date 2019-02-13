@@ -2,9 +2,9 @@
 {
     using System;
     using System.Linq;
+    using System.Linq.Dynamic.Core;
     using System.Linq.Expressions;
     using EnsureThat;
-    using Jokenizer.Net;
 
     public class Criteria
     {
@@ -32,7 +32,11 @@
 
         public Expression<Func<T, bool>> ToExpression<T>()
         {
-            return Evaluator.ToLambda<T, bool>(Tokenizer.Parse(this.ToString()));
+            return DynamicExpressionParser
+                .ParseLambda<T, bool>(ParsingConfig.Default, false, this.ToString());
+
+            // jokenizer
+            //return Evaluator.ToLambda<T, bool>(Tokenizer.Parse(this.ToString()));
         }
 
         public override string ToString()
@@ -41,13 +45,29 @@
             if (this.Operator.IsFunction())
             {
                 // function based operator
-                return $"(t) => t.{this.Name}.{this.Operator.ToValue()}({quote}{this.Value}{quote})";
+                return $"(it.{this.Name}.{this.Operator.ToValue()}({quote}{this.Value}{quote}))";
             }
             else
             {
                 // standard operators
-                return $"(t) => t.{this.Name}{this.Operator.ToValue()}{quote}{this.Value}{quote}";
+                return $"(it.{this.Name}{this.Operator.ToValue()}{quote}{this.Value}{quote})";
             }
         }
+
+        // jokenizer
+        //public override string ToString()
+        //{
+        //    var quote = this.IsNumeric ? string.Empty : "\"";
+        //    if (this.Operator.IsFunction())
+        //    {
+        //        // function based operator
+        //        return $"(t) => t.{this.Name}.{this.Operator.ToValue()}({quote}{this.Value}{quote})";
+        //    }
+        //    else
+        //    {
+        //        // standard operators
+        //        return $"(t) => t.{this.Name}{this.Operator.ToValue()}{quote}{this.Value}{quote}";
+        //    }
+        //}
     }
 }

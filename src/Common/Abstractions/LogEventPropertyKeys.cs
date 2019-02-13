@@ -2,6 +2,7 @@
 {
     public struct LogEventPropertyKeys
     {
+        public const string Ticks = "ns_ticks";
         public const string CorrelationId = "ns_corid";
         public const string RequestId = "ns_reqid";
         public const string TenantId = "ns_tntid";

@@ -47,11 +47,11 @@
             };
             setupAction?.Invoke(new ServiceOptions(context));
 
-            var logger = services.BuildServiceProvider().GetRequiredService<ILoggerFactory>().CreateLogger("Naos");
-            foreach (var message in context.Messages.Safe())
-            {
-                logger.LogDebug(message);
-            }
+            //var logger = services.BuildServiceProvider().GetRequiredService<ILoggerFactory>().CreateLogger("Naos");
+            //foreach (var message in context.Messages.Safe())
+            //{
+            //    logger.LogDebug(message);
+            //}
 
             return context;
         }
