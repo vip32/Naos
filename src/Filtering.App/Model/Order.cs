@@ -19,7 +19,7 @@
 
         public override string ToString()
         {
-            return $"(t) => t.{this.Name} ({this.Direction.ToDescription()})";
+            return $"({this.Name})";
         }
     }
 }

@@ -42,7 +42,7 @@
         {
             foreach (var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
             {
-                this.logger.LogDebug($"{LogEventKeys.DomainRepository} order: {order.Expression?.ToString()}");
+                this.logger.LogDebug($"{LogEventKeys.DomainRepository} order: {order.Expression.ToExpressionString()}");
             }
 
             return await this.decoratee.FindAllAsync(options, cancellationToken).AnyContext();
@@ -57,7 +57,7 @@
 
             foreach (var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
             {
-                this.logger.LogDebug($"{LogEventKeys.DomainRepository} order: {order.Expression?.ToString()}");
+                this.logger.LogDebug($"{LogEventKeys.DomainRepository} order: {order.Expression.ToExpressionString()}");
             }
 
             return await this.decoratee.FindAllAsync(specification, options, cancellationToken).AnyContext();
@@ -72,7 +72,7 @@
 
             foreach (var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
             {
-                this.logger.LogDebug($"{LogEventKeys.DomainRepository} order: {order.Expression?.ToString()}");
+                this.logger.LogDebug($"{LogEventKeys.DomainRepository} order: {order.Expression.ToExpressionString()}");
             }
 
             return await this.decoratee.FindAllAsync(specifications, options, cancellationToken).AnyContext();

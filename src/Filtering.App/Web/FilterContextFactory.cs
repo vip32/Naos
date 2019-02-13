@@ -97,9 +97,9 @@
                         // TODO: properly determine numeric oder not and pass to criteria
             }
 
-            if (result.Any())
+            if (result.Count > 0)
             {
-                this.logger.LogDebug($"{{LogKey:l}} [{request.HttpContext.GetRequestId()}] http filter criterias={result.Select(c => c.ToString().SubstringFrom("t.")).ToString("|")}", LogEventKeys.InboundRequest);
+                this.logger.LogDebug($"{{LogKey:l}} [{request.HttpContext.GetRequestId()}] http filter criterias={result.Select(c => c.ToString()).ToString("|")}", LogEventKeys.InboundRequest);
             }
 
             return result;
@@ -128,14 +128,14 @@
                         Enum.TryParse(direction, true, out OrderDirection e) ? e : OrderDirection.Asc));
             }
 
-            if (result.Any())
+            if (result.Count > 0)
             {
-                this.logger.LogDebug($"{{LogKey:l}} [{request.HttpContext.GetRequestId()}] http filter orders={result.Select(c => c.ToString().SubstringFrom("t.")).ToString("|")}", LogEventKeys.InboundRequest);
+                this.logger.LogDebug($"{{LogKey:l}} [{request.HttpContext.GetRequestId()}] http filter orders={result.Select(o => o.ToString()).ToString("|")}", LogEventKeys.InboundRequest);
             }
 
             return result;
         }
 
-        private bool IsNumeric(string value) => value.Safe().All(char.IsDigit);
+        //private bool IsNumeric(string value) => value.Safe().All(char.IsDigit);
     }
 }

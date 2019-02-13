@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.Common
 {
     using System;
+    using System.Linq.Dynamic.Core;
     using System.Linq.Expressions;
 
     public static class ExpressionHelper
@@ -27,6 +28,38 @@
         public static Func<T, object> GetFunc<T>(string propertyName)
         {
             return GetExpression<T>(propertyName).Compile();
+        }
+
+        public static string ToExpressionString<T>(this Expression<Func<T, bool>> source)
+        {
+            if (source != null)
+            {
+                var result = source.ToString();
+                // strip the parameter from the expression
+                var name = result.SubstringTill(" =>");
+                return result.Replace($"{name}.", string.Empty).SubstringFrom("=> ");
+            }
+
+            return null;
+        }
+
+        public static string ToExpressionString<T>(this Expression<Func<T, object>> source)
+        {
+            if (source != null)
+            {
+                var result = source.ToString();
+                // strip the parameter from the expression
+                var name = result.SubstringTill(" =>");
+                return result.Replace($"{name}.", string.Empty).SubstringFrom("=> ");
+            }
+
+            return null;
+        }
+
+        public static Expression<Func<T, bool>> FromExpressionString<T>(string expression)
+        {
+            return DynamicExpressionParser
+               .ParseLambda<T, bool>(ParsingConfig.Default, false, expression);
         }
     }
 }

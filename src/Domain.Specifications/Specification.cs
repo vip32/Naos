@@ -3,6 +3,7 @@
     using System;
     using System.Linq.Dynamic.Core;
     using System.Linq.Expressions;
+    using EnsureThat;
     using Naos.Core.Common;
 
     public /*abstract*/ class Specification<T> : ISpecification<T>
@@ -21,8 +22,9 @@
 
         public Specification(string expression)
         {
-            this.expression = DynamicExpressionParser
-                .ParseLambda<T, bool>(ParsingConfig.Default, false, expression);
+            EnsureArg.IsNotNullOrEmpty(expression);
+
+            this.expression = ExpressionHelper.FromExpressionString<T>(expression);
 
             // jokenizer
             //this.expression = Evaluator.ToLambda<T, bool>(
@@ -84,13 +86,7 @@
 
         public override string ToString()
         {
-            if(this.expression != null)
-            {
-                return this.ToExpression()?.ToString()
-                    .Replace("Param_0", "it").SubstringFrom("=> ");
-            }
-
-            return null;
+            return this.expression.ToExpressionString();
         }
     }
 }

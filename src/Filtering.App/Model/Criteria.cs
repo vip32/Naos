@@ -5,6 +5,7 @@
     using System.Linq.Dynamic.Core;
     using System.Linq.Expressions;
     using EnsureThat;
+    using Naos.Core.Common;
 
     public class Criteria
     {
@@ -32,25 +33,28 @@
 
         public Expression<Func<T, bool>> ToExpression<T>()
         {
-            return DynamicExpressionParser
-                .ParseLambda<T, bool>(ParsingConfig.Default, false, this.ToString());
+            return ExpressionHelper.FromExpressionString<T>(this.ToString());
 
             // jokenizer
             //return Evaluator.ToLambda<T, bool>(Tokenizer.Parse(this.ToString()));
         }
 
+        /// <summary>
+        /// Returns a string representation for this specification
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             var quote = this.IsNumeric ? string.Empty : "\"";
             if (this.Operator.IsFunction())
             {
                 // function based operator
-                return $"(it.{this.Name}.{this.Operator.ToValue()}({quote}{this.Value}{quote}))";
+                return $"({this.Name}.{this.Operator.ToValue()}({quote}{this.Value}{quote}))";
             }
             else
             {
                 // standard operators
-                return $"(it.{this.Name}{this.Operator.ToValue()}{quote}{this.Value}{quote})";
+                return $"({this.Name}{this.Operator.ToValue()}{quote}{this.Value}{quote})";
             }
         }
 
