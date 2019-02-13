@@ -254,7 +254,7 @@ The same registries as Client-side can be used in the router.
 
 ### operations setup (Azure Log Analytics)
 - logging setup: workspaceId, authenticationKey
-- apiAuthentication identity: https://dev.int.loganalytics.io/documentation/1-Tutorials/ARM-API
+- apiAuthentication identity: https://dev.loganalytics.io/documentation/1-Tutorials/ARM-API
 
 
 # JobScheduling
