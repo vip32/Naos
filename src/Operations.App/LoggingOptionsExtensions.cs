@@ -6,7 +6,6 @@
     using global::Serilog;
     using Microsoft.Extensions.Configuration;
     using Naos.Core.Common;
-    using Naos.Core.Infrastructure.Azure;
     using Naos.Core.Operations.App;
 
     public static class LoggingOptionsExtensions

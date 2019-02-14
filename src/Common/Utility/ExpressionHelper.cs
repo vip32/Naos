@@ -58,6 +58,7 @@
 
         public static Expression<Func<T, bool>> FromExpressionString<T>(string expression)
         {
+            // Param_0 = T
             return DynamicExpressionParser
                .ParseLambda<T, bool>(ParsingConfig.Default, false, expression);
         }

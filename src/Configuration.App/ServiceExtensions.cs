@@ -3,9 +3,6 @@
     using System;
     using EnsureThat;
     using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
     using Naos.Core.Configuration.App;
 
     /// <summary>

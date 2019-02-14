@@ -78,7 +78,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Domain.Repositories\InMemory\" />
     <Folder Include="Domain\Events\" />
     <Folder Include="Domain\Model\" />
     <Folder Include="Domain\Repositories\Extensions\" />
@@ -88,7 +87,6 @@
     <Folder Include="App.Web\" />
     <Folder Include="Infrastructure.CosmosDb\" />
     <Folder Include="Correlation\" />
-    <Folder Include="RequestFiltering\" />
   </ItemGroup>
 
   <ItemGroup>

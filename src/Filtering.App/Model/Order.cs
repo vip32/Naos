@@ -1,7 +1,6 @@
 ﻿namespace Naos.Core.RequestFiltering.App
 {
     using EnsureThat;
-    using Naos.Core.Common;
 
     public class Order
     {

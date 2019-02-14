@@ -58,7 +58,7 @@ branch_o=""
 slug_o=""
 prefix_o=""
 
-commit="$VCS_COMMIT_ID"
+commit="$VCS_COMMIT_ID" # $VCS_COMMIT_ID
 branch="$VCS_BRANCH_NAME"
 pr="$VCS_PULL_REQUEST"
 slug="$VCS_SLUG"

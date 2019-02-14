@@ -12,11 +12,16 @@
         /// </summary>
         /// <param name="request">The request.</param>
         /// <param name="criteriaQueryStringKey">The criteria query string key.</param>
-        /// <param name="orderByQueryStringKey">The order by query string key.</param>
+        /// <param name="orderQueryStringKey">The order by query string key.</param>
         /// <param name="skipQueryStringKey">The skip query string key.</param>
         /// <param name="takeQueryStringKey">The take query string key.</param>
         /// <returns></returns>
-        FilterContext Create(HttpRequest request, string criteriaQueryStringKey, string orderByQueryStringKey, string skipQueryStringKey, string takeQueryStringKey);
+        FilterContext Create(
+            HttpRequest request,
+            string criteriaQueryStringKey = QueryStringKeys.Criteria,
+            string orderQueryStringKey = QueryStringKeys.Order,
+            string skipQueryStringKey = QueryStringKeys.Skip,
+            string takeQueryStringKey = QueryStringKeys.Take);
 
         /// <summary>
         /// Disposes of the <see cref="FilterContext"/> for the current request.

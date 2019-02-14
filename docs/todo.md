@@ -32,19 +32,18 @@ Marketing
 
 TODO:
 
+use Codecov token from azure devop variables in YAML > $(codecov-token) 
+
 OptionsBuilder instead of large ctors (for all non configration things like MessageBrokers/Repositories)
 
 NetCore 3.0 upgrade
  https://www.talkingdotnet.com/asp-net-core-3-0-app-with-net-core-3-preview-2-and-visual-studio-2019/
 
 Repositories
-  Use OptionsBuilder instead of many ctor arguments
+  Use OptionsBuilder instead of too many ctor arguments
 
 Inmemory Repo
   use concurrentdict instead of list https://github.com/SharpRepository/SharpRepository/blob/develop/SharpRepository.InMemoryRepository/InMemoryRepositoryBase.cs
-
-Filtering
-  Convert order/skip/take to FindOptions for repositories
 
 Better Guard (+snippets)
   https://github.com/safakgur/guard/tree/master
@@ -63,11 +62,8 @@ Repositories
   Decorator setup with scrutor Decorators (services.Decorate) https://github.com/khellang/Scrutor
   Caching decorator https://github.com/thangchung/awesome-dotnet-core#caching
 
-ServiceDiscovery
-  Reverse proxy (router)
-
 Documentation
-  Diagrams for ServiceDiscovery(proxy, router)
+  [DONE] Diagrams for ServiceDiscovery(proxy, router)
   Diagrams for Commands
   Diagrams for Messaging
   Diagrams for Scheduling

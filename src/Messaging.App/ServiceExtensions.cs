@@ -2,7 +2,6 @@
 {
     using System;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.App;
 

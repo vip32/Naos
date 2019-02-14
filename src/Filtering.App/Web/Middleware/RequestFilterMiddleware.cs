@@ -47,7 +47,7 @@
         /// <returns></returns>
         public async Task Invoke(HttpContext context, IFilterContextFactory contextFactory)
         {
-            var filterContext = contextFactory.Create(context?.Request, this.options.CriteriaQueryStringKey, this.options.OrderByQueryStringKey, this.options.SkipQueryStringKey, this.options.TakeQueryStringKey);
+            var filterContext = contextFactory.Create(context?.Request, this.options.CriteriaQueryStringKey, this.options.OrderQueryStringKey, this.options.SkipQueryStringKey, this.options.TakeQueryStringKey);
             if (filterContext.Enabled)
             {
                 this.logger.LogInformation($"{{LogKey:l}} [{context.GetRequestId()}] http filter context={{@FilterContext}}", LogEventKeys.InboundRequest, filterContext);

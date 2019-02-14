@@ -38,12 +38,17 @@
         }
 
         /// <inheritdoc />
-        public FilterContext Create(HttpRequest request, string criteriaQueryStringKey, string orderByQueryStringKey, string skipQueryStringKey, string takeQueryStringKey)
+        public FilterContext Create(
+            HttpRequest request,
+            string criteriaQueryStringKey = QueryStringKeys.Criteria,
+            string orderQueryStringKey = QueryStringKeys.Order,
+            string skipQueryStringKey = QueryStringKeys.Skip,
+            string takeQueryStringKey = QueryStringKeys.Take)
         {
             var result = new FilterContext
             {
                 Criterias = this.BuildCriterias(request, criteriaQueryStringKey),
-                Orders = this.BuildOrders(request, orderByQueryStringKey),
+                Orders = this.BuildOrders(request, orderQueryStringKey),
                 Skip = request?.Query?.FirstOrDefault(p => p.Key.Equals(skipQueryStringKey, StringComparison.OrdinalIgnoreCase)).Value.FirstOrDefault().ToNullableInt(),
                 Take = request?.Query?.FirstOrDefault(p => p.Key.Equals(takeQueryStringKey, StringComparison.OrdinalIgnoreCase)).Value.FirstOrDefault().ToNullableInt()
             };
@@ -65,15 +70,15 @@
             }
         }
 
-        private IEnumerable<Criteria> BuildCriterias(HttpRequest request, string criteriaQueryStringKey)
+        private IEnumerable<Criteria> BuildCriterias(HttpRequest request, string queryStringKey)
         {
-            if (request?.Query?.ContainsKey(criteriaQueryStringKey) == false)
+            if (request?.Query?.ContainsKey(queryStringKey) == false)
             {
                 return Enumerable.Empty<Criteria>();
             }
 
             // correlationId=eq:2b34cc25-cd06-475c-8f9c-c42791f49b46,timestamp=qte:01-01-1980,level=eq:debug,OR,level=eq:information
-            var query = request.Query.FirstOrDefault(p => p.Key.Equals(criteriaQueryStringKey, StringComparison.OrdinalIgnoreCase));
+            var query = request.Query.FirstOrDefault(p => p.Key.Equals(queryStringKey, StringComparison.OrdinalIgnoreCase));
             var items = query.Value.ToString().Split(',');
 
             var result = new List<Criteria>();
@@ -105,15 +110,15 @@
             return result;
         }
 
-        private IEnumerable<Order> BuildOrders(HttpRequest request, string orderByQueryStringKey)
+        private IEnumerable<Order> BuildOrders(HttpRequest request, string queryStringKey)
         {
-            if (request?.Query?.ContainsKey(orderByQueryStringKey) == false)
+            if (request?.Query?.ContainsKey(queryStringKey) == false)
             {
                 return Enumerable.Empty<Order>();
             }
 
             // order=desc:timestamp,level
-            var query = request.Query.FirstOrDefault(p => p.Key.Equals(orderByQueryStringKey, StringComparison.OrdinalIgnoreCase));
+            var query = request.Query.FirstOrDefault(p => p.Key.Equals(queryStringKey, StringComparison.OrdinalIgnoreCase));
             var items = query.Value.ToString().Split(',');
 
             var result = new List<Order>();

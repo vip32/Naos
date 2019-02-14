@@ -1,6 +1,5 @@
 ﻿namespace Naos.Core.Operations.App
 {
-    using System.Collections.Generic;
     using Microsoft.Extensions.DependencyInjection;
     using Serilog;
 

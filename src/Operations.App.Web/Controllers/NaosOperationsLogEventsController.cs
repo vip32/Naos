@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
     using Humanizer;
@@ -10,7 +9,6 @@
     using Microsoft.AspNetCore.Mvc;
     using Naos.Core.App.Web.Controllers;
     using Naos.Core.Common;
-    using Naos.Core.Domain.Specifications;
     using Naos.Core.Operations.Domain;
     using Naos.Core.Operations.Domain.Repositories;
 

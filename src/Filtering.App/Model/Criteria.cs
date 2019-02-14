@@ -2,7 +2,6 @@
 {
     using System;
     using System.Linq;
-    using System.Linq.Dynamic.Core;
     using System.Linq.Expressions;
     using EnsureThat;
     using Naos.Core.Common;
@@ -19,8 +18,15 @@
 
             this.Name = name;
             this.Operator = @operator;
-            this.Value = value ?? new object();
             this.IsNumeric = isNumeric ?? value.ToString().All(char.IsDigit);
+            if (this.IsNumeric)
+            {
+                this.Value = value.To<long>();
+            }
+            else
+            {
+                this.Value = value ?? new object();
+            }
         }
 
         public string Name { get; }
