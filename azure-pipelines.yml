@@ -1,7 +1,6 @@
 variables:
   solution: "**/*.sln"
   buildConfiguration: "Release"
-  codecovToken: "$(codecov.token)"
   group: vars # azure pipelines variable group https://docs.microsoft.com/en-us/azure/devops/pipelines/library/variable-groups?view=azdevops&tabs=yaml
 trigger:
 - master
@@ -55,7 +54,7 @@ steps:
       targetType: "filePath"
       filePath: "./tests/UnitTests/CodecovUploader.sh"
       workingDirectory: $(Build.ArtifactStagingDirectory)
-      arguments: "-f coverage.xml -t $(codecovToken) -B $(Build.SourceBranchName) -C $(Build.SourceVersion) -b $(Build.BuildNumber)"
+      arguments: "-f coverage.xml -t $(codecov-token) -B $(Build.SourceBranchName) -C $(Build.SourceVersion) -b $(Build.BuildNumber)"
 
   - task: DotNetCoreCLI@2
     displayName: "dotnet publish"
