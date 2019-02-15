@@ -75,13 +75,24 @@ A service can subscribe to specific messages, but can also publish messages byit
 A service's (inboud) API encapsulates its internal implementation. The service cannot be used in any other way, this API enforces the 
 application's modularity.
 
-# Microservice benefits
+# Microservice 
+
+### Benefits
 
 - Independent development: Developers can work on different microservices at the same time and choose the best technologies for the problem they are solving.
 - Independent release and deployment: Services can be updated individually on their own schedule.
 - Granular scaling: Individual services can scale independently, reducing the overall cost and increasing reliability.
 - Simplicity: Smaller services are easier to understand which expedites development, testing, debugging, and launching a product.
 - Fault isolation: Failure of a service does not have to translate into failure of other services.
+
+### Design Principles
+
+- High cohesion
+- Autonomous
+- Domain centric 
+- Resiliency
+- Observable
+- Automation
 
 # Configuration
 
@@ -103,6 +114,7 @@ application's modularity.
   - Azure Eventbus
   - SignalR
   - Local filesystem
+- Patterns: Competing workers, Fanout
 
 ### Messaging setup (Azure ServiceBus)
 
