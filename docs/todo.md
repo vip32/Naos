@@ -72,6 +72,9 @@ Service
   Api versioning
   Request Rate limiting https://github.com/stefanprodan/AspNetCoreRateLimit
 
+FileStorage
+  Azure Storage File Share implementation (REST + SDK) https://app.pluralsight.com/library/courses/microsoft-azure-file-storage-implementing/table-of-contents
+
 KeyVault cache (peristent)
   improve local service startup (due to vault requests)
   https://github.com/SanderSade/Sander.KeyVaultCache

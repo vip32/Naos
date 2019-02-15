@@ -9,9 +9,9 @@
 
     public static class Extensions
     {
-        public static IEnumerable<CloudBlockBlob> MatchesPattern(this IEnumerable<CloudBlockBlob> blobs, Regex patternRegex)
+        public static IEnumerable<CloudBlockBlob> Matches(this IEnumerable<CloudBlockBlob> blobs, Regex pattern)
         {
-            return blobs.Where(blob => patternRegex == null || patternRegex.IsMatch(blob.ToFileInfo().Path));
+            return blobs.Where(blob => pattern == null || pattern.IsMatch(blob.ToFileInfo().Path));
         }
 
         public static FileInformation ToFileInfo(this CloudBlockBlob blob)

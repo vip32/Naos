@@ -15,18 +15,18 @@
     using Naos.Core.Common.Serialization;
     using Naos.Core.FileStorage.Domain;
 
-    public class AzureFileStorage : IFileStorage
+    public class AzureBlobStorage : IFileStorage
     {
-        private readonly ILogger<AzureFileStorage> logger;
+        private readonly ILogger<AzureBlobStorage> logger;
         private readonly CloudBlobContainer container;
         private readonly ISerializer serializer;
 
-        public AzureFileStorage(AzureFileStorageOptions options)
+        public AzureBlobStorage(AzureBlobStorageOptions options)
         {
             EnsureArg.IsNotNull(options.LoggerFactory, nameof(options.LoggerFactory));
 
-            this.logger = options.LoggerFactory.CreateLogger<AzureFileStorage>();
-            options = options ?? new AzureFileStorageOptions();
+            this.logger = options.LoggerFactory.CreateLogger<AzureBlobStorage>();
+            options = options ?? new AzureBlobStorageOptions();
             this.Serializer = options.Serializer ?? DefaultSerializer.Instance;
 
             this.container = CloudStorageAccount.Parse(options.ConnectionString)
@@ -36,8 +36,8 @@
             this.serializer = options.Serializer ?? DefaultSerializer.Instance;
         }
 
-        public AzureFileStorage(Builder<AzureFileStorageOptionsBuilder, AzureFileStorageOptions> config)
-            : this(config(new AzureFileStorageOptionsBuilder()).Build())
+        public AzureBlobStorage(Builder<AzureBlobStorageOptionsBuilder, AzureBlobStorageOptions> config)
+            : this(config(new AzureBlobStorageOptionsBuilder()).Build())
         {
         }
 
@@ -197,7 +197,7 @@
                 continuationToken = listingResult.ContinuationToken;
 
                 // TODO: Implement paging
-                blobs.AddRange(listingResult.Results.OfType<CloudBlockBlob>().MatchesPattern(patternRegex));
+                blobs.AddRange(listingResult.Results.OfType<CloudBlockBlob>().Matches(patternRegex));
             }
             while (continuationToken != null && blobs.Count < limit.GetValueOrDefault(int.MaxValue));
 

@@ -3,7 +3,7 @@
     using Naos.Core.Common;
     using Naos.Core.Common.Serialization;
 
-    public class AzureFileStorageOptions : BaseOptions
+    public class AzureBlobStorageOptions : BaseOptions
     {
         public string ConnectionString { get; set; }
 
