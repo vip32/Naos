@@ -26,6 +26,21 @@ C#, .Net Core 2.x, EnsureThat, Serilog, Mediator, FluentValidation, AutoMapper, 
 - pattern: Queries
 - pattern: Messaging (servicebus, signalr, filesystem, rabbitmq)
 
+#### Service API
+- Style: 
+  - Pragmatic REST: resources, http verbs, crud + actions/commands
+  - RPC: commands?
+- Patterns: 
+  - Stateless: clients maintain state [Controller]
+  - Facade: the API acts as a facade, domain logic exists beyond it [Controller]
+  - Proxy: wrapper for external entities (+validation, +transformation) [ServiceDiscoveryClient]
+  
+#### Messaging
+- Patterns: 
+  - Competing workers,
+  - Fanout
+
+
 # Getting started
 ## Sample
 [^](SAMPLE.md)
@@ -114,7 +129,6 @@ application's modularity.
   - Azure Eventbus
   - SignalR
   - Local filesystem
-- Patterns: Competing workers, Fanout
 
 ### Messaging setup (Azure ServiceBus)
 
