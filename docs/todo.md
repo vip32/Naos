@@ -32,15 +32,15 @@ Marketing
 
 TODO:
 
+Repositories
+  Use OptionsBuilder instead of too many ctor arguments
+
 use Codecov token from azure devop variables in YAML > $(codecov-token) 
 
 OptionsBuilder instead of large ctors (for all non configration things like MessageBrokers/Repositories)
 
 NetCore 3.0 upgrade
  https://www.talkingdotnet.com/asp-net-core-3-0-app-with-net-core-3-preview-2-and-visual-studio-2019/
-
-Repositories
-  Use OptionsBuilder instead of too many ctor arguments
 
 Inmemory Repo
   use concurrentdict instead of list https://github.com/SharpRepository/SharpRepository/blob/develop/SharpRepository.InMemoryRepository/InMemoryRepositoryBase.cs
