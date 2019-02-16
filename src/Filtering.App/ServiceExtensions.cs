@@ -11,19 +11,20 @@
         /// <summary>
         /// Adds required services to support the request filtering functionality.
         /// </summary>
-        /// <param name="context"></param>
+        /// <param name="naosOptions"></param>
         /// <returns></returns>
-        public static INaosBuilderContext AddRequestFiltering(
-            this INaosBuilderContext context)
+        public static NaosOptions AddRequestFiltering(
+            this NaosOptions naosOptions)
         {
-            EnsureArg.IsNotNull(context, nameof(context));
+            EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
+            EnsureArg.IsNotNull(naosOptions.Context, nameof(naosOptions.Context));
 
-            context.Services.TryAddSingleton<IFilterContextAccessor, FilterContextAccessor>();
-            context.Services.TryAddTransient<IFilterContextFactory, FilterContextFactory>();
+            naosOptions.Context.Services.TryAddSingleton<IFilterContextAccessor, FilterContextAccessor>();
+            naosOptions.Context.Services.TryAddTransient<IFilterContextFactory, FilterContextFactory>();
 
-            context.Messages.Add($"{LogEventKeys.General} naos builder: request filtering added");
+            naosOptions.Context.Messages.Add($"{LogEventKeys.General} naos builder: request filtering added");
 
-            return context;
+            return naosOptions;
         }
     }
 }

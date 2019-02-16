@@ -102,7 +102,7 @@
 
             // naos application services
             services
-                .AddNaos(this.Configuration, "Product", "Capability", new[] { "All" })
+                .AddNaos(this.Configuration, "Product", "Capability", new[] { "All" }, n => n
                     .AddServices(s => s
                         .AddSampleCountries()
                         .AddSampleCustomers()
@@ -113,11 +113,11 @@
                     .AddRequestFiltering()
                     .AddServiceExceptions()
                     .AddCommands()
-                    //.AddQueries()
                     .AddOperations(o => o
                         .AddLogging(l => l
-                            .AddFile()
-                            .AddAzureLogAnalytics()))
+                            .UseFile()
+                            .UseAzureLogAnalytics()))
+                    //.AddQueries()
                     //.AddSwaggerDocument() // s.Description = Product.Capability\
                     .AddJobScheduling(o => o
                         .SetEnabled(true)
@@ -125,16 +125,16 @@
                         .Register<DummyJob>("job2", Cron.MinuteInterval(2), j => j.LogMessageAsync("+++ hello from job2 +++", CancellationToken.None, true), enabled: false)
                         .Register<DummyJob>("longjob33", Cron.Minutely(), j => j.LongRunningAsync("+++ hello from longjob3 +++", CancellationToken.None)))
                     .AddMessaging(o => o
-                        //.AddFileSystemBroker(s => s
-                        //.AddSignalRBroker(s => s
-                        //.AddRabbitMQBroker(s => s
-                        .AddServiceBusBroker(s => s
+                        //.UseFileSystemBroker(s => s
+                        //.UseSignalRBroker(s => s
+                        //.UseRabbitMQBroker(s => s
+                        .UseServiceBusBroker(s => s
                             .Subscribe<TestMessage, TestMessageHandler>()))
                     .AddServiceDiscovery(o => o
-                        .AddFileSystemClientRegistry());
-                        //.AddConsulClientRegistry());
-                        //.AddFileSystemRouterRegistry());
-                        //.AddRemoteRouterClientRegistry());
+                        .UseFileSystemClientRegistry()));
+                        //.UseConsulClientRegistry()));
+                        //.UseFileSystemRouterRegistry()));
+                        //.UseRemoteRouterClientRegistry()));
 
             // TODO: need to find a way to start the MessageBroker (done by resolving the IMessageBroker somewhere, HostedService? like scheduling)
         }

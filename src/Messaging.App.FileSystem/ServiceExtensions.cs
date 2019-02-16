@@ -17,7 +17,7 @@
 
     public static class ServiceExtensions
     {
-        public static MessagingOptions AddFileSystemBroker(
+        public static MessagingOptions UseFileSystemBroker(
             this MessagingOptions options,
             Action<IMessageBroker> setupAction = null,
             string messageScope = null,

@@ -30,10 +30,10 @@
             this.services.Replace(Microsoft.Extensions.DependencyInjection.ServiceDescriptor.Singleton<IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
 
             this.services
-                .AddNaos(configuration, "Product", "Capability")
+                .AddNaos(configuration, "Product", "Capability", new[] { "All" }, n => n
                     .AddRequestCorrelation()
                     .AddOperations(o => o
-                        .AddLogging(correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}"));
+                        .AddLogging(correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}")));
 
             this.ServiceProvider = this.services.BuildServiceProvider();
         }

@@ -12,34 +12,35 @@
         /// <summary>
         /// Adds required services to support the service context functionality.
         /// </summary>
-        /// <param name="context"></param>
+        /// <param name="naosOptions"></param>
         /// <returns></returns>
-        public static INaosBuilderContext AddServiceContext(
-            this INaosBuilderContext context)
+        public static NaosOptions AddServiceContext(
+            this NaosOptions naosOptions)
         {
-            EnsureArg.IsNotNull(context, nameof(context));
+            EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
+            EnsureArg.IsNotNull(naosOptions.Context, nameof(naosOptions.Context));
 
-            if (context.Descriptor.Product.IsNullOrEmpty())
+            if (naosOptions.Context.Descriptor.Product.IsNullOrEmpty())
             {
                 throw new NaosException("SERVICE descriptor needs a productName");
             }
 
-            if (context.Descriptor.Capability.IsNullOrEmpty())
+            if (naosOptions.Context.Descriptor.Capability.IsNullOrEmpty())
             {
                 throw new NaosException("SERVICE descriptor needs a capabilityName");
             }
 
-            context.Services.AddTransient<HttpClientServiceContextHandler>();
-            context.Services.AddSingleton(sp =>
+            naosOptions.Context.Services.AddTransient<HttpClientServiceContextHandler>();
+            naosOptions.Context.Services.AddSingleton(sp =>
                 new Naos.Core.Common.ServiceDescriptor(
-                    context.Descriptor.Product,
-                    context.Descriptor.Capability,
-                    context.Descriptor.Version,
-                    context.Descriptor.Tags));
+                    naosOptions.Context.Descriptor.Product,
+                    naosOptions.Context.Descriptor.Capability,
+                    naosOptions.Context.Descriptor.Version,
+                    naosOptions.Context.Descriptor.Tags));
 
-            context.Messages.Add($"{LogEventKeys.General} naos builder: service context added");
+            naosOptions.Context.Messages.Add($"{LogEventKeys.General} naos builder: service context added");
 
-            return context;
+            return naosOptions;
         }
     }
 }

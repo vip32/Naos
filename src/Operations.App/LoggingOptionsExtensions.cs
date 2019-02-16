@@ -10,7 +10,7 @@
 
     public static class LoggingOptionsExtensions
     {
-        public static LoggingOptions AddFile(this LoggingOptions options)
+        public static LoggingOptions UseFile(this LoggingOptions options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));

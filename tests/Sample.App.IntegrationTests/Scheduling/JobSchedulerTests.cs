@@ -19,10 +19,10 @@
             var configuration = NaosConfigurationFactory.Create();
 
             this.services
-                .AddNaos(configuration, "Product", "Capability")
+                .AddNaos(configuration, "Product", "Capability", new[] { "All" }, n => n
                     .AddOperations(o => o
                         .AddLogging(correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}"))
-                    .AddJobScheduling();
+                    .AddJobScheduling());
 
             this.services.AddScoped<StubProbe>();
 

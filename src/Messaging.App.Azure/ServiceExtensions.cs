@@ -15,7 +15,7 @@
 
     public static class ServiceExtensions
     {
-        public static MessagingOptions AddServiceBusBroker(
+        public static MessagingOptions UseServiceBusBroker(
             this MessagingOptions options,
             Action<IMessageBroker> setupAction = null,
             string topicName = null,

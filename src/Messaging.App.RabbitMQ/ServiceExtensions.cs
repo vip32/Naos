@@ -13,7 +13,7 @@
 
     public static class ServiceExtensions
     {
-        public static MessagingOptions AddRabbitMQBroker(
+        public static MessagingOptions UseRabbitMQBroker(
             this MessagingOptions options,
             Action<IMessageBroker> setupAction = null,
             string section = "naos:messaging:rabbitMQ",

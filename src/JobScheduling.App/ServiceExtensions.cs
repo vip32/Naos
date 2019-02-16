@@ -11,14 +11,15 @@
 
     public static class ServiceExtensions
     {
-        public static INaosBuilderContext AddJobScheduling(
-        this INaosBuilderContext context,
+        public static NaosOptions AddJobScheduling(
+        this NaosOptions naosOptions,
         Action<JobSchedulerOptions> setupAction = null,
         string section = "naos:scheduling")
         {
-            EnsureArg.IsNotNull(context, nameof(context));
+            EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
+            EnsureArg.IsNotNull(naosOptions.Context, nameof(naosOptions.Context));
 
-            context.Services.AddSingleton<IJobScheduler>(sp =>
+            naosOptions.Context.Services.AddSingleton<IJobScheduler>(sp =>
             {
                 var settings = new JobSchedulerOptions(
                     sp.GetRequiredService<ILoggerFactory>(),
@@ -31,12 +32,12 @@
                     settings);
             });
 
-            context.Services.AddSingleton<IHostedService>(sp =>
+            naosOptions.Context.Services.AddSingleton<IHostedService>(sp =>
                 new JobSchedulerHostedService(sp.GetRequiredService<ILogger<JobSchedulerHostedService>>(), sp));
 
-            context.Messages.Add($"{LogEventKeys.General} naos builder: job scheduling added"); // TODO: list available commands/handlers
+            naosOptions.Context.Messages.Add($"{LogEventKeys.General} naos builder: job scheduling added"); // TODO: list available commands/handlers
 
-            return context;
+            return naosOptions;
         }
     }
 }

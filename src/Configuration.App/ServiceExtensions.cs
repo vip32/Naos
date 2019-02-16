@@ -27,7 +27,7 @@
             string product = null,
             string capability = null,
             string[] tags = null,
-            Action<ServiceOptions> setupAction = null,
+            Action<NaosOptions> setupAction = null,
             string section = "naos")
         {
             EnsureArg.IsNotNull(services, nameof(services));
@@ -42,7 +42,7 @@
                     capability ?? naosConfiguration.Product,
                     tags: tags ?? naosConfiguration.Tags),
             };
-            setupAction?.Invoke(new ServiceOptions(context));
+            setupAction?.Invoke(new NaosOptions(context));
 
             //var logger = services.BuildServiceProvider().GetRequiredService<ILoggerFactory>().CreateLogger("Naos");
             //foreach (var message in context.Messages.Safe())
@@ -53,13 +53,16 @@
             return context;
         }
 
-        public static INaosBuilderContext AddServices(
-            this INaosBuilderContext context,
+        public static NaosOptions AddServices(
+            this NaosOptions naosOptions,
             Action<ServiceOptions> setupAction = null)
         {
-            setupAction?.Invoke(new ServiceOptions(context));
+            EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
+            EnsureArg.IsNotNull(naosOptions.Context, nameof(naosOptions.Context));
 
-            return context;
+            setupAction?.Invoke(new ServiceOptions(naosOptions.Context));
+
+            return naosOptions;
         }
     }
 }

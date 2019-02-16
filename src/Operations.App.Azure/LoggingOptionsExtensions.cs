@@ -64,7 +64,7 @@
             return options;
         }
 
-        public static LoggingOptions AddAzureLogAnalytics(this LoggingOptions options)
+        public static LoggingOptions UseAzureLogAnalytics(this LoggingOptions options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));

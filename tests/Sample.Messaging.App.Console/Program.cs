@@ -33,18 +33,18 @@
 
                     // naos application services
                     services
-                        .AddNaos(configuration, "Product", capabilities[new Random().Next(0, capabilities.Length)])
+                        .AddNaos(configuration, "Product", capabilities[new Random().Next(0, capabilities.Length)], new[] { "All" }, n => n
                             .AddRequestCorrelation()
                             .AddOperations(o => o
                                 .AddLogging(l => l
-                                    .AddFile()
-                                    .AddAzureLogAnalytics(),
+                                    .UseFile()
+                                    .UseAzureLogAnalytics(),
                                     correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}"))
                             .AddMessaging(o => o
                                 //.AddFileSystemBroker());
                                 //.AddSignalRBroker());
                                 //.AddRabbitMQBroker());
-                                .AddServiceBusBroker());
+                                .UseServiceBusBroker()));
 
                     services
                         .AddSingleton<IHostedService, MessagingTestHostedService>();

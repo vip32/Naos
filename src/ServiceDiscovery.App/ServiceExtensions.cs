@@ -16,20 +16,23 @@
     /// </summary>
     public static class ServiceExtensions
     {
-        public static INaosBuilderContext AddServiceDiscovery(
-            this INaosBuilderContext context,
+        public static NaosOptions AddServiceDiscovery(
+            this NaosOptions naosOptions,
             Action<ServiceDiscoveryOptions> setupAction = null,
             string section = "naos:serviceDiscovery")
         {
-            context.Services.AddSingleton(sp => context.Configuration?.GetSection(section).Get<ServiceDiscoveryConfiguration>());
-            context.Services.AddSingleton<IServiceRegistryClient>(sp =>
+            EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
+            EnsureArg.IsNotNull(naosOptions.Context, nameof(naosOptions.Context));
+
+            naosOptions.Context.Services.AddSingleton(sp => naosOptions.Context.Configuration?.GetSection(section).Get<ServiceDiscoveryConfiguration>());
+            naosOptions.Context.Services.AddSingleton<IServiceRegistryClient>(sp =>
                 new ServiceRegistryClient(sp.GetRequiredService<IServiceRegistry>()));
 
-            setupAction?.Invoke(new ServiceDiscoveryOptions(context));
+            setupAction?.Invoke(new ServiceDiscoveryOptions(naosOptions.Context));
 
             //context.Messages.Add($"{LogEventKeys.General} naos builder: service discovery added");
 
-            return context;
+            return naosOptions;
         }
 
         /// <summary>
@@ -38,7 +41,7 @@
         /// <param name="options"></param>
         /// <param name="section"></param>
         /// <returns></returns>
-        public static ServiceDiscoveryOptions AddFileSystemClientRegistry(
+        public static ServiceDiscoveryOptions UseFileSystemClientRegistry(
             this ServiceDiscoveryOptions options,
             string section = "naos:serviceDiscovery")
         {
@@ -62,7 +65,7 @@
         /// <param name="options"></param>
         /// <param name="section"></param>
         /// <returns></returns>
-        public static ServiceDiscoveryOptions AddRemoteRouterClientRegistry(
+        public static ServiceDiscoveryOptions UseRemoteRouterClientRegistry(
             this ServiceDiscoveryOptions options,
             string section = "naos:serviceDiscovery")
         {

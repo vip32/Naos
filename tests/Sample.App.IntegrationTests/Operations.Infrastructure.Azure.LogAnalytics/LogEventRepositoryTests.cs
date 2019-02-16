@@ -17,12 +17,12 @@
             var configuration = NaosConfigurationFactory.Create();
 
             this.services
-                .AddNaos(configuration, "Product", "Capability")
+                .AddNaos(configuration, "Product", "Capability", new[] { "All" }, n => n
                     .AddOperations(o => o
                         .AddLogging(l => l
-                            .AddAzureLogAnalytics(),
+                            .UseAzureLogAnalytics(),
                             correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}"))
-                    .AddJobScheduling();
+                    .AddJobScheduling());
 
             this.ServiceProvider = this.services.BuildServiceProvider();
         }

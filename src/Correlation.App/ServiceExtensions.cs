@@ -14,20 +14,21 @@
         /// <summary>
         /// Adds required services to support the request correlation functionality.
         /// </summary>
-        /// <param name="context"></param>
+        /// <param name="naosOptions"></param>
         /// <returns></returns>
-        public static INaosBuilderContext AddRequestCorrelation(
-            this INaosBuilderContext context)
+        public static NaosOptions AddRequestCorrelation(
+            this NaosOptions naosOptions)
         {
-            EnsureArg.IsNotNull(context, nameof(context));
+            EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
+            EnsureArg.IsNotNull(naosOptions.Context, nameof(naosOptions.Context));
 
-            context.Services.TryAddSingleton<ICorrelationContextAccessor, CorrelationContextAccessor>();
-            context.Services.TryAddTransient<ICorrelationContextFactory, CorrelationContextFactory>();
-            context.Services.AddTransient<HttpClientCorrelationHandler>();
+            naosOptions.Context.Services.TryAddSingleton<ICorrelationContextAccessor, CorrelationContextAccessor>();
+            naosOptions.Context.Services.TryAddTransient<ICorrelationContextFactory, CorrelationContextFactory>();
+            naosOptions.Context.Services.AddTransient<HttpClientCorrelationHandler>();
 
-            context.Messages.Add($"{LogEventKeys.General} naos builder: request correlation added");
+            naosOptions.Context.Messages.Add($"{LogEventKeys.General} naos builder: request correlation added");
 
-            return context;
+            return naosOptions;
         }
     }
 }

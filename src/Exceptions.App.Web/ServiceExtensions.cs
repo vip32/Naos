@@ -11,18 +11,19 @@
         /// <summary>
         /// Adds required services to support the exception handling functionality.
         /// </summary>
-        /// <param name="context"></param>
+        /// <param name="naosOptions"></param>
         /// <param name="hideDetails"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public static INaosBuilderContext AddServiceExceptions(
-            this INaosBuilderContext context,
+        public static NaosOptions AddServiceExceptions(
+            this NaosOptions naosOptions,
             bool hideDetails = false,
             ExceptionHandlerMiddlewareOptions options = null)
         {
-            EnsureArg.IsNotNull(context, nameof(context));
+            EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
+            EnsureArg.IsNotNull(naosOptions.Context, nameof(naosOptions.Context));
 
-            context.Services
+            naosOptions.Context.Services
                 .AddSingleton(options ?? new ExceptionHandlerMiddlewareOptions() { HideDetails = hideDetails })
                 .Scan(scan => scan // https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/
                     .FromExecutingAssembly()
@@ -37,9 +38,9 @@
                     o.SuppressModelStateInvalidFilter = true;
                 });
 
-            context.Messages.Add($"{LogEventKeys.General} naos builder: service exceptions added");
+            naosOptions.Context.Messages.Add($"{LogEventKeys.General} naos builder: service exceptions added");
 
-            return context;
+            return naosOptions;
         }
     }
 }

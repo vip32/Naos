@@ -23,7 +23,7 @@
         /// <param name="options"></param>
         /// <param name="section"></param>
         /// <returns></returns>
-        public static ServiceDiscoveryOptions AddConsulClientRegistry(
+        public static ServiceDiscoveryOptions UseConsulClientRegistry(
             this ServiceDiscoveryOptions options,
             string section = "naos:serviceDiscovery")
         {

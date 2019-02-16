@@ -15,7 +15,7 @@
 
     public static class ServiceExtensions
     {
-        public static MessagingOptions AddSignalRBroker(
+        public static MessagingOptions UseSignalRBroker(
             this MessagingOptions options,
             Action<IMessageBroker> setupAction = null,
             string messageScope = null,

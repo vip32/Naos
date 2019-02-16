@@ -18,38 +18,38 @@
         //        }
         //    };
         //}
-        public static INaosBuilderContext AddAuthenticationApiKeyStatic(
-            this INaosBuilderContext context,
+        public static NaosOptions AddAuthenticationApiKeyStatic(
+            this NaosOptions naosOptions,
             Action<AuthenticationHandlerOptions> options = null,
             string section = "naos:authentication:apikey:static")
         {
-            EnsureArg.IsNotNull(context, nameof(context));
+            EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
 
-            var serviceConfiguration = context.Configuration.GetSection(section).Get<ApiKeyStaticValidationServiceConfiguration>();
-            context.Services.AddSingleton<IAuthenticationService, ApiKeyStaticValidationService>(sp => new ApiKeyStaticValidationService(serviceConfiguration));
+            var serviceConfiguration = naosOptions.Context.Configuration.GetSection(section).Get<ApiKeyStaticValidationServiceConfiguration>();
+            naosOptions.Context.Services.AddSingleton<IAuthenticationService, ApiKeyStaticValidationService>(sp => new ApiKeyStaticValidationService(serviceConfiguration));
 
-            context.Services
+            naosOptions.Context.Services
                 .AddAuthentication(AuthenticationKeys.ApiKeyScheme)
                 .AddApiKey(options);
 
-            return context;
+            return naosOptions;
         }
 
-        public static NaosBuilderContext AddAuthenticationBasicStatic(
-            this NaosBuilderContext context,
+        public static NaosOptions AddAuthenticationBasicStatic(
+            this NaosOptions naosOptions,
             Action<AuthenticationHandlerOptions> options = null,
             string section = "naos:authentication:basic:static")
         {
-            EnsureArg.IsNotNull(context, nameof(context));
+            EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
 
-            var serviceConfiguration = context.Configuration.GetSection(section).Get<BasicStaticValidationServiceConfiguration>();
-            context.Services.AddSingleton<IAuthenticationService, BasicStaticValidationService>(sp => new BasicStaticValidationService(serviceConfiguration));
+            var serviceConfiguration = naosOptions.Context.Configuration.GetSection(section).Get<BasicStaticValidationServiceConfiguration>();
+            naosOptions.Context.Services.AddSingleton<IAuthenticationService, BasicStaticValidationService>(sp => new BasicStaticValidationService(serviceConfiguration));
 
-            context.Services
+            naosOptions.Context.Services
                 .AddAuthentication(AuthenticationKeys.BasicScheme)
                 .AddBasic(options);
 
-            return context;
+            return naosOptions;
         }
     }
 }

@@ -24,7 +24,7 @@
             // naos core registrations
             this.services
                 .AddMediatR()
-                .AddNaos(configuration, "Product", "Capability")
+                .AddNaos(configuration, "Product", "Capability", new[] { "All" }, n => n
                     .AddServices(o => o
                         .AddSampleCountries()
                         .AddSampleCustomers()
@@ -34,8 +34,8 @@
                     .AddMessaging(o => o
                         //.AddFileSystemBroker()
                         //.AddSignalRBroker()
-                        .AddServiceBusBroker())
-                    .AddCommands();
+                        .UseServiceBusBroker())
+                    .AddCommands());
 
             this.services.AddSingleton<ICommandBehavior, TrackCommandBehavior>();
             //this.services.AddSingleton<ICommandBehavior, ServiceContextEnrichCommandBehavior>();

@@ -19,13 +19,13 @@
 
             this.services
                 .AddMediatR()
-                .AddNaos(configuration, "Product", "Capability")
+                .AddNaos(configuration, "Product", "Capability", new[] { "All" }, n => n
                     .AddOperations(o => o
                         .AddLogging(correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}"))
                     .AddMessaging(o => o
                         //.AddFileSystemBroker()
                         //.AddSignalRBroker()
-                        .AddServiceBusBroker());
+                        .UseServiceBusBroker()));
 
             this.ServiceProvider = this.services.BuildServiceProvider();
         }

@@ -1,8 +1,10 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
-    public class ServiceOptions
+    using Microsoft.Extensions.DependencyInjection;
+
+    public class NaosOptions
     {
-        public ServiceOptions(INaosBuilderContext context)
+        public NaosOptions(INaosBuilderContext context)
         {
             this.Context = context;
         }
