@@ -54,7 +54,7 @@
                     sp.GetRequiredService<ILogger<FileSystemServiceRegistry>>(),
                     options.Context.Configuration?.GetSection($"{section}:registry:fileSystem").Get<FileSystemServiceRegistryConfiguration>()));
 
-            options.Context.Messages.Add($"{LogEventKeys.General} naos builder: service discovery added (registry={nameof(FileSystemServiceRegistry)})");
+            options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: service discovery added (registry={nameof(FileSystemServiceRegistry)})");
 
             return options;
         }
@@ -80,7 +80,7 @@
                     sp.GetRequiredService<IHttpClientFactory>().CreateClient(),
                     options.Context.Configuration?.GetSection($"{section}:registry:remote").Get<RemoteServiceRegistryConfiguration>()));
 
-            options.Context.Messages.Add($"{LogEventKeys.General} naos builder: service discovery added (registry={nameof(RemoteServiceRegistry)})");
+            options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: service discovery added (registry={nameof(RemoteServiceRegistry)})");
 
             return options;
         }

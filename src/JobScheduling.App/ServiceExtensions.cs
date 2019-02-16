@@ -35,7 +35,7 @@
             naosOptions.Context.Services.AddSingleton<IHostedService>(sp =>
                 new JobSchedulerHostedService(sp.GetRequiredService<ILogger<JobSchedulerHostedService>>(), sp));
 
-            naosOptions.Context.Messages.Add($"{LogEventKeys.General} naos builder: job scheduling added"); // TODO: list available commands/handlers
+            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: job scheduling added"); // TODO: list available commands/handlers
 
             return naosOptions;
         }

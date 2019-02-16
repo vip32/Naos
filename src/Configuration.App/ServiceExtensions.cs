@@ -3,6 +3,8 @@
     using System;
     using EnsureThat;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
     using Naos.Core.Configuration.App;
 
     /// <summary>
@@ -44,11 +46,11 @@
             };
             setupAction?.Invoke(new NaosOptions(context));
 
-            //var logger = services.BuildServiceProvider().GetRequiredService<ILoggerFactory>().CreateLogger("Naos");
-            //foreach (var message in context.Messages.Safe())
-            //{
-            //    logger.LogDebug(message);
-            //}
+            var logger = services.BuildServiceProvider().GetRequiredService<ILoggerFactory>().CreateLogger("Naos");
+            foreach (var message in context.Messages.Safe())
+            {
+                logger.LogDebug(message);
+            }
 
             return context;
         }

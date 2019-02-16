@@ -38,7 +38,7 @@
                     naosOptions.Context.Descriptor.Version,
                     naosOptions.Context.Descriptor.Tags));
 
-            naosOptions.Context.Messages.Add($"{LogEventKeys.General} naos builder: service context added");
+            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: service context added");
 
             return naosOptions;
         }

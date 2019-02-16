@@ -46,7 +46,7 @@
                                     new[] { new AutoMapperSpecificationMapper<Country, DbCountry>(ModelMapperConfiguration.Create()) })))));
             });
 
-            options.Context.Messages.Add($"{LogEventKeys.General} naos builder: countries service added");
+            options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: countries service added");
 
             return options;
         }

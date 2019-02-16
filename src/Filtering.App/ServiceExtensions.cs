@@ -22,7 +22,7 @@
             naosOptions.Context.Services.TryAddSingleton<IFilterContextAccessor, FilterContextAccessor>();
             naosOptions.Context.Services.TryAddTransient<IFilterContextFactory, FilterContextFactory>();
 
-            naosOptions.Context.Messages.Add($"{LogEventKeys.General} naos builder: request filtering added");
+            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: request filtering added");
 
             return naosOptions;
         }

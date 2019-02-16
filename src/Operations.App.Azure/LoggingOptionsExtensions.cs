@@ -40,7 +40,7 @@
                     shared: true,
                     flushToDiskInterval: configuration.FlushToDiskIntervalSeconds.HasValue ? TimeSpan.FromSeconds(configuration.FlushToDiskIntervalSeconds.Value) : TimeSpan.FromSeconds(1));
 
-                options.Context.Messages.Add($"{LogEventKeys.Operations} logging: azurediagnosticslogstream sink added (path={path})");
+                options.Context.Messages.Add($"{LogEventKeys.Startup} logging: azurediagnosticslogstream sink added (path={path})");
             }
 
             return options;
@@ -58,7 +58,7 @@
                 // configure the serilog sink
                 //options.LoggerConfiguration.WriteTo.AppInsights(appInsightsConfiguration.ApplicationKey);
 
-                options.Context.Messages.Add($"{LogEventKeys.Operations} logging: azureapplicationinsightssink added (application={configuration.ApplicationKey})");
+                options.Context.Messages.Add($"{LogEventKeys.Startup} logging: azureapplicationinsightssink added (application={configuration.ApplicationKey})");
             }
 
             return options;
@@ -93,7 +93,7 @@
                     logBufferSize: configuration.BufferSize,
                     batchSize: configuration.BatchSize);
 
-                options.Context.Messages.Add($"{LogEventKeys.Operations} logging: azureloganalytics sink added (name={logName}_CL, workspace={configuration.WorkspaceId})");
+                options.Context.Messages.Add($"{LogEventKeys.Startup} logging: azureloganalytics sink added (name={logName}_CL, workspace={configuration.WorkspaceId})");
             }
 
             // configure the repository for the dashboard (controller)

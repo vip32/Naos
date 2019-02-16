@@ -26,7 +26,7 @@
             naosOptions.Context.Services.TryAddTransient<ICorrelationContextFactory, CorrelationContextFactory>();
             naosOptions.Context.Services.AddTransient<HttpClientCorrelationHandler>();
 
-            naosOptions.Context.Messages.Add($"{LogEventKeys.General} naos builder: request correlation added");
+            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: request correlation added");
 
             return naosOptions;
         }

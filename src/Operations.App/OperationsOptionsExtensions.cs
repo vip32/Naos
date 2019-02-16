@@ -27,6 +27,7 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
+            options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: logging added");
             internalConfiguration = options.Context?.Configuration;
             internalEnvironment = environment ?? Environment.GetEnvironmentVariable(EnvironmentKeys.Environment) ?? "Production";
             internalCorrelationId = correlationId;
@@ -54,7 +55,6 @@
             });
             options.Context.Services.AddSingleton(typeof(ILogger<>), typeof(LoggingAdapter<>));
             options.Context.Services.AddSingleton(typeof(Logging.ILogger), typeof(LoggingAdapter));
-            options.Context.Messages.Add($"{LogEventKeys.General} naos builder: logging added");
 
             return options;
         }
@@ -66,7 +66,7 @@
                 Log.Logger = internalLoggerConfiguration.CreateLogger();
                 factory = new LoggerFactory();
                 factory.AddSerilog(Log.Logger);
-                Log.Logger.Debug("{LogKey:l} logging: serilog initialized", LogEventKeys.Operations);
+                Log.Logger.Debug("{LogKey:l} logging: serilog initialized", LogEventKeys.Startup);
             }
 
             return factory;

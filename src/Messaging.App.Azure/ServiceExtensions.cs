@@ -60,7 +60,7 @@
             options.Context.Services.AddHealthChecks()
                 .AddAzureServiceBusTopic(serviceBusConfiguration.ConnectionString, serviceBusConfiguration.EntityPath, "messaging-servicebus");
 
-            options.Context.Messages.Add($"{LogEventKeys.General} naos builder: messaging added (broker={nameof(ServiceBusMessageBroker)})");
+            options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: messaging added (broker={nameof(ServiceBusMessageBroker)})");
 
             return options;
         }

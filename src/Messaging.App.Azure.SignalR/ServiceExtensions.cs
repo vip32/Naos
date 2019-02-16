@@ -43,7 +43,7 @@
                 return result;
             });
 
-            options.Context.Messages.Add($"{LogEventKeys.General} naos builder: messaging added (broker={nameof(SignalRServerlessMessageBroker)})");
+            options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: messaging added (broker={nameof(SignalRServerlessMessageBroker)})");
 
             return options;
         }

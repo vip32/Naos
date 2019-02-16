@@ -38,7 +38,7 @@
                     o.SuppressModelStateInvalidFilter = true;
                 });
 
-            naosOptions.Context.Messages.Add($"{LogEventKeys.General} naos builder: service exceptions added");
+            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: service exceptions added");
 
             return naosOptions;
         }

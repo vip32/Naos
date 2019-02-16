@@ -38,7 +38,7 @@
                         sp.GetRequiredService<ILogger<FileSystemServiceRegistry>>(),
                         options.Context.Configuration?.GetSection($"{section}:registry:fileSystem").Get<FileSystemServiceRegistryConfiguration>()))));
 
-            options.Context.Messages.Add($"{LogEventKeys.General} naos builder: service discovery router added (registry={nameof(FileSystemServiceRegistry)})");
+            options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: service discovery router added (registry={nameof(FileSystemServiceRegistry)})");
 
             return options;
         }

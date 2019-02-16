@@ -42,7 +42,7 @@
                     shared: configuration.Shared,
                     flushToDiskInterval: configuration.FlushToDiskIntervalSeconds.HasValue ? TimeSpan.FromSeconds(configuration.FlushToDiskIntervalSeconds.Value) : default(TimeSpan?));
 
-                options.Context.Messages.Add($"{LogEventKeys.Operations} logging: file sink added (path={path})");
+                options.Context.Messages.Add($"{LogEventKeys.Startup} logging: file sink added (path={path})");
             }
 
             return options;

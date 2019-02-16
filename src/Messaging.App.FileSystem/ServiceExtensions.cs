@@ -51,7 +51,7 @@
                 return result;
             });
 
-            options.Context.Messages.Add($"{LogEventKeys.General} naos builder: messaging added (broker={nameof(FileSystemMessageBroker)})");
+            options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: messaging added (broker={nameof(FileSystemMessageBroker)})");
 
             return options;
         }

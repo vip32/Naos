@@ -17,7 +17,7 @@
 
             setupAction?.Invoke(new OperationsOptions(naosOptions.Context));
 
-            naosOptions.Context.Messages.Add($"{LogEventKeys.General} naos builder: operations added");
+            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: operations added");
 
             return naosOptions;
         }

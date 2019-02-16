@@ -62,7 +62,7 @@
                     name: "Customers-cosmosdb")
                     .AddServiceDiscoveryClient<UserAccountsClient>();
 
-            options.Context.Messages.Add($"{LogEventKeys.General} naos builder: customers service added");
+            options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: customers service added");
 
             return options;
         }

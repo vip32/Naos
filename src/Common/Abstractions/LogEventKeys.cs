@@ -2,7 +2,8 @@
 {
     public struct LogEventKeys
     {
-        public const string General = "GENERL";
+        public const string Startup = "STRTUP";
+        public const string Shutdown = "SHTDWN";
         public const string InboundRequest = "INBREQ";
         public const string InboundResponse = "INBRES";
         public const string OutboundRequest = "OUTREQ";
