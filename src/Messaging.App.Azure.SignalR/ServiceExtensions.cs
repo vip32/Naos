@@ -26,12 +26,12 @@
 
             options.Context.Services.AddSingleton<IMessageBroker>(sp =>
             {
-                var signalRConfiguration = options.Context.Configuration.GetSection(section).Get<SignalRConfiguration>();
-                var result = new SignalRServerlessMessageBroker(o => o
+                var configuration = options.Context.Configuration.GetSection(section).Get<SignalRConfiguration>();
+                var broker = new SignalRServerlessMessageBroker(o => o
                         .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                         .Mediator((IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)))
                         .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
-                        .Configuration(signalRConfiguration)
+                        .Configuration(configuration)
                         .HttpClient(sp.GetRequiredService<IHttpClientFactory>())
                         .Map(sp.GetRequiredService<ISubscriptionMap>())
                         .FilterScope(Environment.GetEnvironmentVariable(EnvironmentKeys.IsLocal).ToBool()
@@ -39,8 +39,8 @@
                             : string.Empty)
                         .MessageScope(messageScope));
 
-                setupAction?.Invoke(result);
-                return result;
+                setupAction?.Invoke(broker);
+                return broker;
             });
 
             options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: messaging added (broker={nameof(SignalRServerlessMessageBroker)})");

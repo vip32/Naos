@@ -28,9 +28,9 @@
 
             options.Context.Services.AddSingleton<IMessageBroker>(sp =>
             {
-                var fileSystemConfiguration = options.Context.Configuration.GetSection(section).Get<FileSystemConfiguration>();
-                fileSystemConfiguration.Folder = fileSystemConfiguration.Folder.EmptyToNull() ?? Path.GetTempPath();
-                var result = new FileSystemMessageBroker(o => o
+                var configuration = options.Context.Configuration.GetSection(section).Get<FileSystemConfiguration>();
+                configuration.Folder = configuration.Folder.EmptyToNull() ?? Path.GetTempPath();
+                var broker = new FileSystemMessageBroker(o => o
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                     .Mediator((IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)))
                     .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
@@ -38,17 +38,17 @@
                         sp.GetRequiredService<ILoggerFactory>(),
                         new FolderFileStorage(s => s
                             .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
-                            .Folder(fileSystemConfiguration.Folder)
+                            .Folder(configuration.Folder)
                             .Serializer(new JsonNetSerializer()))))
-                    .Configuration(fileSystemConfiguration)
+                    .Configuration(configuration)
                     .Map(sp.GetRequiredService<ISubscriptionMap>())
                     .FilterScope(Environment.GetEnvironmentVariable(EnvironmentKeys.IsLocal).ToBool()
                             ? Environment.MachineName.Humanize().Dehumanize().ToLower()
                             : string.Empty)
                     .MessageScope(messageScope));
 
-                setupAction?.Invoke(result);
-                return result;
+                setupAction?.Invoke(broker);
+                return broker;
             });
 
             options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: messaging added (broker={nameof(FileSystemMessageBroker)})");

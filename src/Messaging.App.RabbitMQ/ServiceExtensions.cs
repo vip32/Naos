@@ -24,13 +24,13 @@
 
             options.Context.Services.AddSingleton<IMessageBroker>(sp =>
             {
-                var result = new RabbitMQMessageBroker(o => o
+                var broker = new RabbitMQMessageBroker(o => o
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                     .Configuration(options.Context.Configuration.GetSection(section).Get<RabbitMQConfiguration>())
                     .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp)));
 
-                setupAction?.Invoke(result);
-                return result;
+                setupAction?.Invoke(broker);
+                return broker;
             });
 
             options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: messaging added (broker={nameof(RabbitMQMessageBroker)})");

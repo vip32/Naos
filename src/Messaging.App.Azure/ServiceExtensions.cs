@@ -25,16 +25,16 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            var serviceBusConfiguration = options.Context.Configuration.GetSection(section).Get<ServiceBusConfiguration>();
-            serviceBusConfiguration.EntityPath = topicName ?? $"{Environment.GetEnvironmentVariable(EnvironmentKeys.Environment) ?? "Production"}-Naos.Messaging";
+            var configuration = options.Context.Configuration.GetSection(section).Get<ServiceBusConfiguration>();
+            configuration.EntityPath = topicName ?? $"{Environment.GetEnvironmentVariable(EnvironmentKeys.Environment) ?? "Production"}-Naos.Messaging";
             options.Context.Services.AddSingleton<IServiceBusProvider>(sp =>
             {
-                if (serviceBusConfiguration?.Enabled == true)
+                if (configuration?.Enabled == true)
                 {
                     return new ServiceBusProvider(
                         sp.GetRequiredService<ILogger<ServiceBusProvider>>(),
-                        SdkContext.AzureCredentialsFactory.FromServicePrincipal(serviceBusConfiguration.ClientId, serviceBusConfiguration.ClientSecret, serviceBusConfiguration.TenantId, AzureEnvironment.AzureGlobalCloud),
-                        serviceBusConfiguration);
+                        SdkContext.AzureCredentialsFactory.FromServicePrincipal(configuration.ClientId, configuration.ClientSecret, configuration.TenantId, AzureEnvironment.AzureGlobalCloud),
+                        configuration);
                 }
 
                 throw new NotImplementedException("no messaging servicebus is enabled");
@@ -42,7 +42,7 @@
 
             options.Context.Services.AddSingleton<IMessageBroker>(sp =>
             {
-                var result = new ServiceBusMessageBroker(o => o
+                var broker = new ServiceBusMessageBroker(o => o
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                     .Mediator((IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)))
                     .Provider(sp.GetRequiredService<IServiceBusProvider>())
@@ -53,12 +53,12 @@
                             ? Environment.MachineName.Humanize().Dehumanize().ToLower()
                             : string.Empty));
 
-                setupAction?.Invoke(result);
-                return result;
+                setupAction?.Invoke(broker);
+                return broker;
             }); // scope the messagebus messages to the local machine, so local events are handled locally
 
             options.Context.Services.AddHealthChecks()
-                .AddAzureServiceBusTopic(serviceBusConfiguration.ConnectionString, serviceBusConfiguration.EntityPath, "messaging-servicebus");
+                .AddAzureServiceBusTopic(configuration.ConnectionString, configuration.EntityPath, "messaging-servicebus");
 
             options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: messaging added (broker={nameof(ServiceBusMessageBroker)})");
 
