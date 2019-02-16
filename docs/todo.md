@@ -99,7 +99,7 @@ ef sqlite + inmemory : https://www.thereformedprogrammer.net/using-in-memory-dat
 webapi test + jwt https://www.domstamand.com/testing-a-webapi-in-net-core-with-integration-tests/
 webapi caching (client/server) https://github.com/aliostad/CacheCow#getting-started---client
 nested app https://github.com/damianh/AspNetCoreNestedApps
-embedded dashboard https://github.com/dotnetcore/CAP/blob/develop/src/DotNetCore.CAP/Dashboard/RazorPageDispatcher.cs
+embedded dashboard https://github.com/dotnetcore/CAP/tree/master/src/DotNetCore.CAP/Dashboard
 angular with netcore 2.2 https://www.codeproject.com/Articles/1274513/Angular-7-with-NET-Core-2-2-Global-Weather-Part-1
 host multiple mvc apps https://damienbod.com/2018/12/01/using-mvc-asp-net-core-apps-in-a-host-asp-net-core-app/
 file repo https://github.com/selmaohneh/Repository/tree/master/Repository.FileRepository

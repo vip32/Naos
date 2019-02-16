@@ -24,7 +24,7 @@
             // naos core registrations
             this.services
                 .AddMediatR()
-                .Naos(configuration, "Product", "Capability")
+                .AddNaos(configuration, "Product", "Capability")
                     .AddServices(o => o
                         .AddSampleCountries()
                         .AddSampleCustomers()

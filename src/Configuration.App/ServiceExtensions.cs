@@ -21,7 +21,7 @@
         /// <param name="setupAction"></param>
         /// <param name="section"></param>
         /// <returns></returns>
-        public static INaosBuilderContext Naos(
+        public static INaosBuilderContext AddNaos(
             this IServiceCollection services,
             IConfiguration configuration,
             string product = null,

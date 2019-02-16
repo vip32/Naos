@@ -19,7 +19,7 @@
 
             this.services
                 .AddMediatR()
-                .Naos(configuration, "Product", "Capability")
+                .AddNaos(configuration, "Product", "Capability")
                     .AddOperations(o => o
                         .AddLogging(correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}"))
                     .AddMessaging(o => o
