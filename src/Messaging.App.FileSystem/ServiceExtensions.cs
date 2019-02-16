@@ -10,7 +10,7 @@
     using Naos.Core.Common;
     using Naos.Core.Common.Serialization;
     using Naos.Core.FileStorage.Domain;
-    using Naos.Core.FileStorage.Infrastructure.FileSystem;
+    using Naos.Core.FileStorage.Infrastructure;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.App;
     using Naos.Core.Messaging.Infrastructure;

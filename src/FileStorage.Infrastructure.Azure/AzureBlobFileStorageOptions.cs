@@ -1,9 +1,9 @@
-﻿namespace Naos.Core.FileStorage.Infrastructure.Azure
+﻿namespace Naos.Core.FileStorage.Infrastructure
 {
     using Naos.Core.Common;
     using Naos.Core.Common.Serialization;
 
-    public class AzureBlobStorageOptions : BaseOptions
+    public class AzureBlobFileStorageOptions : BaseOptions
     {
         public string ConnectionString { get; set; }
 

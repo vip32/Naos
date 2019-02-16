@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.FileStorage.Infrastructure.FileSystem
+﻿namespace Naos.Core.FileStorage.Infrastructure
 {
     using System;
     using System.Collections.Generic;

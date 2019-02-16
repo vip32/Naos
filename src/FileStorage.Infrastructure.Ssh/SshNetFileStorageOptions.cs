@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.FileStorage.Infrastructure.Ssh
+﻿namespace Naos.Core.FileStorage.Infrastructure
 {
     using System.IO;
     using Naos.Core.Common;

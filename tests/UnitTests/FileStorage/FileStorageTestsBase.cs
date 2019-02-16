@@ -9,7 +9,7 @@
     using System.Xml.Linq;
     using Microsoft.Extensions.Logging;
     using Naos.Core.FileStorage.Domain;
-    using Naos.Core.FileStorage.Infrastructure.FileSystem;
+    using Naos.Core.FileStorage.Infrastructure;
     using NSubstitute;
     using Xunit;
 

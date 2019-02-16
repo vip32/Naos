@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.FileStorage.Infrastructure.Azure
+﻿namespace Naos.Core.FileStorage.Infrastructure
 {
     using System;
     using System.Collections.Generic;

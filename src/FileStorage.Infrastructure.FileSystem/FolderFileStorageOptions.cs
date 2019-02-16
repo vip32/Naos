@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.FileStorage.Infrastructure.FileSystem
+﻿namespace Naos.Core.FileStorage.Infrastructure
 {
     using Naos.Core.Common;
     using Naos.Core.Common.Serialization;

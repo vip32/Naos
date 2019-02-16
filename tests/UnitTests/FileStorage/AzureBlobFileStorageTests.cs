@@ -3,11 +3,11 @@
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
     using Naos.Core.FileStorage.Domain;
-    using Naos.Core.FileStorage.Infrastructure.Azure;
+    using Naos.Core.FileStorage.Infrastructure;
     using NSubstitute;
     using Xunit;
 
-    public class AzureFileStorageTests : FileStorageTestsBase
+    public class AzureBlobFileStorageTests : FileStorageTestsBase
     {
         [Fact]
         public override Task CanGetEmptyFileListOnMissingDirectoryAsync()
@@ -105,7 +105,7 @@
 
             if (!string.IsNullOrWhiteSpace(connectionString))
             {
-                return new AzureBlobStorage(o => o
+                return new AzureBlobFileStorage(o => o
                     .LoggerFactory(Substitute.For<ILoggerFactory>())
                     .ConnectionString(connectionString));
             }

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.FileStorage.Infrastructure.Azure
+﻿namespace Naos.Core.FileStorage.Infrastructure
 {
     using System;
     using System.Collections.Generic;
@@ -15,18 +15,18 @@
     using Naos.Core.Common.Serialization;
     using Naos.Core.FileStorage.Domain;
 
-    public class AzureBlobStorage : IFileStorage
+    public class AzureBlobFileStorage : IFileStorage
     {
-        private readonly ILogger<AzureBlobStorage> logger;
+        private readonly ILogger<AzureBlobFileStorage> logger;
         private readonly CloudBlobContainer container;
         private readonly ISerializer serializer;
 
-        public AzureBlobStorage(AzureBlobStorageOptions options)
+        public AzureBlobFileStorage(AzureBlobFileStorageOptions options)
         {
             EnsureArg.IsNotNull(options.LoggerFactory, nameof(options.LoggerFactory));
 
-            this.logger = options.LoggerFactory.CreateLogger<AzureBlobStorage>();
-            options = options ?? new AzureBlobStorageOptions();
+            this.logger = options.LoggerFactory.CreateLogger<AzureBlobFileStorage>();
+            options = options ?? new AzureBlobFileStorageOptions();
             this.Serializer = options.Serializer ?? DefaultSerializer.Instance;
 
             this.container = CloudStorageAccount.Parse(options.ConnectionString)
@@ -36,8 +36,8 @@
             this.serializer = options.Serializer ?? DefaultSerializer.Instance;
         }
 
-        public AzureBlobStorage(Builder<AzureBlobStorageOptionsBuilder, AzureBlobStorageOptions> config)
-            : this(config(new AzureBlobStorageOptionsBuilder()).Build())
+        public AzureBlobFileStorage(Builder<AzureBlobFileStorageOptionsBuilder, AzureBlobFileStorageOptions> config)
+            : this(config(new AzureBlobFileStorageOptionsBuilder()).Build())
         {
         }
 

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Naos.Core.FileStorage.Infrastructure.Ssh</AssemblyName>
-    <RootNamespace>Naos.Core.FileStorage.Infrastructure.Ssh</RootNamespace>
+    <RootNamespace>Naos.Core.FileStorage.Infrastructure</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
