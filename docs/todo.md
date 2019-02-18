@@ -32,6 +32,9 @@ Marketing
 
 TODO:
 
+Dashboard with razor class library (operations logevents)
+  https://www.learnrazorpages.com/advanced/razor-class-library
+
 Repositories
   Use OptionsBuilder instead of too many ctor arguments
 

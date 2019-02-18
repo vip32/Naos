@@ -33,6 +33,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\App\App.csproj" />
+    <ProjectReference Include="..\..\src\Operations.App.Web.Dashboard\Operations.App.Web.Dashboard.csproj" />
     <ProjectReference Include="..\Sample.App\Sample.App.csproj" />
     <ProjectReference Include="..\Sample\Sample.csproj" />
   </ItemGroup>
