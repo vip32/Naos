@@ -20,5 +20,7 @@
         ISpecification<T> Not();
 
         string ToString();
+
+        string ToString(bool noBrackets);
     }
 }

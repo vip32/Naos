@@ -87,5 +87,15 @@
         {
             return this.expression.ToExpressionString();
         }
+
+        public string ToString(bool noBrackets)
+        {
+            if (noBrackets)
+            {
+                return this.expression.ToExpressionString().Trim('(').Trim(')');
+            }
+
+            return this.expression.ToExpressionString();
+        }
     }
 }

@@ -11,6 +11,7 @@
     using Naos.Core.Common;
     using Naos.Core.Operations.Domain;
     using Naos.Core.Operations.Domain.Repositories;
+    using Naos.Core.RequestFiltering.App;
 
     [Route("api/operations/logevents")]
     [ApiController]
@@ -94,12 +95,30 @@
 <body>");
             try
             {
+                if (!this.FilterContext.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Environment))))
+                {
+                    this.FilterContext.Criterias = this.FilterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Environment), CriteriaOperator.Equal, Environment.GetEnvironmentVariable(EnvironmentKeys.Environment) ?? "Production"));
+                }
+
+                if (!this.FilterContext.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Level))))
+                {
+                    this.FilterContext.Criterias = this.FilterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.Equal, "Information"));
+                }
+
+                if(!this.FilterContext.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Ticks))))
+                {
+                    this.FilterContext.Criterias = this.FilterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Ticks), CriteriaOperator.LessThanOrEqual, DateTime.UtcNow.Ticks));
+                    this.FilterContext.Criterias = this.FilterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Ticks), CriteriaOperator.GreaterThanOrEqual, DateTime.UtcNow.AddDays(-1).Ticks));
+                }
+
+                foreach (var criteria in this.FilterContext.Criterias)
+                {
+                    await this.HttpContext.Response.WriteAsync($"criteria: {criteria.ToString()}<br/>");
+                }
+
                 var logEvents = await this.Repository.FindAllAsync(
-                    this.FilterContext.GetSpecifications<LogEvent>()).AnyContext();
-                //var v = 2212121;
-                //var spec = new Specification<LogEvent>(e => e.Ticks < 2212121);
-                //var logEvents2 = await this.Repository.FindAllAsync(
-                //    this.FilterContext.GetSpecifications<LogEvent>()).AnyContext();
+                    this.FilterContext.GetSpecifications<LogEvent>(),
+                    this.FilterContext.GetFindOptions<LogEvent>()).AnyContext();
 
                 foreach (var logEvent in logEvents)
                 {

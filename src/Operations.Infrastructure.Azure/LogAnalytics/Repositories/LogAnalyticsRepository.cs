@@ -73,21 +73,32 @@
 
         public async Task<IEnumerable<LogEvent>> FindAllAsync(IEnumerable<ISpecification<LogEvent>> specifications, IFindOptions<LogEvent> options = null, CancellationToken cancellationToken = default)
         {
-            var s = specifications.FirstOrDefault()?.ToString();
-            var page = 1;
-            var pageSize = 100;
-            var epoch = DateTime.UtcNow.AddDays(-1).ToEpoch(); // should come from filtercontext
-            var ticks = new DateTimeEpoch(epoch).DateTime.Ticks; // calculate ticks
             var query = $@"
 {this.logName} | 
 where LogMessage_s != '' and 
-  LogLevel_s != 'Verbose' and 
-  LogProperties_{LogEventPropertyKeys.Ticks}_d > {ticks} |
-top 100 by LogProperties_{LogEventPropertyKeys.Ticks}_d desc
-//order by LogProperties_{LogEventPropertyKeys.Ticks}_d desc |
-//skip ({page}-1) * {pageSize} | top {pageSize}"; // 5000 = max
+  LogLevel_s != 'Verbose'";
 
-            // limit 100 |
+            foreach (var spec in specifications.Safe().Where(s => s.Name.SafeEquals(nameof(LogEvent.Environment)))) // TODO: map this better/ more generic
+            {
+                query += $" and LogProperties_{LogEventPropertyKeys.Environment}_s {spec.ToString(true).SubstringFrom(" ")}";
+            }
+
+            foreach (var spec in specifications.Safe().Where(s => s.Name.SafeEquals(nameof(LogEvent.Level)))) // TODO: map this better/ more generic
+            {
+                // TODO: from level and up (inf = inf, wrn, err, fat)
+                query += $" and LogLevel_s {spec.ToString(true).SubstringFrom(" ")}";
+            }
+
+            foreach(var spec in specifications.Safe().Where(s => s.Name.SafeEquals(nameof(LogEvent.Ticks)))) // TODO: map this better/ more generic
+            {
+                query += $" and LogProperties_{LogEventPropertyKeys.Ticks}_d {spec.ToString(true).SubstringFrom(" ")}";
+            }
+
+            query += $" | top 100 by LogProperties_{LogEventPropertyKeys.Ticks}_d desc";
+
+            //order by LogProperties_{LogEventPropertyKeys.Ticks}_d desc |
+            //skip ({page}-1) * {pageSize} | top {pageSize}
+            // limit 100 | // 5000 = max
 
             this.logger.LogInformation($"{{LogKey:l}} log analytics query: {query}", LogEventKeys.Operations); // TODO: move to request logging middleware (operations)
             // and LogProperties_ns_trktyp_s == 'journal'
