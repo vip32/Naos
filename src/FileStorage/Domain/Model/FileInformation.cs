@@ -3,6 +3,7 @@
     using System;
     using System.Diagnostics;
     using Humanizer;
+    using Naos.Core.Domain.Model;
 
     [DebuggerDisplay("Path = {Path}, Created = {Created}, Modified = {Modified}, Size = {Size} bytes")]
     public class FileInformation
@@ -20,6 +21,8 @@
 
         public string PrettySize => this.Size.Bytes().ToString("#.##");
 
-        // TODO: Add metadata object (properties) for more custom properties
+        public DataDictionary Properties => new DataDictionary();
+
+        public string Name { get; set; }
     }
 }

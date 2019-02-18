@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.FileStorage.Infrastructure
+﻿namespace Naos.Core.FileStorage
 {
     using System;
     using System.IO;

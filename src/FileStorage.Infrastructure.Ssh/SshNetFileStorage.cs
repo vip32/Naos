@@ -75,6 +75,7 @@
                 return Task.FromResult(new FileInformation
                 {
                     Path = file.FullName.TrimStart('/'),
+                    Name = file.Name,
                     Created = file.LastWriteTimeUtc,
                     Modified = file.LastWriteTimeUtc,
                     Size = file.Length

@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Text.RegularExpressions;
     using Microsoft.WindowsAzure.Storage.Blob;
+    using Naos.Core.Common;
     using Naos.Core.FileStorage.Domain;
 
     public static class Extensions
@@ -21,13 +22,19 @@
                 return null;
             }
 
-            return new FileInformation
+            var result = new FileInformation
             {
                 Path = blob.Name,
+                Name = blob.Name.SubstringFromLast("/"),
                 Size = blob.Properties.Length,
-                Created = blob.Properties.LastModified?.UtcDateTime ?? DateTime.MinValue,
-                Modified = blob.Properties.LastModified?.UtcDateTime ?? DateTime.MinValue
+                Created = blob.Properties.Created?.UtcDateTime ?? DateTime.MinValue,
+                Modified = blob.Properties.LastModified?.UtcDateTime ?? DateTime.MinValue,
             };
+
+            result.Properties.Add(nameof(blob.Properties.ETag), blob.Properties.ETag);
+            result.Properties.Add(nameof(blob.Properties.ContentType), blob.Properties.ContentType);
+
+            return result;
         }
     }
 }

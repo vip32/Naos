@@ -8,6 +8,7 @@
     using System.Threading.Tasks;
     using System.Xml.Linq;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.FileStorage;
     using Naos.Core.FileStorage.Domain;
     using Naos.Core.FileStorage.Infrastructure;
     using NSubstitute;

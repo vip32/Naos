@@ -46,7 +46,7 @@
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
-            path = path.NormalizePath();
+            path = PathHelper.Normalize(path);
             lock (this.@lock)
             {
                 if (!this.storage.ContainsKey(path))
@@ -62,7 +62,7 @@
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
-            path = path.NormalizePath();
+            path = PathHelper.Normalize(path);
             return await this.ExistsAsync(path).AnyContext() ? this.storage[path].Item1 : null;
         }
 
@@ -73,7 +73,7 @@
                 throw new ArgumentNullException(nameof(path));
             }
 
-            path = path.NormalizePath();
+            path = PathHelper.Normalize(path);
             return Task.FromResult(this.storage.ContainsKey(path));
         }
 
@@ -82,7 +82,7 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
             EnsureArg.IsNotNull(stream, nameof(stream));
 
-            path = path.NormalizePath();
+            path = PathHelper.Normalize(path);
             var contents = ReadBytes(stream);
             if (contents.Length > this.MaxFileSize)
             {
@@ -91,13 +91,15 @@
 
             lock (this.@lock)
             {
-                this.storage[path] = Tuple.Create(new FileInformation
-                {
-                    Created = DateTime.UtcNow,
-                    Modified = DateTime.UtcNow,
-                    Path = path,
-                    Size = contents.Length
-                }, contents);
+                this.storage[path] = Tuple.Create(
+                    new FileInformation
+                    {
+                        Path = path,
+                        Name = path.SubstringFromLast(Path.DirectorySeparatorChar.ToString()),
+                        Created = DateTime.UtcNow,
+                        Modified = DateTime.UtcNow,
+                        Size = contents.Length
+                    }, contents);
 
                 if (this.storage.Count > this.MaxFiles)
                 {
@@ -113,8 +115,8 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
             EnsureArg.IsNotNullOrEmpty(newPath, nameof(newPath));
 
-            path = path.NormalizePath();
-            newPath = newPath.NormalizePath();
+            path = PathHelper.Normalize(path);
+            newPath = PathHelper.Normalize(newPath);
             lock (this.@lock)
             {
                 if (!this.storage.ContainsKey(path))
@@ -136,8 +138,8 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
             EnsureArg.IsNotNullOrEmpty(targetPath, nameof(targetPath));
 
-            path = path.NormalizePath();
-            targetPath = targetPath.NormalizePath();
+            path = PathHelper.Normalize(path);
+            targetPath = PathHelper.Normalize(targetPath);
             lock (this.@lock)
             {
                 if (!this.storage.ContainsKey(path))
@@ -157,7 +159,7 @@
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
-            path = path.NormalizePath();
+            path = PathHelper.Normalize(path);
             lock (this.@lock)
             {
                 if (!this.storage.ContainsKey(path))
@@ -183,7 +185,7 @@
                 return Task.FromResult(0);
             }
 
-            searchPattern = searchPattern.NormalizePath();
+            searchPattern = PathHelper.Normalize(searchPattern);
             int count = 0;
 
             if (searchPattern[searchPattern.Length - 1] == Path.DirectorySeparatorChar)
@@ -222,7 +224,7 @@
                 searchPattern = "*";
             }
 
-            searchPattern = searchPattern.NormalizePath();
+            searchPattern = PathHelper.Normalize(searchPattern);
 
             var result = new PagedResults(() => Task.FromResult(this.GetFiles(searchPattern, 1, pageSize)));
             await result.NextPageAsync().AnyContext();

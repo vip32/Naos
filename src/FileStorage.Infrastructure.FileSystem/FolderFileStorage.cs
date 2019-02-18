@@ -83,7 +83,8 @@
 
             return Task.FromResult(new FileInformation
             {
-                Path = path.Replace(this.Folder, string.Empty),
+                Path = info.FullName,
+                Name = info.Name,
                 Created = info.CreationTimeUtc,
                 Modified = info.LastWriteTimeUtc,
                 Size = info.Length
@@ -125,8 +126,8 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
             EnsureArg.IsNotNullOrEmpty(newPath, nameof(newPath));
 
-            path = path.NormalizePath();
-            newPath = newPath.NormalizePath();
+            path = PathHelper.Normalize(path);
+            newPath = PathHelper.Normalize(newPath);
             try
             {
                 lock (this.@lock)
@@ -164,7 +165,7 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
             EnsureArg.IsNotNullOrEmpty(targetPath, nameof(targetPath));
 
-            path = path.NormalizePath();
+            path = PathHelper.Normalize(path);
             try
             {
                 lock (this.@lock)
@@ -191,7 +192,7 @@
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
-            path = path.NormalizePath();
+            path = PathHelper.Normalize(path);
             try
             {
                 File.Delete(Path.Combine(this.Folder, path));
@@ -214,7 +215,7 @@
                 return Task.FromResult(0);
             }
 
-            searchPattern = searchPattern.NormalizePath();
+            searchPattern = PathHelper.Normalize(searchPattern);
             int count = 0;
 
             string path = Path.Combine(this.Folder, searchPattern);
@@ -257,7 +258,7 @@
                 searchPattern = "*";
             }
 
-            searchPattern = searchPattern.NormalizePath();
+            searchPattern = PathHelper.Normalize(searchPattern);
 
             var list = new List<FileInformation>();
             if (!Directory.Exists(Path.GetDirectoryName(Path.Combine(this.Folder, searchPattern))))
