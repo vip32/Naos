@@ -17,17 +17,18 @@
         private readonly ILogger<EmbeddedFileStorage> logger;
         private readonly object @lock = new object();
         private readonly ManifestEmbeddedFileProvider provider;
+        private readonly EmbeddedFileStorageOptions options;
 
         public EmbeddedFileStorage(EmbeddedFileStorageOptions options)
         {
             EnsureArg.IsNotNull(options.LoggerFactory, nameof(options.LoggerFactory));
 
             this.logger = options.LoggerFactory.CreateLogger<EmbeddedFileStorage>();
-            options = options ?? new EmbeddedFileStorageOptions();
-            options.Assembly = options.Assembly ?? Assembly.GetEntryAssembly();
+            this.options = options ?? new EmbeddedFileStorageOptions();
+            this.options.Assembly = options.Assembly ?? Assembly.GetEntryAssembly();
             this.Serializer = options.Serializer ?? DefaultSerializer.Instance;
 
-            this.provider = new ManifestEmbeddedFileProvider(options.Assembly);
+            this.provider = new ManifestEmbeddedFileProvider(this.options.Assembly);
         }
 
         public EmbeddedFileStorage(Builder<EmbeddedFileStorageOptionsBuilder, EmbeddedFileStorageOptions> config)
@@ -72,8 +73,8 @@
                 {
                     Path = path,
                     Name = path.SubstringFromLast(Path.DirectorySeparatorChar.ToString()),
-                    //Created = info.CreationTimeUtc,
-                    //Modified = info.LastWriteTimeUtc,
+                    Created = this.options.Assembly.GetLinkerDateTime(),
+                    Modified = this.options.Assembly.GetLinkerDateTime(),
                     //Size = info.Length
                 });
         }
