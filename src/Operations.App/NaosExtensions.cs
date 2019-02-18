@@ -5,7 +5,7 @@
     using Naos.Core.Common;
     using Naos.Core.Operations.App;
 
-    public static class ServiceExtensions
+    public static class NaosExtensions
     {
         public static NaosOptions AddOperations(
             this NaosOptions naosOptions,

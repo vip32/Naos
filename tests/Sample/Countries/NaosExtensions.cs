@@ -11,7 +11,7 @@
     using Naos.Sample.Countries.Domain;
     using Naos.Sample.Countries.Infrastructure;
 
-    public static partial class ServiceExtensions
+    public static partial class NaosExtensions
     {
         public static ServiceOptions AddSampleCountries(
             this ServiceOptions options)

@@ -10,7 +10,7 @@
     /// <summary>
     /// Extensions on the <see cref="IServiceCollection"/>.
     /// </summary>
-    public static class ServiceExtensions
+    public static class NaosExtensions
     {
         /// <summary>
         /// Adds required services to support the Discovery functionality.
@@ -46,10 +46,18 @@
             };
             setupAction?.Invoke(new NaosOptions(context));
 
-            var logger = services.BuildServiceProvider().GetRequiredService<ILoggerFactory>().CreateLogger("Naos");
-            foreach (var message in context.Messages.Safe())
+            try
             {
-                logger.LogDebug(message);
+                var logger = services.BuildServiceProvider().GetRequiredService<ILoggerFactory>().CreateLogger("Naos");
+                foreach (var message in context.Messages.Safe())
+                {
+                    logger.LogDebug(message);
+                }
+            }
+            catch (InvalidOperationException)
+            {
+                // no loggerfactory registered
+                services.AddScoped<ILoggerFactory>(sp => new LoggerFactory());
             }
 
             return context;

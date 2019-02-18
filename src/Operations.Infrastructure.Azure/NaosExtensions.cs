@@ -9,9 +9,9 @@
     using Naos.Core.Operations.Domain.Repositories;
     using Naos.Core.Operations.Infrastructure.Azure;
 
-    public static class ServiceExtensions
+    public static class NaosExtensions
     {
-        public static INaosBuilderContext AddAzureLogAnalyticsRepo(this INaosBuilderContext context, string logName)
+        public static INaosBuilderContext AddAzureLogAnalytics(this INaosBuilderContext context, string logName)
         {
             EnsureArg.IsNotNull(context, nameof(context));
             EnsureArg.IsNotNull(context.Services, nameof(context.Services));
@@ -37,7 +37,7 @@
                         configuration.SubscriptionId,
                         configuration.ResourceGroupName,
                         configuration.WorkspaceName,
-                        $"{logName}_CL");
+                        $"{logName.Replace("_CL", string.Empty)}_CL");
                 });
                 context.Messages.Add($"{LogEventKeys.Startup} logging: azure loganalytics repository added (name={logName}_CL, workspace={configuration.WorkspaceId})");
             }

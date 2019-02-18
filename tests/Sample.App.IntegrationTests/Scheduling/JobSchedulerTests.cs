@@ -13,6 +13,7 @@
     public class JobSchedulerTests : BaseTest
     {
         private readonly IServiceCollection services = new ServiceCollection();
+        private readonly IJobScheduler sut;
 
         public JobSchedulerTests()
         {
@@ -27,38 +28,30 @@
             this.services.AddScoped<StubProbe>();
 
             this.ServiceProvider = this.services.BuildServiceProvider();
+            this.sut = this.ServiceProvider.GetRequiredService<IJobScheduler>();
         }
 
         public ServiceProvider ServiceProvider { get; private set; }
 
-        //[Fact]
-        //public void VerifyContainer_Test()
-        //{
-        //    this.container.Verify();
-        //}
-
         [Fact]
         public void CanInstantiate_Test()
         {
-            var sut = this.ServiceProvider.GetRequiredService<IJobScheduler>();
-
-            sut.ShouldNotBeNull();
+            this.sut.ShouldNotBeNull();
         }
 
         [Fact]
         public async Task RegisterAndTriggerAction_Test()
         {
-            var sut = this.ServiceProvider.GetRequiredService<IJobScheduler>();
             var count = 0;
 
-            sut.Options.Register("key1", "* 12 * * * *", (a) =>
+            this.sut.Options.Register("key1", "* 12 * * * *", (a) =>
             {
                 count++;
                 System.Diagnostics.Trace.WriteLine("+++ hello from task " + a);
             });
 
-            var t1 = sut.TriggerAsync("key1");
-            var t2 = sut.TriggerAsync("key1");
+            var t1 = this.sut.TriggerAsync("key1");
+            var t2 = this.sut.TriggerAsync("key1");
 
             await Task.WhenAll(new[] { t1, t2 });
 
@@ -68,18 +61,17 @@
         [Fact]
         public async Task RegisterAndTriggerTask_Test()
         {
-            var sut = this.ServiceProvider.GetRequiredService<IJobScheduler>();
             var count = 0;
 
-            sut.Options.Register("key1", "* 12 * * * *", async (a) =>
+            this.sut.Options.Register("key1", "* 12 * * * *", async (a) =>
                 await Task.Run(() =>
                 {
                     count++;
                     System.Diagnostics.Trace.WriteLine("+++ hello from task " + a);
                 }));
 
-            var t1 = sut.TriggerAsync("key1");
-            var t2 = sut.TriggerAsync("key1");
+            var t1 = this.sut.TriggerAsync("key1");
+            var t2 = this.sut.TriggerAsync("key1");
 
             await Task.WhenAll(new[] { t1, t2 });
 
@@ -90,14 +82,13 @@
         public async Task RegisterAndTriggerTypeWithArgs_Test()
         {
             var probe = this.ServiceProvider.GetRequiredService<StubProbe>();
-            var sut = this.ServiceProvider.GetRequiredService<IJobScheduler>();
 
-            sut.Options.Register<StubJob>("key1", "* 12 * * * *", new[] { "once" });
-            sut.Options.Register<StubJob>("key2", "* 12 * * * *", new[] { "once" });
+            this.sut.Options.Register<StubJob>("key1", "* 12 * * * *", new[] { "once" });
+            this.sut.Options.Register<StubJob>("key2", "* 12 * * * *", new[] { "once" });
 
             // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
-            var t1 = sut.TriggerAsync("key1");
-            var t2 = sut.TriggerAsync("key2");
+            var t1 = this.sut.TriggerAsync("key1");
+            var t2 = this.sut.TriggerAsync("key2");
 
             await Task.WhenAll(new[] { t1, t2 });
 
@@ -108,13 +99,12 @@
         public async Task RegisterAndTriggerTypeWithOverlapAndArgs_Test()
         {
             var probe = this.ServiceProvider.GetRequiredService<StubProbe>();
-            var sut = this.ServiceProvider.GetRequiredService<IJobScheduler>();
 
-            sut.Options.Register<StubJob>("key1", "* 12 * * * *", new[] { "once"});
+            this.sut.Options.Register<StubJob>("key1", "* 12 * * * *", new[] { "once"});
 
             // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
-            var t1 = sut.TriggerAsync("key1");
-            var t2 = sut.TriggerAsync("key1");
+            var t1 = this.sut.TriggerAsync("key1");
+            var t2 = this.sut.TriggerAsync("key1");
 
             await Task.WhenAll(new[] { t1, t2 });
 
@@ -125,15 +115,14 @@
         public async Task RegisterAndTriggerTypeWithArgsAndCancellation_Test()
         {
             var probe = this.ServiceProvider.GetRequiredService<StubProbe>();
-            var sut = this.ServiceProvider.GetRequiredService<IJobScheduler>();
 
-            sut.Options
+            this.sut.Options
                 .Register<StubJob>("key1", "* 12 * * * *", new[] { "once" })
                 .Register<StubJob>("key2", "* 12 * * * *", new[] { "cancel" });
 
             // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
-            var t1 = sut.TriggerAsync("key1");
-            var t2 = sut.TriggerAsync("key2");
+            var t1 = this.sut.TriggerAsync("key1");
+            var t2 = this.sut.TriggerAsync("key2");
 
             await Task.WhenAll(new[] { t1, t2 });
 
@@ -145,15 +134,14 @@
         {
             var probe = this.ServiceProvider.GetRequiredService<StubProbe>();
             var cts = new CancellationTokenSource();
-            var sut = this.ServiceProvider.GetRequiredService<IJobScheduler>();
 
-            sut.Options.Register<StubJob>("key1", "* 12 * * * *");
-            sut.Options.Register<StubJob>("key2", "* 12 * * * *");
+            this.sut.Options.Register<StubJob>("key1", "* 12 * * * *");
+            this.sut.Options.Register<StubJob>("key2", "* 12 * * * *");
 
             // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
             cts.CancelAfter(TimeSpan.FromMilliseconds(250));
-            var t1 = sut.TriggerAsync("key1", cts.Token);
-            var t2 = sut.TriggerAsync("key2", cts.Token);
+            var t1 = this.sut.TriggerAsync("key1", cts.Token);
+            var t2 = this.sut.TriggerAsync("key2", cts.Token);
             //var t3 = sut.TriggerAsync("key3", cts.Token);
 
             await Task.WhenAll(new[] { t1, t2 });
@@ -167,14 +155,13 @@
         public async Task RegisterAndTriggerTypeOverlap_Test()
         {
             var probe = this.ServiceProvider.GetRequiredService<StubProbe>();
-            var sut = this.ServiceProvider.GetRequiredService<IJobScheduler>();
 
-            sut.Options.Register<StubJob>("key1", "* 12 * * * *");
+            this.sut.Options.Register<StubJob>("key1", "* 12 * * * *");
 
             // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
-            var t1 = sut.TriggerAsync("key1");
-            var t2 = sut.TriggerAsync("key1"); // skipped, due to overlap
-            var t3 = sut.TriggerAsync("unk");
+            var t1 = this.sut.TriggerAsync("key1");
+            var t2 = this.sut.TriggerAsync("key1"); // skipped, due to overlap
+            var t3 = this.sut.TriggerAsync("unk");
 
             await Task.WhenAll(new[] { t1, t2, t3 });
 
@@ -185,15 +172,14 @@
         public async Task RegisterAndTriggerCustomType_Test()
         {
             var probe = this.ServiceProvider.GetRequiredService<StubProbe>();
-            var sut = this.ServiceProvider.GetRequiredService<IJobScheduler>();
 
-            sut.Options
+            this.sut.Options
                 .Register<StubCustomJob>("key1", "* 12 * * * *", (j) => j.MyExecuteAsync("arg1", probe, CancellationToken.None))
                 .Register<StubCustomJob>("key2", "* 12 * * * *", (j) => j.MyExecuteAsync("arg2", probe, CancellationToken.None));
 
             // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
-            var t1 = sut.TriggerAsync("key1");
-            var t2 = sut.TriggerAsync("key2");
+            var t1 = this.sut.TriggerAsync("key1");
+            var t2 = this.sut.TriggerAsync("key2");
 
             await Task.WhenAll(new[] { t1, t2 });
 

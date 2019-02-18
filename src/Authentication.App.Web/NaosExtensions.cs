@@ -5,7 +5,7 @@
     using Microsoft.Extensions.Configuration;
     using Naos.Core.Authentication.App.Web;
 
-    public static class ServiceExtensions
+    public static class NaosExtensions
     {
         //o =>
         //{

@@ -15,7 +15,7 @@
     using Naos.Core.Messaging.App;
     using Naos.Core.Messaging.Infrastructure;
 
-    public static class ServiceExtensions
+    public static class NaosExtensions
     {
         public static MessagingOptions UseFileSystemBroker(
             this MessagingOptions options,

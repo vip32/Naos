@@ -11,7 +11,7 @@
     using Naos.Sample.UserAccounts.Domain;
     using Naos.Sample.UserAccounts.EntityFramework;
 
-    public static partial class ServiceExtensions
+    public static partial class NaosExtensions
     {
         public static ServiceOptions AddSampleUserAccounts(
             this ServiceOptions options,

@@ -2,18 +2,18 @@
 {
     using System;
     using Naos.Core.Common;
-    using Naos.Sample.App;
+    //using Naos.Sample.App;
 
     public abstract class BaseTest
     {
-        public static AppConfiguration AppConfiguration = new AppConfiguration();
+        //public static AppConfiguration AppConfiguration = new AppConfiguration();
 
         static BaseTest()
         {
             Environment.SetEnvironmentVariable(EnvironmentKeys.Environment, "Development");
             Environment.SetEnvironmentVariable(EnvironmentKeys.IsLocal, "True");
 
-            AppConfiguration.Bind("naos:app:sample");
+            //AppConfiguration.Bind("naos:app:sample");
         }
     }
 }

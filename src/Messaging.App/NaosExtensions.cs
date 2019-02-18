@@ -6,7 +6,7 @@
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.App;
 
-    public static class ServiceExtensions
+    public static class NaosExtensions
     {
         public static NaosOptions AddMessaging(
             this NaosOptions naosOptions,

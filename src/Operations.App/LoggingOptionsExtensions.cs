@@ -33,7 +33,7 @@
                 }
 
                 // https://github.com/serilog/serilog-aspnetcore
-                options.LoggerConfiguration.WriteTo.File(
+                options.LoggerConfiguration?.WriteTo.File(
                     path,
                     //outputTemplate: logFileConfiguration.OutputTemplate "{Timestamp:yyyy-MM-dd HH:mm:ss}|{Level} => {CorrelationId} => {Service}::{SourceContext}{NewLine}    {Message}{NewLine}{Exception}",
                     fileSizeLimitBytes: configuration.FileSizeLimitBytes,

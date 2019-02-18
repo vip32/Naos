@@ -12,6 +12,7 @@
     public class MessageBrokerTests : BaseTest
     {
         private readonly IServiceCollection services = new ServiceCollection();
+        private readonly IMessageBroker sut;
 
         public MessageBrokerTests()
         {
@@ -28,31 +29,23 @@
                         .UseServiceBusBroker()));
 
             this.ServiceProvider = this.services.BuildServiceProvider();
+            this.sut = this.ServiceProvider.GetService<IMessageBroker>();
         }
 
         public ServiceProvider ServiceProvider { get; private set; }
 
-        //[Fact]
-        //public void VerifyContainer_Test()
-        //{
-        //    this.container.Verify();
-        //}
-
         [Fact]
         public void CanInstantiate_Test()
         {
-            var sut = this.ServiceProvider.GetService<IMessageBroker>();
-
-            sut.ShouldNotBeNull();
+            this.sut.ShouldNotBeNull();
         }
 
         [Fact]
         public void CanPublish_Test()
         {
-            var sut = this.ServiceProvider.GetService<IMessageBroker>();
-            sut.Publish(new Message());
+            this.sut.Publish(new Message());
 
-            sut.ShouldNotBeNull();
+            this.sut.ShouldNotBeNull();
         }
     }
 }

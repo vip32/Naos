@@ -5,13 +5,9 @@
     using EnsureThat;
     using global::Serilog;
     using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.Logging;
-    using Microsoft.IdentityModel.Clients.ActiveDirectory;
     using Naos.Core.Common;
     using Naos.Core.Infrastructure.Azure;
     using Naos.Core.Operations.App;
-    using Naos.Core.Operations.Domain.Repositories;
-    using Naos.Core.Operations.Infrastructure.Azure;
 
     public static class LoggingOptionsExtensions
     {
@@ -31,7 +27,7 @@
                     .Replace("[CAPABILITY]", options.Context.Descriptor?.Capability);
                 path = Path.Combine(@"D:\home\LogFiles", path);
 
-                options.LoggerConfiguration.WriteTo.File(
+                options.LoggerConfiguration?.WriteTo.File(
                     path,
                     //outputTemplate: diagnosticsLogStreamConfiguration.OutputTemplate "{Timestamp:yyyy-MM-dd HH:mm:ss}|{Level} => {CorrelationId} => {Service}::{SourceContext}{NewLine}    {Message}{NewLine}{Exception}",
                     fileSizeLimitBytes: configuration.FileSizeLimitBytes,
@@ -56,7 +52,7 @@
                 && configuration?.ApplicationKey.IsNullOrEmpty() == false)
             {
                 // configure the serilog sink
-                //options.LoggerConfiguration.WriteTo.AppInsights(appInsightsConfiguration.ApplicationKey);
+                //options.LoggerConfiguration?.WriteTo.AppInsights(appInsightsConfiguration.ApplicationKey);
 
                 options.Context.Messages.Add($"{LogEventKeys.Startup} logging: azure applicationinsightssink added (application={configuration.ApplicationKey})");
             }
@@ -74,9 +70,9 @@
             {
                 // configure the serilog sink
                 var logName = configuration?.LogName.EmptyToNull() ?? "LogEvents_[ENVIRONMENT]"
-                .Replace("[ENVIRONMENT]", options.Environment)
-                .Replace("[PRODUCT]", options.Context.Descriptor?.Product)
-                .Replace("[CAPABILITY]", options.Context.Descriptor?.Capability);
+                    .Replace("[ENVIRONMENT]", options.Environment)
+                    .Replace("[PRODUCT]", options.Context.Descriptor?.Product)
+                    .Replace("[CAPABILITY]", options.Context.Descriptor?.Capability);
                 if (logName.IsNullOrEmpty())
                 {
                     return options;
@@ -86,7 +82,7 @@
                     && configuration.WorkspaceId.IsNullOrEmpty() == false
                     && configuration.AuthenticationId.IsNullOrEmpty() == false)
                 {
-                    options.LoggerConfiguration.WriteTo.AzureAnalytics(
+                    options.LoggerConfiguration?.WriteTo.AzureAnalytics(
                         configuration.WorkspaceId,
                         configuration.AuthenticationId,
                         logName: logName, // without _CL
@@ -99,7 +95,7 @@
                     if (dashboardEnabled) // registers the loganalytics repo which is used by the dashboard (NaosOperationsLogEventsController)
                     {
                         // configure the repository for the dashboard (controller)
-                        options.Context.AddAzureLogAnalyticsRepo(logName);
+                        options.Context.AddAzureLogAnalytics(logName);
                     }
                 }
             }

@@ -12,8 +12,6 @@
     public static class OperationsOptionsExtensions
     {
         private static IConfiguration internalConfiguration;
-        private static LoggerConfiguration internalLoggerConfiguration;
-        private static string internalEnvironment;
         private static string internalCorrelationId;
         private static ILoggerFactory factory;
 
@@ -29,41 +27,29 @@
 
             options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: logging added");
             internalConfiguration = options.Context?.Configuration;
-            internalEnvironment = environment ?? Environment.GetEnvironmentVariable(EnvironmentKeys.Environment) ?? "Production";
             internalCorrelationId = correlationId;
-            internalLoggerConfiguration = internalLoggerConfiguration ?? loggerConfiguration;
 
-            LoggingOptions loggingOptions = null;
-            if (internalLoggerConfiguration == null)
-            {
-                internalLoggerConfiguration = new LoggerConfiguration();
-                loggingOptions = new LoggingOptions(options.Context, internalLoggerConfiguration, internalEnvironment);
-                InitializeLogger(internalLoggerConfiguration);
+            var loggingOptions = new LoggingOptions(
+                options.Context,
+                loggerConfiguration ?? new LoggerConfiguration(),
+                environment ?? Environment.GetEnvironmentVariable(EnvironmentKeys.Environment) ?? "Production");
 
-                setupAction?.Invoke(loggingOptions);
-            }
+            InitializeLogger(loggingOptions);
+            setupAction?.Invoke(loggingOptions);
 
-            //options.Context.Services.AddSingleton(sp => CreateLoggerFactory());
-            options.Context.Services.AddSingleton(sp =>
-            {
-                var factory = CreateLoggerFactory();
-                //foreach (var message in loggingOptions?.Messages.Safe())
-                //{
-                //    Log.Logger.Debug(message);
-                //}
-                return factory;
-            });
+            options.Context.Services.AddSingleton(sp => CreateLoggerFactory(loggingOptions));
             options.Context.Services.AddSingleton(typeof(ILogger<>), typeof(LoggingAdapter<>));
             options.Context.Services.AddSingleton(typeof(Logging.ILogger), typeof(LoggingAdapter));
 
             return options;
         }
 
-        private static ILoggerFactory CreateLoggerFactory()
+        private static ILoggerFactory CreateLoggerFactory(LoggingOptions loggingOptions)
         {
-            if(factory == null) // extra singleton because sometimes this is called multiple times. serilog does not like that
+            if (factory == null) // extra singleton because sometimes this is called multiple times. serilog does not like that
             {
-                Log.Logger = internalLoggerConfiguration.CreateLogger();
+                    Log.Logger = loggingOptions.LoggerConfiguration.CreateLogger();
+
                 factory = new LoggerFactory();
                 factory.AddSerilog(Log.Logger);
                 Log.Logger.Debug("{LogKey:l} logging: serilog initialized", LogEventKeys.Startup);
@@ -72,9 +58,9 @@
             return factory;
         }
 
-        private static void InitializeLogger(LoggerConfiguration loggerConfiguration)
+        private static void InitializeLogger(LoggingOptions loggingOptions)
         {
-            loggerConfiguration
+            loggingOptions.LoggerConfiguration
                 .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Information)
@@ -89,13 +75,13 @@
 #endif
                 .Enrich.With(new ExceptionEnricher())
                 .Enrich.With(new TicksEnricher())
-                .Enrich.WithProperty(LogEventPropertyKeys.Environment, internalEnvironment)
+                .Enrich.WithProperty(LogEventPropertyKeys.Environment, loggingOptions.Environment)
                 //.Enrich.WithProperty("ServiceDescriptor", internalServiceDescriptor)
                 .Enrich.FromLogContext();
 
             if (!internalCorrelationId.IsNullOrEmpty())
             {
-                loggerConfiguration.Enrich.WithProperty(LogEventPropertyKeys.CorrelationId, internalCorrelationId);
+                loggingOptions.LoggerConfiguration.Enrich.WithProperty(LogEventPropertyKeys.CorrelationId, internalCorrelationId);
             }
         }
     }

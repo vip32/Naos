@@ -7,7 +7,7 @@
     /// <summary>
     /// Extensions on the <see cref="IServiceCollection"/>.
     /// </summary>
-    public static class ServiceExtensions
+    public static class NaosExtensions
     {
         /// <summary>
         /// Adds required services to support the service context functionality.

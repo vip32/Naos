@@ -14,7 +14,7 @@
     /// <summary>
     /// Extensions on the <see cref="IServiceCollection"/>.
     /// </summary>
-    public static class ServiceExtensions
+    public static class NaosExtensions
     {
         public static NaosOptions AddServiceDiscovery(
             this NaosOptions naosOptions,

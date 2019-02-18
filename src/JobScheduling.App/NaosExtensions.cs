@@ -9,7 +9,7 @@
     using Naos.Core.JobScheduling.App;
     using Naos.Core.JobScheduling.Domain;
 
-    public static class ServiceExtensions
+    public static class NaosExtensions
     {
         public static NaosOptions AddJobScheduling(
         this NaosOptions naosOptions,

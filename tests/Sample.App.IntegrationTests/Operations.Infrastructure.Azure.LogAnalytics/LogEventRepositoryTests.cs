@@ -11,6 +11,7 @@
     public class LogEventRepositoryTests : BaseTest
     {
         private readonly IServiceCollection services = new ServiceCollection();
+        private readonly ILogEventRepository sut;
 
         public LogEventRepositoryTests()
         {
@@ -19,35 +20,30 @@
             this.services
                 .AddNaos(configuration, "Product", "Capability", new[] { "All" }, n => n
                     .AddOperations(o => o
-                        .AddLogging(l => l
-                            .UseAzureLogAnalytics(),
+                        .AddLogging(
+                            l => l.UseAzureLogAnalytics(), // registers ILogEventRepository
                             correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}"))
                     .AddJobScheduling());
 
             this.ServiceProvider = this.services.BuildServiceProvider();
+            this.sut = this.ServiceProvider.GetService<ILogEventRepository>();
         }
 
         public ServiceProvider ServiceProvider { get; private set; }
 
-        //[Fact]
-        //public void VerifyContainer_Test()
-        //{
-        //    this.container.Verify();
-        //}
-
-        [Fact]
-        public void CanInstantiate_Test()
-        {
-            var sut = this.ServiceProvider.GetService<ILogEventRepository>();
-
-            sut.ShouldNotBeNull();
-        }
-
         [Fact]
         public async Task FindAllAsync_Test()
         {
-            var sut = this.ServiceProvider.GetService<ILogEventRepository>();
-            var result = await sut.FindAllAsync().AnyContext();
+            var result = await this.sut.FindAllAsync().AnyContext();
+
+            result.ShouldNotBeNull();
+            result.ShouldNotBeEmpty();
+        }
+
+        [Fact]
+        public async Task FindAllAsync2_Test()
+        {
+            var result = await this.sut.FindAllAsync().AnyContext();
 
             result.ShouldNotBeNull();
             result.ShouldNotBeEmpty();

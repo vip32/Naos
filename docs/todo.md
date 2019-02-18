@@ -32,7 +32,10 @@ Marketing
 
 TODO:
 
-Dashboard with razor class library (operations logevents)
+NetCore 3.0 upgrade
+ https://www.talkingdotnet.com/asp-net-core-3-0-app-with-net-core-3-preview-2-and-visual-studio-2019/
+
+Dashboard with razor class library (operations logevents) OR razor components
   https://www.learnrazorpages.com/advanced/razor-class-library
 
 Repositories
@@ -41,9 +44,6 @@ Repositories
 use Codecov token from azure devop variables in YAML > $(codecov-token) 
 
 OptionsBuilder instead of large ctors (for all non configration things like MessageBrokers/Repositories)
-
-NetCore 3.0 upgrade
- https://www.talkingdotnet.com/asp-net-core-3-0-app-with-net-core-3-preview-2-and-visual-studio-2019/
 
 Inmemory Repo
   use concurrentdict instead of list https://github.com/SharpRepository/SharpRepository/blob/develop/SharpRepository.InMemoryRepository/InMemoryRepositoryBase.cs
@@ -104,6 +104,7 @@ webapi test + jwt https://www.domstamand.com/testing-a-webapi-in-net-core-with-i
 webapi caching (client/server) https://github.com/aliostad/CacheCow#getting-started---client
 nested app https://github.com/damianh/AspNetCoreNestedApps
 embedded dashboard https://github.com/dotnetcore/CAP/tree/master/src/DotNetCore.CAP/Dashboard
+vuejs + signalr dashboard https://www.dotnetcurry.com/aspnet-core/1480/aspnet-core-vuejs-signalr-app
 angular with netcore 2.2 https://www.codeproject.com/Articles/1274513/Angular-7-with-NET-Core-2-2-Global-Weather-Part-1
 host multiple mvc apps https://damienbod.com/2018/12/01/using-mvc-asp-net-core-apps-in-a-host-asp-net-core-app/
 file repo https://github.com/selmaohneh/Repository/tree/master/Repository.FileRepository

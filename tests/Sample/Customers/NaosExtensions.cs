@@ -14,7 +14,7 @@
     using Naos.Sample.Customers.App.Client;
     using Naos.Sample.Customers.Domain;
 
-    public static partial class ServiceExtensions
+    public static partial class NaosExtensions
     {
         public static ServiceOptions AddSampleCustomers(
             this ServiceOptions options,

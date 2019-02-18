@@ -5,7 +5,7 @@
     using Naos.Core.Commands.Domain;
     using Naos.Core.Common;
 
-    public static class ServiceExtensions
+    public static class NaosExtensions
     {
         /// <summary>
         /// Adds required services to support the command handling functionality.

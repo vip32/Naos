@@ -13,7 +13,7 @@
     using Naos.Core.Messaging.App;
     using Naos.Core.Messaging.Infrastructure.Azure;
 
-    public static class ServiceExtensions
+    public static class NaosExtensions
     {
         public static MessagingOptions UseServiceBusBroker(
             this MessagingOptions options,

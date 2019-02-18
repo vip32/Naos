@@ -6,7 +6,7 @@
     using Naos.Core.RequestFiltering.App;
     using Naos.Core.RequestFiltering.App.Web;
 
-    public static class ServiceExtensions
+    public static class NaosExtensions
     {
         /// <summary>
         /// Adds required services to support the request filtering functionality.

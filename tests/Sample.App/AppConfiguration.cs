@@ -1,10 +1,8 @@
-﻿namespace Naos.Sample.App
-{
-    using Naos.Core.Configuration;
-    using Naos.Core.Infrastructure.Azure.CosmosDb;
+﻿//namespace Naos.Sample.App
+//{
+//    using Naos.Core.Configuration;
 
-    public class AppConfiguration : NaosAppConfiguration
-    {
-        public CosmosDbConfiguration CosmosDb { get; set; }
-    }
-}
+//    public class AppConfiguration : NaosAppConfiguration
+//    {
+//    }
+//}

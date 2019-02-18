@@ -11,7 +11,7 @@
     using Naos.Core.Messaging.App;
     using Naos.Core.Messaging.Infrastructure.RabbitMQ;
 
-    public static class ServiceExtensions
+    public static class NaosExtensions
     {
         public static MessagingOptions UseRabbitMQBroker(
             this MessagingOptions options,
