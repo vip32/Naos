@@ -55,7 +55,7 @@
             }
             catch (SftpPathNotFoundException ex)
             {
-                if (this.logger.IsEnabled(LogLevel.Trace))
+                if (this.logger.IsEnabled(LogLevel.Warning))
                 {
                     this.logger.LogTrace(ex, "Error trying to get file stream: {Path}", path);
                 }
@@ -83,7 +83,7 @@
             }
             catch (SftpPathNotFoundException ex)
             {
-                if (this.logger.IsEnabled(LogLevel.Trace))
+                if (this.logger.IsEnabled(LogLevel.Warning))
                 {
                     this.logger.LogTrace(ex, "Error trying to getting file info: {Path}", path);
                 }

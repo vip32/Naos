@@ -61,7 +61,7 @@
             }
             catch (IOException ex) when (ex is FileNotFoundException || ex is DirectoryNotFoundException)
             {
-                if (this.logger.IsEnabled(LogLevel.Trace))
+                if (this.logger.IsEnabled(LogLevel.Warning))
                 {
                     this.logger.LogTrace(ex, "Error trying to get file stream: {Path}", path);
                 }
