@@ -388,7 +388,7 @@
         [ContentTypeMetadata(Value = "application/vnd.commonspace", IsBinary = true)]
         CSP,
 
-        [ContentTypeMetadata(Value = "text/css", IsText = true)]
+        [ContentTypeMetadata(Value = "text/css", IsText = true, FileExtension = "css" )]
         CSS,
 
         [ContentTypeMetadata(Value = "application/x-director", IsBinary = true)]
@@ -396,9 +396,6 @@
 
         [ContentTypeMetadata(Value = "text/csv", IsText = true, FileExtension = "csv")]
         CSV,
-
-        [ContentTypeMetadata(Value = "text/flatcsv", IsText = true, FileExtension = "fcsv")]
-        FCSV,
 
         [ContentTypeMetadata(Value = "application/cu-seeme", IsBinary = true)]
         CU,
@@ -928,10 +925,10 @@
         [ContentTypeMetadata(Value = "application/vnd.kenameaapp", IsBinary = true)]
         HTKE,
 
-        [ContentTypeMetadata(Value = "text/html", IsText = true)]
+        [ContentTypeMetadata(Value = "text/html", IsText = true, FileExtension = "htm")]
         HTM,
 
-        [ContentTypeMetadata(Value = "text/html", IsText = true)]
+        [ContentTypeMetadata(Value = "text/html", IsText = true, FileExtension = "html")]
         HTML,
 
         [ContentTypeMetadata(Value = "application/vnd.yamaha.hv-dic", IsBinary = true)]
@@ -1069,7 +1066,7 @@
         [ContentTypeMetadata(Value = "image/jpeg", IsBinary = true)]
         JPEG,
 
-        [ContentTypeMetadata(Value = "image/jpeg", IsBinary = true/*, FileExtension = "jpg"*/)]
+        [ContentTypeMetadata(Value = "image/jpeg", IsBinary = true, FileExtension = "jpg")]
         JPG,
 
         [ContentTypeMetadata(Value = "video/jpm", IsBinary = true)]
@@ -1081,7 +1078,7 @@
         [ContentTypeMetadata(Value = "video/jpm", IsBinary = true)]
         JPM,
 
-        [ContentTypeMetadata(Value = "application/javascript", IsText = true)]
+        [ContentTypeMetadata(Value = "application/javascript", IsText = true, FileExtension = "js")]
         JS,
 
         [ContentTypeMetadata(Value = "application/json", IsText = true, FileExtension = "json")]
@@ -1813,7 +1810,7 @@
         [ContentTypeMetadata(Value = "application/vnd.ctc-posml", IsBinary = true)]
         PML,
 
-        [ContentTypeMetadata(Value = "image/png", IsBinary = true)]
+        [ContentTypeMetadata(Value = "image/png", IsBinary = true, FileExtension = "png")]
         PNG,
 
         [ContentTypeMetadata(Value = "image/x-portable-anymap", IsBinary = true)]

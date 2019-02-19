@@ -90,6 +90,7 @@ KeyVault cache (peristent)
 azure deployment (ARM) https://markheath.net/post/arm-vs-azure-cli
                  (CLI) https://gist.github.com/pascalnaber/75412a97a0d0b059314d193c3ab37c4c
 
+assembly builddate https://www.meziantou.net/2018/09/24/getting-the-date-of-build-of-a-net-assembly-at-runtime 
 pattern cqs https://www.dotnetcurry.com/patterns-practices/1461/command-query-separation-cqs
 cqrs https://github.com/OpenCQRS/OpenCQRS
 crs https://github.com/gautema/CQRSlite (eventstore)

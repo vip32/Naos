@@ -116,6 +116,8 @@
                     await this.HttpContext.Response.WriteAsync($"criteria: {criteria.ToString()}<br/>");
                 }
 
+                this.FilterContext.Take = this.FilterContext.Take ?? 1000; // get amount per request, repeat while logevents.ticks >= past
+
                 var logEvents = await this.Repository.FindAllAsync(
                     this.FilterContext.GetSpecifications<LogEvent>(),
                     this.FilterContext.GetFindOptions<LogEvent>()).AnyContext();

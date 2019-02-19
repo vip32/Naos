@@ -6,7 +6,18 @@
     <RootNamespace>Naos.Core.UnitTests</RootNamespace>
     <IsPackable>false</IsPackable>
     <LangVersion>7.1</LangVersion>
+    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="FileStorage\StubFile.json" />
+    <None Remove="FileStorage\StubFile.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="FileStorage\StubFile.json" />
+    <EmbeddedResource Include="FileStorage\StubFile.txt" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.11.3" />
@@ -87,10 +98,6 @@
     <Folder Include="App.Web\" />
     <Folder Include="Infrastructure.CosmosDb\" />
     <Folder Include="Correlation\" />
-  </ItemGroup>
-
-  <ItemGroup>
-
   </ItemGroup>
 
 </Project>

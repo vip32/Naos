@@ -9,6 +9,11 @@
     [DebuggerDisplay("Path = {Path}, Created = {Created}, Modified = {Modified}, Size = {Size} bytes")]
     public class FileInformation
     {
+        public FileInformation()
+        {
+            this.Properties = new DataDictionary();
+        }
+
         public string Path { get; set; }
 
         public string Name { get; set; }
@@ -24,9 +29,9 @@
 
         public string PrettySize => this.Size.Bytes().ToString("#.##");
 
-        public DataDictionary Properties => new DataDictionary();
+        public DataDictionary Properties { get; set; }
 
         public ContentType ContentType =>
-            !this.Name.IsNullOrEmpty() ? ContentTypeExtensions.FromFilename(this.Name) : ContentTypeExtensions.FromFilename(this.Path);
+            !this.Name.IsNullOrEmpty() ? ContentTypeExtensions.FromFileName(this.Name) : ContentTypeExtensions.FromFileName(this.Path);
     }
 }

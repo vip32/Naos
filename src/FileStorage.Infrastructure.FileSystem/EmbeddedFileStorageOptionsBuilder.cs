@@ -1,5 +1,6 @@
 ﻿namespace Naos.Core.FileStorage.Infrastructure
 {
+    using System.Collections.Generic;
     using System.Reflection;
     using Naos.Core.Common;
     using Naos.Core.Common.Serialization;
@@ -7,9 +8,9 @@
     public class EmbeddedFileStorageOptionsBuilder :
         BaseOptionsBuilder<EmbeddedFileStorageOptions, EmbeddedFileStorageOptionsBuilder>
     {
-        public EmbeddedFileStorageOptionsBuilder Assembly(Assembly assembly)
+        public EmbeddedFileStorageOptionsBuilder Assembly(IEnumerable<Assembly> assemblies)
         {
-            this.Target.Assembly = assembly;
+            this.Target.Assemblies = assemblies;
             return this;
         }
 

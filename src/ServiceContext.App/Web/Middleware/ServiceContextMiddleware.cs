@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.AspNetCore.Http;
@@ -77,7 +78,13 @@
                                 //["userIdentity"] = serviceContext.UserIdentity,
                                 //["username"] = serviceContext.Username
                             },
-                            //Runtime = runtimeDescriptor,
+                            Runtime = new Dictionary<string, string>
+                            {
+                                // TODO: get these endpoints through DI for all active capabilities
+                                ["name"] = Assembly.GetEntryAssembly().GetName().Name,
+                                ["version"] = Assembly.GetEntryAssembly().GetName().Version.ToString(),
+                                ["builddate"] = Assembly.GetEntryAssembly().GetBuildDate().ToString("o")
+                            },
                             Actions = new Dictionary<string, string>
                             {
                                 // TODO: get these endpoints through DI for all active capabilities
@@ -123,7 +130,7 @@
 
             public Dictionary<string, object> Request { get; set; }
 
-            //public RuntimeDescriptor Runtime { get; set; }
+            public IDictionary<string, string> Runtime { get; set; }
 
             public IDictionary<string, string> Actions { get; set; }
         }

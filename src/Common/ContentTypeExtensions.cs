@@ -24,9 +24,9 @@
             return @default;
         }
 
-        public static ContentType FromExtension(string value, ContentType @default = ContentType.TEXT)
+        public static ContentType FromExtension(string extension, ContentType @default = ContentType.TEXT)
         {
-            if (string.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(extension))
             {
                 return @default;
             }
@@ -35,23 +35,35 @@
             {
                 Enum.TryParse(enumValue.ToString(), true, out ContentType contentType);
                 var metaDataValue = contentType.GetAttributeValue<ContentTypeMetadata, string>(x => x.FileExtension);
-                if (metaDataValue != null && metaDataValue.Equals(value, StringComparison.OrdinalIgnoreCase))
+                if (metaDataValue != null)
                 {
-                    return contentType;
+                    // compare the attribute value with the extension
+                    if (metaDataValue.Equals(extension, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return contentType;
+                    }
+                }
+                else
+                {
+                    // compare the enum value with the extension
+                    if(enumValue.ToString().SafeEquals(extension))
+                    {
+                        return contentType;
+                    }
                 }
             }
 
             return @default;
         }
 
-        public static ContentType FromFilename(string value, ContentType @default = ContentType.TEXT)
+        public static ContentType FromFileName(string fileName, ContentType @default = ContentType.TEXT)
         {
-            if (string.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(fileName))
             {
                 return @default;
             }
 
-            return FromExtension(value.SubstringFromLast("."), @default);
+            return FromExtension(fileName.SubstringFromLast("."), @default);
         }
 
         public static string ToValue(this ContentType contentType)

@@ -18,7 +18,19 @@
         {
             foreach (var item in items.Safe())
             {
-                this.Add(item.Key, item.Value);
+                if (!item.Key.IsNullOrEmpty())
+                {
+                    this.Add(item.Key, item.Value);
+                }
+            }
+        }
+
+        public DataDictionary(string key, object value)
+            : base(StringComparer.OrdinalIgnoreCase)
+        {
+            if (!key.IsNullOrEmpty())
+            {
+                this.Add(key, value);
             }
         }
 

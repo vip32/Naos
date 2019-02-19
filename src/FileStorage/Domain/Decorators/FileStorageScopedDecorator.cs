@@ -89,14 +89,14 @@
             return this.Decoratee.DeleteFilesAsync(string.Concat(this.pathPrefix, searchPattern), cancellationToken);
         }
 
-        public async Task<PagedResults> GetPagedFileListAsync(int pageSize = 100, string searchPattern = null, CancellationToken cancellationToken = default)
+        public async Task<PagedResults> GetFileInformationsAsync(int pageSize = 100, string searchPattern = null, CancellationToken cancellationToken = default)
         {
             if (pageSize <= 0)
             {
                 return PagedResults.EmptyResults;
             }
 
-            var unscopedResult = await this.Decoratee.GetPagedFileListAsync(pageSize, string.Concat(this.pathPrefix, searchPattern), cancellationToken).AnyContext();
+            var unscopedResult = await this.Decoratee.GetFileInformationsAsync(pageSize, string.Concat(this.pathPrefix, searchPattern), cancellationToken).AnyContext();
             foreach (var file in unscopedResult.Files)
             {
                 file.Path = file.Path.Substring(this.pathPrefix.Length);

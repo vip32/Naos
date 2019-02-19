@@ -84,7 +84,7 @@
         public static async Task<IReadOnlyCollection<FileInformation>> GetFileInformationsAsync(this IFileStorage storage, string searchPattern = null, int? limit = null, CancellationToken cancellationToken = default)
         {
             var files = new List<FileInformation>();
-            var result = await storage.GetPagedFileListAsync(100, searchPattern, cancellationToken).AnyContext();
+            var result = await storage.GetFileInformationsAsync(100, searchPattern, cancellationToken).AnyContext();
             do
             {
                 foreach (var file in result.Files)

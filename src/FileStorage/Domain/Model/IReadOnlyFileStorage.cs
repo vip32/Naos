@@ -16,6 +16,6 @@
 
         Task<bool> ExistsAsync(string path);
 
-        Task<PagedResults> GetPagedFileListAsync(int pageSize = 100, string searchPattern = null, CancellationToken cancellationToken = default);
+        Task<PagedResults> GetFileInformationsAsync(int pageSize = 100, string searchPattern = null, CancellationToken cancellationToken = default);
     }
 }

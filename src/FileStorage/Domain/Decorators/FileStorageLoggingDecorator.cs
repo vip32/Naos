@@ -90,10 +90,10 @@
             return this.Decoratee.DeleteFilesAsync(searchPattern, cancellationToken);
         }
 
-        public async Task<PagedResults> GetPagedFileListAsync(int pageSize = 100, string searchPattern = null, CancellationToken cancellationToken = default)
+        public async Task<PagedResults> GetFileInformationsAsync(int pageSize = 100, string searchPattern = null, CancellationToken cancellationToken = default)
         {
             this.logger.LogInformation($"{{LogKey:l}} get files: {searchPattern}", LogEventKeys.FileStorage);
-            return await this.GetPagedFileListAsync(pageSize, searchPattern, cancellationToken);
+            return await this.GetFileInformationsAsync(pageSize, searchPattern, cancellationToken);
         }
 
         public void Dispose()
