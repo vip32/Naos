@@ -68,10 +68,7 @@
 
         public Task<bool> ExistsAsync(string path)
         {
-            if (string.IsNullOrEmpty(path))
-            {
-                throw new ArgumentNullException(nameof(path));
-            }
+            EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
             path = PathHelper.Normalize(path);
             return Task.FromResult(this.storage.ContainsKey(path));
