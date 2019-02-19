@@ -73,11 +73,11 @@
 
             if (Path.DirectorySeparatorChar == '\\')
             {
-                path = path.Replace('/', Path.DirectorySeparatorChar);
+                return path.Replace('/', Path.DirectorySeparatorChar);
             }
             else if (Path.DirectorySeparatorChar == '/')
             {
-                path = path.Replace('\\', Path.DirectorySeparatorChar);
+                return path.Replace('\\', Path.DirectorySeparatorChar);
             }
 
             return path;

@@ -5,7 +5,6 @@
     using MediatR;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
-    using Naos.Core.Configuration.App;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Domain.Repositories.AutoMapper;
     using Naos.Sample.Countries.Domain;

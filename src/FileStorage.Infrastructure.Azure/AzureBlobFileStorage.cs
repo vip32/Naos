@@ -93,8 +93,8 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
             EnsureArg.IsNotNull(stream, nameof(stream));
 
-            var blockBlob = this.container.GetBlockBlobReference(path);
-            await blockBlob.UploadFromStreamAsync(stream, null, null, null, cancellationToken).AnyContext();
+            await this.container.GetBlockBlobReference(path)
+                .UploadFromStreamAsync(stream, null, null, null, cancellationToken).AnyContext();
 
             return true;
         }
@@ -134,8 +134,8 @@
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
-            var blockBlob = this.container.GetBlockBlobReference(path);
-            return blockBlob.DeleteIfExistsAsync(DeleteSnapshotsOption.None, null, null, null, cancellationToken);
+            return this.container.GetBlockBlobReference(path)
+                .DeleteIfExistsAsync(DeleteSnapshotsOption.None, null, null, null, cancellationToken);
         }
 
         public async Task<int> DeleteFilesAsync(string searchPattern = null, CancellationToken cancellationToken = default)
@@ -165,7 +165,11 @@
             return result;
         }
 
-        public async Task<IEnumerable<FileInformation>> GetFileListAsync(
+        public void Dispose()
+        {
+        }
+
+        private async Task<IEnumerable<FileInformation>> GetFileListAsync(
             string searchPattern = null,
             int? limit = null,
             int? skip = null,
@@ -207,10 +211,6 @@
             }
 
             return blobs.Select(blob => blob.ToFileInfo());
-        }
-
-        public void Dispose()
-        {
         }
 
         private async Task<NextPageResult> GetFiles(string searchPattern, int page, int pageSize, CancellationToken cancellationToken)

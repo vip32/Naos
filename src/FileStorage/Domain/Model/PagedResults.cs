@@ -11,14 +11,18 @@
         public static readonly IReadOnlyCollection<FileInformation> Empty = new ReadOnlyCollection<FileInformation>(new FileInformation[0]);
         public static PagedResults EmptyResults = new PagedResults(Empty);
 
-        public PagedResults(IReadOnlyCollection<FileInformation> files)
+        public PagedResults(
+            IReadOnlyCollection<FileInformation> files)
         {
             this.Files = files;
             this.HasMore = false;
             ((IHasNextPageFunc)this).NextPageFunc = null;
         }
 
-        public PagedResults(IReadOnlyCollection<FileInformation> files, bool hasMore, Func<Task<NextPageResult>> nextPageFunc)
+        public PagedResults(
+            IReadOnlyCollection<FileInformation> files,
+            bool hasMore,
+            Func<Task<NextPageResult>> nextPageFunc)
         {
             this.Files = files;
             this.HasMore = hasMore;

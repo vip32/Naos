@@ -6,7 +6,6 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
-    using Naos.Core.Configuration.App;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Infrastructure.Azure.CosmosDb;
     using Naos.Core.RequestCorrelation.App.Web;
