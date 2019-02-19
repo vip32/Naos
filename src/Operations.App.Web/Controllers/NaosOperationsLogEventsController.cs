@@ -108,7 +108,7 @@
                 if(!this.FilterContext.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Ticks))))
                 {
                     this.FilterContext.Criterias = this.FilterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Ticks), CriteriaOperator.LessThanOrEqual, DateTime.UtcNow.Ticks));
-                    this.FilterContext.Criterias = this.FilterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Ticks), CriteriaOperator.GreaterThanOrEqual, DateTime.UtcNow.AddDays(-1).Ticks));
+                    this.FilterContext.Criterias = this.FilterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Ticks), CriteriaOperator.GreaterThanOrEqual, DateTime.UtcNow.AddHours(-24).Ticks));
                 }
 
                 foreach (var criteria in this.FilterContext.Criterias)

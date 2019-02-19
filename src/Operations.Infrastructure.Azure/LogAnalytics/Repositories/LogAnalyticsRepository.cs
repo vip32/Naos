@@ -94,7 +94,7 @@ where LogMessage_s != '' and
                 query += $" and LogProperties_{LogEventPropertyKeys.Ticks}_d {spec.ToString(true).SubstringFrom(" ")}";
             }
 
-            query += $" | top 100 by LogProperties_{LogEventPropertyKeys.Ticks}_d desc";
+            query += $" | top {options.Take ?? 1000} by LogProperties_{LogEventPropertyKeys.Ticks}_d desc";
 
             //order by LogProperties_{LogEventPropertyKeys.Ticks}_d desc |
             //skip ({page}-1) * {pageSize} | top {pageSize}
