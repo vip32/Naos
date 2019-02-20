@@ -37,7 +37,7 @@
 
         public async Task Invoke(HttpContext context)
         {
-            if (context.Request.Path.Value.EqualsWildcardAny(this.options.PathBlackListPatterns))
+            if (context.Request.Path.Value.EqualsPatternAny(this.options.PathBlackListPatterns))
             {
                 await this.next.Invoke(context).AnyContext();
             }
@@ -50,7 +50,7 @@
                 var timer = Stopwatch.StartNew();
                 await this.next.Invoke(context).AnyContext();
                 timer.Stop();
-                this.LogResponse(context, requestId, timer.Elapsed);
+                this.LogResponse(context, correlationId, requestId, timer.Elapsed);
             }
         }
 
@@ -68,8 +68,18 @@
                 this.logger.LogInformation($"{{LogKey:l}} [{requestId}] http headers={string.Join("|", context.Request.Headers.Select(h => $"{h.Key}={h.Value}"))}", LogEventKeys.InboundRequest);
             }
 
+            if (this.options.FileStorageEnabled && this.options.FileStorage != null && context.Request.Body != null)
+            {
+                context.Request.EnableBuffering(); // allow multiple reads
+                using (var stream = this.streamManager.GetStream())
+                {
+                    context.Request.Body.CopyTo(stream);
+                    this.options.FileStorage.SaveFileAsync($"{correlationId}_{requestId}_request.txt", stream);
+                }
+            }
+
             //request.EnableRewind();
-            //using (var stream = this.streamManager.GetStream())
+            //using (var stream = this.streamManager.GetStream()) // https://stackoverflow.com/questions/43403941/how-to-read-asp-net-core-response-body/43404745
             //{
             //    request.Body.CopyTo(stream);
 
@@ -80,9 +90,11 @@
             //                           $"QueryString: {request.QueryString} " +
             //                           $"Request Body: {ReadStreamInChunks(stream)}");
             //}
+
+            // OR log json request https://www.strathweb.com/2019/02/be-careful-when-manually-handling-json-requests-in-asp-net-core/
         }
 
-        private void LogResponse(HttpContext context, string requestId, TimeSpan elapsed)
+        private void LogResponse(HttpContext context, string correlationId, string requestId, TimeSpan elapsed)
         {
             var level = LogLevel.Information;
             if ((int)context.Response.StatusCode > 499)
@@ -97,6 +109,15 @@
             if (!context.Response.Headers.IsNullOrEmpty())
             {
                 this.logger.Log(level, $"{{LogKey:l}} [{requestId}] http headers={string.Join("|", context.Response.Headers.Select(h => $"{h.Key}={h.Value}"))}", LogEventKeys.InboundResponse);
+            }
+
+            if (this.options.FileStorageEnabled && this.options.FileStorage != null && context.Request.Body != null)
+            {
+                using (var stream = this.streamManager.GetStream())
+                {
+                    context.Response.Body.CopyTo(stream);
+                    this.options.FileStorage.SaveFileAsync($"{correlationId}_{requestId}_response.txt", stream);
+                }
             }
 
             this.logger.LogJournal(LogEventPropertyKeys.TrackInboundResponse, $"{{LogKey:l}} [{requestId}] http {context.Request.Method} {{Url:l}} {{StatusCode}} ({ReasonPhrases.GetReasonPhrase(context.Response.StatusCode)}) -> took {elapsed.Humanize(3)}", level, args: new object[] { LogEventKeys.InboundResponse, new Uri(context.Request.GetDisplayUrl()), context.Response.StatusCode });
