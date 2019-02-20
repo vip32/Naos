@@ -4,6 +4,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
+    using Humanizer;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Common.Serialization;
@@ -56,7 +57,7 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
             EnsureArg.IsNotNull(stream, nameof(stream));
 
-            this.logger.LogInformation($"{{LogKey:l}} save {this.name} file: {path}", LogEventKeys.FileStorage);
+            this.logger.LogInformation($"{{LogKey:l}} save {this.name} file: {path} (size={stream.Length.Bytes().ToString("#.##")})", LogEventKeys.FileStorage);
             return this.Decoratee.SaveFileAsync(path, stream, cancellationToken);
         }
 
