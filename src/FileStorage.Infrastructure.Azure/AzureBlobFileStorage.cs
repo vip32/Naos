@@ -8,7 +8,6 @@
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
-    using Microsoft.Extensions.Logging;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;
     using Naos.Core.Common;
@@ -17,15 +16,11 @@
 
     public class AzureBlobFileStorage : IFileStorage
     {
-        private readonly ILogger<AzureBlobFileStorage> logger;
         private readonly CloudBlobContainer container;
         private readonly ISerializer serializer;
 
         public AzureBlobFileStorage(AzureBlobFileStorageOptions options)
         {
-            EnsureArg.IsNotNull(options.LoggerFactory, nameof(options.LoggerFactory));
-
-            this.logger = options.LoggerFactory.CreateLogger<AzureBlobFileStorage>();
             options = options ?? new AzureBlobFileStorageOptions();
             this.Serializer = options.Serializer ?? DefaultSerializer.Instance;
 
@@ -145,7 +140,6 @@
 
             foreach (var file in files) // batch?
             {
-                this.logger.LogInformation($"{{LogKey:l}} delete file: {file.Path}", LogEventKeys.FileStorage);
                 await this.DeleteFileAsync(file.Path, cancellationToken).AnyContext();
                 count++;
             }

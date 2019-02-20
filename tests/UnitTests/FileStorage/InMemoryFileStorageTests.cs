@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.FileStorage;
     using Naos.Core.FileStorage.Domain;
     using NSubstitute;
     using Xunit;

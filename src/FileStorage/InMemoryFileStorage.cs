@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.FileStorage.Domain
+﻿namespace Naos.Core.FileStorage
 {
     using System;
     using System.Collections.Generic;
@@ -9,21 +9,22 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Humanizer;
-    using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Common.Serialization;
+    using Naos.Core.FileStorage.Domain;
 
     public class InMemoryFileStorage : IFileStorage
     {
-        private readonly ILogger<InMemoryFileStorage> logger;
         private readonly Dictionary<string, Tuple<FileInformation, byte[]>> storage = new Dictionary<string, Tuple<FileInformation, byte[]>>(StringComparer.OrdinalIgnoreCase);
         private readonly object @lock = new object();
 
+        public InMemoryFileStorage()
+            : this(new InMemoryFileStorageOptions())
+        {
+        }
+
         public InMemoryFileStorage(InMemoryFileStorageOptions options)
         {
-            EnsureArg.IsNotNull(options.LoggerFactory, nameof(options.LoggerFactory));
-
-            this.logger = options.LoggerFactory.CreateLogger<InMemoryFileStorage>();
             options = options ?? new InMemoryFileStorageOptions();
             this.Serializer = options.Serializer ?? DefaultSerializer.Instance;
 
@@ -83,7 +84,7 @@
             var contents = ReadBytes(stream);
             if (contents.Length > this.MaxFileSize)
             {
-                throw new ArgumentException(string.Format("File size {0} exceeds the maximum size of {1}.", contents.Length.Bytes().ToString("#.##"), this.MaxFileSize.Bytes().ToString("#.##")));
+                throw new NaosException(string.Format("File size {0} exceeds the maximum size of {1}.", contents.Length.Bytes().ToString("#.##"), this.MaxFileSize.Bytes().ToString("#.##")));
             }
 
             lock (this.@lock)
@@ -200,7 +201,6 @@
                 var keys = this.storage.Keys.Where(k => regex.IsMatch(k)).Select(k => this.storage[k].Item1).ToList();
                 foreach (var key in keys)
                 {
-                    this.logger.LogInformation($"{{LogKey:l}} delete file: {key.Path}", LogEventKeys.FileStorage);
                     this.storage.Remove(key.Path);
                     count++;
                 }

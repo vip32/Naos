@@ -25,5 +25,15 @@
 
             return source;
         }
+
+        public static string Default(this string source, string defaultValue)
+        {
+            if (string.IsNullOrEmpty(source))
+            {
+                return defaultValue;
+            }
+
+            return source;
+        }
     }
 }

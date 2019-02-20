@@ -8,22 +8,17 @@
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
-    using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Common.Serialization;
     using Naos.Core.FileStorage.Domain;
 
     public class EmbeddedFileStorage : IFileStorage
     {
-        private readonly ILogger<EmbeddedFileStorage> logger;
         private readonly object @lock = new object();
         private readonly EmbeddedFileStorageOptions options;
 
         public EmbeddedFileStorage(EmbeddedFileStorageOptions options)
         {
-            EnsureArg.IsNotNull(options.LoggerFactory, nameof(options.LoggerFactory));
-
-            this.logger = options.LoggerFactory.CreateLogger<EmbeddedFileStorage>();
             this.options = options ?? new EmbeddedFileStorageOptions();
             this.options.Assemblies = options.Assemblies ?? new[] { Assembly.GetEntryAssembly() };
             this.Serializer = options.Serializer ?? DefaultSerializer.Instance;

@@ -32,7 +32,9 @@
             EnsureArg.IsNotNull(app, nameof(app));
             EnsureArg.IsNotNull(options, nameof(options));
 
-            return app.UseMiddleware<RequestResponseLoggingMiddleware>(Options.Create(options));
+            return app
+                .UseMiddleware<RequestResponseLoggingMiddleware>(Options.Create(options))
+                .UseMiddleware<RequestResponseFileStorageMiddleware>(Options.Create(options));
         }
     }
 }

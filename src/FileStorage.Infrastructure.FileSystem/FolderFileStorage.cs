@@ -1,27 +1,21 @@
 ﻿namespace Naos.Core.FileStorage.Infrastructure
 {
-    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
-    using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Common.Serialization;
     using Naos.Core.FileStorage.Domain;
 
     public class FolderFileStorage : IFileStorage
     {
-        private readonly ILogger<FolderFileStorage> logger;
         private readonly object @lock = new object();
 
         public FolderFileStorage(FolderFileStorageOptions options)
         {
-            EnsureArg.IsNotNull(options.LoggerFactory, nameof(options.LoggerFactory));
-
-            this.logger = options.LoggerFactory.CreateLogger<FolderFileStorage>();
             options = options ?? new FolderFileStorageOptions();
             this.Serializer = options.Serializer ?? DefaultSerializer.Instance;
 
@@ -55,19 +49,7 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
             path = PathHelper.Normalize(path);
-            try
-            {
-                return Task.FromResult<Stream>(File.OpenRead(Path.Combine(this.Folder, path)));
-            }
-            catch (IOException ex) when (ex is FileNotFoundException || ex is DirectoryNotFoundException)
-            {
-                if (this.logger.IsEnabled(LogLevel.Warning))
-                {
-                    this.logger.LogTrace(ex, "Error trying to get file stream: {Path}", path);
-                }
-
-                return Task.FromResult<Stream>(null);
-            }
+            return Task.FromResult<Stream>(File.OpenRead(Path.Combine(this.Folder, path)));
         }
 
         public Task<FileInformation> GetFileInformationAsync(string path)
@@ -106,18 +88,10 @@
 
             path = PathHelper.Normalize(path);
             string file = Path.Combine(this.Folder, path);
-            try
+            using (var fileStream = this.CreateFileStream(file))
             {
-                using (var fileStream = this.CreateFileStream(file))
-                {
-                    await stream.CopyToAsync(fileStream).AnyContext();
-                    return true;
-                }
-            }
-            catch (Exception ex)
-            {
-                this.logger.LogError(ex, "Error trying to save file: {Path}", path);
-                return false;
+                await stream.CopyToAsync(fileStream).AnyContext();
+                return true;
             }
         }
 
@@ -128,33 +102,25 @@
 
             path = PathHelper.Normalize(path);
             newPath = PathHelper.Normalize(newPath);
-            try
+            lock (this.@lock)
             {
-                lock (this.@lock)
+                string directory = Path.GetDirectoryName(newPath);
+                if (directory != null)
                 {
-                    string directory = Path.GetDirectoryName(newPath);
-                    if (directory != null)
-                    {
-                        Directory.CreateDirectory(Path.Combine(this.Folder, directory));
-                    }
-
-                    string oldFullPath = Path.Combine(this.Folder, path);
-                    string newFullPath = Path.Combine(this.Folder, newPath);
-                    try
-                    {
-                        File.Move(oldFullPath, newFullPath);
-                    }
-                    catch (IOException)
-                    {
-                        File.Delete(newFullPath);
-                        File.Move(oldFullPath, newFullPath);
-                    }
+                    Directory.CreateDirectory(Path.Combine(this.Folder, directory));
                 }
-            }
-            catch (Exception ex)
-            {
-                this.logger.LogError(ex, "Error trying to rename file {Path} to {NewPath}.", path, newPath);
-                return Task.FromResult(false);
+
+                string oldFullPath = Path.Combine(this.Folder, path);
+                string newFullPath = Path.Combine(this.Folder, newPath);
+                try
+                {
+                    File.Move(oldFullPath, newFullPath);
+                }
+                catch (IOException)
+                {
+                    File.Delete(newFullPath);
+                    File.Move(oldFullPath, newFullPath);
+                }
             }
 
             return Task.FromResult(true);
@@ -166,23 +132,15 @@
             EnsureArg.IsNotNullOrEmpty(targetPath, nameof(targetPath));
 
             path = PathHelper.Normalize(path);
-            try
+            lock (this.@lock)
             {
-                lock (this.@lock)
+                string directory = Path.GetDirectoryName(targetPath);
+                if (directory != null)
                 {
-                    string directory = Path.GetDirectoryName(targetPath);
-                    if (directory != null)
-                    {
-                        Directory.CreateDirectory(Path.Combine(this.Folder, directory));
-                    }
-
-                    File.Copy(Path.Combine(this.Folder, path), Path.Combine(this.Folder, targetPath));
+                    Directory.CreateDirectory(Path.Combine(this.Folder, directory));
                 }
-            }
-            catch (Exception ex)
-            {
-                this.logger.LogError(ex, "Error trying to copy file {Path} to {TargetPath}.", path, targetPath);
-                return Task.FromResult(false);
+
+                File.Copy(Path.Combine(this.Folder, path), Path.Combine(this.Folder, targetPath));
             }
 
             return Task.FromResult(true);
@@ -193,16 +151,7 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
             path = PathHelper.Normalize(path);
-            try
-            {
-                File.Delete(Path.Combine(this.Folder, path));
-            }
-            catch (Exception ex) when (ex is FileNotFoundException || ex is DirectoryNotFoundException)
-            {
-                this.logger.LogDebug(ex, "Error trying to delete file: {Path}.", path);
-                return Task.FromResult(false);
-            }
-
+            File.Delete(Path.Combine(this.Folder, path));
             return Task.FromResult(true);
         }
 
@@ -210,7 +159,6 @@
         {
             if (searchPattern == null || string.IsNullOrEmpty(searchPattern) || searchPattern == "*")
             {
-                this.logger.LogInformation($"{{LogKey:l}} delete folder: {this.Folder}", LogEventKeys.FileStorage);
                 Directory.Delete(this.Folder, true);
                 return Task.FromResult(0);
             }
@@ -238,7 +186,6 @@
 
             foreach (string file in Directory.EnumerateFiles(this.Folder, searchPattern, SearchOption.AllDirectories))
             {
-                this.logger.LogInformation($"{{LogKey:l}} delete file: {file}", LogEventKeys.FileStorage);
                 File.Delete(file);
                 count++;
             }
@@ -289,7 +236,6 @@
             string directory = Path.GetDirectoryName(filePath);
             if (directory != null)
             {
-                this.logger.LogInformation($"{{LogKey:l}} create directory: {directory}", LogEventKeys.FileStorage);
                 Directory.CreateDirectory(directory);
             }
 

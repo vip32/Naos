@@ -22,9 +22,12 @@
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
     using Naos.Core.Configuration;
+    using Naos.Core.FileStorage;
+    using Naos.Core.FileStorage.Domain;
     using Naos.Core.JobScheduling.App;
     using Naos.Core.JobScheduling.Domain;
     using Naos.Core.Messaging;
+    using Naos.Core.Operations.App.Web;
     using Naos.Core.RequestCorrelation.App.Web;
     using Naos.Core.ServiceContext.App.Web;
     using Newtonsoft.Json;
@@ -132,9 +135,9 @@
                             .Subscribe<TestMessage, TestMessageHandler>()))
                     .AddServiceDiscovery(o => o
                         .UseFileSystemClientRegistry()));
-                        //.UseConsulClientRegistry()));
-                        //.UseFileSystemRouterRegistry()));
-                        //.UseRemoteRouterClientRegistry()));
+            //.UseConsulClientRegistry()));
+            //.UseFileSystemRouterRegistry()));
+            //.UseRemoteRouterClientRegistry()));
 
             // TODO: need to find a way to start the MessageBroker (done by resolving the IMessageBroker somewhere, HostedService? like scheduling)
         }
@@ -151,11 +154,17 @@
             }
 
             // naos middleware
-            app.UseHttpsRedirection() // TODO: UseNaos()...... with options like services
+            app.UseHttpsRedirection() // TODO: UseNaos()...... with setupAction like services
                .UseNaosRequestCorrelation()
                .UseNaosServiceContext()
                .UseNaosServicePoweredBy()
-               .UseNaosOperationsRequestResponseLogging()
+               .UseNaosOperationsRequestResponseLogging(
+                    new RequestResponseLoggingOptions
+                    {
+                        FileStorage = new FileStorageLoggingDecorator(
+                            app.ApplicationServices.GetRequiredService<ILoggerFactory>(),
+                            new InMemoryFileStorage())
+                    })
                .UseNaosRequestFiltering()
                .UseNaosExceptionHandling()
                .UseNaosServiceDiscoveryRouter();

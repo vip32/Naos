@@ -46,15 +46,15 @@
                 var correlationId = context.GetCorrelationId();
                 var requestId = context.GetRequestId();
 
-                this.LogRequest(context, correlationId, requestId);
+                await this.LogRequestAsync(context, correlationId, requestId).AnyContext();
                 var timer = Stopwatch.StartNew();
                 await this.next.Invoke(context).AnyContext();
                 timer.Stop();
-                this.LogResponse(context, correlationId, requestId, timer.Elapsed);
+                await this.LogResponseAsync(context, correlationId, requestId, timer.Elapsed).AnyContext();
             }
         }
 
-        private void LogRequest(HttpContext context, string correlationId, string requestId)
+        private async Task LogRequestAsync(HttpContext context, string correlationId, string requestId)
         {
             this.logger.LogJournal(LogEventPropertyKeys.TrackInboundRequest, $"{{LogKey:l}} [{requestId}] http {context.Request.Method} {{Url:l}} ({correlationId})", args: new object[] { LogEventKeys.InboundRequest, new Uri(context.Request.GetDisplayUrl()) });
 
@@ -71,10 +71,10 @@
             if (this.options.FileStorageEnabled && this.options.FileStorage != null && context.Request.Body != null)
             {
                 context.Request.EnableBuffering(); // allow multiple reads
-                using (var stream = this.streamManager.GetStream())
+                if (context.Request.Body.Length > 0)
                 {
-                    context.Request.Body.CopyTo(stream);
-                    this.options.FileStorage.SaveFileAsync($"{correlationId}_{requestId}_request.txt", stream);
+                    await this.options.FileStorage.SaveFileAsync($"{correlationId}_{requestId}_request.txt", context.Request.Body).AnyContext();
+                    context.Request.Body.Position = 0;
                 }
             }
 
@@ -94,33 +94,27 @@
             // OR log json request https://www.strathweb.com/2019/02/be-careful-when-manually-handling-json-requests-in-asp-net-core/
         }
 
-        private void LogResponse(HttpContext context, string correlationId, string requestId, TimeSpan elapsed)
+        private async Task LogResponseAsync(HttpContext context, string correlationId, string requestId, TimeSpan elapsed)
         {
-            var level = LogLevel.Information;
-            if ((int)context.Response.StatusCode > 499)
+            await Task.Run(() =>
             {
-                level = LogLevel.Error;
-            }
-            else if ((int)context.Response.StatusCode > 399)
-            {
-                level = LogLevel.Warning;
-            }
-
-            if (!context.Response.Headers.IsNullOrEmpty())
-            {
-                this.logger.Log(level, $"{{LogKey:l}} [{requestId}] http headers={string.Join("|", context.Response.Headers.Select(h => $"{h.Key}={h.Value}"))}", LogEventKeys.InboundResponse);
-            }
-
-            if (this.options.FileStorageEnabled && this.options.FileStorage != null && context.Request.Body != null)
-            {
-                using (var stream = this.streamManager.GetStream())
+                var level = LogLevel.Information;
+                if ((int)context.Response.StatusCode > 499)
                 {
-                    context.Response.Body.CopyTo(stream);
-                    this.options.FileStorage.SaveFileAsync($"{correlationId}_{requestId}_response.txt", stream);
+                    level = LogLevel.Error;
                 }
-            }
+                else if ((int)context.Response.StatusCode > 399)
+                {
+                    level = LogLevel.Warning;
+                }
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackInboundResponse, $"{{LogKey:l}} [{requestId}] http {context.Request.Method} {{Url:l}} {{StatusCode}} ({ReasonPhrases.GetReasonPhrase(context.Response.StatusCode)}) -> took {elapsed.Humanize(3)}", level, args: new object[] { LogEventKeys.InboundResponse, new Uri(context.Request.GetDisplayUrl()), context.Response.StatusCode });
+                if (!context.Response.Headers.IsNullOrEmpty())
+                {
+                    this.logger.Log(level, $"{{LogKey:l}} [{requestId}] http headers={string.Join("|", context.Response.Headers.Select(h => $"{h.Key}={h.Value}"))}", LogEventKeys.InboundResponse);
+                }
+
+                this.logger.LogJournal(LogEventPropertyKeys.TrackInboundResponse, $"{{LogKey:l}} [{requestId}] http {context.Request.Method} {{Url:l}} {{StatusCode}} ({ReasonPhrases.GetReasonPhrase(context.Response.StatusCode)}) -> took {elapsed.Humanize(3)}", level, args: new object[] { LogEventKeys.InboundResponse, new Uri(context.Request.GetDisplayUrl()), context.Response.StatusCode });
+            }).AnyContext();
         }
 
         //private async Task LogResponseAsync(HttpContext context, string requestId)
@@ -145,28 +139,28 @@
         //context.Response.Body = body;
         //}
 
-        private string ReadStreamInChunks(Stream stream)
-        {
-            string result;
-            stream.Seek(0, SeekOrigin.Begin);
+        //private string ReadStreamInChunks(Stream stream)
+        //{
+        //    string result;
+        //    stream.Seek(0, SeekOrigin.Begin);
 
-            using (var textWriter = new StringWriter())
-            using (var reader = new StreamReader(stream))
-            {
-                var readChunk = new char[ReadChunkBufferLength];
-                int readChunkLength;
+        //    using (var textWriter = new StringWriter())
+        //    using (var reader = new StreamReader(stream))
+        //    {
+        //        var readChunk = new char[ReadChunkBufferLength];
+        //        int readChunkLength;
 
-                do //do while: is useful for the last iteration in case readChunkLength < chunkLength
-                {
-                    readChunkLength = reader.ReadBlock(readChunk, 0, ReadChunkBufferLength);
-                    textWriter.Write(readChunk, 0, readChunkLength);
-                }
-                while (readChunkLength > 0);
+        //        do //do while: is useful for the last iteration in case readChunkLength < chunkLength
+        //        {
+        //            readChunkLength = reader.ReadBlock(readChunk, 0, ReadChunkBufferLength);
+        //            textWriter.Write(readChunk, 0, readChunkLength);
+        //        }
+        //        while (readChunkLength > 0);
 
-                result = textWriter.ToString();
-            }
+        //        result = textWriter.ToString();
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
     }
 }
