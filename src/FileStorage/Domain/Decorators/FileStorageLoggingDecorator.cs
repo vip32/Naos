@@ -57,7 +57,7 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
             EnsureArg.IsNotNull(stream, nameof(stream));
 
-            this.logger.LogInformation($"{{LogKey:l}} save {this.name} file: {path} (size={stream.Length.Bytes().ToString("#.##")})", LogEventKeys.FileStorage);
+            this.logger.LogInformation($"{{LogKey:l}} save {this.name} file: {path} (size={ReadBytes(stream).Length.Bytes().ToString("#.##")})", LogEventKeys.FileStorage);
             return this.Decoratee.SaveFileAsync(path, stream, cancellationToken);
         }
 
@@ -102,6 +102,16 @@
         public void Dispose()
         {
             this.Decoratee?.Dispose();
+        }
+
+        private static byte[] ReadBytes(Stream stream)
+        {
+            using (var ms = new MemoryStream())
+            {
+                stream.CopyTo(ms);
+                //stream.Position = 0;
+                return ms.ToArray();
+            }
         }
     }
 }

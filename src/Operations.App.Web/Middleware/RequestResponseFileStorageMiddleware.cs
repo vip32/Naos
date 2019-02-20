@@ -30,26 +30,25 @@
             var correlationId = context.GetCorrelationId().Default(Guid.NewGuid().ToString().Remove("-"));
             var requestId = context.GetRequestId();
             var path = $"{correlationId}_{requestId}".TrimEnd('_');
+            var contentLength = context.Request.ContentLength ?? 0;
 
             if (this.options.FileStorageEnabled && this.options.FileStorage != null)
             {
-                if (context.Request.Body != null)
+                if (context.Request.Body != null && contentLength > 0)
                 {
                     context.Request.EnableBuffering(); // allow multiple reads
-                    if (context.Request.Body.Length > 0)
+                    context.Request.Body.Position = 0;
+                    try
                     {
-                        try
-                        {
-                            await this.options.FileStorage.SaveFileAsync($"{path}_request.txt", context.Request.Body).AnyContext();
-                        }
-                        catch(Exception ex)
-                        {
-                            // don't throw exceptions when logging
-                            this.logger.LogWarning(ex, ex.Message);
-                        }
-
-                        context.Request.Body.Position = 0;
+                        await this.options.FileStorage.SaveFileAsync($"{path}_request.txt", context.Request.Body).AnyContext();
                     }
+                    catch (Exception ex)
+                    {
+                        // don't throw exceptions when logging
+                        this.logger.LogWarning(ex, ex.Message);
+                    }
+
+                    context.Request.Body.Position = 0;
                 }
 
                 if (context.Response.Body != null)
@@ -64,6 +63,7 @@
 
                             if (stream.Length > 0)
                             {
+                                context.Response.ContentLength = stream.Length; // for later use
                                 stream.Position = 0;
                                 //string responseBody = new StreamReader(stream).ReadToEnd();
                                 try

@@ -50,27 +50,21 @@
 
         private async Task LogRequestAsync(HttpContext context, string correlationId, string requestId)
         {
-            this.logger.LogJournal(LogEventPropertyKeys.TrackInboundRequest, $"{{LogKey:l}} [{requestId}] http {context.Request.Method} {{Url:l}} ({correlationId})", args: new object[] { LogEventKeys.InboundRequest, new Uri(context.Request.GetDisplayUrl()) });
-
-            //if (context.HasServiceName())
-            //{
-            //    this.logger.LogInformation($"SERVICE [{requestId}] http request service {context.GetServiceName()}");
-            //}
-
-            if (!context.Request.Headers.IsNullOrEmpty())
+            await Task.Run(() =>
             {
-                this.logger.LogInformation($"{{LogKey:l}} [{requestId}] http headers={string.Join("|", context.Request.Headers.Select(h => $"{h.Key}={h.Value}"))}", LogEventKeys.InboundRequest);
-            }
+                var contentLength = context.Request.ContentLength ?? 0;
+                this.logger.LogJournal(LogEventPropertyKeys.TrackInboundRequest, $"{{LogKey:l}} [{requestId}] http {context.Request.Method} {{Url:l}} (size={contentLength.Bytes().ToString("#.##")})", args: new object[] { LogEventKeys.InboundRequest, new Uri(context.Request.GetDisplayUrl()) });
 
-            if (this.options.FileStorageEnabled && this.options.FileStorage != null && context.Request.Body != null)
-            {
-                context.Request.EnableBuffering(); // allow multiple reads
-                if (context.Request.Body.Length > 0)
+                //if (context.HasServiceName())
+                //{
+                //    this.logger.LogInformation($"SERVICE [{requestId}] http request service {context.GetServiceName()}");
+                //}
+
+                if (!context.Request.Headers.IsNullOrEmpty())
                 {
-                    await this.options.FileStorage.SaveFileAsync($"{correlationId}_{requestId}_request.txt", context.Request.Body).AnyContext();
-                    context.Request.Body.Position = 0;
+                    this.logger.LogInformation($"{{LogKey:l}} [{requestId}] http headers={string.Join("|", context.Request.Headers.Select(h => $"{h.Key}={h.Value}"))}", LogEventKeys.InboundRequest);
                 }
-            }
+            });
         }
 
         private async Task LogResponseAsync(HttpContext context, string correlationId, string requestId, TimeSpan elapsed)
@@ -92,7 +86,8 @@
                     this.logger.Log(level, $"{{LogKey:l}} [{requestId}] http headers={string.Join("|", context.Response.Headers.Select(h => $"{h.Key}={h.Value}"))}", LogEventKeys.InboundResponse);
                 }
 
-                this.logger.LogJournal(LogEventPropertyKeys.TrackInboundResponse, $"{{LogKey:l}} [{requestId}] http {context.Request.Method} {{Url:l}} {{StatusCode}} ({ReasonPhrases.GetReasonPhrase(context.Response.StatusCode)}) -> took {elapsed.Humanize(3)}", level, args: new object[] { LogEventKeys.InboundResponse, new Uri(context.Request.GetDisplayUrl()), context.Response.StatusCode });
+                var contentLength = context.Response.ContentLength ?? 0;
+                this.logger.LogJournal(LogEventPropertyKeys.TrackInboundResponse, $"{{LogKey:l}} [{requestId}] http {context.Request.Method} {{Url:l}} {{StatusCode}} ({ReasonPhrases.GetReasonPhrase(context.Response.StatusCode)}) -> took {elapsed.Humanize(3)} (size={contentLength.Bytes().ToString("#.##")})", level, args: new object[] { LogEventKeys.InboundResponse, new Uri(context.Request.GetDisplayUrl()), context.Response.StatusCode });
             }).AnyContext();
         }
     }

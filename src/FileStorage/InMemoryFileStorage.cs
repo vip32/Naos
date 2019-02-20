@@ -233,11 +233,11 @@
             this.storage?.Clear();
         }
 
-        private static byte[] ReadBytes(Stream input)
+        private static byte[] ReadBytes(Stream stream)
         {
             using (var ms = new MemoryStream())
             {
-                input.CopyTo(ms);
+                stream.CopyTo(ms);
                 return ms.ToArray();
             }
         }
@@ -249,7 +249,7 @@
             int skip = (page - 1) * pagingLimit;
             if (pagingLimit < int.MaxValue)
             {
-                pagingLimit = pagingLimit + 1;
+                pagingLimit += 1;
             }
 
             var regex = new Regex("^" + Regex.Escape(searchPattern).Replace("\\*", ".*?") + "$");
