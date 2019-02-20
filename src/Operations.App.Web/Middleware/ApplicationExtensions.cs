@@ -18,7 +18,7 @@
         {
             EnsureArg.IsNotNull(app, nameof(app));
 
-            return app.UseNaosOperationsRequestResponseLogging(new RequestResponseLoggingOptions());
+            return app.UseNaosOperationsLogging(new OperationsLoggingOptions());
         }
 
         /// <summary>
@@ -27,7 +27,7 @@
         /// <param name="app"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public static IApplicationBuilder UseNaosOperationsRequestResponseLogging(this IApplicationBuilder app, RequestResponseLoggingOptions options)
+        public static IApplicationBuilder UseNaosOperationsLogging(this IApplicationBuilder app, OperationsLoggingOptions options)
         {
             EnsureArg.IsNotNull(app, nameof(app));
             EnsureArg.IsNotNull(options, nameof(options));

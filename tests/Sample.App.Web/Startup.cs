@@ -158,8 +158,8 @@
                .UseNaosRequestCorrelation()
                .UseNaosServiceContext()
                .UseNaosServicePoweredBy()
-               .UseNaosOperationsRequestResponseLogging(
-                    new RequestResponseLoggingOptions
+               .UseNaosOperationsLogging(
+                    new OperationsLoggingOptions
                     {
                         FileStorage = new FileStorageLoggingDecorator(
                             app.ApplicationServices.GetRequiredService<ILoggerFactory>(),

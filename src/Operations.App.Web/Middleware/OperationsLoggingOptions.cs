@@ -5,7 +5,7 @@
     /// <summary>
     /// Options for operations request response logging.
     /// </summary>
-    public class RequestResponseLoggingOptions
+    public class OperationsLoggingOptions
     {
         private const string DefaultRequestHeader = "X-RequestId";
 

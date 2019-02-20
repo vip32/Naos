@@ -12,16 +12,17 @@
     public class RequestResponseFileStorageMiddleware
     {
         private readonly ILogger<RequestResponseFileStorageMiddleware> logger;
-        private readonly RequestResponseLoggingOptions options;
+        private readonly OperationsLoggingOptions options;
         private readonly RequestDelegate next;
 
         public RequestResponseFileStorageMiddleware(RequestDelegate next,
             ILogger<RequestResponseFileStorageMiddleware> logger,
-            IOptions<RequestResponseLoggingOptions> options)
+            IOptions<OperationsLoggingOptions> options)
         {
             this.next = next;
             this.logger = logger;
-            this.options = options.Value ?? new RequestResponseLoggingOptions();
+            this.options = options.Value ?? new OperationsLoggingOptions();
+            // https://stackoverflow.com/questions/43403941/how-to-read-asp-net-core-response-body/43404745
         }
 
         public async Task Invoke(HttpContext context)
