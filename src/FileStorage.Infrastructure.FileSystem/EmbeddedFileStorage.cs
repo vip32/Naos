@@ -125,7 +125,7 @@
 
             if (!searchPattern.IsNullOrEmpty())
             {
-                result = result.Where(i => i.Path.EqualsWildcard(searchPattern));
+                result = result.Where(i => i.Path.EqualsPattern(searchPattern));
             }
 
             return Task.FromResult(

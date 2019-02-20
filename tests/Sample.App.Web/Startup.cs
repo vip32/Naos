@@ -151,7 +151,7 @@
             }
 
             // naos middleware
-            app.UseHttpsRedirection()
+            app.UseHttpsRedirection() // TODO: UseNaos()...... with options like services
                .UseNaosRequestCorrelation()
                .UseNaosServiceContext()
                .UseNaosServicePoweredBy()

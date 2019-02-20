@@ -8,18 +8,19 @@
         [Fact]
         public void Various()
         {
-            Assert.True("Test".EqualsWildcard("*"));
-            Assert.True("Test".EqualsWildcard("Test"));
-            Assert.False("Test1".EqualsWildcard("Test"));
-            Assert.False("Test".EqualsWildcard("test", false));
-            Assert.True("Test".EqualsWildcard("Test", false));
-            Assert.False("Test123".EqualsWildcard("test*", false));
-            Assert.True("Test234".EqualsWildcard("Test*", false));
-            Assert.True("Test1".EqualsWildcard("Test*"));
-            Assert.False("1Test1".EqualsWildcard("Test*"));
-            Assert.True("1Test1".EqualsWildcard("*Test*"));
-            Assert.True("³[]³}{]}{]}³1Test1³²[²³{[]²³$&%/$&%".EqualsWildcard("*Test*"));
-            Assert.True("Te\\asd[\\w]st".EqualsWildcard("Te\\asd[\\w]st"));
+            Assert.True("Test".EqualsPattern("*"));
+            Assert.True("Test".EqualsPattern("Test"));
+            Assert.False("Test1".EqualsPattern("Test"));
+            Assert.False("Test".EqualsPattern("test", false));
+            Assert.True("Test".EqualsPattern("Test", false));
+            Assert.True("1234Test".EqualsPattern("*Test"));
+            Assert.False("Test123".EqualsPattern("test*", false));
+            Assert.True("Test234".EqualsPattern("Test*", false));
+            Assert.True("Test1".EqualsPattern("Test*"));
+            Assert.False("1Test1".EqualsPattern("Test*"));
+            Assert.True("1Test1".EqualsPattern("*Test*"));
+            Assert.True("³[]³}{]}{]}³1Test1³²[²³{[]²³$&%/$&%".EqualsPattern("*Test*"));
+            Assert.True("Te\\asd[\\w]st".EqualsPattern("Te\\asd[\\w]st"));
         }
     }
 }
