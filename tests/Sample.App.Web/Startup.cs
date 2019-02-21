@@ -121,6 +121,7 @@
                     .AddOperations(o => o
                         .AddLogging(l => l
                             .UseFile()
+                            .UseAzureBlobStorage()
                             .UseAzureLogAnalytics()))
                     //.AddQueries()
                     //.AddSwaggerDocument() // s.Description = Product.Capability\
@@ -170,7 +171,8 @@
                         FileStorage = new FileStorageScopedDecorator($"requests/{env.EnvironmentName}",
                             new FileStorageLoggingDecorator(
                                 app.ApplicationServices.GetRequiredService<ILoggerFactory>(),
-                                new FolderFileStorage(f => f.Folder(Path.Combine(Path.GetTempPath(), "naos_operations")))))
+                                new AzureBlobFileStorage(f => f.ContainerName("operations").ConnectionString(this.Configuration["naos:operations:logging:azureBlobStorage:connectionString"]))))
+                                //new FolderFileStorage(f => f.Folder(Path.Combine(Path.GetTempPath(), "naos_operations"))))
                     })
                 .UseNaosRequestFiltering()
                 .UseNaosExceptionHandling()

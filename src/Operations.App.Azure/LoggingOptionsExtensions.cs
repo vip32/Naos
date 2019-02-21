@@ -21,7 +21,7 @@
             {
                 // configure the serilog sink
                 // https://github.com/serilog/serilog-aspnetcore
-                var path = configuration.File.EmptyToNull() ?? $"LogEvents_[PRODUCT]_[CAPABILITY]_[ENVIRONMENT].log"
+                var path = configuration.File.EmptyToNull() ?? "logevents_[PRODUCT]_[CAPABILITY]_[ENVIRONMENT].log"
                     .Replace("[ENVIRONMENT]", options.Environment)
                     .Replace("[PRODUCT]", options.Context.Descriptor?.Product)
                     .Replace("[CAPABILITY]", options.Context.Descriptor?.Capability);
@@ -55,6 +55,35 @@
                 //options.LoggerConfiguration?.WriteTo.AppInsights(appInsightsConfiguration.ApplicationKey);
 
                 options.Context.Messages.Add($"{LogEventKeys.Startup} logging: azure applicationinsightssink added (application={configuration.ApplicationKey})");
+            }
+
+            return options;
+        }
+
+        public static LoggingOptions UseAzureBlobStorage(this LoggingOptions options)
+        {
+            EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.Context, nameof(options.Context));
+
+            var configuration = options.Context.Configuration?.GetSection("naos:operations:logging:azureBlobStorage").Get<BlobStorageConfiguration>();
+            if (configuration?.Enabled == true
+                && configuration?.ConnectionString.IsNullOrEmpty() == false)
+            {
+                var path = configuration.File.EmptyToNull() ?? "logevents/{yyyy}/{MM}/{dd}/logevents_[PRODUCT]_[CAPABILITY]_[ENVIRONMENT].log"
+                    .Replace("[ENVIRONMENT]", options.Environment)
+                    .Replace("[PRODUCT]", options.Context.Descriptor?.Product)
+                    .Replace("[CAPABILITY]", options.Context.Descriptor?.Capability);
+
+                options.LoggerConfiguration?.WriteTo.AzureBlobStorage(
+                    restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information,
+                    connectionString: configuration.ConnectionString,
+                    storageFolderName: configuration.ContainerName.EmptyToNull() ?? "operations",
+                    storageFileName: path,
+                    writeInBatches: true,
+                    period: TimeSpan.FromSeconds(15),
+                    batchPostingLimit: 10);
+
+                options.Context.Messages.Add($"{LogEventKeys.Startup} logging: azure blobstorage added (container={configuration.ContainerName}, path={path})");
             }
 
             return options;
