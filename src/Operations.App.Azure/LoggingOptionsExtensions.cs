@@ -69,7 +69,7 @@
             if (configuration?.Enabled == true
                 && configuration?.ConnectionString.IsNullOrEmpty() == false)
             {
-                var path = configuration.File.EmptyToNull() ?? "logevents/{yyyy}/{MM}/{dd}/logevents_{product}_{capability}.log"
+                var path = configuration.File.EmptyToNull() ?? "logevents/{yyyy}/{MM}/{dd}/logevents_{environment}_{product}_{capability}.log"
                     .Replace("{environment}", options.Environment.ToLower())
                     .Replace("{product}", options.Context.Descriptor?.Product?.ToLower())
                     .Replace("{capability}", options.Context.Descriptor?.Capability?.ToLower());
