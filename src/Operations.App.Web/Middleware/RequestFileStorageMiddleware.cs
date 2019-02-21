@@ -32,7 +32,7 @@
             var path = $"{correlationId}_{requestId}".TrimEnd('_');
             var contentLength = context.Request.ContentLength ?? 0;
 
-            if (this.options.FileStorageEnabled && this.options.FileStorage != null)
+            if (this.options.RequestFileStorageEnabled && this.options.RequestFileStorage != null)
             {
                 if (context.Request.Body != null && contentLength > 0)
                 {
@@ -40,7 +40,7 @@
                     context.Request.Body.Position = 0;
                     try
                     {
-                        await this.options.FileStorage.SaveFileAsync($"{path}_request.txt", context.Request.Body).AnyContext();
+                        await this.options.RequestFileStorage.SaveFileAsync($"{path}_request.txt", context.Request.Body).AnyContext();
                     }
                     catch (Exception ex)
                     {
@@ -68,7 +68,7 @@
                                 //string responseBody = new StreamReader(stream).ReadToEnd();
                                 try
                                 {
-                                    await this.options.FileStorage.SaveFileAsync($"{path}_response.txt", stream).AnyContext();
+                                    await this.options.RequestFileStorage.SaveFileAsync($"{path}_response.txt", stream).AnyContext();
                                 }
                                 catch (Exception ex)
                                 {

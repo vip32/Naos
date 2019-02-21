@@ -118,6 +118,7 @@
                     .AddServiceExceptions()
                     .AddCommands()
                     .AddOperations(o => o
+                        //.AddRequestFileStorage(r => r.UseAzureBlobStorage())
                         .AddLogging(l => l
                             .UseFile()
                             .UseAzureBlobStorage()
@@ -165,9 +166,11 @@
                 .UseNaosServiceContext()
                 .UseNaosServicePoweredBy()
                 .UseNaosOperationsLogging(
-                    new OperationsLoggingOptions
+                    new OperationsLoggingOptions // DI ABOVE ^^ (configure)
                     {
-                        FileStorage = new FileStorageScopedDecorator("requests/{yyyy}/{MM}/{dd}",
+                        // following for RequestFileStorageMiddleware > bundle in context (configure above) + di register.
+                        //                                              this context is then injected into middleware
+                        RequestFileStorage = new FileStorageScopedDecorator("requests/{yyyy}/{MM}/{dd}",
                             new FileStorageLoggingDecorator(
                                 app.ApplicationServices.GetRequiredService<ILoggerFactory>(),
                                 new AzureBlobFileStorage(f => f

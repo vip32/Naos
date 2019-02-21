@@ -22,8 +22,8 @@
         /// <summary>
         /// The optional filestorage to store the request/response details
         /// </summary>
-        public IFileStorage FileStorage { get; set; }
+        public IFileStorage RequestFileStorage { get; set; }
 
-        public bool FileStorageEnabled { get; set; } = true;
+        public bool RequestFileStorageEnabled { get; set; } = true;
     }
 }
