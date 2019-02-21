@@ -14,11 +14,11 @@
         /// </summary>
         /// <param name="app"></param>
         /// <returns></returns>
-        public static IApplicationBuilder UseNaosOperationsRequestResponseLogging(this IApplicationBuilder app)
+        public static IApplicationBuilder UseNaosOperations(this IApplicationBuilder app)
         {
             EnsureArg.IsNotNull(app, nameof(app));
 
-            return app.UseNaosOperationsLogging(new OperationsLoggingOptions());
+            return app.UseNaosOperations(new OperationsLoggingOptions());
         }
 
         /// <summary>
@@ -27,7 +27,7 @@
         /// <param name="app"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public static IApplicationBuilder UseNaosOperationsLogging(this IApplicationBuilder app, OperationsLoggingOptions options)
+        public static IApplicationBuilder UseNaosOperations(this IApplicationBuilder app, OperationsLoggingOptions options)
         {
             EnsureArg.IsNotNull(app, nameof(app));
             EnsureArg.IsNotNull(options, nameof(options));

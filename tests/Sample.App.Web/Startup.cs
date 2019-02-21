@@ -165,7 +165,7 @@
                 .UseNaosRequestCorrelation()
                 .UseNaosServiceContext()
                 .UseNaosServicePoweredBy()
-                .UseNaosOperationsLogging(
+                .UseNaosOperations(
                     new OperationsLoggingOptions // DI ABOVE ^^ (configure)
                     {
                         // following for RequestFileStorageMiddleware > bundle in context (configure above) + di register.
