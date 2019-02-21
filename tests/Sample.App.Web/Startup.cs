@@ -170,7 +170,9 @@
                         FileStorage = new FileStorageScopedDecorator("requests/{yyyy}/{MM}/{dd}",
                             new FileStorageLoggingDecorator(
                                 app.ApplicationServices.GetRequiredService<ILoggerFactory>(),
-                                new AzureBlobFileStorage(f => f.ContainerName($"{env.EnvironmentName.ToLower()}-operations").ConnectionString(this.Configuration["naos:operations:logging:azureBlobStorage:connectionString"]))))
+                                new AzureBlobFileStorage(f => f
+                                    .ContainerName($"{env.EnvironmentName.ToLower()}-operations")
+                                    .ConnectionString(this.Configuration["naos:operations:logging:azureBlobStorage:connectionString"]))))
                                 //new FolderFileStorage(f => f.Folder(Path.Combine(Path.GetTempPath(), "naos_operations"))))
                     })
                 .UseNaosRequestFiltering()
