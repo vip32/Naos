@@ -1,5 +1,6 @@
 ﻿namespace Naos.Core.FileStorage.Domain
 {
+    using System;
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
@@ -18,6 +19,9 @@
             this.Decoratee = decoratee;
             this.Scope = scope?.Trim();
             this.pathPrefix = this.Scope != null ? string.Concat(this.Scope, "/") : string.Empty;
+
+            this.pathPrefix = this.pathPrefix
+                .Replace("{environment}", Environment.GetEnvironmentVariable(EnvironmentKeys.Environment)?.ToLower());
         }
 
         public ISerializer Serializer => this.Decoratee.Serializer;
@@ -30,14 +34,14 @@
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
-            return this.Decoratee.GetFileStreamAsync(string.Concat(this.pathPrefix, path), cancellationToken);
+            return this.Decoratee.GetFileStreamAsync(string.Concat(this.UpdatePathPrefix(this.pathPrefix), path), cancellationToken);
         }
 
         public async Task<FileInformation> GetFileInformationAsync(string path)
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
-            var file = await this.Decoratee.GetFileInformationAsync(string.Concat(this.pathPrefix, path)).AnyContext();
+            var file = await this.Decoratee.GetFileInformationAsync(string.Concat(this.UpdatePathPrefix(this.pathPrefix), path)).AnyContext();
             if (file != null)
             {
                 file.Path = file.Path.Substring(this.pathPrefix.Length);
@@ -58,7 +62,7 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
             EnsureArg.IsNotNull(stream, nameof(stream));
 
-            return this.Decoratee.SaveFileAsync(string.Concat(this.pathPrefix, path), stream, cancellationToken);
+            return this.Decoratee.SaveFileAsync(string.Concat(this.UpdatePathPrefix(this.pathPrefix), path), stream, cancellationToken);
         }
 
         public Task<bool> RenameFileAsync(string path, string newPath, CancellationToken cancellationToken = default)
@@ -66,7 +70,7 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
             EnsureArg.IsNotNullOrEmpty(newPath, nameof(newPath));
 
-            return this.Decoratee.RenameFileAsync(string.Concat(this.pathPrefix, path), string.Concat(this.pathPrefix, newPath), cancellationToken);
+            return this.Decoratee.RenameFileAsync(string.Concat(this.UpdatePathPrefix(this.pathPrefix), path), string.Concat(this.pathPrefix, newPath), cancellationToken);
         }
 
         public Task<bool> CopyFileAsync(string path, string targetPath, CancellationToken cancellationToken = default)
@@ -74,19 +78,19 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
             EnsureArg.IsNotNullOrEmpty(targetPath, nameof(targetPath));
 
-            return this.Decoratee.CopyFileAsync(string.Concat(this.pathPrefix, path), string.Concat(this.pathPrefix, targetPath), cancellationToken);
+            return this.Decoratee.CopyFileAsync(string.Concat(this.UpdatePathPrefix(this.pathPrefix), path), string.Concat(this.pathPrefix, targetPath), cancellationToken);
         }
 
         public Task<bool> DeleteFileAsync(string path, CancellationToken cancellationToken = default)
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
-            return this.Decoratee.DeleteFileAsync(string.Concat(this.pathPrefix, path), cancellationToken);
+            return this.Decoratee.DeleteFileAsync(string.Concat(this.UpdatePathPrefix(this.pathPrefix), path), cancellationToken);
         }
 
         public Task<int> DeleteFilesAsync(string searchPattern = null, CancellationToken cancellationToken = default)
         {
-            return this.Decoratee.DeleteFilesAsync(string.Concat(this.pathPrefix, searchPattern), cancellationToken);
+            return this.Decoratee.DeleteFilesAsync(string.Concat(this.UpdatePathPrefix(this.pathPrefix), searchPattern), cancellationToken);
         }
 
         public async Task<PagedResults> GetFileInformationsAsync(int pageSize = 100, string searchPattern = null, CancellationToken cancellationToken = default)
@@ -96,10 +100,10 @@
                 return PagedResults.EmptyResults;
             }
 
-            var unscopedResult = await this.Decoratee.GetFileInformationsAsync(pageSize, string.Concat(this.pathPrefix, searchPattern), cancellationToken).AnyContext();
+            var unscopedResult = await this.Decoratee.GetFileInformationsAsync(pageSize, string.Concat(this.UpdatePathPrefix(this.pathPrefix), searchPattern), cancellationToken).AnyContext();
             foreach (var file in unscopedResult.Files)
             {
-                file.Path = file.Path.Substring(this.pathPrefix.Length);
+                file.Path = file.Path.Substring(this.UpdatePathPrefix(this.pathPrefix).Length);
             }
 
             return new PagedResults(unscopedResult.Files, unscopedResult.HasMore, () => this.NextPage(unscopedResult));
@@ -119,6 +123,15 @@
             }
 
             return new NextPageResult { Success = success, HasMore = result.HasMore, Files = result.Files, NextPageFunc = () => this.NextPage(result) };
+        }
+
+        private string UpdatePathPrefix(string path)
+        {
+            var dateTime = DateTime.UtcNow;
+            return path
+                .Replace("{yyyy}", dateTime.Year.ToString(), StringComparison.OrdinalIgnoreCase)
+                .Replace("{MM}", dateTime.Month.ToString().PadLeft(2, '0'), StringComparison.OrdinalIgnoreCase)
+                .Replace("{dd}", dateTime.Day.ToString().PadLeft(2, '0'), StringComparison.OrdinalIgnoreCase);
         }
     }
 }

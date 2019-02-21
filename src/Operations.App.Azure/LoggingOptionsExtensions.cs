@@ -21,10 +21,10 @@
             {
                 // configure the serilog sink
                 // https://github.com/serilog/serilog-aspnetcore
-                var path = configuration.File.EmptyToNull() ?? "logevents_[PRODUCT]_[CAPABILITY]_[ENVIRONMENT].log"
-                    .Replace("[ENVIRONMENT]", options.Environment)
-                    .Replace("[PRODUCT]", options.Context.Descriptor?.Product)
-                    .Replace("[CAPABILITY]", options.Context.Descriptor?.Capability);
+                var path = configuration.File.EmptyToNull() ?? "logevents_{environment}_{product}_{capability}.log"
+                    .Replace("{environment}", options.Environment.ToLower())
+                    .Replace("{product}", options.Context.Descriptor?.Product?.ToLower())
+                    .Replace("{capability}", options.Context.Descriptor?.Capability?.ToLower());
                 path = Path.Combine(@"D:\home\LogFiles", path);
 
                 options.LoggerConfiguration?.WriteTo.File(
@@ -69,15 +69,15 @@
             if (configuration?.Enabled == true
                 && configuration?.ConnectionString.IsNullOrEmpty() == false)
             {
-                var path = configuration.File.EmptyToNull() ?? "logevents/{yyyy}/{MM}/{dd}/logevents_[PRODUCT]_[CAPABILITY]_[ENVIRONMENT].log"
-                    .Replace("[ENVIRONMENT]", options.Environment)
-                    .Replace("[PRODUCT]", options.Context.Descriptor?.Product)
-                    .Replace("[CAPABILITY]", options.Context.Descriptor?.Capability);
+                var path = configuration.File.EmptyToNull() ?? "logevents/{yyyy}/{MM}/{dd}/logevents_{product}_{capability}.log"
+                    .Replace("{environment}", options.Environment.ToLower())
+                    .Replace("{product}", options.Context.Descriptor?.Product?.ToLower())
+                    .Replace("{capability}", options.Context.Descriptor?.Capability?.ToLower());
 
                 options.LoggerConfiguration?.WriteTo.AzureBlobStorage(
                     restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information,
                     connectionString: configuration.ConnectionString,
-                    storageFolderName: configuration.ContainerName.EmptyToNull() ?? "operations",
+                    storageFolderName: configuration.ContainerName.EmptyToNull() ?? $"{options.Environment.ToLower()}-operations",
                     storageFileName: path,
                     writeInBatches: true,
                     period: TimeSpan.FromSeconds(15),
@@ -98,10 +98,10 @@
             if (configuration != null)
             {
                 // configure the serilog sink
-                var logName = configuration?.LogName.EmptyToNull() ?? "LogEvents_[ENVIRONMENT]"
-                    .Replace("[ENVIRONMENT]", options.Environment)
-                    .Replace("[PRODUCT]", options.Context.Descriptor?.Product)
-                    .Replace("[CAPABILITY]", options.Context.Descriptor?.Capability);
+                var logName = configuration?.LogName.EmptyToNull() ?? "{environment}_operations_logevents"
+                    .Replace("{environment}", options.Environment.ToLower())
+                    .Replace("{product}", options.Context.Descriptor?.Product?.ToLower())
+                    .Replace("{capability}", options.Context.Descriptor?.Capability?.ToLower());
                 if (logName.IsNullOrEmpty())
                 {
                     return options;

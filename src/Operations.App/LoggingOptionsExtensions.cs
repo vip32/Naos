@@ -19,10 +19,11 @@
             if (configuration?.Enabled == true)
             {
                 // configure the serilog sink
-                var path = configuration.File.EmptyToNull() ?? $"LogEvents_[PRODUCT]_[CAPABILITY]_[ENVIRONMENT].log"
-                    .Replace("[ENVIRONMENT]", options.Environment)
-                    .Replace("[PRODUCT]", options.Context.Descriptor?.Product)
-                    .Replace("[CAPABILITY]", options.Context.Descriptor?.Capability);
+                var path = configuration.File.EmptyToNull() ?? "logevents_{environment}_{product}_{capability}.log"
+                    .Replace("{environment}", options.Environment.ToLower())
+                    .Replace("{product}", options.Context.Descriptor?.Product?.ToLower())
+                    .Replace("{capability}", options.Context.Descriptor?.Capability?.ToLower());
+
                 if (!configuration.Folder.IsNullOrEmpty() && !configuration.SubFolder.IsNullOrEmpty())
                 {
                     path = Path.Combine(configuration.Folder, "naos_operations", path);

@@ -23,7 +23,6 @@
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
     using Naos.Core.Configuration;
-    using Naos.Core.FileStorage;
     using Naos.Core.FileStorage.Domain;
     using Naos.Core.FileStorage.Infrastructure;
     using Naos.Core.JobScheduling.App;
@@ -168,10 +167,10 @@
                 .UseNaosOperationsLogging(
                     new OperationsLoggingOptions
                     {
-                        FileStorage = new FileStorageScopedDecorator($"requests/{env.EnvironmentName}",
+                        FileStorage = new FileStorageScopedDecorator("requests/{yyyy}/{MM}/{dd}",
                             new FileStorageLoggingDecorator(
                                 app.ApplicationServices.GetRequiredService<ILoggerFactory>(),
-                                new AzureBlobFileStorage(f => f.ContainerName("operations").ConnectionString(this.Configuration["naos:operations:logging:azureBlobStorage:connectionString"]))))
+                                new AzureBlobFileStorage(f => f.ContainerName($"{env.EnvironmentName.ToLower()}-operations").ConnectionString(this.Configuration["naos:operations:logging:azureBlobStorage:connectionString"]))))
                                 //new FolderFileStorage(f => f.Folder(Path.Combine(Path.GetTempPath(), "naos_operations"))))
                     })
                 .UseNaosRequestFiltering()
