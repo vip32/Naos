@@ -90,8 +90,11 @@
             path = Path.Combine(this.Folder, PathHelper.Normalize(path));
             using (var fileStream = this.CreateFileStream(path))
             {
+                var offset = stream.Position;
                 stream.Position = 0;
                 await stream.CopyToAsync(fileStream).AnyContext();
+                stream.Seek(offset, SeekOrigin.Begin);
+
                 return true;
             }
         }

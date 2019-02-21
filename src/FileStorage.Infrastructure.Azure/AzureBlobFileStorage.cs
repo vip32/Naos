@@ -87,9 +87,11 @@
             EnsureArg.IsNotNull(stream, nameof(stream));
 
             this.Initialize();
+            var offset = stream.Position;
             stream.Position = 0;
             await this.container.GetBlockBlobReference(path)
                 .UploadFromStreamAsync(stream, null, null, null, cancellationToken).AnyContext();
+            stream.Seek(offset, SeekOrigin.Begin);
 
             return true;
         }
