@@ -16,19 +16,14 @@
 
     public class AzureBlobFileStorage : IFileStorage
     {
-        private readonly CloudBlobContainer container;
-        private readonly ISerializer serializer;
+        private readonly AzureBlobFileStorageOptions options;
+        private CloudBlobContainer container;
+        private bool initialized;
 
         public AzureBlobFileStorage(AzureBlobFileStorageOptions options)
         {
-            options = options ?? new AzureBlobFileStorageOptions();
-            this.Serializer = options.Serializer ?? DefaultSerializer.Instance;
-
-            this.container = CloudStorageAccount.Parse(options.ConnectionString)
-                .CreateCloudBlobClient()
-                .GetContainerReference(options.ContainerName);
-            this.container.CreateIfNotExistsAsync().GetAwaiter().GetResult();
-            this.serializer = options.Serializer ?? DefaultSerializer.Instance;
+            this.options = options ?? new AzureBlobFileStorageOptions();
+            this.Serializer = this.options.Serializer ?? DefaultSerializer.Instance;
         }
 
         public AzureBlobFileStorage(Builder<AzureBlobFileStorageOptionsBuilder, AzureBlobFileStorageOptions> config)
@@ -42,6 +37,7 @@
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
+            this.Initialize();
             var blockBlob = this.container.GetBlockBlobReference(path);
             try
             {
@@ -62,6 +58,7 @@
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
+            this.Initialize();
             var blob = this.container.GetBlockBlobReference(path);
             try
             {
@@ -79,6 +76,7 @@
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
+            this.Initialize();
             var blockBlob = this.container.GetBlockBlobReference(path);
             return blockBlob.ExistsAsync();
         }
@@ -88,6 +86,8 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
             EnsureArg.IsNotNull(stream, nameof(stream));
 
+            this.Initialize();
+            stream.Position = 0;
             await this.container.GetBlockBlobReference(path)
                 .UploadFromStreamAsync(stream, null, null, null, cancellationToken).AnyContext();
 
@@ -99,6 +99,7 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
             EnsureArg.IsNotNullOrEmpty(newPath, nameof(newPath));
 
+            this.Initialize();
             var oldBlob = this.container.GetBlockBlobReference(path);
             if (!(await this.CopyFileAsync(path, newPath, cancellationToken).AnyContext()))
             {
@@ -113,6 +114,7 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
             EnsureArg.IsNotNullOrEmpty(targetPath, nameof(targetPath));
 
+            this.Initialize();
             var oldBlob = this.container.GetBlockBlobReference(path);
             var newBlob = this.container.GetBlockBlobReference(targetPath);
 
@@ -129,12 +131,14 @@
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
+            this.Initialize();
             return this.container.GetBlockBlobReference(path)
                 .DeleteIfExistsAsync(DeleteSnapshotsOption.None, null, null, null, cancellationToken);
         }
 
         public async Task<int> DeleteFilesAsync(string searchPattern = null, CancellationToken cancellationToken = default)
         {
+            this.Initialize();
             var files = await this.GetFileListAsync(searchPattern, cancellationToken: cancellationToken).AnyContext();
             int count = 0;
 
@@ -149,6 +153,7 @@
 
         public async Task<PagedResults> GetFileInformationsAsync(int pageSize = 100, string searchPattern = null, CancellationToken cancellationToken = default)
         {
+            this.Initialize();
             if (pageSize <= 0)
             {
                 return PagedResults.EmptyResults;
@@ -231,6 +236,18 @@
                 Files = list,
                 NextPageFunc = () => this.GetFiles(searchPattern, page + 1, pageSize, cancellationToken)
             };
+        }
+
+        private void Initialize()
+        {
+            if (!this.initialized)
+            {
+                this.container = CloudStorageAccount.Parse(this.options.ConnectionString)
+                    .CreateCloudBlobClient()
+                    .GetContainerReference(this.options.ContainerName);
+                this.container.CreateIfNotExistsAsync().GetAwaiter().GetResult();
+                this.initialized = true;
+            }
         }
     }
 }

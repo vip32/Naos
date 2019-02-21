@@ -103,10 +103,10 @@
         protected override IFileStorage GetStorage()
         {
             return new FileStorageScopedDecorator(
+                "scoped",
                 new FolderFileStorage(o => o
                     .LoggerFactory(Substitute.For<ILoggerFactory>())
-                    .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "tests_scoped"))),
-                "scoped");
+                    .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "tests_scoped"))));
         }
     }
 }

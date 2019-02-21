@@ -2,6 +2,7 @@
 {
     using System;
     using System.Diagnostics;
+    using System.IO;
     using System.Linq;
     using System.Net.Http;
     using System.Threading;
@@ -24,6 +25,7 @@
     using Naos.Core.Configuration;
     using Naos.Core.FileStorage;
     using Naos.Core.FileStorage.Domain;
+    using Naos.Core.FileStorage.Infrastructure;
     using Naos.Core.JobScheduling.App;
     using Naos.Core.JobScheduling.Domain;
     using Naos.Core.Messaging;
@@ -153,21 +155,26 @@
                 app.UseHsts();
             }
 
+            // "002c1126-c7b6-4d8a-ba87-4a997d8b0c6f"
+
             // naos middleware
-            app.UseHttpsRedirection() // TODO: UseNaos()...... with setupAction like services
-               .UseNaosRequestCorrelation()
-               .UseNaosServiceContext()
-               .UseNaosServicePoweredBy()
-               .UseNaosOperationsLogging(
+            app
+                .UseHttpsRedirection() // TODO: UseNaos()...... with setupAction like services
+                .UseNaos()
+                .UseNaosRequestCorrelation()
+                .UseNaosServiceContext()
+                .UseNaosServicePoweredBy()
+                .UseNaosOperationsLogging(
                     new OperationsLoggingOptions
                     {
-                        FileStorage = new FileStorageLoggingDecorator(
-                            app.ApplicationServices.GetRequiredService<ILoggerFactory>(),
-                            new InMemoryFileStorage())
+                        FileStorage = new FileStorageScopedDecorator($"requests/{env.EnvironmentName}",
+                            new FileStorageLoggingDecorator(
+                                app.ApplicationServices.GetRequiredService<ILoggerFactory>(),
+                                new FolderFileStorage(f => f.Folder(Path.Combine(Path.GetTempPath(), "naos_operations")))))
                     })
-               .UseNaosRequestFiltering()
-               .UseNaosExceptionHandling()
-               .UseNaosServiceDiscoveryRouter();
+                .UseNaosRequestFiltering()
+                .UseNaosExceptionHandling()
+                .UseNaosServiceDiscoveryRouter();
 
             app.UseSwagger();
             app.UseSwaggerUi3();

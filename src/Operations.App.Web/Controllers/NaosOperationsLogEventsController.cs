@@ -113,7 +113,7 @@
 
                 foreach (var criteria in this.FilterContext.Criterias)
                 {
-                    await this.HttpContext.Response.WriteAsync($"criteria: {criteria.ToString()}<br/>");
+                    await this.HttpContext.Response.WriteAsync($"criteria: {criteria}<br/>");
                 }
 
                 this.FilterContext.Take = this.FilterContext.Take ?? 1000; // get amount per request, repeat while logevents.ticks >= past

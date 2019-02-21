@@ -16,7 +16,7 @@
             EnsureArg.IsNotNull(context, nameof(context));
             EnsureArg.IsNotNull(context.Services, nameof(context.Services));
 
-            var configuration = context.Configuration?.GetSection("naos:operations:azureLogAnalytics").Get<LogAnalyticsConfiguration>(); // TODO: move to operations:logevents:azureLogAnalytics
+            var configuration = context.Configuration?.GetSection("naos:operations:logging:azureLogAnalytics").Get<LogAnalyticsConfiguration>(); // TODO: move to operations:logevents:azureLogAnalytics
             if (configuration != null)
             {
                 context.Services.AddScoped<ILogEventRepository>(sp =>

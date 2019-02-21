@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Authentication.App.Web\Authentication.App.Web.csproj" />
     <ProjectReference Include="..\Commands.App\Commands.App.csproj" />
+    <ProjectReference Include="..\Configuration.App.Web\Configuration.App.Web.csproj" />
     <ProjectReference Include="..\Configuration.App\Configuration.App.csproj" />
     <ProjectReference Include="..\Correlation.App\RequestCorrelation.App.csproj" />
     <ProjectReference Include="..\Exceptions.App.Web\Exceptions.App.Web.csproj" />

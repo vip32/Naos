@@ -12,14 +12,15 @@
 
     public class FolderFileStorage : IFileStorage
     {
+        private readonly FolderFileStorageOptions options;
         private readonly object @lock = new object();
 
         public FolderFileStorage(FolderFileStorageOptions options)
         {
-            options = options ?? new FolderFileStorageOptions();
-            this.Serializer = options.Serializer ?? DefaultSerializer.Instance;
+            this.options = options ?? new FolderFileStorageOptions();
+            this.Serializer = this.options.Serializer ?? DefaultSerializer.Instance;
 
-            var folder = PathHelper.ExpandPath(options.Folder);
+            var folder = PathHelper.ExpandPath(this.options.Folder);
             if (!Path.IsPathRooted(folder))
             {
                 folder = Path.GetFullPath(folder);
@@ -86,10 +87,10 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
             EnsureArg.IsNotNull(stream, nameof(stream));
 
-            path = PathHelper.Normalize(path);
-            string file = Path.Combine(this.Folder, path);
-            using (var fileStream = this.CreateFileStream(file))
+            path = Path.Combine(this.Folder, PathHelper.Normalize(path));
+            using (var fileStream = this.CreateFileStream(path))
             {
+                stream.Position = 0;
                 await stream.CopyToAsync(fileStream).AnyContext();
                 return true;
             }

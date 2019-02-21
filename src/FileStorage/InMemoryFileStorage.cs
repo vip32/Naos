@@ -15,6 +15,7 @@
 
     public class InMemoryFileStorage : IFileStorage
     {
+        private readonly InMemoryFileStorageOptions options;
         private readonly Dictionary<string, Tuple<FileInformation, byte[]>> storage = new Dictionary<string, Tuple<FileInformation, byte[]>>(StringComparer.OrdinalIgnoreCase);
         private readonly object @lock = new object();
 
@@ -25,8 +26,8 @@
 
         public InMemoryFileStorage(InMemoryFileStorageOptions options)
         {
-            options = options ?? new InMemoryFileStorageOptions();
-            this.Serializer = options.Serializer ?? DefaultSerializer.Instance;
+            this.options = options ?? new InMemoryFileStorageOptions();
+            this.Serializer = this.options.Serializer ?? DefaultSerializer.Instance;
 
             this.MaxFileSize = options.MaxFileSize;
             this.MaxFiles = options.MaxFiles;

@@ -9,14 +9,14 @@
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
 
-    public class RequestResponseFileStorageMiddleware
+    public class RequestFileStorageMiddleware
     {
-        private readonly ILogger<RequestResponseFileStorageMiddleware> logger;
+        private readonly ILogger<RequestFileStorageMiddleware> logger;
         private readonly OperationsLoggingOptions options;
         private readonly RequestDelegate next;
 
-        public RequestResponseFileStorageMiddleware(RequestDelegate next,
-            ILogger<RequestResponseFileStorageMiddleware> logger,
+        public RequestFileStorageMiddleware(RequestDelegate next,
+            ILogger<RequestFileStorageMiddleware> logger,
             IOptions<OperationsLoggingOptions> options)
         {
             this.next = next;

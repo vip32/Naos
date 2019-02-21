@@ -13,15 +13,15 @@
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
 
-    public class RequestResponseLoggingMiddleware
+    public class RequestLoggingMiddleware
     {
         private readonly RequestDelegate next;
-        private readonly ILogger<RequestResponseLoggingMiddleware> logger;
+        private readonly ILogger<RequestLoggingMiddleware> logger;
         private readonly OperationsLoggingOptions options;
 
-        public RequestResponseLoggingMiddleware(
+        public RequestLoggingMiddleware(
             RequestDelegate next,
-            ILogger<RequestResponseLoggingMiddleware> logger,
+            ILogger<RequestLoggingMiddleware> logger,
             IOptions<OperationsLoggingOptions> options)
         {
             this.next = next;

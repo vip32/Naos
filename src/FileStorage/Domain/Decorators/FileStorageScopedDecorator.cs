@@ -11,7 +11,7 @@
     {
         private readonly string pathPrefix;
 
-        public FileStorageScopedDecorator(IFileStorage decoratee, string scope)
+        public FileStorageScopedDecorator(string scope, IFileStorage decoratee)
         {
             EnsureArg.IsNotNull(decoratee, nameof(decoratee));
 

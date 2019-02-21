@@ -45,16 +45,46 @@ C#, .Net Core 2.x, EnsureThat, Serilog, Mediator, FluentValidation, AutoMapper, 
 ## Sample
 [^](SAMPLE.md)
 
-## Secrets setup (Azure Key Vault)
+## Secrets Setup
 - Create a key vault [^](https://docs.microsoft.com/en-us/azure/key-vault/key-vault-get-started)
-- Store key vault name in an environment variable
-  - `naos__secrets__vault__name`
 - Register an application with Azure Active Directory [^](https://docs.microsoft.com/en-us/azure/key-vault/key-vault-get-started)
-- Store application clientId (ApplicationId) and clientSecret (ApplicationKey) in environment variables
-  - `naos__secrets__vault__clientId` & `naos__secrets__vault__clientSecret`
+
+##### Local setup
+- (1) Either Store application clientId (ApplicationId) and clientSecret (ApplicationKey) in environment variables
+  - `naos__secrets__vault__name=[VAULT_NAME]` 
+  - `naos__secrets__vault__clientId=[AAD_APPLICATION_ID]` 
+  - `naos__secrets__vault__clientSecret=[AAD_APPLICATION_KEY]`
+- (2) Or store application clientId (ApplicationId) and clientSecret (ApplicationKey) in an user secrets files
+- (3) Or store the application clientId (ApplicationId) and clientSecret (ApplicationKey) in the appsettings file
 - Authorize the application to use the key or secret [^](https://docs.microsoft.com/en-us/azure/key-vault/key-vault-get-started)
 
-*or* use the following [json configuration](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-2.1#file-configuration-provider).
+optionally use a multitude of the usual [netcore configuration providers](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-2.1#providers) to store the settings
+
+
+(2) When using the [usersecrets](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets) configuration provider use the following json file:
+```
+{
+  "naos:secrets:vault:name": "[VAULT_NAME]",
+  "naos:secrets:vault:clientId": "[AAD_APPLICATION_ID]",
+  "naos:secrets:vault:clientSecret": "[AAD_APPLICATION_KEY]",
+}
+```
+Place the file in the following location. 
+`
+C:\Users\[USERNAME]\AppData\Roaming\Microsoft\UserSecrets\[SECRETSID]\secrets.json
+`
+The [SECRETSID] should be a guid and must be configured in the appsettings file.
+```
+{
+  "naos": {
+    "secrets": {
+      "userSecretsId": "[SECRETSID]"
+    }
+  }
+}
+```
+
+(3) When using the [file](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-2.1#file-configuration-provider) configuration provider:
 ```
 {
   "naos": {
@@ -64,12 +94,50 @@ C#, .Net Core 2.x, EnsureThat, Serilog, Mediator, FluentValidation, AutoMapper, 
         "clientId": "[AAD_APPLICATION_ID]",
         "clientSecret": "[AAD_APPLICATION_KEY]"
       }
-    },
+    }
   }
 }
 ```
 
-*or* use a multitude of the usual [netcore configuration providers](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-2.1#providers) to store the settings
+##### Azure Setup
+- Store application clientId (ApplicationId) and clientSecret (ApplicationKey) in the App Service application settings (Environment): 
+  - `naos__secrets__vault__name=[VAULT_NAME]` 
+  - `naos__secrets__vault__clientId=[AAD_APPLICATION_ID]` 
+  - `naos__secrets__vault__clientSecret=[AAD_APPLICATION_KEY]`
+
+## Service Setup
+
+#### Dependencies
+- nugets ?? (meta packages)
+
+#### Configuration
+TODO (appsettings)
+
+#### Bootstrapping
+- Program.cs
+
+```
+        public static void Main(string[] args)
+        {
+            CreateWebHostBuilder(args).Build().Run();
+        }
+
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((context, config) =>
+                {
+                    NaosConfigurationFactory.Extend(config);
+                })
+                .UseStartup<Startup>()
+                .UseSerilog();
+```
+
+- Startup.cs
+```
+TODO
+```
+
+
 
 
 # Service Features Overview
@@ -283,6 +351,23 @@ The same registries as Client-side can be used in the router.
 # Operations
 
 - Logging
+  - Debug
+  - Console
+  - File
+    - Rolling
+  - Azure DiagnosticsLogStream
+  - Azure ApplicationInsights
+  - Azure LogAnalytics 
+```
+development-naos--operations--logging--azureLogAnalytics--apiAuthentication--clientId
+development-naos--operations--logging--azureLogAnalytics--apiAuthentication--clientSecret
+development-naos--operations--logging--azureLogAnalytics--apiAuthentication--tenantId
+development-naos--operations--logging--azureLogAnalytics--authenticationId
+development-naos--operations--logging--azureLogAnalytics--resourceGroupName
+development-naos--operations--logging--azureLogAnalytics--subscriptionId
+development-naos--operations--logging--azureLogAnalytics--workspaceId
+development-naos--operations--logging--azureLogAnalytics--workspaceName
+```
 - Journal
 - Dashboard
 

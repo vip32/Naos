@@ -15,7 +15,7 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            var configuration = options.Context.Configuration?.GetSection("naos:operations:logEvents:file").Get<LogFileConfiguration>();
+            var configuration = options.Context.Configuration?.GetSection("naos:operations:logging:file").Get<LogFileConfiguration>();
             if (configuration?.Enabled == true)
             {
                 // configure the serilog sink

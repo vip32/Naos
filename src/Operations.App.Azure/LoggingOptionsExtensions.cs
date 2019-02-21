@@ -16,7 +16,7 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            var configuration = options.Context.Configuration?.GetSection("naos:operations:logEvents:azureDiagnosticsLogStream").Get<DiagnosticsLogStreamConfiguration>();
+            var configuration = options.Context.Configuration?.GetSection("naos:operations:logging:azureDiagnosticsLogStream").Get<DiagnosticsLogStreamConfiguration>();
             if (configuration?.Enabled == true)
             {
                 // configure the serilog sink
@@ -47,7 +47,7 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            var configuration = options.Context.Configuration?.GetSection("naos:operations:logEvents:azureApplicationInsights").Get<ApplicationInsightsConfiguration>();
+            var configuration = options.Context.Configuration?.GetSection("naos:operations:logging:azureApplicationInsights").Get<ApplicationInsightsConfiguration>();
             if (configuration?.Enabled == true
                 && configuration?.ApplicationKey.IsNullOrEmpty() == false)
             {
@@ -65,7 +65,7 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            var configuration = options.Context.Configuration?.GetSection("naos:operations:azureLogAnalytics").Get<LogAnalyticsConfiguration>(); // TODO: move to operations:logevents:azureLogAnalytics
+            var configuration = options.Context.Configuration?.GetSection("naos:operations:logging:azureLogAnalytics").Get<LogAnalyticsConfiguration>(); // TODO: move to operations:logevents:azureLogAnalytics
             if (configuration != null)
             {
                 // configure the serilog sink
