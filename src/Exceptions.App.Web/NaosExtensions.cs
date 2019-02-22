@@ -1,11 +1,13 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
     using Naos.Core.Commands.Exceptions.Web;
     using Naos.Core.Common;
 
+    [ExcludeFromCodeCoverage]
     public static class NaosExtensions
     {
         /// <summary>

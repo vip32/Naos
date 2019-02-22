@@ -1,6 +1,7 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
@@ -9,6 +10,7 @@
     using Naos.Core.JobScheduling.App;
     using Naos.Core.JobScheduling.Domain;
 
+    [ExcludeFromCodeCoverage]
     public static class NaosExtensions
     {
         public static NaosOptions AddJobScheduling(

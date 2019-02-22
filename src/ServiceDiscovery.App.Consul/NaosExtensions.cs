@@ -1,6 +1,7 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using Consul;
     using EnsureThat;
     using Microsoft.Extensions.Configuration;
@@ -15,6 +16,7 @@
     /// <summary>
     /// Extensions on the <see cref="IServiceCollection"/>.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class NaosExtensions
     {
         /// <summary>

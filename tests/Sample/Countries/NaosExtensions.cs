@@ -1,5 +1,6 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using EnsureThat;
     using MediatR;
@@ -10,6 +11,7 @@
     using Naos.Sample.Countries.Domain;
     using Naos.Sample.Countries.Infrastructure;
 
+    [ExcludeFromCodeCoverage]
     public static partial class NaosExtensions
     {
         public static ServiceOptions AddSampleCountries(

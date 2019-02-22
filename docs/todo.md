@@ -96,6 +96,7 @@ azure deployment (ARM) https://markheath.net/post/arm-vs-azure-cli
 (CLI) https://gist.github.com/pascalnaber/75412a97a0d0b059314d193c3ab37c4c
 
 assembly builddate https://www.meziantou.net/2018/09/24/getting-the-date-of-build-of-a-net-assembly-at-runtime
+mediator pipeline for command validation http://www.kamilgrzybek.com/design/rest-api-data-validation/	
 c# script compile + run roslyn https://laurentkempe.com/2019/02/18/dynamically-compile-and-run-code-using-dotNET-Core-3.0
 pattern cqs https://www.dotnetcurry.com/patterns-practices/1461/command-query-separation-cqs
 cqrs https://github.com/OpenCQRS/OpenCQRS

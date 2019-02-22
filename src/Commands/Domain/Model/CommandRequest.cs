@@ -6,6 +6,7 @@
     using EnsureThat;
     using FluentValidation.Results;
     using MediatR;
+    using Naos.Core.Domain.Model;
 
     public abstract class CommandRequest<TResponse> : IRequest<CommandResponse<TResponse>>
     {
@@ -32,7 +33,7 @@
 
         public DateTime Created { get; }
 
-        public IDictionary<string, object> Properties { get; set; } = new Dictionary<string, object>();
+        public DataDictionary Properties { get; set; } = new DataDictionary();
 
         public void Update(string id, string correlationId)
         {
@@ -51,6 +52,6 @@
         /// Validates this instance.
         /// </summary>
         /// <returns><see cref="ValidationResult"/></returns>
-        public abstract ValidationResult Validate();
+        public virtual ValidationResult Validate() => new ValidationResult();
     }
 }

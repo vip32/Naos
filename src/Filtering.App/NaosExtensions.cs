@@ -1,11 +1,13 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
+    using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Naos.Core.Common;
     using Naos.Core.RequestFiltering.App;
     using Naos.Core.RequestFiltering.App.Web;
 
+    [ExcludeFromCodeCoverage]
     public static class NaosExtensions
     {
         /// <summary>

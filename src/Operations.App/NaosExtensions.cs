@@ -1,10 +1,12 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
     using Naos.Core.Common;
     using Naos.Core.Operations.App;
 
+    [ExcludeFromCodeCoverage]
     public static class NaosExtensions
     {
         public static NaosOptions AddOperations(

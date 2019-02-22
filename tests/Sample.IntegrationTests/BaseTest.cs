@@ -37,6 +37,7 @@
                         .UseServiceBusBroker())
                     .AddCommands());
 
+            this.services.AddSingleton<ICommandBehavior, ValidateCommandBehavior>(); // new ValidateCommandBehavior(false)
             this.services.AddSingleton<ICommandBehavior, TrackCommandBehavior>();
             //this.services.AddSingleton<ICommandBehavior, ServiceContextEnrichCommandBehavior>();
             this.services.AddSingleton<ICommandBehavior, IdempotentCommandBehavior>();

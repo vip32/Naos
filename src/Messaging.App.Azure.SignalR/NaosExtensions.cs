@@ -1,6 +1,7 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Net.Http;
     using EnsureThat;
     using Humanizer;
@@ -13,6 +14,7 @@
     using Naos.Core.Messaging.App;
     using Naos.Core.Messaging.Infrastructure.Azure;
 
+    [ExcludeFromCodeCoverage]
     public static class NaosExtensions
     {
         public static MessagingOptions UseSignalRBroker(

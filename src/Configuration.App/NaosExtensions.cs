@@ -1,12 +1,14 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Configuration.App;
 
+    [ExcludeFromCodeCoverage]
     /// <summary>
     /// Extensions on the <see cref="IServiceCollection"/>.
     /// </summary>

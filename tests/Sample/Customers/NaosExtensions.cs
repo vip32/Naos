@@ -13,6 +13,7 @@
     using Naos.Sample.Customers.App.Client;
     using Naos.Sample.Customers.Domain;
 
+    //[ExcludeFromCodeCoverage]
     public static partial class NaosExtensions
     {
         public static ServiceOptions AddSampleCustomers(
@@ -50,6 +51,8 @@
                                     collectionOfferThroughput: cosmosDbConfiguration.CollectionOfferThroughput,
                                     isMasterCollection: cosmosDbConfiguration.IsMasterCollection)))));
             });
+
+            //options.Context.Services.AddSingleton<IValidator<CreateCustomerCommand>>(new CreateCustomerCommandValidator());
 
             options.Context.Services
                 .AddHealthChecks()

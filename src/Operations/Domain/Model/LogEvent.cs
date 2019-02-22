@@ -59,13 +59,5 @@
 
             return (DateTime.UtcNow - this.Timestamp).Humanize();
         }
-
-        /// <summary>
-        /// Determines whether this instance is transient (not persisted).
-        /// </summary>
-        /// <returns>
-        ///   <c>true</c> if this instance is transient; otherwise, <c>false</c>.
-        /// </returns>
-        // public bool IsTransient() => this.Id.IsDefault();
     }
 }

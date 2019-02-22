@@ -1,10 +1,12 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
     using Naos.Core.Commands.Domain;
     using Naos.Core.Common;
 
+    [ExcludeFromCodeCoverage]
     public static class NaosExtensions
     {
         /// <summary>
@@ -25,6 +27,13 @@
                     .AddClasses(classes => classes.AssignableTo(typeof(ICommandBehavior)), true));
 
             naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: commands added"); // TODO: list available commands/handlers
+
+            //naosOptions.Context.Services
+            //    .AddSingleton<ICommandBehavior, ValidateCommandBehavior>()
+            //    .AddSingleton<ICommandBehavior, TrackCommandBehavior>()
+            //    //.AddSingleton<ICommandBehavior, ServiceContextEnrichCommandBehavior>()
+            //    .AddSingleton<ICommandBehavior, IdempotentCommandBehavior>()
+            //    .AddSingleton<ICommandBehavior, PersistCommandBehavior>();
 
             return naosOptions;
         }

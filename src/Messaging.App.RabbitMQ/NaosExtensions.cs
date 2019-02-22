@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Reflection;
     using EnsureThat;
     using Microsoft.Extensions.Configuration;
@@ -11,6 +12,7 @@
     using Naos.Core.Messaging.App;
     using Naos.Core.Messaging.Infrastructure.RabbitMQ;
 
+    [ExcludeFromCodeCoverage]
     public static class NaosExtensions
     {
         public static MessagingOptions UseRabbitMQBroker(

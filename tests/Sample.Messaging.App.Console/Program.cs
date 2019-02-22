@@ -41,10 +41,10 @@
                                     .UseAzureLogAnalytics(),
                                     correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}"))
                             .AddMessaging(o => o
-                                //.AddFileSystemBroker());
-                                //.AddSignalRBroker());
-                                //.AddRabbitMQBroker());
-                                .UseServiceBusBroker()));
+                                //.UseFileSystemBroker()));
+                                .UseSignalRBroker()));
+                                //.UseRabbitMQBroker()));
+                                //.UseServiceBusBroker()));
 
                     services
                         .AddSingleton<IHostedService, MessagingTestHostedService>();

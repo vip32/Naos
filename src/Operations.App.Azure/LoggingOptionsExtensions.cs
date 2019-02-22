@@ -1,6 +1,7 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using EnsureThat;
     using global::Serilog;
@@ -9,6 +10,7 @@
     using Naos.Core.Infrastructure.Azure;
     using Naos.Core.Operations.App;
 
+    [ExcludeFromCodeCoverage]
     public static class LoggingOptionsExtensions
     {
         public static LoggingOptions AddAzureDiagnosticsLogStream(this LoggingOptions options)

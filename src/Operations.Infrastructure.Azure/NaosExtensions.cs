@@ -1,5 +1,6 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
+    using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
@@ -9,6 +10,7 @@
     using Naos.Core.Operations.Domain.Repositories;
     using Naos.Core.Operations.Infrastructure.Azure;
 
+    [ExcludeFromCodeCoverage]
     public static class NaosExtensions
     {
         public static INaosBuilderContext AddAzureLogAnalytics(this INaosBuilderContext context, string logName)

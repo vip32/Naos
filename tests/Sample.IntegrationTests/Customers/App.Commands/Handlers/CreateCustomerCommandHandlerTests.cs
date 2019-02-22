@@ -50,6 +50,36 @@
         }
 
         [Fact]
+        public async Task InvalidCommandThrowsValidationException_Test()
+        {
+            // arrange
+            var entity = this.entityFaker.Generate();
+            entity.FirstName = null; // causes validator to fail (ValidateCommandBehavior)
+            var command = new CreateCustomerCommand(entity);
+
+            // act/assert
+            await Assert.ThrowsAsync<FluentValidation.ValidationException>(() => this.mediator.Send(command));
+        }
+
+        //[Fact]
+        //public async Task InvalidCommandIsCancelled_Test()
+        //{
+        //    // arrange
+        //    var entity = this.entityFaker.Generate();
+        //    entity.FirstName = null; // causes validator to fail (ValidateCommandBehavior)
+        //    var command = new CreateCustomerCommand(entity);
+
+        //    // act
+        //    var response = await this.mediator.Send(command).AnyContext();
+
+        //    // assert
+        //    response.ShouldNotBeNull();
+        //    response.Result.ShouldBeNull();
+        //    response.Cancelled.ShouldBeTrue();
+        //    response.CancelledReason.ShouldNotBeNullOrEmpty();
+        //}
+
+        [Fact]
         public async Task CancelledCommand_Test()
         {
             // arrange

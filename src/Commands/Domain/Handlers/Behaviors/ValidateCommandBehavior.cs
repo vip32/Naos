@@ -1,5 +1,6 @@
 ﻿namespace Naos.Core.Commands.Domain
 {
+    using System.Linq;
     using System.Threading.Tasks;
     using EnsureThat;
     using FluentValidation;
@@ -7,6 +8,13 @@
 
     public class ValidateCommandBehavior : ICommandBehavior
     {
+        private readonly bool throwOnNotIsValid;
+
+        public ValidateCommandBehavior(bool throwOnNotIsValid = true)
+        {
+            this.throwOnNotIsValid = throwOnNotIsValid;
+        }
+
         /// <summary>
         /// Executes this behavior for the specified command
         /// </summary>
@@ -22,7 +30,16 @@
             {
                 // instead of cancel, throw an exception
                 // TODO: log validation errors
-                throw new ValidationException($"{request.GetType().Name} has validation errors", result.Errors);
+                if (this.throwOnNotIsValid)
+                {
+                    throw new ValidationException($"{request.GetType().Name} has validation errors", result.Errors);
+                }
+                else
+                {
+                    return await Task.FromResult(
+                        new CommandBehaviorResult(
+                            $"{request.GetType().Name} has validation errors: " + result.Errors.Safe().Select(e => $"{e.PropertyName}={e.ToString()}").ToString(", "))).AnyContext();
+                }
             }
 
             return await Task.FromResult(new CommandBehaviorResult()).AnyContext();
