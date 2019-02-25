@@ -37,19 +37,18 @@ Marketing
 
 TODO:
 
-Test Coverage
- https://gunnarpeipman.com/aspnet/azure-devops-code-coverage
 
-NetCore 3.0 upgrade
+NetCore 3.0 upgrade (preview)
 https://www.talkingdotnet.com/asp-net-core-3-0-app-with-net-core-3-preview-2-and-visual-studio-2019/
 
-Dashboard with razor class library (operations logevents) OR razor components
+Dashboard with razor class library (operations logevents) OR razor components [NO > BLAZOR or razor components]
 https://www.learnrazorpages.com/advanced/razor-class-library
 
 Repositories
 Use OptionsBuilder instead of too many ctor arguments
 
 use Codecov token from azure devop variables in YAML > \$(codecov-token)
+Test Coverage https://gunnarpeipman.com/aspnet/azure-devops-code-coverage
 
 OptionsBuilder instead of large ctors (for all non configration things like MessageBrokers/Repositories)
 
