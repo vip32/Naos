@@ -45,7 +45,6 @@
         public void ConfigureServices(IServiceCollection services)
         {
             // framework application services
-
             services.AddTransient<HttpClientLogHandler>();
             services.Replace(Microsoft.Extensions.DependencyInjection.ServiceDescriptor.Singleton<IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
 
