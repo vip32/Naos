@@ -53,28 +53,28 @@
             // framework application services
             services.AddTransient<HttpClientLogHandler>();
             services.AddHttpClient("default")
-                .AddPolicyHandler((serviceProvider, request) =>
+                .AddPolicyHandler((sp, req) =>
                     HttpPolicyExtensions.HandleTransientHttpError()
                         .WaitAndRetryAsync(
                             3,
                             sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
                             onRetry: (outcome, timespan, retryAttempt, context) =>
                             {
-                                serviceProvider.GetService<ILogger<HttpClient>>()
+                                sp.GetService<ILogger<HttpClient>>()
                                     .LogWarning($"delaying for {timespan.TotalMilliseconds}ms, then making retry {retryAttempt}");
                             }))
-                .AddPolicyHandler((serviceProvider, request) =>
+                .AddPolicyHandler((sp, req) =>
                     HttpPolicyExtensions.HandleTransientHttpError()
                         .CircuitBreakerAsync(
                             3,
                             durationOfBreak: TimeSpan.FromSeconds(30),
                             onBreak: (response, state) =>
                             {
-                                serviceProvider.GetService<ILogger<HttpClient>>().LogWarning($"break circuit ({state}): {response.Exception.GetFullMessage()}");
+                                sp.GetService<ILogger<HttpClient>>().LogWarning($"break circuit ({state}): {response.Exception.GetFullMessage()}");
                             },
                             onReset: () =>
                             {
-                                serviceProvider.GetService<ILogger<HttpClient>>().LogInformation("reset circuit");
+                                sp.GetService<ILogger<HttpClient>>().LogInformation("reset circuit");
                             }))
                 //.AddTransientHttpErrorPolicy(builder => builder.WaitAndRetryAsync(new[]
                 //{

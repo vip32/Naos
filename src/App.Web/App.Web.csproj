@@ -14,9 +14,11 @@
     <PackageReference Include="MediatR" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common.Web\Common.Web.csproj" />
     <ProjectReference Include="..\Correlation.App\RequestCorrelation.App.csproj" />
     <ProjectReference Include="..\Filtering.App\RequestFiltering.App.csproj" />
     <ProjectReference Include="..\Authentication.App.Web\Authentication.App.Web.csproj" />
+    <ProjectReference Include="..\Operations.App.Web.Dashboard\Operations.App.Web.Dashboard.csproj" />
     <ProjectReference Include="..\Scheduling.App.Web\JobScheduling.App.Web.csproj" />
     <ProjectReference Include="..\ServiceDiscovery.App.Web.Router\ServiceDiscovery.App.Web.Router.csproj" />
     <ProjectReference Include="..\Configuration.App.Web\Configuration.App.Web.csproj" />
