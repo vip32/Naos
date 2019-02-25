@@ -21,12 +21,6 @@
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
             options.Context.AddTag("Countries");
-            options.Context.Services.AddSingleton(sp => new InMemoryContext<Country>(new[]
-            {
-                new Country { Code = "de", LanguageCodes = new[] {"de-de" }, Name = "Germany", TenantId = "naos_sample_test", Id = "de" },
-                new Country { Code = "nl", LanguageCodes = new[] {"nl-nl" }, Name = "Netherlands", TenantId = "naos_sample_test", Id = "nl" },
-                new Country { Code = "be", LanguageCodes = new[] {"fr-be", "nl-be" }, Name = "Belgium", TenantId = "naos_sample_test", Id = "be" },
-            }.ToList()));
 
             options.Context.Services.AddScoped<ICountryRepository>(sp =>
             {
@@ -46,6 +40,13 @@
                                         new AutoMapperEntityMapper(ModelMapperConfiguration.Create())),
                                     new[] { new AutoMapperSpecificationMapper<Country, DbCountry>(ModelMapperConfiguration.Create()) })))));
             });
+
+            options.Context.Services.AddSingleton(sp => new InMemoryContext<Country>(new[]
+            {
+                new Country { Code = "de", LanguageCodes = new[] {"de-de" }, Name = "Germany", TenantId = "naos_sample_test", Id = "de" },
+                new Country { Code = "nl", LanguageCodes = new[] {"nl-nl" }, Name = "Netherlands", TenantId = "naos_sample_test", Id = "nl" },
+                new Country { Code = "be", LanguageCodes = new[] {"fr-be", "nl-be" }, Name = "Belgium", TenantId = "naos_sample_test", Id = "be" },
+            }.ToList()));
 
             options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: countries service added");
 
