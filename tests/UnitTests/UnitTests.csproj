@@ -45,7 +45,6 @@
     <ProjectReference Include="..\..\src\Commands.App\Commands.App.csproj" />
     <ProjectReference Include="..\..\src\App\App.csproj" />
     <ProjectReference Include="..\..\src\Commands\Commands.csproj" />
-    <ProjectReference Include="..\..\src\Common.Web.Extensions\Common.Web.Extensions.csproj" />
     <ProjectReference Include="..\..\src\Common.Web\Common.Web.csproj" />
     <ProjectReference Include="..\..\src\Common\Common.csproj" />
     <ProjectReference Include="..\..\src\Configuration.App\Configuration.App.csproj" />
