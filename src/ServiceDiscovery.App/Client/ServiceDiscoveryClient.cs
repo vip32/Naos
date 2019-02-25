@@ -8,10 +8,10 @@
     using Naos.Core.Common;
     using Naos.Core.ServiceDiscovery.App.Web;
 
-    public abstract class ServiceDiscoveryClient // TODO: actual this is the 'client'
+    public abstract class ServiceDiscoveryClient
     {
         protected ServiceDiscoveryClient(
-            ILogger<ServiceDiscoveryClient> logger,
+            ILoggerFactory loggerFactory,
             ServiceDiscoveryConfiguration configuration,
             HttpClient httpClient,
             IServiceRegistryClient registryClient,
@@ -19,12 +19,13 @@
             string serviceTag = null)
         {
             EnsureArg.IsNotNull(httpClient, nameof(httpClient)); // TYPED CLIENT > https://docs.microsoft.com/en-us/aspnet/core/fundamentals/http-requests?view=aspnetcore-2.2
-            EnsureArg.IsNotNull(logger, nameof(logger));
+            EnsureArg.IsNotNull(loggerFactory, nameof(loggerFactory));
             EnsureArg.IsNotNull(registryClient, nameof(registryClient));
 
             configuration = configuration ?? new ServiceDiscoveryConfiguration();
+            this.Logger = loggerFactory.CreateLogger<ServiceDiscoveryClient>();
 
-            if (configuration.RemoteAddress.IsNullOrEmpty() == true)
+            if (configuration.RemoteAddress.IsNullOrEmpty())
             {
                 // client-side
                 if (serviceName.IsNullOrEmpty() && serviceTag.IsNullOrEmpty())
@@ -36,11 +37,11 @@
                 if (registration != null)
                 {
                     httpClient.BaseAddress = new Uri($"{registration.Address}:{registration.Port}".TrimEnd(':'));
-                    logger.LogInformation($"{{LogKey:l}} proxy (service={{ServiceName}}, tag={serviceTag}, serviceAddress={httpClient.BaseAddress})", LogEventKeys.ServiceDiscovery, serviceName);
+                    this.Logger.LogInformation($"{{LogKey:l}} proxy (service={{ServiceName}}, tag={serviceTag}, serviceAddress={httpClient.BaseAddress})", LogEventKeys.ServiceDiscovery, serviceName);
                 }
                 else
                 {
-                    logger.LogWarning($"{{LogKey:l}} proxy (name={{ServiceName}}, tag={serviceTag}, address=not found in registry)", LogEventKeys.ServiceDiscovery, serviceName);
+                    this.Logger.LogWarning($"{{LogKey:l}} proxy (name={{ServiceName}}, tag={serviceTag}, address=not found in registry)", LogEventKeys.ServiceDiscovery, serviceName);
                 }
             }
             else
@@ -52,7 +53,7 @@
                 httpClient.DefaultRequestHeaders.Add(ServiceDiscoveryRouterHeaders.ServiceName, serviceName);
                 httpClient.DefaultRequestHeaders.Add(ServiceDiscoveryRouterHeaders.ServiceTag, serviceTag);
 
-                logger.LogInformation($"{{LogKey:l}} router (service={{ServiceName}}, tag={serviceTag}, remoteAddress={httpClient.BaseAddress})", LogEventKeys.ServiceDiscovery, serviceName);
+                this.Logger.LogInformation($"{{LogKey:l}} router (service={{ServiceName}}, tag={serviceTag}, remoteAddress={httpClient.BaseAddress})", LogEventKeys.ServiceDiscovery, serviceName);
             }
 
             // TODO: get serviceregistration by name OR any of the tags
@@ -66,5 +67,7 @@
         }
 
         public HttpClient HttpClient { get; }
+
+        public ILogger<ServiceDiscoveryClient> Logger { get; }
     }
 }

@@ -85,9 +85,8 @@
                 //.AddTransientHttpErrorPolicy(builder => builder.CircuitBreakerAsync(
                 //    handledEventsAllowedBeforeBreaking: 3,
                 //    durationOfBreak: TimeSpan.FromSeconds(30)))
-                .AddHttpMessageHandler<HttpClientCorrelationHandler>()
-                .AddHttpMessageHandler<HttpClientServiceContextHandler>()
-                .AddHttpMessageHandler<HttpClientLogHandler>();
+                .AddNaosHttpMessageHandlers();
+
             services.Replace(Microsoft.Extensions.DependencyInjection.ServiceDescriptor.Singleton<IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
 
             services

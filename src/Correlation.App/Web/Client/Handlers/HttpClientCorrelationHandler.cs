@@ -23,7 +23,7 @@
         // TODO: also add these headers to the RESPONSE message
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var correlationId = this.correlationContext?.Context?.CorrelationId ?? string.Empty; // current correlationid will be set on outgoing request
+            var correlationId = this.correlationContext?.Context?.CorrelationId; // current correlationid will be set on outgoing request
             var requestId = RandomGenerator.GenerateString(5, false); // every outgoing request needs a unique id
 
             var loggerState = new Dictionary<string, object>
@@ -35,12 +35,20 @@
             {
                 this.logger.LogDebug($"{{LogKey:l}} [{requestId}] http added correlation headers", LogEventKeys.OutboundRequest);
 
-                request.Headers.Add("x-correlationid", correlationId);
+                if (!correlationId.IsNullOrEmpty())
+                {
+                    request.Headers.Add("x-correlationid", correlationId);
+                }
+
                 request.Headers.Add("x-requestid", requestId);
 
                 var response = await base.SendAsync(request, cancellationToken).AnyContext();
 
-                response.Headers.Add("x-correlationid", correlationId);
+                if (!correlationId.IsNullOrEmpty())
+                {
+                    response.Headers.Add("x-correlationid", correlationId);
+                }
+
                 response.Headers.Add("x-requestid", requestId);
 
                 return response;

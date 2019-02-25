@@ -7,11 +7,11 @@
     public class UserAccountsClient : ServiceDiscoveryClient
     {
         public UserAccountsClient(
-            HttpClient httpClient,
+            ILoggerFactory loggerFactory,
             ServiceDiscoveryConfiguration configuration,
-            ILogger<UserAccountsClient> logger,
+            HttpClient httpClient,
             IServiceRegistryClient discoveryClient)
-            : base(logger, configuration, httpClient, discoveryClient, "Product.Capability", "UserAccounts")
+            : base(loggerFactory, configuration, httpClient, discoveryClient, "Product.Capability", "UserAccounts")
         {
         }
     }

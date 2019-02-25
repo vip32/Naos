@@ -5,15 +5,11 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
-    using Naos.Core.Common.Web;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Infrastructure.Azure.CosmosDb;
-    using Naos.Core.RequestCorrelation.App.Web;
-    using Naos.Core.ServiceContext.App.Web;
     using Naos.Sample.Customers.App.Client;
     using Naos.Sample.Customers.Domain;
 
-    //[ExcludeFromCodeCoverage]
     public static partial class NaosExtensions
     {
         public static ServiceOptions AddSampleCustomers(
@@ -27,11 +23,7 @@
             var cosmosDbConfiguration = options.Context.Configuration?.GetSection(section).Get<CosmosDbConfiguration>();
             Ensure.That(cosmosDbConfiguration).IsNotNull();
 
-            options.Context.Services.AddHttpClient<UserAccountsClient>()
-                .AddHttpMessageHandler<HttpClientCorrelationHandler>()
-                .AddHttpMessageHandler<HttpClientServiceContextHandler>()
-                .AddHttpMessageHandler<HttpClientLogHandler>();
-
+            options.Context.Services.AddNaosServiceClient<UserAccountsClient>();
             options.Context.Services.AddScoped<ICustomerRepository>(sp =>
             {
                 return new CustomerRepository(
