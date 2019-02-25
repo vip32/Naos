@@ -79,7 +79,7 @@
                 options.LoggerConfiguration?.WriteTo.AzureBlobStorage(
                     restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information,
                     connectionString: configuration.ConnectionString,
-                    storageFolderName: configuration.ContainerName.EmptyToNull() ?? $"{options.Environment.ToLower()}-operations",
+                    storageContainerName: configuration.ContainerName.EmptyToNull() ?? $"{options.Environment.ToLower()}-operations",
                     storageFileName: path,
                     writeInBatches: true,
                     period: TimeSpan.FromSeconds(15),
