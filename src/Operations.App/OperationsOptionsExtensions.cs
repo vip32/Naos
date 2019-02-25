@@ -5,8 +5,11 @@
     using global::Serilog;
     using global::Serilog.Events;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection.Extensions;
+    using Microsoft.Extensions.Http;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
+    using Naos.Core.Common.Web;
     using Naos.Core.Operations.App;
 
     public static class OperationsOptionsExtensions
@@ -40,6 +43,9 @@
             options.Context.Services.AddSingleton(sp => CreateLoggerFactory(loggingOptions));
             options.Context.Services.AddSingleton(typeof(ILogger<>), typeof(LoggingAdapter<>));
             options.Context.Services.AddSingleton(typeof(Logging.ILogger), typeof(LoggingAdapter));
+
+            options.Context.Services.AddTransient<HttpClientLogHandler>();
+            options.Context.Services.Replace(ServiceDescriptor.Singleton<IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
 
             return options;
         }

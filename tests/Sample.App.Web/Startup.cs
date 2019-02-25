@@ -14,8 +14,6 @@
     using Microsoft.AspNetCore.Mvc.Authorization;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.DependencyInjection.Extensions;
-    using Microsoft.Extensions.Http;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Commands.Web;
     using Naos.Core.Common;
@@ -44,10 +42,6 @@
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // framework application services
-            services.AddTransient<HttpClientLogHandler>();
-            services.Replace(Microsoft.Extensions.DependencyInjection.ServiceDescriptor.Singleton<IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
-
             services
                 .AddMiddlewareAnalysis()
                 .AddHttpContextAccessor()
