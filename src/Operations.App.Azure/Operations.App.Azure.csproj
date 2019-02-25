@@ -11,7 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Infrastructure.Azure.Configuration\Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\Operations.App\Operations.App.csproj" />
     <ProjectReference Include="..\Operations.Infrastructure.Azure\Operations.Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\Operations\Operations.csproj" />
