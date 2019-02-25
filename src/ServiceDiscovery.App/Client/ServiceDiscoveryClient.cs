@@ -10,7 +10,7 @@
 
     public abstract class ServiceDiscoveryClient // TODO: actual this is the 'client'
     {
-        public ServiceDiscoveryClient(
+        protected ServiceDiscoveryClient(
             ILogger<ServiceDiscoveryClient> logger,
             ServiceDiscoveryConfiguration configuration,
             HttpClient httpClient,
