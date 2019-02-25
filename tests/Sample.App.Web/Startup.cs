@@ -45,9 +45,6 @@
         public void ConfigureServices(IServiceCollection services)
         {
             // framework application services
-            services.AddHttpClient("default")
-                .AddNaosPolicyHandlers()
-                .AddNaosMessageHandlers();
 
             services.AddTransient<HttpClientLogHandler>();
             services.Replace(Microsoft.Extensions.DependencyInjection.ServiceDescriptor.Singleton<IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
@@ -92,6 +89,7 @@
                         .Register<DummyJob>("job1", Cron.Minutely(), (j) => j.LogMessageAsync("+++ hello from job1 +++", CancellationToken.None))
                         .Register<DummyJob>("job2", Cron.MinuteInterval(2), j => j.LogMessageAsync("+++ hello from job2 +++", CancellationToken.None, true), enabled: false)
                         .Register<DummyJob>("longjob33", Cron.Minutely(), j => j.LongRunningAsync("+++ hello from longjob3 +++", CancellationToken.None)))
+                    .AddServiceClient("default")
                     .AddMessaging(o => o
                         //.UseFileSystemBroker(s => s
                         //.UseSignalRBroker(s => s
