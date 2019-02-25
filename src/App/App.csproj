@@ -7,28 +7,23 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Authentication.App.Web\Authentication.App.Web.csproj" />
+
     <ProjectReference Include="..\Commands.App\Commands.App.csproj" />
-    <ProjectReference Include="..\Configuration.App.Web\Configuration.App.Web.csproj" />
     <ProjectReference Include="..\Configuration.App\Configuration.App.csproj" />
     <ProjectReference Include="..\Correlation.App\RequestCorrelation.App.csproj" />
-    <ProjectReference Include="..\Exceptions.App.Web\Exceptions.App.Web.csproj" />
     <ProjectReference Include="..\Filtering.App\RequestFiltering.App.csproj" />
     <ProjectReference Include="..\JobScheduling.App\JobScheduling.App.csproj" />
     <ProjectReference Include="..\Messaging.App.Azure.SignalR\Messaging.App.Azure.SignalR.csproj" />
     <ProjectReference Include="..\Messaging.App.Azure\Messaging.App.Azure.csproj" />
     <ProjectReference Include="..\Messaging.App.FileSystem\Messaging.App.FileSystem.csproj" />
     <ProjectReference Include="..\Messaging.App.RabbitMQ\Messaging.App.RabbitMQ.csproj" />
-    <ProjectReference Include="..\Messaging.App.Web\Messaging.App.Web.csproj" />
     <ProjectReference Include="..\Messaging.App\Messaging.App.csproj" />
     <ProjectReference Include="..\Operations.App.Azure\Operations.App.Azure.csproj" />
-    <ProjectReference Include="..\Operations.App.Web\Operations.App.Web.csproj" />
     <ProjectReference Include="..\Operations.App\Operations.App.csproj" />
-    <ProjectReference Include="..\Scheduling.App.Web\JobScheduling.App.Web.csproj" />
     <ProjectReference Include="..\ServiceContext.App\ServiceContext.App.csproj" />
     <ProjectReference Include="..\ServiceDiscovery.App.Consul\ServiceDiscovery.App.Consul.csproj" />
-    <ProjectReference Include="..\ServiceDiscovery.App.Web.Router\ServiceDiscovery.App.Web.Router.csproj" />
     <ProjectReference Include="..\ServiceDiscovery.App\ServiceDiscovery.App.csproj" />
+    <ProjectReference Include="..\Operations.App.Web\Operations.App.Web.csproj" />
   </ItemGroup>
 
 </Project>

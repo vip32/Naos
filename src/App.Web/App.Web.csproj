@@ -11,10 +11,16 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Api.Analyzers" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.2" />
+    <PackageReference Include="MediatR" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="6.0.0" />
     <ProjectReference Include="..\Correlation.App\RequestCorrelation.App.csproj" />
     <ProjectReference Include="..\Filtering.App\RequestFiltering.App.csproj" />
+    <ProjectReference Include="..\Authentication.App.Web\Authentication.App.Web.csproj" />
+    <ProjectReference Include="..\Scheduling.App.Web\JobScheduling.App.Web.csproj" />
+    <ProjectReference Include="..\ServiceDiscovery.App.Web.Router\ServiceDiscovery.App.Web.Router.csproj" />
+    <ProjectReference Include="..\Configuration.App.Web\Configuration.App.Web.csproj" />
+    <ProjectReference Include="..\Exceptions.App.Web\Exceptions.App.Web.csproj" />
+    <ProjectReference Include="..\Messaging.App.Web\Messaging.App.Web.csproj" />
   </ItemGroup>
 </Project>
