@@ -23,7 +23,7 @@
             var cosmosDbConfiguration = options.Context.Configuration?.GetSection(section).Get<CosmosDbConfiguration>();
             Ensure.That(cosmosDbConfiguration).IsNotNull();
 
-            options.Context.Services.AddNaosServiceClient<UserAccountsClient>();
+            options.Context.AddServiceClient<UserAccountsClient>();
             options.Context.Services.AddScoped<ICustomerRepository>(sp =>
             {
                 return new CustomerRepository(

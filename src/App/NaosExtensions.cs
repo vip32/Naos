@@ -12,7 +12,7 @@
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
             EnsureArg.IsNotNull(naosOptions.Context, nameof(naosOptions.Context));
 
-            naosOptions.Context.Services.AddNaosServiceClient<TClient>(setupAction);
+            naosOptions.Context.AddServiceClient<TClient>(setupAction);
 
             return naosOptions;
         }
@@ -23,7 +23,7 @@
             EnsureArg.IsNotNull(naosOptions.Context, nameof(naosOptions.Context));
             EnsureArg.IsNotNullOrEmpty(name, nameof(name));
 
-            naosOptions.Context.Services.AddNaosServiceClient(name, setupAction);
+            naosOptions.Context.AddServiceClient(name, setupAction);
 
             return naosOptions;
         }
