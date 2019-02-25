@@ -21,6 +21,7 @@
             }
             else
             {
+                // default handlers
                 return builder
                     .AddHttpMessageHandler<HttpClientCorrelationHandler>()
                     .AddHttpMessageHandler<HttpClientServiceContextHandler>()
@@ -37,6 +38,7 @@
             }
             else
             {
+                // default policies
                 return builder
                    .AddPolicyHandler((sp, req) =>
                         HttpPolicyExtensions.HandleTransientHttpError()

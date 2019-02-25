@@ -44,6 +44,7 @@
             }
             else
             {
+                // default setup
                 context.Services
                     .AddHttpClient<TClient>()
                     .AddNaosMessageHandlers()
@@ -68,6 +69,7 @@
             }
             else
             {
+                // default setup
                 context.Services
                     .AddHttpClient(name)
                     .AddNaosMessageHandlers()
