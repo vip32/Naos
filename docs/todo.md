@@ -37,6 +37,9 @@ Marketing
 
 TODO:
 
+Test Coverage
+ https://gunnarpeipman.com/aspnet/azure-devops-code-coverage
+
 NetCore 3.0 upgrade
 https://www.talkingdotnet.com/asp-net-core-3-0-app-with-net-core-3-preview-2-and-visual-studio-2019/
 
