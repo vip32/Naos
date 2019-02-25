@@ -1,10 +1,8 @@
 ﻿namespace Naos.Sample.App.Web
 {
-    using System;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
-    using System.Net.Http;
     using System.Threading;
     using MediatR;
     using Microsoft.AspNetCore.Authorization;
@@ -29,12 +27,8 @@
     using Naos.Core.JobScheduling.Domain;
     using Naos.Core.Messaging;
     using Naos.Core.Operations.App.Web;
-    using Naos.Core.RequestCorrelation.App.Web;
-    using Naos.Core.ServiceContext.App.Web;
     using Newtonsoft.Json;
     using NSwag.AspNetCore;
-    using Polly;
-    using Polly.Extensions.Http;
 
     public class Startup
     {
@@ -51,42 +45,11 @@
         public void ConfigureServices(IServiceCollection services)
         {
             // framework application services
-            services.AddTransient<HttpClientLogHandler>();
             services.AddHttpClient("default")
-                .AddPolicyHandler((sp, req) =>
-                    HttpPolicyExtensions.HandleTransientHttpError()
-                        .WaitAndRetryAsync(
-                            3,
-                            sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
-                            onRetry: (outcome, timespan, retryAttempt, context) =>
-                            {
-                                sp.GetService<ILogger<HttpClient>>()
-                                    .LogWarning($"delaying for {timespan.TotalMilliseconds}ms, then making retry {retryAttempt}");
-                            }))
-                .AddPolicyHandler((sp, req) =>
-                    HttpPolicyExtensions.HandleTransientHttpError()
-                        .CircuitBreakerAsync(
-                            3,
-                            durationOfBreak: TimeSpan.FromSeconds(30),
-                            onBreak: (response, state) =>
-                            {
-                                sp.GetService<ILogger<HttpClient>>().LogWarning($"break circuit ({state}): {response.Exception.GetFullMessage()}");
-                            },
-                            onReset: () =>
-                            {
-                                sp.GetService<ILogger<HttpClient>>().LogInformation("reset circuit");
-                            }))
-                //.AddTransientHttpErrorPolicy(builder => builder.WaitAndRetryAsync(new[]
-                //{
-                //    TimeSpan.FromSeconds(1),
-                //    TimeSpan.FromSeconds(5),
-                //    TimeSpan.FromSeconds(10)
-                //}))
-                //.AddTransientHttpErrorPolicy(builder => builder.CircuitBreakerAsync(
-                //    handledEventsAllowedBeforeBreaking: 3,
-                //    durationOfBreak: TimeSpan.FromSeconds(30)))
-                .AddNaosHttpMessageHandlers();
+                .AddNaosPolicyHandlers()
+                .AddNaosMessageHandlers();
 
+            services.AddTransient<HttpClientLogHandler>();
             services.Replace(Microsoft.Extensions.DependencyInjection.ServiceDescriptor.Singleton<IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
 
             services

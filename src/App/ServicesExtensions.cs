@@ -1,18 +1,27 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
+    using System;
     using Naos.Core.ServiceDiscovery.App;
 
     public static class ServicesExtensions
     {
-        public static IServiceCollection AddNaosServiceClient<TClient>(this IServiceCollection services)
+        public static IHttpClientBuilder AddNaosServiceClient<TClient>(this IServiceCollection services, Action<IHttpClientBuilder> setupAction = null)
             where TClient : ServiceDiscoveryClient
         {
-            services
-                .AddHttpClient<TClient>()
-                // TODO: accept some policies
-                .AddNaosHttpMessageHandlers();
-
-            return services;
+            if (setupAction != null)
+            {
+                var builder = services
+                    .AddHttpClient<TClient>();
+                setupAction.Invoke(builder);
+                return builder;
+            }
+            else
+            {
+                return services
+                    .AddHttpClient<TClient>()
+                    .AddNaosMessageHandlers()
+                    .AddNaosPolicyHandlers();
+            }
         }
     }
 }
