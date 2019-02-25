@@ -21,6 +21,8 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
+            options.Context.AddTag("UserAccounts");
+
             if (dbContext != null)
             {
                 options.Context.Services.AddSingleton(dbContext); // cross wiring, warning this will be a singleton (not scoped)
@@ -40,7 +42,6 @@
             });
 
             var entityFrameworkConfiguration = options.Context.Configuration?.GetSection(section).Get<EntityFrameworkConfiguration>();
-            options.Context.AddTag("UserAccounts");
             options.Context.Services.AddDbContext<UserAccountsContext>(o =>
             {
                 o.UseLoggerFactory(options.Context.Services.BuildServiceProvider().GetRequiredService<ILoggerFactory>());

@@ -20,10 +20,9 @@
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
             options.Context.AddTag("Customers");
-            var cosmosDbConfiguration = options.Context.Configuration?.GetSection(section).Get<CosmosDbConfiguration>();
-            Ensure.That(cosmosDbConfiguration).IsNotNull();
-
             options.Context.AddServiceClient<UserAccountsClient>();
+
+            var cosmosDbConfiguration = options.Context.Configuration?.GetSection(section).Get<CosmosDbConfiguration>();
             options.Context.Services.AddScoped<ICustomerRepository>(sp =>
             {
                 return new CustomerRepository(
