@@ -4,6 +4,6 @@
 
     public class FileSystemServiceRegistryConfiguration
     {
-        public string Folder { get; set; } = Path.GetTempPath();
+        public string Folder { get; set; }
     }
 }

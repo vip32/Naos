@@ -115,7 +115,7 @@
 
         private string GetDirectory(FileSystemServiceRegistryConfiguration configuration)
         {
-            return $@"{configuration.Folder.EmptyToNull() ?? Path.GetTempPath()}naos_servicediscovery\".Replace("\\", @"\");
+            return configuration.Folder.EmptyToNull() ?? Path.GetTempPath();
         }
 
         private void EnsureDirectory(string fullPath)

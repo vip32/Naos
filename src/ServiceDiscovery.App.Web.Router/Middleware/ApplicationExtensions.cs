@@ -41,7 +41,7 @@
             EnsureArg.IsNotNull(app, nameof(app));
             EnsureArg.IsNotNull(options, nameof(options));
 
-            app.RunProxy("/api/servicediscovery/router", async context =>
+            app.RunProxy("/api/servicediscovery/router/proxy", async context =>
             {
                 var logger = app.ApplicationServices.GetRequiredService<ILogger>();
                 var registryClient = app.ApplicationServices.GetRequiredService<RouterContext>().RegistryClient;

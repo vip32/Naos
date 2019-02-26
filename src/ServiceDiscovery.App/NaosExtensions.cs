@@ -2,6 +2,7 @@
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.IO;
     using System.Net.Http;
     using EnsureThat;
     using Microsoft.Extensions.Configuration;
@@ -52,14 +53,20 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
+            var registryConfiguration = options.Context.Configuration?.GetSection($"{section}:registry:fileSystem").Get<FileSystemServiceRegistryConfiguration>();
+            if (registryConfiguration.Folder.IsNullOrEmpty())
+            {
+                registryConfiguration.Folder = Path.Combine(Path.GetTempPath(), "naos_servicediscovery");
+            }
+
             options.Context.Services.AddSingleton<IHostedService, ServiceDiscoveryHostedService>();
             options.Context.Services.AddSingleton<IServiceRegistry>(sp =>
                 new FileSystemServiceRegistry(
                     sp.GetRequiredService<ILogger<FileSystemServiceRegistry>>(),
-                    options.Context.Configuration?.GetSection($"{section}:registry:fileSystem").Get<FileSystemServiceRegistryConfiguration>()));
+                    registryConfiguration));
 
             options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: service discovery added (type={nameof(FileSystemServiceRegistry)})");
-            options.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceDiscovery", Description = "FileSystemClientRegistry" });
+            options.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceDiscovery", Description = "FileSystemClientRegistry", EchoUri = "api/echo/servicediscovery" });
 
             return options;
         }
@@ -91,7 +98,7 @@
                 {
                     var configuration = options.Context.Configuration?.GetSection(section).Get<ServiceDiscoveryConfiguration>();
                     configuration.RouterAddress = registryConfiguration.Address;
-                    configuration.RouterPath = "api/servicediscovery/router";
+                    configuration.RouterPath = "api/servicediscovery/router/proxy";
                     configuration.RouterEnabled = true;
                     return configuration;
                 });
