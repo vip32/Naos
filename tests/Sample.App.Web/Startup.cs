@@ -92,12 +92,11 @@
                         .UseServiceBusBroker(s => s
                             .Subscribe<TestMessage, TestMessageHandler>()))
                     .AddServiceDiscovery(o => o
-                        //.UseFileSystemClientRegistry())
+                        .UseFileSystemClientRegistry())
                         //.UseConsulClientRegistry())
-                        .UseRouterClientRegistry())
+                        //.UseRouterClientRegistry())
                     .AddServiceDiscoveryRouter(o => o
                         .UseFileSystemRegistry()));
-                        //.UseFileSystemRouterRegistry()));
 
             // TODO: need to find a way to start the MessageBroker (done by resolving the IMessageBroker somewhere, HostedService? like scheduling)
         }

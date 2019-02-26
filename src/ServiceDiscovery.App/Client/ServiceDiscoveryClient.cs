@@ -52,7 +52,7 @@
                 }
                 else
                 {
-                    this.Logger.LogWarning($"{{LogKey:l}} client (name={{ServiceName}}, tag={serviceTag}, address=not found in registry)", LogEventKeys.ServiceDiscovery, serviceName);
+                    this.Logger.LogWarning($"{{LogKey:l}} client (service={{ServiceName}}, tag={serviceTag}, address=not found in registry)", LogEventKeys.ServiceDiscovery, serviceName);
                 }
             }
 

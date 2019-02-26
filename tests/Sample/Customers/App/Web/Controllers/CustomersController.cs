@@ -17,7 +17,7 @@
             EnsureArg.IsNotNull(userAccountsClient, nameof(userAccountsClient));
 
             this.userAccountsClient = userAccountsClient;
-            //var accounts = this.userAccountsClient.HttpClient.GetAsync("api/useraccounts").Result;
+            var accounts = this.userAccountsClient.HttpClient.GetAsync("api/useraccounts").Result;
         }
     }
 }
