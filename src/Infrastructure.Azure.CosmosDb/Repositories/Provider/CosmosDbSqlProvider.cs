@@ -61,7 +61,9 @@
                 this.collectionId = isMasterCollection ? "master" : typeof(T).Name;
             }
 
-            this.documentCollection = new AsyncLazy<DocumentCollection>(async () => await this.GetOrCreateCollectionAsync(collectionPartitionKey, collectionOfferThroughput).AnyContext());
+            this.documentCollection = new AsyncLazy<DocumentCollection>(async () =>
+                await this.GetOrCreateCollectionAsync(collectionPartitionKey, collectionOfferThroughput).AnyContext());
+
             if (this.documentCollection.Value.Result != null)
             {
                 if (this.documentCollection.Value.Result.PartitionKey?.Paths?.Any() == true)
