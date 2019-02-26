@@ -27,7 +27,8 @@
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
             EnsureArg.IsNotNull(naosOptions.Context, nameof(naosOptions.Context));
 
-            naosOptions.Context.Services.AddSingleton(sp => naosOptions.Context.Configuration?.GetSection(section).Get<ServiceDiscoveryConfiguration>());
+            naosOptions.Context.Services.AddSingleton(sp =>
+                naosOptions.Context.Configuration?.GetSection(section).Get<ServiceDiscoveryConfiguration>());
             naosOptions.Context.Services.AddSingleton<IServiceRegistryClient>(sp =>
                 new ServiceRegistryClient(sp.GetRequiredService<IServiceRegistry>()));
 
@@ -69,7 +70,7 @@
         /// <param name="options"></param>
         /// <param name="section"></param>
         /// <returns></returns>
-        public static ServiceDiscoveryOptions UseRemoteRouterClientRegistry(
+        public static ServiceDiscoveryOptions UseRouterClientRegistry(
             this ServiceDiscoveryOptions options,
             string section = "naos:serviceDiscovery")
         {
@@ -77,15 +78,26 @@
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
             // client needs remote registry
+            var registryConfiguration = options.Context.Configuration?.GetSection($"{section}:registry:router").Get<RouterServiceRegistryConfiguration>();
             options.Context.Services.AddSingleton<IHostedService, ServiceDiscoveryHostedService>();
             options.Context.Services.AddSingleton<IServiceRegistry>(sp =>
-                new RemoteServiceRegistry(
-                    sp.GetRequiredService<ILogger<RemoteServiceRegistry>>(),
+                new RouterServiceRegistry(
+                    sp.GetRequiredService<ILogger<RouterServiceRegistry>>(),
                     sp.GetRequiredService<IHttpClientFactory>().CreateClient(),
-                    options.Context.Configuration?.GetSection($"{section}:registry:remote").Get<RemoteServiceRegistryConfiguration>()));
+                    registryConfiguration));
 
-            options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: service discovery added (type={nameof(RemoteServiceRegistry)})");
-            options.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceDiscovery", Description = "RemoteRouterClientRegistry", EchoUri = "api/echo/servicediscovery" });
+            // overwrite ServiceDiscoveryConfiguration (from AddServiceDiscovery) with router infos
+            options.Context.Services.AddSingleton(sp =>
+                {
+                    var configuration = options.Context.Configuration?.GetSection(section).Get<ServiceDiscoveryConfiguration>();
+                    configuration.RouterAddress = registryConfiguration.Address;
+                    configuration.RouterPath = "api/servicediscovery/router";
+                    configuration.RouterEnabled = true;
+                    return configuration;
+                });
+
+            options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: service discovery added (type={nameof(RouterServiceRegistry)})");
+            options.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceDiscovery", Description = "RouterClientRegistry", EchoUri = "api/echo/servicediscovery" });
 
             return options;
         }

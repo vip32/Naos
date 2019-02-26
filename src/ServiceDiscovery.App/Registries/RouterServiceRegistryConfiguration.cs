@@ -1,6 +1,6 @@
 ﻿namespace Naos.Core.ServiceDiscovery.App
 {
-    public class RemoteServiceRegistryConfiguration
+    public class RouterServiceRegistryConfiguration
     {
         public string Address { get; set; }
     }

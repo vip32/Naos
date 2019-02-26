@@ -25,7 +25,18 @@
             configuration = configuration ?? new ServiceDiscoveryConfiguration();
             this.Logger = loggerFactory.CreateLogger<ServiceDiscoveryClient>();
 
-            if (configuration.RemoteAddress.IsNullOrEmpty())
+            if (configuration.RouterEnabled && !configuration.RouterAddress.IsNullOrEmpty())
+            {
+                // server-side (router)
+                httpClient.BaseAddress = new Uri(new Uri(configuration.RouterAddress), configuration.RouterPath.Safe().TrimEnd('/') + "/"); // backslash mandatory https://stackoverflow.com/questions/23438416/why-is-httpclient-baseaddress-not-working
+
+                // following are used by router to forward to correct service instance
+                httpClient.DefaultRequestHeaders.Add(ServiceDiscoveryRouterHeaders.ServiceName, serviceName);
+                httpClient.DefaultRequestHeaders.Add(ServiceDiscoveryRouterHeaders.ServiceTag, serviceTag);
+
+                this.Logger.LogInformation($"{{LogKey:l}} router (service={{ServiceName}}, tag={serviceTag}, address={httpClient.BaseAddress})", LogEventKeys.ServiceDiscovery, serviceName);
+            }
+            else
             {
                 // client-side
                 if (serviceName.IsNullOrEmpty() && serviceTag.IsNullOrEmpty())
@@ -37,23 +48,12 @@
                 if (registration != null)
                 {
                     httpClient.BaseAddress = new Uri($"{registration.Address}:{registration.Port}".TrimEnd(':'));
-                    this.Logger.LogInformation($"{{LogKey:l}} proxy (service={{ServiceName}}, tag={serviceTag}, serviceAddress={httpClient.BaseAddress})", LogEventKeys.ServiceDiscovery, serviceName);
+                    this.Logger.LogInformation($"{{LogKey:l}} client (service={{ServiceName}}, tag={serviceTag}, address={httpClient.BaseAddress})", LogEventKeys.ServiceDiscovery, serviceName);
                 }
                 else
                 {
-                    this.Logger.LogWarning($"{{LogKey:l}} proxy (name={{ServiceName}}, tag={serviceTag}, address=not found in registry)", LogEventKeys.ServiceDiscovery, serviceName);
+                    this.Logger.LogWarning($"{{LogKey:l}} client (name={{ServiceName}}, tag={serviceTag}, address=not found in registry)", LogEventKeys.ServiceDiscovery, serviceName);
                 }
-            }
-            else
-            {
-                // server-side
-                httpClient.BaseAddress = new Uri(new Uri(configuration.RemoteAddress), "api/servicediscovery/router/"); // backslash mandatory https://stackoverflow.com/questions/23438416/why-is-httpclient-baseaddress-not-working
-
-                // following are used by router to forward to correct service instance
-                httpClient.DefaultRequestHeaders.Add(ServiceDiscoveryRouterHeaders.ServiceName, serviceName);
-                httpClient.DefaultRequestHeaders.Add(ServiceDiscoveryRouterHeaders.ServiceTag, serviceTag);
-
-                this.Logger.LogInformation($"{{LogKey:l}} router (service={{ServiceName}}, tag={serviceTag}, remoteAddress={httpClient.BaseAddress})", LogEventKeys.ServiceDiscovery, serviceName);
             }
 
             // TODO: get serviceregistration by name OR any of the tags

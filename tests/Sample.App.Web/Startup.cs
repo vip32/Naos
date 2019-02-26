@@ -94,8 +94,9 @@
                     .AddServiceDiscovery(o => o
                         .UseFileSystemClientRegistry()));
                         //.UseConsulClientRegistry()));
+                        //.UseRouterClientRegistry()));
+
                         //.UseFileSystemRouterRegistry()));
-                        //.UseRemoteRouterClientRegistry()));
 
             // TODO: need to find a way to start the MessageBroker (done by resolving the IMessageBroker somewhere, HostedService? like scheduling)
         }

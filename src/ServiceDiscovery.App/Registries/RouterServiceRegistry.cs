@@ -9,15 +9,15 @@
     using Naos.Core.Common;
     using Naos.Core.Common.Web.Client;
 
-    public class RemoteServiceRegistry : IServiceRegistry
+    public class RouterServiceRegistry : IServiceRegistry
     {
-        private readonly ILogger<RemoteServiceRegistry> logger;
+        private readonly ILogger<RouterServiceRegistry> logger;
         private readonly HttpClient httpClient;
 
-        public RemoteServiceRegistry(
-            ILogger<RemoteServiceRegistry> logger,
+        public RouterServiceRegistry(
+            ILogger<RouterServiceRegistry> logger,
             HttpClient httpClient,
-            RemoteServiceRegistryConfiguration configuration)
+            RouterServiceRegistryConfiguration configuration)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(httpClient, nameof(httpClient));

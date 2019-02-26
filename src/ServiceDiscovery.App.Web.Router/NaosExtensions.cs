@@ -35,11 +35,12 @@
                 //o.AddHttpMessageHandler<HttpClientLogHandler>();
             });
 
-            options.Context.Services.AddSingleton(sp => new RouterContext(
-                new ServiceRegistryClient(
-                    new FileSystemServiceRegistry(
-                        sp.GetRequiredService<ILogger<FileSystemServiceRegistry>>(),
-                        options.Context.Configuration?.GetSection($"{section}:registry:fileSystem").Get<FileSystemServiceRegistryConfiguration>()))));
+            options.Context.Services.AddSingleton(sp =>
+                new RouterContext(
+                    new ServiceRegistryClient(
+                        new FileSystemServiceRegistry(
+                            sp.GetRequiredService<ILogger<FileSystemServiceRegistry>>(),
+                            options.Context.Configuration?.GetSection($"{section}:registry:fileSystem").Get<FileSystemServiceRegistryConfiguration>()))));
 
             options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: service discovery router added (registry={nameof(FileSystemServiceRegistry)})");
             options.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceDiscoveryRouter", EchoUri = "api/echo/servicediscovery/router" });

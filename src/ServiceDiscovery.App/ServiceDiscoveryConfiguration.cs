@@ -9,6 +9,10 @@
 
         public string[] ServiceAddresses { get; set; }
 
-        public string RemoteAddress { get; set; } // optional router address
+        public bool RouterEnabled { get; set; } = false;
+
+        public string RouterAddress { get; set; } // optional router address
+
+        public string RouterPath { get; set; }
     }
 }
