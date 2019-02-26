@@ -1,8 +1,9 @@
 ﻿namespace Microsoft.AspNetCore.Builder
 {
     using EnsureThat;
+    using Microsoft.AspNetCore.Diagnostics;
     using Microsoft.Extensions.Options;
-    using Naos.Core.Commands.Exceptions.Web;
+    using Naos.Core.ServiceExceptions.App.Web;
 
     public static class ExceptionHandlerMiddlewareExtensions
     {
@@ -24,7 +25,7 @@
             EnsureArg.IsNotNull(app, nameof(app));
             EnsureArg.IsNotNull(options, nameof(options));
 
-            return app.UseMiddleware<ExceptionHandlerMiddleware>(Options.Create(options));
+            return app.UseMiddleware<Naos.Core.ServiceExceptions.App.Web.ExceptionHandlerMiddleware>(Options.Create(options));
         }
     }
 }

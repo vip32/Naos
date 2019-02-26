@@ -34,7 +34,7 @@
         {
             EnsureArg.IsNotNull(context, nameof(context));
 
-            context.Messages.Add($"{LogEventKeys.Startup} naos builder: typed {typeof(TClient).Name.Replace("Client", string.Empty).ToLower()} service client added (type=http)");
+            context.Messages.Add($"{LogEventKeys.Startup} naos builder: typed service client added (type={typeof(TClient).Name})");
 
             if (setupAction != null)
             {
@@ -59,7 +59,7 @@
             EnsureArg.IsNotNull(context, nameof(context));
             EnsureArg.IsNotNullOrEmpty(name, nameof(name));
 
-            context.Messages.Add($"{LogEventKeys.Startup} naos builder: named {name} service client added (type=http)");
+            context.Messages.Add($"{LogEventKeys.Startup} naos builder: named service client added (name={name})");
 
             if (setupAction != null)
             {

@@ -5,6 +5,7 @@
     using EnsureThat;
     using Naos.Core.Commands.Domain;
     using Naos.Core.Common;
+    using Naos.Core.Configuration.App;
 
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions
@@ -13,9 +14,11 @@
         /// Adds required services to support the command handling functionality.
         /// </summary>
         /// <param name="naosOptions"></param>
+        /// <param name="setupAction"></param>
         /// <returns></returns>
         public static NaosOptions AddCommands(
-            this NaosOptions naosOptions)
+            this NaosOptions naosOptions,
+            Action<CommandsOptions> setupAction = null)
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
             EnsureArg.IsNotNull(naosOptions.Context, nameof(naosOptions.Context));
@@ -28,6 +31,7 @@
 
             naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: commands added"); // TODO: list available commands/handlers
 
+            setupAction?.Invoke(new CommandsOptions(naosOptions.Context));
             //naosOptions.Context.Services
             //    .AddSingleton<ICommandBehavior, ValidateCommandBehavior>()
             //    .AddSingleton<ICommandBehavior, TrackCommandBehavior>()
@@ -35,7 +39,24 @@
             //    .AddSingleton<ICommandBehavior, IdempotentCommandBehavior>()
             //    .AddSingleton<ICommandBehavior, PersistCommandBehavior>();
 
+            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Commands" });
+
             return naosOptions;
+        }
+
+        public static CommandsOptions AddBehavior<TBehavior>(
+            this CommandsOptions options)
+            where TBehavior : class, ICommandBehavior
+        {
+            EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.Context, nameof(options.Context));
+
+            options.Context.Services
+                    .AddSingleton<ICommandBehavior, TBehavior>();
+
+            options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: commands behavior added (type={typeof(TBehavior).Name})"); // TODO: list available commands/handlers
+
+            return options;
         }
     }
 }

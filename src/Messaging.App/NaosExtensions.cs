@@ -4,6 +4,7 @@
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Configuration.App;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.App;
 
@@ -29,6 +30,7 @@
             setupAction?.Invoke(new MessagingOptions(naosOptions.Context));
 
             //context.Messages.Add($"{LogEventKeys.General} naos builder: messaging added");
+            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Messaging", EchoUri = "api/echo/messaging" });
 
             return naosOptions;
         }

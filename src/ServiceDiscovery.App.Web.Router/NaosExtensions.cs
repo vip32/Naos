@@ -5,6 +5,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
+    using Naos.Core.Configuration.App;
     using Naos.Core.ServiceDiscovery.App;
     using Naos.Core.ServiceDiscovery.App.Web.Router;
     using ProxyKit;
@@ -41,6 +42,7 @@
                         options.Context.Configuration?.GetSection($"{section}:registry:fileSystem").Get<FileSystemServiceRegistryConfiguration>()))));
 
             options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: service discovery router added (registry={nameof(FileSystemServiceRegistry)})");
+            options.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceDiscoveryRouter", EchoUri = "api/echo/servicediscovery/router" });
 
             return options;
         }

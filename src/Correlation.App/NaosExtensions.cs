@@ -4,6 +4,7 @@
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Naos.Core.Common;
+    using Naos.Core.Configuration.App;
     using Naos.Core.RequestCorrelation.App;
     using Naos.Core.RequestCorrelation.App.Web;
 
@@ -29,6 +30,7 @@
             naosOptions.Context.Services.AddTransient<HttpClientCorrelationHandler>();
 
             naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: request correlation added");
+            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "RequestCorrelation", EchoUri = "api/echo/requestcorrelation" });
 
             return naosOptions;
         }

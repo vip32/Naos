@@ -6,6 +6,7 @@
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
+    using Naos.Core.Configuration.App;
     using Naos.Core.JobScheduling;
     using Naos.Core.JobScheduling.App;
     using Naos.Core.JobScheduling.Domain;
@@ -38,6 +39,7 @@
                 new JobSchedulerHostedService(sp.GetRequiredService<ILogger<JobSchedulerHostedService>>(), sp));
 
             naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: job scheduling added"); // TODO: list available commands/handlers
+            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "JobScheduling", EchoUri = "api/echo/jobscheduling" });
 
             return naosOptions;
         }

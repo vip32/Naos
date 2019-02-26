@@ -9,6 +9,7 @@
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
+    using Naos.Core.Configuration.App;
     using Naos.Core.ServiceDiscovery.App;
     using Naos.Core.ServiceDiscovery.App.Consul;
     using Naos.Core.ServiceDiscovery.App.Web;
@@ -40,7 +41,8 @@
             options.Context.Services.TryAddSingleton<IServiceRegistry>(sp => new ConsulServiceRegistry(
                 sp.GetRequiredService<ILogger<ConsulServiceRegistry>>(), sp.GetRequiredService<IConsulClient>()));
 
-            options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: service discovery added (registry={nameof(ConsulServiceRegistry)})");
+            options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: service discovery added (type={nameof(ConsulServiceRegistry)})");
+            options.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceDiscovery", Description = "Consul" });
 
             return options;
         }

@@ -12,7 +12,7 @@
         where TEntity : class, IEntity, IAggregateRoot
         where TRepo : class, IRepository<TEntity>
     {
-        public NaosRepositoryControllerBase(TRepo repository)
+        protected NaosRepositoryControllerBase(TRepo repository)
             : base(repository)
         {
         }
@@ -26,7 +26,7 @@
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
         public virtual async Task<ActionResult<TEntity>> Put(string id, TEntity model)
         {
-            if (id.IsNullOrEmpty() || id.Equals("0"))
+            if (id.IsNullOrEmpty())
             {
                 throw new BadRequestException("Model id cannot be empty");
             }
@@ -81,7 +81,7 @@
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
         public virtual async Task<IActionResult> Delete(string id)
         {
-            if (id.IsNullOrEmpty() || id.Equals("0"))
+            if (id.IsNullOrEmpty())
             {
                 throw new BadRequestException("Model id cannot be empty");
             }

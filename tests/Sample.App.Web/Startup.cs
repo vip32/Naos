@@ -68,7 +68,9 @@
                     .AddRequestCorrelation()
                     .AddRequestFiltering()
                     .AddServiceExceptions()
-                    .AddCommands()
+                    .AddCommands(s => s
+                        .AddBehavior<Core.Commands.Domain.ValidateCommandBehavior>()
+                        .AddBehavior<Core.Commands.Domain.TrackCommandBehavior>())
                     .AddOperations(o => o
                         //.AddRequestFileStorage(r => r.UseAzureBlobStorage())
                         .AddLogging(l => l
@@ -91,9 +93,9 @@
                             .Subscribe<TestMessage, TestMessageHandler>()))
                     .AddServiceDiscovery(o => o
                         .UseFileSystemClientRegistry()));
-            //.UseConsulClientRegistry()));
-            //.UseFileSystemRouterRegistry()));
-            //.UseRemoteRouterClientRegistry()));
+                        //.UseConsulClientRegistry()));
+                        //.UseFileSystemRouterRegistry()));
+                        //.UseRemoteRouterClientRegistry()));
 
             // TODO: need to find a way to start the MessageBroker (done by resolving the IMessageBroker somewhere, HostedService? like scheduling)
         }
@@ -108,8 +110,6 @@
             {
                 app.UseHsts();
             }
-
-            // "002c1126-c7b6-4d8a-ba87-4a997d8b0c6f"
 
             // naos middleware
             app

@@ -4,8 +4,9 @@
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
-    using Naos.Core.Commands.Exceptions.Web;
     using Naos.Core.Common;
+    using Naos.Core.Configuration.App;
+    using Naos.Core.ServiceExceptions.App.Web;
 
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions
@@ -41,6 +42,7 @@
                 });
 
             naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: service exceptions added");
+            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceExceptions" });
 
             return naosOptions;
         }

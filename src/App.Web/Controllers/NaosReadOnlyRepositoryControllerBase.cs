@@ -16,7 +16,7 @@
         where TEntity : class, IEntity, IAggregateRoot
         where TRepo : class, IReadOnlyRepository<TEntity>
     {
-        public NaosReadOnlyRepositoryControllerBase(TRepo repository)
+        protected NaosReadOnlyRepositoryControllerBase(TRepo repository)
         {
             EnsureArg.IsNotNull(repository, nameof(repository));
 
@@ -47,15 +47,15 @@
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
         public virtual async Task<ActionResult<TEntity>> Get(string id)
         {
-            if (id.IsNullOrEmpty() || id.Equals("0"))
+            if (id.IsNullOrEmpty())
             {
                 throw new BadRequestException("Model id cannot be empty");
             }
 
-            if (id.Equals("-1"))
-            {
-                throw new ArgumentException("-1 not allowed"); // trigger an exception to test exception handling
-            }
+            //if (id.Equals("-1"))
+            //{
+            //    throw new ArgumentException("-1 not allowed"); // trigger an exception to test exception handling
+            //}
 
             var model = await this.Repository.FindOneAsync(id).AnyContext();
             if (model == null)

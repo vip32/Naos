@@ -5,21 +5,12 @@
     using EnsureThat;
     using Microsoft.Extensions.Configuration;
     using Naos.Core.Authentication.App.Web;
+    using Naos.Core.Common;
+    using Naos.Core.Configuration.App;
 
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions
     {
-        //o =>
-        //{
-        //    o.Events = new AuthenticationHandlerEvents // optional
-        //    {
-        //        OnChallenge = context =>
-        //        {
-        //            Trace.TraceError("ohoh api");
-        //            return Task.CompletedTask;
-        //        }
-        //    };
-        //}
         public static NaosOptions AddAuthenticationApiKeyStatic(
             this NaosOptions naosOptions,
             Action<AuthenticationHandlerOptions> options = null,
@@ -33,6 +24,8 @@
             naosOptions.Context.Services
                 .AddAuthentication(AuthenticationKeys.ApiKeyScheme)
                 .AddApiKey(options);
+            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: authentication added (type=ApiKeyStatic)");
+            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Authentication", Description = "ApiKeyStatic", EchoUri = "api/echo/authentication" });
 
             return naosOptions;
         }
@@ -50,6 +43,8 @@
             naosOptions.Context.Services
                 .AddAuthentication(AuthenticationKeys.BasicScheme)
                 .AddBasic(options);
+            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: authentication added (type=BasicStatic)");
+            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Authentication", Description = "BasicStatic", EchoUri = "api/echo/authentication" });
 
             return naosOptions;
         }

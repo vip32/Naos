@@ -4,6 +4,7 @@
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Naos.Core.Common;
+    using Naos.Core.Configuration.App;
     using Naos.Core.RequestFiltering.App;
     using Naos.Core.RequestFiltering.App.Web;
 
@@ -25,6 +26,7 @@
             naosOptions.Context.Services.TryAddTransient<IFilterContextFactory, FilterContextFactory>();
 
             naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: request filtering added");
+            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "RequestFiltering", EchoUri = "api/echo/requestfiltering?q=name=eq:naos,epoch=lt:12345&order=name" });
 
             return naosOptions;
         }

@@ -47,7 +47,7 @@
             else
             {
                 // server-side
-                httpClient.BaseAddress = new Uri(new Uri(configuration.RemoteAddress), "router/"); // backslash mandatory https://stackoverflow.com/questions/23438416/why-is-httpclient-baseaddress-not-working
+                httpClient.BaseAddress = new Uri(new Uri(configuration.RemoteAddress), "api/servicediscovery/router/"); // backslash mandatory https://stackoverflow.com/questions/23438416/why-is-httpclient-baseaddress-not-working
 
                 // following are used by router to forward to correct service instance
                 httpClient.DefaultRequestHeaders.Add(ServiceDiscoveryRouterHeaders.ServiceName, serviceName);

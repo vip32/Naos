@@ -6,7 +6,7 @@
     public abstract class NaosEntityRepositoryControllerBase<TEntity> : NaosRepositoryControllerBase<TEntity, IRepository<TEntity>>
         where TEntity : class, IEntity, IAggregateRoot
     {
-        public NaosEntityRepositoryControllerBase(IRepository<TEntity> repository)
+        protected NaosEntityRepositoryControllerBase(IRepository<TEntity> repository)
             : base(repository)
         {
         }

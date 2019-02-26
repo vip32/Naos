@@ -33,14 +33,14 @@
         {
             EnsureArg.IsNotNullOrEmpty(id, nameof(id));
 
-            await this.httpClient.DeleteAsync($"api/router/registrations/{id}").AnyContext();
+            await this.httpClient.DeleteAsync($"api/servicediscovery/router/registrations/{id}").AnyContext();
         }
 
         public async Task RegisterAsync(ServiceRegistration registration)
         {
             EnsureArg.IsNotNull(registration, nameof(registration));
 
-            await this.httpClient.PostAsync("api/router/registrations", new JsonContent(registration)).AnyContext();
+            await this.httpClient.PostAsync("api/servicediscovery/router/registrations", new JsonContent(registration)).AnyContext();
         }
 
         public Task<IEnumerable<ServiceRegistration>> RegistrationsAsync()

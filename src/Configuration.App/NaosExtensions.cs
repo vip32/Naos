@@ -46,6 +46,9 @@
                     capability ?? naosConfiguration.Product,
                     tags: tags ?? naosConfiguration.Tags),
             };
+            context.Messages.Add($"{LogEventKeys.Startup} naos builder: naos added");
+            context.Services.AddSingleton(new NaosFeatureInformation { Name = "Naos", EchoUri = "api/echo" });
+
             setupAction?.Invoke(new NaosOptions(context));
 
             try

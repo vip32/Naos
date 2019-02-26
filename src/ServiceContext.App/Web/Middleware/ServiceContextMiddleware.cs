@@ -10,6 +10,7 @@
     using Microsoft.Extensions.Options;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
+    using Naos.Core.Configuration.App;
     using Newtonsoft.Json;
 
     public class ServiceContextMiddleware
@@ -43,8 +44,9 @@
         /// </summary>
         /// <param name="context">The <see cref="HttpContext"/> for the current request.</param>
         /// <param name="serviceDescriptor">The <see cref="serviceDescriptor"/></param>
+        /// <param name="features"></param>
         /// <returns></returns>
-        public async Task Invoke(HttpContext context, ServiceDescriptor serviceDescriptor)
+        public async Task Invoke(HttpContext context, ServiceDescriptor serviceDescriptor, IEnumerable<NaosFeatureInformation> features)
         {
             var loggerState = new Dictionary<string, object>
             {
@@ -64,6 +66,16 @@
                 {
                     context.Response.StatusCode = 200; // TODO: however a 404 will be logged
                     context.Response.ContentType = ContentType.JSON.ToValue();
+
+                    var baseUri = context.Request.Uri();
+                    foreach (var feature in features)
+                    {
+                        if (!feature.EchoUri.IsNullOrEmpty() && !feature.EchoUri.StartsWith("http"))
+                        {
+                            feature.EchoUri = $"{baseUri.ToString().Trim('/')}/{feature.EchoUri.Trim('/')}";
+                        }
+                    }
+
                     await context.Response.WriteAsync(JsonConvert.SerializeObject(
                         new EchoResponse
                         {
@@ -83,7 +95,7 @@
                                 // TODO: get these endpoints through DI for all active capabilities
                                 ["name"] = Assembly.GetEntryAssembly().GetName().Name,
                                 ["version"] = Assembly.GetEntryAssembly().GetName().Version.ToString(),
-                                ["builddate"] = Assembly.GetEntryAssembly().GetBuildDate().ToString("o")
+                                ["buildDate"] = Assembly.GetEntryAssembly().GetBuildDate().ToString("o")
                             },
                             Actions = new Dictionary<string, string>
                             {
@@ -94,33 +106,35 @@
                                 ["swagger-ui"] = $"{context.Request.Uri()}swagger/index.html",
                                 ["swagger"] = $"{context.Request.Uri()}swagger/v1/swagger.json",
                                 ["health"] = $"{context.Request.Uri()}health",
-                                ["echo"] = $"{context.Request.Uri()}echo",
-                                ["echo-authentication"] = $"{context.Request.Uri()}api/echo/authentication",
-                                ["echo-messaging"] = $"{context.Request.Uri()}api/echo/messaging",
-                                ["echo-router"] = $"{context.Request.Uri()}api/echo/router",
-                                ["echo-correlation"] = $"{context.Request.Uri()}api/echo/correlation",
-                                ["echo-requestfiltering"] = $"{context.Request.Uri()}api/echo/filter?q=name=eq:naos,epoch=lt:12345&order=name",
-                                ["echo-servicecontext"] = $"{context.Request.Uri()}api/echo/servicecontext",
-                                ["echo-servicediscovery"] = $"{context.Request.Uri()}api/echo/servicediscovery",
+                                //["echo"] = $"{context.Request.Uri()}api/echo",
+                                //["echo-authentication"] = $"{context.Request.Uri()}api/echo/authentication",
+                                //["echo-messaging"] = $"{context.Request.Uri()}api/echo/messaging",
+                                //["echo-router"] = $"{context.Request.Uri()}api/echo/servicediscovery/router",
+                                //["echo-correlation"] = $"{context.Request.Uri()}api/echo/requestcorrelation",
+                                //["echo-requestfiltering"] = $"{context.Request.Uri()}api/echo/requestfiltering?q=name=eq:naos,epoch=lt:12345&order=name",
+                                //["echo-servicecontext"] = $"{context.Request.Uri()}api/echo/servicecontext",
+                                //["echo-servicediscovery"] = $"{context.Request.Uri()}api/echo/servicediscovery",
                                 ["sample-countries1"] = $"{context.Request.Uri()}api/countries?q=name=Belgium&order=name&take=1",
                                 ["sample-countries2"] = $"{context.Request.Uri()}api/countries?q=name=Belgium",
                                 ["sample-customers1"] = $"{context.Request.Uri()}api/customers?q=region=East,state.updatedEpoch=gte:1548951481&order=lastName",
                                 ["sample-customers2"] = $"{context.Request.Uri()}api/customers?q=region=East,state.updatedEpoch=gte:1548951481",
                                 ["sample-useraccounts1"] = $"{context.Request.Uri()}api/useraccounts?q=visitCount=gte:1&order=email&take=10",
                                 ["sample-useraccounts2"] = $"{context.Request.Uri()}api/useraccounts?q=visitCount=gte:1",
-                            }
+                            },
+                            Features = features
                         }, DefaultJsonSerializerSettings.Create())).AnyContext();
-                }
-                else if (context.Request.Path == "/echo" && this.options.EchoEnabled)
-                {
-                    context.Response.ContentType = ContentType.TEXT.ToValue();
-                    context.Response.StatusCode = 200;
-                    await context.Response.WriteAsync(" ").AnyContext();
                 }
                 else if (context.Request.Path == "/error")
                 {
                     throw new NaosException("forced exception");
                 }
+
+                //else if (context.Request.Path == "/echo" && this.options.EchoEnabled)
+                //{
+                //    context.Response.ContentType = ContentType.TEXT.ToValue();
+                //    context.Response.StatusCode = 200;
+                //    await context.Response.WriteAsync(" ").AnyContext();
+                //}
             }
         }
 
@@ -131,6 +145,8 @@
             public Dictionary<string, object> Request { get; set; }
 
             public IDictionary<string, string> Runtime { get; set; }
+
+            public IEnumerable<NaosFeatureInformation> Features { get; set; }
 
             public IDictionary<string, string> Actions { get; set; }
         }

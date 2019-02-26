@@ -4,6 +4,7 @@
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
     using Naos.Core.Common;
+    using Naos.Core.Configuration.App;
     using Naos.Core.Operations.App;
 
     [ExcludeFromCodeCoverage]
@@ -20,6 +21,7 @@
             setupAction?.Invoke(new OperationsOptions(naosOptions.Context));
 
             naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: operations added");
+            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Operations" });
 
             return naosOptions;
         }

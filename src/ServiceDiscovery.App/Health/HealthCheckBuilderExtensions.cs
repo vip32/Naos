@@ -41,13 +41,13 @@
             }
 
             var options = new UriHealthCheckOptions();
-            var address = serviceClient.HttpClient?.BaseAddress?.ToString();
+            var address = serviceClient.HttpClient?.BaseAddress?.ToString().SubstringTill("servicediscovery");
             if (address.IsNullOrEmpty())
             {
                 throw new NaosException($"Health: ServiceDiscovery client '{typeof(T)}' address not found, registration inactive (due to health) or missing from registry?");
             }
 
-            options.AddUri(new Uri(new Uri(address/*.Remove("router")*/), route));
+            options.AddUri(new Uri(new Uri(address), route));
 
             return new UriHealthCheck(options, () => serviceClient.HttpClient);
         }

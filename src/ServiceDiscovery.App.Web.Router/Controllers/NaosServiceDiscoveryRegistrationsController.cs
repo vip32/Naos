@@ -12,7 +12,7 @@
     using Naos.Core.ServiceDiscovery.App;
     using Naos.Core.ServiceDiscovery.App.Web.Router;
 
-    [Route("api/router/registrations")]
+    [Route("api/servicediscovery/router/registrations")]
     [ApiController]
     public class NaosServiceDiscoveryRegistrationsController : ControllerBase // or use normal middleware?  https://stackoverflow.com/questions/47617994/how-to-use-a-controller-in-another-assembly-in-asp-net-core-mvc-2-0?rq=1
     {

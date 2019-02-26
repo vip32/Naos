@@ -8,6 +8,7 @@
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
+    using Naos.Core.Configuration.App;
     using Naos.Core.ServiceDiscovery.App;
     using Naos.Core.ServiceDiscovery.App.Web;
     //using ProxyKit;
@@ -56,7 +57,8 @@
                     sp.GetRequiredService<ILogger<FileSystemServiceRegistry>>(),
                     options.Context.Configuration?.GetSection($"{section}:registry:fileSystem").Get<FileSystemServiceRegistryConfiguration>()));
 
-            options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: service discovery added (registry={nameof(FileSystemServiceRegistry)})");
+            options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: service discovery added (type={nameof(FileSystemServiceRegistry)})");
+            options.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceDiscovery", Description = "FileSystemClientRegistry" });
 
             return options;
         }
@@ -82,7 +84,8 @@
                     sp.GetRequiredService<IHttpClientFactory>().CreateClient(),
                     options.Context.Configuration?.GetSection($"{section}:registry:remote").Get<RemoteServiceRegistryConfiguration>()));
 
-            options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: service discovery added (registry={nameof(RemoteServiceRegistry)})");
+            options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: service discovery added (type={nameof(RemoteServiceRegistry)})");
+            options.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceDiscovery", Description = "RemoteRouterClientRegistry", EchoUri = "api/echo/servicediscovery" });
 
             return options;
         }
