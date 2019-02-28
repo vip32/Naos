@@ -10,7 +10,7 @@
     {
         public static void Main(string[] args)
         {
-            CommonConsole.WriteNaosLogo();
+            CommonConsole.WriteNaosTextLogo();
             CreateWebHostBuilder(args).Build().Run();
         }
 

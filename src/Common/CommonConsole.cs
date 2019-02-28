@@ -6,9 +6,23 @@
 
     public static class CommonConsole
     {
-        public static void WriteNaosLogo()
+        public static void WriteNaosBitmapLogo()
         {
             WriteImage("Naos.Core.Common.Resources.logo.png", 45);
+        }
+
+        public static void WriteNaosTextLogo()
+        {
+            // generated: https://www.text-image.com/convert/pic2ascii.cgi
+            Console.WriteLine(@"
+    `::`     .:`      :/.       `.::::-`     .-/:/--` 
+    .oo+-    :o`     /:++-     -o/`   -o/`  +o:`  `o/ 
+    .o-:o:   :o`    /:-:+::   .o+      :o/  +o-`   `  
+    .o- -o/` :o`   //-..+-:/` :o+      -oo`  .//+/:.` 
+    .o-  .++.:o`  /:`   -/`:+`.o+      -o/       `-+o.
+    .o-   `/o+o` /-......+-`:+ /o-    `++`  ++     /o-
+    .+.     -+/ `::::::::/+:`   `:/:-::-    -:/--:/:` 
+");
         }
 
         public static void WriteImage(string resource, int sMax = 39)
