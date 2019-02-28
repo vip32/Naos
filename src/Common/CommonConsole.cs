@@ -14,15 +14,18 @@
         public static void WriteNaosTextLogo()
         {
             // generated: https://www.text-image.com/convert/pic2ascii.cgi
+            var foregroundColor = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine(@"
-    `::`     .:`      :/.       `.::::-`     .-/:/--` 
-    .oo+-    :o`     /:++-     -o/`   -o/`  +o:`  `o/ 
-    .o-:o:   :o`    /:-:+::   .o+      :o/  +o-`   `  
-    .o- -o/` :o`   //-..+-:/` :o+      -oo`  .//+/:.` 
-    .o-  .++.:o`  /:`   -/`:+`.o+      -o/       `-+o.
+    `::`     .:`      :/.       `.::::-`     .-/:/--`
+    .oo+-    :o`     /:++-     -o/`   -o/`  +o:`  `o/
+    .o-:o:   :o`    /:-:+::   .o+      :o/  +o-`   `
+    .o- -o/` :o`   //-..+-:/` :o+      -oo`  .//+/:.`
+    .o-  .++.:o`  /:`   -/`:+ .o+      -o/       `-+o.
     .o-   `/o+o` /-......+-`:+ /o-    `++`  ++     /o-
-    .+.     -+/ `::::::::/+:`   `:/:-::-    -:/--:/:` 
+    .+.     -+/ `::::::::/+:`   `:/:-::-    -:/--:/:`
 ");
+            Console.ForegroundColor = foregroundColor;
         }
 
         public static void WriteImage(string resource, int sMax = 39)
