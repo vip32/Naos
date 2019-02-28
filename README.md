@@ -4,7 +4,7 @@
 [![GitHub issues](https://img.shields.io/github/issues/vip32/Naos.Core.svg)](https://github.com/vip32/Naos.Core/issues)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/vip32/Naos.Core/master/LICENSE)
 
-![logo](docs/logo.png)
+![logo](docs/logo5.png)
 
 <p align="center"><h1>A mildly opiniated modern cloud service architecture blueprint & reference implementation</h1></p>
 
