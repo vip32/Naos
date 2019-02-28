@@ -8,7 +8,7 @@
     {
         public static void WriteNaosLogo()
         {
-            WriteImage("Naos.Core.Common.Resources.logo.png");
+            WriteImage("Naos.Core.Common.Resources.logo.png", 45);
         }
 
         public static void WriteImage(string resource, int sMax = 39)
