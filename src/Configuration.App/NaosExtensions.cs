@@ -57,6 +57,15 @@
             try
             {
                 var logger = services.BuildServiceProvider().GetRequiredService<ILoggerFactory>().CreateLogger("Naos");
+//                logger.LogInformation(@"
+//::`     `:        `         .::-:-`     .-:-:--`
+//.o++.    -o`      ```      -o/`   .o/   /o-    o/
+//.o.:o:   -o`     ..`-`    `o+      -o:  /o-`   `
+//.o. -+/` -o`   `...`...   :o+      .oo   .:/+/:.
+//.o.  `++.-o`  `.`   ```.` .o+      .o/       `-+o.
+//.o.    :o+o` ````....-. `  :o-    `++`  +/     /o-
+//`/`     -//  `    ````      `:/--::-    -::--:/:`
+//");
                 foreach (var message in context.Messages.Safe())
                 {
                     logger.LogDebug(message);

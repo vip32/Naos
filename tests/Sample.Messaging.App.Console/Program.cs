@@ -15,6 +15,7 @@
     {
         public static async Task Main(string[] args)
         {
+            CommonConsole.WriteNaosLogo();
             var configuration = NaosConfigurationFactory.Create();
             string[] capabilities = { "CapabilityA", "CapabilityB", "CapabilityC" };
 

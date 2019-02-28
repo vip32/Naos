@@ -2,6 +2,7 @@
 {
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
+    using Naos.Core.Common;
     using Naos.Core.Configuration;
     using Serilog;
 
@@ -9,6 +10,7 @@
     {
         public static void Main(string[] args)
         {
+            CommonConsole.WriteNaosLogo();
             CreateWebHostBuilder(args).Build().Run();
         }
 
