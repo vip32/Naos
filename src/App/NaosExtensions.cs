@@ -7,7 +7,7 @@
 
     public static class NaosExtensions
     {
-        public static NaosOptions AddServiceClient<TClient>(this NaosOptions naosOptions, Action<IHttpClientBuilder> setupAction = null)
+        public static NaosServicesContextOptions AddServiceClient<TClient>(this NaosServicesContextOptions naosOptions, Action<IHttpClientBuilder> setupAction = null)
             where TClient : ServiceDiscoveryClient
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
@@ -18,7 +18,7 @@
             return naosOptions;
         }
 
-        public static NaosOptions AddServiceClient(this NaosOptions naosOptions, string name, Action<IHttpClientBuilder> setupAction = null)
+        public static NaosServicesContextOptions AddServiceClient(this NaosServicesContextOptions naosOptions, string name, Action<IHttpClientBuilder> setupAction = null)
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
             EnsureArg.IsNotNull(naosOptions.Context, nameof(naosOptions.Context));
@@ -29,12 +29,12 @@
             return naosOptions;
         }
 
-        public static INaosBuilderContext AddServiceClient<TClient>(this INaosBuilderContext context, Action<IHttpClientBuilder> setupAction = null)
+        public static INaosServicesContext AddServiceClient<TClient>(this INaosServicesContext context, Action<IHttpClientBuilder> setupAction = null)
             where TClient : ServiceDiscoveryClient
         {
             EnsureArg.IsNotNull(context, nameof(context));
 
-            context.Messages.Add($"{LogEventKeys.Startup} naos builder: typed service client added (type={typeof(TClient).Name})");
+            context.Messages.Add($"{LogEventKeys.Startup} naos services builder: typed service client added (type={typeof(TClient).Name})");
 
             if (setupAction != null)
             {
@@ -54,12 +54,12 @@
             return context;
         }
 
-        public static INaosBuilderContext AddServiceClient(this INaosBuilderContext context, string name, Action<IHttpClientBuilder> setupAction = null)
+        public static INaosServicesContext AddServiceClient(this INaosServicesContext context, string name, Action<IHttpClientBuilder> setupAction = null)
         {
             EnsureArg.IsNotNull(context, nameof(context));
             EnsureArg.IsNotNullOrEmpty(name, nameof(name));
 
-            context.Messages.Add($"{LogEventKeys.Startup} naos builder: named service client added (name={name})");
+            context.Messages.Add($"{LogEventKeys.Startup} naos services builder: named service client added (name={name})");
 
             if (setupAction != null)
             {

@@ -48,7 +48,7 @@
                 new Country { Code = "be", LanguageCodes = new[] {"fr-be", "nl-be" }, Name = "Belgium", TenantId = "naos_sample_test", Id = "be" },
             }.ToList()));
 
-            options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: countries service added");
+            options.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: countries service added");
 
             return options;
         }

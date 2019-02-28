@@ -12,7 +12,7 @@
         public static IHealthChecksBuilder AddServiceDiscoveryClient<T>(
             this IHealthChecksBuilder builder,
             string name = null,
-            string route = "echo",
+            string route = "api/echo",
             HealthStatus? failureStatus = null,
             IEnumerable<string> tags = null)
             where T : ServiceDiscoveryClient
@@ -20,18 +20,18 @@
             name = name ?? typeof(T).Name;
             if (name.EndsWith("Client", StringComparison.OrdinalIgnoreCase))
             {
-                name = name.Replace("Client", "-client", StringComparison.OrdinalIgnoreCase);
+                name = name.Replace("Client", "-serviceclient", StringComparison.OrdinalIgnoreCase);
             }
 
             return builder.Add(
                 new HealthCheckRegistration(
                     name,
-                    sp => CreateHealthCheck<T>(sp, name, route),
+                    sp => CreateHealthCheck<T>(sp, route),
                     failureStatus,
                     tags));
         }
 
-        private static UriHealthCheck CreateHealthCheck<T>(IServiceProvider sp, string name, string route)
+        private static UriHealthCheck CreateHealthCheck<T>(IServiceProvider sp, string route)
             where T : ServiceDiscoveryClient
         {
             var serviceClient = sp.GetRequiredService<T>();
@@ -41,7 +41,7 @@
             }
 
             var options = new UriHealthCheckOptions();
-            var address = serviceClient.HttpClient?.BaseAddress?.ToString().SubstringTill("servicediscovery");
+            var address = serviceClient.HttpClient?.BaseAddress?.ToString(); //.SubstringTill("servicediscovery");
             if (address.IsNullOrEmpty())
             {
                 throw new NaosException($"Health: ServiceDiscovery client '{typeof(T)}' address not found, registration inactive (due to health) or missing from registry?");

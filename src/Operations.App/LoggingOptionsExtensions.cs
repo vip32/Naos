@@ -22,7 +22,7 @@
             {
                 // configure the serilog sink
                 var path = configuration.File.EmptyToNull() ?? "logevents_{environment}_{product}_{capability}.log"
-                    .Replace("{environment}", options.Environment.ToLower())
+                    .Replace("{environment}", options.Context.Environment.ToLower())
                     .Replace("{product}", options.Context.Descriptor?.Product?.ToLower())
                     .Replace("{capability}", options.Context.Descriptor?.Capability?.ToLower());
 
@@ -45,7 +45,7 @@
                     shared: configuration.Shared,
                     flushToDiskInterval: configuration.FlushToDiskIntervalSeconds.HasValue ? TimeSpan.FromSeconds(configuration.FlushToDiskIntervalSeconds.Value) : default(TimeSpan?));
 
-                options.Context.Messages.Add($"{LogEventKeys.Startup} logging: file sink added (path={path})");
+                options.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: logging file sink added (path={path})");
             }
 
             return options;

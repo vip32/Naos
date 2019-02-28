@@ -18,8 +18,8 @@
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions
     {
-        public static NaosOptions AddServiceDiscoveryRouter(
-            this NaosOptions naosOptions,
+        public static NaosServicesContextOptions AddServiceDiscoveryRouter(
+            this NaosServicesContextOptions naosOptions,
             Action<ServiceDiscoveryRouterOptions> setupAction = null,
             string section = "naos:serviceDiscovery")
         {
@@ -63,8 +63,8 @@
                             sp.GetRequiredService<ILogger<FileSystemServiceRegistry>>(),
                             registryConfiguration))));
 
-            options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: service discovery router added (registry={nameof(FileSystemServiceRegistry)})");
-            options.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceDiscoveryRouter", EchoUri = "api/echo/servicediscovery/router" });
+            options.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: service discovery router added (registry={nameof(FileSystemServiceRegistry)})");
+            options.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceDiscoveryRouter", EchoRoute = "api/echo/servicediscovery/router" });
 
             return options;
         }

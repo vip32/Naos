@@ -70,9 +70,9 @@
                     var baseUri = context.Request.Uri();
                     foreach (var feature in features)
                     {
-                        if (!feature.EchoUri.IsNullOrEmpty() && !feature.EchoUri.StartsWith("http"))
+                        if (!feature.EchoRoute.IsNullOrEmpty() && !feature.EchoRoute.StartsWith("http"))
                         {
-                            feature.EchoUri = $"{baseUri.ToString().Trim('/')}/{feature.EchoUri.Trim('/')}";
+                            feature.EchoRoute = $"{baseUri.ToString().Trim('/')}/{feature.EchoRoute.Trim('/')}";
                         }
                     }
 

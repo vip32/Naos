@@ -23,33 +23,36 @@
         /// <param name="capability"></param>
         /// <param name="tags"></param>
         /// <param name="setupAction"></param>
+        /// <param name="environment"></param>
         /// <param name="section"></param>
         /// <returns></returns>
-        public static INaosBuilderContext AddNaos(
+        public static INaosServicesContext AddNaos(
             this IServiceCollection services,
             IConfiguration configuration,
             string product = null,
             string capability = null,
             string[] tags = null,
-            Action<NaosOptions> setupAction = null,
+            Action<NaosServicesContextOptions> setupAction = null,
+            string environment = null,
             string section = "naos")
         {
             EnsureArg.IsNotNull(services, nameof(services));
 
             var naosConfiguration = configuration?.GetSection(section).Get<NaosConfiguration>();
-            var context = new NaosBuilderContext
+            var context = new NaosServicesContext
             {
                 Services = services,
                 Configuration = configuration,
+                Environment = environment ?? Environment.GetEnvironmentVariable(EnvironmentKeys.Environment) ?? "Production",
                 Descriptor = new Naos.Core.Common.ServiceDescriptor(
                     product ?? naosConfiguration.Product,
                     capability ?? naosConfiguration.Product,
                     tags: tags ?? naosConfiguration.Tags),
             };
-            context.Messages.Add($"{LogEventKeys.Startup} naos builder: naos added");
-            context.Services.AddSingleton(new NaosFeatureInformation { Name = "Naos", EchoUri = "api/echo" });
+            context.Messages.Add($"{LogEventKeys.Startup} naos services builder: naos services added");
+            context.Services.AddSingleton(new NaosFeatureInformation { Name = "Naos", EchoRoute = "api/echo" });
 
-            setupAction?.Invoke(new NaosOptions(context));
+            setupAction?.Invoke(new NaosServicesContextOptions(context));
 
             try
             {
@@ -68,8 +71,8 @@
             return context;
         }
 
-        public static NaosOptions AddServices(
-            this NaosOptions naosOptions,
+        public static NaosServicesContextOptions AddServices(
+            this NaosServicesContextOptions naosOptions,
             Action<ServiceOptions> setupAction = null)
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));

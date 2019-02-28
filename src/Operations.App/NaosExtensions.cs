@@ -10,8 +10,8 @@
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions
     {
-        public static NaosOptions AddOperations(
-            this NaosOptions naosOptions,
+        public static NaosServicesContextOptions AddOperations(
+            this NaosServicesContextOptions naosOptions,
             Action<OperationsOptions> setupAction = null,
             string section = "naos:operations")
         {
@@ -20,7 +20,7 @@
 
             setupAction?.Invoke(new OperationsOptions(naosOptions.Context));
 
-            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: operations added");
+            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: operations added");
             naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Operations" });
 
             return naosOptions;

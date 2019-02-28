@@ -18,8 +18,8 @@
         /// <param name="hideDetails"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public static NaosOptions AddServiceExceptions(
-            this NaosOptions naosOptions,
+        public static NaosServicesContextOptions AddServiceExceptions(
+            this NaosServicesContextOptions naosOptions,
             bool hideDetails = false,
             ExceptionHandlerMiddlewareOptions options = null)
         {
@@ -41,7 +41,7 @@
                     o.SuppressModelStateInvalidFilter = true;
                 });
 
-            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: service exceptions added");
+            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: service exceptions added");
             naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceExceptions" });
 
             return naosOptions;

@@ -10,11 +10,11 @@
 
     public class CommandsOptions
     {
-        public CommandsOptions(INaosBuilderContext context)
+        public CommandsOptions(INaosServicesContext context)
         {
             this.Context = context;
         }
 
-        public INaosBuilderContext Context { get; }
+        public INaosServicesContext Context { get; }
     }
 }

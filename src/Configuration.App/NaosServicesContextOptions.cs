@@ -1,8 +1,8 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
-    public class ServiceOptions
+    public class NaosServicesContextOptions
     {
-        public ServiceOptions(INaosServicesContext context)
+        public NaosServicesContextOptions(INaosServicesContext context)
         {
             this.Context = context;
         }

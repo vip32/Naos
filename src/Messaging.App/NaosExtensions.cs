@@ -11,8 +11,8 @@
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions
     {
-        public static NaosOptions AddMessaging(
-            this NaosOptions naosOptions,
+        public static NaosServicesContextOptions AddMessaging(
+            this NaosServicesContextOptions naosOptions,
             Action<MessagingOptions> setupAction = null)
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
@@ -29,8 +29,8 @@
 
             setupAction?.Invoke(new MessagingOptions(naosOptions.Context));
 
-            //context.Messages.Add($"{LogEventKeys.General} naos builder: messaging added");
-            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Messaging", EchoUri = "api/echo/messaging" });
+            //context.Messages.Add($"{LogEventKeys.General} naos services builder: messaging added");
+            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Messaging", EchoRoute = "api/echo/messaging" });
 
             return naosOptions;
         }

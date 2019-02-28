@@ -14,7 +14,7 @@
     /// <summary>
     ///     Extends the HttpRequestMessage type
     /// </summary>
-    public static partial class HttpRequestMessageExtensions
+    public static class HttpRequestMessageExtensions
     {
         /// <summary>
         ///     Returns a dictionary of QueryStrings that's easier to work with

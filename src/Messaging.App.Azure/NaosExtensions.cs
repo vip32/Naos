@@ -60,9 +60,9 @@
             }); // scope the messagebus messages to the local machine, so local events are handled locally
 
             options.Context.Services.AddHealthChecks()
-                .AddAzureServiceBusTopic(configuration.ConnectionString, configuration.EntityPath, "messaging-servicebus");
+                .AddAzureServiceBusTopic(configuration.ConnectionString, configuration.EntityPath, "messaging-broker-servicebus");
 
-            options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: messaging added (broker={nameof(ServiceBusMessageBroker)})");
+            options.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: messaging added (broker={nameof(ServiceBusMessageBroker)})");
 
             return options;
         }

@@ -16,8 +16,8 @@
         /// </summary>
         /// <param name="naosOptions"></param>
         /// <returns></returns>
-        public static NaosOptions AddRequestFiltering(
-            this NaosOptions naosOptions)
+        public static NaosServicesContextOptions AddRequestFiltering(
+            this NaosServicesContextOptions naosOptions)
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
             EnsureArg.IsNotNull(naosOptions.Context, nameof(naosOptions.Context));
@@ -25,8 +25,8 @@
             naosOptions.Context.Services.TryAddSingleton<IFilterContextAccessor, FilterContextAccessor>();
             naosOptions.Context.Services.TryAddTransient<IFilterContextFactory, FilterContextFactory>();
 
-            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: request filtering added");
-            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "RequestFiltering", EchoUri = "api/echo/requestfiltering?q=name=eq:naos,epoch=lt:12345&order=name" });
+            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: request filtering added");
+            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "RequestFiltering", EchoRoute = "api/echo/requestfiltering?q=name=eq:naos,epoch=lt:12345&order=name" });
 
             return naosOptions;
         }

@@ -102,6 +102,7 @@ mediator pipeline for command validation http://www.kamilgrzybek.com/design/rest
 c# script compile + run roslyn https://laurentkempe.com/2019/02/18/dynamically-compile-and-run-code-using-dotNET-Core-3.0
 pattern cqs https://www.dotnetcurry.com/patterns-practices/1461/command-query-separation-cqs
 cqrs https://github.com/OpenCQRS/OpenCQRS
+eventstore https://github.com/NEventStore
 crs https://github.com/gautema/CQRSlite (eventstore)
 api 404s https://www.strathweb.com/2018/10/convert-null-valued-results-to-404-in-asp-net-core-mvc/
 templating (razor) https://github.com/toddams/RazorLight
@@ -144,6 +145,7 @@ azure easy auth https://docs.microsoft.com/en-us/azure/app-service/overview-auth
 signalr client-server streaming https://docs.microsoft.com/en-us/aspnet/core/signalr/streaming?view=aspnetcore-2.2
 core 3 https://blogs.msdn.microsoft.com/webdev/2019/01/29/aspnet-core-3-preview-2/
 metrics (AppMetrics) https://github.com/FoundatioFx/Foundatio#metrics
+metric prometheus https://www.olivercoding.com/2018-07-22-prometheus-dotnetcore/
 inter service JSON RPC http://www.jsonrpc.org/specification
 on hold till MS stabalizes this (gRPC): https://github.com/grpc/grpc-dotnet
 service-bus: https://github.com/Azure/azure-service-bus/tree/master/samples/DotNet/Microsoft.Azure.ServiceBus/QueuesRequestResponse

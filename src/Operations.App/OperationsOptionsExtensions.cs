@@ -4,7 +4,6 @@
     using EnsureThat;
     using global::Serilog;
     using global::Serilog.Events;
-    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Http;
     using Microsoft.Extensions.Logging;
@@ -14,7 +13,6 @@
 
     public static class OperationsOptionsExtensions
     {
-        private static IConfiguration internalConfiguration;
         private static string internalCorrelationId;
         private static ILoggerFactory factory;
 
@@ -28,14 +26,12 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: logging added");
-            internalConfiguration = options.Context?.Configuration;
+            options.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: logging added");
             internalCorrelationId = correlationId;
 
             var loggingOptions = new LoggingOptions(
                 options.Context,
-                loggerConfiguration ?? new LoggerConfiguration(),
-                environment ?? Environment.GetEnvironmentVariable(EnvironmentKeys.Environment) ?? "Production");
+                loggerConfiguration ?? new LoggerConfiguration());
 
             InitializeLogger(loggingOptions);
             setupAction?.Invoke(loggingOptions);
@@ -58,7 +54,7 @@
 
                 factory = new LoggerFactory();
                 factory.AddSerilog(Log.Logger);
-                Log.Logger.Debug("{LogKey:l} logging: serilog initialized", LogEventKeys.Startup);
+                Log.Logger.Debug("{LogKey:l} naos services builder: logging initialized (type=Serilog)", LogEventKeys.Startup);
             }
 
             return factory;
@@ -81,7 +77,7 @@
 #endif
                 .Enrich.With(new ExceptionEnricher())
                 .Enrich.With(new TicksEnricher())
-                .Enrich.WithProperty(LogEventPropertyKeys.Environment, loggingOptions.Environment)
+                .Enrich.WithProperty(LogEventPropertyKeys.Environment, loggingOptions.Context.Environment)
                 //.Enrich.WithProperty("ServiceDescriptor", internalServiceDescriptor)
                 .Enrich.FromLogContext();
 

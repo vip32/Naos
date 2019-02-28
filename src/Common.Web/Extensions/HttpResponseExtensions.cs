@@ -8,7 +8,7 @@
     /// <summary>
     ///     Extends the HttpResponse type
     /// </summary>
-    public static partial class HttpResponseExtensions
+    public static class HttpResponseExtensions
     {
         public static void WriteJson<T>(this HttpResponse response, T content, JsonSerializerSettings settings = null, ContentType contentType = ContentType.JSON)
         {

@@ -72,11 +72,12 @@
                         .AddBehavior<Core.Commands.Domain.ValidateCommandBehavior>()
                         .AddBehavior<Core.Commands.Domain.TrackCommandBehavior>())
                     .AddOperations(o => o
-                        //.AddRequestFileStorage(r => r.UseAzureBlobStorage())
                         .AddLogging(l => l
                             .UseFile()
                             .UseAzureBlobStorage()
-                            .UseAzureLogAnalytics()))
+                            .UseAzureLogAnalytics())
+                        .AddRequestStorage(r => r
+                            .UseAzureBlobStorage()))
                     //.AddQueries()
                     //.AddSwaggerDocument() // s.Description = Product.Capability\
                     .AddJobScheduling(o => o
@@ -102,42 +103,25 @@
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, DiagnosticListener diagnosticListener, IHostingEnvironment env, IApplicationLifetime lifetime)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment environment)
         {
-            this.logger.LogInformation($"app {env.ApplicationName} environment: {env.EnvironmentName}");
-            //diagnosticListener.SubscribeWithAdapter(new NaosDiagnosticListener());
-
-            if (env.IsProduction())
+            if (environment.IsProduction())
             {
                 app.UseHsts();
             }
 
-            // naos middleware
             app
-                .UseHttpsRedirection() // TODO: UseNaos()...... with setupAction like services
-                .UseNaos()
-                .UseNaosRequestCorrelation()
-                .UseNaosServiceContext()
-                .UseNaosServicePoweredBy()
-                .UseNaosOperations(
-                    new OperationsLoggingOptions // DI ABOVE ^^ (configure)
-                    {
-                        // following for RequestFileStorageMiddleware > bundle in context (configure above) + di register.
-                        //                                              this context is then injected into middleware
-                        RequestFileStorage = new FileStorageScopedDecorator("requests/{yyyy}/{MM}/{dd}",
-                            new FileStorageLoggingDecorator(
-                                app.ApplicationServices.GetRequiredService<ILoggerFactory>(),
-                                //new FolderFileStorage(f => f.Folder(Path.Combine(Path.GetTempPath(), "naos_operations")))))
-                                new AzureBlobFileStorage(f => f
-                                    .ContainerName($"{env.EnvironmentName.ToLower()}-operations")
-                                    .ConnectionString(this.Configuration["naos:operations:logging:azureBlobStorage:connectionString"]))))
-                    })
-                .UseNaosRequestFiltering()
-                .UseNaosExceptionHandling()
-                .UseNaosServiceDiscoveryRouter();
-
-            app.UseSwagger();
-            app.UseSwaggerUi3();
+                .UseHttpsRedirection()
+                .UseNaos(s => s
+                    .UseRequestCorrelation()
+                    .UseServiceContext()
+                    .UseServicePoweredBy()
+                    .UseOperations()
+                    .UseRequestFiltering()
+                    .UseServiceExceptions()
+                    .UseServiceDiscoveryRouter())
+                .UseSwagger()
+                .UseSwaggerUi3();
 
             // https://blog.elmah.io/asp-net-core-2-2-health-checks-explained/
             // https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks/blob/master/src/HealthChecks.UI/ServiceCollectionExtensions.cs
@@ -152,11 +136,12 @@
                         took = r.TotalDuration.ToString(),
                         checks = r.Entries.Select(e => new
                         {
-                            service = c.GetServiceName(),
+                            //service = c.GetServiceName(),
                             key = e.Key,
                             status = e.Value.Status.ToString(),
                             took = e.Value.Duration.ToString(),
-                            message = e.Value.Exception?.Message
+                            message = e.Value.Exception?.Message,
+                            data = e.Value.Data
                         })
                     }, DefaultJsonSerializerSettings.Create()));
                 }

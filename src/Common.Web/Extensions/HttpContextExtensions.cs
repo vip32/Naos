@@ -5,7 +5,7 @@
     /// <summary>
     ///     Extends the HttpContext type
     /// </summary>
-    public static partial class HttpContextExtensions
+    public static class HttpContextExtensions
     {
         public static bool HasCorrelationId(this HttpContext context)
         {

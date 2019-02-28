@@ -17,21 +17,22 @@
     {
         private readonly RequestDelegate next;
         private readonly ILogger<RequestLoggingMiddleware> logger;
-        private readonly OperationsLoggingOptions options;
+        private readonly RequestLoggingMiddlewareOptions options;
 
         public RequestLoggingMiddleware(
             RequestDelegate next,
             ILogger<RequestLoggingMiddleware> logger,
-            IOptions<OperationsLoggingOptions> options)
+            IOptions<RequestLoggingMiddlewareOptions> options)
         {
             this.next = next;
             this.logger = logger;
-            this.options = options.Value ?? new OperationsLoggingOptions();
+            this.options = options.Value ?? new RequestLoggingMiddlewareOptions();
         }
 
         public async Task Invoke(HttpContext context)
         {
-            if (context.Request.Path.Value.EqualsPatternAny(this.options.PathBlackListPatterns))
+            if (!this.options.Enabled
+                || context.Request.Path.Value.EqualsPatternAny(this.options.PathBlackListPatterns))
             {
                 await this.next.Invoke(context).AnyContext();
             }
@@ -43,7 +44,7 @@
                 await this.LogRequestAsync(context, correlationId, requestId).AnyContext();
                 var timer = Stopwatch.StartNew();
                 await this.next.Invoke(context).AnyContext();
-                timer.Stop();
+                timer.Stop(); // alternative for timing (actionfilter) https://stackoverflow.com/questions/48822947/asp-net-core-measure-performance
                 await this.LogResponseAsync(context, correlationId, requestId, timer.Elapsed).AnyContext();
             }
         }

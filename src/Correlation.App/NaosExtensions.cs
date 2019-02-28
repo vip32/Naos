@@ -19,8 +19,8 @@
         /// </summary>
         /// <param name="naosOptions"></param>
         /// <returns></returns>
-        public static NaosOptions AddRequestCorrelation(
-            this NaosOptions naosOptions)
+        public static NaosServicesContextOptions AddRequestCorrelation(
+            this NaosServicesContextOptions naosOptions)
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
             EnsureArg.IsNotNull(naosOptions.Context, nameof(naosOptions.Context));
@@ -29,8 +29,8 @@
             naosOptions.Context.Services.TryAddTransient<ICorrelationContextFactory, CorrelationContextFactory>();
             naosOptions.Context.Services.AddTransient<HttpClientCorrelationHandler>();
 
-            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: request correlation added");
-            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "RequestCorrelation", EchoUri = "api/echo/requestcorrelation" });
+            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: request correlation added");
+            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "RequestCorrelation", EchoRoute = "api/echo/requestcorrelation" });
 
             return naosOptions;
         }

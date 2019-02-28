@@ -5,19 +5,16 @@
 
     public class LoggingOptions
     {
-        public LoggingOptions(INaosBuilderContext context, LoggerConfiguration loggerConfiguration, string environment)
+        public LoggingOptions(
+            INaosServicesContext context,
+            LoggerConfiguration loggerConfiguration)
         {
             this.Context = context;
             this.LoggerConfiguration = loggerConfiguration;
-            this.Environment = environment;
         }
 
-        public INaosBuilderContext Context { get; }
+        public INaosServicesContext Context { get; }
 
         public LoggerConfiguration LoggerConfiguration { get; }
-
-        public string Environment { get; set; }
-
-        //public List<string> Messages { get; set; } = new List<string>();
     }
 }

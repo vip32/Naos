@@ -20,8 +20,8 @@
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions
     {
-        public static NaosOptions AddServiceDiscovery(
-            this NaosOptions naosOptions,
+        public static NaosServicesContextOptions AddServiceDiscovery(
+            this NaosServicesContextOptions naosOptions,
             Action<ServiceDiscoveryOptions> setupAction = null,
             string section = "naos:serviceDiscovery")
         {
@@ -35,7 +35,7 @@
 
             setupAction?.Invoke(new ServiceDiscoveryOptions(naosOptions.Context));
 
-            //context.Messages.Add($"{LogEventKeys.General} naos builder: service discovery added");
+            //context.Messages.Add($"{LogEventKeys.General} naos services builder: service discovery added");
 
             return naosOptions;
         }
@@ -65,8 +65,8 @@
                     sp.GetRequiredService<ILogger<FileSystemServiceRegistry>>(),
                     registryConfiguration));
 
-            options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: service discovery added (type={nameof(FileSystemServiceRegistry)})");
-            options.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceDiscovery", Description = "FileSystemClientRegistry", EchoUri = "api/echo/servicediscovery" });
+            options.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: service discovery added (type={nameof(FileSystemServiceRegistry)})");
+            options.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceDiscovery", Description = "FileSystemClientRegistry", EchoRoute = "api/echo/servicediscovery" });
 
             return options;
         }
@@ -103,8 +103,8 @@
                     return configuration;
                 });
 
-            options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: service discovery added (type={nameof(RouterServiceRegistry)})");
-            options.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceDiscovery", Description = "RouterClientRegistry", EchoUri = "api/echo/servicediscovery" });
+            options.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: service discovery added (type={nameof(RouterServiceRegistry)})");
+            options.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceDiscovery", Description = "RouterClientRegistry", EchoRoute = "api/echo/servicediscovery" });
 
             return options;
         }

@@ -14,8 +14,8 @@
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions
     {
-        public static NaosOptions AddJobScheduling(
-        this NaosOptions naosOptions,
+        public static NaosServicesContextOptions AddJobScheduling(
+        this NaosServicesContextOptions naosOptions,
         Action<JobSchedulerOptions> setupAction = null,
         string section = "naos:scheduling")
         {
@@ -38,8 +38,8 @@
             naosOptions.Context.Services.AddSingleton<IHostedService>(sp =>
                 new JobSchedulerHostedService(sp.GetRequiredService<ILogger<JobSchedulerHostedService>>(), sp));
 
-            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: job scheduling added"); // TODO: list available commands/handlers
-            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "JobScheduling", EchoUri = "api/echo/jobscheduling" });
+            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: job scheduling added"); // TODO: list available commands/handlers
+            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "JobScheduling", EchoRoute = "api/echo/jobscheduling" });
 
             return naosOptions;
         }

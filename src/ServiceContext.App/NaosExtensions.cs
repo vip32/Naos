@@ -16,8 +16,8 @@
         /// </summary>
         /// <param name="naosOptions"></param>
         /// <returns></returns>
-        public static NaosOptions AddServiceContext(
-            this NaosOptions naosOptions)
+        public static NaosServicesContextOptions AddServiceContext(
+            this NaosServicesContextOptions naosOptions)
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
             EnsureArg.IsNotNull(naosOptions.Context, nameof(naosOptions.Context));
@@ -40,7 +40,7 @@
                     naosOptions.Context.Descriptor.Version,
                     naosOptions.Context.Descriptor.Tags));
 
-            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: service context added");
+            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: service context added");
 
             return naosOptions;
         }

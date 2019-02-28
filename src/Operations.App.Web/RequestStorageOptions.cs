@@ -1,10 +1,10 @@
-﻿namespace Naos.Core.Messaging.App
+﻿namespace Naos.Core.Operations.App.Web
 {
     using Microsoft.Extensions.DependencyInjection;
 
-    public class MessagingOptions
+    public class RequestStorageOptions
     {
-        public MessagingOptions(INaosServicesContext context)
+        public RequestStorageOptions(INaosServicesContext context)
         {
             this.Context = context;
         }

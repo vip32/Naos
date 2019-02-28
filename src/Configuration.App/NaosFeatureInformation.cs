@@ -10,8 +10,8 @@
 
         public string Description { get; set; }
 
-        public string EchoUri { get; set; }
+        public string EchoRoute { get; set; }
 
-        public IDictionary<string, string> SampleUris { get; set; }
+        public IDictionary<string, string> SampleRoutes { get; set; }
     }
 }

@@ -48,14 +48,14 @@
             options.Context.Services
                 .AddHealthChecks()
                     .AddDocumentDb(s =>
-                    {
-                        s.UriEndpoint = cosmosDbConfiguration.ServiceEndpointUri;
-                        s.PrimaryKey = cosmosDbConfiguration.AuthKeyOrResourceToken;
-                    },
-                    name: "Customers-cosmosdb")
+                        {
+                            s.UriEndpoint = cosmosDbConfiguration.ServiceEndpointUri;
+                            s.PrimaryKey = cosmosDbConfiguration.AuthKeyOrResourceToken;
+                        },
+                        name: "Customers-cosmosdb")
                     .AddServiceDiscoveryClient<UserAccountsClient>();
 
-            options.Context.Messages.Add($"{LogEventKeys.Startup} naos builder: customers service added");
+            options.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: customers service added");
 
             return options;
         }

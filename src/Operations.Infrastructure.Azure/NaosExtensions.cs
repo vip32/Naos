@@ -13,7 +13,7 @@
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions
     {
-        public static INaosBuilderContext AddAzureLogAnalytics(this INaosBuilderContext context, string logName)
+        public static INaosServicesContext AddAzureLogAnalytics(this INaosServicesContext context, string logName)
         {
             EnsureArg.IsNotNull(context, nameof(context));
             EnsureArg.IsNotNull(context.Services, nameof(context.Services));
@@ -41,7 +41,7 @@
                         configuration.WorkspaceName,
                         $"{logName.Replace("_CL", string.Empty)}_CL");
                 });
-                context.Messages.Add($"{LogEventKeys.Startup} logging: azure loganalytics repository added (name={logName}_CL, workspace={configuration.WorkspaceId})");
+                context.Messages.Add($"{LogEventKeys.Startup} naos services builder: logging azure loganalytics repository added (name={logName}_CL, workspace={configuration.WorkspaceId})");
             }
 
             return context;

@@ -12,7 +12,7 @@
     /// <summary>
     ///     Extends the HttpResponseMessage type
     /// </summary>
-    public static partial class HttpResponseMessageExtensions
+    public static class HttpResponseMessageExtensions
     {
         /// <summary>
         ///     Returns an individual header value

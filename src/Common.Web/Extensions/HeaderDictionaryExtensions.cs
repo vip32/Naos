@@ -6,7 +6,7 @@
     /// <summary>
     ///     Extends the HeaderDictionary type
     /// </summary>
-    public static partial class HeaderDictionaryExtensions
+    public static class HeaderDictionaryExtensions
     {
         public static string GetValue(this IHeaderDictionary source, string name)
         {

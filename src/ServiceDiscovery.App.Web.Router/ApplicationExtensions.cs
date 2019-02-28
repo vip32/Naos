@@ -19,32 +19,32 @@
         /// <summary>
         /// Enables the service discovery router
         /// </summary>
-        /// <param name="app"></param>
+        /// <param name="naosOptions"></param>
         /// <returns></returns>
-        public static IApplicationBuilder UseNaosServiceDiscoveryRouter(this IApplicationBuilder app)
+        public static NaosApplicationContextOptions UseServiceDiscoveryRouter(this NaosApplicationContextOptions naosOptions)
         {
-            EnsureArg.IsNotNull(app, nameof(app));
+            EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
 
-            return app.UseNaosServiceDiscoveryRouter(new ServiceDiscoveryRouterMiddlewareOptions());
+            return naosOptions.UseNaosServiceDiscoveryRouter(new ServiceDiscoveryRouterMiddlewareOptions());
         }
 
         /// <summary>
         /// Enables the service discovery router
         /// </summary>
-        /// <param name="app"></param>
+        /// <param name="naosOptions"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public static IApplicationBuilder UseNaosServiceDiscoveryRouter(
-            this IApplicationBuilder app,
+        public static NaosApplicationContextOptions UseNaosServiceDiscoveryRouter(
+            this NaosApplicationContextOptions naosOptions,
             ServiceDiscoveryRouterMiddlewareOptions options)
         {
-            EnsureArg.IsNotNull(app, nameof(app));
+            EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
             EnsureArg.IsNotNull(options, nameof(options));
 
-            app.RunProxy("/api/servicediscovery/router/proxy", async context =>
+            naosOptions.Context.Application.RunProxy("/api/servicediscovery/router/proxy", async context =>
             {
-                var logger = app.ApplicationServices.GetRequiredService<ILogger>();
-                var registryClient = app.ApplicationServices.GetRequiredService<RouterContext>().RegistryClient;
+                var logger = naosOptions.Context.Application.ApplicationServices.GetRequiredService<ILogger>();
+                var registryClient = naosOptions.Context.Application.ApplicationServices.GetRequiredService<RouterContext>().RegistryClient;
 
                 // read headers for service/tag
                 var isFoundName = context.Request.Headers.TryGetValue(ServiceDiscoveryRouterHeaders.ServiceName, out var serviceName);
@@ -79,8 +79,10 @@
                     .Send();
             });
 
+            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos application builder: job scheduling added"); // TODO: list available commands/handlers
+
             //return app.UseMiddleware<ServiceDiscoveryRouterMiddleware>(Options.Create(options));
-            return app;
+            return naosOptions;
         }
     }
 
