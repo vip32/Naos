@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Naos.Sample.UserAccounts.EntityFramework;
 
 namespace Naos.Sample.UserAccounts.Infrastructure.EntityFramework.Migrations
 {
     [DbContext(typeof(UserAccountsContext))]
-    partial class UserAccountsContextModelSnapshot : ModelSnapshot
+    [Migration("20190301145508_StateEpochRemoved")]
+    partial class StateEpochRemoved
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

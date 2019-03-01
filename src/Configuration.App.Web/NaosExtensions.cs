@@ -14,7 +14,7 @@
     {
         public static IApplicationBuilder UseNaos(
             this IApplicationBuilder app,
-            Action<NaosApplicationContextOptions> setupAction = null)
+            Action<NaosApplicationContextOptions> optionsAction = null)
         {
             EnsureArg.IsNotNull(app, nameof(app));
 
@@ -26,7 +26,7 @@
 
             context.Messages.Add($"{LogEventKeys.Startup} naos application builder: naos application added (environment={context.Environment.EnvironmentName})");
 
-            setupAction?.Invoke(new NaosApplicationContextOptions(context));
+            optionsAction?.Invoke(new NaosApplicationContextOptions(context));
 
             try
             {

@@ -13,7 +13,7 @@
     {
         public static NaosServicesContextOptions AddMessaging(
             this NaosServicesContextOptions naosOptions,
-            Action<MessagingOptions> setupAction = null)
+            Action<MessagingOptions> optionsAction = null)
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
             EnsureArg.IsNotNull(naosOptions.Context, nameof(naosOptions.Context));
@@ -27,7 +27,7 @@
                     new MessagingHostedService(sp.GetRequiredService<ILogger<MessagingHostedService>>(), sp));
             naosOptions.Context.Services.AddSingleton<ISubscriptionMap, SubscriptionMap>();
 
-            setupAction?.Invoke(new MessagingOptions(naosOptions.Context));
+            optionsAction?.Invoke(new MessagingOptions(naosOptions.Context));
 
             //context.Messages.Add($"{LogEventKeys.General} naos services builder: messaging added");
             naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Messaging", EchoRoute = "api/echo/messaging" });

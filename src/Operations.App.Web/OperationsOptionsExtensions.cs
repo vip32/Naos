@@ -9,12 +9,12 @@
     {
         public static OperationsOptions AddRequestStorage(
             this OperationsOptions options,
-            Action<RequestStorageOptions> setupAction = null)
+            Action<RequestStorageOptions> optionsAction = null)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            setupAction?.Invoke(new RequestStorageOptions(options.Context));
+            optionsAction?.Invoke(new RequestStorageOptions(options.Context));
 
             return options;
         }

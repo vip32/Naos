@@ -16,7 +16,7 @@
     {
         public static NaosServicesContextOptions AddJobScheduling(
         this NaosServicesContextOptions naosOptions,
-        Action<JobSchedulerOptions> setupAction = null,
+        Action<JobSchedulerOptions> optionsAction = null,
         string section = "naos:scheduling")
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
@@ -27,7 +27,7 @@
                 var settings = new JobSchedulerOptions(
                     sp.GetRequiredService<ILoggerFactory>(),
                     new ServiceProviderJobFactory(sp));
-                setupAction?.Invoke(settings);
+                optionsAction?.Invoke(settings);
 
                 return new JobScheduler(
                     sp.GetRequiredService<ILoggerFactory>(),

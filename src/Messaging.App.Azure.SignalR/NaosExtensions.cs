@@ -19,7 +19,7 @@
     {
         public static MessagingOptions UseSignalRBroker(
             this MessagingOptions options,
-            Action<IMessageBroker> setupAction = null,
+            Action<IMessageBroker> brokerAction = null,
             string messageScope = null,
             string section = "naos:messaging:signalr")
         {
@@ -41,7 +41,7 @@
                             : string.Empty)
                         .MessageScope(messageScope));
 
-                setupAction?.Invoke(broker);
+                brokerAction?.Invoke(broker);
                 return broker;
             });
 

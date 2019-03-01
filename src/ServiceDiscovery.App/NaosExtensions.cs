@@ -22,7 +22,7 @@
     {
         public static NaosServicesContextOptions AddServiceDiscovery(
             this NaosServicesContextOptions naosOptions,
-            Action<ServiceDiscoveryOptions> setupAction = null,
+            Action<ServiceDiscoveryOptions> optionsAction = null,
             string section = "naos:serviceDiscovery")
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
@@ -33,7 +33,7 @@
             naosOptions.Context.Services.AddSingleton<IServiceRegistryClient>(sp =>
                 new ServiceRegistryClient(sp.GetRequiredService<IServiceRegistry>()));
 
-            setupAction?.Invoke(new ServiceDiscoveryOptions(naosOptions.Context));
+            optionsAction?.Invoke(new ServiceDiscoveryOptions(naosOptions.Context));
 
             //context.Messages.Add($"{LogEventKeys.General} naos services builder: service discovery added");
 

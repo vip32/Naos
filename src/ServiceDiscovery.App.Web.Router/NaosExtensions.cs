@@ -20,7 +20,7 @@
     {
         public static NaosServicesContextOptions AddServiceDiscoveryRouter(
             this NaosServicesContextOptions naosOptions,
-            Action<ServiceDiscoveryRouterOptions> setupAction = null,
+            Action<ServiceDiscoveryRouterOptions> optionsAction = null,
             string section = "naos:serviceDiscovery")
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
@@ -32,7 +32,7 @@
                 //o.AddHttpMessageHandler<HttpClientLogHandler>();
             });
 
-            setupAction?.Invoke(new ServiceDiscoveryRouterOptions(naosOptions.Context));
+            optionsAction?.Invoke(new ServiceDiscoveryRouterOptions(naosOptions.Context));
 
             return naosOptions;
         }

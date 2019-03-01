@@ -14,11 +14,11 @@
         /// Adds required services to support the command handling functionality.
         /// </summary>
         /// <param name="naosOptions"></param>
-        /// <param name="setupAction"></param>
+        /// <param name="optionsAction"></param>
         /// <returns></returns>
         public static NaosServicesContextOptions AddCommands(
             this NaosServicesContextOptions naosOptions,
-            Action<CommandsOptions> setupAction = null)
+            Action<CommandsOptions> optionsAction = null)
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
             EnsureArg.IsNotNull(naosOptions.Context, nameof(naosOptions.Context));
@@ -31,7 +31,7 @@
 
             naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: commands added"); // TODO: list available commands/handlers
 
-            setupAction?.Invoke(new CommandsOptions(naosOptions.Context));
+            optionsAction?.Invoke(new CommandsOptions(naosOptions.Context));
             //naosOptions.Context.Services
             //    .AddSingleton<ICommandBehavior, ValidateCommandBehavior>()
             //    .AddSingleton<ICommandBehavior, TrackCommandBehavior>()

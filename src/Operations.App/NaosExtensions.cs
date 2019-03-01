@@ -12,13 +12,13 @@
     {
         public static NaosServicesContextOptions AddOperations(
             this NaosServicesContextOptions naosOptions,
-            Action<OperationsOptions> setupAction = null,
+            Action<OperationsOptions> optionsAction = null,
             string section = "naos:operations")
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
             EnsureArg.IsNotNull(naosOptions.Context, nameof(naosOptions.Context));
 
-            setupAction?.Invoke(new OperationsOptions(naosOptions.Context));
+            optionsAction?.Invoke(new OperationsOptions(naosOptions.Context));
 
             naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: operations added");
             naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Operations" });

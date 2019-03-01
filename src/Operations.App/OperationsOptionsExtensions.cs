@@ -18,7 +18,7 @@
 
         public static OperationsOptions AddLogging(
             this OperationsOptions options,
-            Action<LoggingOptions> setupAction = null,
+            Action<LoggingOptions> optionsAction = null,
             string environment = null,
             string correlationId = null,
             LoggerConfiguration loggerConfiguration = null)
@@ -34,7 +34,7 @@
                 loggerConfiguration ?? new LoggerConfiguration());
 
             InitializeLogger(loggingOptions);
-            setupAction?.Invoke(loggingOptions);
+            optionsAction?.Invoke(loggingOptions);
 
             options.Context.Services.AddSingleton(sp => CreateLoggerFactory(loggingOptions));
             options.Context.Services.AddSingleton(typeof(ILogger<>), typeof(LoggingAdapter<>));

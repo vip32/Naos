@@ -19,7 +19,7 @@
     {
         public static MessagingOptions UseServiceBusBroker(
             this MessagingOptions options,
-            Action<IMessageBroker> setupAction = null,
+            Action<IMessageBroker> brokerAction = null,
             string topicName = null,
             string subscriptionName = null,
             string section = "naos:messaging:serviceBus")
@@ -55,7 +55,7 @@
                             ? Environment.MachineName.Humanize().Dehumanize().ToLower()
                             : string.Empty));
 
-                setupAction?.Invoke(broker);
+                brokerAction?.Invoke(broker);
                 return broker;
             }); // scope the messagebus messages to the local machine, so local events are handled locally
 

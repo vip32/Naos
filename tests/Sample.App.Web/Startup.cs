@@ -1,6 +1,6 @@
 ﻿namespace Naos.Sample.App.Web
 {
-    using System.Diagnostics;
+    using System;
     using System.IO;
     using System.Linq;
     using System.Threading;
@@ -12,19 +12,17 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Authorization;
+    using Microsoft.AspNetCore.Mvc.Infrastructure;
+    using Microsoft.AspNetCore.Mvc.Routing;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Commands.Web;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
-    using Naos.Core.Configuration;
-    using Naos.Core.FileStorage.Domain;
-    using Naos.Core.FileStorage.Infrastructure;
+    using Naos.Core.Configuration.App;
     using Naos.Core.JobScheduling.App;
     using Naos.Core.JobScheduling.Domain;
     using Naos.Core.Messaging;
-    using Naos.Core.Operations.App.Web;
     using Newtonsoft.Json;
     using NSwag.AspNetCore;
 
@@ -45,12 +43,25 @@
             services
                 .AddMiddlewareAnalysis()
                 .AddHttpContextAccessor()
+                .AddSingleton<IActionContextAccessor, ActionContextAccessor>() // needed for GetUrlHelper (IUrlHelperFactory below)
+                .AddScoped(sp =>
+                {
+                    var actionContext = sp.GetRequiredService<IActionContextAccessor>()?.ActionContext;
+                    if (actionContext == null)
+                    {
+                        throw new ArgumentException("UrlHelper needs an ActionContext, which is usually available in MVC components (Controller/PageModel/ViewComponent)");
+                    }
+
+                    var factory = sp.GetRequiredService<IUrlHelperFactory>();
+                    return factory?.GetUrlHelper(actionContext);
+                })
                 .AddSwaggerDocument(s => s.Description = "naos")
                 .AddMediatR()
                 .AddMvc(o =>
                     {
                         // https://tahirnaushad.com/2017/08/28/asp-net-core-2-0-mvc-filters/ or use controller attribute (Authorize)
                         o.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build()));
+                        o.Filters.Add<OperationCancelledExceptionFilter>();
                     })
                     .AddJsonOptions(o => o.AddDefaultJsonSerializerSettings())
                     .AddControllersAsServices() // https://andrewlock.net/controller-activation-and-dependency-injection-in-asp-net-core-mvc/
@@ -74,7 +85,7 @@
                     .AddOperations(o => o
                         .AddLogging(l => l
                             .UseFile()
-                            .UseAzureBlobStorage()
+                            //.UseAzureBlobStorage()
                             .UseAzureLogAnalytics())
                         .AddRequestStorage(r => r
                             .UseAzureBlobStorage()))

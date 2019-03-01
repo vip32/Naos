@@ -46,6 +46,7 @@
             {
                 o.UseLoggerFactory(options.Context.Services.BuildServiceProvider().GetRequiredService<ILoggerFactory>());
                 o.UseNaosSqlServer(entityFrameworkConfiguration.ConnectionString);
+                o.UseQueryTrackingBehavior(EntityFrameworkCore.QueryTrackingBehavior.NoTracking);
             });
 
             options.Context.Services.AddHealthChecks()

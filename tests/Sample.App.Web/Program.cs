@@ -3,7 +3,7 @@
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
     using Naos.Core.Common;
-    using Naos.Core.Configuration;
+    using Naos.Core.Configuration.App;
     using Serilog;
 
     public static class Program

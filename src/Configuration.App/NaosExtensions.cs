@@ -22,7 +22,7 @@
         /// <param name="product"></param>
         /// <param name="capability"></param>
         /// <param name="tags"></param>
-        /// <param name="setupAction"></param>
+        /// <param name="optionsAction"></param>
         /// <param name="environment"></param>
         /// <param name="section"></param>
         /// <returns></returns>
@@ -32,7 +32,7 @@
             string product = null,
             string capability = null,
             string[] tags = null,
-            Action<NaosServicesContextOptions> setupAction = null,
+            Action<NaosServicesContextOptions> optionsAction = null,
             string environment = null,
             string section = "naos")
         {
@@ -52,7 +52,7 @@
             context.Messages.Add($"{LogEventKeys.Startup} naos services builder: naos services added");
             context.Services.AddSingleton(new NaosFeatureInformation { Name = "Naos", EchoRoute = "api/echo" });
 
-            setupAction?.Invoke(new NaosServicesContextOptions(context));
+            optionsAction?.Invoke(new NaosServicesContextOptions(context));
 
             try
             {
@@ -82,12 +82,12 @@
 
         public static NaosServicesContextOptions AddServices(
             this NaosServicesContextOptions naosOptions,
-            Action<ServiceOptions> setupAction = null)
+            Action<ServiceOptions> optionsAction = null)
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
             EnsureArg.IsNotNull(naosOptions.Context, nameof(naosOptions.Context));
 
-            setupAction?.Invoke(new ServiceOptions(naosOptions.Context));
+            optionsAction?.Invoke(new ServiceOptions(naosOptions.Context));
 
             return naosOptions;
         }

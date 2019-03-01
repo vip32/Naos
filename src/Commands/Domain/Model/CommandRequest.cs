@@ -1,7 +1,6 @@
 ﻿namespace Naos.Core.Commands.Domain
 {
     using System;
-    using System.Collections.Generic;
     using Common;
     using EnsureThat;
     using FluentValidation.Results;

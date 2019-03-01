@@ -6,7 +6,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Core.Commands.Domain;
     using Naos.Core.Common;
-    using Naos.Core.Configuration;
+    using Naos.Core.Configuration.App;
     using Naos.Core.Infrastructure.EntityFramework;
     using Naos.Sample.UserAccounts.EntityFramework;
 

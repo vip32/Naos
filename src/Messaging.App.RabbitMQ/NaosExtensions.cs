@@ -17,7 +17,7 @@
     {
         public static MessagingOptions UseRabbitMQBroker(
             this MessagingOptions options,
-            Action<IMessageBroker> setupAction = null,
+            Action<IMessageBroker> brokerAction = null,
             string section = "naos:messaging:rabbitMQ",
             IEnumerable<Assembly> assemblies = null)
         {
@@ -31,7 +31,7 @@
                     .Configuration(options.Context.Configuration.GetSection(section).Get<RabbitMQConfiguration>())
                     .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp)));
 
-                setupAction?.Invoke(broker);
+                brokerAction?.Invoke(broker);
                 return broker;
             });
 

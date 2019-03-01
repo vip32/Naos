@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Commands.Web
+﻿namespace Naos.Core.Common.Web
 {
     using Microsoft.AspNetCore.Mvc;
     using Naos.Core.Common;
