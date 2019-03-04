@@ -10,7 +10,6 @@
     using Naos.Sample.UserAccounts.Domain;
     using Naos.Sample.UserAccounts.EntityFramework;
 
-    //[ExcludeFromCodeCoverage]
     public static partial class NaosExtensions
     {
         public static ServiceOptions AddSampleUserAccounts(
