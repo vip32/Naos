@@ -5,7 +5,11 @@
     /// </summary>
     public class CorrelationContext
     {
-        public CorrelationContext(string correlationId, string correlationHeader, string requestId, string requestHeader)
+        public CorrelationContext(
+            string correlationId,
+            string correlationHeader,
+            string requestId,
+            string requestHeader)
         {
             this.CorrelationId = correlationId;
             this.CorrelationHeader = correlationHeader;

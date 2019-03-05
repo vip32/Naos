@@ -20,6 +20,7 @@
     <ProjectReference Include="..\FileStorage.Infrastructure.Azure\FileStorage.Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\FileStorage.Infrastructure.FileSystem\FileStorage.Infrastructure.FileSystem.csproj" />
     <ProjectReference Include="..\FileStorage\FileStorage.csproj" />
+    <ProjectReference Include="..\Filtering.App\RequestFiltering.App.csproj" />
     <ProjectReference Include="..\Infrastructure.Azure\Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\Operations.App\Operations.App.csproj" />
     <ProjectReference Include="..\Operations\Operations.csproj" />
