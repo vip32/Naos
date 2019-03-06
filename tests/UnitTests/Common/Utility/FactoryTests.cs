@@ -1,20 +1,34 @@
 ﻿namespace Naos.Core.UnitTests.Common.Utility
 {
     using Naos.Core.Common;
+    using Shouldly;
     using Xunit;
 
     public class FactoryTests
     {
         [Fact]
-        public void CanCreateInstace()
+        public void CanCreateInstance()
         {
-            var result = Factory<Stub>.Create();
-
-            Assert.NotNull(result);
+            Factory<Stub>.Create().ShouldNotBeNull();
+            Factory<Stub>.Create(typeof(Stub)).ShouldNotBeNull();
+            Factory<Stub>.Create(typeof(Stub), "firstname").ShouldNotBeNull();
+            Factory<Stub>.Create(typeof(Stub), "firstname", "NOARG").ShouldBeNull();
+            Factory.Create(typeof(Stub)).ShouldNotBeNull();
+            Factory.Create(typeof(Stub), "firstname").ShouldNotBeNull();
+            Factory.Create(typeof(Stub), "firstname", "NOARG").ShouldBeNull();
         }
 
         public class Stub
         {
+            public Stub()
+            {
+            }
+
+            public Stub(string firstName)
+            {
+                this.FirstName = firstName;
+            }
+
             public string FirstName { get; set; }
 
             public string LastName { get; set; }

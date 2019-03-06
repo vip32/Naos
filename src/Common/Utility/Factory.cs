@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq.Expressions;
+    using EnsureThat;
     using Microsoft.Extensions.DependencyInjection;
 
 #pragma warning disable SA1402 // File may only contain a single class
@@ -35,7 +36,18 @@
         /// <param name="parameters"></param>
         /// <returns></returns>
         public static T Create(Type type, params object[] parameters)
-            => Activator.CreateInstance(type, parameters) as T;
+        {
+            EnsureArg.IsNotNull(type, nameof(type));
+
+            try
+            {
+                return Activator.CreateInstance(type, parameters) as T;
+            }
+            catch (MissingMethodException)
+            {
+                return default;
+            }
+        }
 
         /// <summary>
         ///  Creates an instance of the specified type <typeparamref name="T"/> using the serviceprovider to
@@ -44,7 +56,11 @@
         /// <param name="serviceProvider"></param>
         /// <returns></returns>
         public static T Create(IServiceProvider serviceProvider)
-            => ActivatorUtilities.CreateInstance<T>(serviceProvider);
+        {
+            EnsureArg.IsNotNull(serviceProvider, nameof(serviceProvider));
+
+            return ActivatorUtilities.CreateInstance<T>(serviceProvider);
+        }
     }
 
     public static class Factory
@@ -57,7 +73,18 @@
         /// <param name="parameters"></param>
         /// <returns></returns>
         public static object Create(Type type, params object[] parameters)
-            => Activator.CreateInstance(type, parameters);
+        {
+            EnsureArg.IsNotNull(type, nameof(type));
+
+            try
+            {
+                return Activator.CreateInstance(type, parameters);
+            }
+            catch (MissingMethodException)
+            {
+                return default;
+            }
+        }
 
         /// <summary>
         ///  Creates an instance of the specified type <typeparamref name="type"/> using the serviceprovider to
@@ -67,7 +94,12 @@
         /// <param name="serviceProvider"></param>
         /// <returns></returns>
         public static object Create(Type type, IServiceProvider serviceProvider)
-            => ActivatorUtilities.CreateInstance(serviceProvider, type);
+        {
+            EnsureArg.IsNotNull(type, nameof(type));
+            EnsureArg.IsNotNull(serviceProvider, nameof(serviceProvider));
+
+            return ActivatorUtilities.CreateInstance(serviceProvider, type);
+        }
     }
 #pragma warning restore SA1402 // File may only contain a single class
 }
