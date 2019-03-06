@@ -4,7 +4,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Core.Common;
     using Naos.Core.Configuration.App;
-    using Naos.Core.Operations.Domain.Repositories;
+    using Naos.Core.Operations.Domain;
     using Shouldly;
     using Xunit;
 

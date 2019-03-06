@@ -22,6 +22,8 @@
     <ProjectReference Include="..\Common.Web\Common.Web.csproj" />
     <ProjectReference Include="..\Configuration.App\Configuration.App.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\Filtering.App\RequestFiltering.App.csproj" />
+    <ProjectReference Include="..\Operations\Operations.csproj" />
   </ItemGroup>
 
 </Project>

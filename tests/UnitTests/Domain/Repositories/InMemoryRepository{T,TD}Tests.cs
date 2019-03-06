@@ -5,12 +5,12 @@ namespace Naos.Core.UnitTests.Domain.Repositories
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading.Tasks;
-    using AutoMapper;
     using EnsureThat;
     using FizzWare.NBuilder;
     using MediatR;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
+    using Naos.Core.Common.Mapping;
     using Naos.Core.Domain;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Domain.Repositories.AutoMapper;
@@ -374,9 +374,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public static class StubEntityMapperConfiguration
 #pragma warning restore SA1204 // Static elements must appear before instance elements
         {
-            public static IMapper Create()
+            public static global::AutoMapper.IMapper Create()
             {
-                var mapper = new MapperConfiguration(c =>
+                var mapper = new global::AutoMapper.MapperConfiguration(c =>
                 {
                     // TODO: try reversemap https://stackoverflow.com/questions/13490456/automapper-bidirectional-mapping-with-reversemap-and-formember
                     //c.AddExpressionMapping();
@@ -426,9 +426,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             //    }
             //}
 
-            private class YearOfBirthResolver : IValueResolver<StubEntity, StubDb, int>
+            private class YearOfBirthResolver : global::AutoMapper.IValueResolver<StubEntity, StubDb, int>
             {
-                public int Resolve(StubEntity source, StubDb destination, int destMember, ResolutionContext context)
+                public int Resolve(StubEntity source, StubDb destination, int destMember, global::AutoMapper.ResolutionContext context)
                 {
                     return DateTime.UtcNow.Year - source.Age;
                 }
@@ -450,9 +450,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             //    }
             //}
 
-            private class AgeResolver : IValueResolver<StubDb, StubEntity, int>
+            private class AgeResolver : global::AutoMapper.IValueResolver<StubDb, StubEntity, int>
             {
-                public int Resolve(StubDb source, StubEntity destination, int destMember, ResolutionContext context)
+                public int Resolve(StubDb source, StubEntity destination, int destMember, global::AutoMapper.ResolutionContext context)
                 {
                     return DateTime.UtcNow.Year - source.YearOfBirth;
                 }

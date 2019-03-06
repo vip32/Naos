@@ -12,7 +12,6 @@
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Domain.Specifications;
     using Naos.Core.Operations.Domain;
-    using Naos.Core.Operations.Domain.Repositories;
 
     public class LogAnalyticsRepository : ILogEventRepository
     {

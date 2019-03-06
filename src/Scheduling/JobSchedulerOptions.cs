@@ -83,6 +83,7 @@
         }
 
         public JobSchedulerOptions Register<T>(string key, string cron, Expression<Func<T, Task>> task, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
+            where T : class
         {
             EnsureArg.IsNotNull(task, nameof(task));
 
@@ -92,7 +93,7 @@
                 {
                     await Task.Run(() =>
                     {
-                        var job = this.jobFactory.Create(typeof(T));
+                        var job = this.jobFactory.Create<T>();
                         if (job == null)
                         {
                             throw new NaosException($"Cannot create job instance for type {typeof(T).PrettyName()}.");

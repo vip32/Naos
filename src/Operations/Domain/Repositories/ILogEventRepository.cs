@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Operations.Domain.Repositories
+﻿namespace Naos.Core.Operations.Domain
 {
     using Naos.Core.Domain.Repositories;
 

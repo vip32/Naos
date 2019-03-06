@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Common.Mapping\Common.Mapping.csproj" />
     <ProjectReference Include="..\Domain.Repositories\Domain.Repositories.csproj" />
   </ItemGroup>
 

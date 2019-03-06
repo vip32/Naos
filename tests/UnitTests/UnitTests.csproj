@@ -5,7 +5,7 @@
     <AssemblyName>Naos.Core.UnitTests</AssemblyName>
     <RootNamespace>Naos.Core.UnitTests</RootNamespace>
     <IsPackable>false</IsPackable>
-    <LangVersion>7.1</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
   </PropertyGroup>
 
@@ -45,6 +45,7 @@
     <ProjectReference Include="..\..\src\Commands.App\Commands.App.csproj" />
     <ProjectReference Include="..\..\src\App\App.csproj" />
     <ProjectReference Include="..\..\src\Commands\Commands.csproj" />
+    <ProjectReference Include="..\..\src\Common.Mapping\Common.Mapping.csproj" />
     <ProjectReference Include="..\..\src\Common.Web\Common.Web.csproj" />
     <ProjectReference Include="..\..\src\Common\Common.csproj" />
     <ProjectReference Include="..\..\src\Configuration.App\Configuration.App.csproj" />

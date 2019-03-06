@@ -2,7 +2,7 @@
 {
     using System;
     using EnsureThat;
-    using Microsoft.Extensions.DependencyInjection;
+    using Naos.Core.Common;
 
     public class ServiceProviderMessageHandlerFactory : IMessageHandlerFactory
     {
@@ -26,14 +26,7 @@
         /// <returns></returns>
         public object Create(Type messageHandlerType)
         {
-            // in case of scoping (singleton needs scoped lifetime) issues
-            //using (var scope = this.serviceProvider.CreateScope())
-            //{
-            //    var scopedProvider = scope.ServiceProvider;
-            //    return scopedProvider.GetService(messageHandlerType);
-            //}
-
-            return ActivatorUtilities.CreateInstance(this.serviceProvider, messageHandlerType);
+            return Factory.Create(messageHandlerType, this.serviceProvider);
         }
     }
 }

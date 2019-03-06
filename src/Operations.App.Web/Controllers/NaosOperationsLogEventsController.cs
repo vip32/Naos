@@ -10,7 +10,6 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Operations.Domain;
-    using Naos.Core.Operations.Domain.Repositories;
     using Naos.Core.RequestFiltering.App;
 
     [Route("api/operations/logevents")]
@@ -20,18 +19,22 @@
         private readonly ILogger<NaosOperationsLogEventsController> logger;
         private readonly FilterContext filterContext;
         private readonly ILogEventRepository repository;
+        private readonly ILogEventService service;
 
         public NaosOperationsLogEventsController(
-            LoggerFactory loggerFactory,
+            ILoggerFactory loggerFactory,
             ILogEventRepository repository,
+            ILogEventService service,
             IFilterContextAccessor filterContext)
         {
             EnsureThat.EnsureArg.IsNotNull(loggerFactory, nameof(loggerFactory));
             EnsureThat.EnsureArg.IsNotNull(repository, nameof(repository));
+            EnsureThat.EnsureArg.IsNotNull(service, nameof(service));
 
             this.logger = loggerFactory.CreateLogger<NaosOperationsLogEventsController>();
             this.filterContext = filterContext.Context ?? new FilterContext();
             this.repository = repository;
+            this.service = service;
         }
 
         [HttpGet]
@@ -127,7 +130,12 @@
                     await this.HttpContext.Response.WriteAsync($"criteria: {criteria}<br/>");
                 }
 
-                this.filterContext.Take = this.filterContext.Take ?? 1000; // get amount per request, repeat while logevents.ticks >= past
+                this.filterContext.Take ??= 1000; // get amount per request, repeat while logevents.ticks >= past
+
+                //await foreach(var name in this.service.GetLogEventsAsync(this.filterContext))
+                //{
+                //    this.logger.LogInformation(name);
+                //}
 
                 var logEvents = await this.repository.FindAllAsync(
                     this.filterContext.GetSpecifications<LogEvent>(),

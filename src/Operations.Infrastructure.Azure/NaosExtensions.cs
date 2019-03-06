@@ -7,7 +7,7 @@
     using Microsoft.IdentityModel.Clients.ActiveDirectory;
     using Naos.Core.Common;
     using Naos.Core.Infrastructure.Azure;
-    using Naos.Core.Operations.Domain.Repositories;
+    using Naos.Core.Operations.Domain;
     using Naos.Core.Operations.Infrastructure.Azure;
 
     [ExcludeFromCodeCoverage]

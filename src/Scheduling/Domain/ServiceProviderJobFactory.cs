@@ -2,7 +2,7 @@
 {
     using System;
     using EnsureThat;
-    using Microsoft.Extensions.DependencyInjection;
+    using Naos.Core.Common;
 
     public class ServiceProviderJobFactory : IJobFactory
     {
@@ -19,10 +19,10 @@
             this.serviceProvider = serviceProvider;
         }
 
-        public object Create(Type jobType)
+        public T Create<T>()
+            where T : class
         {
-            return ActivatorUtilities.CreateInstance(this.serviceProvider, jobType);
-            //return this.serviceProvider.GetService(jobType);
+            return Factory.Create(typeof(T), this.serviceProvider) as T;
         }
 
         /// <summary>
@@ -32,8 +32,7 @@
         /// <returns></returns>
         public IJob CreateJob(Type jobType)
         {
-            return ActivatorUtilities.CreateInstance(this.serviceProvider, jobType) as IJob;
-            //return this.serviceProvider.GetService(jobType) as IJob;
+            return Factory.Create(jobType, this.serviceProvider) as IJob;
         }
     }
 }

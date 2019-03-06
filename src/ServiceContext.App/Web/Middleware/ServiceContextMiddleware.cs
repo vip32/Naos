@@ -1,8 +1,6 @@
 ﻿namespace Naos.Core.ServiceContext.App.Web
 {
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.AspNetCore.Http;
@@ -11,7 +9,6 @@
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
     using Naos.Core.Configuration.App;
-    using Newtonsoft.Json;
 
     public class ServiceContextMiddleware
     {

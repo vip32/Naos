@@ -11,6 +11,7 @@
         /// <returns></returns>
         IJob CreateJob(Type jobType);
 
-        object Create(Type jobType);
+        T Create<T>()
+            where T : class;
     }
 }

@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Naos.Core.Common.Mapping</AssemblyName>
+    <RootNamespace>Naos.Core.Common.Mapping</RootNamespace>
+  </PropertyGroup>
+
+</Project>
