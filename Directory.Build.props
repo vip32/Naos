@@ -21,7 +21,7 @@
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 		<WarningsAsErrors></WarningsAsErrors>
 		<CodeAnalysisRuleSet></CodeAnalysisRuleSet>
-    <LangVersion>8.0</LangVersion>
+    <!--<LangVersion>8.0</LangVersion>-->
 	</PropertyGroup>
 
 	<ItemGroup>

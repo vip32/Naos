@@ -130,7 +130,7 @@
                     await this.HttpContext.Response.WriteAsync($"criteria: {criteria}<br/>");
                 }
 
-                this.filterContext.Take ??= 1000; // get amount per request, repeat while logevents.ticks >= past
+                this.filterContext.Take = this.filterContext.Take ?? 1000; // get amount per request, repeat while logevents.ticks >= past
 
                 //await foreach(var name in this.service.GetLogEventsAsync(this.filterContext))
                 //{
