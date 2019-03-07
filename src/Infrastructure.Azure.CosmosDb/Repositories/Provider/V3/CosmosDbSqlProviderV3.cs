@@ -98,11 +98,13 @@
 
         public Task<IEnumerable<T>> WhereAsync(Expression<Func<T, bool>> expression = null, IEnumerable<Expression<Func<T, bool>>> expressions = null, int count = 100, Expression<Func<T, object>> orderExpression = null, bool orderDescending = false)
         {
+            // linq not supported yet https://github.com/Azure/azure-cosmos-dotnet-v3/issues/4
             throw new NotImplementedException();
         }
 
         public Task<IEnumerable<T>> WhereAsync(Expression<Func<T, bool>> expression, Expression<Func<T, T>> selector, int count = 100, Expression<Func<T, object>> orderExpression = null, bool orderDescending = false)
         {
+            // linq not supported yet https://github.com/Azure/azure-cosmos-dotnet-v3/issues/4
             throw new NotImplementedException();
         }
 
