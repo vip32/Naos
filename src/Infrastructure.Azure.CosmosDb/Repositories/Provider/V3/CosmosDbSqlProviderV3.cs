@@ -82,13 +82,9 @@
 
         public async Task<T> UpsertAsync(T entity)
         {
-            var response = await this.container.Items.CreateItemAsync(
+            var response = await this.container.Items.UpsertItemAsync(
                 this.partitionKeyValue,
                 entity).AnyContext();
-                //new CosmosItemRequestOptions
-                //{
-                //    ConsistencyLevel = ConsistencyLevel.Eventual
-                //});
             return response.Resource;
         }
 
