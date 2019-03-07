@@ -43,9 +43,9 @@
                                     isMasterCollection: cosmosDbConfiguration.IsMasterCollection)))));
             });
 
-            options.Context.Services.AddScoped<ICosmosDbSqlProvider<SimpleCustomer>>(sp =>
+            options.Context.Services.AddScoped<ICosmosDbSqlProvider<Customer>>(sp =>
             {
-                return new CosmosDbSqlProviderV3<SimpleCustomer>(
+                return new CosmosDbSqlProviderV3<Customer>(
                     accountEndPoint: cosmosDbConfiguration.ServiceEndpointUri,
                     accountKey: cosmosDbConfiguration.AuthKeyOrResourceToken,
                     database: cosmosDbConfiguration.DatabaseId,

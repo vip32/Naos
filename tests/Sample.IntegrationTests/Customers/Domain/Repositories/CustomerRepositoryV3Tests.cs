@@ -1,5 +1,6 @@
 ﻿namespace Naos.Sample.IntegrationTests.Customers.Domain
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using Bogus;
@@ -15,14 +16,15 @@
     public class CustomerRepositoryV3Tests : BaseTest
     {
         // https://xunit.github.io/docs/shared-context.html
-        private readonly ICosmosDbSqlProvider<SimpleCustomer> sut;
-        private readonly Faker<SimpleCustomer> entityFaker;
+        private readonly ICosmosDbSqlProvider<Customer> sut;
+        private readonly Faker<Customer> entityFaker;
         private readonly string tenantId = "naos_sample_test";
 
         public CustomerRepositoryV3Tests()
         {
-            this.sut = this.ServiceProvider.GetService<ICosmosDbSqlProvider<SimpleCustomer>>();
-            this.entityFaker = new Faker<SimpleCustomer>() //https://github.com/bchavez/Bogus
+            this.sut = this.ServiceProvider.GetService<ICosmosDbSqlProvider<Customer>>();
+            this.entityFaker = new Faker<Customer>() //https://github.com/bchavez/Bogus
+                .RuleFor(u => u.Id, f => Guid.NewGuid().ToString())
                 .RuleFor(u => u.CustomerNumber, f => f.Random.Replace("??-#####"))
                 .RuleFor(u => u.Gender, f => f.PickRandom(new[] { "Male", "Female" }))
                 .RuleFor(u => u.FirstName, (f, u) => f.Name.FirstName())
