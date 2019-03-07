@@ -48,7 +48,10 @@
         /// <param name="options">The options.</param>
         /// <param name="cancellationToken">The cancellationToken.</param>
         /// <returns></returns>
-        public override async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
+        public override async Task<IEnumerable<TEntity>> FindAllAsync(
+            IEnumerable<ISpecification<TEntity>> specifications,
+            IFindOptions<TEntity> options = null,
+            CancellationToken cancellationToken = default)
         {
             var result = this.context.Entities.Safe().Select(e => this.Options.Mapper.Map<TDestination>(e)); // work on destination objects
 

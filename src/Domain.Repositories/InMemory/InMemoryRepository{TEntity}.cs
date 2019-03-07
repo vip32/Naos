@@ -55,7 +55,9 @@
         /// <param name="options">The options.</param>
         /// <param name="cancellationToken">The cancellationToken.</param>
         /// <returns></returns>
-        public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<TEntity>> FindAllAsync(
+            IFindOptions<TEntity> options = null,
+            CancellationToken cancellationToken = default)
         {
             return await this.FindAllAsync(specifications: null, options: options, cancellationToken: cancellationToken).AnyContext();
         }
@@ -67,7 +69,10 @@
         /// <param name="options">The options.</param>
         /// /// <param name="cancellationToken">The cancellationToken.</param>
         /// <returns></returns>
-        public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<TEntity>> FindAllAsync(
+            ISpecification<TEntity> specification,
+            IFindOptions<TEntity> options = null,
+            CancellationToken cancellationToken = default)
         {
             return specification == null
                 ? await this.FindAllAsync(specifications: null, options: options).AnyContext()
@@ -81,7 +86,10 @@
         /// <param name="options">The options.</param>
         /// /// <param name="cancellationToken">The cancellationToken.</param>
         /// <returns></returns>
-        public virtual async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
+        public virtual async Task<IEnumerable<TEntity>> FindAllAsync(
+            IEnumerable<ISpecification<TEntity>> specifications,
+            IFindOptions<TEntity> options = null,
+            CancellationToken cancellationToken = default)
         {
             var result = this.context.Entities.AsEnumerable();
 
