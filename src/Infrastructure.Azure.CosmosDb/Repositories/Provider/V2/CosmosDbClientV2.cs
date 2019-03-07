@@ -6,7 +6,7 @@
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
 
-    public static class CosmosDbClient
+    public static class CosmosDbClientV2
     {
         public static IDocumentClient Create(
             string serviceEndpointUri,

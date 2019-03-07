@@ -33,14 +33,23 @@
                             new CosmosDbSqlRepository<Customer>(
                                 sp.GetRequiredService<ILogger<CustomerRepository>>(), // TODO: obsolete
                                 sp.GetRequiredService<IMediator>(),
-                                new CosmosDbSqlProvider<Customer>(
-                                    logger: sp.GetRequiredService<ILogger<CosmosDbSqlProvider<Customer>>>(),
-                                    client: CosmosDbClient.Create(cosmosDbConfiguration.ServiceEndpointUri, cosmosDbConfiguration.AuthKeyOrResourceToken),
+                                new CosmosDbSqlProviderV2<Customer>(
+                                    logger: sp.GetRequiredService<ILogger<CosmosDbSqlProviderV2<Customer>>>(),
+                                    client: CosmosDbClientV2.Create(cosmosDbConfiguration.ServiceEndpointUri, cosmosDbConfiguration.AuthKeyOrResourceToken),
                                     databaseId: cosmosDbConfiguration.DatabaseId,
                                     collectionIdFactory: () => cosmosDbConfiguration.CollectionId,
-                                    collectionPartitionKey: cosmosDbConfiguration.CollectionPartitionKey,
-                                    collectionOfferThroughput: cosmosDbConfiguration.CollectionOfferThroughput,
+                                    partitionKeyPath: cosmosDbConfiguration.CollectionPartitionKey,
+                                    throughput: cosmosDbConfiguration.CollectionOfferThroughput,
                                     isMasterCollection: cosmosDbConfiguration.IsMasterCollection)))));
+            });
+
+            options.Context.Services.AddScoped<ICosmosDbSqlProvider<SimpleCustomer>>(sp =>
+            {
+                return new CosmosDbSqlProviderV3<SimpleCustomer>(
+                    accountEndPoint: cosmosDbConfiguration.ServiceEndpointUri,
+                    accountKey: cosmosDbConfiguration.AuthKeyOrResourceToken,
+                    database: cosmosDbConfiguration.DatabaseId,
+                    container: "customers");
             });
 
             //options.Context.Services.AddSingleton<IValidator<CreateCustomerCommand>>(new CreateCustomerCommandValidator());
