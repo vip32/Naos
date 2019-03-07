@@ -63,8 +63,13 @@
             this.database = /*await */this.client.Databases
                 .CreateDatabaseIfNotExistsAsync(database, throughput: throughPut).Result;
 
+            var containerSettings = new CosmosContainerSettings(container, partitionKeyPath: this.partitionKeyPath)
+            {
+                IndexingPolicy = new IndexingPolicy(new RangeIndex(DataType.String) { Precision = -1 })
+            };
+
             this.container = /*await*/this.database.Containers
-                .CreateContainerIfNotExistsAsync(container, this.partitionKeyPath, throughput: throughPut).Result;
+                .CreateContainerIfNotExistsAsync(containerSettings, throughput: throughPut).Result;
         }
 
         public async Task<T> GetByIdAsync(string id)
@@ -77,7 +82,7 @@
 
         public async Task<T> UpsertAsync(T entity)
         {
-            var response = await this.container.Items.UpsertItemAsync(
+            var response = await this.container.Items.CreateItemAsync(
                 this.partitionKeyValue,
                 entity).AnyContext();
                 //new CosmosItemRequestOptions
