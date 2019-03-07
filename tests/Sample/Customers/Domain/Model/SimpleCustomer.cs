@@ -3,9 +3,11 @@
     using System;
     using Naos.Core.Common;
     using Naos.Core.Domain;
+    using Newtonsoft.Json;
 
     public class SimpleCustomer : IDiscriminated
     {
+        [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
 
         public string CustomerNumber { get; set; }
