@@ -10,7 +10,6 @@ namespace Naos.Core.UnitTests.Domain.Repositories
     using MediatR;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
-    using Naos.Core.Common.Mapping;
     using Naos.Core.Domain;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Domain.Repositories.AutoMapper;

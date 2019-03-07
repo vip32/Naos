@@ -1,7 +1,5 @@
 ﻿namespace Naos.Core.Domain.Repositories
 {
-    using Naos.Core.Common.Mapping;
-
     /// <summary>
     /// Various options for the <see cref="IRepository{TEntity}"/>
     /// </summary>
@@ -13,13 +11,13 @@
         /// </summary>
         /// <param name="mapper">The mapper.</param>
         /// <param name="publishEvents">if set to <c>true</c> [publish events].</param>
-        public RepositoryOptions(IMapper mapper = null, bool publishEvents = true)
+        public RepositoryOptions(IEntityMapper mapper = null, bool publishEvents = true)
         {
             this.Mapper = mapper;
             this.PublishEvents = publishEvents;
         }
 
-        public IMapper Mapper { get; set; }
+        public IEntityMapper Mapper { get; set; }
 
         public bool PublishEvents { get; set; }
     }

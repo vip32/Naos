@@ -1,11 +1,11 @@
-﻿namespace Naos.Core.Common.Mapping
+﻿namespace Naos.Core.Domain.Repositories
 {
     using System.Linq.Expressions;
 
     /// <summary>
     /// Defines the interface to map objects
     /// </summary>
-    public interface IMapper
+    public interface IEntityMapper
     {
         /// <summary>
         /// Maps a source object to a destination object. Creates a new instance of <see cref="TDestination" />

@@ -50,7 +50,7 @@
         /// <returns></returns>
         public override async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            var result = this.context.Entities.Safe().Select(d => this.Options.Mapper.Map<TDestination>(d)); // work on destination objects
+            var result = this.context.Entities.Safe().Select(e => this.Options.Mapper.Map<TDestination>(e)); // work on destination objects
 
             foreach (var specification in specifications.Safe())
             {
@@ -73,7 +73,7 @@
                 return default;
             }
 
-            var result = this.context.Entities.Safe().Select(d => this.Options.Mapper.Map<TDestination>(d)) // work on destination objects
+            var result = this.context.Entities.Safe().Select(e => this.Options.Mapper.Map<TDestination>(e)) // work on destination objects
                 .SingleOrDefault(e => this.idSelector(e).Equals(id)); // TODO: use HasIdSpecification + MapExpression (makes idSelector obsolete)
             // return (await this.FindAllAsync(new HasIdSpecification<TEntity>(id))).FirstOrDefault();
 

@@ -2,9 +2,8 @@
 {
     using System.Linq.Expressions;
     using global::AutoMapper.Extensions.ExpressionMapping;
-    using Naos.Core.Common.Mapping;
 
-    public class AutoMapperEntityMapper : IMapper
+    public class AutoMapperEntityMapper : IEntityMapper
     {
         // TODO: an alternative mapper is FluentInjectorEntityMapper, or hand coded
         private readonly global::AutoMapper.IMapper mapper;
