@@ -2,13 +2,12 @@
 {
     using System;
     using System.Drawing;
-    using System.IO;
 
     public static class CommonConsole
     {
         public static void WriteNaosBitmapLogo()
         {
-            WriteImage("Naos.Core.Common.Resources.logo.png", 45);
+            WriteImage(45);
         }
 
         public static void WriteNaosTextLogo()
@@ -28,15 +27,12 @@
             Console.ForegroundColor = foregroundColor;
         }
 
-        public static void WriteImage(string resource, int sMax = 39)
+        public static void WriteImage(int sMax = 39)
         {
             var foregroundColor = Console.ForegroundColor;
             var backgroundColor = Console.BackgroundColor;
 
-            var str = new BinaryReader(
-                System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(resource)).BaseStream;
-            var bm = new Bitmap(Image.FromStream(str));
-            WriteImage(bm, sMax);
+            WriteImage(Logo.GetAsBitmap(), sMax);
 
             Console.ForegroundColor = foregroundColor;
             Console.BackgroundColor = backgroundColor;

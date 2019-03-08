@@ -5,7 +5,12 @@
 
     public static class LoggerExtensions
     {
-        public static ILogger LogJournal(this ILogger source, string type, string message, LogLevel level = LogLevel.Information, params object[] args)
+        public static ILogger LogJournal(
+            this ILogger source,
+            string type,
+            string message,
+            LogLevel level = LogLevel.Information,
+            params object[] args)
         {
             if (!message.IsNullOrEmpty())
             {

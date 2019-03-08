@@ -57,11 +57,70 @@
                 context.SetServiceName(serviceDescriptor.Name);
                 // TODO: log below should take blacklistpatterns in account (RequestResponseLoggingOptions)
                 //this.logger.LogInformation($"SERVICE http request  ({context.GetRequestId()}) service={serviceDescriptor.Name}, tags={string.Join("|", serviceDescriptor.Tags.NullToEmpty())}");
-                await this.next(context);
 
-                if (context.Request.Path == "/error")
+                //await this.next(context);
+
+                if (context.Request.Path == "/" || context.Request.Path.Equals("/index.html", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    await context.Response.WriteAsync(@"
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width' />
+    <title>Naos</title>
+    <base href='/' />
+    <link href='css/bootstrap/bootstrap.min.css' rel ='stylesheet' />
+    <link href='css/naos.css' rel ='stylesheet' />
+</head>
+<body>
+    <pre style='color: cyan;font-size: xx-small;'>
+    " + Logo.GetAsText() + @"
+    </pre>
+    <hr />
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href='/api'>about</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/logevents/dashboard'>logevents</a>
+</body>
+</html>
+");
+                }
+                else if (context.Request.Path.Equals("/css/naos.css", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    await context.Response.WriteAsync(@"
+body {
+    background-color: black;
+    color: white;
+    font-family: monospace;
+    margin: 1em 0px;
+    font-size: 12px;
+}
+a {
+    text-decoration: none;
+    color: gray;
+}
+a:link {
+}
+a:visited {
+}
+a:hover {
+    color: white;
+}
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #222222;
+    margin: 1em 0;
+    padding: 0;
+}
+");
+                }
+                else if (context.Request.Path == "/error")
                 {
                     throw new NaosException("forced exception");
+                }
+                else
+                {
+                    await this.next(context);
                 }
             }
         }

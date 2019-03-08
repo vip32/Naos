@@ -45,8 +45,10 @@
     <ProjectReference Include="..\..\src\App\App.csproj" />
     <ProjectReference Include="..\..\src\Commands\Commands.csproj" />
     <ProjectReference Include="..\..\src\Common.Mapping\Common.Mapping.csproj" />
+    <ProjectReference Include="..\..\src\Common.Serialization\Common.Serialization.csproj" />
     <ProjectReference Include="..\..\src\Common.Web\Common.Web.csproj" />
     <ProjectReference Include="..\..\src\Common\Common.csproj" />
+    <ProjectReference Include="..\..\src\Configuration.App.Web\Configuration.App.Web.csproj" />
     <ProjectReference Include="..\..\src\Configuration.App\Configuration.App.csproj" />
     <ProjectReference Include="..\..\src\Correlation.App\RequestCorrelation.App.csproj" />
     <ProjectReference Include="..\..\src\Domain.Repositories.AutoMapper\Domain.Repositories.AutoMapper.csproj" />
@@ -63,6 +65,7 @@
     <ProjectReference Include="..\..\src\Infrastructure.Azure.Cosmosdb\Infrastructure.Azure.CosmosDb.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure.Azure.KeyVault\Infrastructure.Azure.KeyVault.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure.Azure.ServiceBus\Infrastructure.Azure.ServiceBus.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure.Azure\Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure.EntityFramework\Infrastructure.EntityFramework.csproj" />
     <ProjectReference Include="..\..\src\JobScheduling.App\JobScheduling.App.csproj" />
     <ProjectReference Include="..\..\src\Messaging.App.Azure.SignalR\Messaging.App.Azure.SignalR.csproj" />

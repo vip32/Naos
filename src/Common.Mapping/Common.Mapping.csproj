@@ -6,4 +6,8 @@
     <RootNamespace>Naos.Core.Common.Mapping</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
+  </ItemGroup>
+
 </Project>

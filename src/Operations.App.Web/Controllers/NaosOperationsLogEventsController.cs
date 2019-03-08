@@ -73,40 +73,21 @@
         {
             this.HttpContext.Response.ContentType = "text/html";
             await this.HttpContext.Response.WriteAsync(@"
+<!DOCTYPE html>
 <html>
 <head>
-<link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.0.10/css/all.css' integrity='sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg' crossorigin='anonymous'>
-<meta charset='utf-8'>
-<style>
-    body {
-        background-color: black;
-        color: white;
-        font-family: monospace;
-        margin: 1em 0px;
-        font-size: 12px;
-    }
-    a {
-        text-decoration: none;
-        color: gray;
-    }
-    a:link {
-    }
-    a:visited {
-    }
-    a:hover {
-      color: white;
-    }
-    hr {
-        display: block;
-        height: 1px;
-        border: 0;
-        border-top: 1px solid #222222;
-        margin: 1em 0;
-        padding: 0;
-    }
-</style>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width' />
+    <title>Naos</title>
+    <base href='/' />
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.0.10/css/all.css' integrity='sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg' crossorigin='anonymous'>
+    <link href='css/naos.css' rel ='stylesheet' />
 </head>
-<body>");
+<body>
+    <pre style='color: cyan;font-size: xx-small;'>
+    " + Logo.GetAsText() + @"
+    </pre>
+    <hr />");
             try
             {
                 if (!this.filterContext.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Environment))))

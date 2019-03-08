@@ -67,6 +67,7 @@
                 Actions = new Dictionary<string, string>
                 {
                     // TODO: get these endpoints through DI for all active capabilities
+                    ["index"] = this.Url.AbsolutePath("index.html"),
                     ["logevents-ui"] = this.Url.AbsolutePath("api/operations/logevents/dashboard"),
                     ["swagger-ui"] = this.Url.AbsolutePath("swagger/index.html"),
                     ["swagger"] = this.Url.AbsolutePath("swagger/v1/swagger.json"),
