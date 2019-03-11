@@ -37,12 +37,14 @@ Marketing
 
 TODO:
 
-
 NetCore 3.0 upgrade (preview)
 https://www.talkingdotnet.com/asp-net-core-3-0-app-with-net-core-3-preview-2-and-visual-studio-2019/
 
-Dashboard with razor class library (operations logevents) OR razor components [NO > BLAZOR or razor components]
+gRPC based ServiceDiscovery https://github.com/damienbod/Secure_gRpc (registry + service)
+
+Dashboard (operations logevents) with razor components [NO > BLAZOR or razor pages] > need razor comp class lib
 https://www.learnrazorpages.com/advanced/razor-class-library
+design inspiration https://hackernoon.com/microsoft-orleans-dashboard-update-cpu-memory-stats-706daed82cf8
 
 Repositories
 Use OptionsBuilder instead of too many ctor arguments
