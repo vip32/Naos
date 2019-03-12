@@ -12,8 +12,9 @@
             EnsureArg.IsNotNullOrEmpty(name);
 
             return source
-                .UseInMemoryDatabase(name);
-                //.EnableSensitiveDataLogging();
+                .UseInMemoryDatabase(name)
+                //.EnableSensitiveDataLogging()
+                .EnableDetailedErrors();
         }
     }
 }
