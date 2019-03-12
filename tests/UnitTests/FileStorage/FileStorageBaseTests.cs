@@ -14,7 +14,7 @@
     using NSubstitute;
     using Xunit;
 
-    public class FileStorageTestsBase
+    public class FileStorageBaseTests
     {
         public virtual async Task CanGetEmptyFileListOnMissingDirectoryAsync()
         {

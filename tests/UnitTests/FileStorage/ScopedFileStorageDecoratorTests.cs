@@ -8,7 +8,7 @@
     using NSubstitute;
     using Xunit;
 
-    public class ScopedFileStorageDecoratorTests : FileStorageTestsBase
+    public class ScopedFileStorageDecoratorTests : FileStorageBaseTests
     {
         [Fact]
         public override Task CanGetEmptyFileListOnMissingDirectoryAsync()

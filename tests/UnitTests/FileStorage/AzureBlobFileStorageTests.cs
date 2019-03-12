@@ -7,7 +7,7 @@
     using NSubstitute;
     using Xunit;
 
-    public class AzureBlobFileStorageTests : FileStorageTestsBase
+    public class AzureBlobFileStorageTests : FileStorageBaseTests
     {
         [Fact]
         public override Task CanGetEmptyFileListOnMissingDirectoryAsync()
