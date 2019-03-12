@@ -13,7 +13,7 @@
         {
             if (source == null)
             {
-                return default(JToken);
+                return default;
             }
 
             if (!useContractResolver)
@@ -44,7 +44,7 @@
         {
             if (source == null)
             {
-                return default(T);
+                return default;
             }
 
             return source.ToObject<T>();
@@ -68,9 +68,9 @@
         /// <returns></returns>
         public static T GetValueByPath<T>(this JToken source, string path)
         {
-            if (path.IsNullOrEmpty())
+            if (source.IsNullOrEmpty() || path.IsNullOrEmpty())
             {
-                return default(T);
+                return default;
             }
 
             if (path.StartsWith("jsonpath:", StringComparison.OrdinalIgnoreCase))
@@ -85,7 +85,7 @@
             catch (Exception)
             {
                 // argumentnullexception, jsonexception
-                return default(T);
+                return default;
             }
         }
 
@@ -100,7 +100,7 @@
         {
             if (path.IsNullOrEmpty())
             {
-                return default(IEnumerable<T>);
+                return default;
             }
 
             if (path.StartsWith("jsonpath:", StringComparison.OrdinalIgnoreCase))
@@ -116,7 +116,7 @@
             catch (Exception)
             {
                 // argumentnullexception, jsonexception
-                return default(IEnumerable<T>);
+                return default;
             }
         }
 
@@ -155,7 +155,7 @@
             }
         }
 
-        public static string GetStringPropertyByToken(this JToken source, string path)
+        public static string GetStringPropertyByPath(this JToken source, string path)
         {
             try
             {
@@ -167,7 +167,7 @@
             }
         }
 
-        public static int? GetIntPropertyByToken(this JToken source, string path)
+        public static int? GetIntPropertyByPath(this JToken source, string path)
         {
             try
             {
@@ -181,7 +181,7 @@
             }
         }
 
-        public static double? GetDoublePropertyByToken(this JToken source, string path)
+        public static double? GetDoublePropertyByPath(this JToken source, string path)
         {
             try
             {
@@ -195,7 +195,7 @@
             }
         }
 
-        public static decimal? GetDecimalPropertyByToken(this JToken source, string path, IFormatProvider provider = null)
+        public static decimal? GetDecimalPropertyByPath(this JToken source, string path, IFormatProvider provider = null)
         {
             try
             {
@@ -208,7 +208,7 @@
             }
         }
 
-        public static DateTime? GetDateTimePropertyByToken(this JToken source, string path, IFormatProvider provider = null)
+        public static DateTime? GetDateTimePropertyByPath(this JToken source, string path, IFormatProvider provider = null)
         {
             try
             {
@@ -221,7 +221,7 @@
             }
         }
 
-        public static bool? GetBoolPropertyByToken(this JToken source, string path)
+        public static bool? GetBoolPropertyByPath(this JToken source, string path)
         {
             try
             {
@@ -237,31 +237,26 @@
             }
         }
 
-        public static string AddOrUpdatePath<T>(string json, string path, T newValue)
+        public static JToken AddOrUpdateByPath<T>(this JToken source, string path, T newValue)
         {
-            return JToken.Parse(json).AddOrUpdatePath(path, newValue).ToString();
-        }
-
-        public static JToken AddOrUpdatePath<T>(this JToken source, string path, T newValue)
-        {
-            if (source == null || path == null)
+            if (source.IsNullOrEmpty() || path.IsNullOrEmpty())
             {
                 return source;
             }
 
-            string[] tokenPaths = path.Split('.');
+            string[] pathParts = path.Split('.');
 
             // make sure all tokens exist
             var tokenPointer = source;
-            foreach (var tokenPath in tokenPaths)
+            foreach (var pathPart in pathParts)
             {
-                if (tokenPointer.SelectToken(tokenPath) == null)
+                if (tokenPointer.SelectToken(pathPart) == null)
                 {
                     var obj = (JObject)tokenPointer;
-                    if (tokenPath.Contains('['))
+                    if (pathPart.Contains('['))
                     {
-                        var replacer = tokenPath.Substring(tokenPath.IndexOf('['));
-                        var arrayPropName = tokenPath.Replace(replacer, string.Empty);
+                        var replacer = pathPart.Substring(pathPart.IndexOf('['));
+                        var arrayPropName = pathPart.Replace(replacer, string.Empty);
 
                         if (obj.SelectToken(arrayPropName) == null)
                         {
@@ -275,18 +270,17 @@
                     }
                     else
                     {
-                        obj.Add(tokenPath, new JObject());
+                        obj.Add(pathPart, new JObject());
                     }
                 }
 
-                tokenPointer = tokenPointer.SelectToken(tokenPath);
+                tokenPointer = tokenPointer.SelectToken(pathPart);
             }
 
             // add or update tokens
             foreach (var value in source.SelectTokens(path).ToList())
             {
                 var token = !newValue.IsDefault() ? JToken.FromObject(newValue) : null;
-
                 if (value == source)
                 {
                     source = token;
@@ -295,6 +289,64 @@
                 {
                     value.Replace(token);
                 }
+            }
+
+            return source;
+        }
+
+        public static JToken RemovePropertyByPath(this JToken source, string path)
+        {
+            if (source.IsNullOrEmpty() || path.IsNullOrEmpty() || !path.ContainsAny(new[] { "." }))
+            {
+                return source;
+            }
+
+            var propertyName = path.SubstringFromLast(".");
+            JToken target;
+            try
+            {
+                target = source.SelectToken(path.SubstringTillLast("."));
+            }
+            catch (Exception)
+            {
+                return source;
+            }
+
+            if (!target.IsNullOrEmpty() && !propertyName.IsNullOrEmpty())
+            {
+                target.RemoveProperty(propertyName);
+            }
+
+            return source;
+        }
+
+        public static JToken RemoveProperty(this JToken source, string propertyName)
+        {
+            return source.RemoveProperties(new[] { propertyName });
+        }
+
+        public static JToken RemoveProperties(this JToken source, string[] propertyNames)
+        {
+            var container = source as JContainer;
+            if (container == null || propertyNames.IsNullOrEmpty())
+            {
+                return source;
+            }
+
+            var tokens = new List<JToken>();
+            foreach (JToken token in container.Children())
+            {
+                if (token is JProperty p && propertyNames.Contains(p.Name))
+                {
+                    tokens.Add(token);
+                }
+
+                token.RemoveProperties(propertyNames);
+            }
+
+            foreach (JToken token in tokens)
+            {
+                token.Remove();
             }
 
             return source;
