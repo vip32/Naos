@@ -58,17 +58,37 @@
         {
             var doc = JToken.Parse(this.json);
 
-            Assert.Equal("Hero", doc.GetStringPropertyByToken("myCats[0].name"));
-            Assert.Equal("Hero", doc.GetStringPropertyByToken("myCats[0].name"));
-            Assert.Null(doc.GetStringPropertyByToken("myCats[0].unknown"));
-            Assert.Equal(5, doc.GetIntPropertyByToken("myCats[0].age"));
-            Assert.Null(doc.GetIntPropertyByToken("unknown"));
-            Assert.Equal(true, doc.GetBoolPropertyByToken("myCats[0].alive"));
-            Assert.Null(doc.GetBoolPropertyByToken("unknown"));
-            Assert.Equal(true, doc.GetBoolPropertyByToken("myCats[0].alive"));
-            Assert.Equal(true, doc.GetBoolPropertyByToken("myCats[0].alive2"));
-            Assert.Equal(true, doc.GetBoolPropertyByToken("myCats[0].alive3"));
-            Assert.Equal(true, doc.GetBoolPropertyByToken("myCats[0].alive4"));
+            Assert.Equal("Hero", doc.GetStringPropertyByPath("myCats[0].name"));
+            Assert.Equal("Hero", doc.GetStringPropertyByPath("myCats[0].name"));
+            Assert.Null(doc.GetStringPropertyByPath("myCats[0].unknown"));
+            Assert.Equal(5, doc.GetIntPropertyByPath("myCats[0].age"));
+            Assert.Null(doc.GetIntPropertyByPath("unknown"));
+            Assert.Equal(true, doc.GetBoolPropertyByPath("myCats[0].alive"));
+            Assert.Null(doc.GetBoolPropertyByPath("unknown"));
+            Assert.Equal(true, doc.GetBoolPropertyByPath("myCats[0].alive"));
+            Assert.Equal(true, doc.GetBoolPropertyByPath("myCats[0].alive2"));
+            Assert.Equal(true, doc.GetBoolPropertyByPath("myCats[0].alive3"));
+            Assert.Equal(true, doc.GetBoolPropertyByPath("myCats[0].alive4"));
+        }
+
+        [Fact]
+        public void Various_RemoveProperty()
+        {
+            var doc = JToken.Parse(this.json);
+
+            Assert.Equal("Hero", doc.GetStringPropertyByPath("myCats[0].name"));
+            doc.RemovePropertyByPath("myCats[0].name");
+            Assert.Null(doc.GetValueByPath<string>("myCats[0].name"));
+
+            doc.RemovePropertyByPath("myCats[0].unknown");
+            Assert.Null(doc.GetValueByPath<string>("myCats[0].unknown"));
+
+            Assert.Equal("5", doc.GetStringPropertyByPath("myCats[0].agestring"));
+            doc.RemoveProperty("agestring");
+            Assert.Null(doc.GetValueByPath<string>("myCats[0].agestring"));
+
+            doc.RemoveProperty("unknown2");
+            Assert.Null(doc.GetValueByPath<string>("myCats[0].unknown2"));
         }
 
         [Fact]
@@ -85,8 +105,8 @@
             doc.SetValueByPath("myCats[0].newint", 11);
             doc.SetValueByPath("myCats[1].newprop", "test2");
             doc.SetValueByPath("myCats[1].newint", 12);
-            doc.AddOrUpdatePath<string>("myCats[1].name", null);
-            doc.AddOrUpdatePath<int?>("myCats[1].age", null);
+            doc.AddOrUpdateByPath<string>("myCats[1].name", null);
+            doc.AddOrUpdateByPath<int?>("myCats[1].age", null);
 
             Assert.Equal("NewHero", doc.GetValueByPath<string>("myCats[0].name"));
             Assert.Equal("NewHero", doc.GetValueByPath<string>("jsonpath:myCats[0].name"));
