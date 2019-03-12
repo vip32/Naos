@@ -262,7 +262,7 @@
                         else
                         {
                             this.logger.LogWarning("{LogKey:l} process failed, message handler could not be created. is the handler registered in the service provider? (name={MessageName}, service={Service}, id={MessageId}, origin={MessageOrigin})",
-                                LogEventKeys.Messaging, serviceBusMessage.Label, this.messageScope, jsonMessage.AsJToken().GetStringPropertyByToken("id"), message.Origin);
+                                LogEventKeys.Messaging, serviceBusMessage.Label, this.messageScope, jsonMessage.AsJToken().GetStringPropertyByPath("id"), message.Origin);
                         }
                     }
                 }
