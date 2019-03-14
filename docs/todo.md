@@ -165,6 +165,7 @@ api problem details https://www.strathweb.com/2018/07/centralized-exception-hand
 performance test websurge https://github.com/edjCase/JsonRpc/blob/master/test/PerformanceTests/BasicTests.websurge
 miniprofiler https://miniprofiler.com/dotnet/
 miniprofiler + swagger ui https://stackoverflow.com/questions/49150492/wire-up-miniprofiler-to-asp-net-core-web-api-swagger
+swagger examples https://github.com/mattfrear/Swashbuckle.Examples
 https://community.miniprofiler.com/t/can-i-use-mini-profiler-for-asp-net-web-api-and-have-results-still-seen-on-url/365/2
 service healthcheck https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks
 https://github.com/Xabaril/BeatPulse

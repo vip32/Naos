@@ -1,13 +1,10 @@
 ﻿namespace Naos.Sample.IntegrationTests.Customers.Domain
 {
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
     using Bogus;
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Core.Common;
-    using Naos.Core.Domain.Repositories;
-    using Naos.Core.Domain.Specifications;
     using Naos.Core.Infrastructure.Azure.CosmosDb;
     using Naos.Sample.Customers.Domain;
     using Shouldly;
