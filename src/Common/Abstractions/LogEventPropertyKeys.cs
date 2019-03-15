@@ -26,5 +26,7 @@
         public const string TrackInboundResponse = "ns_trkirs";
         public const string TrackOutboundRequest = "ns_trkorq";
         public const string TrackOutboundResponse = "ns_trkors";
+        public const string TrackEnqueue = "ns_trkenq";
+        public const string TrackDequeue = "ns_trkdeq";
     }
 }

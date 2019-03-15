@@ -17,5 +17,6 @@
         public const string Operations = "OPRTNS";
         public const string Authentication = "AUTHNT";
         public const string FileStorage = "FILSTR";
+        public const string Queueing = "QUEUNG";
     }
 }
