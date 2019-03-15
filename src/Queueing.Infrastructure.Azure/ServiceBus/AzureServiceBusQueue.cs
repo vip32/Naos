@@ -45,8 +45,6 @@
         {
         }
 
-        public ISerializer Serializer { get; }
-
         private bool QueueIsCreated => this.queueReceiver != null && this.queueSender != null;
 
         public override async Task<string> EnqueueAsync(T data)

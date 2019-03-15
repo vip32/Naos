@@ -5,7 +5,6 @@
     using Microsoft.Extensions.Logging;
     using Microsoft.WindowsAzure.Storage.RetryPolicies;
     using Naos.Core.Common;
-    using Naos.Core.Queueing;
     using Naos.Core.Queueing.Domain;
     using Naos.Core.Queueing.Infrastructure.Azure;
     using NSubstitute;

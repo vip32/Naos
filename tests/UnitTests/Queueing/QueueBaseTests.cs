@@ -4,7 +4,6 @@
     using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
-    using Naos.Core.Queueing;
     using Naos.Core.Queueing.Domain;
     using Xunit;
 

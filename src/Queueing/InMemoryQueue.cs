@@ -8,7 +8,6 @@
     using EnsureThat;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
-    using Naos.Core.Common.Serialization;
     using Naos.Core.Queueing.Domain;
 
     public class InMemoryQueue<T> : QueueBase<T, InMemoryQueueOptions>
@@ -38,8 +37,6 @@
             : this(config(new InMemoryQueueOptionsBuilder()).Build())
         {
         }
-
-        public ISerializer Serializer { get; }
 
         public override async Task<string> EnqueueAsync(T data)
         {

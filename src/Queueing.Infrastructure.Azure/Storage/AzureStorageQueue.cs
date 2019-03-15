@@ -50,8 +50,6 @@
         {
         }
 
-        public ISerializer Serializer { get; }
-
         public override async Task<string> EnqueueAsync(T data)
         {
             EnsureArg.IsNotNull(data, nameof(data));
