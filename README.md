@@ -242,6 +242,7 @@ key vault keys: (or use the json configuration above)
   - InMemory Queue
   - Azure Storage Queue
   - Azure ServiceBus
+- Decorators
 
 Cross Service usage:
 ![inter service](docs/Naos%20–%20Queueing.png)
