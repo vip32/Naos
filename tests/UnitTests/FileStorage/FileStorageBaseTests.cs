@@ -182,18 +182,18 @@
             string readmeFile = this.GetTestFilePath();
             using (storage)
             {
-                Assert.False(await storage.ExistsAsync("readme.txt"));
+                Assert.False(await storage.ExistsAsync("test.txt"));
 
                 using (var stream = /*new NonSeekableStream(*/File.Open(readmeFile, FileMode.Open, FileAccess.Read))/*)*/
                 {
-                    bool result = await storage.SaveFileAsync("readme.txt", stream);
+                    bool result = await storage.SaveFileAsync("test.txt", stream);
                     Assert.True(result);
                 }
 
                 Assert.Single(await Core.FileStorage.Domain.Extensions.GetFileInformationsAsync(storage));
-                Assert.True(await storage.ExistsAsync("readme.txt"));
+                Assert.True(await storage.ExistsAsync("test.txt"));
 
-                using (var stream = await storage.GetFileStreamAsync("readme.txt"))
+                using (var stream = await storage.GetFileStreamAsync("test.txt"))
                 {
                     string result = await new StreamReader(stream).ReadToEndAsync();
                     Assert.Equal(File.ReadAllText(readmeFile), result);
