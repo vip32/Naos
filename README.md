@@ -9,9 +9,11 @@
 <p align="center"><h1>A mildly opiniated modern cloud service architecture blueprint & reference implementation</h1></p>
 
 # Dev stack
+
 C#, .Net Core 2.x, EnsureThat, Serilog, Mediator, FluentValidation, AutoMapper, xUnit, Shouldly, NSubstitute
 
 ## Architectural concepts
+
 - architectural style: hexagonal/onion
 - [Domain Drive Design](https://martinfowler.com/tags/domain%20driven%20design.html)
 - pattern: Domain Events
@@ -27,32 +29,38 @@ C#, .Net Core 2.x, EnsureThat, Serilog, Mediator, FluentValidation, AutoMapper, 
 - pattern: Messaging (servicebus, signalr, filesystem, rabbitmq)
 
 #### Service API
-- Style: 
+
+- Style:
   - Pragmatic REST: resources, http verbs, crud + actions/commands
   - RPC: commands?
-- Patterns: 
+- Patterns:
+
   - Stateless: clients maintain state [Controller]
   - Facade: the API acts as a facade, domain logic exists beyond it [Controller]
   - Proxy: wrapper for external entities (+validation, +transformation) [ServiceDiscoveryClient]
-  
+
 #### Messaging
-- Patterns: 
+
+- Patterns:
   - Competing workers,
   - Fanout
 
-
 # Getting started
+
 ## Sample
+
 [^](SAMPLE.md)
 
 ## Secrets Setup
+
 - Create a key vault [^](https://docs.microsoft.com/en-us/azure/key-vault/key-vault-get-started)
 - Register an application with Azure Active Directory [^](https://docs.microsoft.com/en-us/azure/key-vault/key-vault-get-started)
 
 ##### Local setup
+
 - (1) Either Store application clientId (ApplicationId) and clientSecret (ApplicationKey) in environment variables
-  - `naos__secrets__vault__name=[VAULT_NAME]` 
-  - `naos__secrets__vault__clientId=[AAD_APPLICATION_ID]` 
+  - `naos__secrets__vault__name=[VAULT_NAME]`
+  - `naos__secrets__vault__clientId=[AAD_APPLICATION_ID]`
   - `naos__secrets__vault__clientSecret=[AAD_APPLICATION_KEY]`
 - (2) Or store application clientId (ApplicationId) and clientSecret (ApplicationKey) in an user secrets files
 - (3) Or store the application clientId (ApplicationId) and clientSecret (ApplicationKey) in the appsettings file
@@ -60,8 +68,8 @@ C#, .Net Core 2.x, EnsureThat, Serilog, Mediator, FluentValidation, AutoMapper, 
 
 optionally use a multitude of the usual [netcore configuration providers](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-2.1#providers) to store the settings
 
-
 (2) When using the [usersecrets](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets) configuration provider use the following json file:
+
 ```
 {
   "naos:secrets:vault:name": "[VAULT_NAME]",
@@ -69,11 +77,11 @@ optionally use a multitude of the usual [netcore configuration providers](https:
   "naos:secrets:vault:clientSecret": "[AAD_APPLICATION_KEY]",
 }
 ```
-Place the file in the following location. 
-`
-C:\Users\[USERNAME]\AppData\Roaming\Microsoft\UserSecrets\[SECRETSID]\secrets.json
-`
+
+Place the file in the following location.
+`C:\Users\[USERNAME]\AppData\Roaming\Microsoft\UserSecrets\[SECRETSID]\secrets.json`
 The [SECRETSID] should be a guid and must be configured in the appsettings file.
+
 ```
 {
   "naos": {
@@ -85,6 +93,7 @@ The [SECRETSID] should be a guid and must be configured in the appsettings file.
 ```
 
 (3) When using the [file](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-2.1#file-configuration-provider) configuration provider:
+
 ```
 {
   "naos": {
@@ -100,20 +109,24 @@ The [SECRETSID] should be a guid and must be configured in the appsettings file.
 ```
 
 ##### Azure Setup
-- Store application clientId (ApplicationId) and clientSecret (ApplicationKey) in the App Service application settings (Environment): 
-  - `naos__secrets__vault__name=[VAULT_NAME]` 
-  - `naos__secrets__vault__clientId=[AAD_APPLICATION_ID]` 
+
+- Store application clientId (ApplicationId) and clientSecret (ApplicationKey) in the App Service application settings (Environment):
+  - `naos__secrets__vault__name=[VAULT_NAME]`
+  - `naos__secrets__vault__clientId=[AAD_APPLICATION_ID]`
   - `naos__secrets__vault__clientSecret=[AAD_APPLICATION_KEY]`
 
 ## Service Setup
 
 #### Dependencies
+
 - nugets ?? (meta packages)
 
 #### Configuration
+
 TODO (appsettings)
 
 #### Bootstrapping
+
 - Program.cs
 
 ```
@@ -133,32 +146,32 @@ TODO (appsettings)
 ```
 
 - Startup.cs
+
 ```
 TODO
 ```
-
-
-
 
 # Service Features Overview
 
 ![overview0](docs/Naos%20–%20Architecture%20Overview.png)
 
 # Service External View
-A service is a standalone, independently deployable software component that implements useful functionality (seperated by [Bounded Context](https://martinfowler.com/bliki/BoundedContext.html)). 
+
+A service is a standalone, independently deployable software component that implements useful functionality (seperated by [Bounded Context](https://martinfowler.com/bliki/BoundedContext.html)).
 The external view of the service looks like this:
 ![overview](docs/Naos%20–%20Service%20External%20View.png)
 The service has an API (inbound) thats provides its consumers access to its functionality. This API can consist API of the normal REST interface, or even RPC style if needed.
-Besides the usual API Commands and Queries can be used. A command performs actions and updates data. A query retrieves data. 
+Besides the usual API Commands and Queries can be used. A command performs actions and updates data. A query retrieves data.
+
 <p>Also the service itself has some ways to interact with other services (outbound).
 By using a ServiceClient (wiht ServiceDiscovery) other services can be consumed (Rest/Rpc)
 A service can subscribe to specific messages, but can also publish messages byitself.
 </p>
 
-A service's (inboud) API encapsulates its internal implementation. The service cannot be used in any other way, this API enforces the 
+A service's (inboud) API encapsulates its internal implementation. The service cannot be used in any other way, this API enforces the
 application's modularity.
 
-# Microservice 
+# Microservice
 
 ### Benefits
 
@@ -172,7 +185,7 @@ application's modularity.
 
 - High cohesion
 - Autonomous
-- Domain centric 
+- Domain centric
 - Resiliency
 - Observable
 - Automation
@@ -212,6 +225,7 @@ done.
 - `New-AzureRmRoleAssignment -ServicePrincipalName $sp.ApplicationId -ResourceGroupName RESOURCE_GROUP -ResourceName RESOURCE_NAME -RoleDefinitionName Contributor -ResourceType Microsoft.ServiceBus/namespaces`
 
 key vault keys: (or use the json configuration above)
+
 - `development-naos--messaging--serviceBus--subscriptionId`
 - `development-naos--messaging--serviceBus--tenantId`
 - `development-naos--messaging--serviceBus--connectionString`
@@ -220,31 +234,50 @@ key vault keys: (or use the json configuration above)
 - `development-naos--messaging--serviceBus--clientId`
 - `development-naos--messaging--serviceBus--clientSecret`
 
+# Queueing
+
+- Enqueue/Dequeue
+- Queue Processing
+- Implementations
+  - InMemory Queue
+  - Azure Storage Queue
+  - Azure ServiceBus
+
+Cross Service usage:
+![inter service](docs/Naos%20–%20Queueing.png)
+
+Inside Service usage:
+![inside service](docs/Naos%20–%20Queueing2.png)
+
 # Domain
 
 - Model
+
   - [Aggregate](https://martinfowler.com/bliki/DDD_Aggregate.html) [^](https://deviq.com/aggregate-pattern/)
     <p>An aggregate is a collection of one or more related entities (and possibly value objects). Each aggregate has a single root entity, referred to as the aggregate root. The aggregate root is responsible for controlling access to all of the members of its aggregate. It’s perfectly acceptable to single-entity aggregates, in which case that entity is itself the root of its aggregate. In addition to controlling access, the aggregate root is also responsible for ensuring the consistency of the aggregate.</p>
     <p>When applying the aggregate pattern, it is also important that persistence operations apply only at the aggregate root level. Thus, the aggregate root must be an entity, not a value object, so that it can be persisted to and from a data store using its ID</P
-  - [Domain Entity](https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/microservice-domain-model) [^](https://deviq.com/entity/)  
+  - [Domain Entity](https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/microservice-domain-model) [^](https://deviq.com/entity/)
+
     <p>An Entity is an object that has some intrinsic identity, apart from the rest of its state. Even if its properties are the same as another instance of the same type, it remains distinct because of its unique identity.</p>
-    
-    ![domainentity](https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/media/image9.png) 
+
+    ![domainentity](https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/media/image9.png)
+
   - [ValueObject](https://martinfowler.com/bliki/ValueObject.html) [^](https://deviq.com/value-object/)
-    <p>A Value Object is an immutable type that is distinguishable only by the state of its properties. That is, unlike an Entity, which has a unique identifier and remains distinct even if its properties are otherwise identical, two Value Objects with the exact same properties can be considered equal.</p> 
+    <p>A Value Object is an immutable type that is distinguishable only by the state of its properties. That is, unlike an Entity, which has a unique identifier and remains distinct even if its properties are otherwise identical, two Value Objects with the exact same properties can be considered equal.</p>
   - Specification [^](https://deviq.com/specification-pattern/)
     <p>A solution to the problem of where to place querying logic is to use a Specification. The Specification design pattern describes a query in an object.
     Repository methods (FindAll) will accept an ISpecification and will be able to produce the expected result given the specification.
     </p>
-- Domain Events 
+
+- Domain Events
   - Handlers
 
 # Domain Repository
 
 <p>
-Provides an abstraction of data, so that your service can work with a simple abstraction that has an interface approximating that of a collection. 
-Adding, removing, updating, and selecting items from this collection is done through a series of straightforward methods (FindAll, FindOne, Upsert), 
-without the need to deal with database/storage concerns like connections, commands, cursors, or readers. Using this pattern can help achieve loose coupling and 
+Provides an abstraction of data, so that your service can work with a simple abstraction that has an interface approximating that of a collection.
+Adding, removing, updating, and selecting items from this collection is done through a series of straightforward methods (FindAll, FindOne, Upsert),
+without the need to deal with database/storage concerns like connections, commands, cursors, or readers. Using this pattern can help achieve loose coupling and
 can keep domain objects persistence ignorant.
 </p>
 
@@ -279,11 +312,13 @@ can keep domain objects persistence ignorant.
 - Skip/Take
 
 some example filtered requests:
+
 ```
 GET https://localhost:5001/api/countries?q=name=Belgium&order=name&take=1
 ```
 
 # ServiceExceptions
+
 - Middleware: ConfigureServices() + service.AddNaos().AddServiceExceptions()
 - ProblemDetails [^](https://tools.ietf.org/html/rfc7807)
 - ResponseHandlers (based on specific exceptions)
@@ -292,9 +327,9 @@ GET https://localhost:5001/api/countries?q=name=Belgium&order=name&take=1
   - ClientFormatException handled by FluentValidationExceptionResponseHandler with ValidationProblemDetails response
   - BadHttpRequestException handled by KestrelExceptionResponseHandler with ProblemDetails response
 - Create your own handler by implementing Naos.Core.Commands.Exceptions.Web.IExceptionResponseHandler
-    
 
 example http response when requesting an invalid criteria (or ordering) name:
+
 ```
 GET https://localhost:5001/api/countries?q=nameX=Belgium&order=name&take=1
 {
@@ -357,7 +392,8 @@ The same registries as Client-side can be used in the router.
     - Rolling
   - Azure DiagnosticsLogStream
   - Azure ApplicationInsights
-  - Azure LogAnalytics 
+  - Azure LogAnalytics
+
 ```
 development-naos--operations--logging--azureLogAnalytics--apiAuthentication--clientId
 development-naos--operations--logging--azureLogAnalytics--apiAuthentication--clientSecret
@@ -368,13 +404,14 @@ development-naos--operations--logging--azureLogAnalytics--subscriptionId
 development-naos--operations--logging--azureLogAnalytics--workspaceId
 development-naos--operations--logging--azureLogAnalytics--workspaceName
 ```
+
 - Journal
 - Dashboard
 
 ### operations setup (Azure Log Analytics)
+
 - logging setup: workspaceId, authenticationKey
 - apiAuthentication identity: https://dev.loganalytics.io/documentation/1-Tutorials/ARM-API
-
 
 # JobScheduling
 
@@ -384,13 +421,11 @@ development-naos--operations--logging--azureLogAnalytics--workspaceName
 - Schedules
   - Cron
 
-
 # FileStorage
 
 - Folder
 - Azure Storage
 - InMemory
 - SSH
-
 
 # (Workflow)
