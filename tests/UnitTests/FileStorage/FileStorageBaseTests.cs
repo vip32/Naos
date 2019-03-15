@@ -132,15 +132,18 @@
 
             using (storage)
             {
-                await storage.SaveFileContentsAsync("test.txt", "test");
+                var path1 = $"test-{Guid.NewGuid().ToString("N").Substring(10)}.txt";
+                var path2 = $"test-{Guid.NewGuid().ToString("N").Substring(10)}.txt";
+
+                await storage.SaveFileContentsAsync(path1, "test");
                 var file = (await Core.FileStorage.Domain.Extensions.GetFileInformationsAsync(storage)).Single();
                 Assert.NotNull(file);
-                Assert.Equal("test.txt", file.Path);
-                string content = await storage.GetFileContentsAsync("test.txt");
+                Assert.Equal(path1, file.Path);
+                string content = await storage.GetFileContentsAsync(path1);
                 Assert.Equal("test", content);
-                await storage.RenameFileAsync("test.txt", "new.txt");
-                Assert.Contains(await Core.FileStorage.Domain.Extensions.GetFileInformationsAsync(storage), f => f.Path == "new.txt");
-                await storage.DeleteFileAsync("new.txt");
+                await storage.RenameFileAsync(path1, path2);
+                Assert.Contains(await Core.FileStorage.Domain.Extensions.GetFileInformationsAsync(storage), f => f.Path == path2);
+                await storage.DeleteFileAsync(path2);
                 Assert.Empty(await Core.FileStorage.Domain.Extensions.GetFileInformationsAsync(storage));
             }
         }
@@ -157,13 +160,16 @@
 
             using (storage)
             {
-                Assert.True(await storage.SaveFileContentsAsync("test.txt", "test"));
-                Assert.True(await storage.RenameFileAsync("test.txt", @"archive\new.txt"));
+                var path1 = $"test-{Guid.NewGuid().ToString("N").Substring(10)}.txt";
+                var path2 = $"test-{Guid.NewGuid().ToString("N").Substring(10)}.txt";
+
+                Assert.True(await storage.SaveFileContentsAsync(path1, "test"));
+                Assert.True(await storage.RenameFileAsync(path1, @"archive\new.txt"));
                 Assert.Equal("test", await storage.GetFileContentsAsync(@"archive\new.txt"));
                 Assert.Single(await Core.FileStorage.Domain.Extensions.GetFileInformationsAsync(storage));
 
-                Assert.True(await storage.SaveFileContentsAsync("test2.txt", "test2"));
-                Assert.True(await storage.RenameFileAsync("test2.txt", @"archive\new.txt"));
+                Assert.True(await storage.SaveFileContentsAsync(path2, "test2"));
+                Assert.True(await storage.RenameFileAsync(path2, @"archive\new.txt"));
                 Assert.Equal("test2", await storage.GetFileContentsAsync(@"archive\new.txt"));
                 Assert.Single(await Core.FileStorage.Domain.Extensions.GetFileInformationsAsync(storage));
             }
@@ -182,18 +188,19 @@
             string readmeFile = this.GetTestFilePath();
             using (storage)
             {
-                Assert.False(await storage.ExistsAsync("test.txt"));
+                var path = $"test-{Guid.NewGuid().ToString("N").Substring(10)}.txt";
+                Assert.False(await storage.ExistsAsync(path));
 
                 using (var stream = /*new NonSeekableStream(*/File.Open(readmeFile, FileMode.Open, FileAccess.Read))/*)*/
                 {
-                    bool result = await storage.SaveFileAsync("test.txt", stream);
+                    bool result = await storage.SaveFileAsync(path, stream);
                     Assert.True(result);
                 }
 
                 Assert.Single(await Core.FileStorage.Domain.Extensions.GetFileInformationsAsync(storage));
-                Assert.True(await storage.ExistsAsync("test.txt"));
+                Assert.True(await storage.ExistsAsync(path));
 
-                using (var stream = await storage.GetFileStreamAsync("test.txt"))
+                using (var stream = await storage.GetFileStreamAsync(path))
                 {
                     string result = await new StreamReader(stream).ReadToEndAsync();
                     Assert.Equal(File.ReadAllText(readmeFile), result);
@@ -462,122 +469,6 @@
         protected virtual IFileStorage GetStorage()
         {
             return null;
-        }
-    }
-
-#pragma warning disable SA1402 // File may only contain a single class
-    public class PostInfo
-#pragma warning restore SA1402 // File may only contain a single class
-    {
-        public int ApiVersion { get; set; }
-
-        public string CharSet { get; set; }
-
-        public string ContentEncoding { get; set; }
-
-        public byte[] Data { get; set; }
-
-        public string IpAddress { get; set; }
-
-        public string MediaType { get; set; }
-
-        public string ProjectId { get; set; }
-
-        public string UserAgent { get; set; }
-    }
-
-#pragma warning disable SA1402 // File may only contain a single class
-#pragma warning disable SA1204 // Static elements must appear before instance elements
-    public static class StorageExtensions
-#pragma warning restore SA1204 // Static elements must appear before instance elements
-#pragma warning restore SA1402 // File may only contain a single class
-    {
-        public static async Task<PostInfo> GetEventPostAndSetActiveAsync(this IFileStorage storage, string path, ILogger logger = null)
-        {
-            PostInfo eventPostInfo = null;
-            try
-            {
-                eventPostInfo = await storage.GetFileObjectAsync<PostInfo>(path);
-                if (eventPostInfo == null)
-                {
-                    return null;
-                }
-
-                if (!await storage.ExistsAsync(path + ".x") && !await storage.SaveFileContentsAsync(path + ".x", string.Empty))
-                {
-                    return null;
-                }
-            }
-            catch (Exception ex)
-            {
-                if (logger != null && logger.IsEnabled(LogLevel.Error))
-                {
-                    logger.LogError(ex, "Error retrieving event post data {Path}: {Message}", path, ex.Message);
-                }
-
-                return null;
-            }
-
-            return eventPostInfo;
-        }
-
-        public static async Task<bool> SetNotActiveAsync(this IFileStorage storage, string path, ILogger logger = null)
-        {
-            try
-            {
-                return await storage.DeleteFileAsync(path + ".x");
-            }
-            catch (Exception ex)
-            {
-                if (logger != null && logger.IsEnabled(LogLevel.Error))
-                {
-                    logger.LogError(ex, "Error deleting work marker {Path}: {Message}", path, ex.Message);
-                }
-            }
-
-            return false;
-        }
-
-        public static async Task<bool> CompleteEventPostAsync(this IFileStorage storage, string path, string projectId, DateTime created, bool shouldArchive = true, ILogger logger = null)
-        {
-            // don't move files that are already in the archive
-            if (path.StartsWith("archive"))
-            {
-                return true;
-            }
-
-            string archivePath = $"archive\\{projectId}\\{created.ToString("yy\\\\MM\\\\dd")}\\{Path.GetFileName(path)}";
-
-            try
-            {
-                if (shouldArchive)
-                {
-                    if (!await storage.RenameFileAsync(path, archivePath))
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    if (!await storage.DeleteFileAsync(path))
-                    {
-                        return false;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                if (logger != null && logger.IsEnabled(LogLevel.Error))
-                {
-                    logger?.LogError(ex, "Error archiving event post data {Path}: {Message}", path, ex.Message);
-                }
-
-                return false;
-            }
-
-            await storage.SetNotActiveAsync(path);
-
-            return true;
         }
     }
 }
