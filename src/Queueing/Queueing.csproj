@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Naos.Core.Queueing</AssemblyName>
+    <RootNamespace>Naos.Core.Queueing</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common.Serialization\Common.Serialization.csproj" />
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\Domain\Domain.csproj" />
+  </ItemGroup>
+
+</Project>

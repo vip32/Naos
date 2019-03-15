@@ -20,15 +20,15 @@
 
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.11.4" />
-    <PackageReference Include="coverlet.msbuild" Version="2.5.1">
+    <PackageReference Include="coverlet.msbuild" Version="2.6.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="MediatR" Version="6.0.0" />
     <PackageReference Include="AutoMapper" Version="8.0.0" />
     <PackageReference Include="AutoMapper.Extensions.ExpressionMapping" Version="2.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.2.2" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.2.3" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
     <PackageReference Include="NBuilder" Version="6.0.0" />
     <PackageReference Include="NSubstitute" Version="4.0.0" />
     <PackageReference Include="Shouldly" Version="3.0.2" />
@@ -80,6 +80,8 @@
     <ProjectReference Include="..\..\src\Messaging\Messaging.csproj" />
     <ProjectReference Include="..\..\src\Operations.App.Web\Operations.App.Web.csproj" />
     <ProjectReference Include="..\..\src\Operations\Operations.csproj" />
+    <ProjectReference Include="..\..\src\Queueing.Infrastructure.Azure\Queueing.Infrastructure.Azure.csproj" />
+    <ProjectReference Include="..\..\src\Queueing\Queueing.csproj" />
     <ProjectReference Include="..\..\src\Scheduling.App.Web\JobScheduling.App.Web.csproj" />
     <ProjectReference Include="..\..\src\Scheduling\JobScheduling.csproj" />
     <ProjectReference Include="..\..\src\ServiceContext.App\ServiceContext.App.csproj" />
