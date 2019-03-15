@@ -46,15 +46,16 @@ steps:
     inputs:
       command: test
       projects: "**/*[Tt]ests/*UnitTests.csproj"
-      arguments: "/p:Configuration=$(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=$(Build.ArtifactStagingDirectory)/coverage.xml" # https://github.com/tonerdo/coverlet
+      arguments: "/p:Configuration=$(buildConfiguration)"
+#      arguments: "/p:Configuration=$(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=$(Build.ArtifactStagingDirectory)/coverage.xml" # https://github.com/tonerdo/coverlet
 
-  - task: Bash@3
-    displayName: "codecov upload" # https://docs.codecov.io/docs/about-the-codecov-bash-uploader
-    inputs:
-      targetType: "filePath"
-      filePath: "./tests/UnitTests/CodecovUploader.sh"
-      workingDirectory: $(Build.ArtifactStagingDirectory)
-      arguments: "-f coverage.xml -t b4c5d4f3-0f3a-470e-9d5d-4c63cba2e611 -B $(Build.SourceBranchName) -C $(Build.SourceVersion) -b $(Build.BuildNumber)"
+#  - task: Bash@3
+#    displayName: "codecov upload" # https://docs.codecov.io/docs/about-the-codecov-bash-uploader
+#    inputs:
+#      targetType: "filePath"
+#      filePath: "./tests/UnitTests/CodecovUploader.sh"
+#      workingDirectory: $(Build.ArtifactStagingDirectory)
+#      arguments: "-f coverage.xml -t b4c5d4f3-0f3a-470e-9d5d-4c63cba2e611 -B $(Build.SourceBranchName) -C $(Build.SourceVersion) -b $(Build.BuildNumber)"
 
   - task: DotNetCoreCLI@2
     displayName: "dotnet publish"
