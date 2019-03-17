@@ -263,7 +263,7 @@
                 {
                     Text = "Hello"
                 });
-                Thread.Sleep(300);
+                Thread.Sleep(1000);
 
                 var stats = await queue.GetMetricsAsync();
                 Assert.Equal(1, stats.Completed);
