@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\App\App.csproj" />
+    <ProjectReference Include="..\..\src\Queueing.App\Queueing.App.csproj" />
   </ItemGroup>
 
 </Project>

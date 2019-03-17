@@ -6,6 +6,7 @@
     using EnsureThat;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
     using Naos.Core.Queueing.Domain;
 
     public class QueueProcessHostedService<T> : IHostedService, IDisposable
@@ -31,18 +32,27 @@
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            //await this.queue.ProcessItemsAsync(this.handler);
-            await this.queue.ProcessItemsAsync(async i =>
+            this.logger.LogInformation("{LogKey:l} hosted service started", LogEventKeys.Queueing);
+
+            if (this.handler != null)
             {
-                // do something;
-                this.logger.LogInformation("+++ process item +++");
-                await i.CompleteAsync();
-            });
+                await this.queue.ProcessItemsAsync(this.handler);
+            }
+            else
+            {
+                await this.queue.ProcessItemsAsync(async i =>
+                {
+                    this.logger.LogInformation($"+++ process item +++ {i.Id}");
+                    await i.CompleteAsync();
+                });
+            }
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            this.logger.LogInformation("{LogKey:l} hosted service stopped", LogEventKeys.Queueing);
+
+            return Task.CompletedTask;
         }
 
         public void Dispose()

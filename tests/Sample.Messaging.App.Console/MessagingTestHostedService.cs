@@ -9,11 +9,14 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Messaging;
+    using Naos.Core.Queueing;
+    using Naos.Core.Queueing.Domain;
 
     public class MessagingTestHostedService : IHostedService
     {
         private readonly ILogger<MessagingTestHostedService> logger;
         private readonly IServiceProvider serviceProvider;
+        private IQueue<TestQueueItem> queue;
         private IMessageBroker messageBus;
 
         public MessagingTestHostedService(ILogger<MessagingTestHostedService> logger, IServiceProvider serviceProvider)
@@ -28,6 +31,9 @@
         public Task StartAsync(CancellationToken cancellationToken)
         {
             Console.WriteLine("starting hosted service");
+
+            this.queue = new InMemoryQueue<TestQueueItem>(
+                new InMemoryQueueOptionsBuilder().LoggerFactory(this.serviceProvider.GetRequiredService<ILoggerFactory>()).Build());
 
             this.messageBus = this.serviceProvider.GetRequiredService<IMessageBroker>()
                 .Subscribe<TestMessage, TestMessageHandler>()
@@ -70,7 +76,20 @@
                 //Thread.Sleep(500);
                 this.messageBus.Publish(new TestMessage { Id = RandomGenerator.GenerateString(7, true), Data = $"{i.ToString()}-{RandomGenerator.GenerateString(3, false).ToUpper()}" });
                 this.messageBus.Publish(new EntityMessage<StubEntity> { Id = RandomGenerator.GenerateString(7, true), Entity = new StubEntity { FirstName = "John", LastName = $"{RandomGenerator.GenerateString(3, false).ToUpper()} ({i})" } });
+
+                this.queue.EnqueueAsync(new TestQueueItem { FirstName = "John", LastName = "Doe" });
+                var metrics = this.queue.GetMetricsAsync().Result;
+                Console.WriteLine(metrics.Dump());
             }
         }
+    }
+
+#pragma warning disable SA1402 // File may only contain a single class
+    public class TestQueueItem
+#pragma warning restore SA1402 // File may only contain a single class
+    {
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
     }
 }

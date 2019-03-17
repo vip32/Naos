@@ -22,6 +22,7 @@
             this.options = options ?? Factory<TOptions>.Create();
             this.logger = options.LoggerFactory.CreateLogger<T>();
             this.serializer = options.Serializer ?? DefaultSerializer.Instance;
+            options.Name = options.Name ?? typeof(T).PrettyName().Replace("<", "_").Replace(">", "_");
             this.Name = options.Name;
             this.disposedCancellationTokenSource = new CancellationTokenSource();
         }
