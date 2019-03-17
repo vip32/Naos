@@ -297,7 +297,7 @@
 
                 await queue.EnqueueAsync(new StubMessage { Text = "Hello" });
 
-                Thread.Sleep(500);
+                Thread.Sleep(1000);
                 var stats = await queue.GetMetricsAsync();
 
                 Assert.Equal(0, stats.Completed);
