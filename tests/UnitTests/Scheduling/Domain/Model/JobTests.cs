@@ -76,11 +76,8 @@
             // act
             try
             {
-                var t1 = sut.ExecuteAsync(cts.Token, new[] { "a" });
-                cts.CancelAfter(TimeSpan.FromMilliseconds(250));
-
-                await Task.WhenAll(new[] { t1 });
-                //await ShouldThrowAsyncExtensions.ShouldThrowAsync<TaskCanceledException>(() => sut.ExecuteAsync(cancellationToken, new[] { "a" }));
+                cts.CancelAfter(TimeSpan.FromMilliseconds(10));
+                await sut.ExecuteAsync(cts.Token, new[] { "a" }).AnyContext();
             }
             catch(OperationCanceledException)
             {
