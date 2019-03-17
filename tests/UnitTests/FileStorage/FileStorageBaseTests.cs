@@ -8,6 +8,7 @@
     using System.Threading.Tasks;
     using System.Xml.Linq;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
     using Naos.Core.FileStorage;
     using Naos.Core.FileStorage.Domain;
     using Naos.Core.FileStorage.Infrastructure;
@@ -185,25 +186,24 @@
                 return;
             }
 
-            string readmeFile = this.GetTestFilePath();
             using (storage)
             {
                 var path = $"test-{Guid.NewGuid().ToString("N").Substring(10)}.txt";
                 Assert.False(await storage.ExistsAsync(path));
 
-                using (var stream = /*new NonSeekableStream(*/File.Open(readmeFile, FileMode.Open, FileAccess.Read))/*)*/
+                using (var stream = SerializationHelper.ToStream("test data"))
                 {
-                    bool result = await storage.SaveFileAsync(path, stream);
+                    bool result = await storage.SaveFileAsync(path, stream); // write
                     Assert.True(result);
                 }
 
                 Assert.Single(await Core.FileStorage.Domain.Extensions.GetFileInformationsAsync(storage));
                 Assert.True(await storage.ExistsAsync(path));
 
-                using (var stream = await storage.GetFileStreamAsync(path))
+                using (var stream = await storage.GetFileStreamAsync(path)) // read
                 {
                     string result = await new StreamReader(stream).ReadToEndAsync();
-                    Assert.Equal(File.ReadAllText(readmeFile), result);
+                    Assert.Equal("test data", result);
                 }
             }
         }
@@ -446,24 +446,6 @@
 
                 Assert.Empty(await Core.FileStorage.Domain.Extensions.GetFileInformationsAsync(storage));
             }
-        }
-
-        protected virtual string GetTestFilePath()
-        {
-            var currentDirectory = new DirectoryInfo(PathHelper.ExpandPath(@"|DataDirectory|\"));
-            var currentFilePath = Path.Combine(currentDirectory.FullName, "README.md");
-            while (!File.Exists(currentFilePath) && currentDirectory.Parent != null)
-            {
-                currentDirectory = currentDirectory.Parent;
-                currentFilePath = Path.Combine(currentDirectory.FullName, "README.md");
-            }
-
-            if (File.Exists(currentFilePath))
-            {
-                return currentFilePath;
-            }
-
-            throw new ApplicationException("Unable to find test README.md file in path hierarchy.");
         }
 
         protected virtual IFileStorage GetStorage()
