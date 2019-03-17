@@ -253,10 +253,10 @@
                 await queue.DeleteQueueAsync();
                 await this.AssertEmptyQueueAsync(queue);
 
-                await queue.ProcessItemsAsync(async w =>
+                await queue.ProcessItemsAsync(async i =>
                 {
-                    Assert.Equal("Hello", w.Value.Text);
-                    await w.CompleteAsync();
+                    Assert.Equal("Hello", i.Value.Text);
+                    await i.CompleteAsync();
                 });
 
                 await queue.EnqueueAsync(new StubMessage
@@ -289,9 +289,9 @@
                 await queue.DeleteQueueAsync();
                 await this.AssertEmptyQueueAsync(queue);
 
-                await queue.ProcessItemsAsync(w =>
+                await queue.ProcessItemsAsync(i =>
                 {
-                    Assert.Equal("Hello", w.Value.Text);
+                    Assert.Equal("Hello", i.Value.Text);
                     throw new Exception();
                 });
 
@@ -405,9 +405,9 @@
                 await queue.DeleteQueueAsync();
                 await this.AssertEmptyQueueAsync(queue);
 
-                await queue.ProcessItemsAsync(w =>
+                await queue.ProcessItemsAsync(i =>
                 {
-                    Assert.Equal("Hello", w.Value.Text);
+                    Assert.Equal("Hello", i.Value.Text);
                     return Task.CompletedTask;
                 }, true);
 
