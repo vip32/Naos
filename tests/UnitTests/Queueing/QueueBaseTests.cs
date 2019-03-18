@@ -187,7 +187,7 @@
                 sw.Stop();
 
                 Assert.Null(item);
-                Assert.InRange(sw.Elapsed, TimeSpan.FromMilliseconds(999), TimeSpan.FromMilliseconds(5000));
+                Assert.InRange(sw.Elapsed, TimeSpan.FromMilliseconds(900), TimeSpan.FromMilliseconds(5000));
 
                 await queue.EnqueueAsync(new StubMessage
                 {
