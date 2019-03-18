@@ -4,8 +4,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    public interface IQueue<T> : IDisposable
-        where T : class
+    public interface IQueue
     {
         string Name { get; }
 
@@ -13,6 +12,22 @@
 
         DateTime? LastDequeuedDate { get; }
 
+        /// <summary>
+        /// Gets the queue metrics
+        /// </summary>
+        /// <returns></returns>
+        Task<QueueMetrics> GetMetricsAsync();
+
+        /// <summary>
+        /// Deletes the physical queue
+        /// </summary>
+        /// <returns></returns>
+        Task DeleteQueueAsync();
+    }
+
+    public interface IQueue<T> : IQueue, IDisposable
+        where T : class
+    {
         /// <summary>
         /// Enqueues an item
         /// </summary>
@@ -61,17 +76,5 @@
         /// <param name="cancellationToken">The token used to cancel the background worker</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task ProcessItemsAsync(Func<IQueueItem<T>, CancellationToken, Task> handler, bool autoComplete = false, CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Gets the queue metrics
-        /// </summary>
-        /// <returns></returns>
-        Task<QueueMetrics> GetMetricsAsync();
-
-        /// <summary>
-        /// Deletes the physical queue
-        /// </summary>
-        /// <returns></returns>
-        Task DeleteQueueAsync();
     }
 }
