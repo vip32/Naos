@@ -38,6 +38,7 @@
                             .AddRequestCorrelation()
                             .AddOperations(o => o
                                 .AddLogging(l => l
+                                    .UseConsole()
                                     .UseFile()
                                     .UseAzureLogAnalytics(),
                                     correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}"))

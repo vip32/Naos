@@ -9,7 +9,7 @@
 
         public long Working { get; set; }
 
-        public long Deadletter { get; set; }
+        public long Deadlettered { get; set; }
 
         public long Enqueued { get; set; }
 

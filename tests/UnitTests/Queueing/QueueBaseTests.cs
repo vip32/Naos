@@ -302,7 +302,7 @@
 
                 Assert.Equal(0, stats.Completed);
                 Assert.Equal(1, stats.Errors);
-                Assert.Equal(1, stats.Deadletter);
+                Assert.Equal(1, stats.Deadlettered);
             }
             finally
             {
@@ -383,7 +383,7 @@
 
                 // work item should be moved to deadletter _queue after retries.
                 var stats = await queue.GetMetricsAsync();
-                Assert.Equal(1, stats.Deadletter);
+                Assert.Equal(1, stats.Deadlettered);
                 Assert.Equal(2, stats.Abandoned);
             }
             finally
@@ -545,7 +545,7 @@
                 var stats = await queue.GetMetricsAsync();
                 Assert.Equal(1, stats.Abandoned);
                 Assert.Equal(0, stats.Completed);
-                Assert.Equal(0, stats.Deadletter);
+                Assert.Equal(0, stats.Deadlettered);
                 Assert.Equal(1, stats.Dequeued);
                 Assert.Equal(1, stats.Enqueued);
                 Assert.Equal(0, stats.Errors);
@@ -602,7 +602,7 @@
                 var stats = await queue.GetMetricsAsync();
                 Assert.Equal(0, stats.Abandoned);
                 Assert.Equal(1, stats.Completed);
-                Assert.Equal(0, stats.Deadletter);
+                Assert.Equal(0, stats.Deadlettered);
                 Assert.Equal(1, stats.Dequeued);
                 Assert.Equal(1, stats.Enqueued);
                 Assert.Equal(0, stats.Errors);
@@ -652,7 +652,7 @@
             var stats = await queue.GetMetricsAsync();
             Assert.Equal(0, stats.Abandoned);
             Assert.Equal(0, stats.Completed);
-            Assert.Equal(0, stats.Deadletter);
+            Assert.Equal(0, stats.Deadlettered);
             Assert.Equal(0, stats.Dequeued);
             Assert.Equal(0, stats.Enqueued);
             Assert.Equal(0, stats.Errors);

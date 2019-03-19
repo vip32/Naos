@@ -84,6 +84,7 @@
                         .AddBehavior<Core.Commands.Domain.TrackCommandBehavior>())
                     .AddOperations(o => o
                         .AddLogging(l => l
+                            .UseConsole()
                             .UseFile()
                             //.UseAzureBlobStorage()
                             .UseAzureLogAnalytics())

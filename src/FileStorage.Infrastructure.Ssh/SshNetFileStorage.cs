@@ -33,8 +33,8 @@
             this.client = new SftpClient(this.connectionInfo);
         }
 
-        public SshNetFileStorage(ILogger<SshNetFileStorage> logger, Builder<SshNetFileStorageOptionsBuilder, SshNetFileStorageOptions> config)
-            : this(config(new SshNetFileStorageOptionsBuilder()).Build())
+        public SshNetFileStorage(Builder<SshNetFileStorageOptionsBuilder, SshNetFileStorageOptions> optionsBuilder)
+            : this(optionsBuilder(new SshNetFileStorageOptionsBuilder()).Build())
         {
         }
 

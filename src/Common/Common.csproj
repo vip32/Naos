@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\favicon.ico" />
     <None Remove="Resources\logo.png" />
   </ItemGroup>
 
@@ -22,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\favicon.ico" />
     <EmbeddedResource Include="Resources\logo.png" />
   </ItemGroup>
 

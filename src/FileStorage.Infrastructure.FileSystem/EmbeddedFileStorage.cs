@@ -24,8 +24,8 @@
             this.Serializer = this.options.Serializer ?? DefaultSerializer.Instance;
         }
 
-        public EmbeddedFileStorage(Builder<EmbeddedFileStorageOptionsBuilder, EmbeddedFileStorageOptions> config)
-            : this(config(new EmbeddedFileStorageOptionsBuilder()).Build())
+        public EmbeddedFileStorage(Builder<EmbeddedFileStorageOptionsBuilder, EmbeddedFileStorageOptions> optionsBuilder)
+            : this(optionsBuilder(new EmbeddedFileStorageOptionsBuilder()).Build())
         {
         }
 

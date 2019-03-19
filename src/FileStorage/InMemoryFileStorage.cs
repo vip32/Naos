@@ -33,8 +33,8 @@
             this.MaxFiles = options.MaxFiles;
         }
 
-        public InMemoryFileStorage(Builder<InMemoryFileStorageOptionsBuilder, InMemoryFileStorageOptions> config)
-            : this(config(new InMemoryFileStorageOptionsBuilder()).Build())
+        public InMemoryFileStorage(Builder<InMemoryFileStorageOptionsBuilder, InMemoryFileStorageOptions> optionsBuilder)
+            : this(optionsBuilder(new InMemoryFileStorageOptionsBuilder()).Build())
         {
         }
 

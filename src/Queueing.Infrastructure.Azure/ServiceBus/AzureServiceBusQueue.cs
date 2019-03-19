@@ -40,8 +40,8 @@
             this.managementClient = new ManagementClient(options.ConnectionString);
         }
 
-        public AzureServiceBusQueue(Builder<AzureServiceBusQueueOptionsBuilder, AzureServiceBusQueueOptions> config)
-            : this(config(new AzureServiceBusQueueOptionsBuilder()).Build())
+        public AzureServiceBusQueue(Builder<AzureServiceBusQueueOptionsBuilder, AzureServiceBusQueueOptions> optionsBuilder)
+            : this(optionsBuilder(new AzureServiceBusQueueOptionsBuilder()).Build())
         {
         }
 
@@ -155,7 +155,7 @@
             {
                 Queued = info.MessageCount,
                 Working = 0,
-                Deadletter = info.MessageCountDetails.DeadLetterMessageCount,
+                Deadlettered = info.MessageCountDetails.DeadLetterMessageCount,
                 Enqueued = this.enqueuedCount,
                 Dequeued = this.dequeuedCount,
                 Completed = this.completedCount,

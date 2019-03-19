@@ -33,8 +33,8 @@
         {
         }
 
-        public InMemoryQueue(Builder<InMemoryQueueOptionsBuilder, InMemoryQueueOptions> config)
-            : this(config(new InMemoryQueueOptionsBuilder()).Build())
+        public InMemoryQueue(Builder<InMemoryQueueOptionsBuilder, InMemoryQueueOptions> optionsBuilder)
+            : this(optionsBuilder(new InMemoryQueueOptionsBuilder()).Build())
         {
         }
 
@@ -158,7 +158,7 @@
             {
                 Queued = this.queue.Count,
                 Working = this.dequeued.Count,
-                Deadletter = this.deadletterQueue.Count,
+                Deadlettered = this.deadletterQueue.Count,
                 Enqueued = this.enqueuedCount,
                 Dequeued = this.dequeuedCount,
                 Completed = this.completedCount,

@@ -46,7 +46,7 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            var configuration = options.Context.Configuration?.GetSection("naos:operations:logging:azureBlobStorage").Get<BlobStorageConfiguration>();
+            var configuration = options.Context.Configuration?.GetSection(section).Get<BlobStorageConfiguration>();
             if (configuration?.Enabled == true)
             {
                 options.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: request storage added (type={typeof(AzureBlobFileStorage).Name})");

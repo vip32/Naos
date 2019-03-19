@@ -32,7 +32,7 @@
             var foregroundColor = Console.ForegroundColor;
             var backgroundColor = Console.BackgroundColor;
 
-            WriteImage(Logo.GetAsBitmap(), sMax);
+            WriteImage(Logo.GetLogoAsBitmap(), sMax);
 
             Console.ForegroundColor = foregroundColor;
             Console.BackgroundColor = backgroundColor;

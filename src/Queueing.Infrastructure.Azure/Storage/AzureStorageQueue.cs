@@ -45,8 +45,8 @@
             this.deadletterQueue = client.GetQueueReference($"{this.options.Name}-poison");
         }
 
-        public AzureStorageQueue(Builder<AzureStorageQueueOptionsBuilder, AzureStorageQueueOptions> config)
-            : this(config(new AzureStorageQueueOptionsBuilder()).Build())
+        public AzureStorageQueue(Builder<AzureStorageQueueOptionsBuilder, AzureStorageQueueOptions> optionsBuilder)
+            : this(optionsBuilder(new AzureStorageQueueOptionsBuilder()).Build())
         {
         }
 
@@ -144,7 +144,7 @@
             {
                 Queued = this.queue.ApproximateMessageCount.GetValueOrDefault(),
                 Working = 0,
-                Deadletter = this.deadletterQueue.ApproximateMessageCount.GetValueOrDefault(),
+                Deadlettered = this.deadletterQueue.ApproximateMessageCount.GetValueOrDefault(),
                 Enqueued = this.enqueuedCount,
                 Dequeued = this.dequeuedCount,
                 Completed = this.completedCount,

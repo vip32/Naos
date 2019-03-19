@@ -85,7 +85,7 @@
 </head>
 <body>
     <pre style='color: cyan;font-size: xx-small;'>
-    " + Logo.GetAsText() + @"
+    " + Logo.GetLogoText() + @"
     </pre>
     <hr />");
             try

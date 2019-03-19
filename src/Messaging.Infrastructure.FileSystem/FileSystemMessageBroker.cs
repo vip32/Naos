@@ -43,8 +43,8 @@
             this.messageScope = options.MessageScope ?? AppDomain.CurrentDomain.FriendlyName;
         }
 
-        public FileSystemMessageBroker(Builder<FileSystemMessageBrokerOptionsBuilder, FileSystemMessageBrokerOptions> config)
-            : this(config(new FileSystemMessageBrokerOptionsBuilder()).Build())
+        public FileSystemMessageBroker(Builder<FileSystemMessageBrokerOptionsBuilder, FileSystemMessageBrokerOptions> optionsBuilder)
+            : this(optionsBuilder(new FileSystemMessageBrokerOptionsBuilder()).Build())
         {
         }
 

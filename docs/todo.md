@@ -150,6 +150,7 @@ metrics (AppMetrics) https://github.com/FoundatioFx/Foundatio#metrics
 metric prometheus https://www.olivercoding.com/2018-07-22-prometheus-dotnetcore/
 inter service JSON RPC http://www.jsonrpc.org/specification
 on hold till MS stabalizes this (gRPC): https://github.com/grpc/grpc-dotnet
+entity auditing https://www.ryansouthgate.com/2019/03/18/ef-core-databse-auditing/
 service-bus: https://github.com/Azure/azure-service-bus/tree/master/samples/DotNet/Microsoft.Azure.ServiceBus/QueuesRequestResponse
 https://github.com/ipjohnson/EasyRpc (incl authorization, client, dotnet di, messagepack transport)
 https://github.com/alexanderkozlenko/aspnetcore-json-rpc (simple, only http transport) + client https://github.com/alexanderkozlenko/json-rpc-client

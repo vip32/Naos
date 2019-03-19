@@ -1,6 +1,7 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
     using global::Serilog;
     using global::Serilog.Events;
@@ -11,6 +12,7 @@
     using Naos.Core.Common.Web;
     using Naos.Core.Operations.App;
 
+    [ExcludeFromCodeCoverage]
     public static class OperationsOptionsExtensions
     {
         private static string internalCorrelationId;
@@ -70,10 +72,6 @@
                 .MinimumLevel.Override("System.Net.Http.HttpClient", LogEventLevel.Warning)
 #if DEBUG
                 .WriteTo.Debug()
-                .WriteTo.LiterateConsole(
-                    restrictedToMinimumLevel: LogEventLevel.Information,
-                    //outputTemplate: "[{Timestamp:HH:mm:ss.fff} {Level:u3}] {CorrelationId}|{Service}|{SourceContext}: {Message:lj}{NewLine}{Exception}");
-                    outputTemplate: "[{Timestamp:HH:mm:ss.fff} {Level:u3}] {Message:lj}{NewLine}{Exception}")
 #endif
                 .Enrich.With(new ExceptionEnricher())
                 .Enrich.With(new TicksEnricher())

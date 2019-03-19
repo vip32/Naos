@@ -26,8 +26,8 @@
             this.Serializer = this.options.Serializer ?? DefaultSerializer.Instance;
         }
 
-        public AzureBlobFileStorage(Builder<AzureBlobFileStorageOptionsBuilder, AzureBlobFileStorageOptions> config)
-            : this(config(new AzureBlobFileStorageOptionsBuilder()).Build())
+        public AzureBlobFileStorage(Builder<AzureBlobFileStorageOptionsBuilder, AzureBlobFileStorageOptions> optionsBuilder)
+            : this(optionsBuilder(new AzureBlobFileStorageOptionsBuilder()).Build())
         {
         }
 

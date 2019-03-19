@@ -49,8 +49,8 @@
             this.RegisterMessageHandler();
         }
 
-        public ServiceBusMessageBroker(Builder<ServiceBusMessageBrokerOptionsBuilder, ServiceBusMessageBrokerOptions> config)
-            : this(config(new ServiceBusMessageBrokerOptionsBuilder()).Build())
+        public ServiceBusMessageBroker(Builder<ServiceBusMessageBrokerOptionsBuilder, ServiceBusMessageBrokerOptions> optionsBuilder)
+            : this(optionsBuilder(new ServiceBusMessageBrokerOptionsBuilder()).Build())
         {
         }
 

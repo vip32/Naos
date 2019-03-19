@@ -75,16 +75,17 @@
 </head>
 <body>
     <pre style='color: cyan;font-size: xx-small;'>
-    " + Logo.GetAsText() + @"
+    " + Logo.GetLogoText() + @"
     </pre>
     <hr />
-    &nbsp;&nbsp;&nbsp;&nbsp;<a href='/api'>about</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/logevents/dashboard'>logevents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href='/api'>infos</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/health'>health</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/logevents/dashboard'>logevents</a>
 </body>
 </html>
 ");
                 }
                 else if (context.Request.Path.Equals("/css/naos.css", System.StringComparison.OrdinalIgnoreCase))
                 {
+                    context.Response.ContentType = ContentType.CSS.ToValue();
                     await context.Response.WriteAsync(@"
 body {
     background-color: black;
@@ -102,7 +103,7 @@ a:link {
 a:visited {
 }
 a:hover {
-    color: white;
+    color: cyan;
 }
 hr {
     display: block;
@@ -113,6 +114,12 @@ hr {
     padding: 0;
 }
 ");
+                }
+                else if (context.Request.Path.Equals("/favicon.ico", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    context.Response.ContentType = ContentType.ICO.ToValue();
+                    var icon = Logo.GetIconAsBytes();
+                    context.Response.Body.Write(icon, 0, icon.Length);
                 }
                 else if (context.Request.Path == "/error")
                 {

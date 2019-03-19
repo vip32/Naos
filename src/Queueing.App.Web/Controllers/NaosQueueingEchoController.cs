@@ -30,11 +30,20 @@
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<ActionResult<Dictionary<string, QueueMetrics>>> Get()
         {
-            var result = new Dictionary<string, QueueMetrics>();
+            var result = new List<object>();
 
             foreach(var queue in this.queues.Safe())
             {
-                result.Add(queue.Name, await queue.GetMetricsAsync().AnyContext());
+                var metrics = await queue.GetMetricsAsync().AnyContext();
+                result.Add(
+                    new
+                    {
+                        queue.Name,
+                        metrics.Queued,
+                        metrics.Deadlettered,
+                        queue.LastEnqueuedDate,
+                        queue.LastDequeuedDate,
+                    });
             }
 
             return this.Ok(result);

@@ -10,6 +10,6 @@
         /// <value>
         /// The logger factory.
         /// </value>
-        public ILoggerFactory LoggerFactory { get; set; } // use FileStorageLoggingDecorator
+        public ILoggerFactory LoggerFactory { get; set; }
     }
 }

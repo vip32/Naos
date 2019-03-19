@@ -50,8 +50,8 @@
             this.serviceUtils = new ServiceUtils(this.configuration.ConnectionString);
         }
 
-        public SignalRServerlessMessageBroker(Builder<SignalRServerlessMessageBrokerOptionsBuilder, SignalRServerlessMessageBrokerOptions> config)
-            : this(config(new SignalRServerlessMessageBrokerOptionsBuilder()).Build())
+        public SignalRServerlessMessageBroker(Builder<SignalRServerlessMessageBrokerOptionsBuilder, SignalRServerlessMessageBrokerOptions> optionsBuilder)
+            : this(optionsBuilder(new SignalRServerlessMessageBrokerOptionsBuilder()).Build())
         {
         }
 

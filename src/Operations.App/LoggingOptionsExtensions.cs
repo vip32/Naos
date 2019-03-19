@@ -50,5 +50,25 @@
 
             return options;
         }
+
+        public static LoggingOptions UseConsole(this LoggingOptions options)
+        {
+            EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.Context, nameof(options.Context));
+
+            var configuration = options.Context.Configuration?.GetSection("naos:operations:logging:console").Get<LogConsoleConfiguration>();
+            if (configuration?.Enabled == true)
+            {
+                // configure the serilog sink
+                options.LoggerConfiguration?.WriteTo.LiterateConsole(
+                    restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information,
+                    //outputTemplate: "[{Timestamp:HH:mm:ss.fff} {Level:u3}] {CorrelationId}|{Service}|{SourceContext}: {Message:lj}{NewLine}{Exception}");
+                    outputTemplate: "[{Timestamp:HH:mm:ss.fff} {Level:u3}] {Message:lj}{NewLine}{Exception}");
+
+                options.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: logging console sink added");
+            }
+
+            return options;
+        }
     }
 }

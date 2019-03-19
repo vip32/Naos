@@ -22,8 +22,8 @@
             this.handlerFactory = options.HandlerFactory;
         }
 
-        public RabbitMQMessageBroker(Builder<RabbitMQMessageBrokerOptionsBuilder, RabbitMQMessageBrokerOptions> config)
-            : this(config(new RabbitMQMessageBrokerOptionsBuilder()).Build())
+        public RabbitMQMessageBroker(Builder<RabbitMQMessageBrokerOptionsBuilder, RabbitMQMessageBrokerOptions> optionsBuilder)
+            : this(optionsBuilder(new RabbitMQMessageBrokerOptionsBuilder()).Build())
         {
         }
 

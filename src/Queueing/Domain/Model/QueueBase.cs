@@ -3,7 +3,9 @@
     using System;
     using System.Threading;
     using System.Threading.Tasks;
+    using Humanizer;
     using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Logging.Abstractions;
     using Naos.Core.Common;
     using Naos.Core.Common.Serialization;
 
@@ -20,9 +22,9 @@
         protected QueueBase(TOptions options)
         {
             this.options = options ?? Factory<TOptions>.Create();
-            this.logger = options.LoggerFactory.CreateLogger<T>();
+            this.logger = options.LoggerFactory == null ? new NullLogger<T>() : options.LoggerFactory.CreateLogger<T>();
             this.serializer = options.Serializer ?? DefaultSerializer.Instance;
-            options.Name = options.Name ?? typeof(T).PrettyName().Replace("<", "_").Replace(">", "_");
+            options.Name = options.Name ?? typeof(T).PrettyName().Replace("<", "_").Replace(">", "_").ToLower().Pluralize();
             this.Name = options.Name;
             this.disposedCancellationTokenSource = new CancellationTokenSource();
         }

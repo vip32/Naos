@@ -1,10 +1,12 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
     using Naos.Core.Operations.App;
     using Naos.Core.Operations.App.Web;
 
+    [ExcludeFromCodeCoverage]
     public static class OperationsOptionsExtensions
     {
         public static OperationsOptions AddRequestStorage(

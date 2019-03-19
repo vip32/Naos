@@ -6,7 +6,11 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Domain.Repositories;
+    using Naos.Core.Infrastructure.Azure;
     using Naos.Core.Infrastructure.Azure.CosmosDb;
+    using Naos.Core.Queueing;
+    using Naos.Core.Queueing.Domain;
+    using Naos.Core.Queueing.Infrastructure.Azure;
     using Naos.Sample.Customers.App.Client;
     using Naos.Sample.Customers.Domain;
 
@@ -14,7 +18,7 @@
     {
         public static ServiceOptions AddSampleCustomers(
             this ServiceOptions options,
-            string section = "naos:sample:customers:cosmosDb")
+            string section = "naos:sample:customers")
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
@@ -22,7 +26,7 @@
             options.Context.AddTag("Customers");
             options.Context.AddServiceClient<UserAccountsClient>();
 
-            var cosmosDbConfiguration = options.Context.Configuration?.GetSection(section).Get<CosmosDbConfiguration>();
+            var cosmosDbConfiguration = options.Context.Configuration?.GetSection($"{section}:cosmosDb").Get<CosmosDbConfiguration>();
             options.Context.Services.AddScoped<ICustomerRepository>(sp =>
             {
                 return new CustomerRepository(
@@ -51,6 +55,24 @@
                     database: cosmosDbConfiguration.DatabaseId,
                     container: "customers");
             });
+
+            var queueStorageConfiguration = options.Context.Configuration?.GetSection($"{section}:queueStorage").Get<QueueStorageConfiguration>();
+            options.Context.Services.AddSingleton<IQueue>(sp =>
+            {
+                var q1 = new AzureStorageQueue<Customer>(
+                    new AzureStorageQueueOptionsBuilder()
+                        .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
+                        .ConnectionString(queueStorageConfiguration.ConnectionString).Build());
+                _ = q1.EnqueueAsync(new Customer()).Result;
+                _ = q1.EnqueueAsync(new Customer()).Result;
+                return q1;
+            });
+
+            options.Context.Services
+                .AddHealthChecks()
+                    .AddAzureQueueStorage(
+                        queueStorageConfiguration.ConnectionString,
+                        name: "Customers-queueStorage");
 
             //options.Context.Services.AddSingleton<IValidator<CreateCustomerCommand>>(new CreateCustomerCommandValidator());
 
