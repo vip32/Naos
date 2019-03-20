@@ -70,12 +70,12 @@
     <ProjectReference Include="..\..\src\JobScheduling.App\JobScheduling.App.csproj" />
     <ProjectReference Include="..\..\src\Messaging.App.Azure.SignalR\Messaging.App.Azure.SignalR.csproj" />
     <ProjectReference Include="..\..\src\Messaging.App.Azure\Messaging.App.Azure.csproj" />
-    <ProjectReference Include="..\..\src\Messaging.App.FileSystem\Messaging.App.FileSystem.csproj" />
+    <ProjectReference Include="..\..\src\Messaging.App.FileSystem\Messaging.App.FileStorage.csproj" />
     <ProjectReference Include="..\..\src\Messaging.App.RabbitMQ\Messaging.App.RabbitMQ.csproj" />
     <ProjectReference Include="..\..\src\Messaging.App.Web\Messaging.App.Web.csproj" />
     <ProjectReference Include="..\..\src\Messaging.Infrastructure.Azure.SignalR\Messaging.Infrastructure.Azure.SignalR.csproj" />
     <ProjectReference Include="..\..\src\Messaging.Infrastructure.Azure\Messaging.Infrastructure.Azure.csproj" />
-    <ProjectReference Include="..\..\src\Messaging.Infrastructure.FileSystem\Messaging.Infrastructure.FileSystem.csproj" />
+    <ProjectReference Include="..\..\src\Messaging.Infrastructure.FileSystem\Messaging.Infrastructure.FileStorage.csproj" />
     <ProjectReference Include="..\..\src\Messaging.Infrastructure.RabbitMQ\Messaging.Infrastructure.RabbitMQ.csproj" />
     <ProjectReference Include="..\..\src\Messaging\Messaging.csproj" />
     <ProjectReference Include="..\..\src\Operations.App.Web\Operations.App.Web.csproj" />

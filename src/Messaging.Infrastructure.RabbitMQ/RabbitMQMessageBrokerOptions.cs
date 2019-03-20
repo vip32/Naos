@@ -11,6 +11,6 @@
 
         public ISubscriptionMap Map { get; set; }
 
-        public RabbitMQConfiguration Configuration { get; set; }
+        public string Host { get; set; }
     }
 }

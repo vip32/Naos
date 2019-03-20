@@ -6,7 +6,6 @@
     using System.Threading.Tasks;
     using Common;
     using EnsureThat;
-    using MediatR;
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Infrastructure.Azure.ServiceBus;
@@ -15,13 +14,8 @@
 
     public class ServiceBusMessageBroker : IMessageBroker
     {
+        private readonly ServiceBusMessageBrokerOptions options;
         private readonly ILogger<ServiceBusMessageBroker> logger;
-        private readonly IMediator mediator;
-        private readonly IServiceBusProvider provider;
-        private readonly ISubscriptionMap map;
-        private readonly IMessageHandlerFactory handlerFactory;
-        private readonly string messageScope;
-        private readonly string filterScope;
         private SubscriptionClient client;
 
         /// <summary>
@@ -31,21 +25,16 @@
         public ServiceBusMessageBroker(ServiceBusMessageBrokerOptions options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
-            EnsureArg.IsNotNull(options.LoggerFactory, nameof(options.LoggerFactory));
-            EnsureArg.IsNotNull(options.Mediator, nameof(options.Mediator));
             EnsureArg.IsNotNull(options.Provider, nameof(options.Provider));
             EnsureArg.IsNotNull(options.HandlerFactory, nameof(options.HandlerFactory));
             EnsureArg.IsNotNullOrEmpty(options.SubscriptionName, nameof(options.SubscriptionName));
 
+            this.options = options;
+            this.options.Map = options.Map ?? new SubscriptionMap();
+            this.options.MessageScope = options.MessageScope ?? options.SubscriptionName;
             this.logger = options.LoggerFactory.CreateLogger<ServiceBusMessageBroker>();
-            this.mediator = options.Mediator;
-            this.provider = options.Provider;
-            this.map = options.Map ?? new SubscriptionMap();
-            this.handlerFactory = options.HandlerFactory;
-            this.filterScope = options.FilterScope; // for machine scope
-            this.messageScope = options.MessageScope ?? options.SubscriptionName; // message origin service name
 
-            this.InitializeClient(this.provider, this.provider.ConnectionStringBuilder.EntityPath, options.SubscriptionName);
+            this.InitializeClient(options.Provider, options.Provider.ConnectionStringBuilder.EntityPath, options.SubscriptionName);
             this.RegisterMessageHandler();
         }
 
@@ -67,16 +56,16 @@
             var messageName = typeof(TMessage).PrettyName();
             string ruleName = this.GetRuleName(messageName);
 
-            if (!this.map.Exists<TMessage>())
+            if (!this.options.Map.Exists<TMessage>())
             {
-                this.logger.LogInformation("{LogKey:l} subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, entityPath={EntityPath})", LogEventKeys.Messaging, messageName, this.messageScope, this.filterScope, typeof(THandler).Name, this.provider.EntityPath);
+                this.logger.LogInformation("{LogKey:l} subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, entityPath={EntityPath})", LogEventKeys.Messaging, messageName, this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name, this.options.Provider.EntityPath);
 
                 try
                 {
                     this.logger.LogInformation($"{{LogKey:l}} servicebus add subscription rule: {ruleName} (name={messageName}, type={typeof(TMessage).Name})", LogEventKeys.Messaging);
                     this.client.AddRuleAsync(new RuleDescription
                     {
-                        Filter = new CorrelationFilter { Label = messageName, To = this.filterScope }, // filterscope ist used to lock the rule for a specific machine
+                        Filter = new CorrelationFilter { Label = messageName, To = this.options.FilterScope }, // filterscope ist used to lock the rule for a specific machine
                         Name = ruleName
                     }).GetAwaiter().GetResult();
                 }
@@ -85,7 +74,7 @@
                     this.logger.LogDebug($"{{LogKey:l}} servicebus found subscription rule: {ruleName}", LogEventKeys.Messaging);
                 }
 
-                this.map.Add<TMessage, THandler>();
+                this.options.Map.Add<TMessage, THandler>();
             }
 
             return this;
@@ -118,14 +107,17 @@
 
                 if (message.Origin.IsNullOrEmpty())
                 {
-                    message.Origin = this.messageScope;
+                    message.Origin = this.options.MessageScope;
                     this.logger.LogDebug($"{{LogKey:l}} set message (origin={message.Origin})", LogEventKeys.Messaging);
                 }
 
                 // TODO: async publish!
-                /*await */ this.mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.AnyContext();*/
+                if (this.options.Mediator != null)
+                {
+                    /*await */ this.options.Mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.AnyContext();*/
+                }
 
-                var messageName = /*message.Name*/ message.GetType().PrettyName();
+                var messageName = message.GetType().PrettyName();
 
                 this.logger.LogInformation("{LogKey:l} publish (name={MessageName}, id={MessageId}, origin={MessageOrigin})", LogEventKeys.Messaging, messageName, message.Id, message.Origin);
 
@@ -136,11 +128,11 @@
                     MessageId = message.Id,
                     CorrelationId = message.CorrelationId.IsNullOrEmpty() ? Guid.NewGuid().ToString() : message.CorrelationId,
                     Body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)),
-                    To = this.filterScope
+                    To = this.options.FilterScope
                 };
-                serviceBusMessage.UserProperties.AddOrUpdate("Origin", this.messageScope);
+                serviceBusMessage.UserProperties.AddOrUpdate("Origin", this.options.MessageScope);
 
-                this.provider.CreateModel().SendAsync(serviceBusMessage).GetAwaiter().GetResult();
+                this.options.Provider.CreateModel().SendAsync(serviceBusMessage).GetAwaiter().GetResult();
             }
         }
 
@@ -156,7 +148,7 @@
             var messageName = typeof(TMessage).PrettyName();
             string ruleName = this.GetRuleName(messageName);
 
-            this.logger.LogInformation("{LogKey:l} (name={MessageName}, orgin={MessageOrigin}, filterScope={FilterScope}, handler={MessageHandlerType})", LogEventKeys.Messaging, messageName, this.messageScope, this.filterScope, typeof(THandler).Name);
+            this.logger.LogInformation("{LogKey:l} (name={MessageName}, orgin={MessageOrigin}, filterScope={FilterScope}, handler={MessageHandlerType})", LogEventKeys.Messaging, messageName, this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name);
 
             try
             {
@@ -171,16 +163,16 @@
                 this.logger.LogDebug($"{{LogKey:l}} servicebus subscription rule not found: {ruleName}", LogEventKeys.Messaging);
             }
 
-            this.map.Remove<TMessage, THandler>();
+            this.options.Map.Remove<TMessage, THandler>();
         }
 
         private string GetRuleName(string messageName)
         {
             var ruleName = messageName;
 
-            if (!this.filterScope.IsNullOrEmpty())
+            if (!this.options.FilterScope.IsNullOrEmpty())
             {
-                ruleName += $"-{this.filterScope}";
+                ruleName += $"-{this.options.FilterScope}";
             }
 
             return ruleName.Replace("<", "_").Replace(">", "_");
@@ -220,11 +212,11 @@
             var messageName = serviceBusMessage.Label;
             var messageBody = Encoding.UTF8.GetString(serviceBusMessage.Body);
 
-            if (this.map.Exists(messageName))
+            if (this.options.Map.Exists(messageName))
             {
-                foreach (var subscription in this.map.GetAll(messageName))
+                foreach (var subscription in this.options.Map.GetAll(messageName))
                 {
-                    var messageType = this.map.GetByName(messageName);
+                    var messageType = this.options.Map.GetByName(messageName);
                     if (messageType == null)
                     {
                         continue;
@@ -247,22 +239,26 @@
                         }
 
                         this.logger.LogInformation("{LogKey:l} process (name={MessageName}, id={MessageId}, service={Service}, origin={MessageOrigin})",
-                            LogEventKeys.Messaging, serviceBusMessage.Label, message?.Id, this.messageScope, message.Origin);
+                            LogEventKeys.Messaging, serviceBusMessage.Label, message?.Id, this.options.MessageScope, message.Origin);
 
                         // construct the handler by using the DI container
-                        var handler = this.handlerFactory.Create(subscription.HandlerType); // should not be null, did you forget to register your generic handler (EntityMessageHandler<T>)
+                        var handler = this.options.HandlerFactory.Create(subscription.HandlerType); // should not be null, did you forget to register your generic handler (EntityMessageHandler<T>)
                         var concreteType = typeof(IMessageHandler<>).MakeGenericType(messageType);
 
                         var method = concreteType.GetMethod("Handle");
                         if (handler != null && method != null)
                         {
-                            await this.mediator.Publish(new MessageHandledDomainEvent(message, this.messageScope)).AnyContext();
+                            if (this.options.Mediator != null)
+                            {
+                                await this.options.Mediator.Publish(new MessageHandledDomainEvent(message, this.options.MessageScope)).AnyContext();
+                            }
+
                             await (Task)method.Invoke(handler, new object[] { jsonMessage as object });
                         }
                         else
                         {
                             this.logger.LogWarning("{LogKey:l} process failed, message handler could not be created. is the handler registered in the service provider? (name={MessageName}, service={Service}, id={MessageId}, origin={MessageOrigin})",
-                                LogEventKeys.Messaging, serviceBusMessage.Label, this.messageScope, jsonMessage.AsJToken().GetStringPropertyByPath("id"), message.Origin);
+                                LogEventKeys.Messaging, serviceBusMessage.Label, this.options.MessageScope, jsonMessage.AsJToken().GetStringPropertyByPath("id"), message.Origin);
                         }
                     }
                 }
@@ -279,7 +275,7 @@
 
         private void InitializeClient(IServiceBusProvider provider, string topicName, string subscriptionName)
         {
-            this.provider.EnsureSubscription(topicName, subscriptionName);
+            this.options.Provider.EnsureSubscription(topicName, subscriptionName);
             this.client = new SubscriptionClient(provider.ConnectionStringBuilder, subscriptionName);
 
             this.logger.LogInformation($"{{LogKey:l}} servicebus initialize (topic={topicName}, subscription={subscriptionName})", LogEventKeys.Messaging);

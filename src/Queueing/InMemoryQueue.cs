@@ -10,7 +10,7 @@
     using Naos.Core.Common;
     using Naos.Core.Queueing.Domain;
 
-    public class InMemoryQueue<T> : QueueBase<T, InMemoryQueueOptions>
+    public class InMemoryQueue<T> : BaseQueue<T, InMemoryQueueOptions>
         where T : class
     {
         private readonly ConcurrentQueue<QueueItem<T>> queue = new ConcurrentQueue<QueueItem<T>>();
@@ -43,7 +43,7 @@
             EnsureArg.IsNotNull(data, nameof(data));
             await this.EnsureQueueAsync().AnyContext();
 
-            string id = Guid.NewGuid().ToString("N");
+            string id = RandomGenerator.GenerateString(13, true);
             this.logger.LogInformation($"queue item enqueue (id={id}, queue={this.options.Name})");
 
             var item = new QueueItem<T>(id, data.Clone(), this, DateTime.UtcNow, 0);

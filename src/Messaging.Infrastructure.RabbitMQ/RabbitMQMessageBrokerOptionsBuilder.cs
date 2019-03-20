@@ -18,9 +18,9 @@
             return this;
         }
 
-        public RabbitMQMessageBrokerOptionsBuilder Configuration(RabbitMQConfiguration configuration)
+        public RabbitMQMessageBrokerOptionsBuilder Host(string host)
         {
-            this.Target.Configuration = configuration;
+            this.Target.Host = host;
             return this;
         }
     }

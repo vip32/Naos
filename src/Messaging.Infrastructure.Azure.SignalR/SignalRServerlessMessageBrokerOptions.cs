@@ -3,7 +3,6 @@
     using System.Net.Http;
     using MediatR;
     using Naos.Core.Common;
-    using Naos.Core.Infrastructure.Azure;
 
     public class SignalRServerlessMessageBrokerOptions : BaseOptions
     {
@@ -11,7 +10,7 @@
 
         public IMessageHandlerFactory HandlerFactory { get; set; }
 
-        public SignalRConfiguration Configuration { get; set; }
+        public string ConnectionString { get; set; }
 
         public IHttpClientFactory HttpClient { get; set; }
 

@@ -11,7 +11,7 @@
     using Naos.Core.Common.Serialization;
     using Naos.Core.Queueing.Domain;
 
-    public class AzureStorageQueue<T> : QueueBase<T, AzureStorageQueueOptions>
+    public class AzureStorageQueue<T> : BaseQueue<T, AzureStorageQueueOptions>
         where T : class
     {
         private readonly CloudQueue queue;

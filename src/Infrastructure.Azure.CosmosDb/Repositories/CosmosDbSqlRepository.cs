@@ -5,7 +5,6 @@
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
-    using MediatR;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Domain;
@@ -16,38 +15,26 @@
         where TEntity : class, IEntity, IAggregateRoot //, IDiscriminated
     {
         private readonly ILogger<IRepository<TEntity>> logger;
-        private readonly IMediator mediator;
-        private readonly ICosmosDbSqlProvider<TEntity> provider;
+        private readonly CosmosDbSqlRepositoryOptions<TEntity> options;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CosmosDbSqlRepository{T}" /> class.
-        /// </summary>
-        /// <param name="logger">The logger.</param>
-        /// <param name="mediator">The mediator.</param>
-        /// <param name="provider">The provider.</param>
-        /// <param name="options">The options.</param>
-        public CosmosDbSqlRepository( // TODO: use OptionsBuilder here
-            ILogger<IRepository<TEntity>> logger,
-            IMediator mediator,
-            ICosmosDbSqlProvider<TEntity> provider,
-            IRepositoryOptions options = null) // TODO: move to OptionsBuilder
+        public CosmosDbSqlRepository(CosmosDbSqlRepositoryOptions<TEntity> options)
         {
-            EnsureArg.IsNotNull(logger, nameof(mediator));
-            EnsureArg.IsNotNull(mediator, nameof(mediator));
-            EnsureArg.IsNotNull(provider, nameof(provider));
+            EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.Provider, nameof(options.Provider));
 
-            this.logger = logger;
-            this.mediator = mediator;
-            this.provider = provider;
-            this.Options = options;
+            this.options = options;
+            this.logger = options.CreateLogger<IRepository<TEntity>>();
         }
 
-        protected IRepositoryOptions Options { get; }
+        public CosmosDbSqlRepository(Builder<CosmosDbSqlRepositoryOptionsBuilder<TEntity>, CosmosDbSqlRepositoryOptions<TEntity>> optionsBuilder)
+            : this(optionsBuilder(new CosmosDbSqlRepositoryOptionsBuilder<TEntity>()).Build())
+        {
+        }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
             var order = (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order).FirstOrDefault(); // cosmos only supports single orderby
-            var entities = await this.provider
+            var entities = await this.options.Provider
                 .WhereAsync(
                     count: options?.Take ?? -1, // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
                     orderExpression: order?.Expression,
@@ -58,7 +45,7 @@
         public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
             var order = (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order).FirstOrDefault(); // cosmos only supports single orderby
-            var entities = await this.provider
+            var entities = await this.options.Provider
                 .WhereAsync(
                     expression: specification?.ToExpression().Expand(), // expand fixes Invoke in expression
                     count: options?.Take ?? -1, // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
@@ -70,7 +57,7 @@
         public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
             var order = (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order).FirstOrDefault(); // cosmos only supports single orderby
-            var entities = await this.provider
+            var entities = await this.options.Provider
                 .WhereAsync(
                     expressions: specifications.Safe().Select(s => s.ToExpression().Expand()), // expand fixes Invoke in expression
                     count: options?.Take ?? -1, // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
@@ -86,7 +73,7 @@
                 return default;
             }
 
-            return await this.provider.GetByIdAsync(id as string);
+            return await this.options.Provider.GetByIdAsync(id as string);
         }
 
         public async Task<bool> ExistsAsync(object id)
@@ -135,33 +122,33 @@
 
             bool isNew = entity.Id.IsDefault() || !await this.ExistsAsync(entity.Id).AnyContext();
 
-            if (this.Options?.PublishEvents != false)
+            if (this.options.PublishEvents && this.options.Mediator != null)
             {
                 if (isNew)
                 {
-                    await this.mediator.Publish(new EntityInsertDomainEvent(entity)).AnyContext();
+                    await this.options.Mediator.Publish(new EntityInsertDomainEvent(entity)).AnyContext();
                 }
                 else
                 {
-                    await this.mediator.Publish(new EntityUpdateDomainEvent(entity)).AnyContext();
+                    await this.options.Mediator.Publish(new EntityUpdateDomainEvent(entity)).AnyContext();
                 }
             }
 
             this.logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogEventKeys.DomainRepository);
-            var result = await this.provider.UpsertAsync(entity).AnyContext();
+            var result = await this.options.Provider.UpsertAsync(entity).AnyContext();
             entity = result;
 
-            if (this.Options?.PublishEvents != false)
+            if (this.options.PublishEvents && this.options.Mediator != null)
             {
                 if (isNew)
                 {
                     //await this.mediator.Publish(new EntityInsertedDomainEvent<IEntity>(result)).AnyContext();
-                    await this.mediator.Publish(new EntityInsertedDomainEvent(result)).AnyContext();
+                    await this.options.Mediator.Publish(new EntityInsertedDomainEvent(result)).AnyContext();
                 }
                 else
                 {
                     //await this.mediator.Publish(new EntityUpdatedDomainEvent<IEntity>(result)).AnyContext();
-                    await this.mediator.Publish(new EntityUpdatedDomainEvent(result)).AnyContext();
+                    await this.options.Mediator.Publish(new EntityUpdatedDomainEvent(result)).AnyContext();
                 }
             }
 
@@ -181,17 +168,17 @@
             var entity = await this.FindOneAsync(id).AnyContext();
             if (entity != null)
             {
-                if (this.Options?.PublishEvents != false)
+                if (this.options.PublishEvents && this.options.Mediator != null)
                 {
-                    await this.mediator.Publish(new EntityDeleteDomainEvent(entity)).AnyContext();
+                    await this.options.Mediator.Publish(new EntityDeleteDomainEvent(entity)).AnyContext();
                 }
 
                 this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogEventKeys.DomainRepository);
-                await this.provider.DeleteByIdAsync(id as string).AnyContext();
+                await this.options.Provider.DeleteByIdAsync(id as string).AnyContext();
 
-                if (this.Options?.PublishEvents != false)
+                if (this.options.PublishEvents && this.options.Mediator != null)
                 {
-                    await this.mediator.Publish(new EntityDeletedDomainEvent(entity)).AnyContext();
+                    await this.options.Mediator.Publish(new EntityDeletedDomainEvent(entity)).AnyContext();
                 }
 
                 return ActionResult.Deleted;

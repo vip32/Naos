@@ -7,19 +7,17 @@
 
     public class RabbitMQMessageBroker : IMessageBroker
     {
+        private readonly RabbitMQMessageBrokerOptions options;
         private readonly ILogger<RabbitMQMessageBroker> logger;
-        private readonly RabbitMQConfiguration configuration;
-        private readonly IMessageHandlerFactory handlerFactory;
 
         public RabbitMQMessageBroker(RabbitMQMessageBrokerOptions options)
         {
-            EnsureThat.EnsureArg.IsNotNull(options.LoggerFactory, nameof(options.LoggerFactory));
-            EnsureThat.EnsureArg.IsNotNull(options.Configuration, nameof(options.Configuration));
+            EnsureThat.EnsureArg.IsNotNull(options, nameof(options));
+            EnsureThat.EnsureArg.IsNotNull(options.Host, nameof(options.Host));
             EnsureThat.EnsureArg.IsNotNull(options.HandlerFactory, nameof(options.HandlerFactory));
 
+            this.options = options;
             this.logger = options.LoggerFactory.CreateLogger<RabbitMQMessageBroker>();
-            this.configuration = options.Configuration;
-            this.handlerFactory = options.HandlerFactory;
         }
 
         public RabbitMQMessageBroker(Builder<RabbitMQMessageBrokerOptionsBuilder, RabbitMQMessageBrokerOptions> optionsBuilder)

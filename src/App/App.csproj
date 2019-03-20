@@ -18,7 +18,7 @@
     <ProjectReference Include="..\JobScheduling.App\JobScheduling.App.csproj" />
     <ProjectReference Include="..\Messaging.App.Azure.SignalR\Messaging.App.Azure.SignalR.csproj" />
     <ProjectReference Include="..\Messaging.App.Azure\Messaging.App.Azure.csproj" />
-    <ProjectReference Include="..\Messaging.App.FileSystem\Messaging.App.FileSystem.csproj" />
+    <ProjectReference Include="..\Messaging.App.FileSystem\Messaging.App.FileStorage.csproj" />
     <ProjectReference Include="..\Messaging.App.RabbitMQ\Messaging.App.RabbitMQ.csproj" />
     <ProjectReference Include="..\Messaging.App\Messaging.App.csproj" />
     <ProjectReference Include="..\Operations.App.Azure\Operations.App.Azure.csproj" />

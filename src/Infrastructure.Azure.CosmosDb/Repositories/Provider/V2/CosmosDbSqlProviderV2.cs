@@ -31,7 +31,7 @@
         private readonly bool isPartitioned;
         private AsyncLazy<DocumentCollection> documentCollection;
 
-        public CosmosDbSqlProviderV2(
+        public CosmosDbSqlProviderV2( // TODO: use OptionsBuilder here
             ILogger<CosmosDbSqlProviderV2<T>> logger,
             IDocumentClient client,
             string databaseId,
@@ -44,11 +44,10 @@
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(client, nameof(client));
-            EnsureArg.IsNotNullOrEmpty(databaseId, nameof(databaseId));
 
             this.logger = logger;
             this.client = client;
-            this.databaseId = databaseId;
+            this.databaseId = databaseId ?? "master";
             this.database = new AsyncLazy<Database>(async () => await this.GetOrCreateDatabaseAsync().AnyContext());
             this.partitionKeyPath = partitionKeyPath.EmptyToNull() ?? "/Discriminator";
             this.partitionKeyValue = typeof(T).FullName;

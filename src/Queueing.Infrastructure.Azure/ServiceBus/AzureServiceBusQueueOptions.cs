@@ -5,7 +5,7 @@
     using Microsoft.Azure.ServiceBus.Management;
     using Naos.Core.Queueing.Domain;
 
-    public class AzureServiceBusQueueOptions : QueueBaseOptions
+    public class AzureServiceBusQueueOptions : BaseQueueOptions
     {
         public string ConnectionString { get; set; }
 

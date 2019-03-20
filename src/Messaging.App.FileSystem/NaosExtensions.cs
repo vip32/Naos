@@ -19,20 +19,20 @@
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions
     {
-        public static MessagingOptions UseFileSystemBroker(
+        public static MessagingOptions UseFolderFileStorageBroker(
             this MessagingOptions options,
             Action<IMessageBroker> brokerAction = null,
             string messageScope = null,
-            string section = "naos:messaging:fileSystem")
+            string section = "naos:messaging:fileStorage")
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
             options.Context.Services.AddSingleton<IMessageBroker>(sp =>
             {
-                var configuration = options.Context.Configuration.GetSection(section).Get<FileSystemConfiguration>();
+                var configuration = options.Context.Configuration.GetSection(section).Get<FileStorageConfiguration>();
                 configuration.Folder = configuration.Folder.EmptyToNull() ?? Path.GetTempPath();
-                var broker = new FileSystemMessageBroker(o => o
+                var broker = new FileStorageMessageBroker(o => o
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                     .Mediator((IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)))
                     .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
@@ -42,7 +42,7 @@
                             .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                             .Folder(configuration.Folder)
                             .Serializer(new JsonNetSerializer()))))
-                    .Configuration(configuration)
+                    .ProcessDelay(configuration.ProcessDelay)
                     .Map(sp.GetRequiredService<ISubscriptionMap>())
                     .FilterScope(Environment.GetEnvironmentVariable(EnvironmentKeys.IsLocal).ToBool()
                             ? Environment.MachineName.Humanize().Dehumanize().ToLower()
@@ -53,7 +53,7 @@
                 return broker;
             });
 
-            options.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: messaging added (broker={nameof(FileSystemMessageBroker)})");
+            options.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: messaging added (broker={nameof(FileStorageMessageBroker)})");
 
             return options;
         }

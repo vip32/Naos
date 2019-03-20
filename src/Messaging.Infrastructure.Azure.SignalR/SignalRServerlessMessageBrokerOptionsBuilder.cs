@@ -3,7 +3,6 @@
     using System.Net.Http;
     using MediatR;
     using Naos.Core.Common;
-    using Naos.Core.Infrastructure.Azure;
 
     public class SignalRServerlessMessageBrokerOptionsBuilder :
         BaseOptionsBuilder<SignalRServerlessMessageBrokerOptions, SignalRServerlessMessageBrokerOptionsBuilder>
@@ -20,9 +19,9 @@
             return this;
         }
 
-        public SignalRServerlessMessageBrokerOptionsBuilder Configuration(SignalRConfiguration configuration)
+        public SignalRServerlessMessageBrokerOptionsBuilder ConnectionString(string connectionString)
         {
-            this.Target.Configuration = configuration;
+            this.Target.ConnectionString = connectionString;
             return this;
         }
 

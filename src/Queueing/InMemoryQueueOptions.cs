@@ -3,7 +3,7 @@
     using System;
     using Naos.Core.Queueing.Domain;
 
-    public class InMemoryQueueOptions : QueueBaseOptions
+    public class InMemoryQueueOptions : BaseQueueOptions
     {
         public TimeSpan RetryDelay { get; set; } = TimeSpan.FromMinutes(1);
 

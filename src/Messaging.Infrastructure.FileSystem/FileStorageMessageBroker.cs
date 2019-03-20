@@ -6,7 +6,6 @@
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
-    using MediatR;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.FileStorage.Domain;
@@ -14,37 +13,27 @@
     using Naos.Core.Messaging.Domain.Model;
     using Newtonsoft.Json;
 
-    public class FileSystemMessageBroker : IMessageBroker
+    public class FileStorageMessageBroker : IMessageBroker
     {
-        private readonly ILogger<FileSystemMessageBroker> logger;
-        private readonly IMediator mediator;
-        private readonly IMessageHandlerFactory handlerFactory;
-        private readonly IFileStorage fileStorage;
-        private readonly FileSystemConfiguration configuration;
-        private readonly ISubscriptionMap map;
-        private readonly string filterScope;
-        private readonly string messageScope;
+        private readonly FileStorageMessageBrokerOptions options;
+        private readonly ILogger<FileStorageMessageBroker> logger;
         private readonly IDictionary<string, FileSystemWatcher> watchers = new Dictionary<string, FileSystemWatcher>();
 
-        public FileSystemMessageBroker(FileSystemMessageBrokerOptions options)
+        public FileStorageMessageBroker(FileStorageMessageBrokerOptions options)
         {
-            EnsureArg.IsNotNull(options.LoggerFactory, nameof(options.LoggerFactory));
-            EnsureArg.IsNotNull(options.Mediator, nameof(options.Mediator));
+            EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.HandlerFactory, nameof(options.HandlerFactory));
             EnsureArg.IsNotNull(options.Storage, nameof(options.Storage));
 
-            this.logger = options.LoggerFactory.CreateLogger<FileSystemMessageBroker>();
-            this.mediator = options.Mediator;
-            this.handlerFactory = options.HandlerFactory;
-            this.fileStorage = options.Storage;
-            this.configuration = options.Configuration ?? new FileSystemConfiguration();
-            this.map = options.Map ?? new SubscriptionMap();
-            this.filterScope = options.FilterScope;
-            this.messageScope = options.MessageScope ?? AppDomain.CurrentDomain.FriendlyName;
+            this.options = options;
+            this.options.Folder = options.Folder.EmptyToNull() ?? Path.GetTempPath();
+            this.options.Map = options.Map ?? new SubscriptionMap();
+            this.options.MessageScope = options.MessageScope ?? AppDomain.CurrentDomain.FriendlyName;
+            this.logger = options.LoggerFactory.CreateLogger<FileStorageMessageBroker>();
         }
 
-        public FileSystemMessageBroker(Builder<FileSystemMessageBrokerOptionsBuilder, FileSystemMessageBrokerOptions> optionsBuilder)
-            : this(optionsBuilder(new FileSystemMessageBrokerOptionsBuilder()).Build())
+        public FileStorageMessageBroker(Builder<FileStorageMessageBrokerOptionsBuilder, FileStorageMessageBrokerOptions> optionsBuilder)
+            : this(optionsBuilder(new FileStorageMessageBrokerOptionsBuilder()).Build())
         {
         }
 
@@ -72,21 +61,25 @@
 
                 if (message.Origin.IsNullOrEmpty())
                 {
-                    message.Origin = this.messageScope;
+                    message.Origin = this.options.MessageScope;
                     this.logger.LogDebug($"{{LogKey:l}} set message (origin={message.Origin})", LogEventKeys.Messaging);
                 }
 
                 // store message in specific (Message) folder
                 this.logger.LogInformation("{LogKey:l} publish (name={MessageName}, id={MessageId}, origin={MessageOrigin})", LogEventKeys.Messaging, message.GetType().PrettyName(), message.Id, message.Origin);
                 var messageName = /*message.Name*/ message.GetType().PrettyName(false);
-                var path = Path.Combine(this.GetDirectory(messageName, this.filterScope), $"message_{message.Id}_{this.messageScope}.json.tmp");
-                if (this.fileStorage.SaveFileObjectAsync(path, message).Result)
+                var path = Path.Combine(this.GetDirectory(messageName, this.options.FilterScope), $"message_{message.Id}_{this.options.MessageScope}.json.tmp");
+                if (this.options.Storage.SaveFileObjectAsync(path, message).Result)
                 {
-                    this.fileStorage.RenameFileAsync(path, path.SubstringTillLast("."));
+                    this.options.Storage.RenameFileAsync(path, path.SubstringTillLast("."));
                 }
 
-                // TODO: async publish!
-                /*await */ this.mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.AnyContext();*/
+                if (this.options.Mediator != null)
+                {
+                    // TODO: async publish!
+                    /*await */
+                    this.options.Mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.AnyContext();*/
+                }
             }
         }
 
@@ -96,12 +89,12 @@
         {
             var messageName = typeof(TMessage).PrettyName(false);
 
-            if (!this.map.Exists<TMessage>())
+            if (!this.options.Map.Exists<TMessage>())
             {
                 if (!this.watchers.ContainsKey(messageName))
                 {
-                    var path = this.GetDirectory(messageName, this.filterScope);
-                    this.logger.LogInformation("{LogKey:l} subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, watch={Directory})", LogEventKeys.Messaging, typeof(TMessage).PrettyName(), this.messageScope, this.filterScope, typeof(THandler).Name, path);
+                    var path = this.GetDirectory(messageName, this.options.FilterScope);
+                    this.logger.LogInformation("{LogKey:l} subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, watch={Directory})", LogEventKeys.Messaging, typeof(TMessage).PrettyName(), this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name, path);
                     this.EnsureDirectory(path);
 
                     var watcher = new FileSystemWatcher(path)
@@ -119,7 +112,7 @@
                     this.watchers.Add(messageName, watcher);
                     this.logger.LogDebug("{LogKey:l} filesystem onrenamed handler registered (name={messageName})", LogEventKeys.Messaging, typeof(TMessage).PrettyName());
 
-                    this.map.Add<TMessage, THandler>(messageName);
+                    this.options.Map.Add<TMessage, THandler>(messageName);
                 }
             }
 
@@ -145,11 +138,11 @@
             var messageName = path.SubstringTillLast(@"\").SubstringFromLast(@"\");
             var messageBody = this.GetFileContents(path);
 
-            if (this.map.Exists(messageName))
+            if (this.options.Map.Exists(messageName))
             {
-                foreach (var subscription in this.map.GetAll(messageName))
+                foreach (var subscription in this.options.Map.GetAll(messageName))
                 {
-                    var messageType = this.map.GetByName(messageName);
+                    var messageType = this.options.Map.GetByName(messageName);
                     if (messageType == null)
                     {
                         continue;
@@ -164,23 +157,27 @@
                     }
 
                     this.logger.LogInformation("{LogKey:l} process (name={MessageName}, id={MessageId}, service={Service}, origin={MessageOrigin})",
-                            LogEventKeys.Messaging, messageType.PrettyName(), message?.Id, this.messageScope, message.Origin);
+                            LogEventKeys.Messaging, messageType.PrettyName(), message?.Id, this.options.MessageScope, message.Origin);
 
                     // construct the handler by using the DI container
-                    var handler = this.handlerFactory.Create(subscription.HandlerType); // should not be null, did you forget to register your generic handler (EntityMessageHandler<T>)
+                    var handler = this.options.HandlerFactory.Create(subscription.HandlerType); // should not be null, did you forget to register your generic handler (EntityMessageHandler<T>)
                     var concreteType = typeof(IMessageHandler<>).MakeGenericType(messageType);
 
                     var method = concreteType.GetMethod("Handle");
                     if (handler != null && method != null)
                     {
                         // TODO: async publish!
-                        await this.mediator.Publish(new MessageHandledDomainEvent(message, this.messageScope)).AnyContext();
+                        if (this.options.Mediator != null)
+                        {
+                            await this.options.Mediator.Publish(new MessageHandledDomainEvent(message, this.options.MessageScope)).AnyContext();
+                        }
+
                         await (Task)method.Invoke(handler, new object[] { jsonMessage as object });
                     }
                     else
                     {
                         this.logger.LogWarning("{LogKey:l} process failed, message handler could not be created. is the handler registered in the service provider? (name={MessageName}, service={Service}, id={MessageId}, origin={MessageOrigin})",
-                            LogEventKeys.Messaging, messageType.PrettyName(), this.messageScope, message?.Id, message.Origin);
+                            LogEventKeys.Messaging, messageType.PrettyName(), this.options.MessageScope, message?.Id, message.Origin);
                     }
                 }
 
@@ -196,7 +193,7 @@
 
         private string GetDirectory(string messageName, string filterScope)
         {
-            return $@"{this.configuration.Folder.EmptyToNull() ?? Path.GetTempPath()}naos_messaging\{filterScope}\{messageName}\".Replace("\\", @"\");
+            return $@"{this.options.Folder.EmptyToNull() ?? Path.GetTempPath()}naos_messaging\{filterScope}\{messageName}\".Replace("\\", @"\");
         }
 
         private void EnsureDirectory(string fullPath)
@@ -209,8 +206,8 @@
 
         private string GetFileContents(string path)
         {
-            Thread.Sleep(this.configuration.ProcessDelay); // this helps with locked files
-            return this.fileStorage.GetFileContentsAsync(path).Result;
+            Thread.Sleep(this.options.ProcessDelay); // this helps with locked files
+            return this.options.Storage.GetFileContentsAsync(path).Result;
         }
     }
 }

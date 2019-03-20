@@ -1,6 +1,6 @@
 ﻿namespace Naos.Core.Domain
 {
-    public interface IDiscriminated
+    public interface IDiscriminated // TODO: obsolete when seperate cosmos collections are used (cosmosrepo V3)
     {
         /// <summary>
         /// Gets the type of the entity (discriminator).

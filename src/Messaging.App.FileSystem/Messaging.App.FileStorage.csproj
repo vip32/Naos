@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.Messaging.App.FileSystem</AssemblyName>
-    <RootNamespace>Naos.Core.Messaging.App.FileSystem</RootNamespace>
+    <AssemblyName>Naos.Core.Messaging.App.FileStorage</AssemblyName>
+    <RootNamespace>Naos.Core.Messaging.App.FileStorage</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,7 +16,7 @@
     <ProjectReference Include="..\FileStorage.Infrastructure.FileSystem\FileStorage.Infrastructure.FileSystem.csproj" />
     <ProjectReference Include="..\Messaging.App.Web\Messaging.App.Web.csproj" />
     <ProjectReference Include="..\Messaging.App\Messaging.App.csproj" />
-    <ProjectReference Include="..\Messaging.Infrastructure.FileSystem\Messaging.Infrastructure.FileSystem.csproj" />
+    <ProjectReference Include="..\Messaging.Infrastructure.FileSystem\Messaging.Infrastructure.FileStorage.csproj" />
   </ItemGroup>
 
 </Project>

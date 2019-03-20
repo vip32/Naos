@@ -89,7 +89,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RequestFiltering", "Request
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RequestFiltering.App", "src\Filtering.App\RequestFiltering.App.csproj", "{F0307521-B912-42F4-887D-FBA7D3545B4A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.Infrastructure.FileSystem", "src\Messaging.Infrastructure.FileSystem\Messaging.Infrastructure.FileSystem.csproj", "{4D3D368A-7701-4966-9371-5D266A5EC139}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.Infrastructure.FileStorage", "src\Messaging.Infrastructure.FileSystem\Messaging.Infrastructure.FileStorage.csproj", "{4D3D368A-7701-4966-9371-5D266A5EC139}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.Infrastructure.Azure.SignalR", "src\Messaging.Infrastructure.Azure.SignalR\Messaging.Infrastructure.Azure.SignalR.csproj", "{1C1697FE-23FB-4176-9191-C1B245C36F51}"
 EndProject
@@ -119,7 +119,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.App.Azure", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.App.Azure.SignalR", "src\Messaging.App.Azure.SignalR\Messaging.App.Azure.SignalR.csproj", "{9C6A5765-CA47-4B08-8135-71F3DB028537}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.App.FileSystem", "src\Messaging.App.FileSystem\Messaging.App.FileSystem.csproj", "{383B805E-8B16-4C6C-8229-7AF56B281E68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.App.FileStorage", "src\Messaging.App.FileSystem\Messaging.App.FileStorage.csproj", "{383B805E-8B16-4C6C-8229-7AF56B281E68}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "App", "App", "{126FE8D9-ED1F-4122-B0E8-07E13D94795A}"
 EndProject
@@ -175,9 +175,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Queueing", "src\Queueing\Qu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Queueing.Infrastructure.Azure", "src\Queueing.Infrastructure.Azure\Queueing.Infrastructure.Azure.csproj", "{5A436FA3-8BE8-4A3E-BD87-F2600D471207}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Queueing.App", "src\Queueing.App\Queueing.App.csproj", "{55803417-9A11-40DB-9463-3D7765BBDC2F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Queueing.App", "src\Queueing.App\Queueing.App.csproj", "{55803417-9A11-40DB-9463-3D7765BBDC2F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Queueing.App.Web", "src\Queueing.App.Web\Queueing.App.Web.csproj", "{DB906E06-2208-42BC-B61D-AD3062CCD1BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Queueing.App.Web", "src\Queueing.App.Web\Queueing.App.Web.csproj", "{DB906E06-2208-42BC-B61D-AD3062CCD1BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

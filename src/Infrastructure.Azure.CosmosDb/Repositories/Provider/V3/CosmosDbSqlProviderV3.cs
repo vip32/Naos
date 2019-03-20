@@ -5,12 +5,13 @@
     using System.Linq.Expressions;
     using System.Threading.Tasks;
     using EnsureThat;
+    using Humanizer;
     using Microsoft.Azure.Cosmos;
     using Naos.Core.Common;
     using Naos.Core.Domain;
 
     public class CosmosDbSqlProviderV3<T> : ICosmosDbSqlProvider<T>, IDisposable
-        where T : IDiscriminated
+        where T : IDiscriminated // needed? each type T is persisted in own collection
     {
         private readonly CosmosClient client;
         private readonly string partitionKeyPath;
@@ -18,58 +19,34 @@
         private readonly CosmosDatabase database;
         private readonly CosmosContainer container;
 
-        public CosmosDbSqlProviderV3(
-            string connectionString,
-            string database,
-            string container = "master",
-            string partitionKeyPath = null,
-            int? throughPut = 400)
-            : this(new CosmosClient(connectionString), database, container, partitionKeyPath, throughPut)
+        public CosmosDbSqlProviderV3(CosmosDbSqlProviderV3Options options)
         {
-            EnsureArg.IsNotNullOrEmpty(connectionString, nameof(connectionString));
-        }
-
-        public CosmosDbSqlProviderV3(
-        string accountEndPoint,
-        string accountKey,
-        string database,
-        string container = "master",
-        string partitionKeyPath = null,
-        int? throughPut = 400)
-            : this(new CosmosClient(accountEndPoint, accountKey), database, container, partitionKeyPath, throughPut)
-        {
-            EnsureArg.IsNotNullOrEmpty(accountEndPoint, nameof(accountEndPoint));
-            EnsureArg.IsNotNullOrEmpty(accountKey, nameof(accountKey));
-        }
-
-        public CosmosDbSqlProviderV3(
-            CosmosClient client,
-            string database,
-            string container = "master",
-            string partitionKeyPath = "/Discriminator",
-            int? throughPut = 400)
-        {
-            EnsureArg.IsNotNull(client, nameof(client));
-            EnsureArg.IsNotNullOrEmpty(database, nameof(database));
-            EnsureArg.IsNotNullOrEmpty(container, nameof(container));
+            EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.Client, nameof(options.Client));
 
             // https://azure.microsoft.com/en-us/blog/azure-cosmos-dotnet-sdk-version-3-0-now-in-public-preview/
             // https://github.com/Azure/azure-cosmos-dotnet-v3
             // https://github.com/Azure/azure-cosmos-dotnet-v3/issues/68
-            this.client = client;
-            this.partitionKeyPath = partitionKeyPath.EmptyToNull() ?? "/Discriminator";
+            this.client = options.Client;
+            this.partitionKeyPath = options.PartitionKeyPath.EmptyToNull() ?? "/Discriminator"; // needed? each type T is persisted in own collection
             this.partitionKeyValue = typeof(T).FullName;
 
             this.database = /*await */this.client.Databases
-                .CreateDatabaseIfNotExistsAsync(database, throughput: throughPut).Result;
-
-            var containerSettings = new CosmosContainerSettings(container, partitionKeyPath: this.partitionKeyPath)
-            {
-                IndexingPolicy = new IndexingPolicy(new RangeIndex(DataType.String) { Precision = -1 })
-            };
-
+                .CreateDatabaseIfNotExistsAsync(options.Database.EmptyToNull() ?? "master", throughput: options.ThroughPut).Result;
             this.container = /*await*/this.database.Containers
-                .CreateContainerIfNotExistsAsync(containerSettings, throughput: throughPut).Result;
+                .CreateContainerIfNotExistsAsync(
+                    new CosmosContainerSettings(
+                    options.Container.EmptyToNull() ?? typeof(T).PrettyName().Pluralize().ToLower(),
+                    partitionKeyPath: this.partitionKeyPath)
+                    {
+                        IndexingPolicy = new IndexingPolicy(new RangeIndex(DataType.String) { Precision = -1 })
+                    },
+                    throughput: options.ThroughPut).Result;
+        }
+
+        public CosmosDbSqlProviderV3(Builder<CosmosDbSqlProviderV3OptionsBuilder, CosmosDbSqlProviderV3Options> optionsBuilder)
+            : this(optionsBuilder(new CosmosDbSqlProviderV3OptionsBuilder()).Build())
+        {
         }
 
         public async Task<T> GetByIdAsync(string id)

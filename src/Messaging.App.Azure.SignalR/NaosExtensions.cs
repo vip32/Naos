@@ -33,7 +33,7 @@
                         .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                         .Mediator((IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)))
                         .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
-                        .Configuration(configuration)
+                        .ConnectionString(configuration.ConnectionString)
                         .HttpClient(sp.GetRequiredService<IHttpClientFactory>())
                         .Map(sp.GetRequiredService<ISubscriptionMap>())
                         .FilterScope(Environment.GetEnvironmentVariable(EnvironmentKeys.IsLocal).ToBool()

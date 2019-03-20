@@ -8,11 +8,9 @@
     using System.Text;
     using System.Threading.Tasks;
     using EnsureThat;
-    using MediatR;
     using Microsoft.AspNetCore.SignalR.Client;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
-    using Naos.Core.Infrastructure.Azure;
     using Naos.Core.Messaging.Domain;
     using Naos.Core.Messaging.Domain.Model;
     using Newtonsoft.Json;
@@ -20,34 +18,22 @@
     public class SignalRServerlessMessageBroker : IMessageBroker, IDisposable
     {
         private readonly ILogger<SignalRServerlessMessageBroker> logger;
-        private readonly IMediator mediator;
-        private readonly IMessageHandlerFactory handlerFactory;
-        private readonly SignalRConfiguration configuration;
-        private readonly IHttpClientFactory httpClient;
-        private readonly ISubscriptionMap map;
-        private readonly string filterScope;
-        private readonly string messageScope;
         private readonly ServiceUtils serviceUtils;
+        private readonly SignalRServerlessMessageBrokerOptions options;
         private HubConnection connection;
 
         public SignalRServerlessMessageBroker(SignalRServerlessMessageBrokerOptions options)
         {
-            EnsureArg.IsNotNull(options.LoggerFactory, nameof(options.LoggerFactory));
-            EnsureArg.IsNotNull(options.Mediator, nameof(options.Mediator));
+            EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.HandlerFactory, nameof(options.HandlerFactory));
-            EnsureArg.IsNotNull(options.Configuration, nameof(options.Configuration));
-            EnsureArg.IsNotNullOrEmpty(options.Configuration.ConnectionString, nameof(options.Configuration.ConnectionString));
+            EnsureArg.IsNotNullOrEmpty(options.ConnectionString, nameof(options.ConnectionString));
             EnsureArg.IsNotNull(options.HttpClient, nameof(options.HttpClient));
 
+            this.options = options;
+            this.options.Map = options.Map ?? new SubscriptionMap();
+            this.options.MessageScope = options.MessageScope ?? AppDomain.CurrentDomain.FriendlyName;
             this.logger = options.LoggerFactory.CreateLogger<SignalRServerlessMessageBroker>();
-            this.mediator = options.Mediator;
-            this.handlerFactory = options.HandlerFactory;
-            this.configuration = options.Configuration;
-            this.httpClient = options.HttpClient;
-            this.map = options.Map ?? new SubscriptionMap();
-            this.filterScope = options.FilterScope;
-            this.messageScope = options.MessageScope ?? AppDomain.CurrentDomain.FriendlyName;
-            this.serviceUtils = new ServiceUtils(this.configuration.ConnectionString);
+            this.serviceUtils = new ServiceUtils(this.options.ConnectionString);
         }
 
         public SignalRServerlessMessageBroker(Builder<SignalRServerlessMessageBrokerOptionsBuilder, SignalRServerlessMessageBrokerOptions> optionsBuilder)
@@ -55,7 +41,7 @@
         {
         }
 
-        private string HubName => this.filterScope.IsNullOrEmpty() ? "naos_messaging".ToLower() : $"naos_messaging_{this.filterScope}".ToLower();
+        private string HubName => this.options.FilterScope.IsNullOrEmpty() ? "naos_messaging".ToLower() : $"naos_messaging_{this.options.FilterScope}".ToLower();
 
         /// <inheritdoc />
         public void Dispose()
@@ -87,12 +73,15 @@
 
                 if (message.Origin.IsNullOrEmpty())
                 {
-                    message.Origin = this.messageScope;
+                    message.Origin = this.options.MessageScope;
                     this.logger.LogDebug($"{{LogKey:l}} set message (origin={message.Origin})", LogEventKeys.Messaging);
                 }
 
                 // TODO: async publish!
-                /*await */ this.mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.AnyContext();*/
+                if (this.options.Mediator != null)
+                {
+                    /*await */ this.options.Mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.AnyContext();*/
+                }
 
                 var messageName = /*message.Name*/ message.GetType().PrettyName();
 
@@ -113,7 +102,7 @@
                             message
                         }
                     }), Encoding.UTF8, ContentType.JSON.ToValue());
-                var response = this.httpClient.CreateClient("default").SendAsync(request).GetAwaiter().GetResult(); // TODO: async!
+                var response = this.options.HttpClient.CreateClient("default").SendAsync(request).GetAwaiter().GetResult(); // TODO: async!
                 if (response.StatusCode != HttpStatusCode.Accepted)
                 {
                     this.logger.LogError("{LogKey:l} publish failed: HTTP statuscode {StatusCode} (name={MessageName}, id={MessageId}, origin={MessageOrigin})",
@@ -128,12 +117,12 @@
         {
             var messageName = typeof(TMessage).PrettyName();
 
-            if (!this.map.Exists<TMessage>())
+            if (!this.options.Map.Exists<TMessage>())
             {
                 this.logger.LogInformation("{LogKey:l} subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, endpoint={Endpoint}, hub={Hub})",
-                    LogEventKeys.Messaging, typeof(TMessage).PrettyName(), this.messageScope, this.filterScope, typeof(THandler).Name, this.serviceUtils.Endpoint, this.HubName);
+                    LogEventKeys.Messaging, typeof(TMessage).PrettyName(), this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name, this.serviceUtils.Endpoint, this.HubName);
 
-                this.map.Add<TMessage, THandler>();
+                this.options.Map.Add<TMessage, THandler>();
             }
 
             if (this.connection == null)
@@ -181,11 +170,11 @@
         {
             var processed = false;
 
-            if (this.map.Exists(messageName))
+            if (this.options.Map.Exists(messageName))
             {
-                foreach (var subscription in this.map.GetAll(messageName))
+                foreach (var subscription in this.options.Map.GetAll(messageName))
                 {
-                    var messageType = this.map.GetByName(messageName);
+                    var messageType = this.options.Map.GetByName(messageName);
                     if (messageType == null)
                     {
                         continue;
@@ -195,22 +184,26 @@
                     var message = jsonMessage as Message;
 
                     this.logger.LogInformation("{LogKey:l} process (name={MessageName}, id={MessageId}, service={Service}, origin={MessageOrigin})",
-                            LogEventKeys.Messaging, messageType.PrettyName(), message?.Id, this.messageScope, message?.Origin);
+                            LogEventKeys.Messaging, messageType.PrettyName(), message?.Id, this.options.MessageScope, message?.Origin);
 
                     // construct the handler by using the DI container
-                    var handler = this.handlerFactory.Create(subscription.HandlerType); // should not be null, did you forget to register your generic handler (EntityMessageHandler<T>)
+                    var handler = this.options.HandlerFactory.Create(subscription.HandlerType); // should not be null, did you forget to register your generic handler (EntityMessageHandler<T>)
                     var concreteType = typeof(IMessageHandler<>).MakeGenericType(messageType);
 
                     var method = concreteType.GetMethod("Handle");
                     if (handler != null && method != null)
                     {
-                        await this.mediator.Publish(new MessageHandledDomainEvent(message, this.messageScope)).AnyContext();
+                        if (this.options.Mediator != null)
+                        {
+                            await this.options.Mediator.Publish(new MessageHandledDomainEvent(message, this.options.MessageScope)).AnyContext();
+                        }
+
                         await (Task)method.Invoke(handler, new object[] { jsonMessage as object });
                     }
                     else
                     {
                         this.logger.LogWarning("{LogKey:l} process failed, message handler could not be created. is the handler registered in the service provider? (name={MessageName}, service={Service}, id={MessageId}, origin={MessageOrigin})",
-                            LogEventKeys.Messaging, messageType.PrettyName(), this.messageScope, message?.Id, message?.Origin);
+                            LogEventKeys.Messaging, messageType.PrettyName(), this.options.MessageScope, message?.Id, message?.Origin);
                     }
                 }
 

@@ -14,10 +14,10 @@
 
         public string SubscriptionName { get; set; }
 
-        public ISubscriptionMap Map { get; set; }
+        public ISubscriptionMap Map { get; set; } = new SubscriptionMap();
 
-        public string FilterScope { get; set; }
+        public string FilterScope { get; set; } // for machine scope
 
-        public string MessageScope { get; set; }
+        public string MessageScope { get; set; } // message origin service name
     }
 }

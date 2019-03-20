@@ -4,7 +4,7 @@
     using Naos.Core.Common;
     using Naos.Core.Common.Serialization;
 
-    public class QueueBaseOptions : BaseOptions
+    public class BaseQueueOptions : BaseOptions
     {
         public string Name { get; set; }
 

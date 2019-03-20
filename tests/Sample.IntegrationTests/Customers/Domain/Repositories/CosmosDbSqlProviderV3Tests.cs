@@ -10,14 +10,14 @@
     using Shouldly;
     using Xunit;
 
-    public class CustomerRepositoryV3Tests : BaseTest
+    public class CosmosDbSqlProviderV3Tests : BaseTest
     {
         // https://xunit.github.io/docs/shared-context.html
         private readonly ICosmosDbSqlProvider<Customer> sut;
         private readonly Faker<Customer> entityFaker;
         private readonly string tenantId = "naos_sample_test";
 
-        public CustomerRepositoryV3Tests()
+        public CosmosDbSqlProviderV3Tests()
         {
             this.sut = this.ServiceProvider.GetService<ICosmosDbSqlProvider<Customer>>();
             this.entityFaker = new Faker<Customer>() //https://github.com/bchavez/Bogus
@@ -171,20 +171,16 @@
         //    result.ShouldNotBeEmpty();
         //}
 
-        //[Fact]
-        //public async Task FindOneAsync_Test()
-        //{
-        //    // arrange
-        //    var entities = await this.sut.FindAllAsync(
-        //        new FindOptions<Customer>(take: 1)).AnyContext();
+        [Fact]
+        public async Task GetByIdAsync_Test()
+        {
+            // arrange/act
+            var result = await this.sut.GetByIdAsync("c2557410-c941-424a-8562-f9e25444f2bc").AnyContext();
 
-        //    // act
-        //    var result = await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).AnyContext();
-
-        //    // assert
-        //    result.ShouldNotBeNull();
-        //    result.Id.ShouldBe(entities.FirstOrDefault()?.Id);
-        //}
+            // assert
+            result.ShouldNotBeNull();
+            result.Id.ShouldBe("c2557410-c941-424a-8562-f9e25444f2bc");
+        }
 
         [Fact]
         public async Task InsertAsync_Test()
@@ -220,6 +216,10 @@
                 //result.entity.State.CreatedDescription.ShouldNotBeNull(); // EntityInsertDomainEventHandler
                 //result.entity.State.CreatedBy.ShouldNotBeNull(); // EntityInsertDomainEventHandler
             }
+
+            var entity = this.entityFaker.Generate();
+            entity.Id = "c2557410-c941-424a-8562-f9e25444f2bc";
+            await this.sut.UpsertAsync(entity).AnyContext();
         }
 
         //[Fact]

@@ -4,7 +4,7 @@
     using Microsoft.WindowsAzure.Storage.RetryPolicies;
     using Naos.Core.Queueing.Domain;
 
-    public class AzureStorageQueueOptions : QueueBaseOptions
+    public class AzureStorageQueueOptions : BaseQueueOptions
     {
         public string ConnectionString { get; set; }
 
