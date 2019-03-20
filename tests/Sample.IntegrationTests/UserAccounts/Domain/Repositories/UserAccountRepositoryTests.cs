@@ -167,20 +167,20 @@
         //    result.ShouldNotBeEmpty();
         //}
 
-        //[Fact]
-        //public async Task FindOneAsync_Test()
-        //{
-        //    // arrange
-        //    var entities = await this.sut.FindAllAsync(
-        //        new FindOptions<UserAccount>(take: 1)).AnyContext();
+        [Fact]
+        public async Task FindOneAsync_Test()
+        {
+            // arrange
+            var entities = await this.sut.FindAllAsync(
+                new FindOptions<UserAccount>(take: 1)).AnyContext();
 
-        //    // act
-        //    var result = await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).AnyContext();
+            // act
+            var result = await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).AnyContext();
 
-        //    // assert
-        //    result.ShouldNotBeNull();
-        //    result.Id.ShouldBe(entities.FirstOrDefault()?.Id);
-        //}
+            // assert
+            result.ShouldNotBeNull();
+            //result.Id.ShouldBe(entities.FirstOrDefault()?.Id);
+        }
 
         //[Fact]
         //public async Task InsertAsync_Test()
