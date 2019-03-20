@@ -25,9 +25,7 @@
             {
                 // arrange
                 this.SeedData(context);
-                var mediator = Substitute.For<IMediator>();
-                var logger = Substitute.For<ILogger<EntityFrameworkRepository<StubEntity>>>();
-                var sut = new EntityFrameworkRepository<StubEntity>(logger, mediator, context);
+                var sut = this.CreateRepository(context);
 
                 // act
                 var findResults = await sut.FindAllAsync();
@@ -45,9 +43,7 @@
             {
                 // arrange
                 this.SeedData(context);
-                var mediator = Substitute.For<IMediator>();
-                var logger = Substitute.For<ILogger<EntityFrameworkRepository<StubEntity>>>();
-                var sut = new EntityFrameworkRepository<StubEntity>(logger, mediator, context);
+                var sut = this.CreateRepository(context);
 
                 // act
                 var findResultsWithSpecification = await sut.FindAllAsync(new StubHasTenantSpecification("TestTenant"));
@@ -75,9 +71,7 @@
             {
                 // arrange
                 this.SeedData(context);
-                var mediator = Substitute.For<IMediator>();
-                var logger = Substitute.For<ILogger<EntityFrameworkRepository<StubEntity>>>();
-                var sut = new EntityFrameworkRepository<StubEntity>(logger, mediator, context);
+                var sut = this.CreateRepository(context);
 
                 // act
                 var findResults = await sut.FindAllAsync(
@@ -97,9 +91,7 @@
             {
                 // arrange
                 this.SeedData(context);
-                var mediator = Substitute.For<IMediator>();
-                var logger = Substitute.For<ILogger<EntityFrameworkRepository<StubEntity>>>();
-                var sut = new EntityFrameworkRepository<StubEntity>(logger, mediator, context);
+                var sut = this.CreateRepository(context);
 
                 // act
                 var findResults = await sut.FindAllAsync(
@@ -121,9 +113,7 @@
             {
                 // arrange
                 this.SeedData(context);
-                var mediator = Substitute.For<IMediator>();
-                var logger = Substitute.For<ILogger<EntityFrameworkRepository<StubEntity>>>();
-                var sut = new EntityFrameworkRepository<StubEntity>(logger, mediator, context);
+                var sut = this.CreateRepository(context);
 
                 // act
                 var findResults = await sut.FindAllAsync(
@@ -145,9 +135,7 @@
             {
                 // arrange
                 this.SeedData(context);
-                var mediator = Substitute.For<IMediator>();
-                var logger = Substitute.For<ILogger<EntityFrameworkRepository<StubEntity>>>();
-                var sut = new EntityFrameworkRepository<StubEntity>(logger, mediator, context);
+                var sut = this.CreateRepository(context);
 
                 // act
                 var findResult = await sut.FindOneAsync(new Guid("00000000-0000-0000-0000-000000000001"));
@@ -168,8 +156,7 @@
                 // arrange
                 this.SeedData(context);
                 var mediator = Substitute.For<IMediator>();
-                var logger = Substitute.For<ILogger<EntityFrameworkRepository<StubEntity>>>();
-                var sut = new EntityFrameworkRepository<StubEntity>(logger, mediator, context);
+                var sut = this.CreateRepository(context, mediator);
 
                 var entity = new StubEntity
                 {
@@ -200,8 +187,7 @@
                 // arrange
                 this.SeedData(context);
                 var mediator = Substitute.For<IMediator>();
-                var logger = Substitute.For<ILogger<EntityFrameworkRepository<StubEntity>>>();
-                var sut = new EntityFrameworkRepository<StubEntity>(logger, mediator, context);
+                var sut = this.CreateRepository(context, mediator);
 
                 // act
                 sut.DeleteAsync(new Guid("00000000-0000-0000-0000-000000000001")).Wait();
@@ -237,6 +223,14 @@
 
             context.Entities.AddRange(entities);
             context.SaveChanges();
+        }
+
+        private EntityFrameworkRepository<StubEntity> CreateRepository(StubDbContext dbContext, IMediator mediator = null)
+        {
+            return new EntityFrameworkRepository<StubEntity>(o => o
+                    .LoggerFactory(Substitute.For<ILoggerFactory>())
+                    .Mediator(mediator ?? Substitute.For<IMediator>())
+                    .DbContext(dbContext));
         }
     }
 

@@ -18,38 +18,23 @@
         where TEntity : class, IEntity, IAggregateRoot
     {
         private readonly ILogger<IRepository<TEntity>> logger;
-        private readonly IMediator mediator;
-        private readonly DbContext dbContext;
+        private readonly EntityFrameworkRepositoryOptions options;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EntityFrameworkRepository{T}" /> class.
-        /// </summary>
-        /// <param name="logger">The logger.</param>
-        /// <param name="mediator">The mediator.</param>
-        /// <param name="dbContext">The EF database context.</param>
-        /// <param name="options">The options.</param>
-        public EntityFrameworkRepository(
-            ILogger<IRepository<TEntity>> logger,
-            IMediator mediator,
-            DbContext dbContext,
-            IRepositoryOptions options = null)
+        public EntityFrameworkRepository(EntityFrameworkRepositoryOptions options)
         {
-            EnsureArg.IsNotNull(logger, nameof(logger));
-            EnsureArg.IsNotNull(mediator, nameof(mediator));
-            EnsureArg.IsNotNull(dbContext, nameof(dbContext));
+            EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.DbContext, nameof(options.DbContext));
 
-            this.logger = logger;
-            this.mediator = mediator;
-            this.dbContext = dbContext;
-            this.Options = options;
+            this.options = options;
+            this.logger = options.CreateLogger<IRepository<TEntity>>();
 
             try
             {
-                if (dbContext.Database.GetDbConnection().ConnectionString.Equals("DataSource=:memory:", StringComparison.OrdinalIgnoreCase))
+                if (this.options.DbContext.Database.GetDbConnection().ConnectionString.Equals("DataSource=:memory:", StringComparison.OrdinalIgnoreCase))
                 {
                     // needed for sqlite inmemory
-                    dbContext.Database.OpenConnection();
-                    dbContext.Database.EnsureCreated();
+                    this.options.DbContext.Database.OpenConnection();
+                    this.options.DbContext.Database.EnsureCreated();
                 }
             }
             catch (InvalidOperationException)
@@ -59,19 +44,22 @@
             }
         }
 
-        protected IRepositoryOptions Options { get; }
+        public EntityFrameworkRepository(Builder<EntityFrameworkRepositoryOptionsBuilder, EntityFrameworkRepositoryOptions> optionsBuilder)
+            : this(optionsBuilder(new EntityFrameworkRepositoryOptionsBuilder()).Build())
+        {
+        }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
             if (options?.HasOrders() == true)
             {
-                return await this.dbContext.Set<TEntity>()
+                return await this.options.DbContext.Set<TEntity>()
                     .TakeIf(options?.Take)
                     .OrderByIf(options).ToListAsyncSafe(cancellationToken).AnyContext();
             }
             else
             {
-                return await this.dbContext.Set<TEntity>()
+                return await this.options.DbContext.Set<TEntity>()
                     .TakeIf(options?.Take).ToListAsyncSafe(cancellationToken).AnyContext();
             }
         }
@@ -80,7 +68,7 @@
         {
             if (options?.HasOrders() == true)
             {
-                return await this.dbContext.Set<TEntity>()
+                return await this.options.DbContext.Set<TEntity>()
                     .WhereExpression(specification?.ToExpression())
                     .SkipIf(options?.Skip)
                     .TakeIf(options?.Take)
@@ -88,7 +76,7 @@
             }
             else
             {
-                return await this.dbContext.Set<TEntity>()
+                return await this.options.DbContext.Set<TEntity>()
                     .WhereExpression(specification?.ToExpression())
                     .SkipIf(options?.Skip)
                     .TakeIf(options?.Take).ToListAsyncSafe(cancellationToken).AnyContext();
@@ -102,7 +90,7 @@
 
             if (options?.HasOrders() == true)
             {
-                return await this.dbContext.Set<TEntity>()
+                return await this.options.DbContext.Set<TEntity>()
                     .WhereExpressions(expressions)
                     .SkipIf(options?.Skip)
                     .TakeIf(options?.Take)
@@ -110,7 +98,7 @@
             }
             else
             {
-                return await this.dbContext.Set<TEntity>()
+                return await this.options.DbContext.Set<TEntity>()
                     .WhereExpressions(expressions)
                     .SkipIf(options?.Skip)
                     .TakeIf(options?.Take).ToListAsyncSafe(cancellationToken).AnyContext();
@@ -124,7 +112,7 @@
                 return null;
             }
 
-            return await this.dbContext.Set<TEntity>().FindAsync(this.ConvertEntityId(id)).AnyContext();
+            return await this.options.DbContext.Set<TEntity>().FindAsync(this.ConvertEntityId(id)).AnyContext();
         }
 
         public async Task<bool> ExistsAsync(object id)
@@ -173,31 +161,31 @@
 
             bool isNew = entity.Id.IsDefault() || !await this.ExistsAsync(entity.Id).AnyContext();
 
-            if (this.Options?.PublishEvents != false)
+            if (this.options.PublishEvents && this.options.Mediator != null)
             {
                 if (isNew)
                 {
-                    await this.mediator.Publish(new EntityInsertDomainEvent(entity)).AnyContext();
+                    await this.options.Mediator.Publish(new EntityInsertDomainEvent(entity)).AnyContext();
                 }
                 else
                 {
-                    await this.mediator.Publish(new EntityUpdateDomainEvent(entity)).AnyContext();
+                    await this.options.Mediator.Publish(new EntityUpdateDomainEvent(entity)).AnyContext();
                 }
             }
 
             this.logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogEventKeys.DomainRepository);
-            this.dbContext.Set<TEntity>().Add(entity);
-            await this.dbContext.SaveChangesAsync().AnyContext();
+            this.options.DbContext.Set<TEntity>().Add(entity);
+            await this.options.DbContext.SaveChangesAsync().AnyContext();
 
-            if (this.Options?.PublishEvents != false)
+            if (this.options.PublishEvents && this.options.Mediator != null)
             {
                 if (isNew)
                 {
-                    await this.mediator.Publish(new EntityInsertedDomainEvent(entity)).AnyContext();
+                    await this.options.Mediator.Publish(new EntityInsertedDomainEvent(entity)).AnyContext();
                 }
                 else
                 {
-                    await this.mediator.Publish(new EntityUpdatedDomainEvent(entity)).AnyContext();
+                    await this.options.Mediator.Publish(new EntityUpdatedDomainEvent(entity)).AnyContext();
                 }
             }
 
@@ -218,18 +206,18 @@
             if (entity != null)
             {
                 this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogEventKeys.DomainRepository);
-                this.dbContext.Remove(entity);
+                this.options.DbContext.Remove(entity);
 
-                if (this.Options?.PublishEvents != false)
+                if (this.options.PublishEvents && this.options.Mediator != null)
                 {
-                    await this.mediator.Publish(new EntityDeleteDomainEvent(entity)).AnyContext();
+                    await this.options.Mediator.Publish(new EntityDeleteDomainEvent(entity)).AnyContext();
                 }
 
-                await this.dbContext.SaveChangesAsync();
+                await this.options.DbContext.SaveChangesAsync();
 
-                if (this.Options?.PublishEvents != false)
+                if (this.options.PublishEvents && this.options.Mediator != null)
                 {
-                    await this.mediator.Publish(new EntityDeletedDomainEvent(entity)).AnyContext();
+                    await this.options.Mediator.Publish(new EntityDeletedDomainEvent(entity)).AnyContext();
                 }
 
                 return ActionResult.Deleted;
