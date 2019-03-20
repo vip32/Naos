@@ -182,16 +182,16 @@
             //result.Id.ShouldBe(entities.FirstOrDefault()?.Id);
         }
 
-        //[Fact]
-        //public async Task InsertAsync_Test()
-        //{
-        //    // arrange/act
-        //    var result = await this.sut.InsertAsync(this.entityFaker.Generate()).AnyContext();
+        [Fact]
+        public async Task InsertAsync_Test()
+        {
+            // arrange/act
+            var result = await this.sut.InsertAsync(this.entityFaker.Generate()).AnyContext();
 
-        //    // assert
-        //    result.ShouldNotBeNull();
-        //    result.Id.ShouldNotBeNull();
-        //}
+            // assert
+            result.ShouldNotBeNull();
+            result.Id.ShouldNotBeNull();
+        }
 
         [Fact]
         public async Task UpsertAsync_Test()
