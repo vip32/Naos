@@ -25,50 +25,50 @@
         Task DeleteQueueAsync();
     }
 
-    public interface IQueue<T> : IQueue, IDisposable
-        where T : class
+    public interface IQueue<TData> : IQueue, IDisposable
+        where TData : class
     {
         /// <summary>
         /// Enqueues an item
         /// </summary>
         /// <param name="data">the data to queue</param>
         /// <returns></returns>
-        Task<string> EnqueueAsync(T data);
+        Task<string> EnqueueAsync(TData data);
 
         /// <summary>
         /// Dequeues an item, if no item queued it will wait for the speficied amout (timeout)
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<IQueueItem<T>> DequeueAsync(CancellationToken cancellationToken);
+        Task<IQueueItem<TData>> DequeueAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// Dequeues an item, if no item queued it will wait for the speficied amout (timeout)
         /// </summary>
         /// <param name="timeout"></param>
         /// <returns></returns>
-        Task<IQueueItem<T>> DequeueAsync(TimeSpan? timeout = null);
+        Task<IQueueItem<TData>> DequeueAsync(TimeSpan? timeout = null);
 
         /// <summary>
         /// Renews the lock on a dequeued item
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        Task RenewLockAsync(IQueueItem<T> item);
+        Task RenewLockAsync(IQueueItem<TData> item);
 
         /// <summary>
         /// Completes a dequeued item, take it out of the queue permanently
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        Task CompleteAsync(IQueueItem<T> item);
+        Task CompleteAsync(IQueueItem<TData> item);
 
         /// <summary>
         /// Cancel a dequeued item, puts it back in the queue again
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        Task AbandonAsync(IQueueItem<T> item);
+        Task AbandonAsync(IQueueItem<TData> item);
 
         /// <summary>
         /// Asynchronously dequeues items in the background. Dequeued items are handled by the specified handler
@@ -77,7 +77,7 @@
         /// <param name="autoComplete">True to call <see cref="CompleteAsync"/> after the <paramref name="handler"/> is run, defaults to false</param>
         /// <param name="cancellationToken">The token used to cancel the background worker</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task ProcessItemsAsync(Func<IQueueItem<T>, CancellationToken, Task> handler, bool autoComplete = false, CancellationToken cancellationToken = default);
+        Task ProcessItemsAsync(Func<IQueueItem<TData>, CancellationToken, Task> handler, bool autoComplete = false, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Asynchronously dequeues items in the background. Dequeued items are sent (by using mediator) as <see cref="QueueItemRequest"/> request.

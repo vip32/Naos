@@ -2,7 +2,7 @@
 {
     using System.Diagnostics;
 
-    [DebuggerDisplay("Queued={Queued}, Enqueued={Enqueued}")]
+    [DebuggerDisplay("Queued={Queued}, Enqueued={Enqueued}, Completed={Completed}")]
     public class QueueMetrics
     {
         public long Queued { get; set; }
