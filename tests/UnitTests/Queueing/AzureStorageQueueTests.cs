@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
+    using MediatR;
     using Microsoft.Extensions.Logging;
     using Microsoft.WindowsAzure.Storage.RetryPolicies;
     using Naos.Core.Common;
@@ -54,6 +55,12 @@
         public override Task CanQueueProcessItemsAsync()
         {
             return base.CanQueueProcessItemsAsync();
+        }
+
+        [Fact]
+        public override Task CanQueueProcessItemsWithMediatorSendAsync()
+        {
+            return base.CanQueueProcessItemsWithMediatorSendAsync();
         }
 
         [Fact]
@@ -118,6 +125,7 @@
             }
 
             return this.queue ?? (this.queue = new AzureStorageQueue<StubMessage>(o => o
+                        .Mediator(Substitute.For<IMediator>())
                         .LoggerFactory(Substitute.For<ILoggerFactory>())
                         .ConnectionString(connectionString)
                         .Name(name)

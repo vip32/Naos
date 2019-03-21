@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.Queueing.Infrastructure.Azure
 {
     using System;
+    using MediatR;
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Azure.ServiceBus.Management;
     using Naos.Core.Common;
@@ -8,6 +9,12 @@
     public class AzureServiceBusQueueOptionsBuilder :
        BaseOptionsBuilder<AzureServiceBusQueueOptions, AzureServiceBusQueueOptionsBuilder>
     {
+        public AzureServiceBusQueueOptionsBuilder Mediator(IMediator mediator)
+        {
+            this.Target.Mediator = mediator;
+            return this;
+        }
+
         public AzureServiceBusQueueOptionsBuilder ConnectionString(string connectionString)
         {
             this.Target.ConnectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));

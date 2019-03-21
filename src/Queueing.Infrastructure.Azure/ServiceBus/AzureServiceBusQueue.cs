@@ -13,8 +13,8 @@
     using Naos.Core.Common.Serialization;
     using Naos.Core.Queueing.Domain;
 
-    public class AzureServiceBusQueue<T> : BaseQueue<T, AzureServiceBusQueueOptions>
-         where T : class
+    public class AzureServiceBusQueue<TData> : BaseQueue<TData, AzureServiceBusQueueOptions>
+         where TData : class
     {
         private readonly ManagementClient managementClient;
         private MessageSender queueSender;
@@ -47,7 +47,7 @@
 
         private bool QueueIsCreated => this.queueReceiver != null && this.queueSender != null;
 
-        public override async Task<string> EnqueueAsync(T data)
+        public override async Task<string> EnqueueAsync(TData data)
         {
             EnsureArg.IsNotNull(data, nameof(data));
             await this.EnsureQueueAsync().AnyContext();
@@ -65,14 +65,14 @@
             };
             await this.queueSender.SendAsync(brokeredMessage).AnyContext();
 
-            var item = new QueueItem<T>(brokeredMessage.MessageId, data, this, DateTime.UtcNow, 0);
+            var item = new QueueItem<TData>(brokeredMessage.MessageId, data, this, DateTime.UtcNow, 0);
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item enqueued (id={item.Id}, queue={this.options.Name}, type={typeof(T).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item enqueued (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
             this.LastEnqueuedDate = DateTime.UtcNow;
             return brokeredMessage.MessageId;
         }
 
-        public override async Task<IQueueItem<T>> DequeueAsync(TimeSpan? timeout = null)
+        public override async Task<IQueueItem<TData>> DequeueAsync(TimeSpan? timeout = null)
         {
             await this.EnsureQueueAsync().AnyContext();
             this.logger.LogInformation($"queue item dequeue (queue={this.options.Name})");
@@ -96,7 +96,7 @@
             return this.HandleDequeue(message);
         }
 
-        public override async Task RenewLockAsync(IQueueItem<T> item)
+        public override async Task RenewLockAsync(IQueueItem<TData> item)
         {
             EnsureArg.IsNotNull(item, nameof(item));
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
@@ -104,11 +104,11 @@
 
             await this.queueReceiver.RenewLockAsync(item.Id).AnyContext();
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item lock renewed (id={item.Id}, queue={this.options.Name}, type={typeof(T).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item lock renewed (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
             this.LastDequeuedDate = DateTime.UtcNow;
         }
 
-        public override async Task CompleteAsync(IQueueItem<T> item)
+        public override async Task CompleteAsync(IQueueItem<TData> item)
         {
             EnsureArg.IsNotNull(item, nameof(item));
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
@@ -123,11 +123,11 @@
             Interlocked.Increment(ref this.completedCount);
             item.MarkCompleted();
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item completed (id={item.Id}, queue={this.options.Name}, type={typeof(T).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item completed (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
             this.LastDequeuedDate = DateTime.UtcNow;
         }
 
-        public override async Task AbandonAsync(IQueueItem<T> item)
+        public override async Task AbandonAsync(IQueueItem<TData> item)
         {
             EnsureArg.IsNotNull(item, nameof(item));
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
@@ -142,7 +142,7 @@
             Interlocked.Increment(ref this.abandonedCount);
             item.MarkAbandoned();
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item abandoned (id={item.Id}, queue={this.options.Name}, type={typeof(T).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item abandoned (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
             this.LastDequeuedDate = DateTime.UtcNow;
         }
 
@@ -165,7 +165,7 @@
             };
         }
 
-        public override async Task ProcessItemsAsync(Func<IQueueItem<T>, CancellationToken, Task> handler, bool autoComplete, CancellationToken cancellationToken)
+        public override async Task ProcessItemsAsync(Func<IQueueItem<TData>, CancellationToken, Task> handler, bool autoComplete, CancellationToken cancellationToken)
         {
             EnsureArg.IsNotNull(handler, nameof(handler));
             await this.EnsureQueueAsync(cancellationToken).AnyContext();
@@ -198,6 +198,20 @@
                     }
                 }
             }, new MessageHandlerOptions(this.ExceptionReceivedHandler));
+        }
+
+        public override async Task ProcessItemsAsync(bool autoComplete, CancellationToken cancellationToken)
+        {
+            await this.EnsureQueueAsync(cancellationToken).AnyContext();
+
+            if (this.options.Mediator == null)
+            {
+                throw new NaosException("queue processing error: no mediator instance provided");
+            }
+
+            await this.ProcessItemsAsync(
+                async (i, ct) => await this.options.Mediator.Send<bool>(new QueueItemRequest<TData>(i), ct).AnyContext(),
+                autoComplete, cancellationToken).AnyContext();
         }
 
         public override async Task DeleteQueueAsync()
@@ -254,7 +268,7 @@
                 this.options.RetryPolicy);
         }
 
-        protected override Task<IQueueItem<T>> DequeueWithIntervalAsync(CancellationToken cancellationToken)
+        protected override Task<IQueueItem<TData>> DequeueWithIntervalAsync(CancellationToken cancellationToken)
         {
             // azure ServiceBus does not support CancellationTokens > use TimeSpan overload instead.default 30 second timeout
             return this.DequeueAsync();
@@ -266,7 +280,7 @@
             return Task.CompletedTask;
         }
 
-        private IQueueItem<T> HandleDequeue(Message message)
+        private IQueueItem<TData> HandleDequeue(Message message)
         {
             if (message == null)
             {
@@ -275,14 +289,14 @@
 
             Interlocked.Increment(ref this.dequeuedCount);
 
-            var item = new QueueItem<T>(
+            var item = new QueueItem<TData>(
                 message.SystemProperties.LockToken,
-                this.serializer.Deserialize<T>(message.Body),
+                this.serializer.Deserialize<TData>(message.Body),
                 this,
                 message.SystemProperties.EnqueuedTimeUtc,
                 message.SystemProperties.DeliveryCount);
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item dequeued (id={item.Id}, queue={this.options.Name}, type={typeof(T).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item dequeued (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
             this.LastDequeuedDate = DateTime.UtcNow;
 
             return item;

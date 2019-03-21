@@ -6,18 +6,18 @@
     using Naos.Core.Domain.Model;
 
     [DebuggerDisplay("Id={Id}, Queue={Name}")]
-    public class QueueItem<T> : IQueueItem<T>
-        where T : class
+    public class QueueItem<TData> : IQueueItem<TData>
+        where TData : class
     {
-        private readonly IQueue<T> queue;
+        private readonly IQueue<TData> queue;
 
-        public QueueItem(string id, T value, IQueue<T> queue, DateTime enqueued, int attempts)
+        public QueueItem(string id, TData value, IQueue<TData> queue, DateTime enqueued, int attempts)
         {
             EnsureThat.EnsureArg.IsNotNullOrEmpty(id, nameof(id));
             EnsureThat.EnsureArg.IsNotNull(queue, nameof(queue));
 
             this.Id = id;
-            this.Value = value;
+            this.Data = value;
             this.queue = queue;
             this.EnqueuedDate = enqueued;
             this.Attempts = attempts;
@@ -30,7 +30,7 @@
 
         public bool IsAbandoned { get; private set; }
 
-        public T Value { get; set; }
+        public TData Data { get; set; }
 
         public DateTime EnqueuedDate { get; set; }
 

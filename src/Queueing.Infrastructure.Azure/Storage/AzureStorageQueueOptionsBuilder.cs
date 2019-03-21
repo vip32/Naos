@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.Queueing.Infrastructure.Azure
 {
     using System;
+    using MediatR;
     using Microsoft.WindowsAzure.Storage.RetryPolicies;
     using Naos.Core.Common;
     using Naos.Core.Common.Serialization;
@@ -8,6 +9,12 @@
     public class AzureStorageQueueOptionsBuilder :
        BaseOptionsBuilder<AzureStorageQueueOptions, AzureStorageQueueOptionsBuilder>
     {
+        public AzureStorageQueueOptionsBuilder Mediator(IMediator mediator)
+        {
+            this.Target.Mediator = mediator;
+            return this;
+        }
+
         public AzureStorageQueueOptionsBuilder Name(string name)
         {
             this.Target.Name = name;

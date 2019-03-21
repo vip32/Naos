@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
+    using MediatR;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Queueing;
     using Naos.Core.Queueing.Domain;
@@ -52,6 +53,12 @@
         public override Task CanQueueProcessItemsAsync()
         {
             return base.CanQueueProcessItemsAsync();
+        }
+
+        [Fact]
+        public override Task CanQueueProcessItemsWithMediatorSendAsync()
+        {
+            return base.CanQueueProcessItemsWithMediatorSendAsync();
         }
 
         [Fact]
@@ -109,6 +116,7 @@
             int deadLetterMaxItems = 100)
         {
             return this.queue ?? (this.queue = new InMemoryQueue<StubMessage>(o => o
+                        .Mediator(Substitute.For<IMediator>())
                         .LoggerFactory(Substitute.For<ILoggerFactory>())
                         .RetryDelay(retryDelay.GetValueOrDefault(TimeSpan.FromMinutes(1)))
                         .Retries(retries)

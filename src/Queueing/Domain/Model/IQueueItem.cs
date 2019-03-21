@@ -4,12 +4,12 @@
     using System.Threading.Tasks;
     using Naos.Core.Domain.Model;
 
-    public interface IQueueItem<T> : IDisposable
-        where T : class
+    public interface IQueueItem<TData> : IDisposable
+        where TData : class
     {
         string Id { get; }
 
-        T Value { get; }
+        TData Data { get; }
 
         bool IsCompleted { get; }
 

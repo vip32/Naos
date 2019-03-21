@@ -11,8 +11,8 @@
     using Naos.Core.Common.Serialization;
     using Naos.Core.Queueing.Domain;
 
-    public class AzureStorageQueue<T> : BaseQueue<T, AzureStorageQueueOptions>
-        where T : class
+    public class AzureStorageQueue<TData> : BaseQueue<TData, AzureStorageQueueOptions>
+        where TData : class
     {
         private readonly CloudQueue queue;
         private readonly CloudQueue deadletterQueue;
@@ -50,7 +50,7 @@
         {
         }
 
-        public override async Task<string> EnqueueAsync(T data)
+        public override async Task<string> EnqueueAsync(TData data)
         {
             EnsureArg.IsNotNull(data, nameof(data));
             await this.EnsureQueueAsync().AnyContext();
@@ -62,12 +62,12 @@
             // TODO: store correlationid?
             await this.queue.AddMessageAsync(message).AnyContext();
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item enqueued (id={message.Id}, queue={this.options.Name}, type={typeof(T).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item enqueued (id={message.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
             this.LastEnqueuedDate = DateTime.UtcNow;
             return message.Id;
         }
 
-        public override async Task RenewLockAsync(IQueueItem<T> item)
+        public override async Task RenewLockAsync(IQueueItem<TData> item)
         {
             EnsureArg.IsNotNull(item, nameof(item));
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
@@ -76,11 +76,11 @@
             var message = this.ToMessage(item);
             await this.queue.UpdateMessageAsync(message, this.options.ProcessTimeout, MessageUpdateFields.Visibility).AnyContext();
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item lock renewed (id={message.Id}, queue={this.options.Name}, type={typeof(T).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item lock renewed (id={message.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
             this.LastDequeuedDate = DateTime.UtcNow;
         }
 
-        public override async Task CompleteAsync(IQueueItem<T> item)
+        public override async Task CompleteAsync(IQueueItem<TData> item)
         {
             EnsureArg.IsNotNull(item, nameof(item));
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
@@ -97,11 +97,11 @@
             Interlocked.Increment(ref this.completedCount);
             item.MarkCompleted();
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item completed (id={item.Id}, queue={this.options.Name}, type={typeof(T).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item completed (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
             this.LastDequeuedDate = DateTime.UtcNow;
         }
 
-        public override async Task AbandonAsync(IQueueItem<T> item)
+        public override async Task AbandonAsync(IQueueItem<TData> item)
         {
             EnsureArg.IsNotNull(item, nameof(item));
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
@@ -128,7 +128,7 @@
             Interlocked.Increment(ref this.abandonedCount);
             item.MarkAbandoned();
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item abandoned (id={item.Id}, queue={this.options.Name}, type={typeof(T).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item abandoned (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
             this.LastDequeuedDate = DateTime.UtcNow;
         }
 
@@ -154,12 +154,26 @@
             };
         }
 
-        public override async Task ProcessItemsAsync(Func<IQueueItem<T>, CancellationToken, Task> handler, bool autoComplete, CancellationToken cancellationToken)
+        public override async Task ProcessItemsAsync(Func<IQueueItem<TData>, CancellationToken, Task> handler, bool autoComplete, CancellationToken cancellationToken)
         {
             EnsureArg.IsNotNull(handler, nameof(handler));
             await this.EnsureQueueAsync(cancellationToken).AnyContext();
 
             this.ProcessItems(handler, autoComplete, cancellationToken);
+        }
+
+        public override async Task ProcessItemsAsync(bool autoComplete, CancellationToken cancellationToken)
+        {
+            await this.EnsureQueueAsync(cancellationToken).AnyContext();
+
+            if (this.options.Mediator == null)
+            {
+                throw new NaosException("queue processing error: no mediator instance provided");
+            }
+
+            this.ProcessItems(
+                async (i, ct) => await this.options.Mediator.Send<bool>(new QueueItemRequest<TData>(i), ct).AnyContext(),
+                autoComplete, cancellationToken);
         }
 
         public override async Task DeleteQueueAsync()
@@ -191,7 +205,7 @@
             this.queueCreated = true;
         }
 
-        protected override async Task<IQueueItem<T>> DequeueWithIntervalAsync(CancellationToken cancellationToken)
+        protected override async Task<IQueueItem<TData>> DequeueWithIntervalAsync(CancellationToken cancellationToken)
         {
             await this.EnsureQueueAsync().AnyContext();
             this.logger.LogInformation($"queue item dequeue (queue={this.options.Name})");
@@ -225,7 +239,7 @@
             return this.HandleDequeue(message); // convert message to item
         }
 
-        private void ProcessItems(Func<IQueueItem<T>, CancellationToken, Task> handler, bool autoComplete, CancellationToken cancellationToken)
+        private void ProcessItems(Func<IQueueItem<TData>, CancellationToken, Task> handler, bool autoComplete, CancellationToken cancellationToken)
         {
             EnsureArg.IsNotNull(handler, nameof(handler));
             var linkedCancellationToken = this.CreateLinkedTokenSource(cancellationToken);
@@ -236,7 +250,7 @@
 
                 while (!linkedCancellationToken.IsCancellationRequested)
                 {
-                    IQueueItem<T> item = null;
+                    IQueueItem<TData> item = null;
                     try
                     {
                         item = await this.DequeueWithIntervalAsync(linkedCancellationToken.Token).AnyContext();
@@ -276,27 +290,27 @@
                 .ContinueWith(t => linkedCancellationToken.Dispose());
         }
 
-        private IQueueItem<T> HandleDequeue(CloudQueueMessage message)
+        private IQueueItem<TData> HandleDequeue(CloudQueueMessage message)
         {
             Interlocked.Increment(ref this.dequeuedCount);
 
-            var item = new AzureStorageQueueItem<T>(
+            var item = new AzureStorageQueueItem<TData>(
                 message,
-                this.serializer.Deserialize<T>(message.AsBytes),
+                this.serializer.Deserialize<TData>(message.AsBytes),
                 this);
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item dequeued (id={item.Id}, queue={this.options.Name}, type={typeof(T).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item dequeued (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
             this.LastDequeuedDate = DateTime.UtcNow;
             return item;
         }
 
-        private CloudQueueMessage ToMessage(IQueueItem<T> item)
+        private CloudQueueMessage ToMessage(IQueueItem<TData> item)
         {
 #pragma warning disable SA1119 // Statement must not use unnecessary parenthesis
-            if (!(item is AzureStorageQueueItem<T> azureQueueItem))
+            if (!(item is AzureStorageQueueItem<TData> azureQueueItem))
 #pragma warning restore SA1119 // Statement must not use unnecessary parenthesis
             {
-                throw new ArgumentException($"invalid queue item type, not of type '{nameof(AzureStorageQueueItem<T>)}'");
+                throw new ArgumentException($"invalid queue item type, not of type '{nameof(AzureStorageQueueItem<TData>)}'");
             }
 
             return azureQueueItem.Message;

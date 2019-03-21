@@ -72,6 +72,11 @@
             return this.decoratee.ProcessItemsAsync(handler, true, cancellationToken);
         }
 
+        public Task ProcessItemsAsync(bool autoComplete = false, CancellationToken cancellationToken = default)
+        {
+            return this.decoratee.ProcessItemsAsync(true, cancellationToken);
+        }
+
         public Task RenewLockAsync(IQueueItem<T> item)
         {
             return this.decoratee.RenewLockAsync(item);

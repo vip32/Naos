@@ -4,10 +4,10 @@
     using Microsoft.WindowsAzure.Storage.Queue;
     using Naos.Core.Queueing.Domain;
 
-    public class AzureStorageQueueItem<T> : QueueItem<T>
-        where T : class
+    public class AzureStorageQueueItem<TData> : QueueItem<TData>
+        where TData : class
     {
-        public AzureStorageQueueItem(CloudQueueMessage message, T value, IQueue<T> queue)
+        public AzureStorageQueueItem(CloudQueueMessage message, TData value, IQueue<TData> queue)
             : base(message.Id, value, queue, message.InsertionTime.GetValueOrDefault().UtcDateTime, message.DequeueCount)
         {
             EnsureArg.IsNotNull(message, nameof(message));

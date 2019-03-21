@@ -76,5 +76,7 @@
         /// <param name="cancellationToken">The token used to cancel the background worker</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task ProcessItemsAsync(Func<IQueueItem<T>, CancellationToken, Task> handler, bool autoComplete = false, CancellationToken cancellationToken = default);
+
+        Task ProcessItemsAsync(bool autoComplete = false, CancellationToken cancellationToken = default);
     }
 }

@@ -65,6 +65,8 @@
 
         public abstract Task ProcessItemsAsync(Func<IQueueItem<T>, CancellationToken, Task> handler, bool autoComplete = false, CancellationToken cancellationToken = default);
 
+        public abstract Task ProcessItemsAsync(bool autoComplete = false, CancellationToken cancellationToken = default);
+
         public abstract Task DeleteQueueAsync();
 
         public virtual void Dispose()

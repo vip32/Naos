@@ -1,12 +1,15 @@
 ﻿namespace Naos.Core.Queueing.Infrastructure.Azure
 {
     using System;
+    using MediatR;
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Azure.ServiceBus.Management;
     using Naos.Core.Queueing.Domain;
 
     public class AzureServiceBusQueueOptions : BaseQueueOptions
     {
+        public IMediator Mediator { get; set; }
+
         public string ConnectionString { get; set; }
 
         /// <summary>

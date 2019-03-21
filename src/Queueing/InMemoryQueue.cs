@@ -10,12 +10,12 @@
     using Naos.Core.Common;
     using Naos.Core.Queueing.Domain;
 
-    public class InMemoryQueue<T> : BaseQueue<T, InMemoryQueueOptions>
-        where T : class
+    public class InMemoryQueue<TData> : BaseQueue<TData, InMemoryQueueOptions>
+        where TData : class
     {
-        private readonly ConcurrentQueue<QueueItem<T>> queue = new ConcurrentQueue<QueueItem<T>>();
-        private readonly ConcurrentDictionary<string, QueueItem<T>> dequeued = new ConcurrentDictionary<string, QueueItem<T>>();
-        private readonly ConcurrentQueue<QueueItem<T>> deadletterQueue = new ConcurrentQueue<QueueItem<T>>();
+        private readonly ConcurrentQueue<QueueItem<TData>> queue = new ConcurrentQueue<QueueItem<TData>>();
+        private readonly ConcurrentDictionary<string, QueueItem<TData>> dequeued = new ConcurrentDictionary<string, QueueItem<TData>>();
+        private readonly ConcurrentQueue<QueueItem<TData>> deadletterQueue = new ConcurrentQueue<QueueItem<TData>>();
 
         private int enqueuedCount;
         private int dequeuedCount;
@@ -38,7 +38,7 @@
         {
         }
 
-        public override async Task<string> EnqueueAsync(T data)
+        public override async Task<string> EnqueueAsync(TData data)
         {
             EnsureArg.IsNotNull(data, nameof(data));
             await this.EnsureQueueAsync().AnyContext();
@@ -46,23 +46,23 @@
             string id = RandomGenerator.GenerateString(13, true);
             this.logger.LogInformation($"queue item enqueue (id={id}, queue={this.options.Name})");
 
-            var item = new QueueItem<T>(id, data.Clone(), this, DateTime.UtcNow, 0);
+            var item = new QueueItem<TData>(id, data.Clone(), this, DateTime.UtcNow, 0);
             this.queue.Enqueue(item);
 
             Interlocked.Increment(ref this.enqueuedCount);
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item enqueued (id={item.Id}, queue={this.options.Name}, type={typeof(T).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item enqueued (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
             this.LastEnqueuedDate = DateTime.UtcNow;
             return item.Id;
         }
 
-        public override Task RenewLockAsync(IQueueItem<T> item)
+        public override Task RenewLockAsync(IQueueItem<TData> item)
         {
             EnsureArg.IsNotNull(item, nameof(item));
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
             this.logger.LogInformation($"queue item renew (id={item.Id}, queue={this.options.Name})");
 
-            var addItem = item as QueueItem<T>;
+            var addItem = item as QueueItem<TData>;
             this.dequeued.AddOrUpdate(item.Id, addItem, (key, value) =>
             {
                 if (item != null)
@@ -73,12 +73,12 @@
                 return value;
             });
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item lock renewed (id={item.Id}, queue={this.options.Name}, type={typeof(T).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item lock renewed (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
             this.LastDequeuedDate = DateTime.UtcNow;
             return Task.CompletedTask;
         }
 
-        public override Task CompleteAsync(IQueueItem<T> item)
+        public override Task CompleteAsync(IQueueItem<TData> item)
         {
             EnsureArg.IsNotNull(item, nameof(item));
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
@@ -97,12 +97,12 @@
             Interlocked.Increment(ref this.completedCount);
             item.MarkCompleted();
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item completed (id={item.Id}, queue={this.options.Name}, type={typeof(T).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item completed (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
             this.LastDequeuedDate = DateTime.UtcNow;
             return Task.CompletedTask;
         }
 
-        public override Task AbandonAsync(IQueueItem<T> item)
+        public override Task AbandonAsync(IQueueItem<TData> item)
         {
             EnsureArg.IsNotNull(item, nameof(item));
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
@@ -145,7 +145,7 @@
             Interlocked.Increment(ref this.abandonedCount);
             item.MarkAbandoned();
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item abandoned (id={item.Id}, queue={this.options.Name}, type={typeof(T).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item abandoned (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
             this.LastDequeuedDate = DateTime.UtcNow;
             return Task.CompletedTask;
         }
@@ -168,12 +168,26 @@
             };
         }
 
-        public override async Task ProcessItemsAsync(Func<IQueueItem<T>, CancellationToken, Task> handler, bool autoComplete, CancellationToken cancellationToken)
+        public override async Task ProcessItemsAsync(Func<IQueueItem<TData>, CancellationToken, Task> handler, bool autoComplete, CancellationToken cancellationToken)
         {
             EnsureArg.IsNotNull(handler, nameof(handler));
             await this.EnsureQueueAsync(cancellationToken).AnyContext();
 
             this.ProcessItems(handler, autoComplete, cancellationToken);
+        }
+
+        public override async Task ProcessItemsAsync(bool autoComplete, CancellationToken cancellationToken)
+        {
+            await this.EnsureQueueAsync(cancellationToken).AnyContext();
+
+            if(this.options.Mediator == null)
+            {
+                throw new NaosException("queue processing error: no mediator instance provided");
+            }
+
+            this.ProcessItems(
+                async (i, ct) => await this.options.Mediator.Send<bool>(new QueueItemRequest<TData>(i), ct).AnyContext(),
+                autoComplete, cancellationToken);
         }
 
         public override Task DeleteQueueAsync()
@@ -202,7 +216,7 @@
             return Task.CompletedTask;
         }
 
-        protected override async Task<IQueueItem<T>> DequeueWithIntervalAsync(CancellationToken cancellationToken)
+        protected override async Task<IQueueItem<TData>> DequeueWithIntervalAsync(CancellationToken cancellationToken)
         {
             await this.EnsureQueueAsync().AnyContext();
             this.logger.LogInformation($"queue item dequeue (queue={this.options.Name}, count={this.queue.Count})");
@@ -231,15 +245,15 @@
             dequeuedItem.DequeuedDate = DateTime.UtcNow;
 
             Interlocked.Increment(ref this.dequeuedCount);
-            var item = new QueueItem<T>(dequeuedItem.Id, dequeuedItem.Value.Clone(), this, dequeuedItem.EnqueuedDate, dequeuedItem.Attempts); // clone item
+            var item = new QueueItem<TData>(dequeuedItem.Id, dequeuedItem.Data.Clone(), this, dequeuedItem.EnqueuedDate, dequeuedItem.Attempts); // clone item
             await item.RenewLockAsync();
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item dequeued (id={item.Id}, queue={this.options.Name}, type={typeof(T).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item dequeued (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
             this.LastDequeuedDate = DateTime.UtcNow;
             return item;
         }
 
-        private void ProcessItems(Func<IQueueItem<T>, CancellationToken, Task> handler, bool autoComplete, CancellationToken cancellationToken)
+        private void ProcessItems(Func<IQueueItem<TData>, CancellationToken, Task> handler, bool autoComplete, CancellationToken cancellationToken)
         {
             EnsureArg.IsNotNull(handler, nameof(handler));
             var linkedCancellationToken = this.CreateLinkedTokenSource(cancellationToken);
@@ -250,7 +264,7 @@
 
                 while (!linkedCancellationToken.IsCancellationRequested)
                 {
-                    IQueueItem<T> item = null;
+                    IQueueItem<TData> item = null;
                     try
                     {
                         item = await this.DequeueWithIntervalAsync(linkedCancellationToken.Token).AnyContext();

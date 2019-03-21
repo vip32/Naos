@@ -6,12 +6,19 @@
 
     public static class QueueExtensions
     {
-        public static Task ProcessItemsAsync<T>(
-            this IQueue<T> source,
-            Func<IQueueItem<T>, Task> handler,
+        public static Task ProcessItemsAsync<TData>(
+            this IQueue<TData> source,
+            Func<IQueueItem<TData>, Task> handler,
             bool autoComplete = false,
             CancellationToken cancellationToken = default)
-            where T : class
+            where TData : class
             => source.ProcessItemsAsync((entry, token) => handler(entry), autoComplete, cancellationToken);
+
+        //public static Task ProcessItemsAsync<TData>(
+        //    this IQueue<TData> source,
+        //    bool autoComplete = false,
+        //    CancellationToken cancellationToken = default)
+        //    where TData : class
+        //    => source.ProcessItemsAsync(autoComplete, cancellationToken);
     }
 }

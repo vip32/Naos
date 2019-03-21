@@ -13,10 +13,10 @@
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
     <PackageReference Include="Scrutor" Version="3.0.2" />
+    <PackageReference Include="MediatR" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-
     <ProjectReference Include="..\Infrastructure.Azure.CosmosDb\Infrastructure.Azure.CosmosDb.csproj" />
     <ProjectReference Include="..\Infrastructure.Azure.ServiceBus\Infrastructure.Azure.ServiceBus.csproj" />
     <ProjectReference Include="..\Messaging\Messaging.csproj" />

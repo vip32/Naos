@@ -44,7 +44,7 @@
 
                 var item = await queue.DequeueAsync(TimeSpan.Zero);
                 Assert.NotNull(item);
-                Assert.Equal("Hello", item.Value.Text);
+                Assert.Equal("Hello", item.Data.Text);
                 Assert.Equal(1, (await queue.GetMetricsAsync()).Dequeued);
 
                 await item.CompleteAsync();
@@ -85,7 +85,7 @@
 
                 var item = await queue.DequeueAsync(new CancellationToken(true));
                 Assert.NotNull(item);
-                Assert.Equal("Hello", item.Value.Text);
+                Assert.Equal("Hello", item.Data.Text);
                 Assert.Equal(1, (await queue.GetMetricsAsync()).Dequeued);
 
                 // TODO: We should verify that only one retry occurred.
@@ -128,7 +128,7 @@
                 {
                     var item = await queue.DequeueAsync();
                     Assert.NotNull(item);
-                    Assert.Equal("Hello", item.Value.Text);
+                    Assert.Equal("Hello", item.Data.Text);
                     await item.CompleteAsync();
                 }
 
@@ -255,9 +255,41 @@
 
                 await queue.ProcessItemsAsync(async i =>
                 {
-                    Assert.Equal("Hello", i.Value.Text);
+                    Assert.Equal("Hello", i.Data.Text);
                     await i.CompleteAsync();
                 });
+
+                await queue.EnqueueAsync(new StubMessage
+                {
+                    Text = "Hello"
+                });
+                Thread.Sleep(1000);
+
+                var stats = await queue.GetMetricsAsync();
+                Assert.Equal(1, stats.Completed);
+                Assert.Equal(0, stats.Queued);
+                Assert.Equal(0, stats.Errors);
+            }
+            finally
+            {
+                await this.CleanupQueueAsync(queue);
+            }
+        }
+
+        public virtual async Task CanQueueProcessItemsWithMediatorSendAsync()
+        {
+            var queue = this.GetQueue();
+            if (queue == null)
+            {
+                return;
+            }
+
+            try
+            {
+                await queue.DeleteQueueAsync();
+                await this.AssertEmptyQueueAsync(queue);
+
+                await queue.ProcessItemsAsync(true); // send item(+data) as mediator request > handler
 
                 await queue.EnqueueAsync(new StubMessage
                 {
@@ -291,7 +323,7 @@
 
                 await queue.ProcessItemsAsync(i =>
                 {
-                    Assert.Equal("Hello", i.Value.Text);
+                    Assert.Equal("Hello", i.Data.Text);
                     throw new Exception();
                 });
 
@@ -329,7 +361,7 @@
                 });
                 var item = await queue.DequeueAsync(TimeSpan.Zero);
                 Assert.NotNull(item);
-                Assert.Equal("Hello", item.Value.Text);
+                Assert.Equal("Hello", item.Data.Text);
                 Thread.Sleep(1000);
 
                 // wait for the task to be auto abandoned
@@ -367,7 +399,7 @@
                     Text = "Hello"
                 });
                 var item = await queue.DequeueAsync(TimeSpan.Zero);
-                Assert.Equal("Hello", item.Value.Text);
+                Assert.Equal("Hello", item.Data.Text);
                 Assert.Equal(1, (await queue.GetMetricsAsync()).Dequeued);
 
                 await item.AbandonAsync();
@@ -376,7 +408,7 @@
                 // work item should be retried 1 time.
                 item = await queue.DequeueAsync(TimeSpan.FromSeconds(5));
                 Assert.NotNull(item);
-                Assert.Equal("Hello", item.Value.Text);
+                Assert.Equal("Hello", item.Data.Text);
                 Assert.Equal(2, (await queue.GetMetricsAsync()).Dequeued);
 
                 await item.AbandonAsync();
@@ -407,7 +439,7 @@
 
                 await queue.ProcessItemsAsync(i =>
                 {
-                    Assert.Equal("Hello", i.Value.Text);
+                    Assert.Equal("Hello", i.Data.Text);
                     return Task.CompletedTask;
                 }, true);
 
@@ -447,7 +479,7 @@
 
                 var item = await queue.DequeueAsync(TimeSpan.Zero);
                 Assert.NotNull(item);
-                Assert.Equal("Hello", item.Value.Text);
+                Assert.Equal("Hello", item.Data.Text);
 
                 var startTime = DateTime.UtcNow;
                 await item.AbandonAsync(); // item will be enqueued after 1 second
@@ -495,7 +527,7 @@
                 });
                 var entry = await queue.DequeueAsync(TimeSpan.Zero);
                 Assert.NotNull(entry);
-                Assert.Equal("Hello", entry.Value.Text);
+                Assert.Equal("Hello", entry.Data.Text);
 
                 Thread.Sleep(renewWait);
                 await entry.RenewLockAsync();
@@ -532,7 +564,7 @@
 
                 var item = await queue.DequeueAsync(TimeSpan.Zero);
                 Assert.NotNull(item);
-                Assert.Equal("Hello", item.Value.Text);
+                Assert.Equal("Hello", item.Data.Text);
                 Assert.Equal(1, (await queue.GetMetricsAsync()).Dequeued);
 
                 await item.AbandonAsync();
@@ -592,7 +624,7 @@
 
                 var item = await queue.DequeueAsync(TimeSpan.Zero);
                 Assert.NotNull(item);
-                Assert.Equal("Hello", item.Value.Text);
+                Assert.Equal("Hello", item.Data.Text);
                 Assert.Equal(1, (await queue.GetMetricsAsync()).Dequeued);
 
                 await item.CompleteAsync();

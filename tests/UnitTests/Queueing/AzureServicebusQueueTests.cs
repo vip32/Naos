@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
+    using MediatR;
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
@@ -54,6 +55,12 @@
         public override Task CanQueueProcessItemsAsync()
         {
             return base.CanQueueProcessItemsAsync();
+        }
+
+        [Fact]
+        public override Task CanQueueProcessItemsWithMediatorSendAsync()
+        {
+            return base.CanQueueProcessItemsWithMediatorSendAsync();
         }
 
         [Fact]
@@ -122,6 +129,7 @@
                 : RetryPolicy.NoRetry;
 
             return this.queue ?? (this.queue = new AzureServiceBusQueue<StubMessage>(o => o
+                        .Mediator(Substitute.For<IMediator>())
                         .LoggerFactory(Substitute.For<ILoggerFactory>())
                         .ConnectionString(connectionString)
                         .Name(name)

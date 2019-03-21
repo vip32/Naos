@@ -1,12 +1,19 @@
 ﻿namespace Naos.Core.Queueing
 {
     using System;
+    using MediatR;
     using Naos.Core.Common;
     using Naos.Core.Common.Serialization;
 
     public class InMemoryQueueOptionsBuilder :
         BaseOptionsBuilder<InMemoryQueueOptions, InMemoryQueueOptionsBuilder>
     {
+        public InMemoryQueueOptionsBuilder Mediator(IMediator mediator)
+        {
+            this.Target.Mediator = mediator;
+            return this;
+        }
+
         public InMemoryQueueOptionsBuilder Name(string name)
         {
             this.Target.Name = name;

@@ -65,19 +65,19 @@ steps:
       arguments: "--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)"
       zipAfterPublish: True
 
-  - task: DotNetCoreCLI@2
-    displayName: "dotnet nuget pack"
-    inputs:
-      command: pack
-      buildProperties: "Version=$(GitVersion.NuGetVersion)"
-      verbosityPack: Normal
-
-  - task: DotNetCoreCLI@2
-    displayName: "dotnet nuget push"
-    inputs:
-      command: push
-    enabled: false
-    continueOnError: true
+#  - task: DotNetCoreCLI@2
+#    displayName: "dotnet nuget pack"
+#    inputs:
+#      command: pack
+#      buildProperties: "Version=$(GitVersion.NuGetVersion)"
+#      verbosityPack: Normal
+#
+#  - task: DotNetCoreCLI@2
+#    displayName: "dotnet nuget push"
+#    inputs:
+#      command: push
+#    enabled: false
+#    continueOnError: true
 
   - task: PublishBuildArtifacts@1
     displayName: "publish artifacts"
