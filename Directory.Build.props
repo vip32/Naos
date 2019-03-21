@@ -1,9 +1,9 @@
 <Project>
 	<PropertyGroup>
-    <LangVersion>7.1</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <!--package-->
 		<Authors>vip32</Authors>
-		<Description>A modern cloud service architecture blueprint and reference implementation</Description>
+		<Description>A mildly opiniated modern cloud service architecture blueprint + reference implementation</Description>
 		<Product>Naos</Product>
 		<Copyright>Copyright 2018 (c) vip32. All rights reserved.</Copyright>
     <!--sourcelink https://github.com/dotnet/sourcelink -->
@@ -21,11 +21,12 @@
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 		<WarningsAsErrors></WarningsAsErrors>
 		<CodeAnalysisRuleSet></CodeAnalysisRuleSet>
-    <!--<LangVersion>8.0</LangVersion>-->
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="EnsureThatCore" Version="1.0.0" />
+    <PackageReference Include="Microsoft.Net.Compilers" Version="3.0.0-beta4-final" /> <!--c#8/-->
+    <!--<PackageReference Include="Microsoft.CodeAnalysis" Version="3.0.0-beta4-final" /> --><!--c#8/-->
+    <PackageReference Include="EnsureThatCore" Version="1.0.0" />
 		<PackageReference Include="StyleCop.Analyzers" Version="1.0.2">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
