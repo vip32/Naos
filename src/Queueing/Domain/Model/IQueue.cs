@@ -70,13 +70,22 @@
         /// <returns></returns>
         Task AbandonAsync(IQueueItem<T> item);
 
-        /// <summary>Asynchronously dequeues entries in the background.</summary>
-        /// <param name="handler">Function called on entry dequeued</param>
+        /// <summary>
+        /// Asynchronously dequeues items in the background. Dequeued items are handled by the specified handler
+        /// </summary>
+        /// <param name="handler">Function called on the dequeued item</param>
         /// <param name="autoComplete">True to call <see cref="CompleteAsync"/> after the <paramref name="handler"/> is run, defaults to false</param>
         /// <param name="cancellationToken">The token used to cancel the background worker</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task ProcessItemsAsync(Func<IQueueItem<T>, CancellationToken, Task> handler, bool autoComplete = false, CancellationToken cancellationToken = default);
 
+        /// <summary>
+        /// Asynchronously dequeues items in the background. Dequeued items are sent (by using mediator) as <see cref="QueueItemRequest"/> request.
+        /// These request are handled by <see cref="BaseQueueItemRequestHandler"/> handlers
+        /// </summary>
+        /// <param name="autoComplete">True to call <see cref="CompleteAsync"/> after the <paramref name="handler"/> is run, defaults to false</param>
+        /// <param name="cancellationToken">The token used to cancel the background worker</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task ProcessItemsAsync(bool autoComplete = false, CancellationToken cancellationToken = default);
     }
 }
