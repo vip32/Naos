@@ -23,10 +23,10 @@
     }
 
 #pragma warning disable SA1402 // File may only contain a single class
-    public abstract class BaseQueueItemRequestHandler<TRequest, TValue> : IRequestHandler<TRequest, bool>
+    public abstract class BaseQueueItemRequestHandler<TRequest, TData> : IRequestHandler<TRequest, bool>
 #pragma warning restore SA1402 // File may only contain a single class
-        where TRequest : QueueItemRequest<TValue>
-        where TValue : class
+        where TRequest : QueueItemRequest<TData>
+        where TData : class
     {
         public abstract Task<bool> Handle(TRequest request, CancellationToken cancellationToken);
     }

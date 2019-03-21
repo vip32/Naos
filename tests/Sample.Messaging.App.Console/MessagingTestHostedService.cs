@@ -4,6 +4,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
+    using MediatR;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
@@ -16,7 +17,7 @@
     {
         private readonly ILogger<MessagingTestHostedService> logger;
         private readonly IServiceProvider serviceProvider;
-        private IQueue<TestQueueItem> queue;
+        private IQueue<TestData> queue;
         private IMessageBroker messageBus;
 
         public MessagingTestHostedService(ILogger<MessagingTestHostedService> logger, IServiceProvider serviceProvider)
@@ -28,32 +29,29 @@
             this.serviceProvider = serviceProvider;
         }
 
-        public Task StartAsync(CancellationToken cancellationToken)
+        public async Task StartAsync(CancellationToken cancellationToken)
         {
             Console.WriteLine("starting hosted service");
 
-            this.queue = new InMemoryQueue<TestQueueItem>(
-                new InMemoryQueueOptionsBuilder().LoggerFactory(this.serviceProvider.GetRequiredService<ILoggerFactory>()).Build());
+            this.queue = new InMemoryQueue<TestData>(
+                new InMemoryQueueOptionsBuilder()
+                    .Mediator(this.serviceProvider.GetRequiredService<IMediator>())
+                    .LoggerFactory(this.serviceProvider.GetRequiredService<ILoggerFactory>()).Build());
 
             this.messageBus = this.serviceProvider.GetRequiredService<IMessageBroker>()
                 .Subscribe<TestMessage, TestMessageHandler>()
                 .Subscribe<EntityMessage<StubEntity>, StubEntityMessageHandler>();
 
-            Task.Run(() =>
+            while (true)
             {
-                while (true)
-                {
-                    Console.WriteLine("ready to publish?");
-                    Console.ReadLine();
+                Console.WriteLine("ready to publish?");
+                Console.ReadLine();
 
-                    this.Publish();
-                }
-            });
+                await this.PublishAsync().AnyContext();
+            }
 
             // Wait
             //WaitHandle.WaitOne();
-
-            return Task.CompletedTask;
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
@@ -67,7 +65,7 @@
             return Task.CompletedTask;
         }
 
-        private void Publish()
+        private async Task PublishAsync()
         {
             Console.WriteLine("start publish");
 
@@ -77,19 +75,37 @@
                 this.messageBus.Publish(new TestMessage { Id = RandomGenerator.GenerateString(7, true), Data = $"{i.ToString()}-{RandomGenerator.GenerateString(3, false).ToUpper()}" });
                 this.messageBus.Publish(new EntityMessage<StubEntity> { Id = RandomGenerator.GenerateString(7, true), Entity = new StubEntity { FirstName = "John", LastName = $"{RandomGenerator.GenerateString(3, false).ToUpper()} ({i})" } });
 
-                this.queue.EnqueueAsync(new TestQueueItem { FirstName = "John", LastName = "Doe" });
+                await this.queue.EnqueueAsync(new TestData { FirstName = "John", LastName = "Doe" }).AnyContext();
                 var metrics = this.queue.GetMetricsAsync().Result;
                 Console.WriteLine(metrics.Dump());
             }
+
+            await this.queue.ProcessItemsAsync(true).AnyContext();
         }
     }
 
 #pragma warning disable SA1402 // File may only contain a single class
-    public class TestQueueItem
-#pragma warning restore SA1402 // File may only contain a single class
+    public class TestData
     {
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
     }
+
+    public class TestDataRequestHandler : BaseQueueItemRequestHandler<QueueItemRequest<TestData>, TestData>
+    {
+        private readonly ILogger<TestDataRequestHandler> logger;
+
+        public TestDataRequestHandler(ILogger<TestDataRequestHandler> logger)
+        {
+            this.logger = logger;
+        }
+
+        public override async Task<bool> Handle(QueueItemRequest<TestData> request, CancellationToken cancellationToken)
+        {
+            await Task.Run(() => this.logger.LogInformation($"{{LogKey}} handle (id={request.Item.Id}, type={this.GetType().PrettyName()})", LogEventKeys.Queueing));
+            return true;
+        }
+    }
+#pragma warning restore SA1402 // File may only contain a single class
 }
