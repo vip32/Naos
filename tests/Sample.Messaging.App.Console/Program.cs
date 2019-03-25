@@ -58,7 +58,7 @@
                                 //.UseServiceBusBroker()));
 
                     services
-                        .AddSingleton<IHostedService, MessagingTestHostedService>();
+                        .AddSingleton<IHostedService, HostedService>();
                 });
 
             await builder.RunConsoleAsync();

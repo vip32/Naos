@@ -14,14 +14,14 @@
     using Naos.Core.Queueing;
     using Naos.Core.Queueing.Domain;
 
-    public class MessagingTestHostedService : IHostedService
+    public class HostedService : IHostedService
     {
-        private readonly ILogger<MessagingTestHostedService> logger;
+        private readonly ILogger<HostedService> logger;
         private readonly IServiceProvider serviceProvider;
         private IQueue<EchoQueueEventData> queue;
         private IMessageBroker messageBus;
 
-        public MessagingTestHostedService(ILogger<MessagingTestHostedService> logger, IServiceProvider serviceProvider)
+        public HostedService(ILogger<HostedService> logger, IServiceProvider serviceProvider)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(serviceProvider, nameof(serviceProvider));
@@ -34,10 +34,9 @@
         {
             Console.WriteLine("starting hosted service");
 
-            this.queue = new InMemoryQueue<EchoQueueEventData>(
-                new InMemoryQueueOptionsBuilder()
+            this.queue = new InMemoryQueue<EchoQueueEventData>(o => o
                     .Mediator(this.serviceProvider.GetRequiredService<IMediator>())
-                    .LoggerFactory(this.serviceProvider.GetRequiredService<ILoggerFactory>()).Build());
+                    .LoggerFactory(this.serviceProvider.GetRequiredService<ILoggerFactory>()));
 
             this.messageBus = this.serviceProvider.GetRequiredService<IMessageBroker>()
                 .Subscribe<TestMessage, TestMessageHandler>()
