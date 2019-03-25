@@ -83,7 +83,7 @@
             }
             else
             {
-                this.logger.LogInformation("{LogKey:l} does not known registration with key {JobKey} registered", LogEventKeys.JobScheduling, key);
+                this.logger.LogInformation("{LogKey:l} does not know registration with key {JobKey} registered", LogEventKeys.JobScheduling, key);
             }
         }
 

@@ -16,7 +16,7 @@
 
         public override async Task<bool> Handle(QueueEvent<EchoQueueEventData> request, CancellationToken cancellationToken)
         {
-            await Task.Run(() => this.logger.LogInformation($"{{LogKey}} {request.Item.Data.Message} (id={request.Item.Id}, type={this.GetType().PrettyName()})", LogEventKeys.Queueing));
+            await Task.Run(() => this.logger.LogInformation($"{{LogKey}} {request.Item.Data.Text} (id={request.Item.Id}, type={this.GetType().PrettyName()})", LogEventKeys.Queueing));
             return true;
         }
     }

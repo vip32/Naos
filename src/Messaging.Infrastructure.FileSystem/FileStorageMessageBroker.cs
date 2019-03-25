@@ -42,7 +42,7 @@
 
             if (message.CorrelationId.IsNullOrEmpty())
             {
-                message.CorrelationId = RandomGenerator.GenerateString(13, true); //Guid.NewGuid().ToString().Replace("-", string.Empty);
+                message.CorrelationId = RandomGenerator.GenerateString(13, true);
             }
 
             var loggerState = new Dictionary<string, object>

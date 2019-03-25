@@ -96,7 +96,7 @@
                         .SetEnabled(true)
                         .Register<EchoJob>("testjob1", Cron.Minutely(), (j) => j.EchoAsync("+++ hello from testjob1 +++", CancellationToken.None))
                         .Register("anonymousjob2", Cron.Minutely(), (j) => System.Diagnostics.Trace.WriteLine("+++ hello from task " + j))
-                        .Register("jobrequest1", Cron.Minutely(), () => new EchoJobEventData { Message = "+++ hello from jobrequest1 +++" })
+                        .Register("jobrequest1", Cron.Minutely(), () => new EchoJobEventData { Text = "+++ hello from jobrequest1 +++" })
                         .Register<EchoJob>("testjob3", Cron.MinuteInterval(2), j => j.EchoAsync("+++ hello from job2 +++", CancellationToken.None, true), enabled: false)
                         .Register<EchoJob>("testlongjob4", Cron.Minutely(), j => j.EchoLongAsync("+++ hello from testlongjob4 +++", CancellationToken.None)))
                     .AddServiceClient("default")
@@ -106,7 +106,7 @@
                         //.UseSignalRBroker(s => s
                         //.UseRabbitMQBroker(s => s
                         .UseServiceBusBroker(s => s
-                            .Subscribe<TestMessage, TestMessageHandler>()))
+                            .Subscribe<EchoMessage, EchoMessageHandler>()))
                     .AddServiceDiscovery(o => o
                         .UseFileSystemClientRegistry())
                         //.UseConsulClientRegistry())

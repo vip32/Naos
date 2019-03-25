@@ -2,6 +2,6 @@
 {
     public class EchoJobEventData
     {
-        public string Message { get; set; }
+        public string Text { get; set; }
     }
 }

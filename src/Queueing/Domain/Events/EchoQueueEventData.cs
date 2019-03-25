@@ -2,6 +2,6 @@
 {
     public class EchoQueueEventData
     {
-        public string Message { get; set; }
+        public string Text { get; set; }
     }
 }

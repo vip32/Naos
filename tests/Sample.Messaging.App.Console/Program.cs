@@ -49,13 +49,13 @@
                                     correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}"))
                             .AddJobScheduling(o => o
                                 .Register<EchoJob>("testjob1", Cron.Minutely(), (j) => j.EchoAsync("+++ hello from testjob1 +++", CancellationToken.None))
-                                .Register("jobevent1", Cron.Minutely(), () => new EchoJobEventData { Message = "+++ hello from jobevent1 +++" }))
+                                .Register("jobevent1", Cron.Minutely(), () => new EchoJobEventData { Text = "+++ hello from jobevent1 +++" }))
                             .AddQueueing()
                             .AddMessaging(o => o
                                 //.UseFileSystemBroker()));
-                                .UseSignalRBroker()));
+                                //.UseSignalRBroker()));
                                 //.UseRabbitMQBroker()));
-                                //.UseServiceBusBroker()));
+                                .UseServiceBusBroker()));
 
                     services
                         .AddSingleton<IHostedService, HostedService>();

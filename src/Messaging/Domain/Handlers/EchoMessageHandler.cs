@@ -6,11 +6,11 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
 
-    public class TestMessageHandler : IMessageHandler<TestMessage>
+    public class EchoMessageHandler : IMessageHandler<EchoMessage>
     {
-        protected readonly ILogger<TestMessageHandler> logger;
+        protected readonly ILogger<EchoMessageHandler> logger;
 
-        public TestMessageHandler(ILogger<TestMessageHandler> logger)
+        public EchoMessageHandler(ILogger<EchoMessageHandler> logger)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
 
@@ -22,7 +22,7 @@
         /// </summary>
         /// <param name="message">The event.</param>
         /// <returns></returns>
-        public virtual Task Handle(TestMessage message)
+        public virtual Task Handle(EchoMessage message)
         {
             var loggerState = new Dictionary<string, object>
             {
@@ -31,7 +31,7 @@
 
             using (this.logger.BeginScope(loggerState))
             {
-                this.logger.LogInformation("{LogKey:l} handle (name={MessageName}, id={MessageId}, origin={MessageOrigin}) " + message.Data, LogEventKeys.Messaging, message.GetType().PrettyName(), message.Id, message.Origin);
+                this.logger.LogInformation($"{{LogKey:l}} {message.Text} (name={{MessageName}}, id={{MessageId}}, origin={{MessageOrigin}}) ", LogEventKeys.Messaging, message.GetType().PrettyName(), message.Id, message.Origin);
 
                 return Task.CompletedTask;
             }

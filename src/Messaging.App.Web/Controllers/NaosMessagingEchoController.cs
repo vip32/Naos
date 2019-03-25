@@ -32,10 +32,10 @@
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public ActionResult<IEnumerable<SubscriptionDetails>> Get()
         {
-            this.messageBroker.Publish(new TestMessage
+            this.messageBroker.Publish(new EchoMessage
             {
                 CorrelationId = this.HttpContext.GetCorrelationId(),
-                Data = $"echo ({this.HttpContext.GetRequestId()})"
+                Text = $"echo ({this.HttpContext.GetRequestId()})"
             });
 
             return this.Ok(this.subscriptionMap?.GetAll());

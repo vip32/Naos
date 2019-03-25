@@ -22,45 +22,45 @@
             this.httpClientFactory = httpClientFactory;
         }
 
-        public async Task EchoAsync(string message, CancellationToken cancellationToken)
+        public async Task EchoAsync(string text, CancellationToken cancellationToken)
         {
             await Task.Run(() =>
             {
-                if (!message.IsNullOrEmpty())
+                if (!text.IsNullOrEmpty())
                 {
-                    this.logger.LogInformation(message);
+                    this.logger.LogInformation($"{{LogKey}} {text}", LogEventKeys.JobScheduling);
                 }
             }, cancellationToken);
         }
 
-        public Task EchoAsync(string message, CancellationToken cancellationToken, bool breakable)
+        public Task EchoAsync(string text, CancellationToken cancellationToken, bool breakable)
         {
             if (breakable && Random.Next(2) == 0)// throw randomly
             {
                 throw new NaosException("error from job");
             }
 
-            if (!message.IsNullOrEmpty())
+            if (!text.IsNullOrEmpty())
             {
-                this.logger.LogInformation(message);
+                this.logger.LogInformation($"{{LogKey}} {text}", LogEventKeys.JobScheduling);
             }
 
             return Task.CompletedTask;
         }
 
-        public async Task EchoLongAsync(string message, CancellationToken cancellationToken)
+        public async Task EchoLongAsync(string text, CancellationToken cancellationToken)
         {
             for (int i = 1; i <= 5; i++)
             {
                 if (cancellationToken.IsCancellationRequested)
                 {
-                    this.logger.LogInformation("job cancelled");
+                    this.logger.LogInformation($"{{LogKey}} job cancelled", LogEventKeys.JobScheduling);
                     return; //Task.FromCanceled(cancellationToken);
                 }
 
-                if (!message.IsNullOrEmpty())
+                if (!text.IsNullOrEmpty())
                 {
-                    this.logger.LogInformation(message);
+                    this.logger.LogInformation(text);
                 }
 
                 // TODO: use typed client here

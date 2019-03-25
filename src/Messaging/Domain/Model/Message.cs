@@ -1,6 +1,5 @@
 ﻿namespace Naos.Core.Messaging.Domain
 {
-    using System;
     using Naos.Core.Common;
     using Naos.Core.Domain;
     using Newtonsoft.Json;
@@ -13,7 +12,7 @@
         /// </summary>
         public Message()
         {
-            this.Id = Guid.NewGuid().ToString();
+            this.Id = RandomGenerator.GenerateString(13, true);
             this.Identifier = RandomGenerator.GenerateString(5, false);
         }
 
