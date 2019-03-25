@@ -7,7 +7,6 @@
     using System.Threading.Tasks;
     using Domain;
     using EnsureThat;
-    using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;

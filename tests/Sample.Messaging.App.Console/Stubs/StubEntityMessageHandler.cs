@@ -4,7 +4,7 @@
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
-    using Naos.Core.Messaging;
+    using Naos.Core.Messaging.Domain;
 
     public class StubEntityMessageHandler : EntityMessageHandler<StubEntity>
     {

@@ -12,7 +12,7 @@
         public void AcquireAndRelease_Test()
         {
             // arrange
-            var sut = new InProcessMutex(Substitute.For<ILogger<InProcessMutex>>());
+            var sut = new InProcessMutex(Substitute.For<ILoggerFactory>());
 
             // act
             var result1 = sut.TryAcquireLock("key1");

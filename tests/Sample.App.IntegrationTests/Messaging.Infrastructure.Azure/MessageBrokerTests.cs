@@ -5,7 +5,6 @@
     using Naos.Core.Common;
     using Naos.Core.Configuration.App;
     using Naos.Core.Messaging;
-    using Naos.Core.Messaging.Domain.Model;
     using Shouldly;
     using Xunit;
 
@@ -43,7 +42,7 @@
         [Fact]
         public void CanPublish_Test()
         {
-            this.sut.Publish(new Message());
+            this.sut.Publish(new Core.Messaging.Domain.Message());
 
             this.sut.ShouldNotBeNull();
         }

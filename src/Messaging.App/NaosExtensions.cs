@@ -7,6 +7,7 @@
     using Naos.Core.Configuration.App;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.App;
+    using Naos.Core.Messaging.Domain;
 
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions

@@ -8,7 +8,6 @@
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Infrastructure.Azure;
     using Naos.Core.Infrastructure.Azure.CosmosDb;
-    using Naos.Core.Queueing;
     using Naos.Core.Queueing.Domain;
     using Naos.Core.Queueing.Infrastructure.Azure;
     using Naos.Sample.Customers.App.Client;

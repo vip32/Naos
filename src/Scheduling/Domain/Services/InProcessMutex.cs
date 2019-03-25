@@ -12,16 +12,16 @@
         private readonly Dictionary<string, MutexItem> items = new Dictionary<string, MutexItem>();
         private readonly object @lock = new object();
 
-        public InProcessMutex(ILogger<InProcessMutex> logger)
-            : this(logger, DateTime.UtcNow)
+        public InProcessMutex(ILoggerFactory loggerFactory)
+            : this(loggerFactory, DateTime.UtcNow)
         {
         }
 
-        public InProcessMutex(ILogger<InProcessMutex> logger, DateTime moment)
+        public InProcessMutex(ILoggerFactory loggerFactory, DateTime moment)
         {
             //EnsureArg.IsNotNull(logger, nameof(logger));
 
-            this.logger = logger;
+            this.logger = loggerFactory.CreateLogger<InProcessMutex>();
             this.moment = moment;
         }
 

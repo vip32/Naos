@@ -14,6 +14,7 @@
     using Naos.Core.FileStorage.Infrastructure;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.App;
+    using Naos.Core.Messaging.Domain;
     using Naos.Core.Messaging.Infrastructure;
 
     [ExcludeFromCodeCoverage]

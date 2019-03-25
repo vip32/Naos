@@ -10,6 +10,7 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Messaging;
+    using Naos.Core.Messaging.Domain;
     using Naos.Core.Queueing;
     using Naos.Core.Queueing.Domain;
 
@@ -17,7 +18,7 @@
     {
         private readonly ILogger<MessagingTestHostedService> logger;
         private readonly IServiceProvider serviceProvider;
-        private IQueue<TestData> queue;
+        private IQueue<EchoQueueEventData> queue;
         private IMessageBroker messageBus;
 
         public MessagingTestHostedService(ILogger<MessagingTestHostedService> logger, IServiceProvider serviceProvider)
@@ -33,7 +34,7 @@
         {
             Console.WriteLine("starting hosted service");
 
-            this.queue = new InMemoryQueue<TestData>(
+            this.queue = new InMemoryQueue<EchoQueueEventData>(
                 new InMemoryQueueOptionsBuilder()
                     .Mediator(this.serviceProvider.GetRequiredService<IMediator>())
                     .LoggerFactory(this.serviceProvider.GetRequiredService<ILoggerFactory>()).Build());
@@ -75,7 +76,7 @@
                 this.messageBus.Publish(new TestMessage { Id = RandomGenerator.GenerateString(7, true), Data = $"{i.ToString()}-{RandomGenerator.GenerateString(3, false).ToUpper()}" });
                 this.messageBus.Publish(new EntityMessage<StubEntity> { Id = RandomGenerator.GenerateString(7, true), Entity = new StubEntity { FirstName = "John", LastName = $"{RandomGenerator.GenerateString(3, false).ToUpper()} ({i})" } });
 
-                await this.queue.EnqueueAsync(new TestData { FirstName = "John", LastName = "Doe" }).AnyContext();
+                await this.queue.EnqueueAsync(new EchoQueueEventData { Message = "+++ hello from queue item +++" }).AnyContext();
                 var metrics = this.queue.GetMetricsAsync().Result;
                 Console.WriteLine(metrics.Dump());
             }
@@ -83,29 +84,4 @@
             await this.queue.ProcessItemsAsync(true).AnyContext();
         }
     }
-
-#pragma warning disable SA1402 // File may only contain a single class
-    public class TestData
-    {
-        public string FirstName { get; set; }
-
-        public string LastName { get; set; }
-    }
-
-    public class TestDataRequestHandler : BaseQueueItemRequestHandler<TestData>
-    {
-        private readonly ILogger<TestDataRequestHandler> logger;
-
-        public TestDataRequestHandler(ILogger<TestDataRequestHandler> logger)
-        {
-            this.logger = logger;
-        }
-
-        public override async Task<bool> Handle(QueueItemRequest<TestData> request, CancellationToken cancellationToken)
-        {
-            await Task.Run(() => this.logger.LogInformation($"{{LogKey}} handle (id={request.Item.Id}, type={this.GetType().PrettyName()})", LogEventKeys.Queueing));
-            return true;
-        }
-    }
-#pragma warning restore SA1402 // File may only contain a single class
 }

@@ -6,6 +6,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common.Web;
+    using Naos.Core.Messaging.Domain;
 
     [Route("api/echo/messaging")]
     [ApiController]

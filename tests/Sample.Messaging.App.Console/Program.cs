@@ -1,6 +1,8 @@
 ﻿namespace Naos.Core.Sample.Messaging.App.Console
 {
     using System;
+    using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using MediatR;
     using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +11,9 @@
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
     using Naos.Core.Configuration.App;
+    using Naos.Core.JobScheduling.App;
+    using Naos.Core.JobScheduling.Domain;
+    using Naos.Core.Queueing.Domain;
     using Naos.Core.RequestCorrelation.App.Web;
 
     public static class Program
@@ -42,6 +47,10 @@
                                     .UseFile()
                                     .UseAzureLogAnalytics(),
                                     correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}"))
+                            .AddJobScheduling(o => o
+                                .Register<EchoJob>("testjob1", Cron.Minutely(), (j) => j.EchoAsync("+++ hello from testjob1 +++", CancellationToken.None))
+                                .Register("jobevent1", Cron.Minutely(), () => new EchoJobEventData { Message = "+++ hello from jobevent1 +++" }))
+                            .AddQueueing()
                             .AddMessaging(o => o
                                 //.UseFileSystemBroker()));
                                 .UseSignalRBroker()));

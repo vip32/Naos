@@ -22,7 +22,7 @@
     using Naos.Core.Configuration.App;
     using Naos.Core.JobScheduling.App;
     using Naos.Core.JobScheduling.Domain;
-    using Naos.Core.Messaging;
+    using Naos.Core.Messaging.Domain;
     using Newtonsoft.Json;
     using NSwag.AspNetCore;
 
@@ -94,10 +94,13 @@
                     //.AddSwaggerDocument() // s.Description = Product.Capability\
                     .AddJobScheduling(o => o
                         .SetEnabled(true)
-                        .Register<DummyJob>("job1", Cron.Minutely(), (j) => j.LogMessageAsync("+++ hello from job1 +++", CancellationToken.None))
-                        .Register<DummyJob>("job2", Cron.MinuteInterval(2), j => j.LogMessageAsync("+++ hello from job2 +++", CancellationToken.None, true), enabled: false)
-                        .Register<DummyJob>("longjob33", Cron.Minutely(), j => j.LongRunningAsync("+++ hello from longjob3 +++", CancellationToken.None)))
+                        .Register<EchoJob>("testjob1", Cron.Minutely(), (j) => j.EchoAsync("+++ hello from testjob1 +++", CancellationToken.None))
+                        .Register("anonymousjob2", Cron.Minutely(), (j) => System.Diagnostics.Trace.WriteLine("+++ hello from task " + j))
+                        .Register("jobrequest1", Cron.Minutely(), () => new EchoJobEventData { Message = "+++ hello from jobrequest1 +++" })
+                        .Register<EchoJob>("testjob3", Cron.MinuteInterval(2), j => j.EchoAsync("+++ hello from job2 +++", CancellationToken.None, true), enabled: false)
+                        .Register<EchoJob>("testlongjob4", Cron.Minutely(), j => j.EchoLongAsync("+++ hello from testlongjob4 +++", CancellationToken.None)))
                     .AddServiceClient("default")
+                    .AddQueueing()
                     .AddMessaging(o => o
                         //.UseFileSystemBroker(s => s
                         //.UseSignalRBroker(s => s
