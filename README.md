@@ -236,8 +236,30 @@ key vault keys: (or use the json configuration above)
 
 # Queueing
 
-- Enqueue/Dequeue
-- Queue Processing
+- Enqueue
+  ```
+  await this.queue.EnqueueAsync(new EchoQueueEventData { Message = "+++ hello from queue item +++" }).AnyContext();
+  ```
+- Dequeue
+  ```
+  var item = await queue.DequeueAsync();
+  Console.WriteLine(item.Data.Message);
+  ```
+- Queue Processing (ProcessItemsAsync)
+  - Handle by using a function
+    ```
+	await queue.ProcessItemsAsync(async i =>
+        {
+            Console.WriteLine(i.Data.Message);
+            await i.CompleteAsync();
+        });	
+    ```
+  - Handle by sending events which a single handler can pick up (Mediatr)
+    ```
+	await this.queue.ProcessItemsAsync(true).AnyContext();
+	```
+	will be handled by 'EchoQueueEventHandler'
+
 - Implementations
   - InMemory Queue
   - Azure Storage Queue
@@ -417,8 +439,22 @@ development-naos--operations--logging--azureLogAnalytics--workspaceName
 # JobScheduling
 
 - Jobs
-  - Registration
-  - REST Api
+- REST Api
+- Registrations
+	- Handle by an anonymous function
+	```
+	.Register("anonymousjob2", Cron.Minutely(), (j) => System.Diagnostics.Trace.WriteLine("+++ hello from task " + j))
+	```
+	- Handle by a type based function
+	```
+	.Register<EchoJob>("testjob1", Cron.Minutely(), (j) => j.EchoAsync("+++ hello from testjob1 +++", CancellationToken.None))
+	```
+	- Handle by sending events which a single handler can pick up (Mediatr)
+	```
+	.Register("jobrequest1", Cron.Minutely(), () => new EchoJobEventData { Message = "+++ hello from jobrequest1 +++" })
+	```
+	will be handled by 'EchoJobEventHandler'
+
 - Schedules
   - Cron
 
