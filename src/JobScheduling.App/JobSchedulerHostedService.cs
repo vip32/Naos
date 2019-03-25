@@ -4,7 +4,6 @@
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
-    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
@@ -18,14 +17,14 @@
         private Timer schedulerTimer;
 
         public JobSchedulerHostedService(
-            ILogger<JobSchedulerHostedService> logger,
-            IServiceProvider serviceProvider)
+            ILoggerFactory loggerFactory,
+            IJobScheduler scheduler)
         {
-            EnsureArg.IsNotNull(logger, nameof(logger));
-            EnsureArg.IsNotNull(serviceProvider, nameof(serviceProvider));
+            EnsureArg.IsNotNull(loggerFactory, nameof(loggerFactory));
+            EnsureArg.IsNotNull(scheduler, nameof(scheduler));
 
-            this.logger = logger;
-            this.scheduler = serviceProvider.GetRequiredService<IJobScheduler>();
+            this.logger = loggerFactory.CreateLogger<JobSchedulerHostedService>();
+            this.scheduler = scheduler;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)

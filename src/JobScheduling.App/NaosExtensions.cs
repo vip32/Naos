@@ -3,6 +3,7 @@
     using System;
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
+    using MediatR;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
@@ -22,21 +23,28 @@
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
             EnsureArg.IsNotNull(naosOptions.Context, nameof(naosOptions.Context));
 
+            // needed for mediator
+            naosOptions.Context.Services.Scan(scan => scan
+                .FromAssembliesOf(typeof(JobEventHandler<>))
+                .AddClasses()
+                .AsImplementedInterfaces());
+
             naosOptions.Context.Services.AddSingleton<IJobScheduler>(sp =>
             {
                 var settings = new JobSchedulerOptions(
                     sp.GetRequiredService<ILoggerFactory>(),
+                    sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)) as IMediator,
                     new ServiceProviderJobFactory(sp));
                 optionsAction?.Invoke(settings);
 
                 return new JobScheduler(
                     sp.GetRequiredService<ILoggerFactory>(),
-                    new InProcessMutex(sp.GetRequiredService<ILogger<InProcessMutex>>()),
+                    new InProcessMutex(sp.GetRequiredService<ILoggerFactory>()),
                     settings);
             });
 
             naosOptions.Context.Services.AddSingleton<IHostedService>(sp =>
-                new JobSchedulerHostedService(sp.GetRequiredService<ILogger<JobSchedulerHostedService>>(), sp));
+                new JobSchedulerHostedService(sp.GetRequiredService<ILoggerFactory>(), sp.GetRequiredService<IJobScheduler>()));
 
             naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: job scheduling added"); // TODO: list available commands/handlers
             naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "JobScheduling", EchoRoute = "api/echo/jobscheduling" });

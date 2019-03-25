@@ -7,22 +7,22 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
 
-    public class DummyJob
+    public class EchoJob
     {
         private static readonly Random Random = new Random(DateTime.Now.GetHashCode());
-        private readonly ILogger<DummyJob> logger;
+        private readonly ILogger<EchoJob> logger;
         private readonly IHttpClientFactory httpClientFactory;
 
-        public DummyJob(ILogger<DummyJob> logger, IHttpClientFactory httpClientFactory)
+        public EchoJob(ILogger<EchoJob> logger, IHttpClientFactory httpClientFactory)
         {
             EnsureThat.EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureThat.EnsureArg.IsNotNull(httpClientFactory, nameof(httpClientFactory));
 
             this.logger = logger;
-           this.httpClientFactory = httpClientFactory;
+            this.httpClientFactory = httpClientFactory;
         }
 
-        public async Task LogMessageAsync(string message, CancellationToken cancellationToken)
+        public async Task EchoAsync(string message, CancellationToken cancellationToken)
         {
             await Task.Run(() =>
             {
@@ -33,7 +33,7 @@
             }, cancellationToken);
         }
 
-        public Task LogMessageAsync(string message, CancellationToken cancellationToken, bool breakable)
+        public Task EchoAsync(string message, CancellationToken cancellationToken, bool breakable)
         {
             if (breakable && Random.Next(2) == 0)// throw randomly
             {
@@ -48,7 +48,7 @@
             return Task.CompletedTask;
         }
 
-        public async Task LongRunningAsync(string message, CancellationToken cancellationToken)
+        public async Task EchoLongAsync(string message, CancellationToken cancellationToken)
         {
             for (int i = 1; i <= 5; i++)
             {
