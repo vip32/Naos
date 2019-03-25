@@ -55,7 +55,7 @@
             EnsureArg.IsNotNull(data, nameof(data));
             await this.EnsureQueueAsync().AnyContext();
 
-            this.logger.LogInformation($"queue item enqueue (queue={this.options.Name})");
+            this.logger.LogDebug($"queue item enqueue (queue={this.options.Name})");
 
             Interlocked.Increment(ref this.enqueuedCount);
             var message = CloudQueueMessage.CreateCloudQueueMessageFromByteArray(this.serializer.SerializeToBytes(data));
@@ -71,7 +71,7 @@
         {
             EnsureArg.IsNotNull(item, nameof(item));
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
-            this.logger.LogInformation($"queue item renew (id={item.Id}, queue={this.options.Name})");
+            this.logger.LogDebug($"queue item renew (id={item.Id}, queue={this.options.Name})");
 
             var message = this.ToMessage(item);
             await this.queue.UpdateMessageAsync(message, this.options.ProcessTimeout, MessageUpdateFields.Visibility).AnyContext();
@@ -84,7 +84,7 @@
         {
             EnsureArg.IsNotNull(item, nameof(item));
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
-            this.logger.LogInformation($"queue item complete (id={item.Id}, queue={this.options.Name})");
+            this.logger.LogDebug($"queue item complete (id={item.Id}, queue={this.options.Name})");
 
             if (item.IsAbandoned || item.IsCompleted)
             {
@@ -105,7 +105,7 @@
         {
             EnsureArg.IsNotNull(item, nameof(item));
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
-            this.logger.LogInformation($"queue item abandon (id={item.Id}, queue={this.options.Name})");
+            this.logger.LogDebug($"queue item abandon (id={item.Id}, queue={this.options.Name})");
 
             if (item.IsAbandoned || item.IsCompleted)
             {
@@ -208,7 +208,7 @@
         protected override async Task<IQueueItem<TData>> DequeueWithIntervalAsync(CancellationToken cancellationToken)
         {
             await this.EnsureQueueAsync().AnyContext();
-            this.logger.LogInformation($"queue item dequeue (queue={this.options.Name})");
+            this.logger.LogDebug($"queue item dequeue (queue={this.options.Name})");
 
             var message = await this.queue.GetMessageAsync(this.options.ProcessTimeout, null, null).AnyContext();
             if (message == null)
@@ -246,8 +246,7 @@
 
             Task.Run(async () =>
             {
-                this.logger.LogInformation($"queue processing started (queue={this.options.Name})");
-
+                this.logger.LogInformation($"{{LogKey:l}} processing started (queue={this.options.Name})", args: new[] { LogEventKeys.Queueing });
                 while (!linkedCancellationToken.IsCancellationRequested)
                 {
                     IQueueItem<TData> item = null;
@@ -257,7 +256,7 @@
                     }
                     catch (Exception ex)
                     {
-                        this.logger.LogError(ex, $"queue processing error: {ex.Message}");
+                        this.logger.LogError(ex, $"{{LogKey:l}} processing error: {ex.Message}", args: new[] { LogEventKeys.Queueing });
                     }
 
                     if (linkedCancellationToken.IsCancellationRequested || item == null)
@@ -276,7 +275,7 @@
                     catch (Exception ex)
                     {
                         Interlocked.Increment(ref this.workerErrorCount);
-                        this.logger.LogError(ex, $"queue processing error: {ex.Message}");
+                        this.logger.LogError(ex, $"{{LogKey:l}} processing error: {ex.Message}", args: new[] { LogEventKeys.Queueing });
 
                         if (!item.IsAbandoned && !item.IsCompleted)
                         {
@@ -285,7 +284,7 @@
                     }
                 }
 
-                this.logger.LogInformation($"queue processing exiting (name={this.options.Name}, cancellation={linkedCancellationToken.IsCancellationRequested})");
+                this.logger.LogDebug($"queue processing exiting (name={this.options.Name}, cancellation={linkedCancellationToken.IsCancellationRequested})");
             }, linkedCancellationToken.Token)
                 .ContinueWith(t => linkedCancellationToken.Dispose());
         }

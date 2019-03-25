@@ -53,7 +53,7 @@
             await this.EnsureQueueAsync().AnyContext();
 
             string id = RandomGenerator.GenerateString(13, true);
-            this.logger.LogInformation($"queue item enqueue (id={id}, queue={this.options.Name})");
+            this.logger.LogDebug($"queue item enqueue (id={id}, queue={this.options.Name})");
 
             Interlocked.Increment(ref this.enqueuedCount);
             var stream = new MemoryStream();
@@ -75,7 +75,7 @@
         public override async Task<IQueueItem<TData>> DequeueAsync(TimeSpan? timeout = null)
         {
             await this.EnsureQueueAsync().AnyContext();
-            this.logger.LogInformation($"queue item dequeue (queue={this.options.Name})");
+            this.logger.LogDebug($"queue item dequeue (queue={this.options.Name})");
 
             // TODO: ReceiveBatchAsync?
             Message message;
@@ -100,7 +100,7 @@
         {
             EnsureArg.IsNotNull(item, nameof(item));
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
-            this.logger.LogInformation($"queue item renew (id={item.Id}, queue={this.options.Name})");
+            this.logger.LogDebug($"queue item renew (id={item.Id}, queue={this.options.Name})");
 
             await this.queueReceiver.RenewLockAsync(item.Id).AnyContext();
 
@@ -112,7 +112,7 @@
         {
             EnsureArg.IsNotNull(item, nameof(item));
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
-            this.logger.LogInformation($"queue item complete (id={item.Id}, queue={this.options.Name})");
+            this.logger.LogDebug($"queue item complete (id={item.Id}, queue={this.options.Name})");
 
             if (item.IsAbandoned || item.IsCompleted)
             {
@@ -131,7 +131,7 @@
         {
             EnsureArg.IsNotNull(item, nameof(item));
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
-            this.logger.LogInformation($"queue item abandon (id={item.Id}, queue={this.options.Name})");
+            this.logger.LogDebug($"queue item abandon (id={item.Id}, queue={this.options.Name})");
 
             if (item.IsAbandoned || item.IsCompleted)
             {
@@ -170,7 +170,7 @@
             EnsureArg.IsNotNull(handler, nameof(handler));
             await this.EnsureQueueAsync(cancellationToken).AnyContext();
 
-            this.logger.LogInformation($"queue processing started (queue={this.options.Name})");
+            this.logger.LogInformation($"{{LogKey:l}} processing started (queue={this.options.Name})", args: new[] { LogEventKeys.Queueing });
             this.queueReceiver.RegisterMessageHandler(async (msg, ct) =>
             {
                 var item = this.HandleDequeue(msg);
@@ -190,7 +190,7 @@
                 catch (Exception ex)
                 {
                     Interlocked.Increment(ref this.workerErrorCount);
-                    this.logger.LogError(ex, $"queue processing error: {ex.Message}");
+                    this.logger.LogError(ex, $"{{LogKey:l}} processing error: {ex.Message}", args: new[] { LogEventKeys.Queueing });
 
                     if (!item.IsAbandoned && !item.IsCompleted)
                     {
@@ -276,7 +276,7 @@
 
         private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs e)
         {
-            this.logger.LogWarning($"queue processing error: {e.ExceptionReceivedContext.EntityPath} {e.Exception.Message}");
+            this.logger.LogError(e.Exception, $"{{LogKey:l}} processing error:  {e.ExceptionReceivedContext.EntityPath} {e.Exception.Message}", args: new[] { LogEventKeys.Queueing });
             return Task.CompletedTask;
         }
 

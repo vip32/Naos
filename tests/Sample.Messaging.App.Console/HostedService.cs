@@ -19,7 +19,7 @@
         private readonly ILogger<HostedService> logger;
         private readonly IServiceProvider serviceProvider;
         private IQueue<EchoQueueEventData> queue;
-        private IMessageBroker messageBus;
+        private IMessageBroker messageBroker;
 
         public HostedService(ILogger<HostedService> logger, IServiceProvider serviceProvider)
         {
@@ -34,17 +34,18 @@
         {
             Console.WriteLine("starting hosted service");
 
-            this.queue = new InMemoryQueue<EchoQueueEventData>(o => o
-                    .Mediator(this.serviceProvider.GetRequiredService<IMediator>())
-                    .LoggerFactory(this.serviceProvider.GetRequiredService<ILoggerFactory>()));
-
-            this.messageBus = this.serviceProvider.GetRequiredService<IMessageBroker>()
+            this.messageBroker = this.serviceProvider.GetRequiredService<IMessageBroker>()
                 .Subscribe<TestMessage, TestMessageHandler>()
                 .Subscribe<EntityMessage<StubEntity>, StubEntityMessageHandler>();
 
+            this.queue = new InMemoryQueue<EchoQueueEventData>(o => o
+                    .Mediator(this.serviceProvider.GetRequiredService<IMediator>())
+                    .LoggerFactory(this.serviceProvider.GetRequiredService<ILoggerFactory>()));
+            await this.queue.ProcessItemsAsync(true).AnyContext();
+
             while (true)
             {
-                Console.WriteLine("ready to publish?");
+                Console.WriteLine("ready to publish/queue?");
                 Console.ReadLine();
 
                 await this.PublishAsync().AnyContext();
@@ -67,20 +68,18 @@
 
         private async Task PublishAsync()
         {
-            Console.WriteLine("start publish");
+            Console.WriteLine("start publish/queue");
 
             for (int i = 1; i <= 2; i++)
             {
                 //Thread.Sleep(500);
-                this.messageBus.Publish(new TestMessage { Id = RandomGenerator.GenerateString(7, true), Data = $"{i.ToString()}-{RandomGenerator.GenerateString(3, false).ToUpper()}" });
-                this.messageBus.Publish(new EntityMessage<StubEntity> { Id = RandomGenerator.GenerateString(7, true), Entity = new StubEntity { FirstName = "John", LastName = $"{RandomGenerator.GenerateString(3, false).ToUpper()} ({i})" } });
+                this.messageBroker.Publish(new TestMessage { Id = RandomGenerator.GenerateString(7, true), Data = $"{i.ToString()}-{RandomGenerator.GenerateString(3, false).ToUpper()}" });
+                this.messageBroker.Publish(new EntityMessage<StubEntity> { Id = RandomGenerator.GenerateString(7, true), Entity = new StubEntity { FirstName = "John", LastName = $"{RandomGenerator.GenerateString(3, false).ToUpper()} ({i})" } });
 
                 await this.queue.EnqueueAsync(new EchoQueueEventData { Message = "+++ hello from queue item +++" }).AnyContext();
                 var metrics = this.queue.GetMetricsAsync().Result;
                 Console.WriteLine(metrics.Dump());
             }
-
-            await this.queue.ProcessItemsAsync(true).AnyContext();
         }
     }
 }
