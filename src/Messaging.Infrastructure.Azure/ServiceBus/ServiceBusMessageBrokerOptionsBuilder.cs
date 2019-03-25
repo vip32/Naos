@@ -3,6 +3,7 @@
     using MediatR;
     using Naos.Core.Common;
     using Naos.Core.Infrastructure.Azure.ServiceBus;
+    using Naos.Core.Messaging.Domain;
 
     public class ServiceBusMessageBrokerOptionsBuilder :
         BaseOptionsBuilder<ServiceBusMessageBrokerOptions, ServiceBusMessageBrokerOptionsBuilder>

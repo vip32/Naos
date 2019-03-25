@@ -4,6 +4,7 @@
     using MediatR;
     using Naos.Core.Common;
     using Naos.Core.FileStorage.Domain;
+    using Naos.Core.Messaging.Domain;
 
     public class FileStorageMessageBrokerOptions : BaseOptions
     {

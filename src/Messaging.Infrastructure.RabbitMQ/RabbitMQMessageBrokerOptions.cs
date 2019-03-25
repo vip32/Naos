@@ -2,6 +2,7 @@
 {
     using MediatR;
     using Naos.Core.Common;
+    using Naos.Core.Messaging.Domain;
 
     public class RabbitMQMessageBrokerOptions : BaseOptions
     {

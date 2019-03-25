@@ -3,6 +3,7 @@
     using System.Net.Http;
     using MediatR;
     using Naos.Core.Common;
+    using Naos.Core.Messaging.Domain;
 
     public class SignalRServerlessMessageBrokerOptionsBuilder :
         BaseOptionsBuilder<SignalRServerlessMessageBrokerOptions, SignalRServerlessMessageBrokerOptionsBuilder>

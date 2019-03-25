@@ -12,7 +12,6 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Messaging.Domain;
-    using Naos.Core.Messaging.Domain.Model;
     using Newtonsoft.Json;
 
     public class SignalRServerlessMessageBroker : IMessageBroker, IDisposable

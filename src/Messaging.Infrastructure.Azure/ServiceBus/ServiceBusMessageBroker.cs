@@ -50,7 +50,7 @@
         /// <typeparam name="THandler">The type of the handler.</typeparam>
         /// <returns></returns>
         public IMessageBroker Subscribe<TMessage, THandler>()
-            where TMessage : Domain.Model.Message
+            where TMessage : Domain.Message
             where THandler : IMessageHandler<TMessage>
         {
             var messageName = typeof(TMessage).PrettyName();
@@ -84,7 +84,7 @@
         /// Publishes the specified message.
         /// </summary>
         /// <param name="message">The message.</param>
-        public void Publish(Domain.Model.Message message)
+        public void Publish(Domain.Message message)
         {
             EnsureArg.IsNotNull(message, nameof(message));
             if (message.CorrelationId.IsNullOrEmpty())
@@ -122,7 +122,7 @@
                 this.logger.LogInformation("{LogKey:l} publish (name={MessageName}, id={MessageId}, origin={MessageOrigin})", LogEventKeys.Messaging, messageName, message.Id, message.Origin);
 
                 // TODO: really need non-async Result?
-                var serviceBusMessage = new Message
+                var serviceBusMessage = new Microsoft.Azure.ServiceBus.Message
                 {
                     Label = messageName,
                     MessageId = message.Id,
@@ -142,7 +142,7 @@
         /// <typeparam name="TMessage">The type of the message.</typeparam>
         /// <typeparam name="THandler">The type of the message handler.</typeparam>
         public void Unsubscribe<TMessage, THandler>()
-            where TMessage : Domain.Model.Message
+            where TMessage : Domain.Message
             where THandler : IMessageHandler<TMessage>
         {
             var messageName = typeof(TMessage).PrettyName();
@@ -206,7 +206,7 @@
         /// </summary>
         /// <param name="serviceBusMessage">The servicebus message.</param>
         /// <returns></returns>
-        private async Task<bool> ProcessMessage(Message serviceBusMessage)
+        private async Task<bool> ProcessMessage(Microsoft.Azure.ServiceBus.Message serviceBusMessage)
         {
             var processed = false;
             var messageName = serviceBusMessage.Label;
@@ -231,7 +231,7 @@
                     using (this.logger.BeginScope(loggerState))
                     {
                         // map some message properties to the typed message
-                        var message = jsonMessage as Domain.Model.Message;
+                        var message = jsonMessage as Domain.Message;
                         if (message?.Origin.IsNullOrEmpty() == true)
                         {
                             //message.CorrelationId = jsonMessage.AsJToken().GetStringPropertyByToken("CorrelationId");

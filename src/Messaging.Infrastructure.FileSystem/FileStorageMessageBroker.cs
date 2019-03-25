@@ -10,7 +10,6 @@
     using Naos.Core.Common;
     using Naos.Core.FileStorage.Domain;
     using Naos.Core.Messaging.Domain;
-    using Naos.Core.Messaging.Domain.Model;
     using Newtonsoft.Json;
 
     public class FileStorageMessageBroker : IMessageBroker

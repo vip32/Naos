@@ -2,7 +2,7 @@
 {
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Messaging.Domain.Model;
+    using Naos.Core.Messaging.Domain;
 
     public class StorageQueueMessageBroker : IMessageBroker
     {
