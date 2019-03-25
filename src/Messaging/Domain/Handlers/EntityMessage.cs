@@ -1,6 +1,5 @@
-﻿namespace Naos.Core.Messaging
+﻿namespace Naos.Core.Messaging.Domain
 {
-    using Domain.Model;
     using Naos.Core.Domain;
 
     public class EntityMessage<T> : Message

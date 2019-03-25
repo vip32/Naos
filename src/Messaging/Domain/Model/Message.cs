@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Messaging.Domain.Model
+﻿namespace Naos.Core.Messaging.Domain
 {
     using System;
     using Naos.Core.Common;

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Messaging
+﻿namespace Naos.Core.Messaging.Domain
 {
     using System;
 

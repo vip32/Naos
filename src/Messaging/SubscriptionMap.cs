@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Common;
-    using Domain.Model;
+    using Naos.Core.Messaging.Domain;
 
     public class SubscriptionMap : ISubscriptionMap
     {
@@ -41,38 +41,38 @@
         /// <summary>
         /// Adds this instance.
         /// </summary>
-        /// <typeparam name="TM">The type of the message.</typeparam>
-        /// <typeparam name="TH">The type of the message handler.</typeparam>
-        public void Add<TM, TH>()
-            where TM : Message
-            where TH : IMessageHandler<TM>
+        /// <typeparam name="TMessage">The type of the message.</typeparam>
+        /// <typeparam name="THandler">The type of the message handler.</typeparam>
+        public void Add<TMessage, THandler>()
+            where TMessage : Message
+            where THandler : IMessageHandler<TMessage>
         {
-            this.Add(this.GetKey<TM>(), typeof(TH));
-            this.messageTypes.Add(typeof(TM));
+            this.Add(this.GetKey<TMessage>(), typeof(THandler));
+            this.messageTypes.Add(typeof(TMessage));
         }
 
         /// <summary>
         /// Adds this instance.
         /// </summary>
-        /// <typeparam name="TM">The type of the message.</typeparam>
-        /// <typeparam name="TH">The type of the message handler.</typeparam>
+        /// <typeparam name="TMessage">The type of the message.</typeparam>
+        /// <typeparam name="THandler">The type of the message handler.</typeparam>
         /// <param name="messageName"></param>
-        public void Add<TM, TH>(string messageName)
-            where TM : Message
-            where TH : IMessageHandler<TM>
+        public void Add<TMessage, THandler>(string messageName)
+            where TMessage : Message
+            where THandler : IMessageHandler<TMessage>
         {
-            this.Add(messageName, typeof(TH));
-            this.messageTypes.Add(typeof(TM));
+            this.Add(messageName, typeof(THandler));
+            this.messageTypes.Add(typeof(TMessage));
         }
 
         /// <summary>
         /// Removes this instance.
         /// </summary>
-        /// <typeparam name="TM"></typeparam>
-        /// <typeparam name="TH">The type of the handler.</typeparam>
-        public void Remove<TM, TH>()
-            where TM : Message
-            where TH : IMessageHandler<TM> => this.Remove(this.GetKey<TM>(), this.Find<TM, TH>());
+        /// <typeparam name="TMessage"></typeparam>
+        /// <typeparam name="THandler">The type of the handler.</typeparam>
+        public void Remove<TMessage, THandler>()
+            where TMessage : Message
+            where THandler : IMessageHandler<TMessage> => this.Remove(this.GetKey<TMessage>(), this.Find<TMessage, THandler>());
 
         /// <summary>
         /// Gets all subscription details.
@@ -92,10 +92,10 @@
         /// <summary>
         /// Gets all subscription details.
         /// </summary>
-        /// <typeparam name="TM"></typeparam>
+        /// <typeparam name="TMessage"></typeparam>
         /// <returns></returns>
-        public IEnumerable<SubscriptionDetails> GetAll<TM>()
-            where TM : Message => this.GetAll(this.GetKey<TM>());
+        public IEnumerable<SubscriptionDetails> GetAll<TMessage>()
+            where TMessage : Message => this.GetAll(this.GetKey<TMessage>());
 
         /// <summary>
         /// Gets a specific subscription detail.
@@ -107,10 +107,10 @@
         /// <summary>
         /// Does this instance exist in the map.
         /// </summary>
-        /// <typeparam name="TM"></typeparam>
+        /// <typeparam name="TMessage"></typeparam>
         /// <returns></returns>
-        public bool Exists<TM>()
-            where TM : Message => this.Exists(this.GetKey<TM>());
+        public bool Exists<TMessage>()
+            where TMessage : Message => this.Exists(this.GetKey<TMessage>());
 
         /// <summary>
         /// Does the specified message name exist in the map.
@@ -132,10 +132,10 @@
         /// <summary>
         /// Gets the key.
         /// </summary>
-        /// <typeparam name="TM"></typeparam>
+        /// <typeparam name="TMessage"></typeparam>
         /// <returns></returns>
         //public string GetKey<TMessage>() => typeof(TMessage).Name;
-        public string GetKey<TM>() => typeof(TM).PrettyName();
+        public string GetKey<TMessage>() => typeof(TMessage).PrettyName();
 
         private string GetKey(Type t) => t.PrettyName();
 
@@ -180,9 +180,9 @@
             this.map[messageName].Add(SubscriptionDetails.Create(handlerType));
         }
 
-        private SubscriptionDetails Find<TM, TH>()
-             where TM : Message
-             where TH : IMessageHandler<TM> => this.FindSubscription(this.GetKey<TM>(), typeof(TH));
+        private SubscriptionDetails Find<TMessage, THandler>()
+             where TMessage : Message
+             where THandler : IMessageHandler<TMessage> => this.FindSubscription(this.GetKey<TMessage>(), typeof(THandler));
 
         private SubscriptionDetails FindSubscription(string messageName, Type handlerType)
         {

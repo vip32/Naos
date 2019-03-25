@@ -1,7 +1,6 @@
-﻿namespace Naos.Core.Messaging
+﻿namespace Naos.Core.Messaging.Domain
 {
     using System.Threading.Tasks;
-    using Domain.Model;
 
     public interface IMessageHandler<T>
         where T : Message

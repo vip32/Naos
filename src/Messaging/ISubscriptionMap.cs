@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using Domain.Model;
+    using Naos.Core.Messaging.Domain;
 
     public interface ISubscriptionMap
     {
@@ -22,38 +22,38 @@
         /// <summary>
         /// Adds this instance.
         /// </summary>
-        /// <typeparam name="TM"></typeparam>
-        /// <typeparam name="TH">The type of the h.</typeparam>
-        void Add<TM, TH>()
-           where TM : Message
-           where TH : IMessageHandler<TM>;
+        /// <typeparam name="TMessage"></typeparam>
+        /// <typeparam name="THandler">The type of the h.</typeparam>
+        void Add<TMessage, THandler>()
+           where TMessage : Message
+           where THandler : IMessageHandler<TMessage>;
 
         /// <summary>
         /// Adds this instance.
         /// </summary>
-        /// <typeparam name="TM"></typeparam>
-        /// <typeparam name="TH">The type of the h.</typeparam>
+        /// <typeparam name="TMessage"></typeparam>
+        /// <typeparam name="THandler">The type of the h.</typeparam>
         /// <param name="messageName"></param>
-        void Add<TM, TH>(string messageName)
-           where TM : Message
-           where TH : IMessageHandler<TM>;
+        void Add<TMessage, THandler>(string messageName)
+           where TMessage : Message
+           where THandler : IMessageHandler<TMessage>;
 
         /// <summary>
         /// Removes this instance.
         /// </summary>
-        /// <typeparam name="TM"></typeparam>
-        /// <typeparam name="TH">The type of the h.</typeparam>
-        void Remove<TM, TH>()
-             where TM : Message
-             where TH : IMessageHandler<TM>;
+        /// <typeparam name="TMessage"></typeparam>
+        /// <typeparam name="THandler">The type of the h.</typeparam>
+        void Remove<TMessage, THandler>()
+             where TMessage : Message
+             where THandler : IMessageHandler<TMessage>;
 
         /// <summary>
         /// Does this instance exist in the map.
         /// </summary>
-        /// <typeparam name="TM"></typeparam>
+        /// <typeparam name="TMessage"></typeparam>
         /// <returns></returns>
-        bool Exists<TM>()
-            where TM : Message;
+        bool Exists<TMessage>()
+            where TMessage : Message;
 
         /// <summary>
         /// Does the specified message name exist in the map.
@@ -83,10 +83,10 @@
         /// <summary>
         /// Gets all subscription details.
         /// </summary>
-        /// <typeparam name="TM"></typeparam>
+        /// <typeparam name="TMessage"></typeparam>
         /// <returns></returns>
-        IEnumerable<SubscriptionDetails> GetAll<TM>()
-            where TM : Message;
+        IEnumerable<SubscriptionDetails> GetAll<TMessage>()
+            where TMessage : Message;
 
         /// <summary>
         /// Gets specific subscription details.
@@ -98,8 +98,8 @@
         /// <summary>
         /// Gets the key.
         /// </summary>
-        /// <typeparam name="TM"></typeparam>
+        /// <typeparam name="TMessage"></typeparam>
         /// <returns></returns>
-        string GetKey<TM>();
+        string GetKey<TMessage>();
     }
 }

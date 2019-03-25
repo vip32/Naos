@@ -1,7 +1,6 @@
 ﻿namespace Naos.Core.Messaging.Domain
 {
     using Naos.Core.Domain;
-    using Naos.Core.Messaging.Domain.Model;
 
     public class MessagePublishedDomainEvent : DomainEvent
     {
