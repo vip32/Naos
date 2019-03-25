@@ -4,10 +4,9 @@
     using System.Threading.Tasks;
     using MediatR;
 
-    public abstract class BaseQueueItemRequestHandler<TRequest, TData> : IRequestHandler<TRequest, bool>
-        where TRequest : QueueItemRequest<TData>
+    public abstract class BaseQueueItemRequestHandler<TData> : IRequestHandler<QueueItemRequest<TData>, bool>
         where TData : class
     {
-        public abstract Task<bool> Handle(TRequest request, CancellationToken cancellationToken);
+        public abstract Task<bool> Handle(QueueItemRequest<TData> request, CancellationToken cancellationToken);
     }
 }

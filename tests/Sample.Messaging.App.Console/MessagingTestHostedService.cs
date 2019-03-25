@@ -92,7 +92,7 @@
         public string LastName { get; set; }
     }
 
-    public class TestDataRequestHandler : BaseQueueItemRequestHandler<QueueItemRequest<TestData>, TestData>
+    public class TestDataRequestHandler : BaseQueueItemRequestHandler<TestData>
     {
         private readonly ILogger<TestDataRequestHandler> logger;
 
