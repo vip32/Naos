@@ -18,7 +18,7 @@
 
         public override async Task<bool> Handle(JobEvent<EchoJobEventData> request, CancellationToken cancellationToken)
         {
-            await Task.Run(() => this.logger.LogInformation($"{{LogKey}} {request?.Data?.Text} (type={this.GetType().PrettyName()})", LogEventKeys.JobScheduling));
+            await Task.Run(() => this.logger.LogInformation($"{{LogKey:l}} {request?.Data?.Text} (type={this.GetType().PrettyName()})", LogEventKeys.JobScheduling));
             return true;
         }
     }

@@ -6,14 +6,14 @@
     using Naos.Core.Common;
     using Naos.Core.Messaging.Domain;
 
-    public class StubEntityMessageHandler : EntityMessageHandler<StubEntity>
+    public class EchoEntityMessageHandler : EntityMessageHandler<EchoEntity>
     {
-        public StubEntityMessageHandler(ILogger<StubEntityMessageHandler> logger)
+        public EchoEntityMessageHandler(ILogger<EchoEntityMessageHandler> logger)
             : base(logger)
         {
         }
 
-        public override Task Handle(EntityMessage<StubEntity> message)
+        public override Task Handle(EntityMessage<EchoEntity> message)
         {
             var loggerState = new Dictionary<string, object>
             {
@@ -22,7 +22,7 @@
 
             using (this.logger.BeginScope(loggerState))
             {
-                this.logger.LogInformation("{LogKey:l} handle (name={MessageName}, id={EventId}, origin={EventOrigin}) " + $"{message.Entity.FirstName} {message.Entity.LastName}", LogEventKeys.Messaging, message.GetType().PrettyName(), message.Id, message.Origin);
+                this.logger.LogInformation($"{{LogKey:l}} {message.Entity.Text} (name={{MessageName}}, id={{EventId}}, origin={{EventOrigin}})", LogEventKeys.Messaging, message.GetType().PrettyName(), message.Id, message.Origin);
 
                 return Task.CompletedTask;
             }

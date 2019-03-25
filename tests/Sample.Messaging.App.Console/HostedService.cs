@@ -40,7 +40,7 @@
 
             this.messageBroker = this.serviceProvider.GetRequiredService<IMessageBroker>()
                 .Subscribe<EchoMessage, EchoMessageHandler>()
-                .Subscribe<EntityMessage<StubEntity>, StubEntityMessageHandler>();
+                .Subscribe<EntityMessage<EchoEntity>, EchoEntityMessageHandler>();
 
             this.queue = new InMemoryQueue<EchoQueueEventData>(o => o
                     .Mediator(this.serviceProvider.GetRequiredService<IMediator>())
@@ -78,7 +78,7 @@
             {
                 //Thread.Sleep(500);
                 this.messageBroker.Publish(new EchoMessage { Text = $"+++ hello from echo message ({i.ToString()}-{RandomGenerator.GenerateString(3, false).ToUpper()}) +++" });
-                this.messageBroker.Publish(new EntityMessage<StubEntity> { Id = RandomGenerator.GenerateString(7, true), Entity = new StubEntity { FirstName = "John", LastName = $"{RandomGenerator.GenerateString(3, false).ToUpper()} ({i})" } });
+                this.messageBroker.Publish(new EntityMessage<EchoEntity> { Entity = new EchoEntity { Text = $"+++ hello from echo entity message ({i}-{RandomGenerator.GenerateString(3, false).ToUpper()} +++" } });
             }
 
             return Task.CompletedTask;
@@ -88,7 +88,7 @@
         {
             Console.WriteLine("\r\n--- start enqueue");
 
-            for (int i = 1; i <= 3; i++)
+            for (int i = 1; i <= 2; i++)
             {
                 await this.queue.EnqueueAsync(new EchoQueueEventData { Text = "+++ hello from queue item +++" }).AnyContext();
                 var metrics = this.queue.GetMetricsAsync().Result;
