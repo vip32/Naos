@@ -260,7 +260,7 @@
 
             Task.Run(async () =>
             {
-                this.logger.LogInformation($"{{LogKey:l}} processing started (queue={this.options.Name})", args: new[] { LogEventKeys.Queueing });
+                this.logger.LogInformation($"{{LogKey:l}} processing started (queue={this.options.Name}, type={this.GetType().PrettyName()})", args: new[] { LogEventKeys.Queueing });
                 while (!linkedCancellationToken.IsCancellationRequested)
                 {
                     IQueueItem<TData> item = null;

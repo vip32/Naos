@@ -170,7 +170,7 @@
             EnsureArg.IsNotNull(handler, nameof(handler));
             await this.EnsureQueueAsync(cancellationToken).AnyContext();
 
-            this.logger.LogInformation($"{{LogKey:l}} processing started (queue={this.options.Name})", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogInformation($"{{LogKey:l}} processing started (queue={this.options.Name}, type={this.GetType().PrettyName()})", args: new[] { LogEventKeys.Queueing });
             this.queueReceiver.RegisterMessageHandler(async (msg, ct) =>
             {
                 var item = this.HandleDequeue(msg);
