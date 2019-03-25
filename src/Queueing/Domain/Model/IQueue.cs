@@ -80,8 +80,8 @@
         Task ProcessItemsAsync(Func<IQueueItem<TData>, CancellationToken, Task> handler, bool autoComplete = false, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Asynchronously dequeues items in the background. Dequeued items are sent (by using mediator) as <see cref="QueueItemRequest"/> request.
-        /// These request are handled by <see cref="BaseQueueItemRequestHandler"/> handlers
+        /// Asynchronously dequeues items in the background. Dequeued items are sent (by using mediator) as <see cref="QueueEvent"/> events.
+        /// These request are handled by <see cref="EchoQueueEventHandler"/> handlers
         /// </summary>
         /// <param name="autoComplete">True to call <see cref="CompleteAsync"/> after the <paramref name="handler"/> is run, defaults to false</param>
         /// <param name="cancellationToken">The token used to cancel the background worker</param>

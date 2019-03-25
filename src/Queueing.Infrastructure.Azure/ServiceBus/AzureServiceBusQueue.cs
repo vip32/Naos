@@ -210,7 +210,7 @@
             }
 
             await this.ProcessItemsAsync(
-                async (i, ct) => await this.options.Mediator.Send<bool>(new QueueItemRequest<TData>(i), ct).AnyContext(),
+                async (i, ct) => await this.options.Mediator.Send<bool>(new QueueEvent<TData>(i), ct).AnyContext(),
                 autoComplete, cancellationToken).AnyContext();
         }
 

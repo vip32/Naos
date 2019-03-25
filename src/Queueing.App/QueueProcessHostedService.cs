@@ -1,4 +1,4 @@
-﻿namespace Queueing.App
+﻿namespace Naos.Core.Queueing.App
 {
     using System;
     using System.Threading;
@@ -17,14 +17,14 @@
         private readonly Func<IQueueItem<T>, Task> handler;
 
         public QueueProcessHostedService(
-            ILogger<QueueProcessHostedService<T>> logger,
+            ILoggerFactory loggerFactory,
             IQueue<T> queue,
             Func<IQueueItem<T>, Task> handler = null)
         {
-            EnsureArg.IsNotNull(logger, nameof(logger));
+            EnsureArg.IsNotNull(loggerFactory, nameof(loggerFactory));
             EnsureArg.IsNotNull(queue, nameof(queue));
 
-            this.logger = logger;
+            this.logger = loggerFactory.CreateLogger<QueueProcessHostedService<T>>();
             this.queue = queue;
             this.handler = handler;
             //handler = i => { i.CompleteAsync()};

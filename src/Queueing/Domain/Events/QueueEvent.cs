@@ -4,10 +4,10 @@
     using MediatR;
     using Naos.Core.Domain.Model;
 
-    public class QueueItemRequest<TData> : IRequest<bool>
+    public class QueueEvent<TData> : IRequest<bool>
         where TData : class
     {
-        public QueueItemRequest(IQueueItem<TData> item)
+        public QueueEvent(IQueueItem<TData> item)
         {
             this.Created = DateTime.UtcNow;
             this.Item = item;
