@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Configuration.App\Configuration.App.csproj" />
-    <ProjectReference Include="..\Scheduling\JobScheduling.csproj" />
+    <ProjectReference Include="..\JobScheduling\JobScheduling.csproj" />
   </ItemGroup>
 
 </Project>

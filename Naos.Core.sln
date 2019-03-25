@@ -69,7 +69,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Azure.Servic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Operations", "src\Operations\Operations.csproj", "{0B254852-E2BC-4D7C-84C6-A189E5D9091F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobScheduling", "src\Scheduling\JobScheduling.csproj", "{D0514A2A-4BEE-4898-9344-6EACA9069182}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobScheduling", "src\JobScheduling\JobScheduling.csproj", "{D0514A2A-4BEE-4898-9344-6EACA9069182}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Foundation", "_Foundation", "{C441E12D-3F09-4E93-B490-6E77B8FB7CD5}"
 EndProject
@@ -83,7 +83,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RequestCorrelation.App", "s
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RequestCorrelation", "RequestCorrelation", "{D4E005A7-0093-422D-B7BE-05204D7C63CC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobScheduling.App.Web", "src\Scheduling.App.Web\JobScheduling.App.Web.csproj", "{5B5C61A1-952C-461F-9BFD-CDD486D3E187}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobScheduling.App.Web", "src\JobScheduling.App.Web\JobScheduling.App.Web.csproj", "{5B5C61A1-952C-461F-9BFD-CDD486D3E187}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RequestFiltering", "RequestFiltering", "{41BFCC05-8541-4335-8F13-E4E8B702F486}"
 EndProject
