@@ -27,7 +27,6 @@
         public ServiceBusMessageBroker(ServiceBusMessageBrokerOptions options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
-            EnsureArg.IsNotNull(options.LoggerFactory, nameof(options.LoggerFactory));
             EnsureArg.IsNotNull(options.Provider, nameof(options.Provider));
             EnsureArg.IsNotNull(options.HandlerFactory, nameof(options.HandlerFactory));
             EnsureArg.IsNotNullOrEmpty(options.SubscriptionName, nameof(options.SubscriptionName));
@@ -35,7 +34,7 @@
             this.options = options;
             this.options.Map = options.Map ?? new SubscriptionMap();
             this.options.MessageScope = options.MessageScope ?? options.SubscriptionName;
-            this.logger = options.LoggerFactory.CreateLogger<ServiceBusMessageBroker>();
+            this.logger = options.CreateLogger<ServiceBusMessageBroker>();
             this.serializer = this.options.Serializer ?? DefaultSerializer.Create;
 
             this.InitializeClient(options.Provider, options.Provider.ConnectionStringBuilder.EntityPath, options.SubscriptionName);

@@ -21,7 +21,6 @@
         public FileStorageMessageBroker(FileStorageMessageBrokerOptions options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
-            EnsureArg.IsNotNull(options.LoggerFactory, nameof(options.LoggerFactory));
             EnsureArg.IsNotNull(options.HandlerFactory, nameof(options.HandlerFactory));
             EnsureArg.IsNotNull(options.Storage, nameof(options.Storage));
 
@@ -29,7 +28,7 @@
             this.options.Folder = options.Folder.EmptyToNull() ?? Path.GetTempPath();
             this.options.Map = options.Map ?? new SubscriptionMap();
             this.options.MessageScope = options.MessageScope ?? AppDomain.CurrentDomain.FriendlyName;
-            this.logger = options.LoggerFactory.CreateLogger<FileStorageMessageBroker>();
+            this.logger = options.CreateLogger<FileStorageMessageBroker>();
         }
 
         public FileStorageMessageBroker(Builder<FileStorageMessageBrokerOptionsBuilder, FileStorageMessageBrokerOptions> optionsBuilder)

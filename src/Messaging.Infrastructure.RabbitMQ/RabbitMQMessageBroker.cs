@@ -14,12 +14,11 @@
         public RabbitMQMessageBroker(RabbitMQMessageBrokerOptions options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
-            EnsureArg.IsNotNull(options.LoggerFactory, nameof(options.LoggerFactory));
             EnsureArg.IsNotNull(options.Host, nameof(options.Host));
             EnsureArg.IsNotNull(options.HandlerFactory, nameof(options.HandlerFactory));
 
             this.options = options;
-            this.logger = options.LoggerFactory.CreateLogger<RabbitMQMessageBroker>();
+            this.logger = options.CreateLogger<RabbitMQMessageBroker>();
         }
 
         public RabbitMQMessageBroker(Builder<RabbitMQMessageBrokerOptionsBuilder, RabbitMQMessageBrokerOptions> optionsBuilder)

@@ -26,7 +26,6 @@
         public SignalRServerlessMessageBroker(SignalRServerlessMessageBrokerOptions options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
-            EnsureArg.IsNotNull(options.LoggerFactory, nameof(options.LoggerFactory));
             EnsureArg.IsNotNull(options.HandlerFactory, nameof(options.HandlerFactory));
             EnsureArg.IsNotNullOrEmpty(options.ConnectionString, nameof(options.ConnectionString));
             EnsureArg.IsNotNull(options.HttpClient, nameof(options.HttpClient));
@@ -34,7 +33,7 @@
             this.options = options;
             this.options.Map = options.Map ?? new SubscriptionMap();
             this.options.MessageScope = options.MessageScope ?? AppDomain.CurrentDomain.FriendlyName;
-            this.logger = options.LoggerFactory.CreateLogger<SignalRServerlessMessageBroker>();
+            this.logger = options.CreateLogger<SignalRServerlessMessageBroker>();
             this.serializer = this.options.Serializer ?? DefaultSerializer.Create;
             this.serviceUtils = new ServiceUtils(this.options.ConnectionString);
         }
