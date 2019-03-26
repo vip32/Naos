@@ -130,7 +130,8 @@
                     Label = messageName,
                     MessageId = message.Id,
                     CorrelationId = message.CorrelationId.IsNullOrEmpty() ? Guid.NewGuid().ToString() : message.CorrelationId,
-                    Body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)), // TODO: use ISerializer here, compacter messages
+                    //Body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)), // TODO: use ISerializer here, compacter messages
+                    Body = this.serializer.SerializeToBytes(message),
                     To = this.options.FilterScope
                 };
                 serviceBusMessage.UserProperties.AddOrUpdate("Origin", this.options.MessageScope);
@@ -213,7 +214,6 @@
         {
             var processed = false;
             var messageName = serviceBusMessage.Label;
-            var messageBody = Encoding.UTF8.GetString(serviceBusMessage.Body);
 
             if (this.options.Map.Exists(messageName))
             {
@@ -225,7 +225,6 @@
                         continue;
                     }
 
-                    var jsonMessage = JsonConvert.DeserializeObject(messageBody, messageType); // TODO: use ISerializer here, compacter messages
                     var loggerState = new Dictionary<string, object>
                     {
                         [LogEventPropertyKeys.CorrelationId] = serviceBusMessage.CorrelationId,
@@ -234,8 +233,11 @@
                     using (this.logger.BeginScope(loggerState))
                     {
                         // map some message properties to the typed message
-                        var message = jsonMessage as Domain.Message;
-                        if (message?.Origin.IsNullOrEmpty() == true)
+                        //var jsonMessage = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(serviceBusMessage.Body), messageType); // TODO: use ISerializer here, compacter messages
+                        //var message = jsonMessage as Domain.Message;
+                        var message = this.serializer.Deserialize(serviceBusMessage.Body, messageType) as Domain.Message;
+                        // TODO: message can be null, skip
+                        if (message.Origin.IsNullOrEmpty())
                         {
                             //message.CorrelationId = jsonMessage.AsJToken().GetStringPropertyByToken("CorrelationId");
                             message.Origin = serviceBusMessage.UserProperties.ContainsKey("Origin") ? serviceBusMessage.UserProperties["Origin"] as string : string.Empty;
@@ -256,12 +258,12 @@
                                 await this.options.Mediator.Publish(new MessageHandledDomainEvent(message, this.options.MessageScope)).AnyContext();
                             }
 
-                            await (Task)method.Invoke(handler, new object[] { jsonMessage as object });
+                            await (Task)method.Invoke(handler, new object[] { message as object });
                         }
                         else
                         {
                             this.logger.LogWarning("{LogKey:l} process failed, message handler could not be created. is the handler registered in the service provider? (name={MessageName}, service={Service}, id={MessageId}, origin={MessageOrigin})",
-                                LogEventKeys.Messaging, serviceBusMessage.Label, this.options.MessageScope, jsonMessage.AsJToken().GetStringPropertyByPath("id"), message.Origin);
+                                LogEventKeys.Messaging, serviceBusMessage.Label, this.options.MessageScope, message.Id, message.Origin);
                         }
                     }
                 }
@@ -299,7 +301,7 @@
         private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs args)
         {
             var context = args.ExceptionReceivedContext;
-            this.logger.LogWarning($"{{LogKey:l}} servicebus handler error: topic={context?.EntityPath}, action={context?.Action}, endpoint={context?.Endpoint}, {args.Exception?.Message}", LogEventKeys.Messaging);
+            this.logger.LogWarning($"{{LogKey:l}} servicebus handler error: topic={context?.EntityPath}, action={context?.Action}, endpoint={context?.Endpoint}, {args.Exception?.Message}, {args.Exception?.StackTrace}", LogEventKeys.Messaging);
             return Task.CompletedTask;
         }
     }
