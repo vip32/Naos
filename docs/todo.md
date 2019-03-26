@@ -146,8 +146,11 @@ attr based decorators https://app.pluralsight.com/player?course=cqrs-in-practice
 azure easy auth https://docs.microsoft.com/en-us/azure/app-service/overview-authentication-authorization?view=aspnetcore-2.2 & https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-auth-aad
 signalr client-server streaming https://docs.microsoft.com/en-us/aspnet/core/signalr/streaming?view=aspnetcore-2.2
 core 3 https://blogs.msdn.microsoft.com/webdev/2019/01/29/aspnet-core-3-preview-2/
+
 metrics (AppMetrics) https://github.com/FoundatioFx/Foundatio#metrics
-metric prometheus https://www.olivercoding.com/2018-07-22-prometheus-dotnetcore/
+metrics prometheus https://www.olivercoding.com/2018-07-22-prometheus-dotnetcore/
+metrics azure monitor https://blog.kloud.com.au/2019/01/16/automating-azure-instrumentation-and-monitoring-part-3-custom-metrics/
+
 inter service JSON RPC http://www.jsonrpc.org/specification
 on hold till MS stabalizes this (gRPC): https://github.com/grpc/grpc-dotnet
 entity auditing https://www.ryansouthgate.com/2019/03/18/ef-core-databse-auditing/

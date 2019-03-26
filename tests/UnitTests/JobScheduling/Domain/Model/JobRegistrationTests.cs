@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.UnitTests.Scheduling.Domain.Model
+﻿namespace Naos.Core.UnitTests.JobScheduling.Domain
 {
     using System;
     using System.Globalization;
