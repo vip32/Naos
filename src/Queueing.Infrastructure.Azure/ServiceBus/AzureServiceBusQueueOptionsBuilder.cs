@@ -5,6 +5,7 @@
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Azure.ServiceBus.Management;
     using Naos.Core.Common;
+    using Naos.Core.Common.Serialization;
 
     public class AzureServiceBusQueueOptionsBuilder :
        BaseOptionsBuilder<AzureServiceBusQueueOptions, AzureServiceBusQueueOptionsBuilder>
@@ -12,6 +13,13 @@
         public AzureServiceBusQueueOptionsBuilder Mediator(IMediator mediator)
         {
             this.Target.Mediator = mediator;
+            return this;
+        }
+
+        public AzureServiceBusQueueOptionsBuilder Serializer(ISerializer serializer)
+        {
+            this.Target.Serializer = serializer;
+
             return this;
         }
 

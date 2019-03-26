@@ -11,12 +11,14 @@
     using Microsoft.AspNetCore.SignalR.Client;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
+    using Naos.Core.Common.Serialization;
     using Naos.Core.Messaging.Domain;
     using Newtonsoft.Json;
 
     public class SignalRServerlessMessageBroker : IMessageBroker, IDisposable
     {
         private readonly ILogger<SignalRServerlessMessageBroker> logger;
+        private readonly ISerializer serializer;
         private readonly ServiceUtils serviceUtils;
         private readonly SignalRServerlessMessageBrokerOptions options;
         private HubConnection connection;
@@ -32,6 +34,7 @@
             this.options.Map = options.Map ?? new SubscriptionMap();
             this.options.MessageScope = options.MessageScope ?? AppDomain.CurrentDomain.FriendlyName;
             this.logger = options.LoggerFactory.CreateLogger<SignalRServerlessMessageBroker>();
+            this.serializer = this.options.Serializer ?? DefaultSerializer.Instance;
             this.serviceUtils = new ServiceUtils(this.options.ConnectionString);
         }
 

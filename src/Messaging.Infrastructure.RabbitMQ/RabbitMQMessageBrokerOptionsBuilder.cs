@@ -2,6 +2,7 @@
 {
     using MediatR;
     using Naos.Core.Common;
+    using Naos.Core.Common.Serialization;
     using Naos.Core.Messaging.Domain;
 
     public class RabbitMQMessageBrokerOptionsBuilder :
@@ -10,6 +11,13 @@
         public RabbitMQMessageBrokerOptionsBuilder Mediator(IMediator mediator)
         {
             this.Target.Mediator = mediator;
+            return this;
+        }
+
+        public RabbitMQMessageBrokerOptionsBuilder Serializer(ISerializer serializer)
+        {
+            this.Target.Serializer = serializer;
+
             return this;
         }
 

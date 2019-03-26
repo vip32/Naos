@@ -3,6 +3,7 @@
     using System.Net.Http;
     using MediatR;
     using Naos.Core.Common;
+    using Naos.Core.Common.Serialization;
     using Naos.Core.Messaging.Domain;
 
     public class SignalRServerlessMessageBrokerOptionsBuilder :
@@ -11,6 +12,13 @@
         public SignalRServerlessMessageBrokerOptionsBuilder Mediator(IMediator mediator)
         {
             this.Target.Mediator = mediator;
+            return this;
+        }
+
+        public SignalRServerlessMessageBrokerOptionsBuilder Serializer(ISerializer serializer)
+        {
+            this.Target.Serializer = serializer;
+
             return this;
         }
 

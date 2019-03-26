@@ -8,6 +8,7 @@
     using EnsureThat;
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Common.Serialization;
     using Naos.Core.Infrastructure.Azure.ServiceBus;
     using Naos.Core.Messaging.Domain;
     using Newtonsoft.Json;
@@ -16,6 +17,7 @@
     {
         private readonly ServiceBusMessageBrokerOptions options;
         private readonly ILogger<ServiceBusMessageBroker> logger;
+        private readonly ISerializer serializer;
         private SubscriptionClient client;
 
         /// <summary>
@@ -33,6 +35,7 @@
             this.options.Map = options.Map ?? new SubscriptionMap();
             this.options.MessageScope = options.MessageScope ?? options.SubscriptionName;
             this.logger = options.LoggerFactory.CreateLogger<ServiceBusMessageBroker>();
+            this.serializer = this.options.Serializer ?? DefaultSerializer.Instance;
 
             this.InitializeClient(options.Provider, options.Provider.ConnectionStringBuilder.EntityPath, options.SubscriptionName);
             this.RegisterMessageHandler();
@@ -127,7 +130,7 @@
                     Label = messageName,
                     MessageId = message.Id,
                     CorrelationId = message.CorrelationId.IsNullOrEmpty() ? Guid.NewGuid().ToString() : message.CorrelationId,
-                    Body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)),
+                    Body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)), // TODO: use ISerializer here, compacter messages
                     To = this.options.FilterScope
                 };
                 serviceBusMessage.UserProperties.AddOrUpdate("Origin", this.options.MessageScope);
@@ -222,7 +225,7 @@
                         continue;
                     }
 
-                    var jsonMessage = JsonConvert.DeserializeObject(messageBody, messageType);
+                    var jsonMessage = JsonConvert.DeserializeObject(messageBody, messageType); // TODO: use ISerializer here, compacter messages
                     var loggerState = new Dictionary<string, object>
                     {
                         [LogEventPropertyKeys.CorrelationId] = serviceBusMessage.CorrelationId,

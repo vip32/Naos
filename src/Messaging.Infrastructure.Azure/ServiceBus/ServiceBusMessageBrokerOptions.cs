@@ -2,12 +2,15 @@
 {
     using MediatR;
     using Naos.Core.Common;
+    using Naos.Core.Common.Serialization;
     using Naos.Core.Infrastructure.Azure.ServiceBus;
     using Naos.Core.Messaging.Domain;
 
     public class ServiceBusMessageBrokerOptions : BaseOptions
     {
         public IMediator Mediator { get; set; }
+
+        public ISerializer Serializer { get; set; }
 
         public IServiceBusProvider Provider { get; set; }
 

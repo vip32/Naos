@@ -2,11 +2,14 @@
 {
     using MediatR;
     using Naos.Core.Common;
+    using Naos.Core.Common.Serialization;
     using Naos.Core.Messaging.Domain;
 
     public class RabbitMQMessageBrokerOptions : BaseOptions
     {
         public IMediator Mediator { get; set; }
+
+        public ISerializer Serializer { get; set; }
 
         public IMessageHandlerFactory HandlerFactory { get; set; }
 
