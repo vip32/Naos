@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using Common;
     using EnsureThat;
+    using Humanizer;
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common.Serialization;
@@ -121,9 +122,6 @@
                 }
 
                 var messageName = message.GetType().PrettyName();
-
-                this.logger.LogInformation("{LogKey:l} publish (name={MessageName}, id={MessageId}, origin={MessageOrigin})", LogEventKeys.Messaging, messageName, message.Id, message.Origin);
-
                 // TODO: really need non-async Result?
                 var serviceBusMessage = new Microsoft.Azure.ServiceBus.Message
                 {
@@ -135,6 +133,8 @@
                     To = this.options.FilterScope
                 };
                 serviceBusMessage.UserProperties.AddOrUpdate("Origin", this.options.MessageScope);
+
+                this.logger.LogInformation($"{{LogKey:l}} publish (name={{MessageName}}, id={{MessageId}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes().ToString("#.##")})", LogEventKeys.Messaging, messageName, message.Id, message.Origin);
 
                 this.options.Provider.CreateModel().SendAsync(serviceBusMessage).GetAwaiter().GetResult();
             }
@@ -243,7 +243,7 @@
                             message.Origin = serviceBusMessage.UserProperties.ContainsKey("Origin") ? serviceBusMessage.UserProperties["Origin"] as string : string.Empty;
                         }
 
-                        this.logger.LogInformation("{LogKey:l} process (name={MessageName}, id={MessageId}, service={Service}, origin={MessageOrigin})",
+                        this.logger.LogInformation($"{{LogKey:l}} process (name={{MessageName}}, id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes().ToString("#.##")})",
                             LogEventKeys.Messaging, serviceBusMessage.Label, message?.Id, this.options.MessageScope, message.Origin);
 
                         // construct the handler by using the DI container
