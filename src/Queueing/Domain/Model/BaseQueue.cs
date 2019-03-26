@@ -21,7 +21,7 @@
         protected BaseQueue(TOptions options)
         {
             this.options = options ?? Factory<TOptions>.Create();
-            this.logger = options.LoggerFactory.CreateLogger<TData>();
+            this.logger = options.CreateLogger<TData>();
             this.serializer = options.Serializer ?? DefaultSerializer.Create;
             options.Name = options.Name ?? typeof(TData).PrettyName().Replace("<", "_").Replace(">", "_").ToLower().Pluralize();
             this.Name = options.Name;
