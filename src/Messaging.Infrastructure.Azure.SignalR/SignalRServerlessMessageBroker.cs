@@ -34,7 +34,7 @@
             this.options.Map = options.Map ?? new SubscriptionMap();
             this.options.MessageScope = options.MessageScope ?? AppDomain.CurrentDomain.FriendlyName;
             this.logger = options.LoggerFactory.CreateLogger<SignalRServerlessMessageBroker>();
-            this.serializer = this.options.Serializer ?? DefaultSerializer.Instance;
+            this.serializer = this.options.Serializer ?? DefaultSerializer.Create;
             this.serviceUtils = new ServiceUtils(this.options.ConnectionString);
         }
 

@@ -21,7 +21,7 @@
         {
             this.options = options ?? new EmbeddedFileStorageOptions();
             this.options.Assemblies = this.options.Assemblies ?? new[] { Assembly.GetEntryAssembly() };
-            this.Serializer = this.options.Serializer ?? DefaultSerializer.Instance;
+            this.Serializer = this.options.Serializer ?? DefaultSerializer.Create;
         }
 
         public EmbeddedFileStorage(Builder<EmbeddedFileStorageOptionsBuilder, EmbeddedFileStorageOptions> optionsBuilder)

@@ -18,7 +18,7 @@
         public FolderFileStorage(FolderFileStorageOptions options)
         {
             this.options = options ?? new FolderFileStorageOptions();
-            this.Serializer = this.options.Serializer ?? DefaultSerializer.Instance;
+            this.Serializer = this.options.Serializer ?? DefaultSerializer.Create;
 
             var folder = PathHelper.ExpandPath(this.options.Folder);
             if (!Path.IsPathRooted(folder))

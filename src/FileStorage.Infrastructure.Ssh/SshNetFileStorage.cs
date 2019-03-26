@@ -27,7 +27,7 @@
 
             this.logger = options.LoggerFactory.CreateLogger<SshNetFileStorage>();
             options = options ?? new SshNetFileStorageOptions();
-            this.Serializer = options.Serializer ?? DefaultSerializer.Instance;
+            this.Serializer = options.Serializer ?? DefaultSerializer.Create;
 
             this.connectionInfo = this.CreateConnectionInfo(options);
             this.client = new SftpClient(this.connectionInfo);

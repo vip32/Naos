@@ -27,7 +27,7 @@
         public InMemoryFileStorage(InMemoryFileStorageOptions options)
         {
             this.options = options ?? new InMemoryFileStorageOptions();
-            this.Serializer = this.options.Serializer ?? DefaultSerializer.Instance;
+            this.Serializer = this.options.Serializer ?? DefaultSerializer.Create;
 
             this.MaxFileSize = options.MaxFileSize;
             this.MaxFiles = options.MaxFiles;

@@ -35,7 +35,7 @@
             this.options.Map = options.Map ?? new SubscriptionMap();
             this.options.MessageScope = options.MessageScope ?? options.SubscriptionName;
             this.logger = options.LoggerFactory.CreateLogger<ServiceBusMessageBroker>();
-            this.serializer = this.options.Serializer ?? DefaultSerializer.Instance;
+            this.serializer = this.options.Serializer ?? DefaultSerializer.Create;
 
             this.InitializeClient(options.Provider, options.Provider.ConnectionStringBuilder.EntityPath, options.SubscriptionName);
             this.RegisterMessageHandler();

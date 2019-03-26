@@ -2,6 +2,6 @@
 {
     public static class DefaultSerializer
     {
-        public static ISerializer Instance { get; set; } = new MessagePackSerializer(); // TODO: rename to create
+        public static ISerializer Create { get; set; } = new MessagePackSerializer(); // TODO: as method()
     }
 }
