@@ -21,6 +21,7 @@
         public FileStorageMessageBroker(FileStorageMessageBrokerOptions options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.LoggerFactory, nameof(options.LoggerFactory));
             EnsureArg.IsNotNull(options.HandlerFactory, nameof(options.HandlerFactory));
             EnsureArg.IsNotNull(options.Storage, nameof(options.Storage));
 

@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.Messaging.Infrastructure.RabbitMQ
 {
     using System;
+    using EnsureThat;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Messaging.Domain;
@@ -12,9 +13,10 @@
 
         public RabbitMQMessageBroker(RabbitMQMessageBrokerOptions options)
         {
-            EnsureThat.EnsureArg.IsNotNull(options, nameof(options));
-            EnsureThat.EnsureArg.IsNotNull(options.Host, nameof(options.Host));
-            EnsureThat.EnsureArg.IsNotNull(options.HandlerFactory, nameof(options.HandlerFactory));
+            EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.LoggerFactory, nameof(options.LoggerFactory));
+            EnsureArg.IsNotNull(options.Host, nameof(options.Host));
+            EnsureArg.IsNotNull(options.HandlerFactory, nameof(options.HandlerFactory));
 
             this.options = options;
             this.logger = options.LoggerFactory.CreateLogger<RabbitMQMessageBroker>();

@@ -26,6 +26,7 @@
         public SignalRServerlessMessageBroker(SignalRServerlessMessageBrokerOptions options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.LoggerFactory, nameof(options.LoggerFactory));
             EnsureArg.IsNotNull(options.HandlerFactory, nameof(options.HandlerFactory));
             EnsureArg.IsNotNullOrEmpty(options.ConnectionString, nameof(options.ConnectionString));
             EnsureArg.IsNotNull(options.HttpClient, nameof(options.HttpClient));

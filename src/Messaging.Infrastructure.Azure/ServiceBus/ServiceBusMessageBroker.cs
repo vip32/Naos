@@ -27,6 +27,7 @@
         public ServiceBusMessageBroker(ServiceBusMessageBrokerOptions options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.LoggerFactory, nameof(options.LoggerFactory));
             EnsureArg.IsNotNull(options.Provider, nameof(options.Provider));
             EnsureArg.IsNotNull(options.HandlerFactory, nameof(options.HandlerFactory));
             EnsureArg.IsNotNullOrEmpty(options.SubscriptionName, nameof(options.SubscriptionName));
