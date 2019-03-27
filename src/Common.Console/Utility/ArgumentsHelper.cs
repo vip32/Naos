@@ -18,12 +18,12 @@
             var currentArgument = new StringBuilder();
             char currentQuote = char.MinValue;
 
-            Action reset = () =>
+            void reset()
             {
                 result.Add(currentArgument.ToString());
                 currentArgument = new StringBuilder();
                 currentQuote = char.MinValue;
-            };
+            }
 
             foreach (char c in line)
             {
