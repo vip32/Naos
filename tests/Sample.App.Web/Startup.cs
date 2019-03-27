@@ -18,6 +18,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
+    using Naos.Core.Common.Console;
     using Naos.Core.Common.Web;
     using Naos.Core.Configuration.App;
     using Naos.Core.JobScheduling.App;
@@ -116,6 +117,18 @@
 
             if (this.Configuration["console"] == "true")
             {
+                // needed for mediator, register command handlers
+                services.Scan(scan => scan
+                    .FromAssembliesOf(typeof(ConsoleCommandEventHandler<>))
+                    .AddClasses()
+                    .AsImplementedInterfaces());
+
+                // register all possible commands
+                //services.Scan(scan => scan
+                //    .FromAssembliesOf(typeof(IConsoleCommand))
+                //    .AddClasses()
+                //    .AsImplementedInterfaces());
+
                 services.AddSingleton<Microsoft.Extensions.Hosting.IHostedService, ConsoleHostedService>();
             }
 

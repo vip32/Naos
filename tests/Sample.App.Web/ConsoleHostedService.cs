@@ -1,7 +1,9 @@
 ﻿namespace Naos.Sample.App.Web
 {
     using System;
+    using System.Collections.Generic;
     using System.Drawing;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
@@ -10,6 +12,7 @@
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
+    using Naos.Core.Common.Console;
     using Naos.Core.Domain;
     using Naos.Core.JobScheduling.Domain;
     using Naos.Core.Messaging;
@@ -22,6 +25,8 @@
     {
         private readonly ILogger<ConsoleHostedService> logger;
         private readonly IServiceProvider serviceProvider;
+        private readonly IEnumerable<IConsoleCommand> commands;
+        private readonly IMediator mediator;
         private IMessageBroker messageBroker;
         private IQueue<EchoQueueEventData> queue;
         private IJobScheduler jobScheduler;
@@ -33,11 +38,20 @@
 
             this.logger = logger;
             this.serviceProvider = serviceProvider;
+
+            this.commands = this.serviceProvider.GetServices<IConsoleCommand>().Distinct();
+            this.mediator = (IMediator)this.serviceProvider.CreateScope().ServiceProvider.GetService(typeof(IMediator));
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             Console.WriteLine("\r\n--- naos console start", Color.LimeGreen);
+
+            foreach(var command in this.commands.Safe())
+            {
+                Console.WriteLine("found command: " + command.GetType(), Color.Gray);
+                //await this.mediator.Send<bool>(new ConsoleCommandEvent<EchoConsoleCommand>(command as EchoConsoleCommand)).AnyContext();
+            }
 
             this.jobScheduler = this.serviceProvider.GetRequiredService<IJobScheduler>();
 
@@ -46,7 +60,7 @@
                 .Subscribe<EntityMessage<EchoEntity>, EchoEntityMessageHandler>();
 
             this.queue = new InMemoryQueue<EchoQueueEventData>(o => o
-                    .Mediator((IMediator)this.serviceProvider.CreateScope().ServiceProvider.GetService(typeof(IMediator)))
+                    .Mediator(this.mediator)
                     .LoggerFactory(this.serviceProvider.GetRequiredService<ILoggerFactory>()));
             await this.queue.ProcessItemsAsync(true).AnyContext();
 
