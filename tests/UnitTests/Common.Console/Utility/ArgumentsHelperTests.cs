@@ -9,12 +9,14 @@
         [Fact]
         public void CanParseLine_Test()
         {
-            var args = ArgumentsHelper.Split("git commit -m 'message 123'");
+            var args = ArgumentsHelper.Split("git commit -m 'message 123' ");
 
             args.ShouldContain("git");
             args.ShouldContain("commit");
             args.ShouldContain("-m");
             args.ShouldContain("message 123");
+            args.ShouldNotContain(" ");
+            args.ShouldNotContain(string.Empty);
         }
     }
 }
