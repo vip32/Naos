@@ -146,7 +146,7 @@
                     await this.HttpContext.Response.WriteAsync("</span>");
                     await this.HttpContext.Response.WriteAsync($"&nbsp;[<span style='color: {levelColor}'>");
                     await this.HttpContext.Response.WriteAsync($"{logEvent.Level.ToUpper().Truncate(3, string.Empty)}");
-                    await this.HttpContext.Response.WriteAsync($"</span>]&nbsp;{logEvent.CorrelationId}&nbsp;");
+                    await this.HttpContext.Response.WriteAsync($"</span>]&nbsp;{logEvent.CorrelationId}&nbsp;".Replace("&nbsp;&nbsp;", "&nbsp;"));
                     await this.HttpContext.Response.WriteAsync($"<span style='color: {messageColor}; {extraStyles}'>");
                     await this.HttpContext.Response.WriteAsync($"{logEvent.Message}");
                     await this.HttpContext.Response.WriteAsync("</span>");

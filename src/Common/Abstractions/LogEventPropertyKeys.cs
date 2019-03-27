@@ -18,8 +18,9 @@
         public const string TrackHandleDomainEvent = "ns_trkhdm";
         public const string TrackSendCommand = "ns_trkscm";
         public const string TrackHandleCommand = "ns_trkhcm";
+        public const string TrackSubscribeMessage = "ns_trksmg";
         public const string TrackPublishMessage = "ns_trkpmg";
-        public const string TrackHandleMessage = "ns_trkhmg";
+        public const string TrackReceiveMessage = "ns_trkrmg";
         public const string TrackStartJob = "ns_trksjb";
         public const string TrackFinishJob = "ns_trkfjb";
         public const string TrackInboundRequest = "ns_trkirq";

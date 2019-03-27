@@ -114,6 +114,11 @@
                     .AddServiceDiscoveryRouter(o => o
                         .UseFileSystemRegistry()));
 
+            if (this.Configuration["console"] == "true")
+            {
+                services.AddSingleton<Microsoft.Extensions.Hosting.IHostedService, ConsoleHostedService>();
+            }
+
             // TODO: need to find a way to start the MessageBroker (done by resolving the IMessageBroker somewhere, HostedService? like scheduling)
         }
 

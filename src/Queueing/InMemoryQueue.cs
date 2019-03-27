@@ -2,12 +2,14 @@
 {
     using System;
     using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
+    using Naos.Core.Domain;
     using Naos.Core.Queueing.Domain;
 
     public class InMemoryQueue<TData> : BaseQueue<TData, InMemoryQueueOptions>
@@ -41,19 +43,25 @@
         public override async Task<string> EnqueueAsync(TData data)
         {
             EnsureArg.IsNotNull(data, nameof(data));
-            await this.EnsureQueueAsync().AnyContext();
+            this.EnsureMetaData(data);
 
-            string id = RandomGenerator.GenerateString(13, true);
-            this.logger.LogDebug($"queue item enqueue (id={id}, queue={this.options.Name})");
+            using (this.logger.BeginScope(new Dictionary<string, object>
+            {
+                [LogEventPropertyKeys.CorrelationId] = data.As<IHaveCorrelationId>()?.CorrelationId,
+            }))
+            {
+                await this.EnsureQueueAsync().AnyContext();
 
-            var item = new QueueItem<TData>(id, data.Clone(), this, DateTime.UtcNow, 0);
-            this.queue.Enqueue(item);
+                var item = new QueueItem<TData>(RandomGenerator.GenerateString(13, true), data.Clone(), this, DateTime.UtcNow, 0);
+                this.logger.LogDebug($"queue item enqueue (id={item.Id}, queue={this.options.Name})");
+                this.queue.Enqueue(item);
 
-            Interlocked.Increment(ref this.enqueuedCount);
+                Interlocked.Increment(ref this.enqueuedCount);
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item enqueued (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
-            this.LastEnqueuedDate = DateTime.UtcNow;
-            return item.Id;
+                this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item enqueued (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+                this.LastEnqueuedDate = DateTime.UtcNow;
+                return item.Id;
+            }
         }
 
         public override Task RenewLockAsync(IQueueItem<TData> item)
@@ -73,7 +81,7 @@
                 return value;
             });
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item lock renewed (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogJournal(LogEventPropertyKeys.TrackDequeue, $"{{LogKey:l}} item lock renewed (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
             this.LastDequeuedDate = DateTime.UtcNow;
             return Task.CompletedTask;
         }
@@ -97,7 +105,7 @@
             Interlocked.Increment(ref this.completedCount);
             item.MarkCompleted();
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item completed (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogJournal(LogEventPropertyKeys.TrackDequeue, $"{{LogKey:l}} item completed (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
             this.LastDequeuedDate = DateTime.UtcNow;
             return Task.CompletedTask;
         }
@@ -145,7 +153,7 @@
             Interlocked.Increment(ref this.abandonedCount);
             item.MarkAbandoned();
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item abandoned (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogJournal(LogEventPropertyKeys.TrackDequeue, $"{{LogKey:l}} item abandoned (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
             this.LastDequeuedDate = DateTime.UtcNow;
             return Task.CompletedTask;
         }
@@ -186,7 +194,16 @@
             }
 
             this.ProcessItems(
-                async (i, ct) => await this.options.Mediator.Send<bool>(new QueueEvent<TData>(i), ct).AnyContext(),
+                async (i, ct) =>
+                {
+                    using (this.logger.BeginScope(new Dictionary<string, object>
+                        {
+                            [LogEventPropertyKeys.CorrelationId] = i.Data.As<IHaveCorrelationId>()?.CorrelationId,
+                        }))
+                    {
+                        await this.options.Mediator.Send(new QueueEvent<TData>(i), ct).AnyContext();
+                    }
+                },
                 autoComplete, cancellationToken);
         }
 
@@ -246,11 +263,18 @@
 
             Interlocked.Increment(ref this.dequeuedCount);
             var item = new QueueItem<TData>(dequeuedItem.Id, dequeuedItem.Data.Clone(), this, dequeuedItem.EnqueuedDate, dequeuedItem.Attempts); // clone item
-            await item.RenewLockAsync();
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item dequeued (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
-            this.LastDequeuedDate = DateTime.UtcNow;
-            return item;
+            using (this.logger.BeginScope(new Dictionary<string, object>
+                {
+                    [LogEventPropertyKeys.CorrelationId] = item.Data.As<IHaveCorrelationId>()?.CorrelationId,
+                }))
+            {
+                await item.RenewLockAsync();
+
+                this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item dequeued (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+                this.LastDequeuedDate = DateTime.UtcNow;
+                return item;
+            }
         }
 
         private void ProcessItems(Func<IQueueItem<TData>, CancellationToken, Task> handler, bool autoComplete, CancellationToken cancellationToken)
@@ -279,22 +303,28 @@
                         continue;
                     }
 
-                    try
-                    {
-                        await handler(item, linkedCancellationToken.Token).AnyContext();
-                        if (autoComplete && !item.IsAbandoned && !item.IsCompleted)
+                    using (this.logger.BeginScope(new Dictionary<string, object>
                         {
-                            await item.CompleteAsync().AnyContext();
+                            [LogEventPropertyKeys.CorrelationId] = item.Data.As<IHaveCorrelationId>()?.CorrelationId,
+                        }))
+                    {
+                        try
+                        {
+                            await handler(item, linkedCancellationToken.Token).AnyContext();
+                            if (autoComplete && !item.IsAbandoned && !item.IsCompleted)
+                            {
+                                await item.CompleteAsync().AnyContext();
+                            }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        Interlocked.Increment(ref this.workerErrorCount);
-                        this.logger.LogError(ex, $"{{LogKey:l}} processing error: {ex.Message}", args: new[] { LogEventKeys.Queueing });
-
-                        if (!item.IsAbandoned && !item.IsCompleted)
+                        catch (Exception ex)
                         {
-                            await item.AbandonAsync().AnyContext();
+                            Interlocked.Increment(ref this.workerErrorCount);
+                            this.logger.LogError(ex, $"{{LogKey:l}} processing error: {ex.Message}", args: new[] { LogEventKeys.Queueing });
+
+                            if (!item.IsAbandoned && !item.IsCompleted)
+                            {
+                                await item.AbandonAsync().AnyContext();
+                            }
                         }
                     }
                 }

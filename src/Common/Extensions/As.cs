@@ -1,5 +1,7 @@
 ﻿namespace Naos.Core.Common
 {
+    using System;
+
     public static partial class Extensions
     {
         /// <summary>
@@ -13,21 +15,17 @@
         {
             if (source == null)
             {
-                return null;
+                return default;
             }
 
-            return (T)source;
-        }
-
-        public static bool Is<T>(this object source)
-            where T : class
-        {
-            if(source == null)
+            try
             {
-                return false;
+                return (T)source;
             }
-
-            return source is T;
+            catch (InvalidCastException)
+            {
+                return default;
+            }
         }
     }
 }

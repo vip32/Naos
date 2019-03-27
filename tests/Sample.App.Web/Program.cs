@@ -18,7 +18,7 @@
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((context, config) =>
                 {
-                    NaosConfigurationFactory.Extend(config);
+                    NaosConfigurationFactory.Extend(config, args, context.HostingEnvironment.EnvironmentName);
                 })
                 //.UseUrls($"https://localhost:{GetNextAvailablePort()}")
                 .UseStartup<Startup>()

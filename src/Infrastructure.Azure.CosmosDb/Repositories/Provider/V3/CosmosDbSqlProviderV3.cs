@@ -11,7 +11,7 @@
     using Naos.Core.Domain;
 
     public class CosmosDbSqlProviderV3<T> : ICosmosDbSqlProvider<T>, IDisposable
-        where T : IDiscriminated // needed? each type T is persisted in own collection
+        where T : IHaveDiscriminator // needed? each type T is persisted in own collection
     {
         private readonly CosmosClient client;
         private readonly string partitionKeyPath;

@@ -1,10 +1,10 @@
-﻿namespace Naos.Core.Sample.Messaging.App.Console
+﻿namespace Naos.Core.Messaging.Domain
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
-    using Naos.Core.Messaging.Domain;
+    using Naos.Core.Domain;
 
     public class EchoEntityMessageHandler : EntityMessageHandler<EchoEntity>
     {

@@ -19,9 +19,14 @@
         //        .Bind(instance);
         //}
 
-        public static IConfigurationBuilder Extend(IConfigurationBuilder config, string basePath = null, string[] args = null)
+        public static IConfigurationBuilder Extend(IConfigurationBuilder config, string[] args = null, string environmentName = "Development")
         {
-            return CreateBuilder(basePath, args, config);
+            return CreateBuilder(null, args, config, environmentName);
+        }
+
+        public static IConfigurationBuilder Extend(IConfigurationBuilder config, string basePath, string[] args = null, string environmentName = "Development")
+        {
+            return CreateBuilder(basePath, args, config, environmentName);
         }
 
         public static IConfigurationRoot Create(string basePath = null, string[] args = null)
@@ -29,13 +34,16 @@
             return CreateBuilder(basePath, args).Build();
         }
 
-        private static IConfigurationBuilder CreateBuilder(string basePath = null, string[] args = null, IConfigurationBuilder builder = null)
+        private static IConfigurationBuilder CreateBuilder(string basePath = null, string[] args = null, IConfigurationBuilder builder = null, string environmentName = "Development")
         {
             builder = builder ?? new ConfigurationBuilder();
             builder.SetBasePath(basePath ?? AppDomain.CurrentDomain.BaseDirectory)
-                  .AddJsonFile("appsettings.json", optional: true)
+                  .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                   .AddEnvironmentVariables();
-            builder.AddIf(args != null, b => b.AddCommandLine(args));
+            builder.AddIf(!environmentName.IsNullOrEmpty(), b => b
+                .AddJsonFile($"appsettings.{environmentName}.json", optional: true, reloadOnChange: true));
+            builder.AddIf(args != null, b => b
+                .AddCommandLine(args));
 
             var configuration = builder.Build();
             builder.AddIf(!configuration["naos:secrets:userSecretsId"].IsNullOrEmpty(), b =>

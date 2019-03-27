@@ -1,10 +1,13 @@
 ﻿namespace Naos.Core.Sample.Messaging.App.Console
 {
     using System;
+    using System.Drawing;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using MediatR;
+    using Microsoft.AspNetCore;
+    using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Hosting;
@@ -13,8 +16,8 @@
     using Naos.Core.Configuration.App;
     using Naos.Core.JobScheduling.App;
     using Naos.Core.JobScheduling.Domain;
-    using Naos.Core.Queueing.Domain;
     using Naos.Core.RequestCorrelation.App.Web;
+    using Console = Colorful.Console;
 
     public static class Program
     {
@@ -57,10 +60,16 @@
                                 //.UseRabbitMQBroker()));
                                 .UseServiceBusBroker()));
 
-                    services
-                        .AddSingleton<IHostedService, HostedService>();
+                    //services
+                    //    .AddSingleton<IHostedService, ConsoleHostedService>();
                 });
 
+            //Console.WriteLine($"webapp starting ({typeof(Naos.Sample.App.Web.Program).FullPrettyName()})", Color.Gray);
+            //await Naos.Sample.App.Web.Program.CreateWebHostBuilder(null).Build().StartAsync();
+            //await Naos.Sample.App.Web.Program.CreateWebHostBuilder(args).Build().RunAsync();
+            //Console.WriteLine($"webapp ready ({typeof(Naos.Sample.App.Web.Program).FullPrettyName()})\r\n", Color.Gray);
+
+            Console.WriteLine("console starting", Color.Gray);
             await builder.RunConsoleAsync();
         }
     }

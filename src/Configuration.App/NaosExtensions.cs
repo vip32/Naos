@@ -7,6 +7,7 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Configuration.App;
+    using Console = Colorful.Console;
 
     [ExcludeFromCodeCoverage]
     /// <summary>
@@ -36,6 +37,7 @@
             string environment = null,
             string section = "naos")
         {
+            Console.WriteLine("--- naos service start", System.Drawing.Color.LimeGreen);
             EnsureArg.IsNotNull(services, nameof(services));
 
             var naosConfiguration = configuration?.GetSection(section).Get<NaosConfiguration>();
@@ -57,15 +59,6 @@
             try
             {
                 var logger = services.BuildServiceProvider().GetRequiredService<ILoggerFactory>().CreateLogger("Naos");
-//                logger.LogInformation(@"
-//::`     `:        `         .::-:-`     .-:-:--`
-//.o++.    -o`      ```      -o/`   .o/   /o-    o/
-//.o.:o:   -o`     ..`-`    `o+      -o:  /o-`   `
-//.o. -+/` -o`   `...`...   :o+      .oo   .:/+/:.
-//.o.  `++.-o`  `.`   ```.` .o+      .o/       `-+o.
-//.o.    :o+o` ````....-. `  :o-    `++`  +/     /o-
-//`/`     -//  `    ````      `:/--::-    -::--:/:`
-//");
                 foreach (var message in context.Messages.Safe())
                 {
                     logger.LogDebug(message);

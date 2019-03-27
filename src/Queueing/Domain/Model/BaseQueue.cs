@@ -7,6 +7,7 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Common.Serialization;
+    using Naos.Core.Domain;
 
     public abstract class BaseQueue<TData, TOptions> : IQueue<TData>
         where TData : class
@@ -85,6 +86,14 @@
         protected CancellationTokenSource CreateLinkedTokenSource(CancellationToken cancellationToken)
         {
             return CancellationTokenSource.CreateLinkedTokenSource(this.disposedCancellationTokenSource.Token, cancellationToken);
+        }
+
+        protected void EnsureMetaData(TData data)
+        {
+            if (data is IHaveCorrelationId d && d.CorrelationId.IsNullOrEmpty())
+            {
+                d.CorrelationId = RandomGenerator.GenerateString(13, true);
+            }
         }
 
         protected abstract Task EnsureQueueAsync(CancellationToken cancellationToken = default);

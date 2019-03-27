@@ -17,7 +17,7 @@
     using Newtonsoft.Json;
 
     public class CosmosDbSqlProviderV2<T> : ICosmosDbSqlProvider<T>
-        where T : IDiscriminated
+        where T : IHaveDiscriminator
     {
         private readonly ILogger<CosmosDbSqlProviderV2<T>> logger;
         private readonly IDocumentClient client;

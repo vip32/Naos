@@ -65,7 +65,7 @@
                 }
 
                 // store message in specific (Message) folder
-                this.logger.LogInformation("{LogKey:l} publish (name={MessageName}, id={MessageId}, origin={MessageOrigin})", LogEventKeys.Messaging, message.GetType().PrettyName(), message.Id, message.Origin);
+                this.logger.LogJournal(LogEventPropertyKeys.TrackPublishMessage, "{LogKey:l} publish (name={MessageName}, id={MessageId}, origin={MessageOrigin})", args: new[] { LogEventKeys.Messaging, message.GetType().PrettyName(), message.Id, message.Origin });
                 var messageName = /*message.Name*/ message.GetType().PrettyName(false);
                 var path = Path.Combine(this.GetDirectory(messageName, this.options.FilterScope), $"message_{message.Id}_{this.options.MessageScope}.json.tmp");
                 if (this.options.Storage.SaveFileObjectAsync(path, message).Result)
@@ -93,7 +93,7 @@
                 if (!this.watchers.ContainsKey(messageName))
                 {
                     var path = this.GetDirectory(messageName, this.options.FilterScope);
-                    this.logger.LogInformation("{LogKey:l} subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, watch={Directory})", LogEventKeys.Messaging, typeof(TMessage).PrettyName(), this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name, path);
+                    this.logger.LogJournal(LogEventPropertyKeys.TrackSubscribeMessage, "{LogKey:l} subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, watch={Directory})", args: new[] { LogEventKeys.Messaging, typeof(TMessage).PrettyName(), this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name, path });
                     this.EnsureDirectory(path);
 
                     var watcher = new FileSystemWatcher(path)
@@ -155,8 +155,8 @@
                         message.Origin = path.SubstringFromLast("_").SubstringTillLast("."); // read metadata from filename
                     }
 
-                    this.logger.LogInformation("{LogKey:l} process (name={MessageName}, id={MessageId}, service={Service}, origin={MessageOrigin})",
-                            LogEventKeys.Messaging, messageType.PrettyName(), message?.Id, this.options.MessageScope, message.Origin);
+                    this.logger.LogJournal(LogEventPropertyKeys.TrackReceiveMessage, "{LogKey:l} process (name={MessageName}, id={MessageId}, service={Service}, origin={MessageOrigin})",
+                        args: new[] { LogEventKeys.Messaging, messageType.PrettyName(), message?.Id, this.options.MessageScope, message.Origin });
 
                     // construct the handler by using the DI container
                     var handler = this.options.HandlerFactory.Create(subscription.HandlerType); // should not be null, did you forget to register your generic handler (EntityMessageHandler<T>)

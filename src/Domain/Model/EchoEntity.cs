@@ -1,7 +1,5 @@
-﻿namespace Naos.Core.Sample.Messaging.App.Console
+﻿namespace Naos.Core.Domain
 {
-    using Naos.Core.Domain;
-
     public class EchoEntity : Entity<string>
     {
         public string Text { get; set; }

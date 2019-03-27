@@ -28,13 +28,13 @@
                 {
                     this.logger.LogInformation($"{{LogKey:l}} [{notification.Identifier}] handle {notification.GetType().Name.SubstringTill("DomainEvent")} (entity={notification.Entity.GetType().PrettyName()}, handler={this.GetType().PrettyName()})", LogEventKeys.DomainEvent);
 
-                    if (notification?.Entity.Is<IStateEntity>() == true)
+                    if (notification?.Entity.Is<IStateEntity>() == true) // use pattern matching
                     {
                         var entity = notification.Entity.As<IStateEntity>();
                         entity.State?.SetCreated("[IDENTITY]", "domainevent"); // TODO: use current identity
                     }
 
-                    if (notification?.Entity.Is<IIdentifiable>() == true)
+                    if (notification?.Entity.Is<IIdentifiable>() == true) // use pattern matching
                     {
                         var entity = notification.Entity.As<IIdentifiable>();
                         entity.SetIdentifierHash();

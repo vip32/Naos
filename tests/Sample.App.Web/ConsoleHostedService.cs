@@ -1,6 +1,7 @@
-﻿namespace Naos.Core.Sample.Messaging.App.Console
+﻿namespace Naos.Sample.App.Web
 {
     using System;
+    using System.Drawing;
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
@@ -9,21 +10,23 @@
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
+    using Naos.Core.Domain;
     using Naos.Core.JobScheduling.Domain;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.Domain;
     using Naos.Core.Queueing;
     using Naos.Core.Queueing.Domain;
+    using Console = Colorful.Console;
 
-    public class HostedService : IHostedService
+    public class ConsoleHostedService : IHostedService
     {
-        private readonly ILogger<HostedService> logger;
+        private readonly ILogger<ConsoleHostedService> logger;
         private readonly IServiceProvider serviceProvider;
+        private IMessageBroker messageBroker;
         private IQueue<EchoQueueEventData> queue;
         private IJobScheduler jobScheduler;
-        private IMessageBroker messageBroker;
 
-        public HostedService(ILogger<HostedService> logger, IServiceProvider serviceProvider)
+        public ConsoleHostedService(ILogger<ConsoleHostedService> logger, IServiceProvider serviceProvider)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(serviceProvider, nameof(serviceProvider));
@@ -34,7 +37,7 @@
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            Console.WriteLine("starting hosted service");
+            Console.WriteLine("\r\n--- naos console start", Color.LimeGreen);
 
             this.jobScheduler = this.serviceProvider.GetRequiredService<IJobScheduler>();
 
@@ -43,15 +46,16 @@
                 .Subscribe<EntityMessage<EchoEntity>, EchoEntityMessageHandler>();
 
             this.queue = new InMemoryQueue<EchoQueueEventData>(o => o
-                    .Mediator(this.serviceProvider.GetRequiredService<IMediator>())
+                    .Mediator((IMediator)this.serviceProvider.CreateScope().ServiceProvider.GetService(typeof(IMediator)))
                     .LoggerFactory(this.serviceProvider.GetRequiredService<ILoggerFactory>()));
             await this.queue.ProcessItemsAsync(true).AnyContext();
 
+            Thread.Sleep(500);
             while (true)
             {
                 Thread.Sleep(500);
-                Console.WriteLine("\r\nready to publish & queue & start job?");
-                Console.ReadLine();
+                Console.WriteLine("\r\nready to publish & queue & start job?", Color.LimeGreen);
+                Console.ReadLine(); // https://github.com/tonerdo/readline
 
                 await this.PublishAsync().AnyContext();
                 Thread.Sleep(500);
@@ -63,7 +67,7 @@
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            Console.WriteLine("stopping hosted service");
+            Console.WriteLine("hosted service stopping", Color.Gray);
             //this.messageBus.Unsubscribe<TestMessage, TestMessageHandler>();
             //this.messageBus.Unsubscribe<EntityMessage<StubEntity>, StubEntityMessageHandler>();
 
@@ -72,7 +76,7 @@
 
         private Task PublishAsync()
         {
-            Console.WriteLine("\r\n--- start publish");
+            Console.WriteLine("\r\n--- start publish", Color.LimeGreen);
 
             for (int i = 1; i <= 2; i++)
             {
@@ -86,7 +90,7 @@
 
         private async Task EnqueueAsync()
         {
-            Console.WriteLine("\r\n--- start enqueue");
+            Console.WriteLine("\r\n--- start enqueue", Color.LimeGreen);
 
             for (int i = 1; i <= 2; i++)
             {
@@ -98,7 +102,7 @@
 
         private async Task TriggerJobAsync()
         {
-            Console.WriteLine("\r\n--- start job");
+            Console.WriteLine("\r\n--- start job", Color.LimeGreen);
 
             await this.jobScheduler.TriggerAsync("testjob1").AnyContext();
         }

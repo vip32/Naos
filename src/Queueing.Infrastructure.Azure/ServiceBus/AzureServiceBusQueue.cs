@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.Queueing.Infrastructure.Azure
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
@@ -11,6 +12,7 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Common.Serialization;
+    using Naos.Core.Domain;
     using Naos.Core.Queueing.Domain;
 
     public class AzureServiceBusQueue<TData> : BaseQueue<TData, AzureServiceBusQueueOptions>
@@ -50,26 +52,34 @@
         public override async Task<string> EnqueueAsync(TData data)
         {
             EnsureArg.IsNotNull(data, nameof(data));
-            await this.EnsureQueueAsync().AnyContext();
+            this.EnsureMetaData(data);
 
-            string id = RandomGenerator.GenerateString(13, true);
-            this.logger.LogDebug($"queue item enqueue (id={id}, queue={this.options.Name})");
-
-            Interlocked.Increment(ref this.enqueuedCount);
-            var stream = new MemoryStream();
-            this.serializer.Serialize(data, stream);
-            var brokeredMessage = new Message(stream.ToArray())
+            using (this.logger.BeginScope(new Dictionary<string, object>
             {
-                // TODO: store correlationid?
-                MessageId = id
-            };
-            await this.queueSender.SendAsync(brokeredMessage).AnyContext();
+                [LogEventPropertyKeys.CorrelationId] = data.As<IHaveCorrelationId>()?.CorrelationId,
+            }))
+            {
+                await this.EnsureQueueAsync().AnyContext();
 
-            var item = new QueueItem<TData>(brokeredMessage.MessageId, data, this, DateTime.UtcNow, 0);
+                string id = RandomGenerator.GenerateString(13, true);
+                this.logger.LogDebug($"queue item enqueue (id={id}, queue={this.options.Name})");
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item enqueued (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
-            this.LastEnqueuedDate = DateTime.UtcNow;
-            return brokeredMessage.MessageId;
+                Interlocked.Increment(ref this.enqueuedCount);
+                var stream = new MemoryStream();
+                this.serializer.Serialize(data, stream);
+                var brokeredMessage = new Message(stream.ToArray())
+                {
+                    MessageId = id,
+                    CorrelationId = data.As<IHaveCorrelationId>()?.CorrelationId
+                };
+                await this.queueSender.SendAsync(brokeredMessage).AnyContext();
+
+                var item = new QueueItem<TData>(brokeredMessage.MessageId, data, this, DateTime.UtcNow, 0);
+
+                this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item enqueued (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+                this.LastEnqueuedDate = DateTime.UtcNow;
+                return brokeredMessage.MessageId;
+            }
         }
 
         public override async Task<IQueueItem<TData>> DequeueAsync(TimeSpan? timeout = null)
@@ -104,7 +114,7 @@
 
             await this.queueReceiver.RenewLockAsync(item.Id).AnyContext();
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item lock renewed (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogJournal(LogEventPropertyKeys.TrackDequeue, $"{{LogKey:l}} item lock renewed (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
             this.LastDequeuedDate = DateTime.UtcNow;
         }
 
@@ -123,7 +133,7 @@
             Interlocked.Increment(ref this.completedCount);
             item.MarkCompleted();
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item completed (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogJournal(LogEventPropertyKeys.TrackDequeue, $"{{LogKey:l}} item completed (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
             this.LastDequeuedDate = DateTime.UtcNow;
         }
 
@@ -142,7 +152,7 @@
             Interlocked.Increment(ref this.abandonedCount);
             item.MarkAbandoned();
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item abandoned (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogJournal(LogEventPropertyKeys.TrackDequeue, $"{{LogKey:l}} item abandoned (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
             this.LastDequeuedDate = DateTime.UtcNow;
         }
 
@@ -175,26 +185,32 @@
             {
                 var item = this.HandleDequeue(msg);
 
-                try
+                using (this.logger.BeginScope(new Dictionary<string, object>
+                    {
+                        [LogEventPropertyKeys.CorrelationId] = item.Data.As<IHaveCorrelationId>()?.CorrelationId,
+                    }))
                 {
-                    using (var linkedCancellationToken = this.CreateLinkedTokenSource(cancellationToken))
+                    try
                     {
-                        await handler(item, linkedCancellationToken.Token).AnyContext();
-                    }
+                        using (var linkedCancellationToken = this.CreateLinkedTokenSource(cancellationToken))
+                        {
+                            await handler(item, linkedCancellationToken.Token).AnyContext();
+                        }
 
-                    if (autoComplete && !item.IsAbandoned && !item.IsCompleted)
-                    {
-                        await item.CompleteAsync().AnyContext();
+                        if (autoComplete && !item.IsAbandoned && !item.IsCompleted)
+                        {
+                            await item.CompleteAsync().AnyContext();
+                        }
                     }
-                }
-                catch (Exception ex)
-                {
-                    Interlocked.Increment(ref this.workerErrorCount);
-                    this.logger.LogError(ex, $"{{LogKey:l}} processing error: {ex.Message}", args: new[] { LogEventKeys.Queueing });
-
-                    if (!item.IsAbandoned && !item.IsCompleted)
+                    catch (Exception ex)
                     {
-                        await item.AbandonAsync().AnyContext();
+                        Interlocked.Increment(ref this.workerErrorCount);
+                        this.logger.LogError(ex, $"{{LogKey:l}} processing error: {ex.Message}", args: new[] { LogEventKeys.Queueing });
+
+                        if (!item.IsAbandoned && !item.IsCompleted)
+                        {
+                            await item.AbandonAsync().AnyContext();
+                        }
                     }
                 }
             }, new MessageHandlerOptions(this.ExceptionReceivedHandler));
@@ -210,7 +226,16 @@
             }
 
             await this.ProcessItemsAsync(
-                async (i, ct) => await this.options.Mediator.Send<bool>(new QueueEvent<TData>(i), ct).AnyContext(),
+                async (i, ct) =>
+                {
+                    using (this.logger.BeginScope(new Dictionary<string, object>
+                        {
+                            [LogEventPropertyKeys.CorrelationId] = i.Data.As<IHaveCorrelationId>()?.CorrelationId,
+                        }))
+                    {
+                        await this.options.Mediator.Send<bool>(new QueueEvent<TData>(i), ct).AnyContext();
+                    }
+                },
                 autoComplete, cancellationToken).AnyContext();
         }
 
@@ -296,10 +321,16 @@
                 message.SystemProperties.EnqueuedTimeUtc,
                 message.SystemProperties.DeliveryCount);
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item dequeued (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
-            this.LastDequeuedDate = DateTime.UtcNow;
+            using (this.logger.BeginScope(new Dictionary<string, object>
+                {
+                    [LogEventPropertyKeys.CorrelationId] = item.Data.As<IHaveCorrelationId>()?.CorrelationId,
+                }))
+            {
+                this.logger.LogJournal(LogEventPropertyKeys.TrackDequeue, $"{{LogKey:l}} item dequeued (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+                this.LastDequeuedDate = DateTime.UtcNow;
 
-            return item;
+                return item;
+            }
         }
     }
 }
