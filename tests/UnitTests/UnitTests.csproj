@@ -44,6 +44,7 @@
     <ProjectReference Include="..\..\src\Commands.App\Commands.App.csproj" />
     <ProjectReference Include="..\..\src\App\App.csproj" />
     <ProjectReference Include="..\..\src\Commands\Commands.csproj" />
+    <ProjectReference Include="..\..\src\Common.Console\Common.Console.csproj" />
     <ProjectReference Include="..\..\src\Common.Mapping\Common.Mapping.csproj" />
     <ProjectReference Include="..\..\src\Common.Serialization\Common.Serialization.csproj" />
     <ProjectReference Include="..\..\src\Common.Web\Common.Web.csproj" />
