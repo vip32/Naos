@@ -50,7 +50,8 @@
             foreach(var command in this.commands.Safe())
             {
                 Console.WriteLine("found command: " + command.GetType(), Color.Gray);
-                //await this.mediator.Send<bool>(new ConsoleCommandEvent<EchoConsoleCommand>(command as EchoConsoleCommand)).AnyContext();
+                // TODO: parse line > command
+                await command.SendAsync(this.mediator).AnyContext();
             }
 
             this.jobScheduler = this.serviceProvider.GetRequiredService<IJobScheduler>();
