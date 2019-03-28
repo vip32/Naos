@@ -7,7 +7,7 @@
     {
         public override async Task<bool> Handle(ConsoleCommandEvent<ClearScreenConsoleCommand> request, CancellationToken cancellationToken)
         {
-            await Task.Run(() => System.Console.Clear());
+            await Task.Run(System.Console.Clear);
             return true;
         }
     }

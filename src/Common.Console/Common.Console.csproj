@@ -8,6 +8,9 @@
 
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.4.3" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="2.2.0" />
+    <PackageReference Include="ReadLine" Version="2.0.1" />
+    <PackageReference Include="Colorful.Console" Version="1.2.9" />
     <PackageReference Include="MediatR" Version="6.0.0" />
   </ItemGroup>
 

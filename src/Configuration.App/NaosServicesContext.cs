@@ -17,6 +17,8 @@
 
         public List<string> Messages { get; set; } = new List<string>();
 
+        public bool IsConsoleEnabled() => this.Configuration["console"] == "true";
+
         public INaosServicesContext AddTag(string tag)
         {
             this.Descriptor = this.Descriptor ?? new Naos.Core.Common.ServiceDescriptor();

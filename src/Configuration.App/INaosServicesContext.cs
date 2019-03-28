@@ -15,6 +15,8 @@
 
         List<string> Messages { get; set; }
 
+        bool IsConsoleEnabled();
+
         INaosServicesContext AddTag(string tag);
     }
 }

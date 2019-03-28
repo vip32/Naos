@@ -41,7 +41,7 @@
             EnsureArg.IsNotNull(job, nameof(job));
 
             registration.Key = registration.Key ?? HashAlgorithm.ComputeHash(job);
-            this.logger.LogInformation($"{{LogKey:l}} registration (key={{JobKey}}, cron={registration.Cron}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")}, enabled={registration.Enabled})", LogEventKeys.JobScheduling, registration.Key);
+            this.logger.LogInformation($"{{LogKey:l}} registration (key={{JobKey}}, id={registration.Identifier}, cron={registration.Cron}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")}, enabled={registration.Enabled})", LogEventKeys.JobScheduling, registration.Key);
 
             var item = this.Options.Registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(registration.Key));
             if (item.Key != null)
@@ -150,9 +150,13 @@
                     async Task Execute()
                     {
                         // TODO: publish domain event (job started)
-                        this.logger.LogJournal(LogEventPropertyKeys.TrackStartJob, $"{{LogKey:l}} [{registration.Identifier}] job started (key={{JobKey}}, type={job.GetType().PrettyName()}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")})", args: new[] { LogEventKeys.JobScheduling, registration.Key });
+                        this.logger.LogJournal(LogEventPropertyKeys.TrackStartJob, $"{{LogKey:l}} job started (key={{JobKey}}, id={registration.Identifier}, type={job.GetType().PrettyName()}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")})", args: new[] { LogEventKeys.JobScheduling, registration.Key });
                         await job.ExecuteAsync(cancellationToken, args).AnyContext();
-                        this.logger.LogJournal(LogEventPropertyKeys.TrackFinishJob, $"{{LogKey:l}} [{registration.Identifier}] job finished (key={{JobKey}}, type={job.GetType().PrettyName()})", args: new[] { LogEventKeys.JobScheduling, registration.Key });
+                        await Run.DelayedAsync(new TimeSpan(0, 0, 1), () =>
+                        {
+                            this.logger.LogJournal(LogEventPropertyKeys.TrackFinishJob, $"{{LogKey:l}} job finished (key={{JobKey}}, id={registration.Identifier}, type={job.GetType().PrettyName()})", args: new[] { LogEventKeys.JobScheduling, registration.Key });
+                            return Task.CompletedTask;
+                        });
                         // TODO: publish domain event (job finished)
                     }
 

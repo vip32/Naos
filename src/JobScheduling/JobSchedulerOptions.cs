@@ -76,6 +76,7 @@
                new JobRegistration(key, cron, null, isReentrant, timeout, enabled),
                new Job(async (t, a) => // send mediator request for data
                 {
+                    this.logger.LogInformation($"{LogEventKeys.JobScheduling:l} send jobevent");
                     if (@event != null)
                     {
                         await this.mediator.Send(new JobEvent<TEvent>(@event())).AnyContext();

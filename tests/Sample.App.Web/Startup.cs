@@ -80,10 +80,11 @@
                     .AddRequestCorrelation()
                     .AddRequestFiltering()
                     .AddServiceExceptions()
-                    .AddCommands(s => s
+                    .AddCommands(o => o
                         .AddBehavior<Core.Commands.Domain.ValidateCommandBehavior>()
                         .AddBehavior<Core.Commands.Domain.TrackCommandBehavior>())
                     .AddOperations(o => o
+                        .AddConsoleCommands()
                         .AddLogging(l => l
                             .UseConsole()
                             .UseFile()
@@ -94,12 +95,12 @@
                     //.AddQueries()
                     //.AddSwaggerDocument() // s.Description = Product.Capability\
                     .AddJobScheduling(o => o
-                        .SetEnabled(true)
+                        //.SetEnabled(true)
                         .Register<EchoJob>("testjob1", Cron.Minutely(), (j) => j.EchoAsync("+++ hello from testjob1 +++", CancellationToken.None))
-                        .Register("anonymousjob2", Cron.Minutely(), (j) => System.Diagnostics.Trace.WriteLine("+++ hello from task " + j))
-                        .Register("jobrequest1", Cron.Minutely(), () => new EchoJobEventData { Text = "+++ hello from jobrequest1 +++" })
-                        .Register<EchoJob>("testjob3", Cron.MinuteInterval(2), j => j.EchoAsync("+++ hello from job2 +++", CancellationToken.None, true), enabled: false)
-                        .Register<EchoJob>("testlongjob4", Cron.Minutely(), j => j.EchoLongAsync("+++ hello from testlongjob4 +++", CancellationToken.None)))
+                        .Register("anonymousjob2", Cron.Minutely(), (j) => Console.WriteLine("+++ hello from anonymousjob2 " + j))
+                        .Register("jobevent1", Cron.Minutely(), () => new EchoJobEventData { Text = "+++ hello from jobevent1 +++" }))
+                        //.Register<EchoJob>("testjob3", Cron.MinuteInterval(2), j => j.EchoAsync("+++ hello from testjob3 +++", CancellationToken.None, true), enabled: false)
+                        //.Register<EchoJob>("testlongjob4", Cron.Minutely(), j => j.EchoLongAsync("+++ hello from testlongjob4 +++", CancellationToken.None)))
                     .AddServiceClient("default")
                     .AddQueueing()
                     .AddMessaging(o => o
@@ -114,23 +115,6 @@
                         //.UseRouterClientRegistry())
                     .AddServiceDiscoveryRouter(o => o
                         .UseFileSystemRegistry()));
-
-            if (this.Configuration["console"] == "true")
-            {
-                // needed for mediator, register command handlers
-                services.Scan(scan => scan
-                    .FromAssembliesOf(typeof(ConsoleCommandEventHandler<>))
-                    .AddClasses()
-                    .AsImplementedInterfaces());
-
-                // register all possible commands
-                //services.Scan(scan => scan
-                //    .FromAssembliesOf(typeof(IConsoleCommand))
-                //    .AddClasses()
-                //    .AsImplementedInterfaces());
-
-                services.AddSingleton<Microsoft.Extensions.Hosting.IHostedService, ConsoleHostedService>();
-            }
 
             // TODO: need to find a way to start the MessageBroker (done by resolving the IMessageBroker somewhere, HostedService? like scheduling)
         }

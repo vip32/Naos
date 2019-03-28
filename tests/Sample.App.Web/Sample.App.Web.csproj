@@ -26,9 +26,11 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Api.Analyzers" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="NSwag.AspNetCore" Version="12.0.15" />
+    <PackageReference Include="ReadLine" Version="2.0.1" />
     <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="6.0.1" />
     <PackageReference Include="Colorful.Console" Version="1.2.9" />
+    <PackageReference Include="CommandLineParser" Version="2.4.3" />
   </ItemGroup>
 
   <ItemGroup>

@@ -4,7 +4,7 @@
     using CommandLine;
     using MediatR;
 
-    [Verb("cls", HelpText = "Clears the screen")]
+    [Verb("cls", HelpText = "Clear the screen")]
     public class ClearScreenConsoleCommand : IConsoleCommand
     {
         public async Task<bool> SendAsync(IMediator mediator)

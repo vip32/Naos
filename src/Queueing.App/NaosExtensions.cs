@@ -23,8 +23,10 @@
 
             // needed for mediator
             naosOptions.Context.Services.Scan(scan => scan
-                .FromAssembliesOf(typeof(QueueEventHandler<>))
-                .AddClasses()
+                .FromApplicationDependencies()
+                .AddClasses(classes => classes.Where(c => c.Name.EndsWith("QueueEventHandler")))
+                //.FromAssembliesOf(typeof(QueueEventHandler<>))
+                //.AddClasses()
                 .AsImplementedInterfaces());
 
             //naosOptions.Context.Services.AddSingleton<IHostedService>(sp =>

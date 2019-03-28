@@ -14,6 +14,7 @@
                 return Enumerable.Empty<string>().ToArray();
             }
 
+            line = line.Replace("\0", string.Empty);
             var result = new List<string>();
             var currentArgument = new StringBuilder();
             char currentQuote = char.MinValue;

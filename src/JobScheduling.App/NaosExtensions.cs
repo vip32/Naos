@@ -7,9 +7,11 @@
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
+    using Naos.Core.Common.Console;
     using Naos.Core.Configuration.App;
     using Naos.Core.JobScheduling;
     using Naos.Core.JobScheduling.App;
+    using Naos.Core.JobScheduling.App.Console;
     using Naos.Core.JobScheduling.Domain;
 
     [ExcludeFromCodeCoverage]
@@ -25,8 +27,10 @@
 
             // needed for mediator
             naosOptions.Context.Services.Scan(scan => scan
-                .FromAssembliesOf(typeof(JobEventHandler<>))
-                .AddClasses()
+                .FromApplicationDependencies()
+                .AddClasses(classes => classes.Where(c => c.Name.EndsWith("JobEventHandler")))
+                //.FromAssembliesOf(typeof(JobEventHandler<>))
+                //.AddClasses()
                 .AsImplementedInterfaces());
 
             naosOptions.Context.Services.AddSingleton<IJobScheduler>(sp =>
