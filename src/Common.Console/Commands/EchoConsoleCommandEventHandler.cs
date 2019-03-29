@@ -1,9 +1,13 @@
 ﻿namespace Naos.Core.Common.Console
 {
     using System;
+    using System.Diagnostics;
+    using System.Drawing;
     using System.Threading;
     using System.Threading.Tasks;
+    using Humanizer;
     using Microsoft.Extensions.Logging;
+    using Console = Colorful.Console;
 
     public class EchoConsoleCommandEventHandler : ConsoleCommandEventHandler<EchoConsoleCommand>
     {
@@ -14,7 +18,7 @@
             this.logger = logger;
         }
 
-        public override async Task<bool> Handle(ConsoleCommandEvent<EchoConsoleCommand> request, CancellationToken cancellationToken)
+        public override Task<bool> Handle(ConsoleCommandEvent<EchoConsoleCommand> request, CancellationToken cancellationToken)
         {
             var text = request.Command.Text ?? "+++ hello from echo console command";
             if (request.Command.Timestamp)
@@ -22,8 +26,9 @@
                 text += $" {DateTime.UtcNow.ToEpoch()}";
             }
 
-            await Task.Run(() => this.logger.LogInformation(text));
-            return true;
+            //this.logger.LogInformation(text);
+            Console.WriteLine(text, Color.Gray);
+            return Task.FromResult(true);
         }
     }
 }

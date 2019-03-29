@@ -5,10 +5,11 @@
 
     public class ClearScreenConsoleCommandEventHandler : ConsoleCommandEventHandler<ClearScreenConsoleCommand>
     {
-        public override async Task<bool> Handle(ConsoleCommandEvent<ClearScreenConsoleCommand> request, CancellationToken cancellationToken)
+        public override Task<bool> Handle(ConsoleCommandEvent<ClearScreenConsoleCommand> request, CancellationToken cancellationToken)
         {
-            await Task.Run(System.Console.Clear);
-            return true;
+            System.Console.Clear();
+
+            return Task.FromResult(true);
         }
     }
 }

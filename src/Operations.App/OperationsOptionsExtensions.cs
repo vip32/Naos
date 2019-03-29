@@ -66,7 +66,7 @@
                     .AsImplementedInterfaces());
 
                 options.Context.Services.AddSingleton<Hosting.IHostedService>(sp =>
-                    new ConsoleCommandHostedService(
+                    new InteractiveConsoleHostedService(
                         sp.GetRequiredService<ILoggerFactory>(),
                         (IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)),
                         sp.GetServices<IConsoleCommand>()));

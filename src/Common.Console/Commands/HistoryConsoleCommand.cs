@@ -5,11 +5,11 @@
     using MediatR;
 
     [Verb("history", HelpText = "Show the command history")]
-    public class ShowHistoryConsoleCommand : IConsoleCommand
+    public class HistoryConsoleCommand : IConsoleCommand
     {
         public async Task<bool> SendAsync(IMediator mediator)
         {
-            return await mediator.Send(new ConsoleCommandEvent<ShowHistoryConsoleCommand>(this)).AnyContext();
+            return await mediator.Send(new ConsoleCommandEvent<HistoryConsoleCommand>(this)).AnyContext();
         }
     }
 }

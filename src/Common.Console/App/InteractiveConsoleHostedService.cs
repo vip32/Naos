@@ -14,13 +14,13 @@
     using Microsoft.Extensions.Logging;
     using Console = Colorful.Console;
 
-    public class ConsoleCommandHostedService : IHostedService
+    public class InteractiveConsoleHostedService : IHostedService
     {
-        private readonly ILogger<ConsoleCommandHostedService> logger;
+        private readonly ILogger<InteractiveConsoleHostedService> logger;
         private readonly IEnumerable<IConsoleCommand> commands;
         private readonly IMediator mediator;
 
-        public ConsoleCommandHostedService(
+        public InteractiveConsoleHostedService(
             ILoggerFactory loggerFactory,
             IMediator mediator,
             IEnumerable<IConsoleCommand> commands)
@@ -28,14 +28,14 @@
             EnsureArg.IsNotNull(loggerFactory, nameof(loggerFactory));
             EnsureArg.IsNotNull(mediator, nameof(mediator));
 
-            this.logger = loggerFactory.CreateLogger<ConsoleCommandHostedService>();
+            this.logger = loggerFactory.CreateLogger<InteractiveConsoleHostedService>();
             this.mediator = mediator;
             this.commands = commands.Safe();
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            Console.WriteLine("\r\n--- naos console start", Color.LimeGreen);
+            Console.WriteLine("\r\nnaos interactive console start", Color.LimeGreen);
 
             foreach (var command in this.commands)
             {
@@ -46,12 +46,12 @@
             var parser = new Parser();
             ReadLine.HistoryEnabled = true;
             ReadLine.AutoCompletionHandler = new AutoCompletionHandler();
-            var orgColor = System.Console.ForegroundColor;
+            var originalColor = System.Console.ForegroundColor;
             while (true)
             {
                 System.Console.ForegroundColor = ConsoleColor.Cyan;
                 string input = ReadLine.Read("naos> ").Trim();
-                System.Console.ForegroundColor = orgColor;
+                System.Console.ForegroundColor = originalColor;
 
                 if (input.EqualsAny(new[] { "exit", "quit", "q" }))
                 {
@@ -65,7 +65,13 @@
                         var result = parser.ParseArguments(
                             ArgumentsHelper.Split(input),
                             this.commands.Select(c => c.GetType()).ToArray())
-                                .WithNotParsed(_ => Console.WriteLine("invalid command", Color.Red));
+                                .WithNotParsed(_ =>
+                                {
+                                    if (!input.Contains("--help"))
+                                    {
+                                        Console.WriteLine("invalid command", Color.Red);
+                                    }
+                                });
 
                         if (!result.TypeInfo.Current.GetAttributeValue<VerbAttribute, string>(a => a.Name).IsNullOrEmpty())
                         {
@@ -106,7 +112,7 @@
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            Console.WriteLine("hosted service stopping", Color.Gray);
+            //Console.WriteLine("hosted service stopping", Color.Gray);
 
             return Task.CompletedTask;
         }

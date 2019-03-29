@@ -43,7 +43,7 @@
                 await this.jobScheduler.TriggerAsync(request.Command.Trigger).AnyContext();
             }
 
-            var text = @$"status:
+            var text = $@"status:
 -enabled={this.jobScheduler.Options.Enabled}
 -running={this.jobScheduler.IsRunning}";
 

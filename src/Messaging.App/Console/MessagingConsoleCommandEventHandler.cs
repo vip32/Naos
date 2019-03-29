@@ -21,7 +21,7 @@
             this.messageBroker = messageBroker;
         }
 
-        public override async Task<bool> Handle(ConsoleCommandEvent<MessagingConsoleCommand> request, CancellationToken cancellationToken)
+        public override Task<bool> Handle(ConsoleCommandEvent<MessagingConsoleCommand> request, CancellationToken cancellationToken)
         {
             if (request.Command.Echo)
             {
@@ -31,18 +31,15 @@
 
                 Console.WriteLine("\r\nstart publish", Color.LimeGreen);
 
-                await Task.Run(() =>
+                for (int i = 1; i <= 2; i++)
                 {
-                    for (int i = 1; i <= 2; i++)
-                    {
-                        //Thread.Sleep(500);
-                        this.messageBroker.Publish(new EchoMessage { Text = $"+++ hello from echo message ({i.ToString()}-{RandomGenerator.GenerateString(3, false).ToUpper()}) +++" });
-                        this.messageBroker.Publish(new EntityMessage<EchoEntity> { Entity = new EchoEntity { Text = $"+++ hello from echo entity message ({i}-{RandomGenerator.GenerateString(3, false).ToUpper()} +++" } });
-                    }
-                });
+                    //Thread.Sleep(500);
+                    this.messageBroker.Publish(new EchoMessage { Text = $"+++ hello from echo message ({i.ToString()}-{RandomGenerator.GenerateString(3, false).ToUpper()}) +++" });
+                    this.messageBroker.Publish(new EntityMessage<EchoEntity> { Entity = new EchoEntity { Text = $"+++ hello from echo entity message ({i}-{RandomGenerator.GenerateString(3, false).ToUpper()} +++" } });
+                }
             }
 
-            return true;
+            return Task.FromResult(true);
         }
     }
 }
