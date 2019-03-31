@@ -57,7 +57,7 @@
                 return null;
             }
 
-            using (var stream = SerializationHelper.ToStream(value))
+            using (var stream = StreamHelper.ToStream(value))
             {
                 using (var sha256 = SHA256.Create())
                 {

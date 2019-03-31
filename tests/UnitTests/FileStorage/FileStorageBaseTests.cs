@@ -190,7 +190,7 @@
                 var path = $"test-{Guid.NewGuid().ToString("N").Substring(10)}.txt";
                 Assert.False(await storage.ExistsAsync(path));
 
-                using (var stream = SerializationHelper.ToStream("test data"))
+                using (var stream = StreamHelper.ToStream("test data"))
                 {
                     bool result = await storage.SaveFileAsync(path, stream); // write
                     Assert.True(result);
