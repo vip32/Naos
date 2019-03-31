@@ -13,19 +13,19 @@
             this.serializer = JsonSerializer.Create(settings ?? DefaultJsonSerializerSettings.Create());
         }
 
-        public void Serialize(object data, Stream outputStream)
+        public void Serialize(object data, Stream output)
         {
-            var writer = new JsonTextWriter(new StreamWriter(outputStream));
+            var writer = new JsonTextWriter(new StreamWriter(output));
             this.serializer.Serialize(writer, data, data.GetType());
             writer.Flush();
         }
 
-        public object Deserialize(Stream inputStream, Type objectType)
+        public object Deserialize(Stream input, Type type)
         {
-            using (var sr = new StreamReader(inputStream))
+            using (var sr = new StreamReader(input))
             using (var reader = new JsonTextReader(sr))
             {
-                return this.serializer.Deserialize(reader, objectType);
+                return this.serializer.Deserialize(reader, type);
             }
         }
     }
