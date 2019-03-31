@@ -87,6 +87,9 @@ Request Rate limiting https://github.com/stefanprodan/AspNetCoreRateLimit
 FileStorage
 Azure Storage File Share implementation (REST + SDK) https://app.pluralsight.com/library/courses/microsoft-azure-file-storage-implementing/table-of-contents
 
+Key Value Storage abstraction
+https://github.com/aloneguid/storage/blob/master/src/Storage.Net/KeyValue/IKeyValueStorage.cs
+
 KeyVault cache (peristent)
 improve local service startup (due to vault requests)
 https://github.com/SanderSade/Sander.KeyVaultCache
