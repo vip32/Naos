@@ -5,8 +5,8 @@
 
     public interface ISerializer
     {
-        object Deserialize(Stream data, Type objectType);
-
         void Serialize(object value, Stream output);
+
+        object Deserialize(Stream input, Type type);
     }
 }

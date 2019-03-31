@@ -13,10 +13,10 @@
             this.serializer = JsonSerializer.Create(settings ?? DefaultJsonSerializerSettings.Create());
         }
 
-        public void Serialize(object data, Stream output)
+        public void Serialize(object value, Stream output)
         {
             var writer = new JsonTextWriter(new StreamWriter(output));
-            this.serializer.Serialize(writer, data, data.GetType());
+            this.serializer.Serialize(writer, value, value.GetType());
             writer.Flush();
         }
 

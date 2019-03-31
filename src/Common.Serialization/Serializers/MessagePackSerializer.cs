@@ -28,15 +28,15 @@
             }
         }
 
-        public object Deserialize(Stream data, Type objectType)
+        public object Deserialize(Stream input, Type type)
         {
             if (this.useCompression)
             {
-                return MessagePack.LZ4MessagePackSerializer.NonGeneric.Deserialize(objectType, data, this.formatterResolver);
+                return MessagePack.LZ4MessagePackSerializer.NonGeneric.Deserialize(type, input, this.formatterResolver);
             }
             else
             {
-                return MessagePack.MessagePackSerializer.NonGeneric.Deserialize(objectType, data, this.formatterResolver);
+                return MessagePack.MessagePackSerializer.NonGeneric.Deserialize(type, input, this.formatterResolver);
             }
         }
     }
