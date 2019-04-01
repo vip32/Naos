@@ -28,13 +28,13 @@
             Assert.Equal(model.StringProperty, actual.StringProperty);
             Assert.Equal(model.ListProperty, actual.ListProperty);
 
-            string text = serializer.SerializeToString(model);
-            actual = serializer.Deserialize<SerializeModel>(text);
-            Assert.Equal(model.IntProperty, actual.IntProperty);
-            Assert.Equal(model.StringProperty, actual.StringProperty);
-            Assert.Equal(model.ListProperty, actual.ListProperty);
-            Assert.NotNull(model.ObjectProperty);
-            Assert.Equal(1, ((dynamic)model.ObjectProperty).IntProperty);
+            //string text = serializer.SerializeToString(model);
+            //actual = serializer.Deserialize<SerializeModel>(text);
+            //Assert.Equal(model.IntProperty, actual.IntProperty);
+            //Assert.Equal(model.StringProperty, actual.StringProperty);
+            //Assert.Equal(model.ListProperty, actual.ListProperty);
+            //Assert.NotNull(model.ObjectProperty);
+            //Assert.Equal(1, ((dynamic)model.ObjectProperty).IntProperty);
         }
 
         public virtual void CanRoundTripString()

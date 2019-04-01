@@ -20,7 +20,7 @@
             {
                 var serializer = new JsonSerializer();
                 serializer.Serialize(writer, value);
-                writer.Flush();
+                //writer.Flush();
             }
         }
 

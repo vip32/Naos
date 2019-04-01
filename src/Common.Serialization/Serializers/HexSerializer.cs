@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using System.Linq;
     using System.Text;
     using Newtonsoft.Json;
 
@@ -18,32 +19,19 @@
         {
             // obj > json str > bytes > hex
             var bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(value, this.settings));
-            var hex = BitConverter.ToString(bytes).Replace("-", string.Empty);
-            output.Write(Encoding.UTF8.GetBytes(hex), 0, bytes.Length);
+            var hex = BitConverter.ToString(bytes).Replace("-", " ");
+            var hexBytes = Encoding.UTF8.GetBytes(hex);
+            output.Write(hexBytes, 0, hexBytes.Length);
         }
 
         public object Deserialize(Stream input, Type type)
         {
             // hex > bytes > json str > obj
-            var buffer = new byte[16 * 1024];
-            using (var ms = new MemoryStream())
-            {
-                int read;
-                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    ms.Write(buffer, 0, read);
-                }
+            string hex = Encoding.UTF8.GetString(input.ReadAllBytes());
+            var bytes = hex.Split(' ')
+               .Select(item => Convert.ToByte(item, 16)).ToArray();
 
-                string hex = Encoding.UTF8.GetString(ms.ToArray());
-                int length = hex.Length;
-                byte[] bytes = new byte[length / 2];
-                for (int i = 0; i < length; i += 2)
-                {
-                    bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
-                }
-
-                return JsonConvert.DeserializeObject(Encoding.UTF8.GetString(bytes), type);
-            }
+            return JsonConvert.DeserializeObject(Encoding.UTF8.GetString(bytes), type);
         }
 
         public T Deserialize<T>(Stream input)
