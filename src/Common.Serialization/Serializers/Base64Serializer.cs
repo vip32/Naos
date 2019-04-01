@@ -35,7 +35,7 @@
                 }
 
                 string jsonBack = Encoding.UTF8.GetString(ms.ToArray());
-                return JsonConvert.DeserializeObject(jsonBack, type);
+                return JsonConvert.DeserializeObject(jsonBack, type, this.settings);
             }
         }
 

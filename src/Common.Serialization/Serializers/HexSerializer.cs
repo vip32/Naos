@@ -31,7 +31,7 @@
             var bytes = hex.Split(' ')
                .Select(item => Convert.ToByte(item, 16)).ToArray();
 
-            return JsonConvert.DeserializeObject(Encoding.UTF8.GetString(bytes), type);
+            return JsonConvert.DeserializeObject(Encoding.UTF8.GetString(bytes), type, this.settings);
         }
 
         public T Deserialize<T>(Stream input)

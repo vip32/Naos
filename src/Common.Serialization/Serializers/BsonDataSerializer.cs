@@ -18,8 +18,7 @@
         {
             using (var writer = new BsonDataWriter(output))
             {
-                var serializer = new JsonSerializer();
-                serializer.Serialize(writer, value);
+                this.serializer.Serialize(writer, value);
                 //writer.Flush();
             }
         }
@@ -28,8 +27,7 @@
         {
             using (var reader = new BsonDataReader(input))
             {
-                var serializer = new JsonSerializer();
-                return serializer.Deserialize(reader, type);
+                return this.serializer.Deserialize(reader, type);
             }
         }
 
