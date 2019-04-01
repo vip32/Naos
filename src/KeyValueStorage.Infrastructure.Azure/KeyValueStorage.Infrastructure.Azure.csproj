@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Naos.Core.KeyValueStorage.Infrastructure.Azure</AssemblyName>
+    <RootNamespace>Naos.Core.KeyValueStorage.Infrastructure.Azure</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\KeyValueStorage\KeyValueStorage.csproj" />
+  </ItemGroup>
+
+</Project>

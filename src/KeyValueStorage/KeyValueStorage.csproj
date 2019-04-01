@@ -2,19 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.Queueing</AssemblyName>
-    <RootNamespace>Naos.Core.Queueing</RootNamespace>
+    <AssemblyName>Naos.Core.KeyValueStorage</AssemblyName>
+    <RootNamespace>Naos.Core.KeyValueStorage</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Humanizer.Core" Version="2.6.2" />
-    <PackageReference Include="MediatR" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Serialization\Common.Serialization.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 
 </Project>

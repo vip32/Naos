@@ -113,7 +113,7 @@
                         //    Task.FromCanceled(cancellationToken);
                         //}
 
-                        Thread.Sleep(200);
+                        Thread.Sleep(500);
                     }
                 }, cancellationToken).AnyContext();
             }

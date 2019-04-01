@@ -71,6 +71,8 @@
     <ProjectReference Include="..\..\src\JobScheduling.App.Web\JobScheduling.App.Web.csproj" />
     <ProjectReference Include="..\..\src\JobScheduling.App\JobScheduling.App.csproj" />
     <ProjectReference Include="..\..\src\JobScheduling\JobScheduling.csproj" />
+    <ProjectReference Include="..\..\src\KeyValueStorage.Infrastructure.Azure\KeyValueStorage.Infrastructure.Azure.csproj" />
+    <ProjectReference Include="..\..\src\KeyValueStorage\KeyValueStorage.csproj" />
     <ProjectReference Include="..\..\src\Messaging.App.Azure.SignalR\Messaging.App.Azure.SignalR.csproj" />
     <ProjectReference Include="..\..\src\Messaging.App.Azure\Messaging.App.Azure.csproj" />
     <ProjectReference Include="..\..\src\Messaging.App.FileSystem\Messaging.App.FileStorage.csproj" />
