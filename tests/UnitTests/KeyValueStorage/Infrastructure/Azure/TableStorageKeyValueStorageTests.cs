@@ -102,7 +102,7 @@
         {
             return new TableStorageKeyValueStorage(o => o
                 .AccountName("naos")
-                .StorageKey("-"));
+                .StorageKey("4xdofaUPisB4HnpIBRgLB3NO2cQTV/jgVlyKzyAZ/Sy42i+wfWM9anpYmwO2J3jYsDV8rnVvcwgJcrtQKlp3dQ=="));
         }
 
         public class StubEntity
