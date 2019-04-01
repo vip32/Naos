@@ -2,7 +2,9 @@
 {
     using System;
     using System.IO;
+    using System.Text;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Bson;
 
     public class JsonNetSerializer : ITextSerializer
     {
@@ -26,6 +28,15 @@
             using (var reader = new JsonTextReader(sr))
             {
                 return this.serializer.Deserialize(reader, type);
+            }
+        }
+
+        public T Deserialize<T>(Stream input)
+        {
+            using (var sr = new StreamReader(input))
+            using (var reader = new JsonTextReader(sr))
+            {
+                return this.serializer.Deserialize<T>(reader);
             }
         }
     }

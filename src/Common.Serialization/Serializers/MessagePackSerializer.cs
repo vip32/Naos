@@ -2,15 +2,14 @@
 {
     using System;
     using System.IO;
-    using MessagePack;
     using MessagePack.Resolvers;
 
     public class MessagePackSerializer : ISerializer
     {
-        private readonly IFormatterResolver formatterResolver;
+        private readonly MessagePack.IFormatterResolver formatterResolver;
         private readonly bool useCompression;
 
-        public MessagePackSerializer(IFormatterResolver resolver = null, bool useCompression = false)
+        public MessagePackSerializer(MessagePack.IFormatterResolver resolver = null, bool useCompression = false)
         {
             this.useCompression = useCompression;
             this.formatterResolver = resolver ?? ContractlessStandardResolver.Instance;
@@ -37,6 +36,18 @@
             else
             {
                 return MessagePack.MessagePackSerializer.NonGeneric.Deserialize(type, input, this.formatterResolver);
+            }
+        }
+
+        public T Deserialize<T>(Stream input)
+        {
+            if (this.useCompression)
+            {
+                return MessagePack.LZ4MessagePackSerializer.Deserialize<T>(input, this.formatterResolver);
+            }
+            else
+            {
+                return MessagePack.MessagePackSerializer.Deserialize<T>(input, this.formatterResolver);
             }
         }
     }
