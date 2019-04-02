@@ -8,12 +8,12 @@
     [ShortRunJob]
     public abstract class SerializerBenchmarkBase
     {
-        private readonly SerializeModel data = new SerializeModel
+        private readonly StubModel data = new StubModel
         {
             IntProperty = 1,
             StringProperty = "test",
             ListProperty = new List<int> { 1 },
-            ObjectProperty = new SerializeModel { IntProperty = 1 }
+            ObjectProperty = new StubModel { IntProperty = 1 }
         };
 
         private ISerializer serializer;
@@ -34,16 +34,16 @@
         }
 
         [Benchmark]
-        public SerializeModel Deserialize()
+        public StubModel Deserialize()
         {
-            return this.serializer.Deserialize<SerializeModel>(this.serializedData);
+            return this.serializer.Deserialize<StubModel>(this.serializedData);
         }
 
         [Benchmark]
-        public SerializeModel RoundTrip()
+        public StubModel RoundTrip()
         {
             byte[] serializedData = this.serializer.SerializeToBytes(this.data);
-            return this.serializer.Deserialize<SerializeModel>(serializedData);
+            return this.serializer.Deserialize<StubModel>(serializedData);
         }
 
         protected abstract ISerializer GetSerializer();

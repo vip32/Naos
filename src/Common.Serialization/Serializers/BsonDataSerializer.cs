@@ -5,7 +5,7 @@
     using Newtonsoft.Json;
     using Newtonsoft.Json.Bson;
 
-    public class BsonDataSerializer : ITextSerializer
+    public class BsonDataSerializer : ISerializer
     {
         private readonly JsonSerializer serializer;
 

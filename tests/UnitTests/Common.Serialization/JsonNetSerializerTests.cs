@@ -6,15 +6,15 @@
     public class JsonNetSerializerTests : SerializerTestsBase
     {
         [Fact]
-        public override void CanRoundTripBytes()
+        public override void CanRoundTripBytes_Test()
         {
-            base.CanRoundTripBytes();
+            base.CanRoundTripBytes_Test();
         }
 
         [Fact]
-        public override void CanRoundTripString()
+        public override void CanRoundTripString_Test()
         {
-            base.CanRoundTripString();
+            base.CanRoundTripString_Test();
         }
 
         [Fact(Skip = "Skip benchmarks for now")]

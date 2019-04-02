@@ -6,7 +6,7 @@
     using System.Text;
     using Newtonsoft.Json;
 
-    public class HexSerializer : ITextSerializer
+    public class HexSerializer : ISerializer
     {
         private readonly JsonSerializerSettings settings;
 
