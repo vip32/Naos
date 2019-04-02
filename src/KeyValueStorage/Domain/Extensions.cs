@@ -125,7 +125,7 @@
         /// <param name="partitionKey"></param>
         /// <param name="rowKey"></param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task<Value> GetOneAsync(this IKeyValueStorage source, string tableName, string partitionKey, string rowKey)
+        public static async Task<Value> FindOneAsync(this IKeyValueStorage source, string tableName, string partitionKey, string rowKey)
         {
             EnsureArg.IsNotNullOrEmpty(partitionKey, nameof(partitionKey));
             EnsureArg.IsNotNullOrEmpty(rowKey, nameof(rowKey));

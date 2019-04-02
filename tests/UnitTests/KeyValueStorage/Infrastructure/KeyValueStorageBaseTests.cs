@@ -23,7 +23,7 @@
                 .Concat(new[] { new StubEntity { /*Id = "Id99",*/ FirstName = "John", LastName = "Doe", Age = 38, Country = "USA" } });
         }
 
-        public virtual async Task InsertAndGetOneValue_Test()
+        public virtual async Task InsertAndFindOne_ByKeys_Test()
         {
             var sut = this.GetStorage();
             if (sut == null)
@@ -56,14 +56,14 @@
 
             await sut.InsertAsync("tests", new List<Value>(values)).AnyContext();
 
-            var result = await sut.GetOneAsync("tests", values[0].PartitionKey, values[0].RowKey).AnyContext();
+            var result = await sut.FindOneAsync("tests", values[0].PartitionKey, values[0].RowKey).AnyContext();
 
             result.ShouldNotBeNull();
             //result["Id"].ShouldBe(values[0]["Id"]);
             result.PartitionKey.ShouldBe(values[0].PartitionKey);
         }
 
-        public virtual async Task InsertAndGetOneTyped_Test()
+        public virtual async Task InsertAndFindOne_ByKeys_Typed_Test()
         {
             var sut = this.GetStorage();
             if (sut == null)
@@ -86,7 +86,7 @@
             result.PartitionKey.ShouldBe(values.FirstOrDefault()?.PartitionKey);
         }
 
-        public virtual async Task InsertAndGetAllWithCriteriaTyped_Test()
+        public virtual async Task InsertAndFindAll_ByCriteria_Typed_Test()
         {
             var sut = this.GetStorage();
             if (sut == null)
@@ -101,7 +101,7 @@
                 new StubEntity{ PartitionKey = "part0", RowKey = Core.Common.RandomGenerator.GenerateString(7), Id = "cosmosignored", Age = 33, Country = "USA", FirstName = "John", LastName = lastName}
             }.AsEnumerable();
 
-            await sut.InsertAsync(values).AnyContext();
+            await sut.UpsertAsync(values).AnyContext();
 
             var result = await sut.FindAllAsync<StubEntity>(new[]
                 {
@@ -149,9 +149,9 @@
 
         public class StubEntity
         {
-            public string Id { get; set; } // Id is not a valid name, causes cosmos errors
+            public string Id { get; set; } // Id is not a valid name, causes cosmos errors (ignored)
 
-            public DateTime Timestamp { get; set; } = DateTime.UtcNow; // Timestamp is not a valid name, causes cosmos errors
+            public DateTime Timestamp { get; set; } = DateTime.UtcNow; // Timestamp is not a valid name, causes cosmos errors (ignored)
 
             public string PartitionKey { get; set; }
 

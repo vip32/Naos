@@ -10,21 +10,21 @@
     public class TableKeyValueStorageTests : KeyValueStorageBaseTests
     {
         [Fact]
-        public override Task InsertAndGetOneValue_Test()
+        public override Task InsertAndFindOne_ByKeys_Test()
         {
-            return base.InsertAndGetOneValue_Test();
+            return base.InsertAndFindOne_ByKeys_Test();
         }
 
         [Fact]
-        public override Task InsertAndGetOneTyped_Test()
+        public override Task InsertAndFindOne_ByKeys_Typed_Test()
         {
-            return base.InsertAndGetOneTyped_Test();
+            return base.InsertAndFindOne_ByKeys_Typed_Test();
         }
 
         [Fact]
-        public override Task InsertAndGetAllWithCriteriaTyped_Test()
+        public override Task InsertAndFindAll_ByCriteria_Typed_Test()
         {
-            return base.InsertAndGetAllWithCriteriaTyped_Test();
+            return base.InsertAndFindAll_ByCriteria_Typed_Test();
         }
 
         [Fact]
