@@ -8,14 +8,17 @@
     using EnsureThat;
     using Naos.Core.Common;
 
-    public static class Extensions
+    public static class FileStorageExtensions
     {
         public static Task<bool> SaveFileObjectAsync<T>(this IFileStorage storage, string path, T data, CancellationToken cancellationToken = default)
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
             var bytes = storage.Serializer.SerializeToBytes(data);
-            return storage.SaveFileAsync(path, new MemoryStream(bytes), cancellationToken);
+            return storage.SaveFileAsync(
+                path,
+                new MemoryStream(bytes),
+                cancellationToken);
         }
 
         public static async Task<T> GetFileObjectAsync<T>(this IFileStorage storage, string path, CancellationToken cancellationToken = default)
@@ -37,7 +40,9 @@
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
-            return storage.SaveFileAsync(path, new MemoryStream(Encoding.UTF8.GetBytes(contents ?? string.Empty)));
+            return storage.SaveFileAsync(
+                path,
+                new MemoryStream(Encoding.UTF8.GetBytes(contents ?? string.Empty)));
         }
 
         public static async Task<string> GetFileContentsAsync(this IFileStorage storage, string path)
@@ -86,7 +91,7 @@
             var result = await storage.GetFileInformationsAsync(100, searchPattern, cancellationToken).AnyContext();
             do
             {
-                foreach (var file in result.Files)
+                foreach (var file in result.Files.Safe())
                 {
                     files.Add(file);
                     if (limit.HasValue && limit.Value == files.Count)
