@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Common.Criteria\Common.Criteria.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
 

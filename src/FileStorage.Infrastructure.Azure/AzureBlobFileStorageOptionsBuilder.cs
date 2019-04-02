@@ -2,7 +2,6 @@
 {
     using System.Linq;
     using Naos.Core.Common;
-    using Naos.Core.Common.Serialization;
 
     public class AzureBlobFileStorageOptionsBuilder :
         BaseOptionsBuilder<AzureBlobFileStorageOptions, AzureBlobFileStorageOptionsBuilder>

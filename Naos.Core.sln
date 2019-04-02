@@ -181,11 +181,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Queueing.App.Web", "src\Que
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Console", "src\Common.Console\Common.Console.csproj", "{7E7AEAAD-3600-48D2-81AE-5DADF32447C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyValueStorage.Infrastructure.Azure", "src\KeyValueStorage.Infrastructure.Azure\KeyValueStorage.Infrastructure.Azure.csproj", "{F396131C-509C-4E60-9804-9773CC49A43F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeyValueStorage.Infrastructure.Azure", "src\KeyValueStorage.Infrastructure.Azure\KeyValueStorage.Infrastructure.Azure.csproj", "{F396131C-509C-4E60-9804-9773CC49A43F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyValueStorage", "src\KeyValueStorage\KeyValueStorage.csproj", "{0D34F9E5-EF8F-44DF-8D3A-04A18CEF0A5A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeyValueStorage", "src\KeyValueStorage\KeyValueStorage.csproj", "{0D34F9E5-EF8F-44DF-8D3A-04A18CEF0A5A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "KeyValueStorage", "KeyValueStorage", "{DA64F0A2-4145-4163-B591-DB9374BEABBA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Criteria", "src\Common.Criteria\Common.Criteria.csproj", "{F05D35AB-D17C-43E5-9861-050644144255}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -989,6 +991,18 @@ Global
 		{0D34F9E5-EF8F-44DF-8D3A-04A18CEF0A5A}.Release|x64.Build.0 = Release|Any CPU
 		{0D34F9E5-EF8F-44DF-8D3A-04A18CEF0A5A}.Release|x86.ActiveCfg = Release|Any CPU
 		{0D34F9E5-EF8F-44DF-8D3A-04A18CEF0A5A}.Release|x86.Build.0 = Release|Any CPU
+		{F05D35AB-D17C-43E5-9861-050644144255}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F05D35AB-D17C-43E5-9861-050644144255}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F05D35AB-D17C-43E5-9861-050644144255}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F05D35AB-D17C-43E5-9861-050644144255}.Debug|x64.Build.0 = Debug|Any CPU
+		{F05D35AB-D17C-43E5-9861-050644144255}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F05D35AB-D17C-43E5-9861-050644144255}.Debug|x86.Build.0 = Debug|Any CPU
+		{F05D35AB-D17C-43E5-9861-050644144255}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F05D35AB-D17C-43E5-9861-050644144255}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F05D35AB-D17C-43E5-9861-050644144255}.Release|x64.ActiveCfg = Release|Any CPU
+		{F05D35AB-D17C-43E5-9861-050644144255}.Release|x64.Build.0 = Release|Any CPU
+		{F05D35AB-D17C-43E5-9861-050644144255}.Release|x86.ActiveCfg = Release|Any CPU
+		{F05D35AB-D17C-43E5-9861-050644144255}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1078,6 +1092,7 @@ Global
 		{F396131C-509C-4E60-9804-9773CC49A43F} = {DA64F0A2-4145-4163-B591-DB9374BEABBA}
 		{0D34F9E5-EF8F-44DF-8D3A-04A18CEF0A5A} = {DA64F0A2-4145-4163-B591-DB9374BEABBA}
 		{DA64F0A2-4145-4163-B591-DB9374BEABBA} = {09D80029-71E3-4B4D-AA1A-CD153787AED0}
+		{F05D35AB-D17C-43E5-9861-050644144255} = {C441E12D-3F09-4E93-B490-6E77B8FB7CD5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BD699E0F-4BC9-41A9-93D5-E89FDDA8FC17}

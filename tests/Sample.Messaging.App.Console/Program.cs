@@ -2,12 +2,9 @@
 {
     using System;
     using System.Drawing;
-    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using MediatR;
-    using Microsoft.AspNetCore;
-    using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Hosting;

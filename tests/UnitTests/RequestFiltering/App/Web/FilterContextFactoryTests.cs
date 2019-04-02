@@ -21,7 +21,7 @@
             var logger = Substitute.For<ILogger<FilterContextFactory>>();
             var query = new QueryCollection(new Dictionary<string, StringValues>()
             {
-                ["q"] = "FirstName=John,Age=gte:21",
+                ["q"] = "FirstName=John,Age=ge:21",
                 ["order"] = "FirstName,desc:Age",
                 ["skip"] = "5",
                 ["take"] = "10",
@@ -35,16 +35,16 @@
 
             // assert
             var criteria1 = result.Criterias.FirstOrDefault(c => c.Name.SafeEquals("FirstName"));
-            criteria1.Operator.ShouldBe(Core.RequestFiltering.App.CriteriaOperator.Equal);
+            criteria1.Operator.ShouldBe(CriteriaOperator.Equal);
             criteria1.ShouldNotBeNull();
-            criteria1.IsNumeric.ShouldBe(false);
+            criteria1.IsNumberValue().ShouldBe(false);
             criteria1.Value.ShouldBe("John");
 
             var criteria2 = result.Criterias.FirstOrDefault(c => c.Name.SafeEquals("Age"));
             criteria2.ShouldNotBeNull();
-            criteria2.Operator.ShouldBe(Core.RequestFiltering.App.CriteriaOperator.GreaterThanOrEqual);
-            criteria2.IsNumeric.ShouldBe(true);
-            criteria2.Value.ShouldBe(21);
+            criteria2.Operator.ShouldBe(CriteriaOperator.GreaterThanOrEqual);
+            criteria2.IsNumberValue().ShouldBe(true);
+            criteria2.Value.ShouldBe("21");
 
             var order1 = result.Orders.FirstOrDefault(c => c.Name.SafeEquals("FirstName"));
             order1.ShouldNotBeNull();

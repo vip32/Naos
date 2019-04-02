@@ -2,7 +2,6 @@
 {
     using System;
     using Naos.Core.Common;
-    using Naos.Core.Common.Serialization;
 
     public class BaseQueueOptions : BaseOptions
     {

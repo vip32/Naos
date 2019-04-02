@@ -6,7 +6,6 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Naos.Core.Common;
-    using Naos.Core.Common.Serialization;
 
     public class FileStorageScopedDecorator : IFileStorage
     {

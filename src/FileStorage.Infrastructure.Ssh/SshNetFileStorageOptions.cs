@@ -2,7 +2,6 @@
 {
     using System.IO;
     using Naos.Core.Common;
-    using Naos.Core.Common.Serialization;
     using Renci.SshNet;
 
     public class SshNetFileStorageOptions : BaseOptions

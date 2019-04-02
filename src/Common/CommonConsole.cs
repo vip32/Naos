@@ -3,7 +3,7 @@
     using System;
     using System.Drawing;
 
-    public static class CommonConsole
+    public static class CommonConsole // TODO: move to common.console proj
     {
         public static void WriteNaosBitmapLogo()
         {

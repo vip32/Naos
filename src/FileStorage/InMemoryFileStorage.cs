@@ -10,7 +10,6 @@
     using EnsureThat;
     using Humanizer;
     using Naos.Core.Common;
-    using Naos.Core.Common.Serialization;
     using Naos.Core.FileStorage.Domain;
 
     public class InMemoryFileStorage : IFileStorage

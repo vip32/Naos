@@ -18,7 +18,6 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
-    using Naos.Core.Common.Console;
     using Naos.Core.Common.Web;
     using Naos.Core.Configuration.App;
     using Naos.Core.JobScheduling.App;

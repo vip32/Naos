@@ -1,10 +1,10 @@
-﻿namespace Naos.Core.Common.Serialization
+﻿namespace Naos.Core.Common
 {
     using System;
     using System.IO;
     using System.Text;
 
-    public static class Extensions
+    public static class SerializerExtensions
     {
         public static T Deserialize<T>(this ISerializer source, Stream data)
         {

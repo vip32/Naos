@@ -10,7 +10,6 @@
     using EnsureThat;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
-    using Naos.Core.Common.Serialization;
     using Naos.Core.FileStorage.Domain;
     using Renci.SshNet;
     using Renci.SshNet.Common;

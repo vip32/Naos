@@ -7,7 +7,6 @@
     using Humanizer;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
-    using Naos.Core.Common.Serialization;
 
     public class FileStorageLoggingDecorator : IFileStorage
     {

@@ -1,10 +1,8 @@
-﻿namespace Naos.Core.Common.Serialization
+﻿namespace Naos.Core.Common
 {
     using System;
     using System.IO;
-    using System.Text;
     using Newtonsoft.Json;
-    using Newtonsoft.Json.Bson;
 
     public class JsonNetSerializer : ITextSerializer
     {

@@ -3,7 +3,6 @@
     using System;
     using MediatR;
     using Naos.Core.Common;
-    using Naos.Core.Common.Serialization;
 
     public class InMemoryQueueOptionsBuilder :
         BaseOptionsBuilder<InMemoryQueueOptions, InMemoryQueueOptionsBuilder>

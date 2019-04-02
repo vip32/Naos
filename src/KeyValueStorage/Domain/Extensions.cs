@@ -1,6 +1,5 @@
 ﻿namespace Naos.Core.KeyValueStorage.Domain
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -12,16 +11,16 @@
 
     public static class Extensions
     {
-        public static async Task<IEnumerable<T>> GetAsync<T>(this IKeyValueStorage source, string partitionKey, string rowKey)
+        public static async Task<IEnumerable<T>> FindAllAsync<T>(this IKeyValueStorage source, string partitionKey, string rowKey)
             where T : class, new()
         {
-            return await source.GetAsync<T>(new Key(partitionKey, rowKey)).AnyContext();
+            return await source.FindAllAsync<T>(new Key(partitionKey, rowKey)).AnyContext();
         }
 
-        public static async Task<IEnumerable<T>> GetAsync<T>(this IKeyValueStorage source, Key key)
+        public static async Task<IEnumerable<T>> FindAllAsync<T>(this IKeyValueStorage source, IEnumerable<Criteria> criterias)
             where T : class, new()
         {
-            var results = await source.GetAsync(typeof(T).Name.Pluralize(), key).AnyContext();
+            var results = await source.FindAllAsync(typeof(T).Name.Pluralize(), criterias).AnyContext();
             return results.Select(r =>
             {
                 var instance = r.ToObject<T>();
@@ -30,16 +29,28 @@
             });
         }
 
-        public static async Task<T> GetOneAsync<T>(this IKeyValueStorage source, string partitionKey, string rowKey)
+        public static async Task<IEnumerable<T>> FindAllAsync<T>(this IKeyValueStorage source, Key key)
             where T : class, new()
         {
-            return await source.GetOneAsync<T>(new Key(partitionKey, rowKey)).AnyContext();
+            var results = await source.FindAllAsync(typeof(T).Name.Pluralize(), key).AnyContext();
+            return results.Select(r =>
+            {
+                var instance = r.ToObject<T>();
+                MapKey(r, instance);
+                return instance;
+            });
         }
 
-        public static async Task<T> GetOneAsync<T>(this IKeyValueStorage source, Key key)
+        public static async Task<T> FindOneAsync<T>(this IKeyValueStorage source, string partitionKey, string rowKey)
             where T : class, new()
         {
-            var result = await source.GetOneAsync(typeof(T).Name.Pluralize(), key).AnyContext();
+            return await source.FindOneAsync<T>(new Key(partitionKey, rowKey)).AnyContext();
+        }
+
+        public static async Task<T> FindOneAsync<T>(this IKeyValueStorage source, Key key)
+            where T : class, new()
+        {
+            var result = await source.FindOneAsync(typeof(T).Name.Pluralize(), key).AnyContext();
 
             var instance = result.ToObject<T>();
             MapKey(result, instance);
@@ -119,7 +130,7 @@
             EnsureArg.IsNotNullOrEmpty(partitionKey, nameof(partitionKey));
             EnsureArg.IsNotNullOrEmpty(rowKey, nameof(rowKey));
 
-            return await source.GetOneAsync(tableName, new Key(partitionKey, rowKey)).AnyContext();
+            return await source.FindOneAsync(tableName, new Key(partitionKey, rowKey)).AnyContext();
         }
 
         /// <summary>
@@ -129,11 +140,11 @@
         /// <param name="tableName"></param>
         /// <param name="key"></param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task<Value> GetOneAsync(this IKeyValueStorage source, string tableName, Key key)
+        public static async Task<Value> FindOneAsync(this IKeyValueStorage source, string tableName, Key key)
         {
             EnsureArg.IsNotNull(key, nameof(key));
 
-            var values = await source.GetAsync(tableName, key).AnyContext();
+            var values = await source.FindAllAsync(tableName, key).AnyContext();
             return values.FirstOrDefault();
         }
 

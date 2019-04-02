@@ -11,7 +11,6 @@
     using Microsoft.Azure.ServiceBus.Management;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
-    using Naos.Core.Common.Serialization;
     using Naos.Core.Domain;
     using Naos.Core.Queueing.Domain;
 

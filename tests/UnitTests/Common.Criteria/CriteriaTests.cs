@@ -1,7 +1,6 @@
-﻿namespace Naos.Core.UnitTests.RequestFiltering.App.Model
+﻿namespace Naos.Core.UnitTests.Common.Criteria
 {
     using Naos.Core.Common;
-    using Naos.Core.RequestFiltering.App;
     using Shouldly;
     using Xunit;
 
@@ -30,20 +29,48 @@
         }
 
         [Fact]
-        public void IsNumeric_Test()
+        public void IsNumberValue_Test()
         {
             new Criteria("FirstName", CriteriaOperator.Equal, "John")
-                .IsNumeric.ShouldBe(false);
+                .IsNumberValue().ShouldBe(false);
 
             new Criteria("Age", CriteriaOperator.GreaterThanOrEqual, 21)
-                .IsNumeric.ShouldBe(true);
+                .IsNumberValue().ShouldBe(true);
 
-            new Criteria("Age", CriteriaOperator.GreaterThanOrEqual, "21")
-                .IsNumeric.ShouldBe(true);
+            new Criteria("Age", CriteriaOperator.GreaterThanOrEqual, 21.8)
+                .IsNumberValue().ShouldBe(true);
+
+            new Criteria("Age", CriteriaOperator.GreaterThanOrEqual, "22")
+                .IsNumberValue().ShouldBe(true);
+
+            new Criteria("Age", CriteriaOperator.GreaterThanOrEqual, "22.8")
+                .IsNumberValue().ShouldBe(true);
 
             new Criteria("Age", CriteriaOperator.GreaterThanOrEqual, long.MaxValue)
-                .IsNumeric.ShouldBe(true);
+                .IsNumberValue().ShouldBe(true);
         }
+
+        //[Fact]
+        //public void IsType_Test()
+        //{
+        //    new Criteria("FirstName", CriteriaOperator.Equal, "John")
+        //        .IsStringValue().ShouldBe(true);
+
+        //    new Criteria("Age", CriteriaOperator.GreaterThanOrEqual, 21)
+        //        .IsIntValue().ShouldBe(true);
+
+        //    //new Criteria("Age", CriteriaOperator.GreaterThanOrEqual, 21.8)
+        //    //    .IsDecimalValue().ShouldBe(true);
+
+        //    new Criteria("Age", CriteriaOperator.GreaterThanOrEqual, "22")
+        //        .IsIntValue().ShouldBe(true);
+
+        //    //new Criteria("Age", CriteriaOperator.GreaterThanOrEqual, "22.8")
+        //    //    .IsDecimalValue().ShouldBe(true);
+
+        //    new Criteria("Age", CriteriaOperator.GreaterThanOrEqual, long.MaxValue)
+        //        .IsLongValue().ShouldBe(true);
+        //}
 
         public class StubEntity
         {

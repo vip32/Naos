@@ -2,17 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Text;
     using System.Threading.Tasks;
     using Common;
     using EnsureThat;
     using Humanizer;
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common.Serialization;
     using Naos.Core.Infrastructure.Azure.ServiceBus;
     using Naos.Core.Messaging.Domain;
-    using Newtonsoft.Json;
 
     public class ServiceBusMessageBroker : IMessageBroker
     {

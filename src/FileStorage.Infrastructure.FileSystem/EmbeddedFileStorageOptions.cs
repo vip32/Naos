@@ -3,7 +3,6 @@
     using System.Collections.Generic;
     using System.Reflection;
     using Naos.Core.Common;
-    using Naos.Core.Common.Serialization;
 
     public class EmbeddedFileStorageOptions : BaseOptions
     {

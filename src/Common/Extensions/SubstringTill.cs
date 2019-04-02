@@ -4,44 +4,44 @@
 
     public static partial class Extensions
     {
-        public static string SubstringTill(this string source, string seperator, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
+        public static string SubstringTill(this string source, string till, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         {
             if (source.IsNullOrEmpty())
             {
                 return source;
             }
 
-            if (seperator.IsNullOrEmpty())
+            if (till.IsNullOrEmpty())
             {
                 return source;
             }
 
-            return SubstringTillInternal(source, seperator, source.IndexOf(seperator, comparison));
+            return SubstringTillInternal(source, till, source.IndexOf(till, comparison));
         }
 
-        public static string SubstringTillLast(this string source, string seperator, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
+        public static string SubstringTillLast(this string source, string till, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         {
             if (source.IsNullOrEmpty())
             {
                 return source;
             }
 
-            if (seperator.IsNullOrEmpty())
+            if (till.IsNullOrEmpty())
             {
                 return source;
             }
 
-            return SubstringTillInternal(source, seperator, source.LastIndexOf(seperator, comparison));
+            return SubstringTillInternal(source, till, source.LastIndexOf(till, comparison));
         }
 
-        private static string SubstringTillInternal(this string source, string seperator, int index)
+        private static string SubstringTillInternal(this string source, string till, int index)
         {
             if (source.IsNullOrEmpty())
             {
                 return source;
             }
 
-            if (seperator.IsNullOrEmpty())
+            if (till.IsNullOrEmpty())
             {
                 return source;
             }

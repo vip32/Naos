@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Common.Mapping
+﻿namespace Naos.Core.Common
 {
     /// <summary>
     /// Maps an object of type <typeparamref name="TSource"/> to <typeparamref name="TDestination"/>.

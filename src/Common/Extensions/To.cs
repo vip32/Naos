@@ -42,5 +42,37 @@
                 return defaultValue;
             }
         }
+
+        public static bool TryTo<T>(this object source, out T result)
+            where T : struct
+        {
+            if (source == null)
+            {
+                result = default;
+                return false;
+            }
+
+            try
+            {
+                if (typeof(T) == typeof(Guid))
+                {
+                    result = (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(source.ToString());
+                    return true;
+                }
+
+                result = (T)Convert.ChangeType(source, typeof(T), CultureInfo.InvariantCulture);
+                return true;
+            }
+            catch (OverflowException)
+            {
+                result = default;
+                return false;
+            }
+            catch (FormatException)
+            {
+                result = default;
+                return false;
+            }
+        }
     }
 }

@@ -1,11 +1,9 @@
 ﻿namespace Naos.Core.Common.Console
 {
     using System;
-    using System.Diagnostics;
     using System.Drawing;
     using System.Threading;
     using System.Threading.Tasks;
-    using Humanizer;
     using Microsoft.Extensions.Logging;
     using Console = Colorful.Console;
 

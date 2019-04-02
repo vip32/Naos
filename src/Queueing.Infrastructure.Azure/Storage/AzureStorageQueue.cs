@@ -9,7 +9,6 @@
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Queue;
     using Naos.Core.Common;
-    using Naos.Core.Common.Serialization;
     using Naos.Core.Domain;
     using Naos.Core.Queueing.Domain;
 

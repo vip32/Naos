@@ -9,7 +9,6 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
-    using Naos.Core.Common.Serialization;
     using Naos.Core.FileStorage.Domain;
     using Naos.Core.FileStorage.Infrastructure;
     using Naos.Core.Messaging;

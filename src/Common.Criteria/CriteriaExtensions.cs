@@ -1,9 +1,8 @@
-﻿namespace Naos.Core.RequestFiltering.App
+﻿namespace Naos.Core.Common
 {
     using System;
-    using Naos.Core.Common;
 
-    public static class CriteriaOperatorExtensions
+    public static class CriteriaExtensions
     {
         public static string ToValue(this CriteriaOperator @operator)
         {

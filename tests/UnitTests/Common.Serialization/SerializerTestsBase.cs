@@ -1,7 +1,7 @@
 ﻿namespace Naos.Core.UnitTests.Common.Serialization
 {
     using System.Collections.Generic;
-    using Naos.Core.Common.Serialization;
+    using Naos.Core.Common;
     using Xunit;
 
     public abstract class SerializerTestsBase

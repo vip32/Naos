@@ -4,7 +4,6 @@
     using System.IO;
     using System.Text;
     using Naos.Core.Common;
-    using Naos.Core.Common.Serialization;
     using Renci.SshNet;
 
     public class SshNetFileStorageOptionsBuilder :

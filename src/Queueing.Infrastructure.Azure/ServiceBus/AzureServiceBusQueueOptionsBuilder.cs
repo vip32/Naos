@@ -5,7 +5,6 @@
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Azure.ServiceBus.Management;
     using Naos.Core.Common;
-    using Naos.Core.Common.Serialization;
 
     public class AzureServiceBusQueueOptionsBuilder :
        BaseOptionsBuilder<AzureServiceBusQueueOptions, AzureServiceBusQueueOptionsBuilder>

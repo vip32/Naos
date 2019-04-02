@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Common.Mapping
+﻿namespace Naos.Core.Common
 {
     using System.Collections.Generic;
     using EnsureThat;

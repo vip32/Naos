@@ -4,7 +4,6 @@
     using MediatR;
     using Microsoft.WindowsAzure.Storage.RetryPolicies;
     using Naos.Core.Common;
-    using Naos.Core.Common.Serialization;
 
     public class AzureStorageQueueOptionsBuilder :
        BaseOptionsBuilder<AzureStorageQueueOptions, AzureStorageQueueOptionsBuilder>

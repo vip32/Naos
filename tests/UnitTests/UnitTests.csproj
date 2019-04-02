@@ -45,6 +45,7 @@
     <ProjectReference Include="..\..\src\App\App.csproj" />
     <ProjectReference Include="..\..\src\Commands\Commands.csproj" />
     <ProjectReference Include="..\..\src\Common.Console\Common.Console.csproj" />
+    <ProjectReference Include="..\..\src\Common.Criteria\Common.Criteria.csproj" />
     <ProjectReference Include="..\..\src\Common.Mapping\Common.Mapping.csproj" />
     <ProjectReference Include="..\..\src\Common.Serialization\Common.Serialization.csproj" />
     <ProjectReference Include="..\..\src\Common.Web\Common.Web.csproj" />
@@ -107,6 +108,7 @@
     <Folder Include="App.Web\" />
     <Folder Include="Infrastructure.CosmosDb\" />
     <Folder Include="Correlation\" />
+    <Folder Include="RequestFiltering\App\Model\" />
   </ItemGroup>
 
 </Project>

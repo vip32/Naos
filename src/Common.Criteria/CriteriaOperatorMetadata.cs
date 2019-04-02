@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.RequestFiltering.App
+﻿namespace Naos.Core.Common
 {
     using System;
 

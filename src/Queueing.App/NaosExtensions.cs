@@ -8,7 +8,6 @@
     using Naos.Core.Common;
     using Naos.Core.Configuration.App;
     using Naos.Core.Queueing.App;
-    using Naos.Core.Queueing.Domain;
 
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions

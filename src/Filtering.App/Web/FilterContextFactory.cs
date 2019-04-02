@@ -97,7 +97,7 @@
                 result.Add(
                     new Criteria(
                         name.Trim(),
-                        CriteriaOperatorExtensions.FromAbbreviation(@operator),
+                        CriteriaExtensions.FromAbbreviation(@operator),
                         (value.Contains(":") ? value.SubstringFrom(":") : value).Trim().EmptyToNull()));
                         // TODO: properly determine numeric oder not and pass to criteria
             }

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Naos.Core.Common;
 
     public interface IKeyValueStorage : IDisposable
     {
@@ -29,7 +30,9 @@
         /// List of table values in the table's partition. This method never returns null and if no records
         /// are found an empty collection is returned.
         /// </returns>
-        Task<IEnumerable<Value>> GetAsync(string tableName, Key key);
+        Task<IEnumerable<Value>> FindAllAsync(string tableName, Key key);
+
+        Task<IEnumerable<Value>> FindAllAsync(string tableName, IEnumerable<Criteria> criterias);
 
         /// <summary>
         /// Inserts values in the table.

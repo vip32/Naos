@@ -2,7 +2,6 @@
 {
     using MediatR;
     using Naos.Core.Common;
-    using Naos.Core.Common.Serialization;
     using Naos.Core.Messaging.Domain;
 
     public class RabbitMQMessageBrokerOptionsBuilder :

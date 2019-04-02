@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Naos.Core.Common.Mapping;
+    using Naos.Core.Common;
     using Xunit;
 
     public class MapperTest

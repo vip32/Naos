@@ -18,6 +18,17 @@
         }
 
         [Fact]
+        public void AsValidString_Test()
+        {
+            var sut = (object)"test";
+
+            sut.As<string>().ShouldNotBe(null);
+
+            sut = null;
+            sut.As<string>().ShouldBe(null);
+        }
+
+        [Fact]
         public void AsInvalidInteraface_Test()
         {
             var sut = new AsTests();

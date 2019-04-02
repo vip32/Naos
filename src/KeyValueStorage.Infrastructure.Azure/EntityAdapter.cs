@@ -4,37 +4,42 @@
     using System.Collections.Generic;
     using System.Net;
     using EnsureThat;
-    using Microsoft.WindowsAzure.Storage;
-    using Microsoft.WindowsAzure.Storage.Table;
+    using Microsoft.Azure.Cosmos.Table;
+    using Naos.Core.Common;
+    //using Microsoft.WindowsAzure.Storage;
+    //using Microsoft.WindowsAzure.Storage.Table;
     using Naos.Core.KeyValueStorage.Domain;
 
     public class EntityAdapter : ITableEntity
     {
-        private static readonly Dictionary<Type, Func<object, EntityProperty>> PropertyMap = new Dictionary<Type, Func<object, EntityProperty>>
-        {
-            [typeof(string)] = o => EntityProperty.GeneratePropertyForString((string)o),
-            [typeof(byte[])] = o => EntityProperty.GeneratePropertyForByteArray((byte[])o),
-            [typeof(bool)] = o => EntityProperty.GeneratePropertyForBool((bool)o),
-            [typeof(DateTimeOffset)] = o => EntityProperty.GeneratePropertyForDateTimeOffset((DateTimeOffset)o),
-            [typeof(DateTime)] = o => EntityProperty.GeneratePropertyForDateTimeOffset((DateTimeOffset)(DateTime)o),
-            [typeof(double)] = o => EntityProperty.GeneratePropertyForDouble((double)o),
-            [typeof(Guid)] = o => EntityProperty.GeneratePropertyForGuid((Guid)o),
-            [typeof(int)] = o => EntityProperty.GeneratePropertyForInt((int)o),
-            [typeof(long)] = o => EntityProperty.GeneratePropertyForLong((long)o)
-        };
+        private static readonly Dictionary<Type, Func<object, EntityProperty>> PropertyMap =
+            new Dictionary<Type, Func<object, EntityProperty>>
+            {
+                [typeof(string)] = o => EntityProperty.GeneratePropertyForString((string)o),
+                [typeof(byte[])] = o => EntityProperty.GeneratePropertyForByteArray((byte[])o),
+                [typeof(bool)] = o => EntityProperty.GeneratePropertyForBool((bool)o),
+                [typeof(DateTimeOffset)] = o => EntityProperty.GeneratePropertyForDateTimeOffset((DateTimeOffset)o),
+                [typeof(DateTime)] = o => EntityProperty.GeneratePropertyForDateTimeOffset((DateTime)o),
+                [typeof(double)] = o => EntityProperty.GeneratePropertyForDouble((double)o),
+                [typeof(Guid)] = o => EntityProperty.GeneratePropertyForGuid((Guid)o),
+                [typeof(int)] = o => EntityProperty.GeneratePropertyForInt((int)o),
+                [typeof(long)] = o => EntityProperty.GeneratePropertyForLong((long)o)
+            };
 
-        private readonly Value row;
+        private readonly Value value;
+        private readonly string[] ignoreProperties;
 
-        public EntityAdapter(Key rowId)
+        public EntityAdapter(Key key, string[] ignoreProperties = null)
         {
-            this.Init(rowId, true);
+            this.ignoreProperties = ignoreProperties;
+            this.Init(key, true);
         }
 
-        public EntityAdapter(Value row)
+        public EntityAdapter(Value value, string[] ignoreProperties = null)
         {
-            this.row = row;
-
-            this.Init(row?.Key, true);
+            this.ignoreProperties = ignoreProperties;
+            this.value = value;
+            this.Init(value?.Key, true);
         }
 
         public string PartitionKey { get; set; }
@@ -54,15 +59,15 @@
         {
             //Storage client uses this when it needs to transform this entity to a writeable instance
             var result = new Dictionary<string, EntityProperty>();
-            foreach (KeyValuePair<string, object> cell in this.row)
+            foreach (KeyValuePair<string, object> cell in this.value)
             {
-                if (cell.Value == null)
+                if (cell.Value == null || cell.Key.EqualsAny(this.ignoreProperties))
                 {
                     continue;
                 }
 
                 EntityProperty property;
-                Type type = cell.Value.GetType();
+                var type = cell.Value.GetType();
 
                 if (!PropertyMap.TryGetValue(type, out Func<object, EntityProperty> factoryMethod))
                 {
@@ -79,17 +84,12 @@
             return result;
         }
 
-        private static string ToInternalId(string userId)
+        private void Init(Key key, bool useConcurencyKey)
         {
-            return WebUtility.UrlEncode(userId);
-        }
+            EnsureArg.IsNotNull(key, nameof(key));
 
-        private void Init(Key rowId, bool useConcurencyKey)
-        {
-            EnsureArg.IsNotNull(rowId, nameof(rowId));
-
-            this.PartitionKey = ToInternalId(rowId.PartitionKey);
-            this.RowKey = ToInternalId(rowId.RowKey);
+            this.PartitionKey = WebUtility.UrlEncode(key.PartitionKey);
+            this.RowKey = WebUtility.UrlEncode(key.RowKey);
             this.ETag = "*";
         }
     }

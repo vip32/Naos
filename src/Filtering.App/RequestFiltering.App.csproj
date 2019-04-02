@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Common.Criteria\Common.Criteria.csproj" />
     <ProjectReference Include="..\Common.Web\Common.Web.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Configuration.App.Web\Configuration.App.Web.csproj" />

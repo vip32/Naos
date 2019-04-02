@@ -8,36 +8,44 @@
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using EnsureThat;
+    using Microsoft.Azure.Cosmos.Table;
     using Microsoft.Extensions.Logging;
-    using Microsoft.WindowsAzure.Storage;
-    using Microsoft.WindowsAzure.Storage.Auth;
-    using Microsoft.WindowsAzure.Storage.Table;
     using Naos.Core.Common;
     using Naos.Core.KeyValueStorage.Domain;
 
-    public class TableStorageKeyValueStorage : IKeyValueStorage
+    /// <summary>
+    /// A table keyvalue provider for Azure Table Storage AND Azure Cosmos DB Table API.
+    /// One provider for both backends made possible by the universal client (Microsoft.Azure.Cosmos.Table)
+    /// Which backend to use depends on the connectionstring used.
+    /// </summary>
+    public class TableKeyValueStorage : IKeyValueStorage
     {
-        private const int MaxInsertLimit = 100;
-        private readonly TableStorageKeyValueStorageOptions options;
-        private readonly ILogger<TableStorageKeyValueStorage> logger;
+        // https://docs.microsoft.com/en-us/azure/cosmos-db/tutorial-develop-table-dotnet
+        private readonly TableKeyValueStorageOptions options;
+        private readonly ILogger<TableKeyValueStorage> logger;
         private readonly CloudTableClient client;
         private readonly ConcurrentDictionary<string, TableInfo> tableInfos = new ConcurrentDictionary<string, TableInfo>();
+        private bool isCosmos;
 
-        public TableStorageKeyValueStorage(TableStorageKeyValueStorageOptions options)
+        public TableKeyValueStorage(TableKeyValueStorageOptions options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
-            EnsureArg.IsNotNullOrEmpty(options.AccountName, nameof(options.AccountName));
-            EnsureArg.IsNotNullOrEmpty(options.StorageKey, nameof(options.StorageKey));
+            EnsureArg.IsNotNullOrEmpty(options.ConnectionString, nameof(options.ConnectionString));
 
             this.options = options;
-            this.logger = options.CreateLogger<TableStorageKeyValueStorage>();
+            this.logger = options.CreateLogger<TableKeyValueStorage>();
 
-            var account = new CloudStorageAccount(new StorageCredentials(options.AccountName, options.StorageKey), true);
+            var account = CloudStorageAccount.Parse(this.options.ConnectionString);
             this.client = account.CreateCloudTableClient();
+
+            if (this.options.ConnectionString.Contains("table.cosmos.azure.com", StringComparison.OrdinalIgnoreCase))
+            {
+                this.isCosmos = true;
+            }
         }
 
-        public TableStorageKeyValueStorage(Builder<TableStorageKeyValueStorageOptionsBuilder, TableStorageKeyValueStorageOptions> optionsBuilder)
-            : this(optionsBuilder(new TableStorageKeyValueStorageOptionsBuilder()).Build())
+        public TableKeyValueStorage(Builder<TableKeyValueStorageOptionsBuilder, TableKeyValueStorageOptions> optionsBuilder)
+            : this(optionsBuilder(new TableKeyValueStorageOptionsBuilder()).Build())
         {
         }
 
@@ -62,7 +70,7 @@
 
         public async Task<bool> DeleteAsync(string tableName)
         {
-            var table = await this.GetTableAsync(tableName, false);
+            var table = await this.EnsureTableAsync(tableName, false);
             if (table != null)
             {
                 await table.DeleteAsync();
@@ -72,12 +80,25 @@
             return false;
         }
 
-        public async Task<IEnumerable<Value>> GetAsync(string tableName, Key key)
+        public async Task<IEnumerable<Value>> FindAllAsync(string tableName, Key key)
         {
             EnsureArg.IsNotNullOrEmpty(tableName, nameof(tableName));
             EnsureArg.IsNotNull(key, nameof(key));
 
-            return await this.InternalGetAsync(tableName, key, -1);
+            return await this.FindAsync(tableName, key);
+        }
+
+        public async Task<IEnumerable<Value>> FindAllAsync(string tableName, IEnumerable<Criteria> criterias)
+        {
+            EnsureArg.IsNotNullOrEmpty(tableName, nameof(tableName));
+
+            if (!this.isCosmos)
+            {
+                // criteria cause table scan when Azure Table Storage is the backend
+                //throw new NotSupportedException();
+            }
+
+            return await this.FindAsync(tableName, criterias: criterias);
         }
 
         public async Task InsertAsync(string tableName, IEnumerable<Value> values)
@@ -97,7 +118,7 @@
             }
 
             await this.BatchedOperationAsync(tableName, true,
-               (b, te) => b.Insert(te),
+               (op, te) => op.Insert(te),
                rowsList);
         }
 
@@ -118,21 +139,21 @@
             }
 
             await this.BatchedOperationAsync(tableName, true,
-               (b, te) => b.InsertOrReplace(te),
+               (op, te) => op.InsertOrReplace(te),
                rowsList);
         }
 
         public async Task UpdateAsync(string tableName, IEnumerable<Value> values)
         {
             await this.BatchedOperationAsync(tableName, false,
-               (b, te) => b.Replace(te),
+               (op, te) => op.Replace(te),
                values);
         }
 
         public async Task MergeAsync(string tableName, IEnumerable<Value> values)
         {
             await this.BatchedOperationAsync(tableName, true,
-               (b, te) => b.InsertOrMerge(te),
+               (op, te) => op.InsertOrMerge(te),
                values);
         }
 
@@ -144,7 +165,7 @@
             }
 
             await this.BatchedOperationAsync(tableName, true,
-               (b, te) => b.Delete(te),
+               (op, te) => op.Delete(te),
                rowIds);
         }
 
@@ -157,65 +178,70 @@
             string tableName,
             bool createTable,
             Action<TableBatchOperation, ITableEntity> action,
-            IEnumerable<Value> rows)
+            IEnumerable<Value> values)
         {
             EnsureArg.IsNotNullOrEmpty(tableName, nameof(tableName));
-            EnsureArg.IsNotNull(rows, nameof(rows));
+            EnsureArg.IsNotNull(values, nameof(values));
 
-            var table = await this.GetTableAsync(tableName, createTable);
+            var table = await this.EnsureTableAsync(tableName, createTable);
             if (table == null)
             {
                 return;
             }
 
-            await Task.WhenAll(rows.GroupBy(e => e.PartitionKey).Select(g => this.BatchedOperationAsync(table, g, action)));
+            await Task.WhenAll(values.GroupBy(e => e.PartitionKey).Select(g => this.BatchedOperationAsync(table, g, action)));
         }
 
-        private async Task BatchedOperationAsync(CloudTable table, IGrouping<string, Value> group, Action<TableBatchOperation, ITableEntity> action)
+        private async Task BatchedOperationAsync(
+            CloudTable table,
+            IGrouping<string, Value> valueGroups,
+            Action<TableBatchOperation, ITableEntity> action)
         {
-            foreach (IEnumerable<Value> chunk in group.Chunk(MaxInsertLimit))
+            foreach (IEnumerable<Value> valuesChunk in valueGroups.Chunk(this.options.MaxInsertLimit))
             {
-                if (chunk == null)
+                if (valuesChunk == null)
                 {
                     break;
                 }
 
-                var chunks = new List<Value>(chunk);
+                var values = new List<Value>(valuesChunk);
                 var batch = new TableBatchOperation();
-                foreach (Value row in chunks)
+                foreach (var value in values)
                 {
-                    action(batch, new EntityAdapter(row));
+                    action(batch, new EntityAdapter(
+                        value,
+                        this.isCosmos ? new[] { "Id", "Timestamp" } : null));
                 }
 
                 var result = await this.ExecuteBatchAsync(table, batch);
-                for (int i = 0; i < result.Count && i < chunks.Count; i++)
+                for (int i = 0; i < result.Count && i < values.Count; i++)
                 {
                     var tableResult = result[i];
-                    var row = chunks[i];
+                    var value = values[i];
                 }
             }
         }
 
         private async Task BatchedOperationAsync(string tableName, bool createTable,
            Action<TableBatchOperation, ITableEntity> action,
-           IEnumerable<Key> rowIds)
+           IEnumerable<Key> keys)
         {
             EnsureArg.IsNotNullOrEmpty(tableName, nameof(tableName));
 
-            if (rowIds == null)
+            if (keys == null)
             {
                 return;
             }
 
-            var table = await this.GetTableAsync(tableName, createTable);
+            var table = await this.EnsureTableAsync(tableName, createTable);
             if (table == null)
             {
                 return;
             }
 
-            foreach (IGrouping<string, Key> group in rowIds.GroupBy(e => e.PartitionKey))
+            foreach (var group in keys.GroupBy(e => e.PartitionKey))
             {
-                foreach (IEnumerable<Key> chunk in group.Chunk(MaxInsertLimit))
+                foreach (var chunk in group.Chunk(this.options.MaxInsertLimit))
                 {
                     if (chunk == null)
                     {
@@ -223,9 +249,11 @@
                     }
 
                     var batch = new TableBatchOperation();
-                    foreach (var row in chunk)
+                    foreach (var key in chunk)
                     {
-                        action(batch, new EntityAdapter(row));
+                        action(batch, new EntityAdapter(
+                            key,
+                            this.isCosmos ? new[] { "Id", "Timestamp" } : null));
                     }
 
                     await this.ExecuteBatchAsync(table, batch);
@@ -233,13 +261,13 @@
             }
         }
 
-        private async Task<CloudTable> GetTableAsync(string tableName, bool createIfNotExists)
+        private async Task<CloudTable> EnsureTableAsync(string tableName, bool createIfNotExists)
         {
             EnsureArg.IsNotNullOrEmpty(tableName, nameof(tableName));
 
             if (!new Regex("^[A-Za-z][A-Za-z0-9]{2,62}$").IsMatch(tableName))
             {
-                throw new ArgumentException($"invalid table name: {tableName}", nameof(tableName));
+                throw new ArgumentException($"table name {tableName} not valid", nameof(tableName));
             }
 
             var cached = this.tableInfos.TryGetValue(tableName, out TableInfo tag);
@@ -321,9 +349,13 @@
             return result;
         }
 
-        private async Task<IEnumerable<Value>> InternalGetAsync(string tableName, Key key, int take)
+        private async Task<IEnumerable<Value>> FindAsync(
+            string tableName,
+            Key key = null,
+            int take = -1,
+            IEnumerable<Criteria> criterias = null)
         {
-            var table = await this.GetTableAsync(tableName, false);
+            var table = await this.EnsureTableAsync(tableName, false);
             if (table == null)
             {
                 return new List<Value>();
@@ -335,7 +367,7 @@
                 filters.Add(TableQuery.GenerateFilterCondition(
                    "PartitionKey",
                    QueryComparisons.Equal,
-                   this.EncodeKey(key.PartitionKey)));
+                   WebUtility.UrlEncode(key.PartitionKey)));
             }
 
             if (key?.RowKey != null)
@@ -343,8 +375,10 @@
                 filters.Add(TableQuery.GenerateFilterCondition(
                    "RowKey",
                    QueryComparisons.Equal,
-                   this.EncodeKey(key.RowKey)));
+                   WebUtility.UrlEncode(key.RowKey)));
             }
+
+            this.Map(criterias, filters);
 
             var query = new TableQuery();
             if (filters.Count > 0)
@@ -376,10 +410,53 @@
             return entities.Select(this.ToValue).ToList();
         }
 
-        private string EncodeKey(string key)
+        private void Map(IEnumerable<Criteria> criterias, List<string> filters)
         {
-            //todo: read more: https://msdn.microsoft.com/library/azure/dd179338.aspx
-            return WebUtility.UrlEncode(key);
+            foreach (var criteria in criterias.Safe())
+            {
+                if (criteria.Value is int i)
+                {
+                    filters.Add(TableQuery.GenerateFilterConditionForInt(
+                       criteria.Name,
+                       criteria.Operator.ToAbbreviation(),
+                       i));
+                }
+                else if (criteria.Value is double d)
+                {
+                    filters.Add(TableQuery.GenerateFilterConditionForDouble(
+                       criteria.Name,
+                       criteria.Operator.ToAbbreviation(),
+                       d));
+                }
+                else if (criteria.Value is long l)
+                {
+                    filters.Add(TableQuery.GenerateFilterConditionForLong(
+                       criteria.Name,
+                       criteria.Operator.ToAbbreviation(),
+                       l));
+                }
+                else if (criteria.Value is bool b)
+                {
+                    filters.Add(TableQuery.GenerateFilterConditionForBool(
+                       criteria.Name,
+                       criteria.Operator.ToAbbreviation(),
+                       b));
+                }
+                else if (criteria.Value is DateTime dt)
+                {
+                    filters.Add(TableQuery.GenerateFilterConditionForDate(
+                       criteria.Name,
+                       criteria.Operator.ToAbbreviation(),
+                       dt));
+                }
+                else
+                {
+                    filters.Add(TableQuery.GenerateFilterCondition(
+                       criteria.Name,
+                       criteria.Operator.ToAbbreviation(),
+                       WebUtility.UrlEncode(criteria.Value.As<string>())));
+                }
+            }
         }
 
         private class TableInfo

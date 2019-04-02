@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.RequestFiltering.App
+﻿namespace Naos.Core.Common
 {
     public enum CriteriaOperator
     {
@@ -9,6 +9,12 @@
         Equal = 10,
 
         /// <summary>
+        /// Equal to
+        /// </summary>
+        [CriteriaOperatorMetadata(Value = "!=", Abbreviation = "ne")]
+        NotEqual = 11,
+
+        /// <summary>
         /// Greater than
         /// </summary>
         [CriteriaOperatorMetadata(Value = ">", Abbreviation = "gt")]
@@ -17,7 +23,7 @@
         /// <summary>
         /// Greater than or equal to
         /// </summary>
-        [CriteriaOperatorMetadata(Value = ">=", Abbreviation = "gte")]
+        [CriteriaOperatorMetadata(Value = ">=", Abbreviation = "ge")]
         GreaterThanOrEqual = 21,
 
         /// <summary>
@@ -29,7 +35,7 @@
         /// <summary>
         /// Less than or equal to
         /// </summary>
-        [CriteriaOperatorMetadata(Value = "<=", Abbreviation = "lte")]
+        [CriteriaOperatorMetadata(Value = "<=", Abbreviation = "le")]
         LessThanOrEqual = 31,
 
         /// <summary>
