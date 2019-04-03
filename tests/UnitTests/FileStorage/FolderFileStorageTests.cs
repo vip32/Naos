@@ -3,6 +3,7 @@
     using System.IO;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
     using Naos.Core.FileStorage.Domain;
     using Naos.Core.FileStorage.Infrastructure;
     using NSubstitute;
@@ -38,6 +39,16 @@
         public override Task CanSaveFilesAsync()
         {
             return base.CanSaveFilesAsync();
+        }
+
+        [Fact]
+        public async Task CanSaveFilesWithSerializersAsync()
+        {
+            await base.CanSaveFilesWithSerializerAsync(new Base64Serializer(), "base64");
+            await base.CanSaveFilesWithSerializerAsync(new BsonDataSerializer(), "bson");
+            await base.CanSaveFilesWithSerializerAsync(new HexSerializer(), "hex");
+            await base.CanSaveFilesWithSerializerAsync(new JsonNetSerializer(), "json");
+            await base.CanSaveFilesWithSerializerAsync(new MessagePackSerializer(), "mpack");
         }
 
         [Fact]

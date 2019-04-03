@@ -78,7 +78,7 @@
 
                 try
                 {
-                    for (int i = 0; i < lambda.Parameters.Count; i++)
+                    for (var i = 0; i < lambda.Parameters.Count; i++)
                     {
                         replacementParams.Add(lambda.Parameters[i], invocationExpression.Arguments[i]);
                     }
@@ -120,7 +120,7 @@
 
                     try
                     {
-                        for (int i = 0; i < lambda.Parameters.Count; i++)
+                        for (var i = 0; i < lambda.Parameters.Count; i++)
                         {
                             replacementParams.Add(lambda.Parameters[i], expression.Arguments[i + 1]);
                         }
@@ -177,7 +177,7 @@
 
                 if (input.Expression is ConstantExpression)
                 {
-                    object obj = ((ConstantExpression)input.Expression).Value;
+                    var obj = ((ConstantExpression)input.Expression).Value;
                     if (obj == null)
                     {
                         return input;
@@ -190,7 +190,7 @@
                     }
 
                     var fi = (FieldInfo)input.Member;
-                    object result = fi.GetValue(obj);
+                    var result = fi.GetValue(obj);
                     if (result is Expression)
                     {
                         return this.Visit((Expression)result);
@@ -402,7 +402,7 @@
                     else if (expression != expressions[i])
                     {
                         list = new List<Expression>(n);
-                        for (int j = 0; j < i; j++)
+                        for (var j = 0; j < i; j++)
                         {
                             list.Add(expressions[j]);
                         }
@@ -460,7 +460,7 @@
                     else if (binding != original[i])
                     {
                         list = new List<MemberBinding>(n);
-                        for (int j = 0; j < i; j++)
+                        for (var j = 0; j < i; j++)
                         {
                             list.Add(original[j]);
                         }
@@ -485,7 +485,7 @@
                     else if (element != original[i])
                     {
                         list = new List<ElementInit>(n);
-                        for (int j = 0; j < i; j++)
+                        for (var j = 0; j < i; j++)
                         {
                             list.Add(original[j]);
                         }

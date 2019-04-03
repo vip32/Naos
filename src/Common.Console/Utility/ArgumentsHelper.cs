@@ -16,7 +16,7 @@
             line = line.Replace("\0", string.Empty);
             var result = new List<string>();
             var currentArgument = new StringBuilder();
-            char currentQuote = char.MinValue;
+            var currentQuote = char.MinValue;
 
             void reset()
             {
@@ -25,7 +25,7 @@
                 currentQuote = char.MinValue;
             }
 
-            foreach (char c in line)
+            foreach (var c in line)
             {
                 if (currentQuote == char.MinValue)
                 {

@@ -3,7 +3,7 @@
     using System.Drawing;
     using System.IO;
 
-    public static class Logo
+    public static class ResourcesHelper
     {
         public static Bitmap GetLogoAsBitmap()
         {
@@ -31,8 +31,9 @@
                 System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Naos.Core.Common.Resources.favicon.ico")).ReadAllBytes();
         }
 
-        public static string GetLogoText()
+        public static string GetLogoAsString()
         {
+            // generated: https://www.text-image.com/convert/pic2ascii.cgi
             return @"
     `::`     .:`      :/.       `.::::-`     .-/:/--`
     .oo+-    :o`     /:++-     -o/`   -o/`  +o:`  `o/

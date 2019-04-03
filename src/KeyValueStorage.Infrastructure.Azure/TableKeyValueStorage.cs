@@ -68,13 +68,13 @@
             return result;
         }
 
-        public async Task<bool> DeleteAsync(string tableName)
+        public async Task<bool> DeleteTableAsync(string tableName)
         {
             var table = await this.EnsureTableAsync(tableName, false);
             if (table != null)
             {
                 await table.DeleteAsync();
-                return this.tableInfos.TryRemove(tableName, out TableInfo tag);
+                return this.tableInfos.TryRemove(tableName, out var tag);
             }
 
             return false;
@@ -157,16 +157,16 @@
                values);
         }
 
-        public async Task DeleteAsync(string tableName, IEnumerable<Key> rowIds)
+        public async Task DeleteAsync(string tableName, IEnumerable<Key> keys)
         {
-            if (rowIds == null)
+            if (keys == null)
             {
                 return;
             }
 
             await this.BatchedOperationAsync(tableName, true,
                (op, te) => op.Delete(te),
-               rowIds);
+               keys);
         }
 
         public void Dispose()
@@ -197,7 +197,7 @@
             IGrouping<string, Value> valueGroups,
             Action<TableBatchOperation, ITableEntity> action)
         {
-            foreach (IEnumerable<Value> valuesChunk in valueGroups.Chunk(this.options.MaxInsertLimit))
+            foreach (var valuesChunk in valueGroups.Chunk(this.options.MaxInsertLimit))
             {
                 if (valuesChunk == null)
                 {
@@ -214,7 +214,7 @@
                 }
 
                 var result = await this.ExecuteBatchAsync(table, batch);
-                for (int i = 0; i < result.Count && i < values.Count; i++)
+                for (var i = 0; i < result.Count && i < values.Count; i++)
                 {
                     var tableResult = result[i];
                     var value = values[i];
@@ -270,7 +270,7 @@
                 throw new ArgumentException($"table name {tableName} not valid", nameof(tableName));
             }
 
-            var cached = this.tableInfos.TryGetValue(tableName, out TableInfo tag);
+            var cached = this.tableInfos.TryGetValue(tableName, out var tag);
             if (!cached)
             {
                 tag = new TableInfo
@@ -383,8 +383,8 @@
             var query = new TableQuery();
             if (filters.Count > 0)
             {
-                string filter = filters[0];
-                for (int i = 1; i < filters.Count; i++)
+                var filter = filters[0];
+                for (var i = 1; i < filters.Count; i++)
                 {
                     filter = TableQuery.CombineFilters(filter, TableOperators.And, filters[i]);
                 }

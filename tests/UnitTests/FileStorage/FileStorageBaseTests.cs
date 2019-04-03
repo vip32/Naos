@@ -207,6 +207,39 @@
             }
         }
 
+        public virtual async Task CanSaveFilesWithSerializerAsync(ISerializer serializer, string fileExtension)
+        {
+            await this.ResetAsync();
+
+            var storage = this.GetStorage();
+            if (storage == null)
+            {
+                return;
+            }
+
+            using (storage)
+            {
+                var path = $"entity-{Guid.NewGuid().ToString("N").Substring(10)}.{fileExtension}";
+                Assert.False(await storage.ExistsAsync(path));
+
+                var entity = new StubEntity
+                {
+                    FirstName = "John",
+                    LastName = "Doe"
+                };
+
+                var saveResult = await storage.SaveFileObjectAsync(path, entity, serializer); // write
+                Assert.True(saveResult);
+
+                Assert.Single(await FileStorageExtensions.GetFileInformationsAsync(storage));
+                Assert.True(await storage.ExistsAsync(path));
+
+                var getResult = await storage.GetFileObjectAsync<StubEntity>(path, serializer); // read
+                Assert.Equal("John", getResult.FirstName);
+                Assert.Equal("Doe", getResult.LastName);
+            }
+        }
+
         public virtual async Task CanDeleteEntireFolderAsync()
         {
             await this.ResetAsync();
@@ -360,7 +393,7 @@
             using (storage)
             {
                 const string path = "user.xml";
-                var element = XElement.Parse("<user>Blake</user>");
+                var element = XElement.Parse("<user>Doe</user>");
 
                 using (var memoryStream = new MemoryStream())
                 {
@@ -393,23 +426,23 @@
 
             using (storage)
             {
-                var path = "blake.txt";
+                var path = "doe.txt";
                 using (var memoryStream = new MemoryStream())
                 {
                     long offset;
                     using (var writer = new StreamWriter(memoryStream, Encoding.UTF8, 1024, true))
                     {
                         writer.AutoFlush = true;
-                        await writer.WriteAsync("Eric");
+                        await writer.WriteAsync("John");
                         offset = memoryStream.Position;
-                        await writer.WriteAsync("Blake");
+                        await writer.WriteAsync("Doe");
                     }
 
                     memoryStream.Seek(offset, SeekOrigin.Begin);
                     await storage.SaveFileAsync(path, memoryStream);
                 }
 
-                Assert.Equal("Blake", await storage.GetFileContentsAsync(path));
+                Assert.Equal("Doe", await storage.GetFileContentsAsync(path));
             }
         }
 
@@ -450,6 +483,13 @@
         protected virtual IFileStorage GetStorage()
         {
             return null;
+        }
+
+        public class StubEntity
+        {
+            public string FirstName { get; set; }
+
+            public string LastName { get; set; }
         }
     }
 }

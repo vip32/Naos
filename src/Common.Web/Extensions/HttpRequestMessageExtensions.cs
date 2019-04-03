@@ -131,7 +131,7 @@
                 return default;
             }
 
-            return !source.Headers.TryGetValues(name, out IEnumerable<string> values) ? null : values.First();
+            return !source.Headers.TryGetValues(name, out var values) ? null : values.First();
         }
 
         /// <summary>
@@ -147,7 +147,7 @@
                 return default;
             }
 
-            return !source.Headers.TryGetValues(name, out IEnumerable<string> keys) ? null : keys;
+            return !source.Headers.TryGetValues(name, out var keys) ? null : keys;
         }
 
         public static IDictionary<string, string> GetHeaders(

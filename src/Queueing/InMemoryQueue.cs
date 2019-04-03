@@ -335,8 +335,8 @@
 
         private TimeSpan GetRetryDelay(int attempts)
         {
-            int maxMultiplier = this.options.RetryMultipliers.Length > 0 ? this.options.RetryMultipliers.Last() : 1;
-            int multiplier = attempts <= this.options.RetryMultipliers.Length ? this.options.RetryMultipliers[attempts - 1] : maxMultiplier;
+            var maxMultiplier = this.options.RetryMultipliers.Length > 0 ? this.options.RetryMultipliers.Last() : 1;
+            var multiplier = attempts <= this.options.RetryMultipliers.Length ? this.options.RetryMultipliers[attempts - 1] : maxMultiplier;
             return TimeSpan.FromMilliseconds((int)(this.options.RetryDelay.TotalMilliseconds * multiplier));
         }
     }

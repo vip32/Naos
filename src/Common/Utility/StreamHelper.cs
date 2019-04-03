@@ -57,7 +57,7 @@
             }
 
             var buffer = new byte[16 * 1024];
-            using (MemoryStream ms = new MemoryStream())
+            using (var ms = new MemoryStream())
             {
                 int read;
                 while ((read = stream.Read(buffer, 0, buffer.Length)) > 0)

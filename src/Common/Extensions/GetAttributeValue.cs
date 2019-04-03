@@ -9,7 +9,7 @@
         public static TE GetAttributeValue<T, TE>(this Enum enumeration, Func<T, TE> expression)
         where T : Attribute
         {
-            T attribute =
+            var attribute =
               enumeration
                 .GetType()
                 .GetMember(enumeration.ToString())

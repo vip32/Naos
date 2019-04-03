@@ -21,6 +21,18 @@
                 cancellationToken);
         }
 
+        public static Task<bool> SaveFileObjectAsync<T>(this IFileStorage storage, string path, T data, ISerializer serializer, CancellationToken cancellationToken = default)
+        {
+            EnsureArg.IsNotNull(serializer, nameof(serializer));
+            EnsureArg.IsNotNullOrEmpty(path, nameof(path));
+
+            var bytes = serializer.SerializeToBytes(data);
+            return storage.SaveFileAsync(
+                path,
+                new MemoryStream(bytes),
+                cancellationToken);
+        }
+
         public static async Task<T> GetFileObjectAsync<T>(this IFileStorage storage, string path, CancellationToken cancellationToken = default)
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
@@ -30,6 +42,22 @@
                 if (stream != null)
                 {
                     return storage.Serializer.Deserialize<T>(stream);
+                }
+            }
+
+            return default;
+        }
+
+        public static async Task<T> GetFileObjectAsync<T>(this IFileStorage storage, string path, ISerializer serializer, CancellationToken cancellationToken = default)
+        {
+            EnsureArg.IsNotNullOrEmpty(path, nameof(path));
+            EnsureArg.IsNotNull(serializer, nameof(serializer));
+
+            using (var stream = await storage.GetFileStreamAsync(path, cancellationToken).AnyContext())
+            {
+                if (stream != null)
+                {
+                    return serializer.Deserialize<T>(stream);
                 }
             }
 

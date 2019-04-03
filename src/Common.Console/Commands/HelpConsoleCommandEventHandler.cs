@@ -5,7 +5,6 @@
     using System.Threading;
     using System.Threading.Tasks;
     using CommandLine;
-    using Console = Colorful.Console;
 
     public class HelpConsoleCommandEventHandler : ConsoleCommandEventHandler<HelpConsoleCommand>
     {
@@ -20,7 +19,7 @@
         {
             foreach (var command in this.commands)
             {
-                Console.WriteLine($"{command.GetType().GetAttributeValue<VerbAttribute, string>(a => a.Name) ?? "?NAME?"} - {command.GetType().GetAttributeValue<VerbAttribute, string>(a => a.HelpText)}", Color.Gray); // ({command.GetType()})
+                Colorful.Console.WriteLine($"{command.GetType().GetAttributeValue<VerbAttribute, string>(a => a.Name) ?? "?NAME?"} - {command.GetType().GetAttributeValue<VerbAttribute, string>(a => a.HelpText)}", Color.Gray); // ({command.GetType()})
             }
 
             return Task.FromResult(true);

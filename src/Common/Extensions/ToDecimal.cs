@@ -9,7 +9,7 @@
                 return @default;
             }
 
-            var result = decimal.TryParse(source, out decimal parsedValue);
+            var result = decimal.TryParse(source, out var parsedValue);
 
             if (!result)
             {
@@ -26,7 +26,7 @@
                 return @default;
             }
 
-            var result = decimal.TryParse(source, out decimal parsedValue);
+            var result = decimal.TryParse(source, out var parsedValue);
 
             if (!result)
             {

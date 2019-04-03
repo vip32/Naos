@@ -56,9 +56,9 @@
         {
             EnsureArg.IsNotNull(action, nameof(action));
 
-            int attempts = 1;
+            var attempts = 1;
             var startTime = DateTime.UtcNow;
-            int currentBackoffTime = DefaultBackoffIntervals[0];
+            var currentBackoffTime = DefaultBackoffIntervals[0];
             if (retryInterval != null)
             {
                 currentBackoffTime = (int)retryInterval.Value.TotalMilliseconds;

@@ -155,7 +155,7 @@
 
         public static async Task<T> ReadAsJsonAsync<T>(this HttpContent content)
         {
-            string json = await content.ReadAsStringAsync();
+            var json = await content.ReadAsStringAsync();
             if(json.IsNullOrEmpty())
             {
                 return default;
@@ -182,7 +182,7 @@
                 return null;
             }
 
-            return !source.Headers.TryGetValues(name, out IEnumerable<string> keys) ? null : keys.First();
+            return !source.Headers.TryGetValues(name, out var keys) ? null : keys.First();
         }
     }
 }

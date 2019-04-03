@@ -244,7 +244,7 @@
                 return source;
             }
 
-            string[] pathParts = path.Split('.');
+            var pathParts = path.Split('.');
 
             // make sure all tokens exist
             var tokenPointer = source;
@@ -334,7 +334,7 @@
             }
 
             var tokens = new List<JToken>();
-            foreach (JToken token in container.Children())
+            foreach (var token in container.Children())
             {
                 if (token is JProperty p && propertyNames.Contains(p.Name))
                 {
@@ -344,7 +344,7 @@
                 token.RemoveProperties(propertyNames);
             }
 
-            foreach (JToken token in tokens)
+            foreach (var token in tokens)
             {
                 token.Remove();
             }

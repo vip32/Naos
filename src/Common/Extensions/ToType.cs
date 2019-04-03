@@ -35,7 +35,7 @@
                 // attempt to match enum by name.
                 if (EnumExtensions.TryEnumIsDefined(targetType, value.ToString()))
                 {
-                    object parsedValue = Enum.Parse(targetType, value.ToString(), false);
+                    var parsedValue = Enum.Parse(targetType, value.ToString(), false);
                     return (T)parsedValue;
                 }
 
@@ -49,7 +49,7 @@
 
             if (converter.CanConvertFrom(valueType))
             {
-                object convertedValue = converter.ConvertFrom(value);
+                var convertedValue = converter.ConvertFrom(value);
                 return (T)convertedValue;
             }
 
@@ -60,7 +60,7 @@
 
             try
             {
-                object convertedValue = Convert.ChangeType(value, targetType);
+                var convertedValue = Convert.ChangeType(value, targetType);
                 return (T)convertedValue;
             }
             catch (Exception e)

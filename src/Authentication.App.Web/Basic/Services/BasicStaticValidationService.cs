@@ -23,9 +23,9 @@
 
         public(bool Authenticated, IEnumerable<Claim> Claims) Validate(string value)
         {
-            byte[] headerValueBytes = Convert.FromBase64String(value);
-            string userAndPassword = Encoding.UTF8.GetString(headerValueBytes);
-            string[] parts = userAndPassword.Split(':');
+            var headerValueBytes = Convert.FromBase64String(value);
+            var userAndPassword = Encoding.UTF8.GetString(headerValueBytes);
+            var parts = userAndPassword.Split(':');
 
             if(parts.Length == 2)
             {

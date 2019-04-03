@@ -18,7 +18,7 @@
 
         public override Expression<Func<T, bool>> ToExpression()
         {
-            Expression<Func<T, bool>> expression = this.specification.ToExpression();
+            var expression = this.specification.ToExpression();
 
             var notepression = Expression.Not(expression.Body);
             return Expression.Lambda<Func<T, bool>>(notepression, expression.Parameters.Single());

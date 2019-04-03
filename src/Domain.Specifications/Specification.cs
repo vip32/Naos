@@ -49,7 +49,7 @@
                 return false;
             }
 
-            Func<T, bool> predicate = this.ToPredicate();
+            var predicate = this.ToPredicate();
             return predicate(entity);
         }
 

@@ -41,8 +41,8 @@
 
             var sb = new StringBuilder();
 
-            int previousIndex = 0;
-            int index = source.IndexOf(oldValue, comparison);
+            var previousIndex = 0;
+            var index = source.IndexOf(oldValue, comparison);
 
             while (index != -1)
             {

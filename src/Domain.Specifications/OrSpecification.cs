@@ -21,8 +21,8 @@
 
         public override Expression<Func<T, bool>> ToExpression()
         {
-            Expression<Func<T, bool>> leftExpression = this.leftSpecification.ToExpression();
-            Expression<Func<T, bool>> rightExpression = this.rightSpecification.ToExpression();
+            var leftExpression = this.leftSpecification.ToExpression();
+            var rightExpression = this.rightSpecification.ToExpression();
 
             //var orExpression = Expression.OrElse(leftExpression.Body, rightExpression.Body);
             var orExpression = Expression.OrElse(

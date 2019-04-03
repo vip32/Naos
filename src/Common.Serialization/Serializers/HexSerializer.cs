@@ -27,7 +27,7 @@
         public object Deserialize(Stream input, Type type)
         {
             // hex > bytes > json str > obj
-            string hex = Encoding.UTF8.GetString(input.ReadAllBytes());
+            var hex = Encoding.UTF8.GetString(input.ReadAllBytes());
             var bytes = hex.Split(' ')
                .Select(item => Convert.ToByte(item, 16)).ToArray();
 
@@ -36,18 +36,12 @@
 
         public T Deserialize<T>(Stream input)
         {
-            byte[] buffer = new byte[16 * 1024];
-            using (var ms = new MemoryStream())
-            {
-                int read;
-                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    ms.Write(buffer, 0, read);
-                }
+            // hex > bytes > json str > obj
+            var hex = Encoding.UTF8.GetString(input.ReadAllBytes());
+            var bytes = hex.Split(' ')
+               .Select(item => Convert.ToByte(item, 16)).ToArray();
 
-                string jsonBack = Encoding.UTF8.GetString(ms.ToArray());
-                return JsonConvert.DeserializeObject<T>(jsonBack);
-            }
+            return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(bytes), this.settings);
         }
     }
 }

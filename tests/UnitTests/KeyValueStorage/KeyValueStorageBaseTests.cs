@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.UnitTests.KeyValueStorage.Infrastructure
+﻿namespace Naos.Core.UnitTests.KeyValueStorage
 {
     using System;
     using System.Collections.Generic;
@@ -54,13 +54,15 @@
                 }
             };
 
-            await sut.InsertAsync("tests", new List<Value>(values)).AnyContext();
+            await sut.InsertAsync("StubEntities", new List<Value>(values)).AnyContext();
 
-            var result = await sut.FindOneAsync("tests", values[0].PartitionKey, values[0].RowKey).AnyContext();
+            var result = await sut.FindOneAsync("StubEntities", values[0].PartitionKey, values[0].RowKey).AnyContext();
 
             result.ShouldNotBeNull();
             //result["Id"].ShouldBe(values[0]["Id"]);
             result.PartitionKey.ShouldBe(values[0].PartitionKey);
+
+            await sut.DeleteTableAsync("StubEntities").AnyContext();
         }
 
         public virtual async Task InsertAndFindOne_ByKeys_Typed_Test()
@@ -84,6 +86,8 @@
             result.ShouldNotBeNull();
             //result.Id.ShouldBe(values.FirstOrDefault()?.Id);
             result.PartitionKey.ShouldBe(values.FirstOrDefault()?.PartitionKey);
+
+            await sut.DeleteTableAsync("StubEntities").AnyContext();
         }
 
         public virtual async Task InsertAndFindAll_ByCriteria_Typed_Test()
@@ -114,6 +118,8 @@
             {
                 entity.LastName.ShouldBe(lastName);
             }
+
+            await sut.DeleteTableAsync("StubEntities").AnyContext();
         }
 
         public virtual async Task CreateAndDeleteTable_Test()
@@ -124,7 +130,7 @@
                 return;
             }
 
-            var tableName = "test" + Core.Common.RandomGenerator.GenerateString(4);
+            var tableName = "StubEntities" + Core.Common.RandomGenerator.GenerateString(4);
 
             await sut.InsertAsync(tableName, new List<Value>
             {
@@ -139,7 +145,7 @@
                 }
             }).AnyContext();
 
-            await sut.DeleteAsync(tableName).AnyContext();
+            await sut.DeleteTableAsync(tableName).AnyContext();
         }
 
         protected virtual IKeyValueStorage GetStorage()

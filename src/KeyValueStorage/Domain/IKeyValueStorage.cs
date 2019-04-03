@@ -8,19 +8,6 @@
     public interface IKeyValueStorage : IDisposable
     {
         /// <summary>
-        /// Returns the list of all table names in the storage.
-        /// </summary>
-        /// <returns></returns>
-        Task<IEnumerable<string>> GetTableNames();
-
-        /// <summary>
-        /// Deletes entire table. If table doesn't exist no errors are raised.
-        /// </summary>
-        /// <param name="tableName">Name of the table to delete. Passing null raises <see cref="ArgumentNullException"/></param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task<bool> DeleteAsync(string tableName);
-
-        /// <summary>
         /// Gets values by key
         /// </summary>
         /// <param name="tableName">Table name, required.</param>
@@ -78,8 +65,21 @@
         /// Deletes multiple values
         /// </summary>
         /// <param name="tableName"></param>
-        /// <param name="rowIds"></param>
+        /// <param name="keys"></param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task DeleteAsync(string tableName, IEnumerable<Key> rowIds);
+        Task DeleteAsync(string tableName, IEnumerable<Key> keys);
+
+        /// <summary>
+        /// Returns the list of all table names in the storage.
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<string>> GetTableNames();
+
+        /// <summary>
+        /// Deletes entire table. If table doesn't exist no errors are raised.
+        /// </summary>
+        /// <param name="tableName">Name of the table to delete. Passing null raises <see cref="ArgumentNullException"/></param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task<bool> DeleteTableAsync(string tableName);
     }
 }

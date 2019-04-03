@@ -61,7 +61,7 @@
         [Fact]
         public void TestIntValueWithValueReturnsFalse()
         {
-            int id0 = 1;
+            var id0 = 1;
             var id1 = 1;
             object id2 = 1;
 
@@ -73,7 +73,7 @@
         [Fact]
         public void TestIntValueWithValueReturnsTrue()
         {
-            int id0 = 0;
+            var id0 = 0;
             var id1 = 0;
             object id2 = 0;
 

@@ -22,22 +22,22 @@
                 return Path.GetFullPath(path);
             }
 
-            string dataDirectory = GetDataDirectory();
-            int length = DATADIRECTORY.Length;
+            var dataDirectory = GetDataDirectory();
+            var length = DATADIRECTORY.Length;
             if (path.Length <= length)
             {
                 return dataDirectory;
             }
 
-            string relativePath = path.Substring(length);
-            char c = relativePath[0];
+            var relativePath = path.Substring(length);
+            var c = relativePath[0];
 
             if (c == Path.DirectorySeparatorChar || c == Path.AltDirectorySeparatorChar)
             {
                 relativePath = relativePath.Substring(1);
             }
 
-            string fullPath = Path.Combine(dataDirectory ?? string.Empty, relativePath);
+            var fullPath = Path.Combine(dataDirectory ?? string.Empty, relativePath);
             return Path.GetFullPath(fullPath);
         }
 
@@ -45,7 +45,7 @@
         {
             try
             {
-                string dataDirectory = AppDomain.CurrentDomain.GetData("DataDirectory") as string;
+                var dataDirectory = AppDomain.CurrentDomain.GetData("DataDirectory") as string;
                 if (string.IsNullOrEmpty(dataDirectory))
                 {
                     dataDirectory = AppContext.BaseDirectory;

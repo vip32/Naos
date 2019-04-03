@@ -53,7 +53,7 @@
                 throw new BadRequestException(this.ModelState);
             }
 
-            bool exists = (await this.context.RegistryClient.RegistrationsAsync().AnyContext()).Any(r => r.Id.Equals(model.Id));
+            var exists = (await this.context.RegistryClient.RegistrationsAsync().AnyContext()).Any(r => r.Id.Equals(model.Id));
             await this.context.RegistryClient.RegisterAsync(model).AnyContext();
             if (exists)
             {

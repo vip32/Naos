@@ -42,7 +42,7 @@
         [Benchmark]
         public StubModel RoundTrip()
         {
-            byte[] serializedData = this.serializer.SerializeToBytes(this.data);
+            var serializedData = this.serializer.SerializeToBytes(this.data);
             return this.serializer.Deserialize<StubModel>(serializedData);
         }
 

@@ -2,7 +2,6 @@
 {
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
-    using Naos.Core.Common;
     using Naos.Core.Configuration.App;
     using Serilog;
 
@@ -10,16 +9,14 @@
     {
         public static void Main(string[] args)
         {
-            CommonConsole.WriteNaosTextLogo();
+            Core.Common.Console2.WriteTextLogo();
             CreateWebHostBuilder(args).Build().Run();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((context, config) =>
-                {
-                    NaosConfigurationFactory.Extend(config, args, context.HostingEnvironment.EnvironmentName);
-                })
+                    NaosConfigurationFactory.Extend(config, args, context.HostingEnvironment.EnvironmentName))
                 //.UseUrls($"https://localhost:{GetNextAvailablePort()}")
                 .UseStartup<Startup>()
                 .UseSerilog();

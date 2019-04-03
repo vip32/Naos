@@ -98,7 +98,7 @@
             var info = type.GetMember(contentType.ToString());
             if ((info != null) && (info.Length > 0))
             {
-                object[] attrs = info[0].GetCustomAttributes(typeof(ContentTypeMetadata), false);
+                var attrs = info[0].GetCustomAttributes(typeof(ContentTypeMetadata), false);
                 if ((attrs != null) && (attrs.Length > 0))
                 {
                     return attrs[0];

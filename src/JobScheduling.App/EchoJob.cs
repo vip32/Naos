@@ -50,7 +50,7 @@
 
         public async Task EchoLongAsync(string text, CancellationToken cancellationToken)
         {
-            for (int i = 1; i <= 5; i++)
+            for (var i = 1; i <= 5; i++)
             {
                 if (cancellationToken.IsCancellationRequested)
                 {

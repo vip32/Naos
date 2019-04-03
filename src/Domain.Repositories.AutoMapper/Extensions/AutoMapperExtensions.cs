@@ -60,7 +60,7 @@
 
         private static void IgnoreUnmappedProperties(TypeMap map, IMappingExpression expr)
         {
-            foreach (string propName in map.GetUnmappedPropertyNames())
+            foreach (var propName in map.GetUnmappedPropertyNames())
             {
                 if (map.SourceType.GetProperty(propName) != null)
                 {

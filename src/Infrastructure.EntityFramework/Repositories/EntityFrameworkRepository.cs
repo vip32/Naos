@@ -158,7 +158,7 @@
                 return (null, ActionResult.None);
             }
 
-            bool isNew = entity.Id.IsDefault() || !await this.ExistsAsync(entity.Id).AnyContext();
+            var isNew = entity.Id.IsDefault() || !await this.ExistsAsync(entity.Id).AnyContext();
 
             if (this.options.PublishEvents && this.options.Mediator != null)
             {

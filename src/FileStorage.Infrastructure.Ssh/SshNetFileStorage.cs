@@ -163,7 +163,7 @@
         public async Task<int> DeleteFilesAsync(string searchPattern = null, CancellationToken cancellationToken = default)
         {
             var files = await this.GetFileListAsync(searchPattern, cancellationToken: cancellationToken).AnyContext();
-            int count = 0;
+            var count = 0;
 
             foreach (var file in files) // batch?
             {
@@ -201,15 +201,15 @@
 
         private async Task<NextPageResult> GetFiles(string searchPattern, int page, int pageSize, CancellationToken cancellationToken)
         {
-            int pagingLimit = pageSize;
-            int skip = (page - 1) * pagingLimit;
+            var pagingLimit = pageSize;
+            var skip = (page - 1) * pagingLimit;
             if (pagingLimit < int.MaxValue)
             {
                 pagingLimit = pagingLimit + 1;
             }
 
             var list = (await this.GetFileListAsync(searchPattern, pagingLimit, skip, cancellationToken).AnyContext()).ToList();
-            bool hasMore = false;
+            var hasMore = false;
             if (list.Count == pagingLimit)
             {
                 hasMore = true;
@@ -278,7 +278,7 @@
                     continue;
                 }
 
-                string path = file.FullName.TrimStart('/');
+                var path = file.FullName.TrimStart('/');
                 if (pattern != null && !pattern.IsMatch(path))
                 {
                     continue;
@@ -306,10 +306,10 @@
                 throw new ArgumentException("Unable to parse connection string uri", nameof(options.ConnectionString));
             }
 
-            string[] userParts = uri.UserInfo.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-            string username = Uri.UnescapeDataString(userParts.First());
-            string password = Uri.UnescapeDataString(userParts.Length > 0 ? userParts[1] : string.Empty);
-            int port = uri.Port > 0 ? uri.Port : 22;
+            var userParts = uri.UserInfo.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+            var username = Uri.UnescapeDataString(userParts.First());
+            var password = Uri.UnescapeDataString(userParts.Length > 0 ? userParts[1] : string.Empty);
+            var port = uri.Port > 0 ? uri.Port : 22;
 
             var authenticationMethods = new List<AuthenticationMethod>();
             if (!string.IsNullOrEmpty(password))
@@ -334,9 +334,9 @@
                     throw new ArgumentException("Unable to parse proxy uri", nameof(options.Proxy));
                 }
 
-                string[] proxyParts = proxyUri.UserInfo.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-                string proxyUsername = proxyParts.First();
-                string proxyPassword = proxyParts.Length > 0 ? proxyParts[1] : null;
+                var proxyParts = proxyUri.UserInfo.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                var proxyUsername = proxyParts.First();
+                var proxyPassword = proxyParts.Length > 0 ? proxyParts[1] : null;
 
                 var proxyType = options.ProxyType;
                 if (proxyType == ProxyTypes.None && proxyUri.Scheme != null && proxyUri.Scheme.StartsWith("http"))
@@ -360,16 +360,16 @@
 
         private void EnsureDirectoryExists(string path)
         {
-            string directory = this.NormalizePath(Path.GetDirectoryName(path));
+            var directory = this.NormalizePath(Path.GetDirectoryName(path));
             if (string.IsNullOrEmpty(directory) || this.client.Exists(directory))
             {
                 return;
             }
 
             this.logger.LogInformation($"{{LogKey:l}} create directory: {directory}", LogEventKeys.FileStorage);
-            string[] folderSegments = directory.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-            string currentDirectory = string.Empty;
-            foreach (string segment in folderSegments)
+            var folderSegments = directory.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+            var currentDirectory = string.Empty;
+            foreach (var segment in folderSegments)
             {
                 currentDirectory = string.Concat(currentDirectory, "/", segment);
                 if (!this.client.Exists(currentDirectory))
@@ -389,12 +389,12 @@
             Regex patternRegex = null;
             searchPattern = searchPattern?.Replace('\\', '/');
 
-            string prefix = searchPattern;
-            int wildcardPos = searchPattern?.IndexOf('*') ?? -1;
+            var prefix = searchPattern;
+            var wildcardPos = searchPattern?.IndexOf('*') ?? -1;
             if (searchPattern != null && wildcardPos >= 0)
             {
                 patternRegex = new Regex("^" + Regex.Escape(searchPattern).Replace("\\*", ".*?") + "$");
-                int slashPos = searchPattern.LastIndexOf('/');
+                var slashPos = searchPattern.LastIndexOf('/');
                 prefix = slashPos >= 0 ? searchPattern.Substring(0, slashPos) : string.Empty;
             }
 

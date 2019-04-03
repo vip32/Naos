@@ -164,8 +164,8 @@
             where T : class, new()
         {
             var values = value.ToDictionary().Safe();
-            values.TryGetValue("PartitionKey", out object partitionKey);
-            values.TryGetValue("RowKey", out object rowKey);
+            values.TryGetValue("PartitionKey", out var partitionKey);
+            values.TryGetValue("RowKey", out var rowKey);
 
             var result = new Value(new Key(partitionKey?.ToString(), rowKey?.ToString()));
             values.ForEach(vd => result.Add(vd.Key, vd.Value));

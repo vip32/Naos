@@ -184,7 +184,7 @@
             }
 
             searchPattern = PathHelper.Normalize(searchPattern);
-            int count = 0;
+            var count = 0;
 
             if (searchPattern[searchPattern.Length - 1] == Path.DirectorySeparatorChar)
             {
@@ -245,8 +245,8 @@
         private NextPageResult GetFiles(string searchPattern, int page, int pageSize)
         {
             var list = new List<FileInformation>();
-            int pagingLimit = pageSize;
-            int skip = (page - 1) * pagingLimit;
+            var pagingLimit = pageSize;
+            var skip = (page - 1) * pagingLimit;
             if (pagingLimit < int.MaxValue)
             {
                 pagingLimit += 1;
@@ -259,7 +259,7 @@
                 list.AddRange(this.storage.Keys.Where(k => regex.IsMatch(k)).Select(k => this.storage[k].Item1).Skip(skip).Take(pagingLimit).ToList());
             }
 
-            bool hasMore = false;
+            var hasMore = false;
             if (list.Count == pagingLimit)
             {
                 hasMore = true;

@@ -72,7 +72,7 @@
         {
             get
             {
-                if (!this.keyToValue.TryGetValue(key, out object value))
+                if (!this.keyToValue.TryGetValue(key, out var value))
                 {
                     return null;
                 }
@@ -98,8 +98,8 @@
                 return true;
             }
 
-            IEnumerable<IGrouping<Key, Value>> groups = rows.GroupBy(r => r.Key);
-            IEnumerable<int> counts = groups.Select(g => g.Count());
+            var groups = rows.GroupBy(r => r.Key);
+            var counts = groups.Select(g => g.Count());
             return counts.OrderByDescending(c => c).First() == 1;
         }
 
@@ -112,7 +112,7 @@
         {
             Value masterRow = null;
 
-            foreach (Value row in rows)
+            foreach (var row in rows)
             {
                 if (masterRow == null)
                 {
@@ -120,7 +120,7 @@
                 }
                 else
                 {
-                    foreach (KeyValuePair<string, object> cell in row)
+                    foreach (var cell in row)
                     {
                         if (!masterRow.ContainsKey(cell.Key))
                         {

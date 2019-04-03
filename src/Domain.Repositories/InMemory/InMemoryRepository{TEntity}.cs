@@ -181,8 +181,8 @@
                 return (default, ActionResult.None);
             }
 
-            bool isTransient = entity.Id.IsDefault();
-            bool isNew = isTransient || !await this.ExistsAsync(entity.Id).AnyContext();
+            var isTransient = entity.Id.IsDefault();
+            var isNew = isTransient || !await this.ExistsAsync(entity.Id).AnyContext();
 
             if (isTransient)
             {

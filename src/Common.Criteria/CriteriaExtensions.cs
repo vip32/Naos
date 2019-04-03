@@ -68,7 +68,7 @@
             var info = type.GetMember(@operator.ToString());
             if ((info != null) && (info.Length > 0))
             {
-                object[] attrs = info[0].GetCustomAttributes(typeof(CriteriaOperatorMetadata), false);
+                var attrs = info[0].GetCustomAttributes(typeof(CriteriaOperatorMetadata), false);
                 if ((attrs != null) && (attrs.Length > 0))
                 {
                     return attrs[0];

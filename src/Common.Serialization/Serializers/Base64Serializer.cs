@@ -34,14 +34,14 @@
                     ms.Write(buffer, 0, read);
                 }
 
-                string jsonBack = Encoding.UTF8.GetString(ms.ToArray());
+                var jsonBack = Encoding.UTF8.GetString(ms.ToArray());
                 return JsonConvert.DeserializeObject(jsonBack, type, this.settings);
             }
         }
 
         public T Deserialize<T>(Stream input)
         {
-            byte[] buffer = new byte[16 * 1024];
+            var buffer = new byte[16 * 1024];
             using (var ms = new MemoryStream())
             {
                 int read;
@@ -50,7 +50,7 @@
                     ms.Write(buffer, 0, read);
                 }
 
-                string jsonBack = Encoding.UTF8.GetString(ms.ToArray());
+                var jsonBack = Encoding.UTF8.GetString(ms.ToArray());
                 return JsonConvert.DeserializeObject<T>(jsonBack);
             }
         }

@@ -62,7 +62,7 @@
                 return default(TValue);
             }
 
-            return source.TryGetValue(key, out TValue value) ? value : defaultValue;
+            return source.TryGetValue(key, out var value) ? value : defaultValue;
         }
     }
 }

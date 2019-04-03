@@ -58,7 +58,7 @@
                 return null;
             }
 
-            return this.TryGetValue(key, out object value) ? value : null;
+            return this.TryGetValue(key, out var value) ? value : null;
         }
 
         public object GetValueOrDefault(string key, object defaultValue)
@@ -68,7 +68,7 @@
                 return null;
             }
 
-            return this.TryGetValue(key, out object value) ? value : defaultValue;
+            return this.TryGetValue(key, out var value) ? value : defaultValue;
         }
 
         public object GetValueOrDefault(string key, Func<object> defaultValueProvider)
@@ -78,7 +78,7 @@
                 return null;
             }
 
-            return this.TryGetValue(key, out object value) ? value : defaultValueProvider();
+            return this.TryGetValue(key, out var value) ? value : defaultValueProvider();
         }
 
         public T GetValue<T>(string key, bool throwIfKeyNotFound = false)
@@ -103,7 +103,7 @@
                 return defaultValue;
             }
 
-            object value = this[key];
+            var value = this[key];
             if (value is T)
             {
                 return (T)value;
@@ -133,7 +133,7 @@
 
         public string GetStringValue(string name, string defaultValue)
         {
-            if (!this.TryGetValue(name, out object value))
+            if (!this.TryGetValue(name, out var value))
             {
                 return defaultValue;
             }

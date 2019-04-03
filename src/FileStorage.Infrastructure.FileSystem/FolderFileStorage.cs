@@ -25,7 +25,7 @@
                 folder = Path.GetFullPath(folder);
             }
 
-            char lastCharacter = folder[folder.Length - 1];
+            var lastCharacter = folder[folder.Length - 1];
             if (!lastCharacter.Equals(Path.DirectorySeparatorChar) && !lastCharacter.Equals(Path.AltDirectorySeparatorChar))
             {
                 folder += Path.DirectorySeparatorChar;
@@ -107,14 +107,14 @@
             newPath = PathHelper.Normalize(newPath);
             lock (this.@lock)
             {
-                string directory = Path.GetDirectoryName(newPath);
+                var directory = Path.GetDirectoryName(newPath);
                 if (directory != null)
                 {
                     Directory.CreateDirectory(Path.Combine(this.Folder, directory));
                 }
 
-                string oldFullPath = Path.Combine(this.Folder, path);
-                string newFullPath = Path.Combine(this.Folder, newPath);
+                var oldFullPath = Path.Combine(this.Folder, path);
+                var newFullPath = Path.Combine(this.Folder, newPath);
                 try
                 {
                     File.Move(oldFullPath, newFullPath);
@@ -137,7 +137,7 @@
             path = PathHelper.Normalize(path);
             lock (this.@lock)
             {
-                string directory = Path.GetDirectoryName(targetPath);
+                var directory = Path.GetDirectoryName(targetPath);
                 if (directory != null)
                 {
                     Directory.CreateDirectory(Path.Combine(this.Folder, directory));
@@ -167,12 +167,12 @@
             }
 
             searchPattern = PathHelper.Normalize(searchPattern);
-            int count = 0;
+            var count = 0;
 
-            string path = Path.Combine(this.Folder, searchPattern);
+            var path = Path.Combine(this.Folder, searchPattern);
             if (path[path.Length - 1] == Path.DirectorySeparatorChar || path.EndsWith(Path.DirectorySeparatorChar + "*"))
             {
-                string directory = Path.GetDirectoryName(path);
+                var directory = Path.GetDirectoryName(path);
                 if (Directory.Exists(directory))
                 {
                     count += Directory.EnumerateFiles(directory, "*,*", SearchOption.AllDirectories).Count();
@@ -187,7 +187,7 @@
                 return Task.FromResult(count);
             }
 
-            foreach (string file in Directory.EnumerateFiles(this.Folder, searchPattern, SearchOption.AllDirectories))
+            foreach (var file in Directory.EnumerateFiles(this.Folder, searchPattern, SearchOption.AllDirectories))
             {
                 File.Delete(file);
                 count++;
@@ -236,7 +236,7 @@
                 // created below
             }
 
-            string directory = Path.GetDirectoryName(filePath);
+            var directory = Path.GetDirectoryName(filePath);
             if (directory != null)
             {
                 Directory.CreateDirectory(directory);
@@ -248,14 +248,14 @@
         private NextPageResult GetFiles(string searchPattern, int page, int pageSize)
         {
             var list = new List<FileInformation>();
-            int pagingLimit = pageSize;
-            int skip = (page - 1) * pagingLimit;
+            var pagingLimit = pageSize;
+            var skip = (page - 1) * pagingLimit;
             if (pagingLimit < int.MaxValue)
             {
                 pagingLimit = pagingLimit + 1;
             }
 
-            foreach (string path in Directory.EnumerateFiles(this.Folder, searchPattern, SearchOption.AllDirectories).Skip(skip).Take(pagingLimit))
+            foreach (var path in Directory.EnumerateFiles(this.Folder, searchPattern, SearchOption.AllDirectories).Skip(skip).Take(pagingLimit))
             {
                 var info = new FileInfo(path);
                 if (!info.Exists)
@@ -272,7 +272,7 @@
                 });
             }
 
-            bool hasMore = false;
+            var hasMore = false;
             if (list.Count == pagingLimit)
             {
                 hasMore = true;

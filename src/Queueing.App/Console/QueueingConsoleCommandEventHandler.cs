@@ -37,7 +37,7 @@
                 await queue.ProcessItemsAsync(true).AnyContext();
                 Console.WriteLine("\r\nstart enqueue", Color.LimeGreen);
 
-                for (int i = 1; i <= 2; i++)
+                for (var i = 1; i <= 2; i++)
                 {
                     await queue.EnqueueAsync(new EchoQueueEventData { Text = "+++ hello from queue item +++" }).AnyContext();
                     var metrics = queue.GetMetricsAsync().Result;

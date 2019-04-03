@@ -52,7 +52,7 @@
                 }
 
                 string value;
-                if (this.Request.Query.TryGetValue("basic", out StringValues queryValue))
+                if (this.Request.Query.TryGetValue("basic", out var queryValue))
                 {
                     // also allow the auth header to be sent in the querystring (for easy dashboard usage)
                     value = queryValue.ToString();
@@ -64,7 +64,7 @@
                         return AuthenticateResult.NoResult(); //Authorization header not in request
                     }
 
-                    if (!AuthenticationHeaderValue.TryParse(this.Request.Headers[AuthenticationKeys.AuthorizationHeaderName], out AuthenticationHeaderValue headerValue))
+                    if (!AuthenticationHeaderValue.TryParse(this.Request.Headers[AuthenticationKeys.AuthorizationHeaderName], out var headerValue))
                     {
                         return AuthenticateResult.NoResult(); //Invalid Authorization header
                     }

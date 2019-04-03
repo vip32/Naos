@@ -26,7 +26,7 @@
                 return @default;
             }
 
-            if (source.TryGetValue(key, out T result))
+            if (source.TryGetValue(key, out var result))
             {
                 return result;
             }

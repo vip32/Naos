@@ -19,7 +19,8 @@
             using (var writer = new BsonDataWriter(output))
             {
                 this.serializer.Serialize(writer, value);
-                //writer.Flush();
+                writer.Flush();
+                //output.Position = 0;
             }
         }
 

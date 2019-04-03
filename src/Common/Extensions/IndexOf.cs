@@ -31,7 +31,7 @@
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            int index = 0;
+            var index = 0;
             foreach (var item in items)
             {
                 if (predicate(item))

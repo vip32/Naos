@@ -63,7 +63,7 @@
                 {
                     var bytes = sha256.ComputeHash(stream);
                     var result = string.Empty;
-                    for (int i = 0; i < bytes.Length; i++)
+                    for (var i = 0; i < bytes.Length; i++)
                     {
                         result += string.Format("{0:X2}", bytes[i]);
                     }

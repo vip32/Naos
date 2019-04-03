@@ -27,7 +27,7 @@
                 return false;
             }
 
-            return !bool.TryParse(source, out bool parsedValue) ? @default : parsedValue;
+            return !bool.TryParse(source, out var parsedValue) ? @default : parsedValue;
         }
 
         /// <summary>
@@ -53,7 +53,7 @@
                 return false;
             }
 
-            return !bool.TryParse(source, out bool parsedValue) ? @default : parsedValue;
+            return !bool.TryParse(source, out var parsedValue) ? @default : parsedValue;
         }
     }
 }

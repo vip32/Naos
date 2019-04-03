@@ -77,10 +77,10 @@
                     ["sample-logevents2"] = this.Url.AbsolutePath("api/operations/logevents?q=Ticks=gt:636855734000000000,Environment=Development"),
                     ["sample-countries1"] = this.Url.AbsolutePath("api/countries?q=name=Belgium&order=name&take=1"),
                     ["sample-countries2"] = this.Url.AbsolutePath("api/countries?q=name=Belgium"),
-                    ["sample-customers1"] = this.Url.AbsolutePath("api/customers?q=region=East,state.updatedEpoch=gte:1548951481&order=lastName"),
-                    ["sample-customers2"] = this.Url.AbsolutePath("api/customers?q=region=East,state.updatedEpoch=gte:1548951481"),
-                    ["sample-useraccounts1"] = this.Url.AbsolutePath("api/useraccounts?q=visitCount=gte:1&order=email&take=10"),
-                    ["sample-useraccounts2"] = this.Url.AbsolutePath("api/useraccounts?q=visitCount=gte:1"),
+                    ["sample-customers1"] = this.Url.AbsolutePath("api/customers?q=region=East,state.createdDate=ge:2010-01-01&order=lastName"),
+                    ["sample-customers2"] = this.Url.AbsolutePath("api/customers?q=region=East,state.createdDate=ge:2010-01-01"),
+                    ["sample-useraccounts1"] = this.Url.AbsolutePath("api/useraccounts?q=visitCount=ge:1&order=email&take=10"),
+                    ["sample-useraccounts2"] = this.Url.AbsolutePath("api/useraccounts?q=visitCount=ge:1"),
                 },
                 Features = this.features
             };

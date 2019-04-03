@@ -55,7 +55,7 @@
             where THandler : IMessageHandler<TMessage>
         {
             var messageName = typeof(TMessage).PrettyName();
-            string ruleName = this.GetRuleName(messageName);
+            var ruleName = this.GetRuleName(messageName);
 
             if (!this.options.Map.Exists<TMessage>())
             {
@@ -147,7 +147,7 @@
             where THandler : IMessageHandler<TMessage>
         {
             var messageName = typeof(TMessage).PrettyName();
-            string ruleName = this.GetRuleName(messageName);
+            var ruleName = this.GetRuleName(messageName);
 
             this.logger.LogInformation("{LogKey:l} (name={MessageName}, orgin={MessageOrigin}, filterScope={FilterScope}, handler={MessageHandlerType})", LogEventKeys.Messaging, messageName, this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name);
 

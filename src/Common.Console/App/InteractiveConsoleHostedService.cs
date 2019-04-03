@@ -33,16 +33,27 @@
             this.commands = commands.Safe();
         }
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public Task StartAsync(CancellationToken cancellationToken)
         {
-            Console.WriteLine("\r\nnaos interactive console start", Color.LimeGreen);
+            Console.WriteLine("\r\n--- naos interactive console start", Color.LimeGreen);
 
+            Task.Run(() => this.Run());
+            return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        private async Task Run()
+        {
+            Thread.Sleep(500);
             foreach (var command in this.commands)
             {
                 Console.WriteLine($"found command: {command.GetType().GetAttributeValue<VerbAttribute, string>(a => a.Name) ?? "?NAME?"} ({command.GetType()})", Color.Gray);
             }
 
-            Thread.Sleep(500);
             var parser = new Parser();
             ReadLine.HistoryEnabled = true;
             ReadLine.AutoCompletionHandler = new AutoCompletionHandler();
@@ -50,13 +61,8 @@
             while (true)
             {
                 System.Console.ForegroundColor = ConsoleColor.Cyan;
-                string input = ReadLine.Read("naos> ").Trim();
+                var input = ReadLine.Read("naos> ").Trim();
                 System.Console.ForegroundColor = originalColor;
-
-                if (input.EqualsAny(new[] { "exit", "quit", "q" }))
-                {
-                    Environment.Exit((int)ExitCode.Termination); // TODO: move to a ConsoleCommand, also does not really exit the console
-                }
 
                 if (!input.IsNullOrEmpty())
                 {
@@ -97,8 +103,7 @@
                         }
                         else
                         {
-                            // no command found
-                            Console.WriteLine();
+                            Console.WriteLine(); // no command found
                         }
                     }
                     catch (Exception ex)
@@ -108,13 +113,6 @@
                     }
                 }
             }
-        }
-
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            //Console.WriteLine("hosted service stopping", Color.Gray);
-
-            return Task.CompletedTask;
         }
 
         public class AutoCompletionHandler : IAutoCompleteHandler // TODO: let all ConsoleCommands fill this (via reflection/helptext?)

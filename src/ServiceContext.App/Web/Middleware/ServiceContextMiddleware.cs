@@ -75,7 +75,7 @@
 </head>
 <body>
     <pre style='color: cyan;font-size: xx-small;'>
-    " + Logo.GetLogoText() + @"
+    " + ResourcesHelper.GetLogoAsString() + @"
     </pre>
     <hr />
     &nbsp;&nbsp;&nbsp;&nbsp;<a href='/api'>infos</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/health'>health</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/logevents/dashboard'>logevents</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/logevents/dashboard?q=journal=true'>journal</a>
@@ -118,7 +118,7 @@ hr {
                 else if (context.Request.Path.Equals("/favicon.ico", System.StringComparison.OrdinalIgnoreCase))
                 {
                     context.Response.ContentType = ContentType.ICO.ToValue();
-                    var icon = Logo.GetIconAsBytes();
+                    var icon = ResourcesHelper.GetIconAsBytes();
                     context.Response.Body.Write(icon, 0, icon.Length);
                 }
                 else if (context.Request.Path == "/error")

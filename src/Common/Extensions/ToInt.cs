@@ -9,7 +9,7 @@
                 return @default;
             }
 
-            var result = int.TryParse(source, out int parsedValue);
+            var result = int.TryParse(source, out var parsedValue);
 
             if (!result)
             {
@@ -26,7 +26,7 @@
                 return @default;
             }
 
-            var result = int.TryParse(source, out int parsedValue);
+            var result = int.TryParse(source, out var parsedValue);
 
             if (!result)
             {

@@ -15,7 +15,7 @@
                 return default;
             }
 
-            return !source.TryGetValue(name, out StringValues keys) ? default : keys[0];
+            return !source.TryGetValue(name, out var keys) ? default : keys[0];
         }
 
         public static StringValues GetValues(this IHeaderDictionary source, string name)
@@ -25,7 +25,7 @@
                 return default;
             }
 
-            return !source.TryGetValue(name, out StringValues values) ? default : values;
+            return !source.TryGetValue(name, out var values) ? default : values;
         }
     }
 }

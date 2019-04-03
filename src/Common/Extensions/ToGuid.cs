@@ -11,7 +11,7 @@
                 return null;
             }
 
-            var result = Guid.TryParse(source, out Guid parsedValue);
+            var result = Guid.TryParse(source, out var parsedValue);
 
             if (!result)
             {

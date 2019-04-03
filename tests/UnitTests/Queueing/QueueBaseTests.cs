@@ -114,7 +114,7 @@
                 await this.AssertEmptyQueueAsync(queue);
 
                 const int itemCount = 25;
-                for (int i = 0; i < itemCount; i++)
+                for (var i = 0; i < itemCount; i++)
                 {
                     await queue.EnqueueAsync(new StubMessage
                     {
@@ -124,7 +124,7 @@
 
                 Assert.Equal(itemCount, (await queue.GetMetricsAsync()).Queued);
 
-                for (int i = 0; i < itemCount; i++)
+                for (var i = 0; i < itemCount; i++)
                 {
                     var item = await queue.DequeueAsync();
                     Assert.NotNull(item);

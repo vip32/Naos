@@ -193,11 +193,11 @@ https://blogs.msdn.microsoft.com/mattwar/2007/07/31/linq-building-an-iqueryable-
 https://stackoverflow.com/questions/43685229/using-predicatebuilder-to-build-query-searching-across-multiple-columns-of-entit
 https://stackoverflow.com/questions/16208214/construct-lambdaexpression-for-nested-property-from-string
 
-criteria: /logevents?q=type=111,correlationId=eq:2b34cc25-cd06-475c-8f9c-c42791f49b46,timestamp=gte:01-01-1980,level=eq:debug,OR,level=eq:information
+criteria: /logevents?q=type=111,correlationId=eq:2b34cc25-cd06-475c-8f9c-c42791f49b46,timestamp=ge:01-01-1980,level=eq:debug,OR,level=eq:information
 pagination: &skip=XX&take=XX
 order: &order=desc:timestamp,asc:level
 
-?q=type=111,correlationId=eq:2b34cc25-cd06-475c-8f9c-c42791f49b46,timestamp=gte:01-01-1980,level=eq:debug,OR,level=eq:information&skip=0&take=100&orderby=desc:timestamp,asc:level
+?q=type=111,correlationId=eq:2b34cc25-cd06-475c-8f9c-c42791f49b46,timestamp=ge:01-01-1980,level=eq:debug,OR,level=eq:information&skip=0&take=100&orderby=desc:timestamp,asc:level
 
 middleware > criteria builder (request) > criteriacontext > controller (ctor) > repository (use criteria as specificaton)
 

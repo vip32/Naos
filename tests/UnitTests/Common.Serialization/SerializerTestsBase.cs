@@ -28,7 +28,7 @@
             Assert.Equal(model.StringProperty, actual.StringProperty);
             Assert.Equal(model.ListProperty, actual.ListProperty);
 
-            string text = serializer.SerializeToString(model);
+            var text = serializer.SerializeToString(model);
             actual = serializer.Deserialize<StubModel>(text);
             Assert.Equal(model.IntProperty, actual.IntProperty);
             Assert.Equal(model.StringProperty, actual.StringProperty);

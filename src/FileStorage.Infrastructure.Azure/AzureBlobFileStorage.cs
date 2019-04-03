@@ -141,7 +141,7 @@
         {
             this.Initialize();
             var files = await this.GetFileListAsync(searchPattern, cancellationToken: cancellationToken).AnyContext();
-            int count = 0;
+            var count = 0;
 
             foreach (var file in files) // batch?
             {
@@ -181,13 +181,13 @@
             }
 
             searchPattern = searchPattern?.Replace('\\', '/');
-            string prefix = searchPattern;
+            var prefix = searchPattern;
             Regex patternRegex = null;
-            int wildcardPos = searchPattern?.IndexOf('*') ?? -1;
+            var wildcardPos = searchPattern?.IndexOf('*') ?? -1;
             if (searchPattern != null && wildcardPos >= 0)
             {
                 patternRegex = new Regex("^" + Regex.Escape(searchPattern).Replace("\\*", ".*?") + "$");
-                int slashPos = searchPattern.LastIndexOf('/');
+                var slashPos = searchPattern.LastIndexOf('/');
                 prefix = slashPos >= 0 ? searchPattern.Substring(0, slashPos) : string.Empty;
             }
 
@@ -215,15 +215,15 @@
 
         private async Task<NextPageResult> GetFiles(string searchPattern, int page, int pageSize, CancellationToken cancellationToken)
         {
-            int pagingLimit = pageSize;
-            int skip = (page - 1) * pagingLimit;
+            var pagingLimit = pageSize;
+            var skip = (page - 1) * pagingLimit;
             if (pagingLimit < int.MaxValue)
             {
                 pagingLimit++;
             }
 
             var list = (await this.GetFileListAsync(searchPattern, pagingLimit, skip, cancellationToken).AnyContext()).ToList();
-            bool hasMore = false;
+            var hasMore = false;
             if (list.Count == pagingLimit)
             {
                 hasMore = true;

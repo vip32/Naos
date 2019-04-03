@@ -59,7 +59,7 @@
         {
             //Storage client uses this when it needs to transform this entity to a writeable instance
             var result = new Dictionary<string, EntityProperty>();
-            foreach (KeyValuePair<string, object> cell in this.value)
+            foreach (var cell in this.value)
             {
                 if (cell.Value == null || cell.Key.EqualsAny(this.ignoreProperties))
                 {
@@ -69,7 +69,7 @@
                 EntityProperty property;
                 var type = cell.Value.GetType();
 
-                if (!PropertyMap.TryGetValue(type, out Func<object, EntityProperty> factoryMethod))
+                if (!PropertyMap.TryGetValue(type, out var factoryMethod))
                 {
                     property = EntityProperty.GeneratePropertyForString(cell.Value.ToString());
                 }

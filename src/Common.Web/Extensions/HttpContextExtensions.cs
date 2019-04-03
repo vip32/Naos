@@ -47,7 +47,7 @@
                 return default;
             }
 
-            context.Items.TryGetValue("correlationId", out object value);
+            context.Items.TryGetValue("correlationId", out var value);
             return value?.ToString();
         }
 
@@ -83,7 +83,7 @@
                 return default;
             }
 
-            context.Items.TryGetValue("requestId", out object value);
+            context.Items.TryGetValue("requestId", out var value);
             return value?.ToString();
         }
 
@@ -119,7 +119,7 @@
                 return default;
             }
 
-            context.Items.TryGetValue("serviceName", out object value);
+            context.Items.TryGetValue("serviceName", out var value);
             return value?.ToString();
         }
 
