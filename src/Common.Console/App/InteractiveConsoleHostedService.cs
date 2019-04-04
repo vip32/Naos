@@ -58,65 +58,69 @@
             var parser = new Parser();
             ReadLine.AutoCompletionHandler = new AutoCompletionHandler();
             ReadLine.HistoryEnabled = true;
-            if(File.Exists("history.db"))
+            var path = Path.Combine(Path.GetTempPath(), "naos_console", "history.db");
+            if(File.Exists(path))
             {
-                ReadLine.AddHistory(
-                    File.ReadAllLines(Path.Combine(Path.GetTempPath(), "naos_console", "history.db")));
+                ReadLine.AddHistory(File.ReadAllLines(path));
             }
 
             var originalColor = System.Console.ForegroundColor;
             while(true)
             {
+                Thread.Sleep(500);
                 System.Console.ForegroundColor = ConsoleColor.Cyan;
-                var input = ReadLine.Read("naos> ").Trim();
+                var inputLine = ReadLine.Read("naos> ").Trim();
                 System.Console.ForegroundColor = originalColor;
 
-                if(!input.IsNullOrEmpty())
+                if(!inputLine.IsNullOrEmpty())
                 {
-                    try
+                    foreach(var input in inputLine.Split('|'))
                     {
-                        var result = parser.ParseArguments(
-                            ArgumentsHelper.Split(input),
-                            this.commands.Select(c => c.GetType()).ToArray())
-                                .WithNotParsed(_ =>
-                                {
-                                    if(!input.Contains("--help"))
-                                    {
-                                        Console.WriteLine("invalid command", Color.Red);
-                                    }
-                                });
-
-                        if(!result.TypeInfo.Current.GetAttributeValue<VerbAttribute, string>(a => a.Name).IsNullOrEmpty())
+                        try
                         {
-                            // command found
-                            var command = (result as Parsed<object>)?.Value;
-                            if(command != null)
+                            var result = parser.ParseArguments(
+                                ArgumentsHelper.Split(input.Trim()),
+                                this.commands.Select(c => c.GetType()).ToArray())
+                                    .WithNotParsed(_ =>
+                                    {
+                                        if(!input.Contains("--help"))
+                                        {
+                                            Console.WriteLine("invalid command", Color.Red);
+                                        }
+                                    });
+
+                            if(!result.TypeInfo.Current.GetAttributeValue<VerbAttribute, string>(a => a.Name).IsNullOrEmpty())
                             {
-                                // send the command so it can be handled by a command handler
-                                await command.As<IConsoleCommand>().SendAsync(this.mediator).AnyContext();
+                                // command found
+                                var command = (result as Parsed<object>)?.Value;
+                                if(command != null)
+                                {
+                                    // send the command so it can be handled by a command handler
+                                    await command.As<IConsoleCommand>().SendAsync(this.mediator).AnyContext();
+                                }
+                                else
+                                {
+                                    // command cannot be parsed, invalid options. show help
+                                    Console.WriteLine(
+                                        new HelpText { AddDashesToOption = true, AutoHelp = false, AutoVersion = false }
+                                            .AddPreOptionsLine(result.TypeInfo.Current.GetAttributeValue<VerbAttribute, string>(a => a.HelpText) ?? string.Empty)
+                                            .AddPreOptionsLine($"Usage: {result.TypeInfo.Current.GetAttributeValue<VerbAttribute, string>(a => a.Name)} [OPTIONS]")
+                                            //.AddPostOptionsLine($"({result.TypeInfo.Current.PrettyName()})")
+                                            .AddVerbs(this.commands.Select(c => c.GetType()).ToArray())
+                                            .AddOptions(result),
+                                        Color.Gray);
+                                }
                             }
                             else
                             {
-                                // command cannot be parsed, invalid options. show help
-                                Console.WriteLine(
-                                    new HelpText { AddDashesToOption = true, AutoHelp = false, AutoVersion = false }
-                                        .AddPreOptionsLine(result.TypeInfo.Current.GetAttributeValue<VerbAttribute, string>(a => a.HelpText) ?? string.Empty)
-                                        .AddPreOptionsLine($"Usage: {result.TypeInfo.Current.GetAttributeValue<VerbAttribute, string>(a => a.Name)} [OPTIONS]")
-                                        //.AddPostOptionsLine($"({result.TypeInfo.Current.PrettyName()})")
-                                        .AddVerbs(this.commands.Select(c => c.GetType()).ToArray())
-                                        .AddOptions(result),
-                                    Color.Gray);
+                                Console.WriteLine(); // no command found
                             }
                         }
-                        else
+                        catch(Exception ex)
                         {
-                            Console.WriteLine(); // no command found
+                            Console.WriteLine($"[{ex.GetType().PrettyName()}] {ex.GetFullMessage()}", Color.Red);
+                            Console.WriteLine($"{ex.StackTrace}", Color.Red);
                         }
-                    }
-                    catch(Exception ex)
-                    {
-                        Console.WriteLine($"[{ex.GetType().PrettyName()}] {ex.GetFullMessage()}", Color.Red);
-                        Console.WriteLine($"{ex.StackTrace}", Color.Red);
                     }
                 }
             }
