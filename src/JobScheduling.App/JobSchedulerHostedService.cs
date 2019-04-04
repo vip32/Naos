@@ -14,7 +14,7 @@
         private readonly ILogger<JobSchedulerHostedService> logger;
         private readonly IJobScheduler scheduler;
         private bool enabled = true; // TODO: start/stop from outside https://stackoverflow.com/questions/51469881/asp-net-core-ihostedservice-manual-start-stop-pause
-        private Timer schedulerTimer;
+        private System.Threading.Timer schedulerTimer;
 
         public JobSchedulerHostedService(
             ILoggerFactory loggerFactory,
@@ -32,7 +32,7 @@
             if(!cancellationToken.IsCancellationRequested)
             {
                 var moment = DateTime.UtcNow;
-                this.schedulerTimer = new Timer(
+                this.schedulerTimer = new System.Threading.Timer(
                     this.RunSchedulerAsync,
                     null,
                     new DateTime(moment.Year, moment.Month, moment.Day, moment.Hour, moment.Minute, 59, 999, DateTimeKind.Utc) - moment, // trigger on the minute start

@@ -30,12 +30,13 @@
 
             await this.LogHttpRequest(request, correlationId, requestId);
 
-            var timer = Stopwatch.StartNew();
-            var response = await base.SendAsync(request, cancellationToken).AnyContext();
-            timer.Stop();
-
-            await this.LogHttpResponse(response, requestId, timer.Elapsed);
-            return response;
+            using(var timer = new Common.Timer())
+            {
+                var response = await base.SendAsync(request, cancellationToken).AnyContext();
+                timer.Stop();
+                await this.LogHttpResponse(response, requestId, timer.Elapsed);
+                return response;
+            }
         }
 
         protected async Task<string> GetRequestContent(HttpRequestMessage request)

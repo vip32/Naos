@@ -42,10 +42,12 @@
                 var requestId = context.GetRequestId();
 
                 await this.LogRequestAsync(context, correlationId, requestId).AnyContext();
-                var timer = Stopwatch.StartNew();
-                await this.next.Invoke(context).AnyContext();
-                timer.Stop(); // alternative for timing (actionfilter) https://stackoverflow.com/questions/48822947/asp-net-core-measure-performance
-                await this.LogResponseAsync(context, correlationId, requestId, timer.Elapsed).AnyContext();
+                using(var timer = new Timer()) // alternative for timing (actionfilter) https://stackoverflow.com/questions/48822947/asp-net-core-measure-performance
+                {
+                    await this.next.Invoke(context).AnyContext();
+                    timer.Stop();
+                    await this.LogResponseAsync(context, correlationId, requestId, timer.Elapsed).AnyContext();
+                }
             }
         }
 
