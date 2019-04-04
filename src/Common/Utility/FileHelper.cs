@@ -1,0 +1,50 @@
+﻿namespace Naos.Core.Common
+{
+    using System.IO;
+    using EnsureThat;
+
+    public static class FileHelper
+    {
+        /// <summary>
+        /// Compress the file
+        /// </summary>
+        /// <param name="sourcePath">Path to the file to compress</param>
+        /// <param name="destinationPath">Path to the compressed file </param>
+        public static void CompressFile(string sourcePath, string destinationPath = null)
+        {
+            EnsureArg.IsNotNullOrEmpty(sourcePath, nameof(sourcePath));
+            EnsureArg.IsTrue(File.Exists(sourcePath), nameof(sourcePath)); // source file does not exist
+
+            destinationPath ??= sourcePath.SubstringTillLast(".") + ".zip";
+
+            using(var source = File.OpenRead(sourcePath))
+            {
+                using(var destination = File.Create(destinationPath))
+                {
+                    source.Compress(destination);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Decompress the file
+        /// </summary>
+        /// <param name="sourcePath">Path to the file to decompress</param>
+        /// <param name="destinationPath">Path to the decompressed file </param>
+        public static void DecompressFile(string sourcePath, string destinationPath = null)
+        {
+            EnsureArg.IsNotNullOrEmpty(sourcePath, nameof(sourcePath));
+            EnsureArg.IsTrue(File.Exists(sourcePath), nameof(sourcePath)); // source file does not exist
+
+            destinationPath ??= sourcePath.SubstringTill(".");
+
+            using(var source = File.OpenRead(sourcePath))
+            {
+                using(var destination = File.Create(destinationPath))
+                {
+                    source.Decompress(destination);
+                }
+            }
+        }
+    }
+}
