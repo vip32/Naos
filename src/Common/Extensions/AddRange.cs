@@ -16,5 +16,18 @@
                 source.Add(item);
             }
         }
+
+        public static void AddRange<TKey, TValue>(this IDictionary<TKey, TValue> source, IDictionary<TKey, TValue> items)
+        {
+            if(source == null || items == null)
+            {
+                return;
+            }
+
+            foreach(var pair in items)
+            {
+                source.Add(pair);
+            }
+        }
     }
 }
