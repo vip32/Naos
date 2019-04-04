@@ -109,7 +109,7 @@
                 }
                 else if(this.options.UseHashAsCorrelationId)
                 {
-                    return HashAlgorithm.ComputeHash(httpContext.TraceIdentifier);
+                    return HashAlgorithm.ComputeMd5Hash(httpContext.TraceIdentifier);
                 }
                 else
                 {

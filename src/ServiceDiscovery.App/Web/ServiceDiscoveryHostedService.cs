@@ -61,7 +61,7 @@
             {
                 // Register this service (use ServiceDescriptor for more infos)
                 var uri = new Uri(this.serviceAddress);
-                this.registrationId = $"{this.serviceDescriptor.Name}-{HashAlgorithm.ComputeHash(uri.ToString())}";
+                this.registrationId = $"{this.serviceDescriptor.Name}-{HashAlgorithm.ComputeMd5Hash(uri.ToString())}";
                 var registration = new ServiceRegistration
                 {
                     Id = this.registrationId, // TODO: use resolved servicedescriptor for id/name  (AppDomain.CurrentDomain.FriendlyName)

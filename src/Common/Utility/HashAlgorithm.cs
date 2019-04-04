@@ -27,7 +27,7 @@
             }
         }
 
-        public static string ComputeHash(string value, bool removeDashes = true)
+        public static string ComputeMd5Hash(string value, bool removeDashes = true)
         {
             if(value == null)
             {
@@ -70,6 +70,26 @@
 
                     return result;
                 }
+            }
+        }
+
+        public static string ComputeSha256Hash(byte[] data)
+        {
+            if(data == null)
+            {
+                return null;
+            }
+
+            using(var sha256 = SHA256.Create())
+            {
+                var bytes = sha256.ComputeHash(data);
+                var result = string.Empty;
+                for(var i = 0; i < bytes.Length; i++)
+                {
+                    result += string.Format("{0:X2}", bytes[i]);
+                }
+
+                return result;
             }
         }
 
