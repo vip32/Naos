@@ -79,6 +79,19 @@
             }
         }
 
+        public static byte[] ComputeHashBytes(byte[] value, HashType hashType = HashType.Sha256)
+        {
+            if(value == null)
+            {
+                return null;
+            }
+
+            using(var algorithm = CreateHashAlgorithm(hashType))
+            {
+                return algorithm.ComputeHash(value);
+            }
+        }
+
         public static Guid ComputeGuid(string value)
         {
             if(value == null)
