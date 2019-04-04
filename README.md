@@ -262,7 +262,7 @@ key vault keys: (or use the json configuration above)
 
 - Implementations
   - InMemory Queue
-  - Azure Storage Queue
+  - Azure Queue Storage
   - Azure ServiceBus
 - Decorators
 
@@ -460,9 +460,16 @@ development-naos--operations--logging--azureLogAnalytics--workspaceName
 
 # FileStorage
 
+- Serializers (json/bson/messagepack)
 - Folder
 - Azure Storage
 - InMemory
 - SSH
+
+# KeyValueStorage
+
+- FileStorage (TODO)
+- Azure Table Storage
+- CosmosDb (Table)
 
 # (Workflow)
