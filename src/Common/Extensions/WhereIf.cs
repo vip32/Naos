@@ -11,7 +11,7 @@
             this IQueryable<TSource> source, bool condition,
             Expression<Func<TSource, bool>> predicate)
         {
-            if (condition)
+            if(condition)
             {
                 return source.Where(predicate);
             }
@@ -25,7 +25,7 @@
             this IEnumerable<TSource> source, bool condition,
             Func<TSource, bool> predicate)
         {
-            if (condition)
+            if(condition)
             {
                 return source.Where(predicate);
             }

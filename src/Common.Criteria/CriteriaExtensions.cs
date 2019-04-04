@@ -24,16 +24,16 @@
 
         public static CriteriaOperator FromValue(string value, CriteriaOperator @default = CriteriaOperator.Equal)
         {
-            if (string.IsNullOrEmpty(value))
+            if(string.IsNullOrEmpty(value))
             {
                 return @default;
             }
 
-            foreach (var enumValue in Enum.GetValues(typeof(CriteriaOperator)))
+            foreach(var enumValue in Enum.GetValues(typeof(CriteriaOperator)))
             {
                 Enum.TryParse(enumValue.ToString(), true, out CriteriaOperator @operator);
                 var metaDataValue = @operator.GetAttributeValue<CriteriaOperatorMetadata, string>(x => x.Value);
-                if (metaDataValue != null && metaDataValue.Equals(value, StringComparison.OrdinalIgnoreCase))
+                if(metaDataValue != null && metaDataValue.Equals(value, StringComparison.OrdinalIgnoreCase))
                 {
                     return @operator;
                 }
@@ -44,16 +44,16 @@
 
         public static CriteriaOperator FromAbbreviation(string value, CriteriaOperator @default = CriteriaOperator.Equal)
         {
-            if (string.IsNullOrEmpty(value))
+            if(string.IsNullOrEmpty(value))
             {
                 return @default;
             }
 
-            foreach (var enumValue in Enum.GetValues(typeof(CriteriaOperator)))
+            foreach(var enumValue in Enum.GetValues(typeof(CriteriaOperator)))
             {
                 Enum.TryParse(enumValue.ToString(), true, out CriteriaOperator @operator);
                 var metaDataValue = @operator.GetAttributeValue<CriteriaOperatorMetadata, string>(x => x.Abbreviation);
-                if (metaDataValue != null && metaDataValue.Equals(value, StringComparison.OrdinalIgnoreCase))
+                if(metaDataValue != null && metaDataValue.Equals(value, StringComparison.OrdinalIgnoreCase))
                 {
                     return @operator;
                 }
@@ -66,10 +66,10 @@
         {
             var type = @operator.GetType();
             var info = type.GetMember(@operator.ToString());
-            if ((info != null) && (info.Length > 0))
+            if((info != null) && (info.Length > 0))
             {
                 var attrs = info[0].GetCustomAttributes(typeof(CriteriaOperatorMetadata), false);
-                if ((attrs != null) && (attrs.Length > 0))
+                if((attrs != null) && (attrs.Length > 0))
                 {
                     return attrs[0];
                 }

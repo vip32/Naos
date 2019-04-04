@@ -23,7 +23,7 @@
 
         public override Task<bool> Handle(ConsoleCommandEvent<MessagingConsoleCommand> request, CancellationToken cancellationToken)
         {
-            if (request.Command.Echo)
+            if(request.Command.Echo)
             {
                 this.messageBroker
                     .Subscribe<EchoMessage, EchoMessageHandler>()
@@ -31,7 +31,7 @@
 
                 Console.WriteLine("\r\nstart publish", Color.LimeGreen);
 
-                for (var i = 1; i <= 2; i++)
+                for(var i = 1; i <= 2; i++)
                 {
                     //Thread.Sleep(500);
                     this.messageBroker.Publish(new EchoMessage { Text = $"+++ hello from echo message ({i.ToString()}-{RandomGenerator.GenerateString(3, false).ToUpper()}) +++" });

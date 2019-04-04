@@ -26,9 +26,9 @@
 
         public void Handle(HttpContext context, Exception exception, string instance, string requestId, bool hideDetails = false, bool jsonResponse = true)
         {
-            if (exception is BadHttpRequestException badHttpRequestException)
+            if(exception is BadHttpRequestException badHttpRequestException)
             {
-                if (jsonResponse)
+                if(jsonResponse)
                 {
                     // low level kestrel exception (too large paylod, method not allowed, too large headers)
                     var details = new ProblemDetails

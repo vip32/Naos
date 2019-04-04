@@ -60,7 +60,7 @@
                 return specification;
             }
 
-            if (specification == All)
+            if(specification == All)
             {
                 return this;
             }
@@ -90,7 +90,7 @@
 
         public string ToString(bool noBrackets)
         {
-            if (noBrackets)
+            if(noBrackets)
             {
                 return this.expression.ToExpressionString().Trim('(').Trim(')');
             }

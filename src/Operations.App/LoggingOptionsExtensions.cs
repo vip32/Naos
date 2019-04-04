@@ -18,7 +18,7 @@
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
             var configuration = options.Context.Configuration?.GetSection("naos:operations:logging:file").Get<LogFileConfiguration>();
-            if (configuration?.Enabled == true)
+            if(configuration?.Enabled == true)
             {
                 // configure the serilog sink
                 var path = configuration.File.EmptyToNull() ?? "logevents_{environment}_{product}_{capability}.log"
@@ -26,11 +26,11 @@
                     .Replace("{product}", options.Context.Descriptor?.Product?.ToLower())
                     .Replace("{capability}", options.Context.Descriptor?.Capability?.ToLower());
 
-                if (!configuration.Folder.IsNullOrEmpty() && !configuration.SubFolder.IsNullOrEmpty())
+                if(!configuration.Folder.IsNullOrEmpty() && !configuration.SubFolder.IsNullOrEmpty())
                 {
                     path = Path.Combine(configuration.Folder, "naos_operations", path);
                 }
-                else if (!configuration.Folder.IsNullOrEmpty() && configuration.SubFolder.IsNullOrEmpty())
+                else if(!configuration.Folder.IsNullOrEmpty() && configuration.SubFolder.IsNullOrEmpty())
                 {
                     path = Path.Combine(configuration.Folder, path);
                 }
@@ -57,7 +57,7 @@
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
             var configuration = options.Context.Configuration?.GetSection("naos:operations:logging:console").Get<LogConsoleConfiguration>();
-            if (configuration?.Enabled == true)
+            if(configuration?.Enabled == true)
             {
                 // configure the serilog sink
                 options.LoggerConfiguration?.WriteTo.LiterateConsole(

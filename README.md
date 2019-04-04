@@ -472,4 +472,20 @@ development-naos--operations--logging--azureLogAnalytics--workspaceName
 - Azure Table Storage
 - CosmosDb (Table)
 
-# (Workflow)
+# (Workflow)?
+
+# Foundation
+- Domain
+  - Model
+  - Repository
+  - Specifications
+- Serialization
+- Web
+  - Client
+  Filters
+  - Streaming
+- Mapping
+- Criteria
+- Console
+  - Interactive
+  - Commands

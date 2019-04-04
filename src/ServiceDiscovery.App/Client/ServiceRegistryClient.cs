@@ -41,12 +41,12 @@
         {
             var registrations = await this.registry.RegistrationsAsync().AnyContext();
 
-            if (!name.IsNullOrEmpty())
+            if(!name.IsNullOrEmpty())
             {
                 registrations = registrations?.Where(r => r.Name?.Equals(name, StringComparison.OrdinalIgnoreCase) == true);
             }
 
-            if (!tag.IsNullOrEmpty())
+            if(!tag.IsNullOrEmpty())
             {
                 registrations = registrations?.Where(r => tag.EqualsAny(r.Tags));
             }

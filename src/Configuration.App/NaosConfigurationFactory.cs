@@ -51,7 +51,7 @@
             configuration = builder.Build();
             builder.AddIf(configuration["naos:secrets:vault:enabled"].ToBool(true), b =>
             {
-                if (configuration["naos:secrets:vault:name"].IsNullOrEmpty()
+                if(configuration["naos:secrets:vault:name"].IsNullOrEmpty()
                     || configuration["naos:secrets:vault:clientId"].IsNullOrEmpty()
                     || configuration["naos:secrets:vault:clientSecret"].IsNullOrEmpty())
                 {

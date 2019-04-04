@@ -43,7 +43,7 @@
             {
                 return Activator.CreateInstance(type, parameters) as T;
             }
-            catch (MissingMethodException)
+            catch(MissingMethodException)
             {
                 return default;
             }
@@ -80,7 +80,7 @@
             {
                 return Activator.CreateInstance(type, parameters);
             }
-            catch (MissingMethodException)
+            catch(MissingMethodException)
             {
                 return default;
             }

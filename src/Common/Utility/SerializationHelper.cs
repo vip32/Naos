@@ -11,12 +11,12 @@
         public static T JsonDeserialize<T>(MemoryStream stream)
             where T : class
         {
-            if (stream == null)
+            if(stream == null)
             {
                 return null;
             }
 
-            using (var reader = new StreamReader(stream))
+            using(var reader = new StreamReader(stream))
             {
                 return JsonSerializer.Create().Deserialize(reader, typeof(T)) as T;
             }
@@ -25,13 +25,13 @@
         public static T JsonDeserialize<T>(byte[] value)
             where T : class
         {
-            if (value == null)
+            if(value == null)
             {
                 return null;
             }
 
-            using (var stream = new MemoryStream(value))
-            using (var reader = new StreamReader(stream))
+            using(var stream = new MemoryStream(value))
+            using(var reader = new StreamReader(stream))
             {
                 return JsonSerializer.Create().Deserialize(reader, typeof(T)) as T;
             }
@@ -40,7 +40,7 @@
         public static string JsonSerialize<T>(T value, JsonSerializerSettings settings = null)
             where T : class
         {
-            if (value == null)
+            if(value == null)
             {
                 return null;
             }
@@ -51,7 +51,7 @@
         public static string JsonSerialize<T>(T value, bool asArray, JsonSerializerSettings settings = null)
             where T : class
         {
-            if (value == null)
+            if(value == null)
             {
                 return null;
             }
@@ -62,7 +62,7 @@
         public static T JsonDeserialize<T>(string value, JsonSerializerSettings settings = null)
             where T : class
         {
-            if (value == null)
+            if(value == null)
             {
                 return null;
             }
@@ -90,7 +90,7 @@
 
         public static string ToBase64(string data)
         {
-            if (data == null)
+            if(data == null)
             {
                 return null;
             }
@@ -100,7 +100,7 @@
 
         public static string FromBase64(string data)
         {
-            if (data == null)
+            if(data == null)
             {
                 return null;
             }
@@ -130,13 +130,13 @@
         public static byte[] BsonByteSerialize<T>(T data)
             where T : class
         {
-            if (data == null)
+            if(data == null)
             {
                 return null;
             }
 
             var ms = new MemoryStream();
-            using (var writer = new BsonDataWriter(ms))
+            using(var writer = new BsonDataWriter(ms))
             {
                 var serializer = new JsonSerializer();
                 serializer.Serialize(writer, data);
@@ -148,13 +148,13 @@
         public static T BsonByteDeserialize<T>(byte[] data)
             where T : class
         {
-            if (data == null)
+            if(data == null)
             {
                 return null;
             }
 
             var ms = new MemoryStream(data);
-            using (var reader = new BsonDataReader(ms))
+            using(var reader = new BsonDataReader(ms))
             {
                 var serializer = new JsonSerializer();
                 return serializer.Deserialize<T>(reader);

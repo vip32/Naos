@@ -12,10 +12,10 @@
             LogLevel level = LogLevel.Information,
             params object[] args)
         {
-            if (!message.IsNullOrEmpty())
+            if(!message.IsNullOrEmpty())
             {
                 type = type ?? LogEventPropertyKeys.TrackMisc;
-                using (source.BeginScope(new Dictionary<string, object>
+                using(source.BeginScope(new Dictionary<string, object>
                 {
                     [LogEventPropertyKeys.TrackType] = LogEventTrackTypeValues.Journal,
                     [type] = true

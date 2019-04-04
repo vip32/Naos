@@ -9,7 +9,7 @@
 
         public static string ExpandPath(string path)
         {
-            if (string.IsNullOrEmpty(path))
+            if(string.IsNullOrEmpty(path))
             {
                 return path;
             }
@@ -17,14 +17,14 @@
             path = path.Replace('/', Path.DirectorySeparatorChar);
             path = path.Replace('\\', Path.DirectorySeparatorChar);
 
-            if (!path.StartsWith(DATADIRECTORY, StringComparison.OrdinalIgnoreCase))
+            if(!path.StartsWith(DATADIRECTORY, StringComparison.OrdinalIgnoreCase))
             {
                 return Path.GetFullPath(path);
             }
 
             var dataDirectory = GetDataDirectory();
             var length = DATADIRECTORY.Length;
-            if (path.Length <= length)
+            if(path.Length <= length)
             {
                 return dataDirectory;
             }
@@ -32,7 +32,7 @@
             var relativePath = path.Substring(length);
             var c = relativePath[0];
 
-            if (c == Path.DirectorySeparatorChar || c == Path.AltDirectorySeparatorChar)
+            if(c == Path.DirectorySeparatorChar || c == Path.AltDirectorySeparatorChar)
             {
                 relativePath = relativePath.Substring(1);
             }
@@ -46,17 +46,17 @@
             try
             {
                 var dataDirectory = AppDomain.CurrentDomain.GetData("DataDirectory") as string;
-                if (string.IsNullOrEmpty(dataDirectory))
+                if(string.IsNullOrEmpty(dataDirectory))
                 {
                     dataDirectory = AppContext.BaseDirectory;
                 }
 
-                if (!string.IsNullOrEmpty(dataDirectory))
+                if(!string.IsNullOrEmpty(dataDirectory))
                 {
                     return Path.GetFullPath(dataDirectory);
                 }
             }
-            catch (Exception)
+            catch(Exception)
             {
                 return null;
             }
@@ -66,16 +66,16 @@
 
         public static string Normalize(string path)
         {
-            if (string.IsNullOrEmpty(path))
+            if(string.IsNullOrEmpty(path))
             {
                 return path;
             }
 
-            if (Path.DirectorySeparatorChar == '\\')
+            if(Path.DirectorySeparatorChar == '\\')
             {
                 return path.Replace('/', Path.DirectorySeparatorChar);
             }
-            else if (Path.DirectorySeparatorChar == '/')
+            else if(Path.DirectorySeparatorChar == '/')
             {
                 return path.Replace('\\', Path.DirectorySeparatorChar);
             }

@@ -41,7 +41,7 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
             var file = await this.Decoratee.GetFileInformationAsync(string.Concat(this.UpdatePathPrefix(this.pathPrefix), path)).AnyContext();
-            if (file != null)
+            if(file != null)
             {
                 file.Path = file.Path.Substring(this.pathPrefix.Length);
             }
@@ -94,13 +94,13 @@
 
         public async Task<PagedResults> GetFileInformationsAsync(int pageSize = 100, string searchPattern = null, CancellationToken cancellationToken = default)
         {
-            if (pageSize <= 0)
+            if(pageSize <= 0)
             {
                 return PagedResults.EmptyResults;
             }
 
             var unscopedResult = await this.Decoratee.GetFileInformationsAsync(pageSize, string.Concat(this.UpdatePathPrefix(this.pathPrefix), searchPattern), cancellationToken).AnyContext();
-            foreach (var file in unscopedResult.Files)
+            foreach(var file in unscopedResult.Files)
             {
                 file.Path = file.Path.Substring(this.UpdatePathPrefix(this.pathPrefix).Length);
             }
@@ -116,7 +116,7 @@
         private async Task<NextPageResult> NextPage(PagedResults result)
         {
             var success = await result.NextPageAsync().AnyContext();
-            foreach (var file in result.Files)
+            foreach(var file in result.Files)
             {
                 file.Path = file.Path.Substring(this.pathPrefix.Length);
             }

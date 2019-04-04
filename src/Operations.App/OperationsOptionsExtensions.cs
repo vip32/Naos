@@ -51,13 +51,14 @@
             return options;
         }
 
-        public static OperationsOptions AddConsoleCommands(
-            this OperationsOptions options)
+        public static OperationsOptions AddInteractiveConsole(
+            this OperationsOptions options,
+            bool enabled = true)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            if (options.Context.IsConsoleEnabled())
+            if(options.Context.IsConsoleEnabled() && enabled)
             {
                 // needed for mediator, register console commands + handlers
                 options.Context.Services.Scan(scan => scan
@@ -79,7 +80,7 @@
 
         private static ILoggerFactory CreateLoggerFactory(LoggingOptions loggingOptions)
         {
-            if (factory == null) // extra singleton because sometimes this is called multiple times. serilog does not like that
+            if(factory == null) // extra singleton because sometimes this is called multiple times. serilog does not like that
             {
                 Log.Logger = loggingOptions.LoggerConfiguration.CreateLogger();
 
@@ -108,7 +109,7 @@
                 //.Enrich.WithProperty("ServiceDescriptor", internalServiceDescriptor)
                 .Enrich.FromLogContext();
 
-            if (!internalCorrelationId.IsNullOrEmpty())
+            if(!internalCorrelationId.IsNullOrEmpty())
             {
                 loggingOptions.LoggerConfiguration.Enrich.WithProperty(LogEventPropertyKeys.CorrelationId, internalCorrelationId);
             }

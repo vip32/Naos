@@ -31,7 +31,7 @@
 
         public async Task Invoke(HttpContext context)
         {
-            if (!this.options.Enabled
+            if(!this.options.Enabled
                 || context.Request.Path.Value.EqualsPatternAny(this.options.PathBlackListPatterns))
             {
                 await this.next.Invoke(context).AnyContext();
@@ -61,7 +61,7 @@
                 //    this.logger.LogInformation($"SERVICE [{requestId}] http request service {context.GetServiceName()}");
                 //}
 
-                if (!context.Request.Headers.IsNullOrEmpty())
+                if(!context.Request.Headers.IsNullOrEmpty())
                 {
                     this.logger.LogInformation($"{{LogKey:l}} [{requestId}] http headers={string.Join("|", context.Request.Headers.Select(h => $"{h.Key}={h.Value}"))}", LogEventKeys.InboundRequest);
                 }
@@ -73,16 +73,16 @@
             await Task.Run(() =>
             {
                 var level = LogLevel.Information;
-                if ((int)context.Response.StatusCode > 499)
+                if((int)context.Response.StatusCode > 499)
                 {
                     level = LogLevel.Error;
                 }
-                else if ((int)context.Response.StatusCode > 399)
+                else if((int)context.Response.StatusCode > 399)
                 {
                     level = LogLevel.Warning;
                 }
 
-                if (!context.Response.Headers.IsNullOrEmpty())
+                if(!context.Response.Headers.IsNullOrEmpty())
                 {
                     this.logger.Log(level, $"{{LogKey:l}} [{requestId}] http headers={string.Join("|", context.Response.Headers.Select(h => $"{h.Key}={h.Value}"))}", LogEventKeys.InboundResponse);
                 }

@@ -14,12 +14,12 @@
         {
             EnsureArg.IsNotNull(destination, nameof(destination));
 
-            if (source == null)
+            if(source == null)
             {
                 return;
             }
 
-            using (var compressor = new GZipStream(destination, CompressionLevel.Optimal, true))
+            using(var compressor = new GZipStream(destination, CompressionLevel.Optimal, true))
             {
                 source.CopyTo(compressor);
                 compressor.Flush();
@@ -30,12 +30,12 @@
         {
             EnsureArg.IsNotNull(destination, nameof(destination));
 
-            if (source == null)
+            if(source == null)
             {
                 return;
             }
 
-            using (var decompressor = new GZipStream(source, CompressionMode.Decompress, true))
+            using(var decompressor = new GZipStream(source, CompressionMode.Decompress, true))
             {
                 decompressor.CopyTo(destination);
                 destination.Flush();
@@ -44,9 +44,9 @@
 
         public static byte[] Compress(byte[] source)
         {
-            using (var sourceStream = new MemoryStream(source))
+            using(var sourceStream = new MemoryStream(source))
             {
-                using (var destinationStream = new MemoryStream())
+                using(var destinationStream = new MemoryStream())
                 {
                     Compress(sourceStream, destinationStream);
                     return destinationStream.ToArray();
@@ -56,9 +56,9 @@
 
         public static byte[] Decompress(byte[] source)
         {
-            using (var sourceStream = new MemoryStream(source))
+            using(var sourceStream = new MemoryStream(source))
             {
-                using (var destinationStream = new MemoryStream())
+                using(var destinationStream = new MemoryStream())
                 {
                     Decompress(sourceStream, destinationStream);
                     return destinationStream.ToArray();
@@ -68,7 +68,7 @@
 
         public static bool IsGzipped(byte[] source)
         {
-            if (source == null || source.Length < 2)
+            if(source == null || source.Length < 2)
             {
                 return false;
             }
@@ -78,7 +78,7 @@
 
         public static bool IsPkZipped(byte[] source)
         {
-            if (source == null || source.Length < 4)
+            if(source == null || source.Length < 4)
             {
                 return false;
             }

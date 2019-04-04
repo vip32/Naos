@@ -17,7 +17,7 @@
     {
         public static bool HasCorrelationId(this HttpContext context)
         {
-            if (context == null)
+            if(context == null)
             {
                 return false;
             }
@@ -27,12 +27,12 @@
 
         public static void SetCorrelationId(this HttpContext context, string value)
         {
-            if (context == null)
+            if(context == null)
             {
                 return;
             }
 
-            if (context.Items.ContainsKey("correlationId"))
+            if(context.Items.ContainsKey("correlationId"))
             {
                 context.Items.Remove("correlationId");
             }
@@ -42,7 +42,7 @@
 
         public static string GetCorrelationId(this HttpContext context)
         {
-            if (context == null)
+            if(context == null)
             {
                 return default;
             }
@@ -53,7 +53,7 @@
 
         public static bool HasRequestId(this HttpContext context)
         {
-            if (context == null)
+            if(context == null)
             {
                 return false;
             }
@@ -63,12 +63,12 @@
 
         public static void SetRequestId(this HttpContext context, string value)
         {
-            if (context == null)
+            if(context == null)
             {
                 return;
             }
 
-            if (context.Items.ContainsKey("requestId"))
+            if(context.Items.ContainsKey("requestId"))
             {
                 context.Items.Remove("requestId");
             }
@@ -78,7 +78,7 @@
 
         public static string GetRequestId(this HttpContext context)
         {
-            if (context == null)
+            if(context == null)
             {
                 return default;
             }
@@ -89,7 +89,7 @@
 
         public static bool HasServiceName(this HttpContext context)
         {
-            if (context == null)
+            if(context == null)
             {
                 return false;
             }
@@ -99,12 +99,12 @@
 
         public static void SetServiceName(this HttpContext context, string value)
         {
-            if (context == null)
+            if(context == null)
             {
                 return;
             }
 
-            if (context.Items.ContainsKey("serviceName"))
+            if(context.Items.ContainsKey("serviceName"))
             {
                 context.Items.Remove("serviceName");
             }
@@ -114,7 +114,7 @@
 
         public static string GetServiceName(this HttpContext context)
         {
-            if (context == null)
+            if(context == null)
             {
                 return default;
             }
@@ -156,15 +156,15 @@
 
             var headers = source.Response.Headers;
 
-            if (!string.IsNullOrEmpty(profile.VaryByHeader))
+            if(!string.IsNullOrEmpty(profile.VaryByHeader))
             {
                 headers[HeaderNames.Vary] = profile.VaryByHeader;
             }
 
-            if (profile.NoStore == true)
+            if(profile.NoStore == true)
             {
                 // Cache-control: no-store, no-cache is valid.
-                if (profile.Location == ResponseCacheLocation.None)
+                if(profile.Location == ResponseCacheLocation.None)
                 {
                     headers[HeaderNames.CacheControl] = noStoreNoCache;
                     headers[HeaderNames.Pragma] = noCache;
@@ -178,7 +178,7 @@
             {
                 string cacheControlValue = null;
                 var duration = profile.Duration.GetValueOrDefault().ToString(CultureInfo.InvariantCulture);
-                switch (profile.Location)
+                switch(profile.Location)
                 {
                     case ResponseCacheLocation.Any:
                         cacheControlValue = publicMaxAge + duration;

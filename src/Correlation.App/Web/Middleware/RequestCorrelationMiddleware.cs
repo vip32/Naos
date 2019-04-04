@@ -59,13 +59,13 @@
                 [LogEventPropertyKeys.RequestId] = requestId
             };
 
-            using (this.logger.BeginScope(loggerState))
+            using(this.logger.BeginScope(loggerState))
             {
                 // needed by other request middlewares (requestresponselogging, filtering)
                 context.SetCorrelationId(correlationId);
                 context.SetRequestId(requestId);
 
-                if (this.options.UpdateTraceIdentifier)
+                if(this.options.UpdateTraceIdentifier)
                 {
                     this.logger.LogDebug($"{{LogKey:l}} [{requestId}] http now has traceIdentifier {correlationId}, was {context.TraceIdentifier}", LogEventKeys.InboundRequest); // TODO: move to request logging middleware (operations)
                     context.TraceIdentifier = correlationId;
@@ -73,16 +73,16 @@
 
                 contextFactory.Create(correlationId, this.options.CorrelationHeader, requestId, this.options.RequestHeader);
 
-                if (this.options.IncludeInResponse)
+                if(this.options.IncludeInResponse)
                 {
                     context.Response.OnStarting(() =>
                     {
                         // add the response headers
-                        if (!context.Response.Headers.ContainsKey(this.options.CorrelationHeader))
+                        if(!context.Response.Headers.ContainsKey(this.options.CorrelationHeader))
                         {
                             context.Response.Headers.Add(this.options.CorrelationHeader, correlationId);
                         }
-                        if (!context.Response.Headers.ContainsKey(this.options.RequestHeader))
+                        if(!context.Response.Headers.ContainsKey(this.options.RequestHeader))
                         {
                             context.Response.Headers.Add(this.options.RequestHeader, requestId);
                         }
@@ -100,14 +100,14 @@
         private string EnsureCorrelationId(HttpContext httpContext)
         {
             var isFound = httpContext.Request.Headers.TryGetValue(this.options.CorrelationHeader, out var id);
-            if (!isFound || StringValues.IsNullOrEmpty(id))
+            if(!isFound || StringValues.IsNullOrEmpty(id))
             {
-                if (this.options.UseRandomCorrelationId)
+                if(this.options.UseRandomCorrelationId)
                 {
                     //return Guid.NewGuid().ToString(); //.Replace("-", string.Empty);
                     return RandomGenerator.GenerateString(this.options.RandomCorrelationIdLength, true);
                 }
-                else if (this.options.UseHashAsCorrelationId)
+                else if(this.options.UseHashAsCorrelationId)
                 {
                     return HashAlgorithm.ComputeHash(httpContext.TraceIdentifier);
                 }
@@ -123,7 +123,7 @@
         private string EnsureRequestId(HttpContext httpContext)
         {
             var isFound = httpContext.Request.Headers.TryGetValue(this.options.RequestHeader, out var id);
-            if (!isFound || StringValues.IsNullOrEmpty(id))
+            if(!isFound || StringValues.IsNullOrEmpty(id))
             {
                 return RandomGenerator.GenerateString(this.options.RequestIdLength, this.options.RequestIdAlphanumeric);
             }

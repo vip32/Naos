@@ -35,7 +35,7 @@
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
             EnsureArg.IsNotNull(options, nameof(options));
 
-            if (naosOptions.Context.Application.ApplicationServices.GetService(typeof(IFilterContextFactory)) == null)
+            if(naosOptions.Context.Application.ApplicationServices.GetService(typeof(IFilterContextFactory)) == null)
             {
                 throw new InvalidOperationException($"Unable to find the required services. You must call the AddRequestFiltering method in ConfigureServices in the application startup code.");
             }

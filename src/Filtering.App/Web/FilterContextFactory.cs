@@ -53,7 +53,7 @@
                 Take = request?.Query?.FirstOrDefault(p => p.Key.Equals(takeQueryStringKey, StringComparison.OrdinalIgnoreCase)).Value.FirstOrDefault().ToNullableInt()
             };
 
-            if (this.accessor != null)
+            if(this.accessor != null)
             {
                 this.accessor.Context = result;
             }
@@ -64,7 +64,7 @@
         /// <inheritdoc />
         public void Dispose()
         {
-            if (this.accessor != null)
+            if(this.accessor != null)
             {
                 this.accessor.Context = null;
             }
@@ -72,7 +72,7 @@
 
         private IEnumerable<Criteria> BuildCriterias(HttpRequest request, string queryStringKey)
         {
-            if (request?.Query?.ContainsKey(queryStringKey) == false)
+            if(request?.Query?.ContainsKey(queryStringKey) == false)
             {
                 return Enumerable.Empty<Criteria>();
             }
@@ -82,9 +82,9 @@
             var items = query.Value.ToString().Split(',');
 
             var result = new List<Criteria>();
-            foreach (var item in items.Where(c => !c.IsNullOrEmpty()))
+            foreach(var item in items.Where(c => !c.IsNullOrEmpty()))
             {
-                if (item.EqualsAny(new[] { "and", "or" }))
+                if(item.EqualsAny(new[] { "and", "or" }))
                 {
                     // TODO: AND / OR
                     continue;
@@ -99,10 +99,10 @@
                         name.Trim(),
                         CriteriaExtensions.FromAbbreviation(@operator),
                         (value.Contains(":") ? value.SubstringFrom(":") : value).Trim().EmptyToNull()));
-                        // TODO: properly determine numeric oder not and pass to criteria
+                // TODO: properly determine numeric oder not and pass to criteria
             }
 
-            if (result.Count > 0)
+            if(result.Count > 0)
             {
                 this.logger.LogDebug($"{{LogKey:l}} [{request.HttpContext.GetRequestId()}] http filter criterias={result.Select(c => c.ToString()).ToString("|")}", LogEventKeys.InboundRequest);
             }
@@ -112,7 +112,7 @@
 
         private IEnumerable<Order> BuildOrders(HttpRequest request, string queryStringKey)
         {
-            if (request?.Query?.ContainsKey(queryStringKey) == false)
+            if(request?.Query?.ContainsKey(queryStringKey) == false)
             {
                 return Enumerable.Empty<Order>();
             }
@@ -122,7 +122,7 @@
             var items = query.Value.ToString().Split(',');
 
             var result = new List<Order>();
-            foreach (var item in items.Where(c => !c.IsNullOrEmpty()))
+            foreach(var item in items.Where(c => !c.IsNullOrEmpty()))
             {
                 var name = item.Contains(":") ? item.SubstringFrom(":").Trim() : item;
                 var direction = item.Contains(":") ? item.SubstringTill(":").Trim() : "ascending";
@@ -133,7 +133,7 @@
                         Enum.TryParse(direction, true, out OrderDirection e) ? e : OrderDirection.Asc));
             }
 
-            if (result.Count > 0)
+            if(result.Count > 0)
             {
                 this.logger.LogDebug($"{{LogKey:l}} [{request.HttpContext.GetRequestId()}] http filter orders={result.Select(o => o.ToString()).ToString("|")}", LogEventKeys.InboundRequest);
             }

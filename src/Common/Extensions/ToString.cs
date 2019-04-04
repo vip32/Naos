@@ -15,16 +15,16 @@
         /// <returns>A String consisting of the elements of value interspersed with the separator string.</returns>
         public static string ToString<T>(this IEnumerable<T> source, string separator)
         {
-            if (source.IsNullOrEmpty())
+            if(source.IsNullOrEmpty())
             {
                 return string.Empty;
             }
 
             var sb = new StringBuilder();
 
-            foreach (var obj in source)
+            foreach(var obj in source)
             {
-                if (sb.Length > 0)
+                if(sb.Length > 0)
                 {
                     sb.Append(separator);
                 }

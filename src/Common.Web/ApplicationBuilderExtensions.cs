@@ -22,17 +22,17 @@
             bool condition,
             Func<IApplicationBuilder, IApplicationBuilder> action)
         {
-            if (application == null)
+            if(application == null)
             {
                 throw new ArgumentNullException(nameof(application));
             }
 
-            if (action == null)
+            if(action == null)
             {
                 throw new ArgumentNullException(nameof(action));
             }
 
-            if (condition)
+            if(condition)
             {
                 application = action(application);
             }
@@ -59,22 +59,22 @@
             Func<IApplicationBuilder, IApplicationBuilder> ifAction,
             Func<IApplicationBuilder, IApplicationBuilder> elseAction)
         {
-            if (application == null)
+            if(application == null)
             {
                 throw new ArgumentNullException(nameof(application));
             }
 
-            if (ifAction == null)
+            if(ifAction == null)
             {
                 throw new ArgumentNullException(nameof(ifAction));
             }
 
-            if (elseAction == null)
+            if(elseAction == null)
             {
                 throw new ArgumentNullException(nameof(elseAction));
             }
 
-            if (condition)
+            if(condition)
             {
                 application = ifAction(application);
             }
@@ -100,17 +100,17 @@
             Func<HttpContext, bool> condition,
             Func<IApplicationBuilder, IApplicationBuilder> action)
         {
-            if (application == null)
+            if(application == null)
             {
                 throw new ArgumentNullException(nameof(application));
             }
 
-            if (condition == null)
+            if(condition == null)
             {
                 throw new ArgumentNullException(nameof(condition));
             }
 
-            if (action == null)
+            if(action == null)
             {
                 throw new ArgumentNullException(nameof(action));
             }
@@ -127,7 +127,7 @@
 
                 return context =>
                 {
-                    if (condition(context))
+                    if(condition(context))
                     {
                         return branch(context);
                     }
@@ -156,22 +156,22 @@
             Func<IApplicationBuilder, IApplicationBuilder> ifAction,
             Func<IApplicationBuilder, IApplicationBuilder> elseAction)
         {
-            if (application == null)
+            if(application == null)
             {
                 throw new ArgumentNullException(nameof(application));
             }
 
-            if (condition == null)
+            if(condition == null)
             {
                 throw new ArgumentNullException(nameof(condition));
             }
 
-            if (ifAction == null)
+            if(ifAction == null)
             {
                 throw new ArgumentNullException(nameof(ifAction));
             }
 
-            if (elseAction == null)
+            if(elseAction == null)
             {
                 throw new ArgumentNullException(nameof(elseAction));
             }
@@ -192,7 +192,7 @@
 
                 return context =>
                 {
-                    if (condition(context))
+                    if(condition(context))
                     {
                         return ifBranch(context);
                     }

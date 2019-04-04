@@ -34,7 +34,7 @@
         {
             this.logger.LogInformation("{LogKey:l} hosted service started", LogEventKeys.Queueing);
 
-            if (this.handler != null)
+            if(this.handler != null)
             {
                 await this.queue.ProcessItemsAsync(this.handler);
             }

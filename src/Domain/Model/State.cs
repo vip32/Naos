@@ -123,12 +123,12 @@
             this.SetUpdated(by);
             this.Deactivated = true;
             this.DeactivatedBy = by;
-            if (this.DeactivatedReasons.IsNullOrEmpty())
+            if(this.DeactivatedReasons.IsNullOrEmpty())
             {
                 this.DeactivatedReasons = new List<string>();
             }
 
-            if (by.IsNullOrEmpty() && reason.IsNullOrEmpty())
+            if(by.IsNullOrEmpty() && reason.IsNullOrEmpty())
             {
                 return;
             }
@@ -161,12 +161,12 @@
             this.UpdatedDate = DateTimeOffset.UtcNow;
             this.UpdatedBy = by;
 
-            if (by.IsNullOrEmpty() && reason.IsNullOrEmpty())
+            if(by.IsNullOrEmpty() && reason.IsNullOrEmpty())
             {
                 return;
             }
 
-            if (this.UpdatedReasons.IsNullOrEmpty())
+            if(this.UpdatedReasons.IsNullOrEmpty())
             {
                 this.UpdatedReasons = new List<string>();
             }
@@ -189,7 +189,7 @@
             this.UpdatedDate = this.DeletedDate.Value;
             this.DeletedBy = by;
 
-            if (by.IsNullOrEmpty() && reason.IsNullOrEmpty())
+            if(by.IsNullOrEmpty() && reason.IsNullOrEmpty())
             {
                 return;
             }

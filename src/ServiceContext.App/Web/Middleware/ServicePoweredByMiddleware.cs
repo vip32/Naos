@@ -19,7 +19,7 @@
 
         public Task Invoke(HttpContext httpContext)
         {
-            if (this.options.Enabled)
+            if(this.options.Enabled)
             {
                 httpContext.Response.Headers[this.options.HeaderName] = this.options.HeaderValue;
             }

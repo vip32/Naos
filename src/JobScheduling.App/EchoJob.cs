@@ -26,7 +26,7 @@
         {
             await Task.Run(() =>
             {
-                if (!text.IsNullOrEmpty())
+                if(!text.IsNullOrEmpty())
                 {
                     this.logger.LogInformation($"{{LogKey}} {text}", LogEventKeys.JobScheduling);
                 }
@@ -35,12 +35,12 @@
 
         public Task EchoAsync(string text, CancellationToken cancellationToken, bool breakable)
         {
-            if (breakable && Random.Next(2) == 0)// throw randomly
+            if(breakable && Random.Next(2) == 0)// throw randomly
             {
                 throw new NaosException("error from job");
             }
 
-            if (!text.IsNullOrEmpty())
+            if(!text.IsNullOrEmpty())
             {
                 this.logger.LogInformation($"{{LogKey}} {text}", LogEventKeys.JobScheduling);
             }
@@ -50,15 +50,15 @@
 
         public async Task EchoLongAsync(string text, CancellationToken cancellationToken)
         {
-            for (var i = 1; i <= 5; i++)
+            for(var i = 1; i <= 5; i++)
             {
-                if (cancellationToken.IsCancellationRequested)
+                if(cancellationToken.IsCancellationRequested)
                 {
                     this.logger.LogInformation($"{{LogKey}} job cancelled", LogEventKeys.JobScheduling);
                     return; //Task.FromCanceled(cancellationToken);
                 }
 
-                if (!text.IsNullOrEmpty())
+                if(!text.IsNullOrEmpty())
                 {
                     this.logger.LogInformation(text);
                 }

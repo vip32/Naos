@@ -73,15 +73,15 @@
             {
                 await this.task(args).AnyContext();
             }
-            else if (this.task2 != null)
+            else if(this.task2 != null)
             {
                 await this.task2(cancellationToken, args).AnyContext();
             }
-            else if (this.action2 != null)
+            else if(this.action2 != null)
             {
                 this.action2();
             }
-            else if (this.action != null)
+            else if(this.action != null)
             {
                 this.action(args);
             }

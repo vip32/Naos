@@ -86,7 +86,7 @@
         /// </returns>
         public static long? ToEpoch(this DateTimeOffset? source)
         {
-            if (!source.HasValue)
+            if(!source.HasValue)
             {
                 return null;
             }

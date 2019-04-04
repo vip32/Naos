@@ -6,12 +6,12 @@
     {
         public static string SubstringTill(this string source, string till, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         {
-            if (source.IsNullOrEmpty())
+            if(source.IsNullOrEmpty())
             {
                 return source;
             }
 
-            if (till.IsNullOrEmpty())
+            if(till.IsNullOrEmpty())
             {
                 return source;
             }
@@ -21,12 +21,12 @@
 
         public static string SubstringTillLast(this string source, string till, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         {
-            if (source.IsNullOrEmpty())
+            if(source.IsNullOrEmpty())
             {
                 return source;
             }
 
-            if (till.IsNullOrEmpty())
+            if(till.IsNullOrEmpty())
             {
                 return source;
             }
@@ -36,22 +36,22 @@
 
         private static string SubstringTillInternal(this string source, string till, int index)
         {
-            if (source.IsNullOrEmpty())
+            if(source.IsNullOrEmpty())
             {
                 return source;
             }
 
-            if (till.IsNullOrEmpty())
+            if(till.IsNullOrEmpty())
             {
                 return source;
             }
 
-            if (index == 0)
+            if(index == 0)
             {
                 return string.Empty;
             }
 
-            if (index > 0)
+            if(index > 0)
             {
                 return source.Substring(0, index);
             }

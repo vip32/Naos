@@ -22,7 +22,7 @@
 
             options.Context.AddTag("UserAccounts");
 
-            if (dbContext != null)
+            if(dbContext != null)
             {
                 options.Context.Services.AddSingleton(dbContext); // cross wiring, warning this will be a singleton (not scoped)
             }

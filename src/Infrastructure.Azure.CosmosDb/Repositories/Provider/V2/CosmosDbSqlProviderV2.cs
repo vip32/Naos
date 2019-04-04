@@ -53,12 +53,12 @@
             this.partitionKeyValue = typeof(T).FullName;
 
             this.isMasterCollection = isMasterCollection;
-            if (collectionIdFactory != null)
+            if(collectionIdFactory != null)
             {
                 this.collectionId = collectionIdFactory();
             }
 
-            if (string.IsNullOrEmpty(this.collectionId))
+            if(string.IsNullOrEmpty(this.collectionId))
             {
                 this.collectionId = isMasterCollection ? "master" : typeof(T).Name;
             }
@@ -66,14 +66,14 @@
             this.documentCollection = new AsyncLazy<DocumentCollection>(async () =>
                 await this.GetOrCreateCollectionAsync(this.partitionKeyPath, throughput).AnyContext());
 
-            if (this.documentCollection.Value.Result != null)
+            if(this.documentCollection.Value.Result != null)
             {
-                if (this.documentCollection.Value.Result.PartitionKey?.Paths?.Any() == true)
+                if(this.documentCollection.Value.Result.PartitionKey?.Paths?.Any() == true)
                 {
                     this.isPartitioned = true;
                 }
 
-                if (indexingPolicy == null)
+                if(indexingPolicy == null)
                 {
                     // change the default indexingPolicy so ORDER BY works better with string fields
                     // https://github.com/Azure/azure-cosmos-dotnet-v2/blob/2e9a48b6a446b47dd6182606c8608d439b88b683/samples/code-samples/IndexManagement/Program.cs#L305-L340
@@ -103,7 +103,7 @@
 
         public async Task<T> GetByIdAsync(string id)
         {
-            if (string.IsNullOrEmpty(id))
+            if(string.IsNullOrEmpty(id))
             {
                 return default;
             }
@@ -114,9 +114,9 @@
                     UriFactory.CreateDocumentUri(this.databaseId, this.collectionId, id),
                     new RequestOptions { PartitionKey = new PartitionKey(this.partitionKeyValue) }).AnyContext();
             }
-            catch (DocumentClientException ex)
+            catch(DocumentClientException ex)
             {
-                if (ex.Message.Contains("Resource Not Found"))
+                if(ex.Message.Contains("Resource Not Found"))
                 {
                     return default;
                 }
@@ -136,7 +136,7 @@
 
         public async Task<bool> DeleteByIdAsync(string id)
         {
-            if (string.IsNullOrEmpty(id))
+            if(string.IsNullOrEmpty(id))
             {
                 return false;
             }
@@ -149,9 +149,9 @@
 
                 return result.StatusCode == HttpStatusCode.NoContent;
             }
-            catch (DocumentClientException ex)
+            catch(DocumentClientException ex)
             {
-                if (ex.Message.Contains("Resource Not Found"))
+                if(ex.Message.Contains("Resource Not Found"))
                 {
                     return false;
                 }
@@ -427,10 +427,10 @@
                 UriFactory.CreateDatabaseUri(this.databaseId).ToString())
                 .WhereExpression(c => c.Id == this.collectionId).AsEnumerable().FirstOrDefault();
 
-            if (documentCollection == null)
+            if(documentCollection == null)
             {
                 documentCollection = new DocumentCollection { Id = this.collectionId };
-                if (!string.IsNullOrEmpty(partitionKey))
+                if(!string.IsNullOrEmpty(partitionKey))
                 {
                     documentCollection.PartitionKey.Paths.Add(string.Format("/{0}", partitionKey.Replace(".", "/").Trim('/')));
                 }
@@ -453,7 +453,7 @@
         {
             var result = this.client.CreateDatabaseQuery()
                 .WhereExpression(db => db.Id == this.databaseId).AsEnumerable().FirstOrDefault();
-            if (result == null)
+            if(result == null)
             {
                 result = await this.client.CreateDatabaseAsync(
                     new Database { Id = this.databaseId }).AnyContext();

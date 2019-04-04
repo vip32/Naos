@@ -26,7 +26,7 @@
         /// <param name="context">The exception context.</param>
         public override void OnException(ExceptionContext context)
         {
-            if (context.Exception is OperationCanceledException)
+            if(context.Exception is OperationCanceledException)
             {
                 this.logger.LogInformation($"{LogEventKeys.InboundRequest} [{context.HttpContext?.GetRequestId()}] http request was cancelled");
                 context.ExceptionHandled = true;

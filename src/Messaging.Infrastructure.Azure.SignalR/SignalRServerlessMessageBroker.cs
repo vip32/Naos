@@ -54,7 +54,7 @@
         public void Publish(Message message)
         {
             EnsureArg.IsNotNull(message, nameof(message));
-            if (message.CorrelationId.IsNullOrEmpty())
+            if(message.CorrelationId.IsNullOrEmpty())
             {
                 message.CorrelationId = RandomGenerator.GenerateString(13, true);
             }
@@ -64,24 +64,25 @@
                 [LogEventPropertyKeys.CorrelationId] = message.CorrelationId,
             };
 
-            using (this.logger.BeginScope(loggerState))
+            using(this.logger.BeginScope(loggerState))
             {
-                if (message.Id.IsNullOrEmpty())
+                if(message.Id.IsNullOrEmpty())
                 {
                     message.Id = Guid.NewGuid().ToString();
                     this.logger.LogDebug($"{{LogKey:l}} set message (id={message.Id})", LogEventKeys.Messaging);
                 }
 
-                if (message.Origin.IsNullOrEmpty())
+                if(message.Origin.IsNullOrEmpty())
                 {
                     message.Origin = this.options.MessageScope;
                     this.logger.LogDebug($"{{LogKey:l}} set message (origin={message.Origin})", LogEventKeys.Messaging);
                 }
 
                 // TODO: async publish!
-                if (this.options.Mediator != null)
+                if(this.options.Mediator != null)
                 {
-                    /*await */ this.options.Mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.AnyContext();*/
+                    /*await */
+                    this.options.Mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.AnyContext();*/
                 }
 
                 var messageName = /*message.Name*/ message.GetType().PrettyName();
@@ -104,7 +105,7 @@
                         }
                     }), Encoding.UTF8, ContentType.JSON.ToValue());
                 var response = this.options.HttpClient.CreateClient("default").SendAsync(request).GetAwaiter().GetResult(); // TODO: async!
-                if (response.StatusCode != HttpStatusCode.Accepted)
+                if(response.StatusCode != HttpStatusCode.Accepted)
                 {
                     this.logger.LogError("{LogKey:l} publish failed: HTTP statuscode {StatusCode} (name={MessageName}, id={MessageId}, origin={MessageOrigin})",
                         LogEventKeys.Messaging, response.StatusCode, message.GetType().PrettyName(), message.Id, message.Origin);
@@ -118,7 +119,7 @@
         {
             var messageName = typeof(TMessage).PrettyName();
 
-            if (!this.options.Map.Exists<TMessage>())
+            if(!this.options.Map.Exists<TMessage>())
             {
                 this.logger.LogJournal(LogEventPropertyKeys.TrackSubscribeMessage, "{LogKey:l} subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, endpoint={Endpoint}, hub={Hub})",
                     args: new[] { LogEventKeys.Messaging, typeof(TMessage).PrettyName(), this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name, this.serviceUtils.Endpoint, this.HubName });
@@ -126,7 +127,7 @@
                 this.options.Map.Add<TMessage, THandler>();
             }
 
-            if (this.connection == null)
+            if(this.connection == null)
             {
                 var url = $"{this.serviceUtils.Endpoint}/client/?hub={this.HubName}";
                 this.connection = new HubConnectionBuilder()
@@ -171,12 +172,12 @@
         {
             var processed = false;
 
-            if (this.options.Map.Exists(messageName))
+            if(this.options.Map.Exists(messageName))
             {
-                foreach (var subscription in this.options.Map.GetAll(messageName))
+                foreach(var subscription in this.options.Map.GetAll(messageName))
                 {
                     var messageType = this.options.Map.GetByName(messageName);
-                    if (messageType == null)
+                    if(messageType == null)
                     {
                         continue;
                     }
@@ -192,9 +193,9 @@
                     var concreteType = typeof(IMessageHandler<>).MakeGenericType(messageType);
 
                     var method = concreteType.GetMethod("Handle");
-                    if (handler != null && method != null)
+                    if(handler != null && method != null)
                     {
-                        if (this.options.Mediator != null)
+                        if(this.options.Mediator != null)
                         {
                             await this.options.Mediator.Publish(new MessageHandledDomainEvent(message, this.options.MessageScope)).AnyContext();
                         }

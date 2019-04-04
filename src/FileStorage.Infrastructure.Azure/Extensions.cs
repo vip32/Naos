@@ -17,7 +17,7 @@
 
         public static FileInformation ToFileInfo(this CloudBlockBlob blob)
         {
-            if (blob.Properties.Length == -1)
+            if(blob.Properties.Length == -1)
             {
                 return null;
             }

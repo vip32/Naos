@@ -77,7 +77,7 @@
                new Job(async (t, a) => // send mediator request for data
                 {
                     this.logger.LogInformation($"{LogEventKeys.JobScheduling:l} send jobevent");
-                    if (@event != null)
+                    if(@event != null)
                     {
                         await this.mediator.Send(new JobEvent<TEvent>(@event())).AnyContext();
                     }
@@ -85,13 +85,13 @@
                     {
                         await this.mediator.Send(new JobEvent<TEvent>(null)).AnyContext();
                     }
-               }));
+                }));
         }
 
         public JobSchedulerOptions Register<T>(string key, string cron, string[] args = null, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
             where T : IJob
         {
-            if (!typeof(Job).IsAssignableFrom(typeof(T)))
+            if(!typeof(Job).IsAssignableFrom(typeof(T)))
             {
                 throw new NaosException("Job type to register must implement IJob.");
             }
@@ -101,7 +101,7 @@
                 new Job(async (t, a) => // defer job creation
                 {
                     var job = this.jobFactory.CreateJob(typeof(T));
-                    if (job == null)
+                    if(job == null)
                     {
                         throw new NaosException($"Cannot create job instance for type {typeof(T).PrettyName()}.");
                     }
@@ -122,7 +122,7 @@
                     await Task.Run(() =>
                     {
                         var job = this.jobFactory.Create<T>();
-                        if (job == null)
+                        if(job == null)
                         {
                             throw new NaosException($"cannot create job instance for type {typeof(T).PrettyName()}");
                         }
@@ -145,7 +145,7 @@
             this.logger.LogInformation($"{{LogKey:l}} registration (key={{JobKey}}, cron={registration.Cron}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")}, enabled={registration.Enabled})", LogEventKeys.JobScheduling, registration.Key);
 
             var item = this.Registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(registration.Key));
-            if (item.Key != null)
+            if(item.Key != null)
             {
                 this.Registrations.Remove(item.Key);
             }
@@ -157,7 +157,7 @@
         private object MapParameter(Expression expression, CancellationToken cancellationToken)
         {
             // https://gist.github.com/i-e-b/8556753
-            if (expression.Type.IsValueType && expression.Type == typeof(CancellationToken))
+            if(expression.Type.IsValueType && expression.Type == typeof(CancellationToken))
             {
                 return cancellationToken;
             }

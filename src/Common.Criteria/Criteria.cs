@@ -81,7 +81,7 @@
         public override string ToString()
         {
             var quote = this.IsNumberValue() ? string.Empty : "\"";
-            if (this.Operator.IsFunction())
+            if(this.Operator.IsFunction())
             {
                 // function based operator
                 return $"({this.Name}.{this.Operator.ToValue()}({quote}{this.Value}{quote}))";

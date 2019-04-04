@@ -11,7 +11,7 @@
     {
         public override Task<bool> Handle(ConsoleCommandEvent<HistoryConsoleCommand> request, CancellationToken cancellationToken)
         {
-            foreach (var item in ReadLine.GetHistory().Distinct())
+            foreach(var item in ReadLine.GetHistory().Distinct())
             {
                 Console.WriteLine(item, Color.Gray);
             }

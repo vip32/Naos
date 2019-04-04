@@ -176,13 +176,13 @@
             where T : class, new()
         {
             var partitionKeyProperty = typeof(T).GetProperty("PartitionKey", BindingFlags.Public | BindingFlags.Instance);
-            if (partitionKeyProperty?.CanWrite == true)
+            if(partitionKeyProperty?.CanWrite == true)
             {
                 partitionKeyProperty.SetValue(instance, value.PartitionKey, null);
             }
 
             var rowKeyProperty = typeof(T).GetProperty("RowKey", BindingFlags.Public | BindingFlags.Instance);
-            if (rowKeyProperty?.CanWrite == true)
+            if(rowKeyProperty?.CanWrite == true)
             {
                 rowKeyProperty.SetValue(instance, value.RowKey, null);
             }

@@ -93,7 +93,7 @@
         {
             var result = this.context.Entities.AsEnumerable();
 
-            foreach (var specification in specifications.Safe())
+            foreach(var specification in specifications.Safe())
             {
                 result = result.Where(this.EnsurePredicate(specification));
             }
@@ -109,7 +109,7 @@
         /// <exception cref="ArgumentOutOfRangeException">id</exception>
         public virtual async Task<TEntity> FindOneAsync(object id)
         {
-            if (id.IsDefault())
+            if(id.IsDefault())
             {
                 return default;
             }
@@ -119,7 +119,7 @@
             {
                 var result = this.context.Entities.FirstOrDefault(x => x.Id.Equals(id));
 
-                if (this.Options?.Mapper != null && result != null)
+                if(this.Options?.Mapper != null && result != null)
                 {
                     return this.Options.Mapper.Map<TEntity>(result);
                 }
@@ -139,7 +139,7 @@
         /// <returns></returns>
         public virtual async Task<bool> ExistsAsync(object id)
         {
-            if (id.IsDefault())
+            if(id.IsDefault())
             {
                 return false;
             }
@@ -176,7 +176,7 @@
         /// <returns></returns>
         public async Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
         {
-            if (entity == null)
+            if(entity == null)
             {
                 return (default, ActionResult.None);
             }
@@ -184,14 +184,14 @@
             var isTransient = entity.Id.IsDefault();
             var isNew = isTransient || !await this.ExistsAsync(entity.Id).AnyContext();
 
-            if (isTransient)
+            if(isTransient)
             {
                 this.EnsureId(entity);
             }
 
-            if (this.Options?.PublishEvents != false)
+            if(this.Options?.PublishEvents != false)
             {
-                if (isNew)
+                if(isNew)
                 {
                     await this.mediator.Publish(new EntityInsertDomainEvent(entity)).AnyContext();
                 }
@@ -207,7 +207,7 @@
             this.@lock.EnterWriteLock();
             try
             {
-                if (this.context.Entities.Contains(entity))
+                if(this.context.Entities.Contains(entity))
                 {
                     this.context.Entities.Remove(entity);
                 }
@@ -219,9 +219,9 @@
                 this.@lock.ExitWriteLock();
             }
 
-            if (this.Options?.PublishEvents != false)
+            if(this.Options?.PublishEvents != false)
             {
-                if (isNew)
+                if(isNew)
                 {
                     await this.mediator.Publish(new EntityInsertedDomainEvent(entity)).AnyContext();
                 }
@@ -245,15 +245,15 @@
         /// <exception cref="ArgumentOutOfRangeException">id</exception>
         public async Task<ActionResult> DeleteAsync(object id)
         {
-            if (id.IsDefault())
+            if(id.IsDefault())
             {
                 return ActionResult.None;
             }
 
             var entity = this.context.Entities.FirstOrDefault(x => x.Id.Equals(id));
-            if (entity != null)
+            if(entity != null)
             {
-                if (this.Options?.PublishEvents != false)
+                if(this.Options?.PublishEvents != false)
                 {
                     await this.mediator.Publish(new EntityDeleteDomainEvent(entity)).AnyContext();
                 }
@@ -269,7 +269,7 @@
                     this.@lock.ExitWriteLock();
                 }
 
-                if (this.Options?.PublishEvents != false)
+                if(this.Options?.PublishEvents != false)
                 {
                     await this.mediator.Publish(new EntityDeletedDomainEvent(entity)).AnyContext();
                 }
@@ -288,12 +288,12 @@
         /// <exception cref="ArgumentOutOfRangeException">Id</exception>
         public async Task<ActionResult> DeleteAsync(TEntity entity)
         {
-            if (entity?.Id.IsDefault() != false)
+            if(entity?.Id.IsDefault() != false)
             {
                 return ActionResult.None;
             }
 
-            if (this.Options?.PublishEvents != false)
+            if(this.Options?.PublishEvents != false)
             {
                 await this.mediator.Publish(new EntityDeleteDomainEvent(entity)).AnyContext();
             }
@@ -310,7 +310,7 @@
                 this.@lock.ExitWriteLock();
             }
 
-            if (this.Options?.PublishEvents != false)
+            if(this.Options?.PublishEvents != false)
             {
                 await this.mediator.Publish(new EntityDeletedDomainEvent(entity)).AnyContext();
             }
@@ -331,18 +331,18 @@
             {
                 var result = entities;
 
-                if (options?.Skip.HasValue == true && options.Skip.Value > 0)
+                if(options?.Skip.HasValue == true && options.Skip.Value > 0)
                 {
                     result = result.Skip(options.Skip.Value);
                 }
 
-                if (options?.Take.HasValue == true && options.Take.Value > 0)
+                if(options?.Take.HasValue == true && options.Take.Value > 0)
                 {
                     result = result.Take(options.Take.Value);
                 }
 
                 IOrderedEnumerable<TEntity> orderedResult = null;
-                foreach (var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
+                foreach(var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
                 {
                     orderedResult = orderedResult == null
                         ? order.Direction == OrderDirection.Ascending
@@ -353,12 +353,12 @@
                             : orderedResult.ThenByDescending(order.Expression.Compile());
                 }
 
-                if (orderedResult != null)
+                if(orderedResult != null)
                 {
                     result = orderedResult;
                 }
 
-                if (this.Options?.Mapper != null && result != null)
+                if(this.Options?.Mapper != null && result != null)
                 {
                     return result.Select(r => this.Options.Mapper.Map<TEntity>(r));
                 }
@@ -373,15 +373,15 @@
 
         private void EnsureId(TEntity entity) // TODO: move this to seperate class (IdentityGenerator)
         {
-            if (entity is IEntity<int>)
+            if(entity is IEntity<int>)
             {
                 (entity as IEntity<int>).Id = this.context.Entities.Count() + 1;
             }
-            else if (entity is IEntity<string>)
+            else if(entity is IEntity<string>)
             {
                 (entity as IEntity<string>).Id = Guid.NewGuid().ToString();
             }
-            else if (entity is IEntity<Guid>)
+            else if(entity is IEntity<Guid>)
             {
                 (entity as IEntity<Guid>).Id = Guid.NewGuid();
             }

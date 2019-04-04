@@ -52,7 +52,7 @@
                 [LogEventPropertyKeys.ServiceName] = serviceDescriptor.Name,
             };
 
-            using (this.logger.BeginScope(loggerState))
+            using(this.logger.BeginScope(loggerState))
             {
                 context.SetServiceName(serviceDescriptor.Name);
                 // TODO: log below should take blacklistpatterns in account (RequestResponseLoggingOptions)
@@ -60,7 +60,7 @@
 
                 //await this.next(context);
 
-                if (context.Request.Path == "/" || context.Request.Path.Equals("/index.html", System.StringComparison.OrdinalIgnoreCase))
+                if(context.Request.Path == "/" || context.Request.Path.Equals("/index.html", System.StringComparison.OrdinalIgnoreCase))
                 {
                     await context.Response.WriteAsync(@"
 <!DOCTYPE html>
@@ -83,7 +83,7 @@
 </html>
 ");
                 }
-                else if (context.Request.Path.Equals("/css/naos.css", System.StringComparison.OrdinalIgnoreCase))
+                else if(context.Request.Path.Equals("/css/naos.css", System.StringComparison.OrdinalIgnoreCase))
                 {
                     context.Response.ContentType = ContentType.CSS.ToValue();
                     await context.Response.WriteAsync(@"
@@ -115,13 +115,13 @@ hr {
 }
 ");
                 }
-                else if (context.Request.Path.Equals("/favicon.ico", System.StringComparison.OrdinalIgnoreCase))
+                else if(context.Request.Path.Equals("/favicon.ico", System.StringComparison.OrdinalIgnoreCase))
                 {
                     context.Response.ContentType = ContentType.ICO.ToValue();
                     var icon = ResourcesHelper.GetIconAsBytes();
                     context.Response.Body.Write(icon, 0, icon.Length);
                 }
-                else if (context.Request.Path == "/error")
+                else if(context.Request.Path == "/error")
                 {
                     throw new NaosException("forced exception");
                 }

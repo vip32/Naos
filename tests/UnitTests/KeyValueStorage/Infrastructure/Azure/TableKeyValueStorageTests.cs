@@ -38,7 +38,7 @@
             //var connectionString = "DefaultEndpointsProtocol=https;AccountName=naos;AccountKey=iY7rvsvpzKxa3h8HED6B8VUB5V0NFur91zBr1F+Ebuttm9y0gjuFZScFdqbJeDBKydxiquXZpcSbA4/1iuZorg==;EndpointSuffix=core.windows.net";
             var connectionString = "DefaultEndpointsProtocol=https;AccountName=naos-kv;AccountKey=KHmWrdnHt0J9myHiGZISAQJ8yBZOUNLi68JQDzZEipvvfyIDN2cCwGFPeeHcR9jXL8FQtwE7XqwCokF9tGDPpA==;TableEndpoint=https://naos-kv.table.cosmos.azure.com:443/;";
 
-            if (!connectionString.IsNullOrEmpty())
+            if(!connectionString.IsNullOrEmpty())
             {
                 return new TableKeyValueStorage(o => o
                     .ConnectionString(connectionString));

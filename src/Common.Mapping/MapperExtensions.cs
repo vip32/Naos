@@ -23,7 +23,7 @@
         {
             EnsureArg.IsNotNull(mapper, nameof(mapper));
 
-            if (source == null)
+            if(source == null)
             {
                 return null;
             }
@@ -48,7 +48,7 @@
         {
             EnsureArg.IsNotNull(mapper, nameof(mapper));
 
-            foreach (var source in sources.Safe())
+            foreach(var source in sources.Safe())
             {
                 yield return mapper.Map(source);
             }
@@ -69,7 +69,7 @@
         {
             EnsureArg.IsNotNull(mapper, nameof(mapper));
 
-            for (var i = 0; i < sources.Safe().Count; ++i)
+            for(var i = 0; i < sources.Safe().Count; ++i)
             {
                 var source = sources[i];
                 var destinationItem = Factory<TDestination>.Create();

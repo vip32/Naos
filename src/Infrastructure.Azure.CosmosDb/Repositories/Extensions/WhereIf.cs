@@ -12,7 +12,7 @@
             Expression<Func<T, bool>> expression,
             bool condition)
         {
-            if (condition && expression != null)
+            if(condition && expression != null)
             {
                 return source.Where(expression);
             }
@@ -25,9 +25,9 @@
             IEnumerable<Expression<Func<T, bool>>> expressions,
             bool condition)
         {
-            if (condition && expressions?.Any() == true)
+            if(condition && expressions?.Any() == true)
             {
-                foreach (var expression in expressions)
+                foreach(var expression in expressions)
                 {
                     source = source.Where(expression);
                 }

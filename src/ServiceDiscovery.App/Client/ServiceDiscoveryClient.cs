@@ -25,7 +25,7 @@
             configuration = configuration ?? new ServiceDiscoveryConfiguration();
             this.Logger = loggerFactory.CreateLogger<ServiceDiscoveryClient>();
 
-            if (configuration.RouterEnabled && !configuration.RouterAddress.IsNullOrEmpty())
+            if(configuration.RouterEnabled && !configuration.RouterAddress.IsNullOrEmpty())
             {
                 // server-side (router)
                 httpClient.BaseAddress = new Uri(new Uri(configuration.RouterAddress), configuration.RouterPath.Safe().TrimEnd('/') + "/"); // backslash mandatory https://stackoverflow.com/questions/23438416/why-is-httpclient-baseaddress-not-working
@@ -39,13 +39,13 @@
             else
             {
                 // client-side
-                if (serviceName.IsNullOrEmpty() && serviceTag.IsNullOrEmpty())
+                if(serviceName.IsNullOrEmpty() && serviceTag.IsNullOrEmpty())
                 {
                     throw new ArgumentNullException("serviceName and serviceTag arguments cannot both be null or empty");
                 }
 
                 var registration = registryClient.RegistrationsAsync(serviceName, serviceTag).Result?.FirstOrDefault();
-                if (registration != null)
+                if(registration != null)
                 {
                     httpClient.BaseAddress = new Uri($"{registration.Address}:{registration.Port}".TrimEnd(':'));
                     this.Logger.LogInformation($"{{LogKey:l}} client (service={{ServiceName}}, tag={serviceTag}, address={httpClient.BaseAddress})", LogEventKeys.ServiceDiscovery, serviceName);

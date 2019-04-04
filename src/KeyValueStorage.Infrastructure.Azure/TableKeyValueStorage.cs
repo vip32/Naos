@@ -38,7 +38,7 @@
             var account = CloudStorageAccount.Parse(this.options.ConnectionString);
             this.client = account.CreateCloudTableClient();
 
-            if (this.options.ConnectionString.Contains("table.cosmos.azure.com", StringComparison.OrdinalIgnoreCase))
+            if(this.options.ConnectionString.Contains("table.cosmos.azure.com", StringComparison.OrdinalIgnoreCase))
             {
                 this.isCosmos = true;
             }
@@ -56,14 +56,14 @@
             do
             {
                 var tables = await this.client.ListTablesSegmentedAsync(token);
-                foreach (var table in tables.Results)
+                foreach(var table in tables.Results)
                 {
                     result.Add(table.Name);
                 }
 
                 token = tables.ContinuationToken;
             }
-            while (token != null);
+            while(token != null);
 
             return result;
         }
@@ -71,7 +71,7 @@
         public async Task<bool> DeleteTableAsync(string tableName)
         {
             var table = await this.EnsureTableAsync(tableName, false);
-            if (table != null)
+            if(table != null)
             {
                 await table.DeleteAsync();
                 return this.tableInfos.TryRemove(tableName, out var tag);
@@ -92,7 +92,7 @@
         {
             EnsureArg.IsNotNullOrEmpty(tableName, nameof(tableName));
 
-            if (!this.isCosmos)
+            if(!this.isCosmos)
             {
                 // criteria cause table scan when Azure Table Storage is the backend
                 //throw new NotSupportedException();
@@ -107,12 +107,12 @@
             EnsureArg.IsNotNull(values, nameof(values));
 
             var rowsList = values.ToList();
-            if (rowsList.Count == 0)
+            if(rowsList.Count == 0)
             {
                 return;
             }
 
-            if (!Value.AreDistinct(rowsList))
+            if(!Value.AreDistinct(rowsList))
             {
                 throw new StorageException("DuplicateKey", null);
             }
@@ -128,12 +128,12 @@
             EnsureArg.IsNotNull(values, nameof(values));
 
             var rowsList = values.ToList();
-            if (rowsList.Count == 0)
+            if(rowsList.Count == 0)
             {
                 return;
             }
 
-            if (!Value.AreDistinct(rowsList))
+            if(!Value.AreDistinct(rowsList))
             {
                 throw new StorageException("DuplicateKey", null);
             }
@@ -159,7 +159,7 @@
 
         public async Task DeleteAsync(string tableName, IEnumerable<Key> keys)
         {
-            if (keys == null)
+            if(keys == null)
             {
                 return;
             }
@@ -184,7 +184,7 @@
             EnsureArg.IsNotNull(values, nameof(values));
 
             var table = await this.EnsureTableAsync(tableName, createTable);
-            if (table == null)
+            if(table == null)
             {
                 return;
             }
@@ -197,16 +197,16 @@
             IGrouping<string, Value> valueGroups,
             Action<TableBatchOperation, ITableEntity> action)
         {
-            foreach (var valuesChunk in valueGroups.Chunk(this.options.MaxInsertLimit))
+            foreach(var valuesChunk in valueGroups.Chunk(this.options.MaxInsertLimit))
             {
-                if (valuesChunk == null)
+                if(valuesChunk == null)
                 {
                     break;
                 }
 
                 var values = new List<Value>(valuesChunk);
                 var batch = new TableBatchOperation();
-                foreach (var value in values)
+                foreach(var value in values)
                 {
                     action(batch, new EntityAdapter(
                         value,
@@ -214,7 +214,7 @@
                 }
 
                 var result = await this.ExecuteBatchAsync(table, batch);
-                for (var i = 0; i < result.Count && i < values.Count; i++)
+                for(var i = 0; i < result.Count && i < values.Count; i++)
                 {
                     var tableResult = result[i];
                     var value = values[i];
@@ -228,28 +228,28 @@
         {
             EnsureArg.IsNotNullOrEmpty(tableName, nameof(tableName));
 
-            if (keys == null)
+            if(keys == null)
             {
                 return;
             }
 
             var table = await this.EnsureTableAsync(tableName, createTable);
-            if (table == null)
+            if(table == null)
             {
                 return;
             }
 
-            foreach (var group in keys.GroupBy(e => e.PartitionKey))
+            foreach(var group in keys.GroupBy(e => e.PartitionKey))
             {
-                foreach (var chunk in group.Chunk(this.options.MaxInsertLimit))
+                foreach(var chunk in group.Chunk(this.options.MaxInsertLimit))
                 {
-                    if (chunk == null)
+                    if(chunk == null)
                     {
                         break;
                     }
 
                     var batch = new TableBatchOperation();
-                    foreach (var key in chunk)
+                    foreach(var key in chunk)
                     {
                         action(batch, new EntityAdapter(
                             key,
@@ -265,13 +265,13 @@
         {
             EnsureArg.IsNotNullOrEmpty(tableName, nameof(tableName));
 
-            if (!new Regex("^[A-Za-z][A-Za-z0-9]{2,62}$").IsMatch(tableName))
+            if(!new Regex("^[A-Za-z][A-Za-z0-9]{2,62}$").IsMatch(tableName))
             {
                 throw new ArgumentException($"table name {tableName} not valid", nameof(tableName));
             }
 
             var cached = this.tableInfos.TryGetValue(tableName, out var tag);
-            if (!cached)
+            if(!cached)
             {
                 tag = new TableInfo
                 {
@@ -281,13 +281,13 @@
                 this.tableInfos[tableName] = tag;
             }
 
-            if (!tag.Exists && createIfNotExists)
+            if(!tag.Exists && createIfNotExists)
             {
                 await tag.Table.CreateAsync();
                 tag.Exists = true;
             }
 
-            if (!tag.Exists)
+            if(!tag.Exists)
             {
                 return null;
             }
@@ -301,9 +301,9 @@
             {
                 return (await table.ExecuteBatchAsync(operation)).ToList();
             }
-            catch (StorageException ex)
+            catch(StorageException ex)
             {
-                if (ex.RequestInformation.HttpStatusCode == 409)
+                if(ex.RequestInformation.HttpStatusCode == 409)
                 {
                     throw new StorageException("DuplicateKey", ex);
                 }
@@ -315,9 +315,9 @@
         private Value ToValue(DynamicTableEntity entity)
         {
             var result = new Value(entity.PartitionKey, entity.RowKey);
-            foreach (var property in entity.Properties)
+            foreach(var property in entity.Properties)
             {
-                switch (property.Value.PropertyType)
+                switch(property.Value.PropertyType)
                 {
                     case EdmType.Boolean:
                         result[property.Key] = property.Value.BooleanValue;
@@ -356,13 +356,13 @@
             IEnumerable<Criteria> criterias = null)
         {
             var table = await this.EnsureTableAsync(tableName, false);
-            if (table == null)
+            if(table == null)
             {
                 return new List<Value>();
             }
 
             var filters = new List<string>();
-            if (key?.PartitionKey != null)
+            if(key?.PartitionKey != null)
             {
                 filters.Add(TableQuery.GenerateFilterCondition(
                    "PartitionKey",
@@ -370,7 +370,7 @@
                    WebUtility.UrlEncode(key.PartitionKey)));
             }
 
-            if (key?.RowKey != null)
+            if(key?.RowKey != null)
             {
                 filters.Add(TableQuery.GenerateFilterCondition(
                    "RowKey",
@@ -381,10 +381,10 @@
             this.Map(criterias, filters);
 
             var query = new TableQuery();
-            if (filters.Count > 0)
+            if(filters.Count > 0)
             {
                 var filter = filters[0];
-                for (var i = 1; i < filters.Count; i++)
+                for(var i = 1; i < filters.Count; i++)
                 {
                     filter = TableQuery.CombineFilters(filter, TableOperators.And, filters[i]);
                 }
@@ -392,7 +392,7 @@
                 query = query.Where(filter);
             }
 
-            if (take > 0)
+            if(take > 0)
             {
                 query = query.Take(take);
             }
@@ -405,44 +405,44 @@
                 entities.AddRange(queryResults.Results);
                 token = queryResults.ContinuationToken;
             }
-            while (token != null);
+            while(token != null);
 
             return entities.Select(this.ToValue).ToList();
         }
 
         private void Map(IEnumerable<Criteria> criterias, List<string> filters)
         {
-            foreach (var criteria in criterias.Safe())
+            foreach(var criteria in criterias.Safe())
             {
-                if (criteria.Value is int i)
+                if(criteria.Value is int i)
                 {
                     filters.Add(TableQuery.GenerateFilterConditionForInt(
                        criteria.Name,
                        criteria.Operator.ToAbbreviation(),
                        i));
                 }
-                else if (criteria.Value is double d)
+                else if(criteria.Value is double d)
                 {
                     filters.Add(TableQuery.GenerateFilterConditionForDouble(
                        criteria.Name,
                        criteria.Operator.ToAbbreviation(),
                        d));
                 }
-                else if (criteria.Value is long l)
+                else if(criteria.Value is long l)
                 {
                     filters.Add(TableQuery.GenerateFilterConditionForLong(
                        criteria.Name,
                        criteria.Operator.ToAbbreviation(),
                        l));
                 }
-                else if (criteria.Value is bool b)
+                else if(criteria.Value is bool b)
                 {
                     filters.Add(TableQuery.GenerateFilterConditionForBool(
                        criteria.Name,
                        criteria.Operator.ToAbbreviation(),
                        b));
                 }
-                else if (criteria.Value is DateTime dt)
+                else if(criteria.Value is DateTime dt)
                 {
                     filters.Add(TableQuery.GenerateFilterConditionForDate(
                        criteria.Name,

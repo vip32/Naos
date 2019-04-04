@@ -6,12 +6,12 @@
     {
         public static string SubstringFrom(this string source, string from, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         {
-            if (source.IsNullOrEmpty())
+            if(source.IsNullOrEmpty())
             {
                 return source;
             }
 
-            if (from.IsNullOrEmpty())
+            if(from.IsNullOrEmpty())
             {
                 return source;
             }
@@ -21,12 +21,12 @@
 
         public static string SubstringFromLast(this string source, string from, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         {
-            if (source.IsNullOrEmpty())
+            if(source.IsNullOrEmpty())
             {
                 return source;
             }
 
-            if (from.IsNullOrEmpty())
+            if(from.IsNullOrEmpty())
             {
                 return source;
             }
@@ -36,27 +36,27 @@
 
         private static string SubstringFromInternal(this string source, string from, int index)
         {
-            if (source.IsNullOrEmpty())
+            if(source.IsNullOrEmpty())
             {
                 return source;
             }
 
-            if (from.IsNullOrEmpty())
+            if(from.IsNullOrEmpty())
             {
                 return source;
             }
 
-            if (index == 0 && index + from.Length < source.Length)
+            if(index == 0 && index + from.Length < source.Length)
             {
                 return source.Substring(index + from.Length);
             }
 
-            if (index > 0 && index == source.Length)
+            if(index > 0 && index == source.Length)
             {
                 return string.Empty;
             }
 
-            if (index > 0 && index + from.Length < source.Length)
+            if(index > 0 && index + from.Length < source.Length)
             {
                 return source.Substring(index + from.Length);
             }

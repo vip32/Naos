@@ -26,7 +26,7 @@
             this.services
                 .AddHttpClient("default")
                     .AddHttpMessageHandler<HttpClientCorrelationHandler>();
-                    //.AddHttpMessageHandler<HttpClientLogHandler>();
+            //.AddHttpMessageHandler<HttpClientLogHandler>();
             this.services.Replace(Microsoft.Extensions.DependencyInjection.ServiceDescriptor.Singleton<IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
 
             this.services

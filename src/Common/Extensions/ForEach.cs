@@ -15,16 +15,16 @@
         /// <returns>the source with the actions applied</returns>
         public static IEnumerable<T> ForEach<T>(this IEnumerable<T> source, Action<T> action)
         {
-            if (source.IsNullOrEmpty())
+            if(source.IsNullOrEmpty())
             {
                 return source;
             }
 
             var itemsArray = source as T[] ?? source.ToArray();
 
-            foreach (var value in itemsArray)
+            foreach(var value in itemsArray)
             {
-                if (action != null && !EqualityComparer<T>.Default.Equals(value, default(T)))
+                if(action != null && !EqualityComparer<T>.Default.Equals(value, default(T)))
                 {
                     action(value);
                 }
@@ -45,17 +45,17 @@
 
         public static void ForEach<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>> childSelector, Action<T> action = null)
         {
-            if (source.IsNullOrEmpty())
+            if(source.IsNullOrEmpty())
             {
                 return;
             }
 
-            if (action == null)
+            if(action == null)
             {
                 return;
             }
 
-            foreach (var item in source)
+            foreach(var item in source)
             {
                 action(item);
                 childSelector?.Invoke(item).ForEach(childSelector, action);

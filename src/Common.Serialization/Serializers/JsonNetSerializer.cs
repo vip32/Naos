@@ -22,8 +22,8 @@
 
         public object Deserialize(Stream input, Type type)
         {
-            using (var sr = new StreamReader(input))
-            using (var reader = new JsonTextReader(sr))
+            using(var sr = new StreamReader(input))
+            using(var reader = new JsonTextReader(sr))
             {
                 return this.serializer.Deserialize(reader, type);
             }
@@ -31,8 +31,8 @@
 
         public T Deserialize<T>(Stream input)
         {
-            using (var sr = new StreamReader(input))
-            using (var reader = new JsonTextReader(sr))
+            using(var sr = new StreamReader(input))
+            using(var reader = new JsonTextReader(sr))
             {
                 return this.serializer.Deserialize<T>(reader);
             }

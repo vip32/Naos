@@ -18,7 +18,7 @@
             where T : ServiceDiscoveryClient
         {
             name = name ?? typeof(T).Name;
-            if (name.EndsWith("Client", StringComparison.OrdinalIgnoreCase))
+            if(name.EndsWith("Client", StringComparison.OrdinalIgnoreCase))
             {
                 name = name.Replace("Client", "-serviceclient", StringComparison.OrdinalIgnoreCase);
             }
@@ -42,7 +42,7 @@
 
             var options = new UriHealthCheckOptions();
             var address = serviceClient.HttpClient?.BaseAddress?.ToString(); //.SubstringTill("servicediscovery");
-            if (address.IsNullOrEmpty())
+            if(address.IsNullOrEmpty())
             {
                 throw new NaosException($"Health: ServiceDiscovery client '{typeof(T)}' address not found, registration inactive (due to health) or missing from registry?");
             }

@@ -35,7 +35,7 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
             path = PathHelper.Normalize(path);
-            if (!await this.ExistsAsync(path))
+            if(!await this.ExistsAsync(path))
             {
                 return null;
             }
@@ -50,7 +50,7 @@
 
             foreach(var assembly in this.options.Assemblies)
             {
-                if (item.Properties.GetValue<string>("assemblyName").SafeEquals(assembly.GetName().Name))
+                if(item.Properties.GetValue<string>("assemblyName").SafeEquals(assembly.GetName().Name))
                 {
                     return assembly.GetManifestResourceStream(item.Properties.GetValue<string>("resourceName"));
                 }
@@ -64,7 +64,7 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
             path = PathHelper.Normalize(path);
-            if (!await this.ExistsAsync(path))
+            if(!await this.ExistsAsync(path))
             {
                 return null;
             }
@@ -112,12 +112,12 @@
             searchPattern = PathHelper.Normalize(searchPattern);
             var result = this.GetFileList(this.options.Assemblies);
 
-            if (result.IsNullOrEmpty())
+            if(result.IsNullOrEmpty())
             {
                 return Task.FromResult(new PagedResults(null, false, null));
             }
 
-            if (!searchPattern.IsNullOrEmpty())
+            if(!searchPattern.IsNullOrEmpty())
             {
                 result = result.Where(i => i.Path.EqualsPattern(searchPattern));
             }
@@ -133,7 +133,7 @@
         private IEnumerable<FileInformation> GetFileList(IEnumerable<Assembly> assemblies)
         {
             var result = new List<FileInformation>();
-            foreach (var assembly in assemblies.Safe())
+            foreach(var assembly in assemblies.Safe())
             {
                 var created = assembly.GetBuildDate();
                 foreach(var resource in assembly.GetManifestResourceNames())

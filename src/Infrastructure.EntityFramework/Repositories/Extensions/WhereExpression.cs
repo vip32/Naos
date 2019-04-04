@@ -11,7 +11,7 @@
             this IQueryable<TSource> source,
             Expression<Func<TSource, bool>> expression)
         {
-            if (expression != null)
+            if(expression != null)
             {
                 return source.Where(expression);
             }
@@ -23,9 +23,9 @@
             this IQueryable<TSource> source,
             IEnumerable<Expression<Func<TSource, bool>>> expressions)
         {
-            if (expressions?.Any() == true)
+            if(expressions?.Any() == true)
             {
-                foreach (var expression in expressions)
+                foreach(var expression in expressions)
                 {
                     source = source.Where(expression);
                 }

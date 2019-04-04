@@ -21,7 +21,7 @@
         [Fact]
         public async Task FindAll_Test()
         {
-            using (var context = new StubDbContext(this.DbOptions()))
+            using(var context = new StubDbContext(this.DbOptions()))
             {
                 // arrange
                 this.SeedData(context);
@@ -39,7 +39,7 @@
         [Fact]
         public async Task FindAll_WithSpecifications_Test()
         {
-            using (var context = new StubDbContext(this.DbOptions()))
+            using(var context = new StubDbContext(this.DbOptions()))
             {
                 // arrange
                 this.SeedData(context);
@@ -67,7 +67,7 @@
         [Fact]
         public async Task FindAll_WithAndSpecification_Test()
         {
-            using (var context = new StubDbContext(this.DbOptions()))
+            using(var context = new StubDbContext(this.DbOptions()))
             {
                 // arrange
                 this.SeedData(context);
@@ -87,7 +87,7 @@
         [Fact]
         public async Task FindAll_WithOrSpecification_Test()
         {
-            using (var context = new StubDbContext(this.DbOptions()))
+            using(var context = new StubDbContext(this.DbOptions()))
             {
                 // arrange
                 this.SeedData(context);
@@ -109,7 +109,7 @@
         [Fact]
         public async Task FindAll_WithNotSpecification_Test()
         {
-            using (var context = new StubDbContext(this.DbOptions()))
+            using(var context = new StubDbContext(this.DbOptions()))
             {
                 // arrange
                 this.SeedData(context);
@@ -131,7 +131,7 @@
         [Fact]
         public async Task FindById_Test()
         {
-            using (var context = new StubDbContext(this.DbOptions()))
+            using(var context = new StubDbContext(this.DbOptions()))
             {
                 // arrange
                 this.SeedData(context);
@@ -151,7 +151,7 @@
         [Fact]
         public async Task AddOrUpdate_Test()
         {
-            using (var context = new StubDbContext(this.DbOptions()))
+            using(var context = new StubDbContext(this.DbOptions()))
             {
                 // arrange
                 this.SeedData(context);
@@ -182,7 +182,7 @@
         [Fact]
         public async Task Delete_Test()
         {
-            using (var context = new StubDbContext(this.DbOptions()))
+            using(var context = new StubDbContext(this.DbOptions()))
             {
                 // arrange
                 this.SeedData(context);

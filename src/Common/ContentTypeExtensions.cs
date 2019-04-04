@@ -6,16 +6,16 @@
     {
         public static ContentType FromValue(string value, ContentType @default = ContentType.TEXT)
         {
-            if (string.IsNullOrEmpty(value))
+            if(string.IsNullOrEmpty(value))
             {
                 return @default;
             }
 
-            foreach (var enumValue in Enum.GetValues(typeof(ContentType)))
+            foreach(var enumValue in Enum.GetValues(typeof(ContentType)))
             {
                 Enum.TryParse(enumValue.ToString(), true, out ContentType contentType);
                 var metaDataValue = contentType.GetAttributeValue<ContentTypeMetadata, string>(x => x.Value);
-                if (metaDataValue != null && metaDataValue.Equals(value, StringComparison.OrdinalIgnoreCase))
+                if(metaDataValue != null && metaDataValue.Equals(value, StringComparison.OrdinalIgnoreCase))
                 {
                     return contentType;
                 }
@@ -26,19 +26,19 @@
 
         public static ContentType FromExtension(string extension, ContentType @default = ContentType.TEXT)
         {
-            if (string.IsNullOrEmpty(extension))
+            if(string.IsNullOrEmpty(extension))
             {
                 return @default;
             }
 
-            foreach (var enumValue in Enum.GetValues(typeof(ContentType)))
+            foreach(var enumValue in Enum.GetValues(typeof(ContentType)))
             {
                 Enum.TryParse(enumValue.ToString(), true, out ContentType contentType);
                 var metaDataValue = contentType.GetAttributeValue<ContentTypeMetadata, string>(x => x.FileExtension);
-                if (metaDataValue != null)
+                if(metaDataValue != null)
                 {
                     // compare the attribute value with the extension
-                    if (metaDataValue.Equals(extension, StringComparison.OrdinalIgnoreCase))
+                    if(metaDataValue.Equals(extension, StringComparison.OrdinalIgnoreCase))
                     {
                         return contentType;
                     }
@@ -58,7 +58,7 @@
 
         public static ContentType FromFileName(string fileName, ContentType @default = ContentType.TEXT)
         {
-            if (string.IsNullOrEmpty(fileName))
+            if(string.IsNullOrEmpty(fileName))
             {
                 return @default;
             }
@@ -96,10 +96,10 @@
         {
             var type = contentType.GetType();
             var info = type.GetMember(contentType.ToString());
-            if ((info != null) && (info.Length > 0))
+            if((info != null) && (info.Length > 0))
             {
                 var attrs = info[0].GetCustomAttributes(typeof(ContentTypeMetadata), false);
-                if ((attrs != null) && (attrs.Length > 0))
+                if((attrs != null) && (attrs.Length > 0))
                 {
                     return attrs[0];
                 }

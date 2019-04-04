@@ -21,20 +21,20 @@
         /// </exception>
         public static int IndexOf<T>(this IEnumerable<T> items, Func<T, bool> predicate)
         {
-            if (items == null)
+            if(items == null)
             {
                 throw new ArgumentNullException(nameof(items));
             }
 
-            if (predicate == null)
+            if(predicate == null)
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
 
             var index = 0;
-            foreach (var item in items)
+            foreach(var item in items)
             {
-                if (predicate(item))
+                if(predicate(item))
                 {
                     return index;
                 }

@@ -68,7 +68,7 @@
 
         public async Task<TEntity> FindOneAsync(object id)
         {
-            if (id.IsDefault())
+            if(id.IsDefault())
             {
                 return default;
             }
@@ -78,7 +78,7 @@
 
         public async Task<bool> ExistsAsync(object id)
         {
-            if (id.IsDefault())
+            if(id.IsDefault())
             {
                 return false;
             }
@@ -115,16 +115,16 @@
         /// <returns></returns>
         public async Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
         {
-            if (entity == null)
+            if(entity == null)
             {
                 return (default, ActionResult.None);
             }
 
             var isNew = entity.Id.IsDefault() || !await this.ExistsAsync(entity.Id).AnyContext();
 
-            if (this.options.PublishEvents && this.options.Mediator != null)
+            if(this.options.PublishEvents && this.options.Mediator != null)
             {
-                if (isNew)
+                if(isNew)
                 {
                     await this.options.Mediator.Publish(new EntityInsertDomainEvent(entity)).AnyContext();
                 }
@@ -138,9 +138,9 @@
             var result = await this.options.Provider.UpsertAsync(entity).AnyContext();
             entity = result;
 
-            if (this.options.PublishEvents && this.options.Mediator != null)
+            if(this.options.PublishEvents && this.options.Mediator != null)
             {
-                if (isNew)
+                if(isNew)
                 {
                     //await this.mediator.Publish(new EntityInsertedDomainEvent<IEntity>(result)).AnyContext();
                     await this.options.Mediator.Publish(new EntityInsertedDomainEvent(result)).AnyContext();
@@ -160,15 +160,15 @@
 
         public async Task<ActionResult> DeleteAsync(object id)
         {
-            if (id.IsDefault())
+            if(id.IsDefault())
             {
                 return ActionResult.None;
             }
 
             var entity = await this.FindOneAsync(id).AnyContext();
-            if (entity != null)
+            if(entity != null)
             {
-                if (this.options.PublishEvents && this.options.Mediator != null)
+                if(this.options.PublishEvents && this.options.Mediator != null)
                 {
                     await this.options.Mediator.Publish(new EntityDeleteDomainEvent(entity)).AnyContext();
                 }
@@ -176,7 +176,7 @@
                 this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogEventKeys.DomainRepository);
                 await this.options.Provider.DeleteByIdAsync(id as string).AnyContext();
 
-                if (this.options.PublishEvents && this.options.Mediator != null)
+                if(this.options.PublishEvents && this.options.Mediator != null)
                 {
                     await this.options.Mediator.Publish(new EntityDeletedDomainEvent(entity)).AnyContext();
                 }
@@ -189,7 +189,7 @@
 
         public async Task<ActionResult> DeleteAsync(TEntity entity)
         {
-            if (entity?.Id.IsDefault() != false)
+            if(entity?.Id.IsDefault() != false)
             {
                 return ActionResult.None;
             }

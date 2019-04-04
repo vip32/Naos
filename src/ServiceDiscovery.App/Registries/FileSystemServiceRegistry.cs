@@ -36,7 +36,7 @@
             EnsureArg.IsNotNullOrEmpty(id, nameof(id));
 
             var path = Path.Combine(this.directory, $"registration_{id}.json.tmp");
-            if (File.Exists(path))
+            if(File.Exists(path))
             {
                 this.logger.LogInformation("{LogKey:l} filesystem registration delete (id={RegistrationId})", LogEventKeys.ServiceDiscovery, id);
 
@@ -58,17 +58,17 @@
             this.logger.LogInformation($"{{LogKey:l}} register filesystem (name={{RegistrationName}}, tags={string.Join("|", registration.Tags.Safe())}, id={{RegistrationId}}, address={registration.FullAddress}, file={path.SubstringFromLast(@"\")})",
                 LogEventKeys.ServiceDiscovery, registration.Name, registration.Id);
 
-            if (File.Exists(pathTemp))
+            if(File.Exists(pathTemp))
             {
                 File.Delete(pathTemp);
             }
 
-            if (File.Exists(path))
+            if(File.Exists(path))
             {
                 File.Delete(path);
             }
 
-            using (var streamWriter = File.CreateText(pathTemp))
+            using(var streamWriter = File.CreateText(pathTemp))
             {
                 streamWriter.Write(SerializationHelper.JsonSerialize(registration));
                 streamWriter.Flush();
@@ -81,7 +81,7 @@
 
         public async Task<IEnumerable<ServiceRegistration>> RegistrationsAsync()
         {
-            if (this.watcher == null)
+            if(this.watcher == null)
             {
                 this.EnsureDirectory(this.directory);
                 this.RefreshRegistrations(this.directory);
@@ -120,7 +120,7 @@
 
         private void EnsureDirectory(string fullPath)
         {
-            if (!Directory.Exists(fullPath))
+            if(!Directory.Exists(fullPath))
             {
                 Directory.CreateDirectory(fullPath);
             }
@@ -129,7 +129,7 @@
         private string GetFileContents(string fullPath)
         {
             //System.Threading.Thread.Sleep(200); // this helps with locked files
-            using (var reader = new StreamReader(File.Open(fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)))
+            using(var reader = new StreamReader(File.Open(fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)))
             {
                 return reader.ReadToEnd();
             }
@@ -139,10 +139,10 @@
         {
             this.registrations.Clear();
 
-            foreach (var path in Directory.GetFiles(directory))
+            foreach(var path in Directory.GetFiles(directory))
             {
                 var registration = JsonConvert.DeserializeObject<ServiceRegistration>(this.GetFileContents(path));
-                if (registration != null)
+                if(registration != null)
                 {
                     this.logger.LogInformation($"{{LogKey:l}} filesystem registrations refresh (name={{RegistrationName}}, id={{RegistrationId}}, file={path.SubstringFromLast(@"\")})",
                         LogEventKeys.ServiceDiscovery, registration.Name, registration.Id);

@@ -37,7 +37,7 @@
 
             var account = CloudStorageAccount.Parse(options.ConnectionString);
             var client = account.CreateCloudQueueClient();
-            if (options.RetryPolicy != null)
+            if(options.RetryPolicy != null)
             {
                 client.DefaultRequestOptions.RetryPolicy = options.RetryPolicy;
             }
@@ -56,7 +56,7 @@
             EnsureArg.IsNotNull(data, nameof(data));
             this.EnsureMetaData(data);
 
-            using (this.logger.BeginScope(new Dictionary<string, object>
+            using(this.logger.BeginScope(new Dictionary<string, object>
             {
                 [LogEventPropertyKeys.CorrelationId] = data.As<IHaveCorrelationId>()?.CorrelationId,
             }))
@@ -95,7 +95,7 @@
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
             this.logger.LogDebug($"queue item complete (id={item.Id}, queue={this.options.Name})");
 
-            if (item.IsAbandoned || item.IsCompleted)
+            if(item.IsAbandoned || item.IsCompleted)
             {
                 throw new InvalidOperationException($"queue item has already been completed or abandoned (id={item.Id})");
             }
@@ -116,13 +116,13 @@
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
             this.logger.LogDebug($"queue item abandon (id={item.Id}, queue={this.options.Name})");
 
-            if (item.IsAbandoned || item.IsCompleted)
+            if(item.IsAbandoned || item.IsCompleted)
             {
                 throw new InvalidOperationException($"queue item has already been completed or abandoned (id={item.Id})");
             }
 
             var message = this.ToMessage(item);
-            if (message.DequeueCount > this.options.Retries)
+            if(message.DequeueCount > this.options.Retries)
             {
                 // too many retries
                 await Task.WhenAll(
@@ -175,7 +175,7 @@
         {
             await this.EnsureQueueAsync(cancellationToken).AnyContext();
 
-            if (this.options.Mediator == null)
+            if(this.options.Mediator == null)
             {
                 throw new NaosException("queue processing error: no mediator instance provided");
             }
@@ -201,7 +201,7 @@
 
         protected override async Task EnsureQueueAsync(CancellationToken cancellationToken = default)
         {
-            if (this.queueCreated)
+            if(this.queueCreated)
             {
                 return;
             }
@@ -220,18 +220,18 @@
             this.logger.LogDebug($"queue item dequeue (queue={this.options.Name})");
 
             var message = await this.queue.GetMessageAsync(this.options.ProcessTimeout, null, null).AnyContext();
-            if (message == null)
+            if(message == null)
             {
-                while (message == null && !cancellationToken.IsCancellationRequested)
+                while(message == null && !cancellationToken.IsCancellationRequested)
                 {
-                    if (!cancellationToken.IsCancellationRequested)
+                    if(!cancellationToken.IsCancellationRequested)
                     {
                         Task.Delay(this.options.DequeueInterval.Milliseconds).Wait();
                     }
 
                     //try
                     //{
-                        message = await this.queue.GetMessageAsync(this.options.ProcessTimeout, null, null).AnyContext();
+                    message = await this.queue.GetMessageAsync(this.options.ProcessTimeout, null, null).AnyContext();
                     //}
                     //catch (Exception ex)
                     //{
@@ -240,7 +240,7 @@
                 }
             }
 
-            if (message == null)
+            if(message == null)
             {
                 return null;
             }
@@ -256,42 +256,42 @@
             Task.Run(async () =>
             {
                 this.logger.LogInformation($"{{LogKey:l}} processing started (queue={this.options.Name}, type={this.GetType().PrettyName()})", args: new[] { LogEventKeys.Queueing });
-                while (!linkedCancellationToken.IsCancellationRequested)
+                while(!linkedCancellationToken.IsCancellationRequested)
                 {
                     IQueueItem<TData> item = null;
                     try
                     {
                         item = await this.DequeueWithIntervalAsync(linkedCancellationToken.Token).AnyContext();
                     }
-                    catch (Exception ex)
+                    catch(Exception ex)
                     {
                         this.logger.LogError(ex, $"{{LogKey:l}} processing error: {ex.Message}", args: new[] { LogEventKeys.Queueing });
                     }
 
-                    if (linkedCancellationToken.IsCancellationRequested || item == null)
+                    if(linkedCancellationToken.IsCancellationRequested || item == null)
                     {
                         continue;
                     }
 
-                    using (this.logger.BeginScope(new Dictionary<string, object>
-                        {
-                            [LogEventPropertyKeys.CorrelationId] = item.Data.As<IHaveCorrelationId>()?.CorrelationId,
-                        }))
+                    using(this.logger.BeginScope(new Dictionary<string, object>
+                    {
+                        [LogEventPropertyKeys.CorrelationId] = item.Data.As<IHaveCorrelationId>()?.CorrelationId,
+                    }))
                     {
                         try
                         {
                             await handler(item, linkedCancellationToken.Token).AnyContext();
-                            if (autoComplete && !item.IsAbandoned && !item.IsCompleted)
+                            if(autoComplete && !item.IsAbandoned && !item.IsCompleted)
                             {
                                 await item.CompleteAsync().AnyContext();
                             }
                         }
-                        catch (Exception ex)
+                        catch(Exception ex)
                         {
                             Interlocked.Increment(ref this.workerErrorCount);
                             this.logger.LogError(ex, $"{{LogKey:l}} processing error: {ex.Message}", args: new[] { LogEventKeys.Queueing });
 
-                            if (!item.IsAbandoned && !item.IsCompleted)
+                            if(!item.IsAbandoned && !item.IsCompleted)
                             {
                                 await item.AbandonAsync().AnyContext();
                             }
@@ -313,10 +313,10 @@
                 this.serializer.Deserialize<TData>(message.AsBytes),
                 this);
 
-            using (this.logger.BeginScope(new Dictionary<string, object>
-                {
-                    [LogEventPropertyKeys.CorrelationId] = item.Data.As<IHaveCorrelationId>()?.CorrelationId,
-                }))
+            using(this.logger.BeginScope(new Dictionary<string, object>
+            {
+                [LogEventPropertyKeys.CorrelationId] = item.Data.As<IHaveCorrelationId>()?.CorrelationId,
+            }))
             {
                 this.logger.LogJournal(LogEventPropertyKeys.TrackDequeue, $"{{LogKey:l}} item dequeued (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
                 this.LastDequeuedDate = DateTime.UtcNow;
@@ -327,7 +327,7 @@
         private CloudQueueMessage ToMessage(IQueueItem<TData> item)
         {
 #pragma warning disable SA1119 // Statement must not use unnecessary parenthesis
-            if (!(item is AzureStorageQueueItem<TData> azureQueueItem))
+            if(!(item is AzureStorageQueueItem<TData> azureQueueItem))
 #pragma warning restore SA1119 // Statement must not use unnecessary parenthesis
             {
                 throw new ArgumentException($"invalid queue item type, not of type '{nameof(AzureStorageQueueItem<TData>)}'");

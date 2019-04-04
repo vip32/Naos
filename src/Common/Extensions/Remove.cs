@@ -10,7 +10,7 @@
         /// <returns></returns>
         public static string Remove(this string source, string value)
         {
-            if (source == null)
+            if(source == null)
             {
                 return source;
             }

@@ -17,7 +17,7 @@
 
         public override Task<bool> Handle(ConsoleCommandEvent<HelpConsoleCommand> request, CancellationToken cancellationToken)
         {
-            foreach (var command in this.commands)
+            foreach(var command in this.commands)
             {
                 Colorful.Console.WriteLine($"{command.GetType().GetAttributeValue<VerbAttribute, string>(a => a.Name) ?? "?NAME?"} - {command.GetType().GetAttributeValue<VerbAttribute, string>(a => a.HelpText)}", Color.Gray); // ({command.GetType()})
             }

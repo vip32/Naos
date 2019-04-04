@@ -48,9 +48,9 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
             path = PathHelper.Normalize(path);
-            lock (this.@lock)
+            lock(this.@lock)
             {
-                if (!this.storage.ContainsKey(path))
+                if(!this.storage.ContainsKey(path))
                 {
                     return Task.FromResult<Stream>(null);
                 }
@@ -82,12 +82,12 @@
 
             path = PathHelper.Normalize(path);
             var contents = ReadBytes(stream);
-            if (contents.Length > this.MaxFileSize)
+            if(contents.Length > this.MaxFileSize)
             {
                 throw new NaosException(string.Format("File size {0} exceeds the maximum size of {1}.", contents.Length.Bytes().ToString("#.##"), this.MaxFileSize.Bytes().ToString("#.##")));
             }
 
-            lock (this.@lock)
+            lock(this.@lock)
             {
                 this.storage[path] = Tuple.Create(
                     new FileInformation
@@ -99,7 +99,7 @@
                         Size = contents.Length
                     }, contents);
 
-                if (this.storage.Count > this.MaxFiles)
+                if(this.storage.Count > this.MaxFiles)
                 {
                     this.storage.Remove(this.storage.OrderByDescending(kvp => kvp.Value.Item1.Created).First().Key);
                 }
@@ -115,9 +115,9 @@
 
             path = PathHelper.Normalize(path);
             newPath = PathHelper.Normalize(newPath);
-            lock (this.@lock)
+            lock(this.@lock)
             {
-                if (!this.storage.ContainsKey(path))
+                if(!this.storage.ContainsKey(path))
                 {
                     return Task.FromResult(false);
                 }
@@ -138,9 +138,9 @@
 
             path = PathHelper.Normalize(path);
             targetPath = PathHelper.Normalize(targetPath);
-            lock (this.@lock)
+            lock(this.@lock)
             {
-                if (!this.storage.ContainsKey(path))
+                if(!this.storage.ContainsKey(path))
                 {
                     return Task.FromResult(false);
                 }
@@ -158,9 +158,9 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
             path = PathHelper.Normalize(path);
-            lock (this.@lock)
+            lock(this.@lock)
             {
-                if (!this.storage.ContainsKey(path))
+                if(!this.storage.ContainsKey(path))
                 {
                     return Task.FromResult(false);
                 }
@@ -173,9 +173,9 @@
 
         public Task<int> DeleteFilesAsync(string searchPattern = null, CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrEmpty(searchPattern) || searchPattern == "*")
+            if(string.IsNullOrEmpty(searchPattern) || searchPattern == "*")
             {
-                lock (this.@lock)
+                lock(this.@lock)
                 {
                     this.storage.Clear();
                 }
@@ -186,20 +186,20 @@
             searchPattern = PathHelper.Normalize(searchPattern);
             var count = 0;
 
-            if (searchPattern[searchPattern.Length - 1] == Path.DirectorySeparatorChar)
+            if(searchPattern[searchPattern.Length - 1] == Path.DirectorySeparatorChar)
             {
                 searchPattern = $"{searchPattern}*";
             }
-            else if (!searchPattern.EndsWith(Path.DirectorySeparatorChar + "*") && !Path.HasExtension(searchPattern))
+            else if(!searchPattern.EndsWith(Path.DirectorySeparatorChar + "*") && !Path.HasExtension(searchPattern))
             {
                 searchPattern = Path.Combine(searchPattern, "*");
             }
 
             var regex = new Regex("^" + Regex.Escape(searchPattern).Replace("\\*", ".*?") + "$");
-            lock (this.@lock)
+            lock(this.@lock)
             {
                 var keys = this.storage.Keys.Where(k => regex.IsMatch(k)).Select(k => this.storage[k].Item1).ToList();
-                foreach (var key in keys)
+                foreach(var key in keys)
                 {
                     this.storage.Remove(key.Path);
                     count++;
@@ -211,12 +211,12 @@
 
         public async Task<PagedResults> GetFileInformationsAsync(int pageSize = 100, string searchPattern = null, CancellationToken cancellationToken = default)
         {
-            if (pageSize <= 0)
+            if(pageSize <= 0)
             {
                 return PagedResults.EmptyResults;
             }
 
-            if (searchPattern == null)
+            if(searchPattern == null)
             {
                 searchPattern = "*";
             }
@@ -235,7 +235,7 @@
 
         private static byte[] ReadBytes(Stream stream)
         {
-            using (var ms = new MemoryStream())
+            using(var ms = new MemoryStream())
             {
                 stream.CopyTo(ms);
                 return ms.ToArray();
@@ -247,20 +247,20 @@
             var list = new List<FileInformation>();
             var pagingLimit = pageSize;
             var skip = (page - 1) * pagingLimit;
-            if (pagingLimit < int.MaxValue)
+            if(pagingLimit < int.MaxValue)
             {
                 pagingLimit += 1;
             }
 
             var regex = new Regex("^" + Regex.Escape(searchPattern).Replace("\\*", ".*?") + "$");
 
-            lock (this.@lock)
+            lock(this.@lock)
             {
                 list.AddRange(this.storage.Keys.Where(k => regex.IsMatch(k)).Select(k => this.storage[k].Item1).Skip(skip).Take(pagingLimit).ToList());
             }
 
             var hasMore = false;
-            if (list.Count == pagingLimit)
+            if(list.Count == pagingLimit)
             {
                 hasMore = true;
                 list.RemoveAt(pagingLimit);

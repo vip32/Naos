@@ -48,14 +48,14 @@
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
         public async Task<ActionResult<ServiceRegistration>> Post(ServiceRegistration model)
         {
-            if (!this.ModelState.IsValid)
+            if(!this.ModelState.IsValid)
             {
                 throw new BadRequestException(this.ModelState);
             }
 
             var exists = (await this.context.RegistryClient.RegistrationsAsync().AnyContext()).Any(r => r.Id.Equals(model.Id));
             await this.context.RegistryClient.RegisterAsync(model).AnyContext();
-            if (exists)
+            if(exists)
             {
                 return this.Accepted(this.Url.Action(nameof(this.Get), new { id = model.Id }), model);
             }
@@ -74,12 +74,12 @@
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
         public async Task<IActionResult> Delete(string id)
         {
-            if (id.IsNullOrEmpty() || id.Equals("0"))
+            if(id.IsNullOrEmpty() || id.Equals("0"))
             {
                 throw new BadRequestException("Model id cannot be empty");
             }
 
-            if (!(await this.context.RegistryClient.RegistrationsAsync().AnyContext()).Any(r => r.Id.Equals(id)))
+            if(!(await this.context.RegistryClient.RegistrationsAsync().AnyContext()).Any(r => r.Id.Equals(id)))
             {
                 return this.NotFound(); // TODO: throw notfoundexception?
             }

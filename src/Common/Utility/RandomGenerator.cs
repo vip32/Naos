@@ -18,7 +18,7 @@
         /// <returns></returns>
         public static string GenerateString(int length, bool alphanumeric = true, bool nonAlphanumeric = false, bool lowerCase = false, bool mixedCase = false)
         {
-            if (length < 0)
+            if(length < 0)
             {
                 length = 0;
             }
@@ -28,17 +28,17 @@
                 ? characters + "0123456789"
                 : characters;
 
-            if (nonAlphanumeric)
+            if(nonAlphanumeric)
             {
                 chars += "!\"§$%&/()=?*#-.,";
             }
 
-            if (lowerCase)
+            if(lowerCase)
             {
                 chars = chars.ToLower();
             }
 
-            if (!lowerCase && mixedCase)
+            if(!lowerCase && mixedCase)
             {
                 chars += characters.ToLower();
             }

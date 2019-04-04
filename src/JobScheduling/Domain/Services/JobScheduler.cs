@@ -44,7 +44,7 @@
             this.logger.LogInformation($"{{LogKey:l}} registration (key={{JobKey}}, id={registration.Identifier}, cron={registration.Cron}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")}, enabled={registration.Enabled})", LogEventKeys.JobScheduling, registration.Key);
 
             var item = this.Options.Registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(registration.Key));
-            if (item.Key != null)
+            if(item.Key != null)
             {
                 this.Options.Registrations.Remove(item.Key);
             }
@@ -60,7 +60,7 @@
 
         public IJobScheduler UnRegister(JobRegistration registration)
         {
-            if (registration != null)
+            if(registration != null)
             {
                 this.Options.Registrations.Remove(registration);
             }
@@ -77,7 +77,7 @@
         public async Task TriggerAsync(string key, string[] args = null)
         {
             var item = this.Options.Registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(key));
-            if (item.Key != null)
+            if(item.Key != null)
             {
                 await this.TriggerAsync(key, new CancellationTokenSource(item.Key.Timeout).Token, args);
             }
@@ -90,7 +90,7 @@
         public async Task TriggerAsync(string key, CancellationToken cancellationToken, string[] args = null)
         {
             var item = this.Options.Registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(key));
-            if (item.Key != null)
+            if(item.Key != null)
             {
                 await this.ExecuteJobAsync(item.Key, item.Value, cancellationToken, args ?? item.Key?.Args).AnyContext();
             }
@@ -109,7 +109,7 @@
         {
             EnsureArg.IsTrue(moment.Kind == DateTimeKind.Utc);
 
-            if (!this.Options.Enabled)
+            if(!this.Options.Enabled)
             {
                 //this.logger.LogDebug($"job scheduler run not started (enabled={this.Settings.Enabled})");
                 return;
@@ -133,7 +133,7 @@
                 }, cts.Token);
             }).ToList();
 
-            if (dueJobs.IsNullOrEmpty())
+            if(dueJobs.IsNullOrEmpty())
             {
                 this.logger.LogInformation($"{{LogKey:l}} run has no due jobs at moment {moment.ToString("o")}", LogEventKeys.JobScheduling);
             }
@@ -143,7 +143,7 @@
 
         private async Task ExecuteJobAsync(JobRegistration registration, IJob job, CancellationToken cancellationToken, string[] args = null)
         {
-            if (registration?.Key.IsNullOrEmpty() == false && job != null)
+            if(registration?.Key.IsNullOrEmpty() == false && job != null)
             {
                 try
                 {
@@ -160,9 +160,9 @@
                         // TODO: publish domain event (job finished)
                     }
 
-                    if (!registration.IsReentrant)
+                    if(!registration.IsReentrant)
                     {
-                        if (this.mutex.TryAcquireLock(registration.Key))
+                        if(this.mutex.TryAcquireLock(registration.Key))
                         {
                             try
                             {
@@ -183,13 +183,13 @@
                         await Execute();
                     }
                 }
-                catch (OperationCanceledException ex)
+                catch(OperationCanceledException ex)
                 {
                     // TODO: publish domain event (job failed)
                     this.logger.LogWarning(ex, $"{{LogKey:l}} canceled (key={{JobKey}}), type={job.GetType().PrettyName()})", LogEventKeys.JobScheduling, registration.Key);
                     //this.errorHandler?.Invoke(ex);
                 }
-                catch (Exception ex)
+                catch(Exception ex)
                 {
                     // TODO: publish domain event (job failed)
                     this.logger.LogError(ex.InnerException ?? ex, $"{{LogKey:l}} failed (key={{JobKey}}), type={job.GetType().PrettyName()})", LogEventKeys.JobScheduling, registration.Key);

@@ -23,12 +23,12 @@
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
             EnsureArg.IsNotNull(naosOptions.Context, nameof(naosOptions.Context));
 
-            if (naosOptions.Context.Descriptor.Product.IsNullOrEmpty())
+            if(naosOptions.Context.Descriptor.Product.IsNullOrEmpty())
             {
                 throw new NaosException("SERVICE descriptor needs a productName");
             }
 
-            if (naosOptions.Context.Descriptor.Capability.IsNullOrEmpty())
+            if(naosOptions.Context.Descriptor.Capability.IsNullOrEmpty())
             {
                 throw new NaosException("SERVICE descriptor needs a capabilityName");
             }

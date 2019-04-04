@@ -200,7 +200,7 @@
         [Fact]
         public async Task UpsertAsync_Test()
         {
-            for (var i = 1; i < 10; i++)
+            for(var i = 1; i < 10; i++)
             {
                 // arrange/act
                 var result = await this.sut.UpsertAsync(this.entityFaker.Generate()).AnyContext();

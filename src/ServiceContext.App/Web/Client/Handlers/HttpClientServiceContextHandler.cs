@@ -29,9 +29,9 @@
                     new ProductInfoHeaderValue($"({Environment.OSVersion})"),
                 };
 
-            if (!request.Headers.UserAgent.SafeAny())
+            if(!request.Headers.UserAgent.SafeAny())
             {
-                foreach (var userAgentValue in this.userAgentValues)
+                foreach(var userAgentValue in this.userAgentValues)
                 {
                     request.Headers.UserAgent.Add(userAgentValue);
                 }

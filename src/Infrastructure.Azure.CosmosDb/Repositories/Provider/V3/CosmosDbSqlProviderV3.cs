@@ -36,12 +36,12 @@
             this.container = /*await*/this.database.Containers
                 .CreateContainerIfNotExistsAsync(
                     new CosmosContainerSettings(
-                    options.Container.EmptyToNull() ?? typeof(T).PrettyName().Pluralize().ToLower(),
-                    partitionKeyPath: this.partitionKeyPath)
-                    {
-                        IndexingPolicy = new IndexingPolicy(new RangeIndex(DataType.String) { Precision = -1 })
-                    },
-                    throughput: options.ThroughPut).Result;
+                        options.Container.EmptyToNull() ?? typeof(T).PrettyName().Pluralize().ToLower(),
+                        partitionKeyPath: this.partitionKeyPath)
+                        {
+                            IndexingPolicy = new IndexingPolicy(new RangeIndex(DataType.String) { Precision = -1 })
+                        },
+                        throughput: options.ThroughPut).Result;
         }
 
         public CosmosDbSqlProviderV3(Builder<CosmosDbSqlProviderV3OptionsBuilder, CosmosDbSqlProviderV3Options> optionsBuilder)

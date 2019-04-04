@@ -16,9 +16,9 @@
         public DataDictionary(IEnumerable<KeyValuePair<string, object>> items)
             : base(StringComparer.OrdinalIgnoreCase)
         {
-            foreach (var item in items.Safe())
+            foreach(var item in items.Safe())
             {
-                if (!item.Key.IsNullOrEmpty())
+                if(!item.Key.IsNullOrEmpty())
                 {
                     this.Add(item.Key, item.Value);
                 }
@@ -28,7 +28,7 @@
         public DataDictionary(string key, object value)
             : base(StringComparer.OrdinalIgnoreCase)
         {
-            if (!key.IsNullOrEmpty())
+            if(!key.IsNullOrEmpty())
             {
                 this.Add(key, value);
             }
@@ -36,12 +36,12 @@
 
         public DataDictionary AddOrUpdate<T>(string key, object value)
         {
-            if (key.IsNullOrEmpty())
+            if(key.IsNullOrEmpty())
             {
                 return this;
             }
 
-            if (this.ContainsKey(key))
+            if(this.ContainsKey(key))
             {
                 this.Remove(key);
             }
@@ -53,7 +53,7 @@
 
         public object GetValueOrDefault(string key)
         {
-            if (key.IsNullOrEmpty())
+            if(key.IsNullOrEmpty())
             {
                 return null;
             }
@@ -63,7 +63,7 @@
 
         public object GetValueOrDefault(string key, object defaultValue)
         {
-            if (key.IsNullOrEmpty())
+            if(key.IsNullOrEmpty())
             {
                 return null;
             }
@@ -73,7 +73,7 @@
 
         public object GetValueOrDefault(string key, Func<object> defaultValueProvider)
         {
-            if (key.IsNullOrEmpty())
+            if(key.IsNullOrEmpty())
             {
                 return null;
             }
@@ -83,12 +83,12 @@
 
         public T GetValue<T>(string key, bool throwIfKeyNotFound = false)
         {
-            if (key.IsNullOrEmpty())
+            if(key.IsNullOrEmpty())
             {
                 return default;
             }
 
-            if (!this.ContainsKey(key) && throwIfKeyNotFound)
+            if(!this.ContainsKey(key) && throwIfKeyNotFound)
             {
                 throw new KeyNotFoundException($"Key \"{key}\" not found in the dictionary.");
             }
@@ -98,18 +98,18 @@
 
         public T GetValueOrDefault<T>(string key, T defaultValue = default)
         {
-            if (!this.ContainsKey(key))
+            if(!this.ContainsKey(key))
             {
                 return defaultValue;
             }
 
             var value = this[key];
-            if (value is T)
+            if(value is T)
             {
                 return (T)value;
             }
 
-            if (value == null)
+            if(value == null)
             {
                 return defaultValue;
             }
@@ -133,12 +133,12 @@
 
         public string GetStringValue(string name, string defaultValue)
         {
-            if (!this.TryGetValue(name, out var value))
+            if(!this.TryGetValue(name, out var value))
             {
                 return defaultValue;
             }
 
-            if (value is string)
+            if(value is string)
             {
                 return (string)value;
             }

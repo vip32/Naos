@@ -90,23 +90,23 @@
     <hr />");
             try
             {
-                if (!this.filterContext.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Environment))))
+                if(!this.filterContext.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Environment))))
                 {
                     this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Environment), CriteriaOperator.Equal, Environment.GetEnvironmentVariable(EnvironmentKeys.Environment) ?? "Production"));
                 }
 
-                if (!this.filterContext.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Level))))
+                if(!this.filterContext.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Level))))
                 {
                     this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.Equal, "Information"));
                 }
 
-                if (!this.filterContext.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Ticks))))
+                if(!this.filterContext.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Ticks))))
                 {
                     this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Ticks), CriteriaOperator.LessThanOrEqual, DateTime.UtcNow.Ticks));
                     this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Ticks), CriteriaOperator.GreaterThanOrEqual, DateTime.UtcNow.AddHours(-24).Ticks));
                 }
 
-                foreach (var criteria in this.filterContext.Criterias)
+                foreach(var criteria in this.filterContext.Criterias)
                 {
                     await this.HttpContext.Response.WriteAsync($"criteria: {criteria}<br/>");
                 }
@@ -122,18 +122,18 @@
                     this.filterContext.GetSpecifications<LogEvent>(),
                     this.filterContext.GetFindOptions<LogEvent>()).AnyContext();
 
-                foreach (var logEvent in logEvents)
+                foreach(var logEvent in logEvents)
                 {
                     var levelColor = "lime";
-                    if (logEvent.Level.Equals("Verbose", StringComparison.OrdinalIgnoreCase) || logEvent.Level.Equals("Debug", StringComparison.OrdinalIgnoreCase))
+                    if(logEvent.Level.Equals("Verbose", StringComparison.OrdinalIgnoreCase) || logEvent.Level.Equals("Debug", StringComparison.OrdinalIgnoreCase))
                     {
                         levelColor = "#75715E";
                     }
-                    else if (logEvent.Level.Equals("Warning", StringComparison.OrdinalIgnoreCase))
+                    else if(logEvent.Level.Equals("Warning", StringComparison.OrdinalIgnoreCase))
                     {
                         levelColor = "#FF8C00";
                     }
-                    else if (logEvent.Level.Equals("Error", StringComparison.OrdinalIgnoreCase) || logEvent.Level.Equals("Fatal", StringComparison.OrdinalIgnoreCase))
+                    else if(logEvent.Level.Equals("Error", StringComparison.OrdinalIgnoreCase) || logEvent.Level.Equals("Fatal", StringComparison.OrdinalIgnoreCase))
                     {
                         levelColor = "#FF0000";
                     }

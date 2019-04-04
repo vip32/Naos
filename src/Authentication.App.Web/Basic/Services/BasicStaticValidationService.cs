@@ -14,7 +14,7 @@
         {
             this.configuration = configuration ?? new BasicStaticValidationServiceConfiguration();
             this.configuration.Claims = this.configuration.Claims ?? new Dictionary<string, string>();
-            if (!this.configuration.Claims.ContainsKey(ClaimTypes.Name))
+            if(!this.configuration.Claims.ContainsKey(ClaimTypes.Name))
             {
                 // add the static user
                 this.configuration.Claims.Add(ClaimTypes.Name, this.configuration.UserName ?? "unknown");

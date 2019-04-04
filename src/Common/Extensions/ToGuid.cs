@@ -6,14 +6,14 @@
     {
         public static Guid? ToGuid(this string source)
         {
-            if (source.IsNullOrEmpty())
+            if(source.IsNullOrEmpty())
             {
                 return null;
             }
 
             var result = Guid.TryParse(source, out var parsedValue);
 
-            if (!result)
+            if(!result)
             {
                 return null;
             }

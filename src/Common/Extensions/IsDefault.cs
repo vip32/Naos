@@ -24,9 +24,9 @@
 
         public static bool IsDefault(this object source)
         {
-            if (source?.GetType().IsValueType == true)
+            if(source?.GetType().IsValueType == true)
             {
-                switch (source)
+                switch(source)
                 {
                     case int s:
                         return s == default;

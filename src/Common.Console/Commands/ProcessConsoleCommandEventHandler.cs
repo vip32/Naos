@@ -35,7 +35,7 @@
             //"Is64BitProcess", Environment.Is64BitProcess);
             //"Domain", Environment.UserDomainName);
 
-            if (request.Command.Memory)
+            if(request.Command.Memory)
             {
                 Console.WriteLine(process.PrivateMemorySize64.Bytes().ToString("#.##"), Color.Gray);
             }

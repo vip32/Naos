@@ -22,19 +22,19 @@
         //     method returns the current instance unchanged.
         public static string Replace(this string source, string oldValue, string newValue, StringComparison comparison)
         {
-            if (string.IsNullOrWhiteSpace(source))
+            if(string.IsNullOrWhiteSpace(source))
             {
                 return source;
             }
 
             // skip the loop entirely if oldValue and newValue are the same
-            if (string.Compare(oldValue, newValue, comparison) == 0)
+            if(string.Compare(oldValue, newValue, comparison) == 0)
             {
                 return source;
             }
 
             // this is a hack to avoid the bug reported here https://stackoverflow.com/questions/244531/is-there-an-alternative-to-string-replace-that-is-case-insensitive/13847351#comment31063745_244933
-            if (oldValue.Length > source.Length)
+            if(oldValue.Length > source.Length)
             {
                 return source;
             }
@@ -44,7 +44,7 @@
             var previousIndex = 0;
             var index = source.IndexOf(oldValue, comparison);
 
-            while (index != -1)
+            while(index != -1)
             {
                 sb.Append(source.Substring(previousIndex, index - previousIndex));
                 sb.Append(newValue);

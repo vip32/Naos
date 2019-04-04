@@ -20,7 +20,7 @@
             return this;
         }
 
-        public CosmosDbSqlRepositoryOptionsBuilder<TEntity> Pub(bool publishEvents)
+        public CosmosDbSqlRepositoryOptionsBuilder<TEntity> PublishEvents(bool publishEvents)
         {
             this.Target.PublishEvents = publishEvents;
             return this;

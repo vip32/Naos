@@ -17,12 +17,12 @@
             string value,
             bool ignoreCase = true)
         {
-            if (source == null && value == null)
+            if(source == null && value == null)
             {
                 return true;
             }
 
-            if (source == null)
+            if(source == null)
             {
                 return false;
             }
@@ -44,24 +44,24 @@
             IEnumerable<string> values,
             bool ignoreCase = true)
         {
-            if (source == null && values == null)
+            if(source == null && values == null)
             {
                 return true;
             }
 
-            if (values.IsNullOrEmpty())
+            if(values.IsNullOrEmpty())
             {
                 return false;
             }
 
-            foreach (var value in values.Safe())
+            foreach(var value in values.Safe())
             {
-                if (value == null)
+                if(value == null)
                 {
                     continue;
                 }
 
-                if (source.EqualsPattern(value, ignoreCase))
+                if(source.EqualsPattern(value, ignoreCase))
                 {
                     return true;
                 }

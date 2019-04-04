@@ -57,7 +57,7 @@
             var messageName = typeof(TMessage).PrettyName();
             var ruleName = this.GetRuleName(messageName);
 
-            if (!this.options.Map.Exists<TMessage>())
+            if(!this.options.Map.Exists<TMessage>())
             {
                 this.logger.LogJournal(LogEventPropertyKeys.TrackSubscribeMessage, "{LogKey:l} subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, entityPath={EntityPath})", args: new[] { LogEventKeys.Messaging, messageName, this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name, this.options.Provider.EntityPath });
 
@@ -70,7 +70,7 @@
                         Name = ruleName
                     }).GetAwaiter().GetResult();
                 }
-                catch (ServiceBusException)
+                catch(ServiceBusException)
                 {
                     this.logger.LogDebug($"{{LogKey:l}} servicebus found subscription rule: {ruleName}", LogEventKeys.Messaging);
                 }
@@ -88,7 +88,7 @@
         public void Publish(Domain.Message message)
         {
             EnsureArg.IsNotNull(message, nameof(message));
-            if (message.CorrelationId.IsNullOrEmpty())
+            if(message.CorrelationId.IsNullOrEmpty())
             {
                 message.CorrelationId = RandomGenerator.GenerateString(13, true);
             }
@@ -98,24 +98,25 @@
                 [LogEventPropertyKeys.CorrelationId] = message.CorrelationId,
             };
 
-            using (this.logger.BeginScope(loggerState))
+            using(this.logger.BeginScope(loggerState))
             {
-                if (message.Id.IsNullOrEmpty())
+                if(message.Id.IsNullOrEmpty())
                 {
                     message.Id = Guid.NewGuid().ToString();
                     this.logger.LogDebug($"{{LogKey:l}} set message (id={message.Id})", LogEventKeys.Messaging);
                 }
 
-                if (message.Origin.IsNullOrEmpty())
+                if(message.Origin.IsNullOrEmpty())
                 {
                     message.Origin = this.options.MessageScope;
                     this.logger.LogDebug($"{{LogKey:l}} set message (origin={message.Origin})", LogEventKeys.Messaging);
                 }
 
                 // TODO: async publish!
-                if (this.options.Mediator != null)
+                if(this.options.Mediator != null)
                 {
-                    /*await */ this.options.Mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.AnyContext();*/
+                    /*await */
+                    this.options.Mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.AnyContext();*/
                 }
 
                 var messageName = message.GetType().PrettyName();
@@ -159,7 +160,7 @@
                  .GetAwaiter()
                  .GetResult();
             }
-            catch (MessagingEntityNotFoundException)
+            catch(MessagingEntityNotFoundException)
             {
                 this.logger.LogDebug($"{{LogKey:l}} servicebus subscription rule not found: {ruleName}", LogEventKeys.Messaging);
             }
@@ -171,7 +172,7 @@
         {
             var ruleName = messageName;
 
-            if (!this.options.FilterScope.IsNullOrEmpty())
+            if(!this.options.FilterScope.IsNullOrEmpty())
             {
                 ruleName += $"-{this.options.FilterScope}";
             }
@@ -186,7 +187,7 @@
                 {
                     //this.logger.LogInformation("message received (id={MessageId}, name={MessageName})", message.MessageId, message.Label);
 
-                    if (await this.ProcessMessage(m))
+                    if(await this.ProcessMessage(m))
                     {
                         // complete message so it is not received again
                         await this.client.CompleteAsync(m.SystemProperties.LockToken);
@@ -212,12 +213,12 @@
             var processed = false;
             var messageName = serviceBusMessage.Label;
 
-            if (this.options.Map.Exists(messageName))
+            if(this.options.Map.Exists(messageName))
             {
-                foreach (var subscription in this.options.Map.GetAll(messageName))
+                foreach(var subscription in this.options.Map.GetAll(messageName))
                 {
                     var messageType = this.options.Map.GetByName(messageName);
-                    if (messageType == null)
+                    if(messageType == null)
                     {
                         continue;
                     }
@@ -227,14 +228,14 @@
                         [LogEventPropertyKeys.CorrelationId] = serviceBusMessage.CorrelationId,
                     };
 
-                    using (this.logger.BeginScope(loggerState))
+                    using(this.logger.BeginScope(loggerState))
                     {
                         // map some message properties to the typed message
                         //var jsonMessage = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(serviceBusMessage.Body), messageType); // TODO: use ISerializer here, compacter messages
                         //var message = jsonMessage as Domain.Message;
                         var message = this.serializer.Deserialize(serviceBusMessage.Body, messageType) as Domain.Message;
                         // TODO: message can be null, skip
-                        if (message.Origin.IsNullOrEmpty())
+                        if(message.Origin.IsNullOrEmpty())
                         {
                             //message.CorrelationId = jsonMessage.AsJToken().GetStringPropertyByToken("CorrelationId");
                             message.Origin = serviceBusMessage.UserProperties.ContainsKey("Origin") ? serviceBusMessage.UserProperties["Origin"] as string : string.Empty;
@@ -248,9 +249,9 @@
                         var concreteType = typeof(IMessageHandler<>).MakeGenericType(messageType);
 
                         var method = concreteType.GetMethod("Handle");
-                        if (handler != null && method != null)
+                        if(handler != null && method != null)
                         {
-                            if (this.options.Mediator != null)
+                            if(this.options.Mediator != null)
                             {
                                 await this.options.Mediator.Publish(new MessageHandledDomainEvent(message, this.options.MessageScope)).AnyContext();
                             }
@@ -289,7 +290,7 @@
                  .GetAwaiter()
                  .GetResult();
             }
-            catch (MessagingEntityNotFoundException)
+            catch(MessagingEntityNotFoundException)
             {
                 // do nothing, default rule not found
             }

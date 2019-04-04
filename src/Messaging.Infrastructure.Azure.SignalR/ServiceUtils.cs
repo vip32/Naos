@@ -27,7 +27,7 @@
         public string GenerateAccessToken(string audience, string userId, TimeSpan? lifetime = null)
         {
             IEnumerable<Claim> claims = null;
-            if (userId != null)
+            if(userId != null)
             {
                 claims = new[]
                 {
@@ -55,19 +55,19 @@
         internal static(string, string) ParseConnectionString(string connectionString)
         {
             var properties = connectionString.Split(PropertySeparator, StringSplitOptions.RemoveEmptyEntries);
-            if (properties.Length > 1)
+            if(properties.Length > 1)
             {
                 var dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-                foreach (var property in properties)
+                foreach(var property in properties)
                 {
                     var kvp = property.Split(KeyValueSeparator, 2);
-                    if (kvp.Length != 2)
+                    if(kvp.Length != 2)
                     {
                         continue;
                     }
 
                     var key = kvp[0].Trim();
-                    if (dict.ContainsKey(key))
+                    if(dict.ContainsKey(key))
                     {
                         throw new ArgumentException($"Duplicate properties found in connection string: {key}.");
                     }
@@ -75,7 +75,7 @@
                     dict.Add(key, kvp[1].Trim());
                 }
 
-                if (dict.ContainsKey(EndpointProperty) && dict.ContainsKey(AccessKeyProperty))
+                if(dict.ContainsKey(EndpointProperty) && dict.ContainsKey(AccessKeyProperty))
                 {
                     return (dict[EndpointProperty].TrimEnd('/'), dict[AccessKeyProperty]);
                 }

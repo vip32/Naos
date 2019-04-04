@@ -21,17 +21,17 @@
             bool condition,
             Func<IConfigurationBuilder, IConfigurationBuilder> action)
         {
-            if (configurationBuilder == null)
+            if(configurationBuilder == null)
             {
                 throw new ArgumentNullException(nameof(configurationBuilder));
             }
 
-            if (action == null)
+            if(action == null)
             {
                 throw new ArgumentNullException(nameof(action));
             }
 
-            if (condition)
+            if(condition)
             {
                 configurationBuilder = action(configurationBuilder);
             }
@@ -58,22 +58,22 @@
             Func<IConfigurationBuilder, IConfigurationBuilder> ifAction,
             Func<IConfigurationBuilder, IConfigurationBuilder> elseAction)
         {
-            if (configurationBuilder == null)
+            if(configurationBuilder == null)
             {
                 throw new ArgumentNullException(nameof(configurationBuilder));
             }
 
-            if (ifAction == null)
+            if(ifAction == null)
             {
                 throw new ArgumentNullException(nameof(ifAction));
             }
 
-            if (elseAction == null)
+            if(elseAction == null)
             {
                 throw new ArgumentNullException(nameof(elseAction));
             }
 
-            if (condition)
+            if(condition)
             {
                 configurationBuilder = ifAction(configurationBuilder);
             }

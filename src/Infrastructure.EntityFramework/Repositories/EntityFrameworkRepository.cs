@@ -29,14 +29,14 @@
 
             try
             {
-                if (this.options.DbContext.Database.GetDbConnection().ConnectionString.Equals("DataSource=:memory:", StringComparison.OrdinalIgnoreCase))
+                if(this.options.DbContext.Database.GetDbConnection().ConnectionString.Equals("DataSource=:memory:", StringComparison.OrdinalIgnoreCase))
                 {
                     // needed for sqlite inmemory
                     this.options.DbContext.Database.OpenConnection();
                     this.options.DbContext.Database.EnsureCreated();
                 }
             }
-            catch (InvalidOperationException)
+            catch(InvalidOperationException)
             {
                 // not possible for DbContext with UseInMemoryDatabase enabled (options)
                 // 'Relational-specific methods can only be used when the context is using a relational database provider.'
@@ -50,7 +50,7 @@
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            if (options?.HasOrders() == true)
+            if(options?.HasOrders() == true)
             {
                 return await this.options.DbContext.Set<TEntity>()
                     .TakeIf(options?.Take)
@@ -65,7 +65,7 @@
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            if (options?.HasOrders() == true)
+            if(options?.HasOrders() == true)
             {
                 return await this.options.DbContext.Set<TEntity>()
                     .WhereExpression(specification?.ToExpression())
@@ -87,7 +87,7 @@
             var specificationsArray = specifications as ISpecification<TEntity>[] ?? specifications.ToArray();
             var expressions = specificationsArray.Safe().Select(s => s.ToExpression());
 
-            if (options?.HasOrders() == true)
+            if(options?.HasOrders() == true)
             {
                 return await this.options.DbContext.Set<TEntity>()
                     .WhereExpressions(expressions)
@@ -106,7 +106,7 @@
 
         public async Task<TEntity> FindOneAsync(object id)
         {
-            if (id.IsDefault())
+            if(id.IsDefault())
             {
                 return null;
             }
@@ -116,7 +116,7 @@
 
         public async Task<bool> ExistsAsync(object id)
         {
-            if (id.IsDefault())
+            if(id.IsDefault())
             {
                 return false;
             }
@@ -153,16 +153,16 @@
         /// <returns></returns>
         public async Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
         {
-            if (entity == null)
+            if(entity == null)
             {
                 return (null, ActionResult.None);
             }
 
             var isNew = entity.Id.IsDefault() || !await this.ExistsAsync(entity.Id).AnyContext();
 
-            if (this.options.PublishEvents && this.options.Mediator != null)
+            if(this.options.PublishEvents && this.options.Mediator != null)
             {
-                if (isNew)
+                if(isNew)
                 {
                     await this.options.Mediator.Publish(new EntityInsertDomainEvent(entity)).AnyContext();
                 }
@@ -176,9 +176,9 @@
             this.options.DbContext.Set<TEntity>().Add(entity);
             await this.options.DbContext.SaveChangesAsync().AnyContext();
 
-            if (this.options.PublishEvents && this.options.Mediator != null)
+            if(this.options.PublishEvents && this.options.Mediator != null)
             {
-                if (isNew)
+                if(isNew)
                 {
                     await this.options.Mediator.Publish(new EntityInsertedDomainEvent(entity)).AnyContext();
                 }
@@ -196,25 +196,25 @@
 
         public async Task<ActionResult> DeleteAsync(object id)
         {
-            if (id.IsDefault())
+            if(id.IsDefault())
             {
                 return ActionResult.None;
             }
 
             var entity = await this.FindOneAsync(id).AnyContext();
-            if (entity != null)
+            if(entity != null)
             {
                 this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogEventKeys.DomainRepository);
                 this.options.DbContext.Remove(entity);
 
-                if (this.options.PublishEvents && this.options.Mediator != null)
+                if(this.options.PublishEvents && this.options.Mediator != null)
                 {
                     await this.options.Mediator.Publish(new EntityDeleteDomainEvent(entity)).AnyContext();
                 }
 
                 await this.options.DbContext.SaveChangesAsync();
 
-                if (this.options.PublishEvents && this.options.Mediator != null)
+                if(this.options.PublishEvents && this.options.Mediator != null)
                 {
                     await this.options.Mediator.Publish(new EntityDeletedDomainEvent(entity)).AnyContext();
                 }
@@ -227,7 +227,7 @@
 
         public async Task<ActionResult> DeleteAsync(TEntity entity)
         {
-            if (entity == null || entity.Id.IsDefault())
+            if(entity == null || entity.Id.IsDefault())
             {
                 return ActionResult.None;
             }
@@ -239,7 +239,7 @@
         {
             try
             {
-                if (typeof(TEntity).GetProperty("Id")?.PropertyType == typeof(Guid) && value?.GetType() == typeof(string))
+                if(typeof(TEntity).GetProperty("Id")?.PropertyType == typeof(Guid) && value?.GetType() == typeof(string))
                 {
                     // string to guid conversion
                     value = Guid.Parse(value.ToString());

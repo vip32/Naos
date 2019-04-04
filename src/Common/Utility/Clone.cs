@@ -16,16 +16,16 @@
             CloneMode mode = CloneMode.Bson)
              where T : class
         {
-            if (EqualityComparer<T>.Default.Equals(source, default))
+            if(EqualityComparer<T>.Default.Equals(source, default))
             {
                 return default;
             }
 
-            if (mode == CloneMode.Bson)
+            if(mode == CloneMode.Bson)
             {
                 return source.BsonClone();
             }
-            else if (mode == CloneMode.Json)
+            else if(mode == CloneMode.Json)
             {
                 return source.JsonClone();
             }
@@ -43,14 +43,14 @@
         private static T JsonClone<T>(this T source)
              where T : class
         {
-            if (EqualityComparer<T>.Default.Equals(source, default))
+            if(EqualityComparer<T>.Default.Equals(source, default))
             {
                 return default;
             }
 
             var settings = DefaultJsonSerializerSettings.Create();
             var json = JsonConvert.SerializeObject(source, settings);
-            if (json.IsNullOrEmpty())
+            if(json.IsNullOrEmpty())
             {
                 return default;
             }
@@ -68,13 +68,13 @@
         private static T BsonClone<T>(this T source)
              where T : class
         {
-            if (source == null)
+            if(source == null)
             {
                 return default;
             }
 
             var bytes = SerializationHelper.BsonByteSerialize<T>(source);
-            if (bytes.IsNullOrEmpty())
+            if(bytes.IsNullOrEmpty())
             {
                 return default;
             }

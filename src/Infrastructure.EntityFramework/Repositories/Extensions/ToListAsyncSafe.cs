@@ -10,12 +10,12 @@
     {
         public static Task<List<TSource>> ToListAsyncSafe<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken = default)
         {
-            if (source == null)
+            if(source == null)
             {
                 throw new System.ArgumentNullException(nameof(source));
             }
 
-            if (!(source is IAsyncEnumerable<TSource>))
+            if(!(source is IAsyncEnumerable<TSource>))
             {
                 return Task.FromResult(source.ToList());
             }

@@ -13,9 +13,9 @@
         public static void WriteJson<T>(this HttpResponse response, T content, JsonSerializerSettings settings = null, ContentType contentType = ContentType.JSON)
         {
             response.ContentType = contentType.ToValue();
-            using (var writer = new HttpResponseStreamWriter(response.Body, Encoding.UTF8))
+            using(var writer = new HttpResponseStreamWriter(response.Body, Encoding.UTF8))
             {
-                using (var jsonWriter = new JsonTextWriter(writer))
+                using(var jsonWriter = new JsonTextWriter(writer))
                 {
                     jsonWriter.CloseOutput = false;
                     jsonWriter.AutoCompleteOnClose = false;

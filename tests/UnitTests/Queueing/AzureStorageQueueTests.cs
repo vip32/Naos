@@ -119,7 +119,7 @@
         {
             var name = $"test-{Guid.NewGuid().ToString("N").Substring(10)}";
             var connectionString = string.Empty;
-            if (connectionString.IsNullOrEmpty())
+            if(connectionString.IsNullOrEmpty())
             {
                 return null;
             }

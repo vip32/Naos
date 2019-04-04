@@ -6,12 +6,12 @@
     {
         public static byte[] ReadAllBytes(this Stream source)
         {
-            if (source is MemoryStream)
+            if(source is MemoryStream)
             {
                 return ((MemoryStream)source).ToArray();
             }
 
-            using (var memoryStream = new MemoryStream())
+            using(var memoryStream = new MemoryStream())
             {
                 source.CopyTo(memoryStream);
                 return memoryStream.ToArray();

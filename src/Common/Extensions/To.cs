@@ -18,23 +18,23 @@
         public static T To<T>(this object source, bool throws = false, T defaultValue = default)
             where T : struct
         {
-            if (source == null)
+            if(source == null)
             {
                 return default;
             }
 
             try
             {
-                if (typeof(T) == typeof(Guid))
+                if(typeof(T) == typeof(Guid))
                 {
                     return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(source.ToString());
                 }
 
                 return (T)Convert.ChangeType(source, typeof(T), CultureInfo.InvariantCulture);
             }
-            catch (FormatException)
+            catch(FormatException)
             {
-                if (throws)
+                if(throws)
                 {
                     throw;
                 }
@@ -46,7 +46,7 @@
         public static bool TryTo<T>(this object source, out T result)
             where T : struct
         {
-            if (source == null)
+            if(source == null)
             {
                 result = default;
                 return false;
@@ -54,7 +54,7 @@
 
             try
             {
-                if (typeof(T) == typeof(Guid))
+                if(typeof(T) == typeof(Guid))
                 {
                     result = (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(source.ToString());
                     return true;
@@ -63,12 +63,12 @@
                 result = (T)Convert.ChangeType(source, typeof(T), CultureInfo.InvariantCulture);
                 return true;
             }
-            catch (OverflowException)
+            catch(OverflowException)
             {
                 result = default;
                 return false;
             }
-            catch (FormatException)
+            catch(FormatException)
             {
                 result = default;
                 return false;

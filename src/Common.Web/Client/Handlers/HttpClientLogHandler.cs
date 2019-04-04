@@ -51,12 +51,12 @@
         protected async Task LogHttpRequest(HttpRequestMessage request, string correlationId, string requestId)
         {
             var content = string.Empty;
-            if (request?.Content != null)
+            if(request?.Content != null)
             {
                 content = await this.GetRequestContent(request).AnyContext();
             }
 
-            if (!request.Headers.IsNullOrEmpty())
+            if(!request.Headers.IsNullOrEmpty())
             {
                 this.WriteLog($"{{LogKey:l}} [{requestId}] http headers={string.Join("|", request.Headers.Select(h => $"{h.Key}={string.Join("|", h.Value)}"))}", args: LogEventKeys.OutboundRequest);
             }
@@ -67,38 +67,38 @@
         protected async Task LogHttpResponse(HttpResponseMessage response, string requestId, TimeSpan elapsed)
         {
             var level = LogLevel.Information;
-            if ((int)response.StatusCode > 499)
+            if((int)response.StatusCode > 499)
             {
                 level = LogLevel.Error;
             }
-            else if ((int)response.StatusCode > 399)
+            else if((int)response.StatusCode > 399)
             {
                 level = LogLevel.Warning;
             }
 
             var content = string.Empty;
-            if (response?.Content != null)
+            if(response?.Content != null)
             {
                 content = await this.GetResponseContent(response).AnyContext();
             }
 
-            if (!response.Headers.IsNullOrEmpty())
+            if(!response.Headers.IsNullOrEmpty())
             {
                 this.WriteLog($"{{LogKey:l}} [{requestId}] http headers={string.Join("|", response.Headers.Select(h => $"{h.Key}={string.Join("|", h.Value)}"))}", level: level, args: LogEventKeys.OutboundResponse);
             }
 
-            this.WriteLog($"{{LogKey:l}} [{requestId}] http {response.RequestMessage.Method} {{Url:l}} {{StatusCode}} ({response.StatusCode}) -> took {elapsed.Humanize(3)}", null, level, journalType: LogEventPropertyKeys.TrackOutboundResponse, args: new object[] { LogEventKeys.OutboundResponse, response.RequestMessage.RequestUri, (int)response.StatusCode});
+            this.WriteLog($"{{LogKey:l}} [{requestId}] http {response.RequestMessage.Method} {{Url:l}} {{StatusCode}} ({response.StatusCode}) -> took {elapsed.Humanize(3)}", null, level, journalType: LogEventPropertyKeys.TrackOutboundResponse, args: new object[] { LogEventKeys.OutboundResponse, response.RequestMessage.RequestUri, (int)response.StatusCode });
         }
 
         private void WriteLog(string message, Exception exception = null, LogLevel level = LogLevel.Information, string journalType = null, params object[] args)
         {
-            if (this.logger == null)
+            if(this.logger == null)
             {
                 Debug.WriteLine(message);
             }
             else
             {
-                if (journalType.IsNullOrEmpty())
+                if(journalType.IsNullOrEmpty())
                 {
                     this.logger.Log(level, exception, message, args);
                 }

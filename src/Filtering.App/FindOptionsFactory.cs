@@ -21,7 +21,7 @@
         private static IEnumerable<OrderOption<T>> GetOrderOptions<T>(FilterContext filterContext)
         {
             var result = new List<OrderOption<T>>();
-            foreach (var order in filterContext.Orders.Safe().Where(o => !o.Name.IsNullOrEmpty()))
+            foreach(var order in filterContext.Orders.Safe().Where(o => !o.Name.IsNullOrEmpty()))
             {
                 try
                 {
@@ -29,7 +29,7 @@
                         ExpressionHelper.GetExpression<T>(order.Name),
                         order.Direction == OrderDirection.Asc ? Domain.Repositories.OrderDirection.Ascending : Domain.Repositories.OrderDirection.Descending));
                 }
-                catch (ArgumentException ex)
+                catch(ArgumentException ex)
                 {
                     throw new NaosClientFormatException(ex.Message, ex);
                 }

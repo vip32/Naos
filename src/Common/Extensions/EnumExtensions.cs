@@ -21,13 +21,13 @@
 
             var memberInfo = type.GetMember(@enum.ToString());
 
-            if (memberInfo != null && !memberInfo.Any())
+            if(memberInfo != null && !memberInfo.Any())
             {
                 throw new ArgumentException($"No public members for the argument '{@enum}'.");
             }
 
             var attributes = memberInfo[0].GetCustomAttributes(typeof(T), false);
-            if (attributes == null || attributes.Length != 1)
+            if(attributes == null || attributes.Length != 1)
             {
                 throw new ArgumentException($"Can't find an attribute matching '{typeof(T).Name}' for the argument '{@enum}'");
             }
@@ -43,58 +43,58 @@
         /// <returns>True if the enum value is defined.</returns>
         public static bool TryEnumIsDefined(Type type, object value)
         {
-            if (type == null || value == null || !type.GetTypeInfo().IsEnum)
+            if(type == null || value == null || !type.GetTypeInfo().IsEnum)
             {
                 return false;
             }
 
             // Return true if the value is an enum and is a matching type.
-            if (type == value.GetType())
+            if(type == value.GetType())
             {
                 return true;
             }
 
-            if (TryEnumIsDefined<int>(type, value))
+            if(TryEnumIsDefined<int>(type, value))
             {
                 return true;
             }
 
-            if (TryEnumIsDefined<string>(type, value))
+            if(TryEnumIsDefined<string>(type, value))
             {
                 return true;
             }
 
-            if (TryEnumIsDefined<byte>(type, value))
+            if(TryEnumIsDefined<byte>(type, value))
             {
                 return true;
             }
 
-            if (TryEnumIsDefined<short>(type, value))
+            if(TryEnumIsDefined<short>(type, value))
             {
                 return true;
             }
 
-            if (TryEnumIsDefined<long>(type, value))
+            if(TryEnumIsDefined<long>(type, value))
             {
                 return true;
             }
 
-            if (TryEnumIsDefined<sbyte>(type, value))
+            if(TryEnumIsDefined<sbyte>(type, value))
             {
                 return true;
             }
 
-            if (TryEnumIsDefined<ushort>(type, value))
+            if(TryEnumIsDefined<ushort>(type, value))
             {
                 return true;
             }
 
-            if (TryEnumIsDefined<uint>(type, value))
+            if(TryEnumIsDefined<uint>(type, value))
             {
                 return true;
             }
 
-            if (TryEnumIsDefined<ulong>(type, value))
+            if(TryEnumIsDefined<ulong>(type, value))
             {
                 return true;
             }
@@ -107,12 +107,12 @@
             // Catch any casting errors that can occur or if 0 is not defined as a default value.
             try
             {
-                if (value is T && Enum.IsDefined(type, (T)value))
+                if(value is T && Enum.IsDefined(type, (T)value))
                 {
                     return true;
                 }
             }
-            catch (Exception)
+            catch(Exception)
             {
                 // return false;
             }

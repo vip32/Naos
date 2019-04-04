@@ -77,12 +77,12 @@
 where LogMessage_s != '' and 
   LogLevel_s != 'Verbose'";
 
-            foreach (var spec in specifications.Safe().Where(s => s.Name.SafeEquals(nameof(LogEvent.Environment)))) // TODO: map this better/ more generic
+            foreach(var spec in specifications.Safe().Where(s => s.Name.SafeEquals(nameof(LogEvent.Environment)))) // TODO: map this better/ more generic
             {
                 query += $" and LogProperties_{LogEventPropertyKeys.Environment}_s {spec.ToString(true).SubstringFrom(" ")}";
             }
 
-            foreach (var spec in specifications.Safe().Where(s => s.Name.SafeEquals(nameof(LogEvent.Level)))) // TODO: map this better/ more generic
+            foreach(var spec in specifications.Safe().Where(s => s.Name.SafeEquals(nameof(LogEvent.Level)))) // TODO: map this better/ more generic
             {
                 // TODO: from level and up (inf = inf, wrn, err, fat)
                 query += $" and LogLevel_s {spec.ToString(true).SubstringFrom(" ")}";
@@ -135,22 +135,22 @@ where LogMessage_s != '' and
 
         private IEnumerable<LogEvent> MapResponse(LogAnalyticsResponse responseContent) // TODO: move to seperate mapper
         {
-            if (responseContent?.Tables.IsNullOrEmpty() == false)
+            if(responseContent?.Tables.IsNullOrEmpty() == false)
             {
                 var table = responseContent.Tables[0];
                 var keys = table.Columns.Safe().Select(
                     c => c.ColumnName.Safe().Replace("LogProperties_", string.Empty).SubstringTillLast("_")).ToList();
 
-                if (!table.Rows.IsNullOrEmpty())
+                if(!table.Rows.IsNullOrEmpty())
                 {
-                    foreach (var values in table.Rows)
+                    foreach(var values in table.Rows)
                     {
                         var result = new LogEvent();
-                        foreach (var key in keys
+                        foreach(var key in keys
                             .Where(k => !k.EqualsAny(new[] { "TenantId", "SourceSystem", "TimeGenerated", "ConnectionId" })))
                         {
                             var value = values[keys.IndexOf(key)];
-                            if (value != null && !string.IsNullOrEmpty(value.ToString()))
+                            if(value != null && !string.IsNullOrEmpty(value.ToString()))
                             {
                                 result.Properties.AddOrUpdate(key, value);
                             }

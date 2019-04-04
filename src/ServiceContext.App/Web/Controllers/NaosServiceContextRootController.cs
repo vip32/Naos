@@ -36,9 +36,9 @@
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<ActionResult<ServiceDescriptor>> Get()
         {
-            foreach (var feature in this.features.Safe())
+            foreach(var feature in this.features.Safe())
             {
-                if (!feature.EchoRoute.IsNullOrEmpty() && !feature.EchoRoute.StartsWith("http"))
+                if(!feature.EchoRoute.IsNullOrEmpty() && !feature.EchoRoute.StartsWith("http"))
                 {
                     feature.EchoRoute = this.Url.AbsolutePath(feature.EchoRoute);
                 }

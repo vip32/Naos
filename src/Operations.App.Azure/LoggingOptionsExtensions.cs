@@ -19,7 +19,7 @@
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
             var configuration = options.Context.Configuration?.GetSection("naos:operations:logging:azureDiagnosticsLogStream").Get<DiagnosticsLogStreamConfiguration>();
-            if (configuration?.Enabled == true)
+            if(configuration?.Enabled == true)
             {
                 // configure the serilog sink
                 // https://github.com/serilog/serilog-aspnetcore
@@ -50,7 +50,7 @@
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
             var configuration = options.Context.Configuration?.GetSection("naos:operations:logging:azureApplicationInsights").Get<ApplicationInsightsConfiguration>();
-            if (configuration?.Enabled == true
+            if(configuration?.Enabled == true
                 && configuration?.ApplicationKey.IsNullOrEmpty() == false)
             {
                 // configure the serilog sink
@@ -68,7 +68,7 @@
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
             var configuration = options.Context.Configuration?.GetSection("naos:operations:logging:azureBlobStorage").Get<BlobStorageConfiguration>();
-            if (configuration?.Enabled == true
+            if(configuration?.Enabled == true
                 && configuration?.ConnectionString.IsNullOrEmpty() == false)
             {
                 var path = configuration.File.EmptyToNull() ?? "logevents/{yyyy}/{MM}/{dd}/logevents_{environment}_{product}_{capability}.log"
@@ -97,19 +97,19 @@
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
             var configuration = options.Context.Configuration?.GetSection("naos:operations:logging:azureLogAnalytics").Get<LogAnalyticsConfiguration>(); // TODO: move to operations:logevents:azureLogAnalytics
-            if (configuration != null)
+            if(configuration != null)
             {
                 // configure the serilog sink
                 var logName = configuration?.LogName.EmptyToNull() ?? "{environment}_operations_logevents"
                     .Replace("{environment}", options.Context.Environment.ToLower())
                     .Replace("{product}", options.Context.Descriptor?.Product?.ToLower())
                     .Replace("{capability}", options.Context.Descriptor?.Capability?.ToLower());
-                if (logName.IsNullOrEmpty())
+                if(logName.IsNullOrEmpty())
                 {
                     return options;
                 }
 
-                if (configuration.Enabled == true
+                if(configuration.Enabled == true
                     && configuration.WorkspaceId.IsNullOrEmpty() == false
                     && configuration.AuthenticationId.IsNullOrEmpty() == false)
                 {
@@ -123,7 +123,7 @@
 
                     options.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: logging azure loganalytics sink added (name={logName}_CL, workspace={configuration.WorkspaceId})");
 
-                    if (dashboardEnabled) // registers the loganalytics repo which is used by the dashboard (NaosOperationsLogEventsController)
+                    if(dashboardEnabled) // registers the loganalytics repo which is used by the dashboard (NaosOperationsLogEventsController)
                     {
                         // configure the repository for the dashboard (controller)
                         options.Context.AddAzureLogAnalytics(logName);

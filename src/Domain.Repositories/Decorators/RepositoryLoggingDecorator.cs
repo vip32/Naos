@@ -40,7 +40,7 @@
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            foreach (var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
+            foreach(var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
             {
                 this.logger.LogDebug($"{LogEventKeys.DomainRepository} order: {order.Expression.ToExpressionString()}");
             }
@@ -50,12 +50,12 @@
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            if (specification != null)
+            if(specification != null)
             {
                 this.logger.LogDebug($"{LogEventKeys.DomainRepository} specification: {specification.ToString()}");
             }
 
-            foreach (var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
+            foreach(var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
             {
                 this.logger.LogDebug($"{LogEventKeys.DomainRepository} order: {order.Expression.ToExpressionString()}");
             }
@@ -65,12 +65,12 @@
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            foreach (var specification in specifications.Safe())
+            foreach(var specification in specifications.Safe())
             {
                 this.logger.LogDebug($"{LogEventKeys.DomainRepository} specification: {specification.ToString()}");
             }
 
-            foreach (var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
+            foreach(var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
             {
                 this.logger.LogDebug($"{LogEventKeys.DomainRepository} order: {order.Expression.ToExpressionString()}");
             }

@@ -16,13 +16,13 @@
             }
 
             var result = new List<Specification<T>>();
-            foreach (var criteria in filterContext.Criterias.Safe())
+            foreach(var criteria in filterContext.Criterias.Safe())
             {
                 try
                 {
-                    result.Add(new Specification<T>(criteria.ToExpression<T>()){ Name = criteria.Name });
+                    result.Add(new Specification<T>(criteria.ToExpression<T>()) { Name = criteria.Name });
                 }
-                catch (ArgumentException ex)
+                catch(ArgumentException ex)
                 {
                     throw new NaosClientFormatException(ex.Message, ex);
                 }

@@ -12,17 +12,17 @@
         /// <returns></returns>
         public static bool? ToNullableBool(this string source, bool? @default = null)
         {
-            if (source.IsNullOrEmpty())
+            if(source.IsNullOrEmpty())
             {
                 return @default;
             }
 
-            if (source.Equals("1", StringComparison.Ordinal))
+            if(source.Equals("1", StringComparison.Ordinal))
             {
                 return true;
             }
 
-            if (source.Equals("0", StringComparison.Ordinal))
+            if(source.Equals("0", StringComparison.Ordinal))
             {
                 return false;
             }
@@ -38,7 +38,7 @@
         /// <returns></returns>
         public static bool ToBool(this string source, bool @default = false)
         {
-            if (source.IsNullOrEmpty())
+            if(source.IsNullOrEmpty())
             {
                 return @default;
             }
@@ -48,7 +48,7 @@
                 return true;
             }
 
-            if (source.Equals("0", StringComparison.Ordinal))
+            if(source.Equals("0", StringComparison.Ordinal))
             {
                 return false;
             }

@@ -24,7 +24,7 @@
         {
             return source
                 .UseSqlite("DataSource=:memory:");
-                //.EnableSensitiveDataLogging();
+            //.EnableSensitiveDataLogging();
         }
     }
 }

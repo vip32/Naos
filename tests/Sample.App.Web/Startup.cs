@@ -47,7 +47,7 @@
                 .AddScoped(sp =>
                 {
                     var actionContext = sp.GetRequiredService<IActionContextAccessor>()?.ActionContext;
-                    if (actionContext == null)
+                    if(actionContext == null)
                     {
                         throw new ArgumentException("UrlHelper needs an ActionContext, which is usually available in MVC components (Controller/PageModel/ViewComponent)");
                     }
@@ -83,7 +83,7 @@
                         .AddBehavior<Core.Commands.Domain.ValidateCommandBehavior>()
                         .AddBehavior<Core.Commands.Domain.TrackCommandBehavior>())
                     .AddOperations(o => o
-                        .AddConsoleCommands()
+                        .AddInteractiveConsole()
                         .AddLogging(l => l
                             .UseConsole()
                             .UseFile()
@@ -98,8 +98,8 @@
                         .Register<EchoJob>("testjob1", Cron.Minutely(), (j) => j.EchoAsync("+++ hello from testjob1 +++", CancellationToken.None))
                         .Register("anonymousjob2", Cron.Minutely(), (j) => Console.WriteLine("+++ hello from anonymousjob2 " + j))
                         .Register("jobevent1", Cron.Minutely(), () => new EchoJobEventData { Text = "+++ hello from jobevent1 +++" }))
-                        //.Register<EchoJob>("testjob3", Cron.MinuteInterval(2), j => j.EchoAsync("+++ hello from testjob3 +++", CancellationToken.None, true), enabled: false)
-                        //.Register<EchoJob>("testlongjob4", Cron.Minutely(), j => j.EchoLongAsync("+++ hello from testlongjob4 +++", CancellationToken.None)))
+                    //.Register<EchoJob>("testjob3", Cron.MinuteInterval(2), j => j.EchoAsync("+++ hello from testjob3 +++", CancellationToken.None, true), enabled: false)
+                    //.Register<EchoJob>("testlongjob4", Cron.Minutely(), j => j.EchoLongAsync("+++ hello from testlongjob4 +++", CancellationToken.None)))
                     .AddServiceClient("default")
                     .AddQueueing()
                     .AddMessaging(o => o
@@ -110,8 +110,8 @@
                             .Subscribe<EchoMessage, EchoMessageHandler>()))
                     .AddServiceDiscovery(o => o
                         .UseFileSystemClientRegistry())
-                        //.UseConsulClientRegistry())
-                        //.UseRouterClientRegistry())
+                    //.UseConsulClientRegistry())
+                    //.UseRouterClientRegistry())
                     .AddServiceDiscoveryRouter(o => o
                         .UseFileSystemRegistry()));
 
@@ -121,7 +121,7 @@
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment environment)
         {
-            if (environment.IsProduction())
+            if(environment.IsProduction())
             {
                 app.UseHsts();
             }

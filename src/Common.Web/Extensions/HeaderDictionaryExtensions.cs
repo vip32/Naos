@@ -10,7 +10,7 @@
     {
         public static string GetValue(this IHeaderDictionary source, string name)
         {
-            if (source == null || string.IsNullOrEmpty(name))
+            if(source == null || string.IsNullOrEmpty(name))
             {
                 return default;
             }
@@ -20,7 +20,7 @@
 
         public static StringValues GetValues(this IHeaderDictionary source, string name)
         {
-            if (source == null || string.IsNullOrEmpty(name))
+            if(source == null || string.IsNullOrEmpty(name))
             {
                 return default;
             }

@@ -6,12 +6,12 @@
     {
         public static void AddRange<T>(this ICollection<T> source, IEnumerable<T> items)
         {
-            if (source == null || items == null)
+            if(source == null || items == null)
             {
                 return;
             }
 
-            foreach (var item in items)
+            foreach(var item in items)
             {
                 source.Add(item);
             }

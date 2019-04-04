@@ -24,11 +24,11 @@
         public static T Deserialize<T>(this ISerializer source, string data)
         {
             byte[] bytes;
-            if (data == null)
+            if(data == null)
             {
                 bytes = Array.Empty<byte>();
             }
-            else if (source is ITextSerializer)
+            else if(source is ITextSerializer)
             {
                 bytes = Encoding.UTF8.GetBytes(data);
             }
@@ -43,11 +43,11 @@
         public static object Deserialize(this ISerializer source, string data, Type type)
         {
             byte[] bytes;
-            if (data == null)
+            if(data == null)
             {
                 bytes = Array.Empty<byte>();
             }
-            else if (source is ITextSerializer)
+            else if(source is ITextSerializer)
             {
                 bytes = Encoding.UTF8.GetBytes(data);
             }
@@ -61,13 +61,13 @@
 
         public static string SerializeToString<T>(this ISerializer source, T value)
         {
-            if (value == null)
+            if(value == null)
             {
                 return null;
             }
 
             var bytes = source.SerializeToBytes(value);
-            if (source is ITextSerializer)
+            if(source is ITextSerializer)
             {
                 return Encoding.UTF8.GetString(bytes);
             }
@@ -77,7 +77,7 @@
 
         public static byte[] SerializeToBytes<T>(this ISerializer source, T value)
         {
-            if (value == null)
+            if(value == null)
             {
                 return null;
             }

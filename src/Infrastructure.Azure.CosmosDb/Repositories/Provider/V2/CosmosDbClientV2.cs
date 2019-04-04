@@ -31,8 +31,8 @@
                 connectionPolicy != null ?
                     new ConnectionPolicy
                     {
-                        ConnectionMode = (ConnectionMode) Enum.Parse(typeof(ConnectionMode), connectionPolicy.ConnectionMode.ToString()),
-                        ConnectionProtocol = (Protocol) Enum.Parse(typeof(Protocol), connectionPolicy.ConnectionProtocol.ToString())
+                        ConnectionMode = (ConnectionMode)Enum.Parse(typeof(ConnectionMode), connectionPolicy.ConnectionMode.ToString()),
+                        ConnectionProtocol = (Protocol)Enum.Parse(typeof(Protocol), connectionPolicy.ConnectionProtocol.ToString())
                     }
                     : defaultPolicy);
         }

@@ -32,7 +32,7 @@
 
         public static string ToExpressionString<T>(this Expression<Func<T, bool>> source)
         {
-            if (source != null)
+            if(source != null)
             {
                 var result = source.ToString();
                 // strip the parameter from the expression
@@ -45,7 +45,7 @@
 
         public static string ToExpressionString<T>(this Expression<Func<T, object>> source)
         {
-            if (source != null)
+            if(source != null)
             {
                 var result = source.ToString();
                 // strip the parameter from the expression

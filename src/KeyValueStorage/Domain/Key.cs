@@ -28,17 +28,17 @@
 
         public bool Equals(Key other)
         {
-            if (ReferenceEquals(other, null))
+            if(ReferenceEquals(other, null))
             {
                 return false;
             }
 
-            if (ReferenceEquals(other, this))
+            if(ReferenceEquals(other, this))
             {
                 return true;
             }
 
-            if (other.GetType() != this.GetType())
+            if(other.GetType() != this.GetType())
             {
                 return false;
             }

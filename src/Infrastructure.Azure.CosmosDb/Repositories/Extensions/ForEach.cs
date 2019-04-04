@@ -16,15 +16,15 @@
         /// <returns></returns>
         public static IEnumerable<T> ForEach<T>(this IEnumerable<T> source, Action<T> action)
         {
-            if (source == null)
+            if(source == null)
             {
                 return null;
             }
 
             var retVal = source as T[] ?? source.ToArray();
-            foreach (var value in retVal)
+            foreach(var value in retVal)
             {
-                if (action != null && !value.IsDefault())
+                if(action != null && !value.IsDefault())
                 {
                     action(value);
                 }

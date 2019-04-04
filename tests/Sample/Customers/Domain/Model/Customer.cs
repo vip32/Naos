@@ -26,7 +26,7 @@
 
         public void SetCustomerNumber()
         {
-            if (this.CustomerNumber.IsNullOrEmpty())
+            if(this.CustomerNumber.IsNullOrEmpty())
             {
                 this.CustomerNumber = $"{RandomGenerator.GenerateString(2)}-{DateTime.UtcNow.Ticks}";
             }

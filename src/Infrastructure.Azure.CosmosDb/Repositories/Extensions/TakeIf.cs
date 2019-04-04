@@ -9,7 +9,7 @@
             int count = 100,
             bool condition = true)
         {
-            if (condition && count > 0)
+            if(condition && count > 0)
             {
                 return source.Take(count);
             }

@@ -7,14 +7,14 @@
     {
         public static CancellationTokenSource ToCancellationTokenSource(this TimeSpan source)
         {
-            if (source == TimeSpan.Zero)
+            if(source == TimeSpan.Zero)
             {
                 var result = new CancellationTokenSource();
                 result.Cancel();
                 return result;
             }
 
-            if (source.Ticks > 0)
+            if(source.Ticks > 0)
             {
                 return new CancellationTokenSource(source);
             }
@@ -24,7 +24,7 @@
 
         public static CancellationTokenSource ToCancellationTokenSource(this TimeSpan? source)
         {
-            if (source.HasValue)
+            if(source.HasValue)
             {
                 return source.Value.ToCancellationTokenSource();
             }

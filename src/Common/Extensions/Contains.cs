@@ -8,12 +8,12 @@
     {
         public static bool Contains(this string source, string value, StringComparison comp = StringComparison.OrdinalIgnoreCase)
         {
-            if (string.IsNullOrEmpty(source))
+            if(string.IsNullOrEmpty(source))
             {
                 return false;
             }
 
-            if (string.IsNullOrEmpty(value))
+            if(string.IsNullOrEmpty(value))
             {
                 return false;
             }
@@ -23,7 +23,7 @@
 
         public static bool Contains(this IEnumerable<string> source, string value, StringComparison comp = StringComparison.OrdinalIgnoreCase)
         {
-            if (source.IsNullOrEmpty())
+            if(source.IsNullOrEmpty())
             {
                 return false;
             }

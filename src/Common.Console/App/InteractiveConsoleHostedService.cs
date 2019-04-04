@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Drawing;
+    using System.IO;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -49,22 +50,28 @@
         private async Task Run()
         {
             Thread.Sleep(500);
-            foreach (var command in this.commands)
+            foreach(var command in this.commands)
             {
                 Console.WriteLine($"found command: {command.GetType().GetAttributeValue<VerbAttribute, string>(a => a.Name) ?? "?NAME?"} ({command.GetType()})", Color.Gray);
             }
 
             var parser = new Parser();
-            ReadLine.HistoryEnabled = true;
             ReadLine.AutoCompletionHandler = new AutoCompletionHandler();
+            ReadLine.HistoryEnabled = true;
+            if(File.Exists("history.db"))
+            {
+                ReadLine.AddHistory(
+                    File.ReadAllLines(Path.Combine(Path.GetTempPath(), "naos_console", "history.db")));
+            }
+
             var originalColor = System.Console.ForegroundColor;
-            while (true)
+            while(true)
             {
                 System.Console.ForegroundColor = ConsoleColor.Cyan;
                 var input = ReadLine.Read("naos> ").Trim();
                 System.Console.ForegroundColor = originalColor;
 
-                if (!input.IsNullOrEmpty())
+                if(!input.IsNullOrEmpty())
                 {
                     try
                     {
@@ -73,17 +80,17 @@
                             this.commands.Select(c => c.GetType()).ToArray())
                                 .WithNotParsed(_ =>
                                 {
-                                    if (!input.Contains("--help"))
+                                    if(!input.Contains("--help"))
                                     {
                                         Console.WriteLine("invalid command", Color.Red);
                                     }
                                 });
 
-                        if (!result.TypeInfo.Current.GetAttributeValue<VerbAttribute, string>(a => a.Name).IsNullOrEmpty())
+                        if(!result.TypeInfo.Current.GetAttributeValue<VerbAttribute, string>(a => a.Name).IsNullOrEmpty())
                         {
                             // command found
                             var command = (result as Parsed<object>)?.Value;
-                            if (command != null)
+                            if(command != null)
                             {
                                 // send the command so it can be handled by a command handler
                                 await command.As<IConsoleCommand>().SendAsync(this.mediator).AnyContext();
@@ -106,7 +113,7 @@
                             Console.WriteLine(); // no command found
                         }
                     }
-                    catch (Exception ex)
+                    catch(Exception ex)
                     {
                         Console.WriteLine($"[{ex.GetType().PrettyName()}] {ex.GetFullMessage()}", Color.Red);
                         Console.WriteLine($"{ex.StackTrace}", Color.Red);
@@ -124,19 +131,19 @@
             // index - The index of the terminal cursor within {text}
             public string[] GetSuggestions(string text, int index)
             {
-                if (text.StartsWith("echo "))
+                if(text.StartsWith("echo "))
                 {
                     return new string[] { "-t", "-s" };
                 }
-                else if (text.StartsWith("messaging "))
+                else if(text.StartsWith("messaging "))
                 {
                     return new string[] { "--echo" };
                 }
-                else if (text.StartsWith("queueing "))
+                else if(text.StartsWith("queueing "))
                 {
                     return new string[] { "--echo" };
                 }
-                else if (text.StartsWith("jobscheduler "))
+                else if(text.StartsWith("jobscheduler "))
                 {
                     return new string[] { "--enable", "--disable", "--trigger" };
                 }

@@ -37,13 +37,13 @@
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
         public async Task<ActionResult> Put(string key)
         {
-            if (key.IsNullOrEmpty())
+            if(key.IsNullOrEmpty())
             {
                 throw new BadRequestException("key cannot be empty");
             }
 
             var model = this.jobScheduler.Options.Registrations.Where(r => r.Key.Key.SafeEquals(key)).Select(r => r.Key).FirstOrDefault();
-            if (model == null)
+            if(model == null)
             {
                 return this.NotFound(); // TODO: throw notfoundexception?
             }

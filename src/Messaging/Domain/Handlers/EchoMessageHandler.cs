@@ -29,7 +29,7 @@
                 [LogEventPropertyKeys.CorrelationId] = message.CorrelationId,
             };
 
-            using (this.logger.BeginScope(loggerState))
+            using(this.logger.BeginScope(loggerState))
             {
                 this.logger.LogInformation($"{{LogKey:l}} {message.Text} (name={{MessageName}}, id={{MessageId}}, origin={{MessageOrigin}}) ", LogEventKeys.Messaging, message.GetType().PrettyName(), message.Id, message.Origin);
 

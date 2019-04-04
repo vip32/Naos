@@ -7,7 +7,7 @@
     {
         public static bool IsOfType(this object source, Type targetType)
         {
-            if (source == null)
+            if(source == null)
             {
                 return false;
             }
@@ -17,7 +17,7 @@
 
         public static bool IsNotOfType(this object source, Type targetType)
         {
-            if (source == null)
+            if(source == null)
             {
                 return false;
             }
@@ -27,7 +27,7 @@
 
         public static string PrettyName(this Type source, bool useAngleBrackets = true)
         {
-            if (source.IsGenericType)
+            if(source.IsGenericType)
             {
                 var genericOpen = useAngleBrackets ? "<" : "[";
                 var genericClose = useAngleBrackets ? ">" : "]";
@@ -41,7 +41,7 @@
 
         public static string FullPrettyName(this Type source, bool useAngleBrackets = true)
         {
-            if (source.IsGenericType)
+            if(source.IsGenericType)
             {
                 var genericOpen = useAngleBrackets ? "<" : "[";
                 var genericClose = useAngleBrackets ? ">" : "]";
@@ -55,12 +55,12 @@
 
         public static bool IsNumeric(this Type type)
         {
-            if (type.IsArray)
+            if(type.IsArray)
             {
                 return false;
             }
 
-            if (type == typeof(byte) ||
+            if(type == typeof(byte) ||
                 type == typeof(decimal) ||
                 type == typeof(double) ||
                 type == typeof(short) ||
@@ -75,7 +75,7 @@
                 return true;
             }
 
-            switch (Type.GetTypeCode(type))
+            switch(Type.GetTypeCode(type))
             {
                 case TypeCode.Byte:
                 case TypeCode.Decimal:

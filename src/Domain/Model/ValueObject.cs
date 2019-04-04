@@ -8,7 +8,7 @@
     {
         public override bool Equals(object obj)
         {
-            if (obj == null || obj.GetType() != this.GetType())
+            if(obj == null || obj.GetType() != this.GetType())
             {
                 return false;
             }
@@ -17,14 +17,14 @@
             var thisValues = this.GetAtomicValues().GetEnumerator();
             var otherValues = other.GetAtomicValues().GetEnumerator();
 
-            while (thisValues.MoveNext() && otherValues.MoveNext())
+            while(thisValues.MoveNext() && otherValues.MoveNext())
             {
-                if (thisValues.Current is null ^ otherValues.Current is null)
+                if(thisValues.Current is null ^ otherValues.Current is null)
                 {
                     return false;
                 }
 
-                if (thisValues.Current != null &&
+                if(thisValues.Current != null &&
                     !thisValues.Current.Equals(otherValues.Current))
                 {
                     return false;
@@ -43,7 +43,7 @@
 
         protected static bool EqualOperator(ValueObject left, ValueObject right)
         {
-            if (left is null ^ right is null)
+            if(left is null ^ right is null)
             {
                 return false;
             }

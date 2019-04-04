@@ -45,7 +45,7 @@
             EnsureArg.IsNotNull(data, nameof(data));
             this.EnsureMetaData(data);
 
-            using (this.logger.BeginScope(new Dictionary<string, object>
+            using(this.logger.BeginScope(new Dictionary<string, object>
             {
                 [LogEventPropertyKeys.CorrelationId] = data.As<IHaveCorrelationId>()?.CorrelationId,
             }))
@@ -73,7 +73,7 @@
             var addItem = item as QueueItem<TData>;
             this.dequeued.AddOrUpdate(item.Id, addItem, (key, value) =>
             {
-                if (item != null)
+                if(item != null)
                 {
                     value.RenewedDate = addItem.RenewedDate;
                 }
@@ -92,12 +92,12 @@
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
             this.logger.LogDebug($"queue item complete (id={item.Id}, queue={this.options.Name})");
 
-            if (item.IsAbandoned || item.IsCompleted)
+            if(item.IsAbandoned || item.IsCompleted)
             {
                 throw new InvalidOperationException($"queue item has already been completed or abandoned (id={item.Id})");
             }
 
-            if (!this.dequeued.TryRemove(item.Id, out var dequeuedItem) || dequeuedItem == null)
+            if(!this.dequeued.TryRemove(item.Id, out var dequeuedItem) || dequeuedItem == null)
             {
                 throw new Exception($"unable to remove item from the dequeued list, not found (id={item.Id})");
             }
@@ -116,19 +116,19 @@
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
             this.logger.LogDebug($"queue item abandon (id={item.Id}, queue={this.options.Name})");
 
-            if (item.IsAbandoned || item.IsCompleted)
+            if(item.IsAbandoned || item.IsCompleted)
             {
                 throw new InvalidOperationException($"queue item has already been completed or abandoned (id={item.Id})");
             }
 
-            if (!this.dequeued.TryRemove(item.Id, out var dequeuedItem) || dequeuedItem == null)
+            if(!this.dequeued.TryRemove(item.Id, out var dequeuedItem) || dequeuedItem == null)
             {
                 throw new Exception($"unable to remove item from the dequeued list, not found (id={item.Id})");
             }
 
-            if (dequeuedItem.Attempts < this.options.Retries + 1)
+            if(dequeuedItem.Attempts < this.options.Retries + 1)
             {
-                if (this.options.RetryDelay > TimeSpan.Zero)
+                if(this.options.RetryDelay > TimeSpan.Zero)
                 {
                     this.logger.LogDebug($"add item to wait list, for future retry (id={item.Id})");
                     var unawaited = Run.DelayedAsync(
@@ -196,10 +196,10 @@
             this.ProcessItems(
                 async (i, ct) =>
                 {
-                    using (this.logger.BeginScope(new Dictionary<string, object>
-                        {
-                            [LogEventPropertyKeys.CorrelationId] = i.Data.As<IHaveCorrelationId>()?.CorrelationId,
-                        }))
+                    using(this.logger.BeginScope(new Dictionary<string, object>
+                    {
+                        [LogEventPropertyKeys.CorrelationId] = i.Data.As<IHaveCorrelationId>()?.CorrelationId,
+                    }))
                     {
                         await this.options.Mediator.Send(new QueueEvent<TData>(i), ct).AnyContext();
                     }
@@ -238,22 +238,22 @@
             await this.EnsureQueueAsync().AnyContext();
             this.logger.LogDebug($"queue item dequeue (queue={this.options.Name}, count={this.queue.Count})");
 
-            if (this.queue.Count == 0)
+            if(this.queue.Count == 0)
             {
                 this.logger.LogDebug($"no queue items, waiting (name={this.options.Name})");
 
-                while (this.queue.Count == 0 && !cancellationToken.IsCancellationRequested)
+                while(this.queue.Count == 0 && !cancellationToken.IsCancellationRequested)
                 {
                     Task.Delay(this.options.DequeueInterval.Milliseconds).Wait();
                 }
             }
 
-            if (this.queue.Count == 0)
+            if(this.queue.Count == 0)
             {
                 return null;
             }
 
-            if (!this.queue.TryDequeue(out var dequeuedItem) || dequeuedItem == null)
+            if(!this.queue.TryDequeue(out var dequeuedItem) || dequeuedItem == null)
             {
                 return null;
             }
@@ -264,10 +264,10 @@
             Interlocked.Increment(ref this.dequeuedCount);
             var item = new QueueItem<TData>(dequeuedItem.Id, dequeuedItem.Data.Clone(), this, dequeuedItem.EnqueuedDate, dequeuedItem.Attempts); // clone item
 
-            using (this.logger.BeginScope(new Dictionary<string, object>
-                {
-                    [LogEventPropertyKeys.CorrelationId] = item.Data.As<IHaveCorrelationId>()?.CorrelationId,
-                }))
+            using(this.logger.BeginScope(new Dictionary<string, object>
+            {
+                [LogEventPropertyKeys.CorrelationId] = item.Data.As<IHaveCorrelationId>()?.CorrelationId,
+            }))
             {
                 await item.RenewLockAsync();
 
@@ -285,43 +285,43 @@
             Task.Run(async () =>
             {
                 this.logger.LogInformation($"{{LogKey:l}} processing started (queue={this.options.Name}, type={this.GetType().PrettyName()})", args: new[] { LogEventKeys.Queueing });
-                while (!linkedCancellationToken.IsCancellationRequested)
+                while(!linkedCancellationToken.IsCancellationRequested)
                 {
                     IQueueItem<TData> item = null;
                     try
                     {
                         item = await this.DequeueWithIntervalAsync(linkedCancellationToken.Token).AnyContext();
                     }
-                    catch (Exception ex)
+                    catch(Exception ex)
                     {
                         this.logger.LogError(ex, $"{{LogKey:l}} processing error: {ex.Message}", args: new[] { LogEventKeys.Queueing });
                     }
 
-                    if (linkedCancellationToken.IsCancellationRequested || item == null)
+                    if(linkedCancellationToken.IsCancellationRequested || item == null)
                     {
                         await Task.Delay(this.options.ProcessTimeout.Milliseconds);
                         continue;
                     }
 
-                    using (this.logger.BeginScope(new Dictionary<string, object>
-                        {
-                            [LogEventPropertyKeys.CorrelationId] = item.Data.As<IHaveCorrelationId>()?.CorrelationId,
-                        }))
+                    using(this.logger.BeginScope(new Dictionary<string, object>
+                    {
+                        [LogEventPropertyKeys.CorrelationId] = item.Data.As<IHaveCorrelationId>()?.CorrelationId,
+                    }))
                     {
                         try
                         {
                             await handler(item, linkedCancellationToken.Token).AnyContext();
-                            if (autoComplete && !item.IsAbandoned && !item.IsCompleted)
+                            if(autoComplete && !item.IsAbandoned && !item.IsCompleted)
                             {
                                 await item.CompleteAsync().AnyContext();
                             }
                         }
-                        catch (Exception ex)
+                        catch(Exception ex)
                         {
                             Interlocked.Increment(ref this.workerErrorCount);
                             this.logger.LogError(ex, $"{{LogKey:l}} processing error: {ex.Message}", args: new[] { LogEventKeys.Queueing });
 
-                            if (!item.IsAbandoned && !item.IsCompleted)
+                            if(!item.IsAbandoned && !item.IsCompleted)
                             {
                                 await item.AbandonAsync().AnyContext();
                             }

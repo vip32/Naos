@@ -59,12 +59,12 @@
             try
             {
                 var logger = services.BuildServiceProvider().GetRequiredService<ILoggerFactory>().CreateLogger("Naos");
-                foreach (var message in context.Messages.Safe())
+                foreach(var message in context.Messages.Safe())
                 {
                     logger.LogDebug(message);
                 }
             }
-            catch (InvalidOperationException)
+            catch(InvalidOperationException)
             {
                 // no loggerfactory registered
                 services.AddScoped<ILoggerFactory>(sp => new LoggerFactory());

@@ -103,7 +103,7 @@
         {
             var connectionString = string.Empty;
 
-            if (!string.IsNullOrWhiteSpace(connectionString))
+            if(!string.IsNullOrWhiteSpace(connectionString))
             {
                 return new AzureBlobFileStorage(o => o
                     .LoggerFactory(Substitute.For<ILoggerFactory>())

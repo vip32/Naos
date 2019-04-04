@@ -24,17 +24,17 @@
         {
             await Task.Run(() =>
             {
-                if (this.CanHandle(notification))
+                if(this.CanHandle(notification))
                 {
                     this.logger.LogInformation($"{{LogKey:l}} [{notification.Identifier}] handle {notification.GetType().Name.SubstringTill("DomainEvent")} (entity={notification.Entity.GetType().PrettyName()}, handler={this.GetType().PrettyName()})", LogEventKeys.DomainEvent);
 
-                    if (notification?.Entity.Is<IStateEntity>() == true)
+                    if(notification?.Entity.Is<IStateEntity>() == true)
                     {
                         var entity = notification.Entity.As<IStateEntity>();
                         entity.State?.SetUpdated("[IDENTITY]", "domainevent"); // TODO: use current identity
                     }
 
-                    if (notification?.Entity.Is<IIdentifiable>() == true)
+                    if(notification?.Entity.Is<IIdentifiable>() == true)
                     {
                         var entity = notification.Entity.As<IIdentifiable>();
                         entity.SetIdentifierHash();

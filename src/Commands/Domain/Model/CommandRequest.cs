@@ -36,12 +36,12 @@
 
         public void Update(string id, string correlationId)
         {
-            if (this.Id.IsNullOrEmpty())
+            if(this.Id.IsNullOrEmpty())
             {
                 this.Id = id;
             }
 
-            if (this.CorrelationId.IsNullOrEmpty())
+            if(this.CorrelationId.IsNullOrEmpty())
             {
                 this.CorrelationId = correlationId;
             }

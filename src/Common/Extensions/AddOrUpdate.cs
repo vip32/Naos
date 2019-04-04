@@ -15,12 +15,12 @@
         public static IDictionary<string, T> AddOrUpdate<T>(this IDictionary<string, T> source, string key, T value)
         {
             source = source ?? new Dictionary<string, T>();
-            if (key.IsNullOrEmpty())
+            if(key.IsNullOrEmpty())
             {
                 return source;
             }
 
-            if (source.ContainsKey(key))
+            if(source.ContainsKey(key))
             {
                 source.Remove(key);
             }

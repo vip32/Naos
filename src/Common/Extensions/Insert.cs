@@ -19,7 +19,7 @@
                 return source;
             }
 
-            if (source == null)
+            if(source == null)
             {
                 return new List<TSource>
                 {
@@ -28,7 +28,7 @@
             }
 
             var result = new List<TSource>(source);
-            if (index >= 0)
+            if(index >= 0)
             {
                 result.Insert(index, item);
             }

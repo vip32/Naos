@@ -21,7 +21,7 @@
         /// <returns></returns>
         public static DateTime? FromEpoch(long? epoch)
         {
-            if (!epoch.HasValue)
+            if(!epoch.HasValue)
             {
                 return null;
             }

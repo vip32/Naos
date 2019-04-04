@@ -388,7 +388,7 @@
         [ContentTypeMetadata(Value = "application/vnd.commonspace", IsBinary = true)]
         CSP,
 
-        [ContentTypeMetadata(Value = "text/css", IsText = true, FileExtension = "css" )]
+        [ContentTypeMetadata(Value = "text/css", IsText = true, FileExtension = "css")]
         CSS,
 
         [ContentTypeMetadata(Value = "application/x-director", IsBinary = true)]

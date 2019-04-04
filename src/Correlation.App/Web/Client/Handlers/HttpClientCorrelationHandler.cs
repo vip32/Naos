@@ -31,11 +31,11 @@
                 [LogEventPropertyKeys.CorrelationId] = correlationId
             };
 
-            using (this.logger.BeginScope(loggerState))
+            using(this.logger.BeginScope(loggerState))
             {
                 this.logger.LogDebug($"{{LogKey:l}} [{requestId}] http added correlation headers", LogEventKeys.OutboundRequest);
 
-                if (!correlationId.IsNullOrEmpty())
+                if(!correlationId.IsNullOrEmpty())
                 {
                     request.Headers.Add("x-correlationid", correlationId);
                 }
@@ -44,7 +44,7 @@
 
                 var response = await base.SendAsync(request, cancellationToken).AnyContext();
 
-                if (!correlationId.IsNullOrEmpty())
+                if(!correlationId.IsNullOrEmpty())
                 {
                     response.Headers.Add("x-correlationid", correlationId);
                 }

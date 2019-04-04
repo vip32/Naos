@@ -4,14 +4,14 @@
     {
         public static int? ToNullableInt(this string source, int? @default = null)
         {
-            if (source.IsNullOrEmpty())
+            if(source.IsNullOrEmpty())
             {
                 return @default;
             }
 
             var result = int.TryParse(source, out var parsedValue);
 
-            if (!result)
+            if(!result)
             {
                 return @default;
             }
@@ -21,14 +21,14 @@
 
         public static int ToInt(this string source, int @default = 0)
         {
-            if (source.IsNullOrEmpty())
+            if(source.IsNullOrEmpty())
             {
                 return @default;
             }
 
             var result = int.TryParse(source, out var parsedValue);
 
-            if (!result)
+            if(!result)
             {
                 return @default;
             }

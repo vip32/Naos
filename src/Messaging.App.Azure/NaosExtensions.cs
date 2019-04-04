@@ -32,7 +32,7 @@
             configuration.EntityPath = topicName ?? $"{Environment.GetEnvironmentVariable(EnvironmentKeys.Environment) ?? "Production"}-Naos.Messaging";
             options.Context.Services.AddSingleton<IServiceBusProvider>(sp =>
             {
-                if (configuration?.Enabled == true)
+                if(configuration?.Enabled == true)
                 {
                     return new ServiceBusProvider(
                         sp.GetRequiredService<ILogger<ServiceBusProvider>>(),

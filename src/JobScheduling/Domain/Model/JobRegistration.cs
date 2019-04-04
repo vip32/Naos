@@ -21,7 +21,7 @@
             this.Timeout = timeout ?? new TimeSpan(0, 20, 0);
             this.Enabled = enabled;
             this.Identifier = RandomGenerator.GenerateString(5, false);
-            if (cron.Count(char.IsWhiteSpace) == 4) // mi ho da mo yy
+            if(cron.Count(char.IsWhiteSpace) == 4) // mi ho da mo yy
             {
                 this.cronExpression = CronExpression.Parse(this.Cron, CronFormat.Standard);
             }
@@ -52,7 +52,7 @@
             span = span ?? TimeSpan.FromMinutes(1);
             var occurrence = this.cronExpression.GetNextOccurrence(fromUtc, true);
 
-            if (!occurrence.HasValue)
+            if(!occurrence.HasValue)
             {
                 return false;
             }

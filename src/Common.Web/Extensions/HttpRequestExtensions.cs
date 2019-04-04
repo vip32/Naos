@@ -8,7 +8,7 @@
     {
         public static Uri Uri(this HttpRequest source)
         {
-            if (source == null)
+            if(source == null)
             {
                 return null;
             }
@@ -20,7 +20,7 @@
         {
             // https://stackoverflow.com/a/41242493/7860424
             var connection = source.HttpContext.Connection;
-            if (IsIpAddressSet(connection.RemoteIpAddress))
+            if(IsIpAddressSet(connection.RemoteIpAddress))
             {
                 return IsIpAddressSet(connection.LocalIpAddress)
                     //if local is same as remote, then we are local

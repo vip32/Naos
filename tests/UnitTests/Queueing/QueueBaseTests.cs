@@ -12,12 +12,12 @@
         public virtual void Dispose()
         {
             var queue = this.GetQueue();
-            if (queue == null)
+            if(queue == null)
             {
                 return;
             }
 
-            using (queue)
+            using(queue)
             {
                 queue.DeleteQueueAsync().GetAwaiter().GetResult();
             }
@@ -26,7 +26,7 @@
         public virtual async Task CanQueueAndDequeueAsync()
         {
             var queue = this.GetQueue();
-            if (queue == null)
+            if(queue == null)
             {
                 return;
             }
@@ -67,7 +67,7 @@
         public virtual async Task CanDequeueWithCancelledTokenAsync()
         {
             var queue = this.GetQueue();
-            if (queue == null)
+            if(queue == null)
             {
                 return;
             }
@@ -103,7 +103,7 @@
         public virtual async Task CanQueueAndDequeueMultipleAsync()
         {
             var queue = this.GetQueue();
-            if (queue == null)
+            if(queue == null)
             {
                 return;
             }
@@ -114,7 +114,7 @@
                 await this.AssertEmptyQueueAsync(queue);
 
                 const int itemCount = 25;
-                for (var i = 0; i < itemCount; i++)
+                for(var i = 0; i < itemCount; i++)
                 {
                     await queue.EnqueueAsync(new StubMessage
                     {
@@ -124,7 +124,7 @@
 
                 Assert.Equal(itemCount, (await queue.GetMetricsAsync()).Queued);
 
-                for (var i = 0; i < itemCount; i++)
+                for(var i = 0; i < itemCount; i++)
                 {
                     var item = await queue.DequeueAsync();
                     Assert.NotNull(item);
@@ -146,7 +146,7 @@
         public virtual async Task WillNotWaitForItemAsync()
         {
             var queue = this.GetQueue();
-            if (queue == null)
+            if(queue == null)
             {
                 return;
             }
@@ -172,7 +172,7 @@
         public virtual async Task WillWaitForItemAsync()
         {
             var queue = this.GetQueue();
-            if (queue == null)
+            if(queue == null)
             {
                 return;
             }
@@ -211,7 +211,7 @@
         public virtual async Task DequeueWaitWillGetSignaledAsync()
         {
             var queue = this.GetQueue();
-            if (queue == null)
+            if(queue == null)
             {
                 return;
             }
@@ -243,7 +243,7 @@
         public virtual async Task CanQueueProcessItemsAsync()
         {
             var queue = this.GetQueue();
-            if (queue == null)
+            if(queue == null)
             {
                 return;
             }
@@ -279,7 +279,7 @@
         public virtual async Task CanQueueProcessItemsWithMediatorSendAsync()
         {
             var queue = this.GetQueue();
-            if (queue == null)
+            if(queue == null)
             {
                 return;
             }
@@ -311,7 +311,7 @@
         public virtual async Task CanHandleErrorInProcessItemsAsync()
         {
             var queue = this.GetQueue(retries: 0);
-            if (queue == null)
+            if(queue == null)
             {
                 return;
             }
@@ -345,7 +345,7 @@
         public virtual async Task ItemsWillTimeoutAsync()
         {
             var queue = this.GetQueue(retryDelay: TimeSpan.Zero, processTimeout: TimeSpan.FromMilliseconds(50));
-            if (queue == null)
+            if(queue == null)
             {
                 return;
             }
@@ -384,7 +384,7 @@
         public virtual async Task ItemsWillGetMovedToDeadletterAsync()
         {
             var queue = this.GetQueue(retryDelay: TimeSpan.Zero);
-            if (queue == null)
+            if(queue == null)
             {
                 return;
             }
@@ -427,7 +427,7 @@
         public virtual async Task CanAutoCompleteProcessItemsAsync()
         {
             var queue = this.GetQueue();
-            if (queue == null)
+            if(queue == null)
             {
                 return;
             }
@@ -462,7 +462,7 @@
         public virtual async Task CanDelayRetryAsync()
         {
             var queue = this.GetQueue(processTimeout: TimeSpan.FromMilliseconds(500), retryDelay: TimeSpan.FromSeconds(1));
-            if (queue == null)
+            if(queue == null)
             {
                 return;
             }
@@ -511,7 +511,7 @@
                 retryDelay: TimeSpan.Zero,
                 processTimeout: timeout);
 
-            if (queue == null)
+            if(queue == null)
             {
                 return;
             }
@@ -549,7 +549,7 @@
         public virtual async Task CanAbandonQueueEntryOnceAsync()
         {
             var queue = this.GetQueue();
-            if (queue == null)
+            if(queue == null)
             {
                 return;
             }
@@ -585,7 +585,7 @@
                 Assert.Equal(0, stats.Timeouts);
                 Assert.Equal(0, stats.Working);
 
-                if (item is QueueItem<StubMessage> queueEntry)
+                if(item is QueueItem<StubMessage> queueEntry)
                 {
                     Assert.Equal(1, queueEntry.Attempts);
                 }
@@ -610,7 +610,7 @@
         public virtual async Task CanCompleteQueueEntryOnceAsync()
         {
             var queue = this.GetQueue();
-            if (queue == null)
+            if(queue == null)
             {
                 return;
             }
@@ -642,7 +642,7 @@
                 Assert.Equal(0, stats.Timeouts);
                 Assert.Equal(0, stats.Working);
 
-                if (item is QueueItem<StubMessage> queueEntry)
+                if(item is QueueItem<StubMessage> queueEntry)
                 {
                     Assert.Equal(1, queueEntry.Attempts);
                 }
@@ -664,7 +664,7 @@
 
         protected virtual async Task CleanupQueueAsync(IQueue<StubMessage> queue)
         {
-            if (queue == null)
+            if(queue == null)
             {
                 return;
             }

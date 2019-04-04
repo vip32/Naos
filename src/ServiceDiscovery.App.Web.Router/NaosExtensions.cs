@@ -51,7 +51,7 @@
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
             var registryConfiguration = options.Context.Configuration?.GetSection($"{section}:registry:fileSystem").Get<FileSystemServiceRegistryConfiguration>();
-            if (registryConfiguration.Folder.IsNullOrEmpty())
+            if(registryConfiguration.Folder.IsNullOrEmpty())
             {
                 registryConfiguration.Folder = Path.Combine(Path.Combine(Path.GetTempPath(), "naos_servicediscovery"), "router");
             }

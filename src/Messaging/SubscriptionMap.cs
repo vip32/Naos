@@ -147,14 +147,14 @@
 
         private void Remove(string messageName, SubscriptionDetails subscription)
         {
-            if (subscription != null)
+            if(subscription != null)
             {
                 this.map[messageName].Remove(subscription);
-                if (!this.map[messageName].Any())
+                if(!this.map[messageName].Any())
                 {
                     this.map.Remove(messageName);
                     var messageType = this.messageTypes.SingleOrDefault(e => e.Name == messageName);
-                    if (messageType != null)
+                    if(messageType != null)
                     {
                         this.messageTypes.Remove(messageType);
                     }
@@ -166,12 +166,12 @@
 
         private void Add(string messageName, Type handlerType)
         {
-            if (!this.Exists(messageName))
+            if(!this.Exists(messageName))
             {
                 this.map.Add(messageName, new List<SubscriptionDetails>());
             }
 
-            if (this.map[messageName].Any(s => s.HandlerType == handlerType))
+            if(this.map[messageName].Any(s => s.HandlerType == handlerType))
             {
                 throw new ArgumentException(
                     $"handler {handlerType.Name} already registered for '{messageName}'", nameof(handlerType));
@@ -186,7 +186,7 @@
 
         private SubscriptionDetails FindSubscription(string messageName, Type handlerType)
         {
-            if (!this.Exists(messageName))
+            if(!this.Exists(messageName))
             {
                 return null;
             }

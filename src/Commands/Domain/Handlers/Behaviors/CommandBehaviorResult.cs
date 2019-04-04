@@ -10,7 +10,7 @@
         /// <param name="cancelledReason">The cancelled reason.</param>
         public CommandBehaviorResult(string cancelledReason = null)
         {
-            if (!cancelledReason.IsNullOrEmpty())
+            if(!cancelledReason.IsNullOrEmpty())
             {
                 this.Cancelled = true;
                 this.CancelledReason = cancelledReason;
