@@ -29,6 +29,7 @@
             {
                 type.GetProperty(item.Key)
                     .SetValue(result, item.Value, null);
+                // TODO: optionally don't break when something goes wrong
             }
 
             return result;
