@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.Common.Mapping</AssemblyName>
+    <AssemblyName>Naos.Core.Common.Compression</AssemblyName>
     <RootNamespace>Naos.Core.Common</RootNamespace>
   </PropertyGroup>
 
