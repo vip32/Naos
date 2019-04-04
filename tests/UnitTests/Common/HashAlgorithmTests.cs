@@ -11,12 +11,14 @@
         {
             var sut1 = HashAlgorithm.ComputeHash("abcdefghij");
             var sut2 = HashAlgorithm.ComputeHash("abcdefghij");
+            var sut2b = HashAlgorithm.ComputeHash("abcdefghij", HashType.Sha512);
             var sut3 = HashAlgorithm.ComputeHash("VeryLongVeryLongVeryLongVeryLongVeryLongVeryLongVeryLongVeryLong");
-            var sut4 = HashAlgorithm.ComputeHash(null);
+            var sut4 = HashAlgorithm.ComputeHash(string.Empty);
 
             Assert.Equal(sut2, sut1);
             Assert.Equal(sut3.Length, sut1.Length);
             Assert.NotEqual(sut3, sut1);
+            Assert.NotEqual(sut2, sut2b);
             Assert.Null(sut4);
         }
 

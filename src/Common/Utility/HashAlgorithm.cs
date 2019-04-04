@@ -27,7 +27,7 @@
             }
         }
 
-        public static string ComputeMd5Hash(string value, bool removeDashes = true)
+        public static string ComputeMd5Hash(string value, bool noDashes = true)
         {
             if(value == null)
             {
@@ -36,7 +36,7 @@
 
             using(var md5 = new MD5CryptoServiceProvider())
             {
-                if(removeDashes)
+                if(noDashes)
                 {
                     return BitConverter.ToString(
                         md5.ComputeHash(
@@ -50,46 +50,32 @@
             }
         }
 
-        public static string ComputeSha256Hash(string value)
+        public static string ComputeHash(string value, HashType hashType = HashType.Sha256)
         {
-            if(value == null)
+            if(value.IsNullOrEmpty())
             {
                 return null;
             }
 
             using(var stream = StreamHelper.ToStream(value))
             {
-                using(var sha256 = SHA256.Create())
+                using(var algorithm = CreateHashAlgorithm(hashType))
                 {
-                    var bytes = sha256.ComputeHash(stream);
-                    var result = string.Empty;
-                    for(var i = 0; i < bytes.Length; i++)
-                    {
-                        result += string.Format("{0:X2}", bytes[i]);
-                    }
-
-                    return result;
+                    return BytesToString(algorithm.ComputeHash(stream));
                 }
             }
         }
 
-        public static string ComputeSha256Hash(byte[] data)
+        public static string ComputeHash(byte[] value, HashType hashType = HashType.Sha256)
         {
-            if(data == null)
+            if(value == null)
             {
                 return null;
             }
 
-            using(var sha256 = SHA256.Create())
+            using(var algorithm = CreateHashAlgorithm(hashType))
             {
-                var bytes = sha256.ComputeHash(data);
-                var result = string.Empty;
-                for(var i = 0; i < bytes.Length; i++)
-                {
-                    result += string.Format("{0:X2}", bytes[i]);
-                }
-
-                return result;
+                return BytesToString(algorithm.ComputeHash(value));
             }
         }
 
@@ -105,5 +91,46 @@
                 return new Guid(md5.ComputeHash(Encoding.Default.GetBytes(value)));
             }
         }
+
+        private static System.Security.Cryptography.HashAlgorithm CreateHashAlgorithm(HashType hashType)
+        {
+            switch(hashType)
+            {
+                case HashType.Md5:
+                    return MD5.Create();
+                case HashType.Sha1:
+                    return SHA1.Create();
+                case HashType.Sha256:
+                    return SHA256.Create();
+                case HashType.Sha384:
+                    return SHA384.Create();
+                case HashType.Sha512:
+                    return SHA512.Create();
+                default:
+                    throw new NotSupportedException($"{hashType} is an unsupported algorithm");
+            }
+        }
+
+        private static string BytesToString(byte[] bytes)
+        {
+            var result = string.Empty;
+            for(var i = 0; i < bytes.Length; i++)
+            {
+                result += string.Format("{0:X2}", bytes[i]);
+            }
+
+            return result;
+        }
+    }
+
+#pragma warning disable SA1201 // Elements must appear in the correct order
+    public enum HashType
+#pragma warning restore SA1201 // Elements must appear in the correct order
+    {
+        Md5,
+        Sha1,
+        Sha256,
+        Sha384,
+        Sha512,
     }
 }
