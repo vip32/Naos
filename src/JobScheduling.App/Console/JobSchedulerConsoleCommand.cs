@@ -18,6 +18,9 @@
         [Option("trigger", HelpText = "Triggers a job, should contain the job key")]
         public string Trigger { get; set; }
 
+        [Option("list", HelpText = "Shows list of registered jobs", Default = false)]
+        public bool List { get; set; }
+
         //[Option("repeat", HelpText = "Repeat the action")]
         //public int Repeat { get; set; }
 
