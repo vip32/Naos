@@ -2,9 +2,9 @@
 {
     public static partial class Extensions
     {
-        public static byte[] GetHash(this byte[] bytes, HashType hashType = HashType.Sha256)
+        public static string GetHash(this byte[] bytes, HashType hashType = HashType.Sha256)
         {
-            return HashAlgorithm.ComputeHashBytes(bytes, hashType);
+            return HashAlgorithm.ComputeHash(bytes, hashType);
         }
     }
 }
