@@ -10,45 +10,13 @@
         private const int ZipLeadBytes = 0x04034b50;
         private const ushort GzipLeadBytes = 0x8b1f;
 
-        public static void Compress(Stream source, Stream destination)
-        {
-            EnsureArg.IsNotNull(destination, nameof(destination));
-
-            if(source == null)
-            {
-                return;
-            }
-
-            using(var compressor = new GZipStream(destination, CompressionLevel.Optimal, true))
-            {
-                source.CopyTo(compressor);
-                compressor.Flush();
-            }
-        }
-
-        public static void Decompress(Stream source, Stream destination)
-        {
-            EnsureArg.IsNotNull(destination, nameof(destination));
-
-            if(source == null)
-            {
-                return;
-            }
-
-            using(var decompressor = new GZipStream(source, CompressionMode.Decompress, true))
-            {
-                decompressor.CopyTo(destination);
-                destination.Flush();
-            }
-        }
-
         public static byte[] Compress(byte[] source)
         {
             using(var sourceStream = new MemoryStream(source))
             {
                 using(var destinationStream = new MemoryStream())
                 {
-                    Compress(sourceStream, destinationStream);
+                    StreamHelper.Compress(sourceStream, destinationStream);
                     return destinationStream.ToArray();
                 }
             }
@@ -60,7 +28,7 @@
             {
                 using(var destinationStream = new MemoryStream())
                 {
-                    Decompress(sourceStream, destinationStream);
+                    StreamHelper.Decompress(sourceStream, destinationStream);
                     return destinationStream.ToArray();
                 }
             }

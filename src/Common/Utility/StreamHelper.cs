@@ -1,9 +1,43 @@
 ﻿namespace Naos.Core.Common
 {
     using System.IO;
+    using System.IO.Compression;
+    using EnsureThat;
 
     public static class StreamHelper
     {
+        public static void Compress(Stream source, Stream destination)
+        {
+            EnsureArg.IsNotNull(destination, nameof(destination));
+
+            if(source == null)
+            {
+                return;
+            }
+
+            using(var compressor = new GZipStream(destination, CompressionLevel.Optimal, true))
+            {
+                source.CopyTo(compressor);
+                compressor.Flush();
+            }
+        }
+
+        public static void Decompress(Stream source, Stream destination)
+        {
+            EnsureArg.IsNotNull(destination, nameof(destination));
+
+            if(source == null)
+            {
+                return;
+            }
+
+            using(var decompressor = new GZipStream(source, CompressionMode.Decompress, true))
+            {
+                decompressor.CopyTo(destination);
+                destination.Flush();
+            }
+        }
+
         public static string FromStream(Stream stream)
         {
             if(stream == null)
