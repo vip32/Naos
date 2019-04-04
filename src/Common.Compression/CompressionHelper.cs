@@ -16,7 +16,7 @@
             {
                 using(var destinationStream = new MemoryStream())
                 {
-                    StreamHelper.Compress(sourceStream, destinationStream);
+                    Compress(sourceStream, destinationStream);
                     return destinationStream.ToArray();
                 }
             }
@@ -28,10 +28,54 @@
             {
                 using(var destinationStream = new MemoryStream())
                 {
-                    StreamHelper.Decompress(sourceStream, destinationStream);
+                    Decompress(sourceStream, destinationStream);
                     return destinationStream.ToArray();
                 }
             }
+        }
+
+        public static void Compress(Stream source, Stream destination)
+        {
+            EnsureArg.IsNotNull(destination, nameof(destination));
+
+            if(source == null)
+            {
+                return;
+            }
+
+            using(var compressor = new GZipStream(destination, CompressionLevel.Optimal, true))
+            {
+                source.CopyTo(compressor);
+                compressor.Flush();
+            }
+        }
+
+        public static void Decompress(Stream source, Stream destination)
+        {
+            EnsureArg.IsNotNull(destination, nameof(destination));
+
+            if(source == null)
+            {
+                return;
+            }
+
+            using(var decompressor = new GZipStream(source, CompressionMode.Decompress, true))
+            {
+                decompressor.CopyTo(destination);
+                destination.Flush();
+            }
+        }
+
+        public static string FromStream(Stream stream)
+        {
+            if(stream == null)
+            {
+                return null;
+            }
+
+            stream.Position = 0;
+            var reader = new StreamReader(stream);
+            return reader.ReadToEnd();
         }
 
         public static bool IsGzipped(byte[] source)

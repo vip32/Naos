@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.UnitTests.Common.Utility
+﻿namespace Naos.Core.UnitTests.Common.Compression
 {
     using System;
     using System.IO;
@@ -6,7 +6,7 @@
     using Shouldly;
     using Xunit;
 
-    public class FileHelperTests
+    public class FileCompressionHelperTests
     {
         [Fact]
         public void CompressionRoundtrip_Test()
@@ -21,8 +21,8 @@
             }
 
             // act
-            FileHelper.Compress(path + ".txt");
-            FileHelper.Decompress(path + ".gz", path + ".new.txt");
+            FileCompressionHelper.Compress(path + ".txt");
+            FileCompressionHelper.Decompress(path + ".gz", path + ".new.txt");
 
             // assert
             File.ReadAllLines(path + ".new.txt")[0].ShouldBe(content);

@@ -3,7 +3,7 @@
     using System.IO;
     using EnsureThat;
 
-    public static class FileHelper
+    public static class FileCompressionHelper
     {
         /// <summary>
         /// Compress the file (Gzip)
