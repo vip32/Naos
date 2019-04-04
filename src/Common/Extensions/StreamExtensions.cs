@@ -33,7 +33,7 @@
                 return;
             }
 
-            CompressionHelper.Compress(source, destination);
+            StreamHelper.Compress(source, destination);
         }
 
         /// <summary>
@@ -50,7 +50,7 @@
                 return;
             }
 
-            CompressionHelper.Decompress(source, destination);
+            StreamHelper.Decompress(source, destination);
         }
     }
 }
