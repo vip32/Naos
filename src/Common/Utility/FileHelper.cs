@@ -6,16 +6,16 @@
     public static class FileHelper
     {
         /// <summary>
-        /// Compress the file
+        /// Compress the file (Gzip)
         /// </summary>
         /// <param name="sourcePath">Path to the file to compress</param>
-        /// <param name="destinationPath">Path to the compressed file </param>
-        public static void CompressFile(string sourcePath, string destinationPath = null)
+        /// <param name="destinationPath">Path to the compressed file</param>
+        public static void Compress(string sourcePath, string destinationPath = null)
         {
             EnsureArg.IsNotNullOrEmpty(sourcePath, nameof(sourcePath));
             EnsureArg.IsTrue(File.Exists(sourcePath), nameof(sourcePath)); // source file does not exist
 
-            destinationPath ??= sourcePath.SubstringTillLast(".") + ".zip";
+            destinationPath ??= sourcePath.SubstringTillLast(".") + ".gz";
 
             using(var source = File.OpenRead(sourcePath))
             {
@@ -27,11 +27,11 @@
         }
 
         /// <summary>
-        /// Decompress the file
+        /// Decompress the file (Gzip)
         /// </summary>
         /// <param name="sourcePath">Path to the file to decompress</param>
-        /// <param name="destinationPath">Path to the decompressed file </param>
-        public static void DecompressFile(string sourcePath, string destinationPath = null)
+        /// <param name="destinationPath">Path to the decompressed file</param>
+        public static void Decompress(string sourcePath, string destinationPath = null)
         {
             EnsureArg.IsNotNullOrEmpty(sourcePath, nameof(sourcePath));
             EnsureArg.IsTrue(File.Exists(sourcePath), nameof(sourcePath)); // source file does not exist
