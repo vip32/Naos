@@ -34,9 +34,7 @@
 
         protected override IKeyValueStorage GetStorage()
         {
-            //var connectionString = string.Empty;
-            var connectionString = "DefaultEndpointsProtocol=https;AccountName=naos;AccountKey=BPBCZDqtZh8VsEmp4lKxC7PTODiZvb6D482NfdPXxbPK1BDwG1Cu66yid1MCgfZ5O1YpnPHUfpx1HiOs8D5hxw==;EndpointSuffix=core.windows.net";
-            //var connectionString = "DefaultEndpointsProtocol=https;AccountName=naos-kv;AccountKey=0pmkGB6EMjHpNdQOBpsXthKEm3aolGaxE8lEMjs5xaphkMEVyRJCOKaE3WA98zBT4ZOeZQv4sUxbdKecQy7Gww==;TableEndpoint=https://naos-kv.table.cosmos.azure.com:443/;";
+            var connectionString = string.Empty;
 
             if(!connectionString.IsNullOrEmpty())
             {
