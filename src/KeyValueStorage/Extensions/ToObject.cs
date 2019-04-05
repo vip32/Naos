@@ -1,5 +1,6 @@
 ﻿namespace Naos.Core.KeyValueStorage
 {
+    using System;
     using System.Collections.Generic;
     using Naos.Core.Common;
 
@@ -27,9 +28,13 @@
 
             foreach(var item in source.Safe())
             {
-                type.GetProperty(item.Key)
-                    .SetValue(result, item.Value, null);
+                var prop = type.GetProperty(item.Key.Capitalize());
+                var propertyVal = Convert.ChangeType(item.Value, prop.PropertyType);
+
+                type.GetProperty(item.Key.Capitalize())
+                    .SetValue(result, propertyVal, null);
                 // TODO: optionally don't break when something goes wrong
+                // ArgumentException, ArgumentNullException, InvalidCastException
             }
 
             return result;

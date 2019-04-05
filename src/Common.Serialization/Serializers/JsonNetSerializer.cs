@@ -34,7 +34,8 @@
             using(var sr = new StreamReader(input))
             using(var reader = new JsonTextReader(sr))
             {
-                return this.serializer.Deserialize<T>(reader);
+                var r = this.serializer.Deserialize<T>(reader);
+                return r;
             }
         }
     }

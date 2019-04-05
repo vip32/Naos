@@ -98,6 +98,8 @@
                 return;
             }
 
+            // TODO: delete table first (if exists)
+
             var lastName = Core.Common.RandomGenerator.GenerateString(4, lowerCase: true);
             var values = new List<StubEntity>
             {
@@ -119,7 +121,7 @@
                 entity.LastName.ShouldBe(lastName);
             }
 
-            await sut.DeleteTableAsync("StubEntities").AnyContext();
+            //await sut.DeleteTableAsync("StubEntities").AnyContext();
         }
 
         public virtual async Task CreateAndDeleteTable_Test()

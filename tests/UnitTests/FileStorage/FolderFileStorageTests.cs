@@ -114,8 +114,8 @@
         protected override IFileStorage GetStorage()
         {
             return new FolderFileStorage(o => o
-                    .LoggerFactory(Substitute.For<ILoggerFactory>())
-                    .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "tests_normal"))); //o => o.Folder("|DataDirectory|\\temp"));
+                .LoggerFactory(Substitute.For<ILoggerFactory>())
+                .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "tests_normal"))); //o => o.Folder("|DataDirectory|\\temp"));
         }
     }
 }

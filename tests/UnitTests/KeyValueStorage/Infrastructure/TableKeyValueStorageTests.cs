@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.UnitTests.KeyValueStorage.Infrastructure.Azure
+﻿namespace Naos.Core.UnitTests.KeyValueStorage.Infrastructure
 {
     using System.Threading.Tasks;
     using Naos.Core.Common;
@@ -35,8 +35,8 @@
         protected override IKeyValueStorage GetStorage()
         {
             //var connectionString = string.Empty;
-            //var connectionString = "DefaultEndpointsProtocol=https;AccountName=naos;AccountKey=iY7rvsvpzKxa3h8HED6B8VUB5V0NFur91zBr1F+Ebuttm9y0gjuFZScFdqbJeDBKydxiquXZpcSbA4/1iuZorg==;EndpointSuffix=core.windows.net";
-            var connectionString = "DefaultEndpointsProtocol=https;AccountName=naos-kv;AccountKey=KHmWrdnHt0J9myHiGZISAQJ8yBZOUNLi68JQDzZEipvvfyIDN2cCwGFPeeHcR9jXL8FQtwE7XqwCokF9tGDPpA==;TableEndpoint=https://naos-kv.table.cosmos.azure.com:443/;";
+            var connectionString = "DefaultEndpointsProtocol=https;AccountName=naos;AccountKey=BPBCZDqtZh8VsEmp4lKxC7PTODiZvb6D482NfdPXxbPK1BDwG1Cu66yid1MCgfZ5O1YpnPHUfpx1HiOs8D5hxw==;EndpointSuffix=core.windows.net";
+            //var connectionString = "DefaultEndpointsProtocol=https;AccountName=naos-kv;AccountKey=0pmkGB6EMjHpNdQOBpsXthKEm3aolGaxE8lEMjs5xaphkMEVyRJCOKaE3WA98zBT4ZOeZQv4sUxbdKecQy7Gww==;TableEndpoint=https://naos-kv.table.cosmos.azure.com:443/;";
 
             if(!connectionString.IsNullOrEmpty())
             {

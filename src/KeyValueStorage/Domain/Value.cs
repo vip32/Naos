@@ -11,7 +11,12 @@
     /// </summary>
     public class Value : IDictionary<string, object>, IEquatable<Value>
     {
-        private readonly Dictionary<string, object> keyToValue = new Dictionary<string, object>();
+        private readonly Dictionary<string, object> keyToValue =
+            new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+
+        public Value()
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Value"/> class.
@@ -36,16 +41,42 @@
             this.Key = key;
         }
 
-        public Key Key { get; }
+        public Key Key { get; private set; }
 
         public string PartitionKey
         {
-            get { return this.Key.PartitionKey; }
+            get
+            {
+                return this.Key?.PartitionKey;
+            }
+
+            set
+            {
+                if(this.Key == null)
+                {
+                    this.Key = new Key();
+                }
+
+                this.Key.PartitionKey = value; // for deserialization
+            }
         }
 
         public string RowKey
         {
-            get { return this.Key.RowKey; }
+            get
+            {
+                return this.Key?.RowKey;
+            }
+
+            set
+            {
+                if(this.Key == null)
+                {
+                    this.Key = new Key();
+                }
+
+                this.Key.RowKey = value; // for deserialization
+            }
         }
 
         public int Count

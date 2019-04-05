@@ -21,11 +21,11 @@
             where T : class, new()
         {
             var results = await source.FindAllAsync(typeof(T).Name.Pluralize(), criterias).AnyContext();
-            return results.Select(r =>
+            return results.Select(v =>
             {
-                var instance = r.ToObject<T>();
-                MapKey(r, instance);
-                return instance;
+                var entity = v.ToObject<T>();
+                MapKey(v, entity);
+                return entity;
             });
         }
 
@@ -33,11 +33,11 @@
             where T : class, new()
         {
             var results = await source.FindAllAsync(typeof(T).Name.Pluralize(), key).AnyContext();
-            return results.Select(r =>
+            return results.Select(v =>
             {
-                var instance = r.ToObject<T>();
-                MapKey(r, instance);
-                return instance;
+                var entity = v.ToObject<T>();
+                MapKey(v, entity);
+                return entity;
             });
         }
 
@@ -172,19 +172,25 @@
             return result;
         }
 
-        private static void MapKey<T>(Value value, T instance)
+        private static void MapKey<T>(Value value, T entity)
             where T : class, new()
         {
-            var partitionKeyProperty = typeof(T).GetProperty("PartitionKey", BindingFlags.Public | BindingFlags.Instance);
-            if(partitionKeyProperty?.CanWrite == true)
+            if(value.PartitionKey != null)
             {
-                partitionKeyProperty.SetValue(instance, value.PartitionKey, null);
+                var partitionKeyProperty = typeof(T).GetProperty("PartitionKey", BindingFlags.Public | BindingFlags.Instance);
+                if(partitionKeyProperty?.CanWrite == true)
+                {
+                    partitionKeyProperty.SetValue(entity, value.PartitionKey, null);
+                }
             }
 
-            var rowKeyProperty = typeof(T).GetProperty("RowKey", BindingFlags.Public | BindingFlags.Instance);
-            if(rowKeyProperty?.CanWrite == true)
+            if(value.RowKey != null)
             {
-                rowKeyProperty.SetValue(instance, value.RowKey, null);
+                var rowKeyProperty = typeof(T).GetProperty("RowKey", BindingFlags.Public | BindingFlags.Instance);
+                if(rowKeyProperty?.CanWrite == true)
+                {
+                    rowKeyProperty.SetValue(entity, value.RowKey, null);
+                }
             }
         }
     }

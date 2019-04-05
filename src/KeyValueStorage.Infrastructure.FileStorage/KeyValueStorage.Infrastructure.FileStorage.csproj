@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Naos.Core.KeyValueStorage.Infrastructure.FileStorage</AssemblyName>
+    <RootNamespace>Naos.Core.KeyValueStorage.Infrastructure.FileStorage</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common.Criteria\Common.Criteria.csproj" />
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\FileStorage\FileStorage.csproj" />
+    <ProjectReference Include="..\KeyValueStorage\KeyValueStorage.csproj" />
+  </ItemGroup>
+
+</Project>

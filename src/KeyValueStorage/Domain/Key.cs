@@ -11,6 +11,13 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="Key"/> class.
         /// </summary>
+        public Key()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Key"/> class.
+        /// </summary>
         /// <param name="partitionKey">Partition key</param>
         /// <param name="rowKey">Row key</param>
         public Key(string partitionKey, string rowKey)
@@ -22,9 +29,9 @@
             this.RowKey = rowKey;
         }
 
-        public string PartitionKey { get; }
+        public string PartitionKey { get; set; }
 
-        public string RowKey { get; }
+        public string RowKey { get; set; }
 
         public bool Equals(Key other)
         {

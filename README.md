@@ -468,7 +468,7 @@ development-naos--operations--logging--azureLogAnalytics--workspaceName
 
 # KeyValueStorage
 
-- FileStorage (TODO)
+- FileStorage
 - Azure Table Storage
 - CosmosDb (Table)
 

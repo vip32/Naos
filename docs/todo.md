@@ -229,6 +229,7 @@ operations: render razor without mcv https://blogs.u2u.be/peter/post/using-razor
 https://github.com/toddams/RazorLight
 razor with ajax https://www.thereformedprogrammer.net/asp-net-core-razor-pages-how-to-implement-ajax-requests/
 streamed json oboejs https://medium.com/@deaniusaur/how-to-stream-json-data-over-rest-with-observables-80e0571821d3
+                     https://www.tpeczek.com/2019/04/fetch-api-streams-api-ndjson-and-aspnet.html + https://github.com/tpeczek/Demo.AspNetCore.Mvc.FetchStreaming
 http://oboejs.com/examples#extracting-objects-from-the-json-stream
 operations: stream logevents https://www.tpeczek.com/2017/02/server-sent-events-sse-support-for.html
 operations: signalr https://github.com/dmitry26/Serilog.Sinks.SignalR.NetCore (console client example)
