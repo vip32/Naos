@@ -15,9 +15,10 @@
                 return default;
             }
 
-            return source.GetType().GetProperties(bindingAttr).ToDictionary(
-                pi => pi.Name,
-                pi => pi.GetValue(source, null));
+            return source.GetType().GetProperties(bindingAttr)
+                .ToDictionary(
+                    pi => pi.Name,
+                    pi => pi.GetValue(source, null));
         }
     }
 }

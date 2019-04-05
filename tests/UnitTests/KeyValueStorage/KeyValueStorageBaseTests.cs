@@ -54,7 +54,7 @@
                 }
             };
 
-            await sut.InsertAsync("StubEntities", new List<Value>(values)).AnyContext();
+            await sut.InsertAsync("StubEntities", values).AnyContext();
 
             var result = await sut.FindOneAsync("StubEntities", values[0].PartitionKey, values[0].RowKey).AnyContext();
 
@@ -62,7 +62,7 @@
             //result["Id"].ShouldBe(values[0]["Id"]);
             result.PartitionKey.ShouldBe(values[0].PartitionKey);
 
-            await sut.DeleteTableAsync("StubEntities").AnyContext();
+            //await sut.DeleteTableAsync("StubEntities").AnyContext();
         }
 
         public virtual async Task InsertAndFindOne_ByKeys_Typed_Test()
@@ -77,17 +77,17 @@
             {
                 new StubEntity{ PartitionKey = "part0", RowKey = Core.Common.RandomGenerator.GenerateString(7), Id = "cosmosignored", Age = 33, Country = "USA", FirstName = "John", LastName = "Doe"},
                 new StubEntity{ PartitionKey = "part0", RowKey = Core.Common.RandomGenerator.GenerateString(7), Id = "cosmosignored", Age = 33, Country = "USA", FirstName = "John", LastName = "Doe"}
-            }.AsEnumerable();
+            };
 
             await sut.InsertAsync(values).AnyContext();
 
-            var result = await sut.FindOneAsync<StubEntity>(values.FirstOrDefault()?.PartitionKey, values.FirstOrDefault()?.RowKey).AnyContext();
+            var result = await sut.FindOneAsync<StubEntity>(values[0].PartitionKey, values[0].RowKey).AnyContext();
 
             result.ShouldNotBeNull();
             //result.Id.ShouldBe(values.FirstOrDefault()?.Id);
             result.PartitionKey.ShouldBe(values.FirstOrDefault()?.PartitionKey);
 
-            await sut.DeleteTableAsync("StubEntities").AnyContext();
+            //await sut.DeleteTableAsync("StubEntities").AnyContext();
         }
 
         public virtual async Task InsertAndFindAll_ByCriteria_Typed_Test()

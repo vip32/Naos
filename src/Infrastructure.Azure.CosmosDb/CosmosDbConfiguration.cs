@@ -4,6 +4,8 @@
     {
         public string DatabaseId { get; set; }
 
+        public string ConnectionString { get; set; }
+
         public string ServiceEndpointUri { get; set; }
 
         public string AuthKeyOrResourceToken { get; set; }

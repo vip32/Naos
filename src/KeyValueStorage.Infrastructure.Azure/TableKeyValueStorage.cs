@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Net;
     using System.Text.RegularExpressions;
+    using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Azure.Cosmos.Table;
@@ -284,6 +285,7 @@
             if(!tag.Exists && createIfNotExists)
             {
                 await tag.Table.CreateAsync();
+                //Thread.Sleep(1500);
                 tag.Exists = true;
             }
 

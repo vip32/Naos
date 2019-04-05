@@ -63,6 +63,12 @@
             await source.InsertAsync(typeof(T).Name.Pluralize(), values.Safe().Select(Map)).AnyContext();
         }
 
+        public static async Task InsertAsync<T>(this IKeyValueStorage source, List<T> values)
+            where T : class, new()
+        {
+            await source.InsertAsync(typeof(T).Name.Pluralize(), values.Safe().Select(Map)).AnyContext();
+        }
+
         public static async Task InsertAsync<T>(this IKeyValueStorage source, T value)
             where T : class, new()
         {
@@ -160,10 +166,11 @@
             return source.DeleteAsync(tableName, new[] { key });
         }
 
-        private static Value Map<T>(T value)
+        private static Value Map<T>(T entity)
             where T : class, new()
         {
-            var values = value.ToDictionary().Safe();
+            var values = entity.ToDictionary().Safe();
+
             values.TryGetValue("PartitionKey", out var partitionKey);
             values.TryGetValue("RowKey", out var rowKey);
 
