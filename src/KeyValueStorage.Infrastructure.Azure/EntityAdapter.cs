@@ -12,6 +12,8 @@
 
     public class EntityAdapter : ITableEntity
     {
+        // improvement? https://www.neovolve.com/2019/04/05/updated-azure-table-storage-entityadapter/
+
         private static readonly Dictionary<Type, Func<object, EntityProperty>> PropertyMap =
             new Dictionary<Type, Func<object, EntityProperty>>
             {
@@ -59,26 +61,26 @@
         {
             //Storage client uses this when it needs to transform this entity to a writeable instance
             var result = new Dictionary<string, EntityProperty>();
-            foreach(var cell in this.value)
+            foreach(var kv in this.value)
             {
-                if(cell.Value == null || cell.Key.EqualsAny(this.ignoreProperties))
+                if(kv.Value == null || kv.Key.EqualsAny(this.ignoreProperties))
                 {
                     continue;
                 }
 
                 EntityProperty property;
-                var type = cell.Value.GetType();
+                var type = kv.Value.GetType();
 
                 if(!PropertyMap.TryGetValue(type, out var factoryMethod))
                 {
-                    property = EntityProperty.GeneratePropertyForString(cell.Value.ToString());
+                    property = EntityProperty.GeneratePropertyForString(kv.Value.ToString());
                 }
                 else
                 {
-                    property = factoryMethod(cell.Value);
+                    property = factoryMethod(kv.Value);
                 }
 
-                result[cell.Key] = property;
+                result[kv.Key] = property;
             }
 
             return result;
