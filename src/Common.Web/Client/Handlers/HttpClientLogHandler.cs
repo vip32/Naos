@@ -62,10 +62,10 @@
                 this.WriteLog($"{{LogKey:l}} [{requestId}] http headers={string.Join("|", request.Headers.Select(h => $"{h.Key}={string.Join("|", h.Value)}"))}", args: LogEventKeys.OutboundRequest);
             }
 
-            this.WriteLog($"{{LogKey:l}} [{requestId}] http {request?.Method} {{Url:l}} ({correlationId})", journalType: LogEventPropertyKeys.TrackOutboundRequest, args: new object[] { LogEventKeys.OutboundRequest, request.RequestUri });
+            this.WriteLog($"{{LogKey:l}} [{requestId}] http {request?.Method} {{Url:l}} ({correlationId})", requestId, journalType: LogEventPropertyKeys.TrackOutboundRequest, args: new object[] { LogEventKeys.OutboundRequest, request.RequestUri });
         }
 
-        protected async Task LogHttpResponse(HttpResponseMessage response, string requestId, TimeSpan elapsed)
+        protected async Task LogHttpResponse(HttpResponseMessage response, string requestId, TimeSpan duration)
         {
             var level = LogLevel.Information;
             if((int)response.StatusCode > 499)
@@ -88,10 +88,17 @@
                 this.WriteLog($"{{LogKey:l}} [{requestId}] http headers={string.Join("|", response.Headers.Select(h => $"{h.Key}={string.Join("|", h.Value)}"))}", level: level, args: LogEventKeys.OutboundResponse);
             }
 
-            this.WriteLog($"{{LogKey:l}} [{requestId}] http {response.RequestMessage.Method} {{Url:l}} {{StatusCode}} ({response.StatusCode}) -> took {elapsed.Humanize(3)}", null, level, journalType: LogEventPropertyKeys.TrackOutboundResponse, args: new object[] { LogEventKeys.OutboundResponse, response.RequestMessage.RequestUri, (int)response.StatusCode });
+            this.WriteLog($"{{LogKey:l}} [{requestId}] http {response.RequestMessage.Method} {{Url:l}} {{StatusCode}} ({response.StatusCode}) -> took {duration.Humanize(3)}", requestId, null, level, journalType: LogEventPropertyKeys.TrackOutboundResponse, duration, args: new object[] { LogEventKeys.OutboundResponse, response.RequestMessage.RequestUri, (int)response.StatusCode });
         }
 
-        private void WriteLog(string message, Exception exception = null, LogLevel level = LogLevel.Information, string journalType = null, params object[] args)
+        private void WriteLog(
+            string message,
+            string id = null,
+            Exception exception = null,
+            LogLevel level = LogLevel.Information,
+            string journalType = null,
+            TimeSpan? duration = null,
+            params object[] args)
         {
             if(this.logger == null)
             {
@@ -105,7 +112,7 @@
                 }
                 else
                 {
-                    this.logger.LogJournal(journalType, message, level, args);
+                    this.logger.LogJournal(journalType, message, id, level, duration, args);
                 }
             }
         }

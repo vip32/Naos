@@ -41,7 +41,7 @@
 
         private async Task LogRequestAsync(HttpContext context)
         {
-            var correlationId = context.GetCorrelationId().Default(Guid.NewGuid().ToString().Remove("-"));
+            var correlationId = context.GetCorrelationId().Default(IdGenerator.Instance.Next);
             var requestId = context.GetRequestId();
             var path = $"{correlationId}_{requestId}".TrimEnd('_');
             var contentLength = context.Request.ContentLength ?? 0;

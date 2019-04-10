@@ -103,10 +103,14 @@
 #if DEBUG
                 .WriteTo.Debug()
 #endif
+                //.Enrich.With<EventTypeEnricher>() // https://nblumhardt.com/2015/10/assigning-event-types-to-serilog-events/
+                .Enrich.With(new IdEnricher())
                 .Enrich.With(new ExceptionEnricher())
                 .Enrich.With(new TicksEnricher())
                 .Enrich.WithProperty(LogEventPropertyKeys.Environment, loggingOptions.Context.Environment)
-                //.Enrich.WithProperty("ServiceDescriptor", internalServiceDescriptor)
+                .Enrich.WithProperty(LogEventPropertyKeys.ServiceName, loggingOptions.Context.Descriptor.Name)
+                .Enrich.WithProperty(LogEventPropertyKeys.ServiceProduct, loggingOptions.Context.Descriptor.Product)
+                .Enrich.WithProperty(LogEventPropertyKeys.ServiceCapability, loggingOptions.Context.Descriptor.Capability)
                 .Enrich.FromLogContext();
 
             if(!internalCorrelationId.IsNullOrEmpty())

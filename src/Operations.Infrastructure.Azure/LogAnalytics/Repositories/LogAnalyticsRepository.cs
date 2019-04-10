@@ -93,7 +93,17 @@ where LogMessage_s != '' and
                 query += $" and LogProperties_{LogEventPropertyKeys.Ticks}_d {spec.ToString(true).SubstringFrom(" ")}";
             }
 
-            query += $" | top {options.Take ?? 1000} by LogProperties_{LogEventPropertyKeys.Ticks}_d desc";
+            foreach(var spec in specifications.Safe().Where(s => s.Name.SafeEquals(nameof(LogEvent.TrackType)))) // TODO: map this better/ more generic
+            {
+                query += $" and LogProperties_{LogEventPropertyKeys.TrackType}_s {spec.ToString(true).SubstringFrom(" ")}";
+            }
+
+            foreach(var spec in specifications.Safe().Where(s => s.Name.SafeEquals(nameof(LogEvent.Id)))) // TODO: map this better/ more generic
+            {
+                query += $" and LogProperties_{LogEventPropertyKeys.Id}_s {spec.ToString(true).SubstringFrom(" ")}";
+            }
+
+            query += $" | top {options?.Take ?? 1000} by LogProperties_{LogEventPropertyKeys.Ticks}_d desc";
 
             //order by LogProperties_{LogEventPropertyKeys.Ticks}_d desc |
             //skip ({page}-1) * {pageSize} | top {pageSize}
@@ -156,6 +166,7 @@ where LogMessage_s != '' and
                             }
                         }
 
+                        result.Id = result.Properties.TryGetValue(LogEventPropertyKeys.Id) as string;
                         result.Level = result.Properties.TryGetValue("LogLevel") as string;
                         result.Environment = result.Properties.TryGetValue(LogEventPropertyKeys.Environment) as string;
                         result.Message = result.Properties.TryGetValue("LogMessage") as string;
@@ -166,6 +177,7 @@ where LogMessage_s != '' and
                         result.CorrelationId = result.Properties.TryGetValue(LogEventPropertyKeys.CorrelationId) as string;
                         //result.ServiceDescriptor = result.Properties.TryGetValue("ServiceDescriptor") as string;
                         result.SourceContext = result.Properties.TryGetValue("SourceContext") as string;
+                        result.TrackType = result.Properties.TryGetValue(LogEventPropertyKeys.TrackType) as string;
 
                         // remove some unneeded properties
                         result.Properties.Remove("LogMessage");
@@ -175,6 +187,8 @@ where LogMessage_s != '' and
                         result.Properties.Remove("Scope");
                         result.Properties.Remove(LogEventPropertyKeys.Ticks);
                         result.Properties.Remove(LogEventPropertyKeys.Environment);
+                        result.Properties.Remove(LogEventPropertyKeys.TrackType);
+                        result.Properties.Remove(LogEventPropertyKeys.Id);
 
                         yield return result;
                     }

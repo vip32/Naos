@@ -56,7 +56,7 @@
             await Task.Run(() =>
             {
                 var contentLength = context.Request.ContentLength ?? 0;
-                this.logger.LogJournal(LogEventPropertyKeys.TrackInboundRequest, $"{{LogKey:l}} [{requestId}] http {context.Request.Method} {{Url:l}} (size={contentLength.Bytes().ToString("#.##")})", args: new object[] { LogEventKeys.InboundRequest, new Uri(context.Request.GetDisplayUrl()) });
+                this.logger.LogJournal(LogEventPropertyKeys.TrackInboundRequest, $"{{LogKey:l}} [{requestId}] http {context.Request.Method} {{Url:l}} (size={contentLength.Bytes().ToString("#.##")})", requestId, args: new object[] { LogEventKeys.InboundRequest, new Uri(context.Request.GetDisplayUrl()) });
 
                 //if (context.HasServiceName())
                 //{
@@ -70,7 +70,7 @@
             });
         }
 
-        private async Task LogResponseAsync(HttpContext context, string correlationId, string requestId, TimeSpan elapsed)
+        private async Task LogResponseAsync(HttpContext context, string correlationId, string requestId, TimeSpan duration)
         {
             await Task.Run(() =>
             {
@@ -90,7 +90,7 @@
                 }
 
                 var contentLength = context.Response.ContentLength ?? 0;
-                this.logger.LogJournal(LogEventPropertyKeys.TrackInboundResponse, $"{{LogKey:l}} [{requestId}] http {context.Request.Method} {{Url:l}} {{StatusCode}} ({ReasonPhrases.GetReasonPhrase(context.Response.StatusCode)}) -> took {elapsed.Humanize(3)} (size={contentLength.Bytes().ToString("#.##")})", level, args: new object[] { LogEventKeys.InboundResponse, new Uri(context.Request.GetDisplayUrl()), context.Response.StatusCode });
+                this.logger.LogJournal(LogEventPropertyKeys.TrackInboundResponse, $"{{LogKey:l}} [{requestId}] http {context.Request.Method} {{Url:l}} {{StatusCode}} ({ReasonPhrases.GetReasonPhrase(context.Response.StatusCode)}) -> took {duration.Humanize(3)} (size={contentLength.Bytes().ToString("#.##")})", requestId, level, duration, args: new object[] { LogEventKeys.InboundResponse, new Uri(context.Request.GetDisplayUrl()), context.Response.StatusCode });
             }).AnyContext();
         }
     }

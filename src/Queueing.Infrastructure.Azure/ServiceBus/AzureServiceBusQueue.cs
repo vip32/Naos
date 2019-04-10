@@ -60,7 +60,7 @@
             {
                 await this.EnsureQueueAsync().AnyContext();
 
-                var id = RandomGenerator.GenerateString(13, true);
+                var id = IdGenerator.Instance.Next;
                 this.logger.LogDebug($"queue item enqueue (id={id}, queue={this.options.Name})");
 
                 Interlocked.Increment(ref this.enqueuedCount);

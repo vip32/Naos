@@ -47,6 +47,8 @@
 
         public string SourceContext { get; set; }
 
+        public string TrackType { get; set; }
+
         public Dictionary<string, object> Properties { get; set; } = new Dictionary<string, object>();
 
         public string GetAge()

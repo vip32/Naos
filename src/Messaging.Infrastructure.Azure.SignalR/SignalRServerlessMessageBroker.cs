@@ -56,7 +56,7 @@
             EnsureArg.IsNotNull(message, nameof(message));
             if(message.CorrelationId.IsNullOrEmpty())
             {
-                message.CorrelationId = RandomGenerator.GenerateString(13, true);
+                message.CorrelationId = IdGenerator.Instance.Next;
             }
 
             var loggerState = new Dictionary<string, object>
@@ -68,7 +68,7 @@
             {
                 if(message.Id.IsNullOrEmpty())
                 {
-                    message.Id = Guid.NewGuid().ToString();
+                    message.Id = IdGenerator.Instance.Next;
                     this.logger.LogDebug($"{{LogKey:l}} set message (id={message.Id})", LogEventKeys.Messaging);
                 }
 

@@ -90,7 +90,7 @@
             EnsureArg.IsNotNull(message, nameof(message));
             if(message.CorrelationId.IsNullOrEmpty())
             {
-                message.CorrelationId = RandomGenerator.GenerateString(13, true);
+                message.CorrelationId = IdGenerator.Instance.Next;
             }
 
             var loggerState = new Dictionary<string, object>
@@ -102,7 +102,7 @@
             {
                 if(message.Id.IsNullOrEmpty())
                 {
-                    message.Id = Guid.NewGuid().ToString();
+                    message.Id = IdGenerator.Instance.Next;
                     this.logger.LogDebug($"{{LogKey:l}} set message (id={message.Id})", LogEventKeys.Messaging);
                 }
 
@@ -125,7 +125,7 @@
                 {
                     Label = messageName,
                     MessageId = message.Id,
-                    CorrelationId = message.CorrelationId.IsNullOrEmpty() ? Guid.NewGuid().ToString() : message.CorrelationId,
+                    CorrelationId = message.CorrelationId.IsNullOrEmpty() ? IdGenerator.Instance.Next : message.CorrelationId,
                     //Body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)), // TODO: use ISerializer here, compacter messages
                     Body = this.serializer.SerializeToBytes(message),
                     To = this.options.FilterScope

@@ -22,7 +22,7 @@
             this.services
                 .AddNaos(configuration, "Product", "Capability", new[] { "All" }, n => n
                     .AddOperations(o => o
-                        .AddLogging(correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}"))
+                        .AddLogging(correlationId: $"TEST{IdGenerator.Instance.Next}"))
                     .AddJobScheduling());
 
             this.services.AddScoped<StubProbe>();

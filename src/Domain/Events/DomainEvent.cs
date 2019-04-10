@@ -6,7 +6,7 @@
     {
         public DomainEvent()
         {
-            this.Identifier = RandomGenerator.GenerateString(5, false);
+            this.Identifier = IdGenerator.Instance.Next;
         }
 
         public string Identifier { get; }
