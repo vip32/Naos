@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
     using Humanizer;
@@ -41,16 +42,15 @@
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        public ActionResult<IEnumerable<string>> Get()
+        public async Task<ActionResult<IEnumerable<object>>> Get() // LogEvent
         {
             //var acceptHeader = this.HttpContext.Request.Headers.GetValue("Accept");
             //if (acceptHeader.ContainsAny(new[] { ContentType.HTML.ToValue(), ContentType.HTM.ToValue() }))
             //{
             //    return await this.GetHtmlAsync().AnyContext();
             //}
-            //var logEvents = await this.GetJsonAsync().AnyContext();
-            //return this.Ok(logEvents);
-            return this.Ok(new[] { "Test" });
+
+            return this.Ok(await this.GetJsonAsync().AnyContext());
         }
 
         [HttpGet]
@@ -66,11 +66,10 @@
 
         private async Task<IEnumerable<LogEvent>> GetJsonAsync()
         {
-            await this.EnsureFilterContext();
+            //await this.EnsureFilterContext();
 
             return await this.repository.FindAllAsync(
-                this.filterContext.GetSpecifications<LogEvent>(),
-                this.filterContext.GetFindOptions<LogEvent>()).AnyContext();
+                this.filterContext.GetSpecifications<LogEvent>()/*, this.filterContext.GetFindOptions<LogEvent>()*/).AnyContext();
         }
 
         private async Task GetHtmlAsync()

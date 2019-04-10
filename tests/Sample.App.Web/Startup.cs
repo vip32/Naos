@@ -78,7 +78,7 @@
                     .AddAuthenticationApiKeyStatic()
                     .AddRequestCorrelation()
                     .AddRequestFiltering()
-                    .AddServiceExceptions()
+                    //.AddServiceExceptions()
                     .AddCommands(o => o
                         .AddBehavior<Core.Commands.Domain.ValidateCommandBehavior>()
                         .AddBehavior<Core.Commands.Domain.TrackCommandBehavior>())
@@ -134,7 +134,7 @@
                     .UseServicePoweredBy()
                     .UseOperations()
                     .UseRequestFiltering()
-                    .UseServiceExceptions()
+                    //.UseServiceExceptions()
                     .UseServiceDiscoveryRouter())
                 .UseSwagger()
                 .UseSwaggerUi3();
