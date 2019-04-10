@@ -2,8 +2,10 @@
 {
     public struct LogEventPropertyKeys
     {
+        public const string EventType = "ns_evntp";
         public const string Ticks = "ns_ticks";
         public const string CorrelationId = "ns_corid";
+        public const string Id = "ns_id";
         public const string RequestId = "ns_reqid";
         public const string TenantId = "ns_tntid";
         public const string Environment = "ns_env";
@@ -13,6 +15,8 @@
         public const string ServiceName = "ns_svcname";
 
         public const string TrackType = "ns_trktyp";
+        public const string TrackId = "ns_trkid";
+        public const string TrackDuration = "ns_trkdur";
         public const string TrackMisc = "ns_trkmsc";
         public const string TrackSendDomainEvent = "ns_trksdm";
         public const string TrackHandleDomainEvent = "ns_trkhdm";
@@ -23,10 +27,10 @@
         public const string TrackReceiveMessage = "ns_trkrmg";
         public const string TrackStartJob = "ns_trksjb";
         public const string TrackFinishJob = "ns_trkfjb";
-        public const string TrackInboundRequest = "ns_trkirq";
-        public const string TrackInboundResponse = "ns_trkirs";
-        public const string TrackOutboundRequest = "ns_trkorq";
+        public const string TrackOutboundRequest = "ns_trkorq"; // client
         public const string TrackOutboundResponse = "ns_trkors";
+        public const string TrackInboundRequest = "ns_trkirq"; // server
+        public const string TrackInboundResponse = "ns_trkirs";
         public const string TrackEnqueue = "ns_trkenq";
         public const string TrackDequeue = "ns_trkdeq";
     }
