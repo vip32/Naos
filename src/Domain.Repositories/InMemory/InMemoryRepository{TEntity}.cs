@@ -379,7 +379,7 @@
             }
             else if(entity is IEntity<string>)
             {
-                (entity as IEntity<string>).Id = Guid.NewGuid().ToString();
+                (entity as IEntity<string>).Id = IdGenerator.Instance.Next;
             }
             else if(entity is IEntity<Guid>)
             {

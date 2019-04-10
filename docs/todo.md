@@ -37,6 +37,12 @@ Marketing
 
 TODO:
 
+Server > Client tracing like zipkin (https://zipkin.io/pages/data_model.html), based on serilog logevents (journal)
+4 journal types are relevant (web): TrackOutboundRequest/Response + TrackInboundRequest/Response 
+2 journal types are relevant (messaging): TrackPublishMessage/TrackReceiveMessage
+req/res are correlated by TrackId
+logevent contains timestamp, duration, overall correlationid, (track)id , servicename/product/capability
+
 NetCore 3.0 upgrade (preview)
 https://www.talkingdotnet.com/asp-net-core-3-0-app-with-net-core-3-preview-2-and-visual-studio-2019/
 

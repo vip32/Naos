@@ -75,8 +75,8 @@
 
             var values = new List<StubEntity>
             {
-                new StubEntity{ PartitionKey = "part0", RowKey = Core.Common.RandomGenerator.GenerateString(7), Id = "cosmosignored", Age = 33, Country = "USA", FirstName = "John", LastName = "Doe"},
-                new StubEntity{ PartitionKey = "part0", RowKey = Core.Common.RandomGenerator.GenerateString(7), Id = "cosmosignored", Age = 33, Country = "USA", FirstName = "John", LastName = "Doe"}
+                new StubEntity{ PartitionKey = "part0", RowKey = IdGenerator.Instance.Next, Id = "cosmosignored", Age = 33, Country = "USA", FirstName = "John", LastName = "Doe"},
+                new StubEntity{ PartitionKey = "part0", RowKey = IdGenerator.Instance.Next, Id = "cosmosignored", Age = 33, Country = "USA", FirstName = "John", LastName = "Doe"}
             };
 
             await sut.InsertAsync(values).AnyContext();
@@ -136,7 +136,7 @@
 
             await sut.InsertAsync(tableName, new List<Value>
             {
-                new Value(new Key(Core.Common.RandomGenerator.GenerateString(5), Core.Common.RandomGenerator.GenerateString(7)))
+                new Value(new Key(IdGenerator.Instance.Next, Core.Common.RandomGenerator.GenerateString(7)))
                 {
                     ["Id"] = "cosmosignored",
                     ["Identity"] = Guid.NewGuid().ToString(),

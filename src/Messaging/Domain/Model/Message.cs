@@ -12,7 +12,7 @@
         /// </summary>
         public Message()
         {
-            this.Id = RandomGenerator.GenerateString(13, true);
+            this.Id = IdGenerator.Instance.Next;
             this.Identifier = RandomGenerator.GenerateString(5, false);
         }
 

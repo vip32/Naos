@@ -10,7 +10,7 @@
     public abstract class CommandRequest<TResponse> : IRequest<CommandResponse<TResponse>>
     {
         protected CommandRequest()
-            : this(Guid.NewGuid().ToString(), Guid.NewGuid().ToString())
+            : this(IdGenerator.Instance.Next, IdGenerator.Instance.Next)
         {
         }
 
@@ -18,8 +18,8 @@
         {
             EnsureArg.IsNotNullOrEmpty(id);
 
-            this.Id = id ?? Guid.NewGuid().ToString();
-            this.CorrelationId = correlationId ?? Guid.NewGuid().ToString();
+            this.Id = id ?? IdGenerator.Instance.Next;
+            this.CorrelationId = correlationId ?? IdGenerator.Instance.Next;
             this.Identifier = RandomGenerator.GenerateString(5, false);
             this.Created = DateTime.UtcNow;
         }

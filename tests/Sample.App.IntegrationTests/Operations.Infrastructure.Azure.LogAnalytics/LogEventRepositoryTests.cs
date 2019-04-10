@@ -22,7 +22,7 @@
                     .AddOperations(o => o
                         .AddLogging(
                             l => l.UseAzureLogAnalytics(), // registers ILogEventRepository
-                            correlationId: $"TEST{RandomGenerator.GenerateString(9, true)}"))
+                            correlationId: $"TEST{IdGenerator.Instance.Next}"))
                     .AddJobScheduling());
 
             this.ServiceProvider = this.services.BuildServiceProvider();

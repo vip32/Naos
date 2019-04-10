@@ -91,7 +91,7 @@
         {
             if(data is IHaveCorrelationId d && d.CorrelationId.IsNullOrEmpty())
             {
-                d.CorrelationId = RandomGenerator.GenerateString(13, true);
+                d.CorrelationId = IdGenerator.Instance.Next;
             }
         }
 

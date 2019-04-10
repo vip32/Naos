@@ -105,7 +105,7 @@
                 if(this.options.UseRandomCorrelationId)
                 {
                     //return Guid.NewGuid().ToString(); //.Replace("-", string.Empty);
-                    return RandomGenerator.GenerateString(this.options.RandomCorrelationIdLength, true);
+                    return IdGenerator.Instance.Next; //RandomGenerator.GenerateString(this.options.RandomCorrelationIdLength, true);
                 }
                 else if(this.options.UseHashAsCorrelationId)
                 {

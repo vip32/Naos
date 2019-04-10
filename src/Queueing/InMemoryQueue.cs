@@ -52,7 +52,7 @@
             {
                 await this.EnsureQueueAsync().AnyContext();
 
-                var item = new QueueItem<TData>(RandomGenerator.GenerateString(13, true), data.Clone(), this, DateTime.UtcNow, 0);
+                var item = new QueueItem<TData>(IdGenerator.Instance.Next, data.Clone(), this, DateTime.UtcNow, 0);
                 this.logger.LogDebug($"queue item enqueue (id={item.Id}, queue={this.options.Name})");
                 this.queue.Enqueue(item);
 
