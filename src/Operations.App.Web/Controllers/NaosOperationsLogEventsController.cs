@@ -42,7 +42,7 @@
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<IEnumerable<object>>> Get() // LogEvent
+        public async Task<ActionResult<IEnumerable<LogEvent>>> Get()
         {
             //var acceptHeader = this.HttpContext.Request.Headers.GetValue("Accept");
             //if (acceptHeader.ContainsAny(new[] { ContentType.HTML.ToValue(), ContentType.HTM.ToValue() }))
@@ -66,10 +66,11 @@
 
         private async Task<IEnumerable<LogEvent>> GetJsonAsync()
         {
-            //await this.EnsureFilterContext();
+            this.EnsureFilterContext();
 
             return await this.repository.FindAllAsync(
-                this.filterContext.GetSpecifications<LogEvent>()/*, this.filterContext.GetFindOptions<LogEvent>()*/).AnyContext();
+                this.filterContext.GetSpecifications<LogEvent>(),
+                this.filterContext.GetFindOptions<LogEvent>()).AnyContext();
         }
 
         private async Task GetHtmlAsync()
@@ -95,7 +96,7 @@
 "); // TODO: reuse from ServiceContextMiddleware.cs
             try
             {
-                await this.EnsureFilterContext();
+                this.EnsureFilterContext();
 
                 var logEvents = await this.repository.FindAllAsync(
                     this.filterContext.GetSpecifications<LogEvent>(),
@@ -139,7 +140,7 @@
             }
         }
 
-        private async Task EnsureFilterContext()
+        private void EnsureFilterContext()
         {
             // environment (default: current environment)
             if(!this.filterContext.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Environment))))
@@ -160,12 +161,12 @@
                 this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Ticks), CriteriaOperator.GreaterThanOrEqual, DateTime.UtcNow.AddHours(-24).Ticks));
             }
 
-            foreach(var criteria in this.filterContext.Criterias)
-            {
-                await this.HttpContext.Response.WriteAsync($"criteria: {criteria}<br/>");
-            }
+            //foreach(var criteria in this.filterContext.Criterias)
+            //{
+            //    await this.HttpContext.Response.WriteAsync($"criteria: {criteria}<br/>");
+            //}
 
-            this.filterContext.Take = this.filterContext.Take ?? 1000; // get amount per request, repeat while logevents.ticks >= past
+            this.filterContext.Take ??= 1000; // get amount per request, repeat while logevents.ticks >= past
 
             //await foreach(var name in this.service.GetLogEventsAsync(this.filterContext))
             //{
