@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.Common
 {
     using System;
+    using System.Diagnostics;
 
     public static partial class Extensions
     {
@@ -22,6 +23,7 @@
         //    return EqualityComparer<T>.Default.Equals(source, default);
         //}
 
+        [DebuggerStepThrough]
         public static bool IsDefault(this object source)
         {
             if(source?.GetType().IsValueType == true)
@@ -47,21 +49,25 @@
             return source == null;
         }
 
+        [DebuggerStepThrough]
         public static bool IsDefault(this string source)
         {
             return source == default;
         }
 
+        [DebuggerStepThrough]
         public static bool IsDefault(this int source)
         {
             return source == default;
         }
 
+        [DebuggerStepThrough]
         public static bool IsDefault(this Guid source)
         {
             return source == default;
         }
 
+        [DebuggerStepThrough]
         public static bool IsDefault(this DateTime source)
         {
             return source == default;

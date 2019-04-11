@@ -1,5 +1,7 @@
 ﻿namespace Naos.Core.Common
 {
+    using System.Diagnostics;
+
     public static partial class Extensions
     {
         /// <summary>
@@ -8,6 +10,7 @@
         /// <param name="source">the source to remove from</param>
         /// <param name="value">the value to remove</param>
         /// <returns></returns>
+        [DebuggerStepThrough]
         public static string Remove(this string source, string value)
         {
             if(source == null)

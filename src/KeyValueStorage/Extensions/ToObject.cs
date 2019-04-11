@@ -29,12 +29,15 @@
             foreach(var item in source.Safe())
             {
                 var prop = type.GetProperty(item.Key.Capitalize());
-                var propertyVal = Convert.ChangeType(item.Value, prop.PropertyType);
+                if(prop != null)
+                {
+                    var propertyVal = Convert.ChangeType(item.Value, prop.PropertyType);
 
-                type.GetProperty(item.Key.Capitalize())
-                    .SetValue(result, propertyVal, null);
-                // TODO: optionally don't break when something goes wrong
-                // ArgumentException, ArgumentNullException, InvalidCastException
+                    type.GetProperty(item.Key.Capitalize())
+                        .SetValue(result, propertyVal, null);
+                    // TODO: optionally don't break when something goes wrong
+                    // ArgumentException, ArgumentNullException, InvalidCastException
+                }
             }
 
             return result;

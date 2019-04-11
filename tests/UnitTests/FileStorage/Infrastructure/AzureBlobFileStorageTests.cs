@@ -1,7 +1,8 @@
-﻿namespace Naos.Core.UnitTests.FileStorage
+﻿namespace Naos.Core.UnitTests.FileStorage.Infrastructure
 {
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
     using Naos.Core.FileStorage.Domain;
     using Naos.Core.FileStorage.Infrastructure;
     using NSubstitute;
@@ -93,17 +94,17 @@
             return base.CanRoundTripSeekableStreamAsync();
         }
 
-        [Fact]
-        public override Task WillRespectStreamOffsetAsync()
-        {
-            return base.WillRespectStreamOffsetAsync();
-        }
+        //[Fact]
+        //public override Task WillRespectStreamOffsetAsync()
+        //{
+        //    return base.WillRespectStreamOffsetAsync();
+        //}
 
         protected override IFileStorage GetStorage()
         {
-            var connectionString = string.Empty;
+            var connectionString = Configuration["naos:tests:storage:connectionString"];
 
-            if(!string.IsNullOrWhiteSpace(connectionString))
+            if(!connectionString.IsNullOrEmpty())
             {
                 return new AzureBlobFileStorage(o => o
                     .LoggerFactory(Substitute.For<ILoggerFactory>())

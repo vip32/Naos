@@ -1,9 +1,11 @@
 ﻿namespace Naos.Core.Common
 {
     using System;
+    using System.Diagnostics;
 
     public static partial class Extensions
     {
+        [DebuggerStepThrough]
         public static string SubstringFrom(this string source, string from, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         {
             if(source.IsNullOrEmpty())
@@ -19,6 +21,7 @@
             return SubstringFromInternal(source, from, source.IndexOf(from, comparison));
         }
 
+        [DebuggerStepThrough]
         public static string SubstringFromLast(this string source, string from, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         {
             if(source.IsNullOrEmpty())

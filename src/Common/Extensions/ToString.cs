@@ -1,7 +1,7 @@
 ﻿namespace Naos.Core.Common
 {
     using System.Collections.Generic;
-    using System.Text;
+    using System.Diagnostics;
 
     public static partial class Extensions
     {
@@ -13,6 +13,7 @@
         /// <param name="source">The enumeration</param>
         /// <param name="separator">A String</param>
         /// <returns>A String consisting of the elements of value interspersed with the separator string.</returns>
+        [DebuggerStepThrough]
         public static string ToString<T>(this IEnumerable<T> source, string separator)
         {
             if(source.IsNullOrEmpty())
@@ -20,19 +21,11 @@
                 return string.Empty;
             }
 
-            var sb = new StringBuilder();
-
-            foreach(var obj in source)
-            {
-                if(sb.Length > 0)
-                {
-                    sb.Append(separator);
-                }
-
-                sb.Append(obj);
-            }
-
-            return sb.ToString();
+            return string.Join(separator, source);
         }
+
+        [DebuggerStepThrough]
+        public static string ToString<T>(this IEnumerable<T> source, char seperator)
+            => ToString(source, seperator.ToString());
     }
 }

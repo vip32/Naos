@@ -33,16 +33,16 @@ steps:
 
   - task: DotNetCoreCLI@2
     displayName: "dotnet build"
-    env:
-        "naos__secrets__vault__clientId": $(key-vault-clientId) # from vars group
-        "naos__secrets__vault__clientSecret": $(key-vault-clientSecret) # from vars group
-        "naos__secrets__vault__name": "naos"
     inputs:
       projects: "$(solution)"
       arguments: "--configuration $(buildConfiguration) /p:AssemblyVersion=$(GitVersion.AssemblySemVer);FileVersion=$(GitVersion.AssemblySemVer);InformationalVersion=$(GitVersion.InformationalVersion)"
 
   - task: DotNetCoreCLI@2
     displayName: "dotnet test"
+    env:
+        "naos__secrets__vault__clientId": $(key-vault-clientId) # from vars group
+        "naos__secrets__vault__clientSecret": $(key-vault-clientSecret) # from vars group
+        "naos__secrets__vault__name": "naos"
     inputs:
       command: test
       projects: "**/*[Tt]ests/*UnitTests.csproj"

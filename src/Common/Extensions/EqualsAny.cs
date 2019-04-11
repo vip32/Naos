@@ -2,9 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     public static partial class Extensions
     {
+        [DebuggerStepThrough]
         public static bool EqualsAny(
             this string source,
             IEnumerable<string> values,
@@ -36,6 +38,7 @@
             return false;
         }
 
+        [DebuggerStepThrough]
         public static bool EqualsAny(
             this int source,
             IEnumerable<int> values)
@@ -56,6 +59,7 @@
             return false;
         }
 
+        [DebuggerStepThrough]
         public static bool EqualsAny(
             this long source,
             IEnumerable<long> values)

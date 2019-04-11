@@ -22,6 +22,10 @@
         {
             var process = Process.GetCurrentProcess();
             Console.WriteLine($"PID: {process.Id}", Color.Gray);
+            Console.WriteLine($"Memory used: {process.PrivateMemorySize64.Bytes().ToString("#.##")}", Color.Gray);
+            Console.WriteLine($"GC Gen-0: {GC.CollectionCount(0)} (fast/blocking)", Color.Gray);
+            Console.WriteLine($"GC Gen-1: {GC.CollectionCount(1)} (fast/blocking)", Color.Gray);
+            Console.WriteLine($"GC Gen-2: {GC.CollectionCount(2)} (slow/nonblocking)", Color.Gray);
             Console.WriteLine($"Is64BitOperatingSystem: {Environment.Is64BitOperatingSystem}", Color.Gray);
             Console.WriteLine($"Is64BitProcess: {Environment.Is64BitProcess}", Color.Gray);
 
@@ -34,11 +38,6 @@
             //"Cpu", $"{new PerformanceCounter("Processor", "% Processor Time", "_Total").NextValue()}%");
             //"Is64BitProcess", Environment.Is64BitProcess);
             //"Domain", Environment.UserDomainName);
-
-            if(request.Command.Memory)
-            {
-                Console.WriteLine(process.PrivateMemorySize64.Bytes().ToString("#.##"), Color.Gray);
-            }
 
             //this.logger.LogInformation(text);
             return Task.FromResult(true);

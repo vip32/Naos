@@ -1,7 +1,10 @@
 ﻿namespace Naos.Core.Common
 {
+    using System.Diagnostics;
+
     public static partial class Extensions
     {
+        [DebuggerStepThrough]
         public static bool IsNullOrDefault<T>(this T? value)
             where T : struct
         {

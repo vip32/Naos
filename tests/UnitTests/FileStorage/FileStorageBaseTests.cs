@@ -14,7 +14,7 @@
     using NSubstitute;
     using Xunit;
 
-    public class FileStorageBaseTests
+    public class FileStorageBaseTests : BaseTest
     {
         public virtual async Task CanGetEmptyFileListOnMissingDirectoryAsync()
         {
@@ -76,7 +76,7 @@
                 Assert.Null(fileInfo);
 
                 var startTime = DateTime.UtcNow;
-                Thread.Sleep(1000);
+                Thread.Sleep(3.Seconds()); // blob storage needs 3 seconds
 
                 var path = $"folder\\{Guid.NewGuid()}-nested.txt";
                 Assert.True(await storage.SaveFileContentsAsync(path, "test"));
@@ -88,8 +88,9 @@
                 // NOTE: File creation time might not be accurate: http://stackoverflow.com/questions/2109152/unbelievable-strange-file-creation-time-problem
                 Assert.True(fileInfo.Created > DateTime.MinValue, "File creation time should be newer than the start time.");
                 Assert.Equal(DateTimeKind.Utc, fileInfo.Modified.Kind);
-                Assert.True(startTime <= fileInfo.Modified, $"File {path} modified time {fileInfo.Modified:O} should be newer than the start time {startTime:O}.");
+                Assert.True(startTime <= fileInfo.Created, $"File {path} created time {fileInfo.Modified:O} should be newer than the start time {startTime:O}.");
 
+                //Thread.Sleep(3.Seconds()); // blob storage needs 3 seconds
                 path = $"{Guid.NewGuid()}-test.txt";
                 Assert.True(await storage.SaveFileContentsAsync(path, "test"));
                 fileInfo = await storage.GetFileInformationAsync(path);

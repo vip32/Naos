@@ -1,5 +1,7 @@
 ﻿namespace Naos.Core.Common
 {
+    using System.Diagnostics;
+
     public static partial class Extensions
     {
         /// <summary>
@@ -9,6 +11,7 @@
         /// <param name="value">the value string to compare to</param>
         /// <param name="comparisonType">the comparison type</param>
         /// <returns>true if equal, otherwhise false</returns>
+        [DebuggerStepThrough]
         public static bool SafeEquals(
             this string source,
             string value,

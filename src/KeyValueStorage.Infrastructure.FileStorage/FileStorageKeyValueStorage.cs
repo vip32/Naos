@@ -168,6 +168,12 @@
                 var value = await this.options.FileStorage.GetFileObjectAsync<Value>(fileInformation.Path);
                 if(value != null && this.Match(criterias, value)) // in memory criteria matching
                 {
+                    if(key != null)
+                    {
+                        value.PartitionKey = key.PartitionKey;
+                        value.RowKey = key.RowKey;
+                    }
+
                     result.Add(value);
                 }
             }

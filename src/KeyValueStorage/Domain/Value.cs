@@ -3,12 +3,15 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using EnsureThat;
+    using Naos.Core.Common;
 
     /// <summary>
     /// Represents a row in the table structure.
     /// </summary>
+    [DebuggerDisplay("PartitionKey={'PartitionKey}, RowKey={RowKey}")]
     public class Value : IDictionary<string, object>, IEquatable<Value>
     {
         private readonly Dictionary<string, object> keyToValue =
@@ -39,6 +42,9 @@
             EnsureArg.IsNotNullOrEmpty(key.RowKey, nameof(key.RowKey));
 
             this.Key = key;
+
+            this.AddOrUpdate("PartitionKey", key.PartitionKey);
+            this.AddOrUpdate("RowKey", key.RowKey);
         }
 
         public Key Key { get; private set; }

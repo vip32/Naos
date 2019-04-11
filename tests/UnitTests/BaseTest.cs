@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.App.IntegrationTests
+﻿namespace Naos.Core.UnitTests
 {
     using System;
     using Microsoft.Extensions.Configuration;

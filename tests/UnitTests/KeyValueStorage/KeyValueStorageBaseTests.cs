@@ -9,7 +9,7 @@
     using Naos.Core.KeyValueStorage.Domain;
     using Shouldly;
 
-    public class KeyValueStorageBaseTests
+    public class KeyValueStorageBaseTests : BaseTest
     {
         private readonly IEnumerable<StubEntity> entities;
 
@@ -31,36 +31,36 @@
                 return;
             }
 
+            var lastName = Core.Common.RandomGenerator.GenerateString(4, lowerCase: true);
             var values = new List<Value>
             {
-                new Value(Core.Common.RandomGenerator.GenerateString(5), Core.Common.RandomGenerator.GenerateString(7))
+                new Value("part1", IdGenerator.Instance.Next)
                 {
                     ["Id"] = "cosmosignored",
-                    ["Identity"] = Guid.NewGuid().ToString(),
-                    ["Age"] = 44,
-                    ["Country"] = "USA",
-                    ["FullName"] = "John Doe",
-                    ["RegistrationDate"] = DateTime.UtcNow
-                },
-                new Value(new Key(Core.Common.RandomGenerator.GenerateString(5), Core.Common.RandomGenerator.GenerateString(7)))
-                {
-                    ["Id"] = "cosmosignored",
-                    ["Identity"] = Guid.NewGuid().ToString(),
                     ["Age"] = 33,
                     ["Country"] = "USA",
                     ["FirstName"] = "John",
-                    ["LastName"] = "Doe",
+                    ["LastName"] = lastName,
+                    ["RegistrationDate"] = DateTime.UtcNow
+                },
+                new Value(new Key("part1", IdGenerator.Instance.Next))
+                {
+                    ["Id"] = "cosmosignored",
+                    ["Age"] = 33,
+                    ["Country"] = "USA",
+                    ["FirstName"] = "John",
+                    ["LastName"] = lastName,
                     ["RegistrationDate"] = DateTime.UtcNow
                 }
             };
 
             await sut.InsertAsync("StubEntities", values).AnyContext();
 
-            var result = await sut.FindOneAsync("StubEntities", values[0].PartitionKey, values[0].RowKey).AnyContext();
+            var value = await sut.FindOneAsync("StubEntities", values[0].PartitionKey, values[0].RowKey).AnyContext();
 
-            result.ShouldNotBeNull();
+            value.ShouldNotBeNull();
             //result["Id"].ShouldBe(values[0]["Id"]);
-            result.PartitionKey.ShouldBe(values[0].PartitionKey);
+            value.PartitionKey.ShouldBe(values[0].PartitionKey);
 
             //await sut.DeleteTableAsync("StubEntities").AnyContext();
         }
@@ -81,11 +81,12 @@
 
             await sut.InsertAsync(values).AnyContext();
 
-            var result = await sut.FindOneAsync<StubEntity>(values[0].PartitionKey, values[0].RowKey).AnyContext();
+            var entity = await sut.FindOneAsync<StubEntity>(values[0].PartitionKey, values[0].RowKey).AnyContext();
 
-            result.ShouldNotBeNull();
+            entity.ShouldNotBeNull();
             //result.Id.ShouldBe(values.FirstOrDefault()?.Id);
-            result.PartitionKey.ShouldBe(values.FirstOrDefault()?.PartitionKey);
+            entity.PartitionKey.ShouldBe(values.FirstOrDefault()?.PartitionKey);
+            entity.RowKey.ShouldBe(values.FirstOrDefault()?.RowKey);
 
             //await sut.DeleteTableAsync("StubEntities").AnyContext();
         }
@@ -103,20 +104,20 @@
             var lastName = Core.Common.RandomGenerator.GenerateString(4, lowerCase: true);
             var values = new List<StubEntity>
             {
-                new StubEntity{ PartitionKey = "part0", RowKey = Core.Common.RandomGenerator.GenerateString(7), Id = "cosmosignored", Age = 33, Country = "USA", FirstName = "John", LastName = lastName},
-                new StubEntity{ PartitionKey = "part0", RowKey = Core.Common.RandomGenerator.GenerateString(7), Id = "cosmosignored", Age = 33, Country = "USA", FirstName = "John", LastName = lastName}
+                new StubEntity{ PartitionKey = "part0", RowKey = IdGenerator.Instance.Next, Id = "cosmosignored", Age = 33, Country = "USA", FirstName = "John", LastName = lastName},
+                new StubEntity{ PartitionKey = "part0", RowKey = IdGenerator.Instance.Next, Id = "cosmosignored", Age = 33, Country = "USA", FirstName = "John", LastName = lastName}
             }.AsEnumerable();
 
             await sut.UpsertAsync(values).AnyContext();
 
-            var result = await sut.FindAllAsync<StubEntity>(new[]
+            var entities = await sut.FindAllAsync<StubEntity>(new[]
                 {
                     new Criteria("LastName", CriteriaOperator.Equal, lastName)
                 }).AnyContext();
 
-            result.ShouldNotBeNull();
-            result.Count().ShouldBe(2);
-            foreach(var entity in result)
+            entities.ShouldNotBeNull();
+            entities.Count().ShouldBe(2);
+            foreach(var entity in entities)
             {
                 entity.LastName.ShouldBe(lastName);
             }
@@ -133,16 +134,17 @@
             }
 
             var tableName = "StubEntities" + Core.Common.RandomGenerator.GenerateString(4);
+            var lastName = Core.Common.RandomGenerator.GenerateString(4, lowerCase: true);
 
             await sut.InsertAsync(tableName, new List<Value>
             {
-                new Value(new Key(IdGenerator.Instance.Next, Core.Common.RandomGenerator.GenerateString(7)))
+                new Value(new Key("part1", IdGenerator.Instance.Next))
                 {
                     ["Id"] = "cosmosignored",
-                    ["Identity"] = Guid.NewGuid().ToString(),
-                    ["Age"] = 44,
+                    ["Age"] = 33,
                     ["Country"] = "USA",
-                    ["FullName"] = "John Doe",
+                    ["FirstName"] = "John",
+                    ["LastName"] = lastName,
                     ["RegistrationDate"] = DateTime.UtcNow
                 }
             }).AnyContext();
@@ -159,7 +161,7 @@
         {
             public string Id { get; set; } // Id is not a valid name, causes cosmos errors (ignored)
 
-            public DateTime Timestamp { get; set; } = DateTime.UtcNow; // Timestamp is not a valid name, causes cosmos errors (ignored)
+            //public DateTime Timestamp { get; set; } = DateTime.UtcNow; // Timestamp is not a valid name, causes cosmos errors (ignored)
 
             public string PartitionKey { get; set; }
 

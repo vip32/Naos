@@ -3,7 +3,7 @@
     using System;
     using System.Linq;
 
-    public static class RandomGenerator
+    public static partial class RandomGenerator
     {
         private static readonly Random Random = new Random();
 

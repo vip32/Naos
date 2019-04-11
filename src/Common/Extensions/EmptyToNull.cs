@@ -1,9 +1,11 @@
 ﻿namespace Naos.Core.Common
 {
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     public static partial class Extensions
     {
+        [DebuggerStepThrough]
         public static IEnumerable<T> EmptyToNull<T>(this IEnumerable<T> source)
         {
             if(source.IsNullOrEmpty())
@@ -16,6 +18,7 @@
             return source;
         }
 
+        [DebuggerStepThrough]
         public static string EmptyToNull(this string source)
         {
             if(string.IsNullOrEmpty(source))
@@ -26,6 +29,7 @@
             return source;
         }
 
+        [DebuggerStepThrough]
         public static string Default(this string source, string defaultValue)
         {
             if(string.IsNullOrEmpty(source))

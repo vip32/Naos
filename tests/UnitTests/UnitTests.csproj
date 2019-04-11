@@ -100,6 +100,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Common\Encoding\" />
     <Folder Include="Domain\Events\" />
     <Folder Include="Domain\Model\" />
     <Folder Include="Domain\Repositories\Extensions\" />

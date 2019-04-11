@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.Globalization;
 
     public static partial class Extensions
@@ -15,6 +16,7 @@
         /// <returns>
         /// Converted object
         /// </returns>
+        [DebuggerStepThrough]
         public static T To<T>(this object source, bool throws = false, T defaultValue = default)
             where T : struct
         {
@@ -43,6 +45,7 @@
             }
         }
 
+        [DebuggerStepThrough]
         public static bool TryTo<T>(this object source, out T result)
             where T : struct
         {

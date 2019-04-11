@@ -1,11 +1,13 @@
 ﻿namespace Naos.Core.KeyValueStorage.Domain
 {
     using System;
+    using System.Diagnostics;
     using EnsureThat;
 
     /// <summary>
     /// Identity structure of the <see cref="Value"/> (row)
     /// </summary>
+    [DebuggerDisplay("PartitionKey={'PartitionKey}, RowKey={RowKey}")]
     public class Key : IEquatable<Key>
     {
         /// <summary>

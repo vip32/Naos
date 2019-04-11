@@ -30,11 +30,11 @@
             return base.InsertAndFindAll_ByCriteria_Typed_Test();
         }
 
-        [Fact]
-        public override Task CreateAndDeleteTable_Test()
-        {
-            return base.CreateAndDeleteTable_Test();
-        }
+        //[Fact]
+        //public override Task CreateAndDeleteTable_Test()
+        //{
+        //    return base.CreateAndDeleteTable_Test();
+        //}
 
         protected override IKeyValueStorage GetStorage()
         {

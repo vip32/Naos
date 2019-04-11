@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
 
     public static partial class Extensions
@@ -13,6 +14,7 @@
         /// <param name="source">The items.</param>
         /// <param name="action">Action to perform on every item</param>
         /// <returns>the source with the actions applied</returns>
+        [DebuggerStepThrough]
         public static IEnumerable<T> ForEach<T>(this IEnumerable<T> source, Action<T> action)
         {
             if(source.IsNullOrEmpty())
@@ -33,8 +35,14 @@
             return itemsArray;
         }
 
+        [DebuggerStepThrough]
         public static ICollection<T> ForEach<T>(this ICollection<T> source, Action<T> action)
         {
+            if(source.IsNullOrEmpty())
+            {
+                return source;
+            }
+
             return source.AsEnumerable().ForEach(action).ToList();
         }
 

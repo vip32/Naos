@@ -1,5 +1,6 @@
 ﻿namespace Naos.Core.Common
 {
+    using System.Diagnostics;
     using System.Text;
 
     public static partial class Extensions
@@ -9,6 +10,7 @@
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
+        [DebuggerStepThrough]
         public static string Capitalize(this string source)
         {
             if(source.IsNullOrEmpty())
@@ -30,6 +32,7 @@
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
+        [DebuggerStepThrough]
         public static string Decapitalize(this string source)
         {
             if(source.IsNullOrEmpty())

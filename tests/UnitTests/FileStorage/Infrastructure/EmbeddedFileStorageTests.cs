@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.UnitTests.FileStorage
+﻿namespace Naos.Core.UnitTests.FileStorage.Infrastructure
 {
     using System.Linq;
     using System.Reflection;

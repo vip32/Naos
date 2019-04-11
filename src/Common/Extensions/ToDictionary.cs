@@ -6,6 +6,9 @@
 
     public static partial class Extensions
     {
+        //public static Dictionary<string, string> ToDictionary(this NameValueCollection source)
+        //    => source.AllKeys.ToDictionary(key => key, key => source[key]);
+
         public static IDictionary<string, object> ToDictionary(this NameValueCollection source)
         {
             if(source == null)
