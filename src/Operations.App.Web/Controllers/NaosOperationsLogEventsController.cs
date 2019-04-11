@@ -125,8 +125,8 @@
                     await this.HttpContext.Response.WriteAsync($"{logEvent.Timestamp.ToUniversalTime():u}");
                     await this.HttpContext.Response.WriteAsync("</span>");
                     await this.HttpContext.Response.WriteAsync($"&nbsp;[<span style='color: {levelColor}'>");
-                    await this.HttpContext.Response.WriteAsync($"{logEvent.Level.ToUpper().Truncate(3, string.Empty)}");
-                    await this.HttpContext.Response.WriteAsync($"</span>]&nbsp;{logEvent.CorrelationId}&nbsp;".Replace("&nbsp;&nbsp;", "&nbsp;"));
+                    await this.HttpContext.Response.WriteAsync($"{logEvent.Level.ToUpper().Truncate(3, string.Empty)}</span>]");
+                    await this.HttpContext.Response.WriteAsync(!logEvent.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logevents/dashboard?q=CorrelationId={logEvent.CorrelationId}\">{logEvent.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;");
                     await this.HttpContext.Response.WriteAsync($"<span style='color: {messageColor}; {extraStyles}'>");
                     //await this.HttpContext.Response.WriteAsync(logEvent.TrackType.SafeEquals("journal") ? "*" : "&nbsp;"); // journal prefix
                     await this.HttpContext.Response.WriteAsync($"{logEvent.Message} <a target=\"blank\" href=\"/api/operations/logevents?q=Id={logEvent.Id}\">*</a>");

@@ -23,7 +23,7 @@
         private readonly string workspaceName;
         private readonly string logName;
 
-        public LogAnalyticsRepository(
+        public LogAnalyticsRepository( // TODO: use options+builder here
             ILoggerFactory loggerFactory,
             HttpClient httpClient,
             string accessToken,
@@ -77,30 +77,35 @@
 where LogMessage_s != '' and 
   LogLevel_s != 'Verbose'";
 
-            foreach(var spec in specifications.Safe().Where(s => s.Name.SafeEquals(nameof(LogEvent.Environment)))) // TODO: map this better/ more generic
+            foreach(var spec in specifications.Safe().Where(s => s.Name.SafeEquals(nameof(LogEvent.Environment)))) // TODO: map this better/ more generic ISpecificationMapper?
             {
                 query += $" and LogProperties_{LogEventPropertyKeys.Environment}_s {spec.ToString(true).SubstringFrom(" ")}";
             }
 
-            foreach(var spec in specifications.Safe().Where(s => s.Name.SafeEquals(nameof(LogEvent.Level)))) // TODO: map this better/ more generic
+            foreach(var spec in specifications.Safe().Where(s => s.Name.SafeEquals(nameof(LogEvent.Level)))) // TODO: map this better/ more generic ISpecificationMapper?
             {
                 // TODO: from level and up (inf = inf, wrn, err, fat)
                 query += $" and LogLevel_s {spec.ToString(true).SubstringFrom(" ")}";
             }
 
-            foreach(var spec in specifications.Safe().Where(s => s.Name.SafeEquals(nameof(LogEvent.Ticks)))) // TODO: map this better/ more generic
+            foreach(var spec in specifications.Safe().Where(s => s.Name.SafeEquals(nameof(LogEvent.Ticks)))) // TODO: map this better/ more generic ISpecificationMapper?
             {
                 query += $" and LogProperties_{LogEventPropertyKeys.Ticks}_d {spec.ToString(true).SubstringFrom(" ")}";
             }
 
-            foreach(var spec in specifications.Safe().Where(s => s.Name.SafeEquals(nameof(LogEvent.TrackType)))) // TODO: map this better/ more generic
+            foreach(var spec in specifications.Safe().Where(s => s.Name.SafeEquals(nameof(LogEvent.TrackType)))) // TODO: map this better/ more generic ISpecificationMapper?
             {
                 query += $" and LogProperties_{LogEventPropertyKeys.TrackType}_s {spec.ToString(true).SubstringFrom(" ")}";
             }
 
-            foreach(var spec in specifications.Safe().Where(s => s.Name.SafeEquals(nameof(LogEvent.Id)))) // TODO: map this better/ more generic
+            foreach(var spec in specifications.Safe().Where(s => s.Name.SafeEquals(nameof(LogEvent.Id)))) // TODO: map this better/ more generic ISpecificationMapper?
             {
                 query += $" and LogProperties_{LogEventPropertyKeys.Id}_s {spec.ToString(true).SubstringFrom(" ")}";
+            }
+
+            foreach(var spec in specifications.Safe().Where(s => s.Name.SafeEquals(nameof(LogEvent.CorrelationId)))) // TODO: map this better/ more generic ISpecificationMapper?
+            {
+                query += $" and LogProperties_{LogEventPropertyKeys.CorrelationId}_s {spec.ToString(true).SubstringFrom(" ")}";
             }
 
             query += $" | top {options?.Take ?? 1000} by LogProperties_{LogEventPropertyKeys.Ticks}_d desc";
