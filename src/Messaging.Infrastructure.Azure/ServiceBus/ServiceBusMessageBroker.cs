@@ -132,7 +132,7 @@
                 };
                 serviceBusMessage.UserProperties.AddOrUpdate("Origin", this.options.MessageScope);
 
-                this.logger.LogJournal(LogEventPropertyKeys.TrackPublishMessage, $"{{LogKey:l}} publish (name={{MessageName}}, id={{MessageId}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes().ToString("#.##")})", args: new[] { LogEventKeys.Messaging, messageName, message.Id, message.Origin });
+                this.logger.LogJournal(LogEventPropertyKeys.TrackPublishMessage, $"{{LogKey:l}} publish (name={{MessageName}}, id={{MessageId}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes().ToString("#.##")})", message.Id, "message", args: new[] { LogEventKeys.Messaging, messageName, message.Id, message.Origin });
 
                 this.options.Provider.CreateModel().SendAsync(serviceBusMessage).GetAwaiter().GetResult();
             }
@@ -241,7 +241,7 @@
                             message.Origin = serviceBusMessage.UserProperties.ContainsKey("Origin") ? serviceBusMessage.UserProperties["Origin"] as string : string.Empty;
                         }
 
-                        this.logger.LogJournal(LogEventPropertyKeys.TrackReceiveMessage, $"{{LogKey:l}} process (name={{MessageName}}, id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes().ToString("#.##")})",
+                        this.logger.LogJournal(LogEventPropertyKeys.TrackReceiveMessage, $"{{LogKey:l}} process (name={{MessageName}}, id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes().ToString("#.##")})", message.Id, "message",
                             args: new[] { LogEventKeys.Messaging, serviceBusMessage.Label, message?.Id, this.options.MessageScope, message.Origin });
 
                         // construct the handler by using the DI container

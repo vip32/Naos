@@ -65,7 +65,7 @@
                 }
 
                 // store message in specific (Message) folder
-                this.logger.LogJournal(LogEventPropertyKeys.TrackPublishMessage, "{LogKey:l} publish (name={MessageName}, id={MessageId}, origin={MessageOrigin})", args: new[] { LogEventKeys.Messaging, message.GetType().PrettyName(), message.Id, message.Origin });
+                this.logger.LogJournal(LogEventPropertyKeys.TrackPublishMessage, "{LogKey:l} publish (name={MessageName}, id={MessageId}, origin={MessageOrigin})", message.Id, "message", args: new[] { LogEventKeys.Messaging, message.GetType().PrettyName(), message.Id, message.Origin });
                 var messageName = /*message.Name*/ message.GetType().PrettyName(false);
                 var path = Path.Combine(this.GetDirectory(messageName, this.options.FilterScope), $"message_{message.Id}_{this.options.MessageScope}.json.tmp");
                 if(this.options.Storage.SaveFileObjectAsync(path, message).Result)
@@ -155,7 +155,7 @@
                         message.Origin = path.SubstringFromLast("_").SubstringTillLast("."); // read metadata from filename
                     }
 
-                    this.logger.LogJournal(LogEventPropertyKeys.TrackReceiveMessage, "{LogKey:l} process (name={MessageName}, id={MessageId}, service={Service}, origin={MessageOrigin})",
+                    this.logger.LogJournal(LogEventPropertyKeys.TrackReceiveMessage, "{LogKey:l} process (name={MessageName}, id={MessageId}, service={Service}, origin={MessageOrigin})", message.Id, "message",
                         args: new[] { LogEventKeys.Messaging, messageType.PrettyName(), message?.Id, this.options.MessageScope, message.Origin });
 
                     // construct the handler by using the DI container

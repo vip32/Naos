@@ -87,7 +87,7 @@
 
                 var messageName = /*message.Name*/ message.GetType().PrettyName();
 
-                this.logger.LogJournal(LogEventPropertyKeys.TrackPublishMessage, "{LogKey:l} publish (name={MessageName}, id={MessageId}, origin={MessageOrigin})",
+                this.logger.LogJournal(LogEventPropertyKeys.TrackPublishMessage, "{LogKey:l} publish (name={MessageName}, id={MessageId}, origin={MessageOrigin})", message.Id, "message",
                     args: new[] { LogEventKeys.Messaging, message.GetType().PrettyName(), message.Id, message.Origin });
 
                 var url = $"{this.serviceUtils.Endpoint}/api/v1/hubs/{this.HubName}";
@@ -185,7 +185,7 @@
                     var jsonMessage = JsonConvert.DeserializeObject(signalRMessage.ToString(), messageType);
                     var message = jsonMessage as Message;
 
-                    this.logger.LogJournal(LogEventPropertyKeys.TrackReceiveMessage, "{LogKey:l} process (name={MessageName}, id={MessageId}, service={Service}, origin={MessageOrigin})",
+                    this.logger.LogJournal(LogEventPropertyKeys.TrackReceiveMessage, "{LogKey:l} process (name={MessageName}, id={MessageId}, service={Service}, origin={MessageOrigin})", message.Id, "message",
                             args: new[] { LogEventKeys.Messaging, messageType.PrettyName(), message?.Id, this.options.MessageScope, message?.Origin });
 
                     // construct the handler by using the DI container

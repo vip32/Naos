@@ -10,7 +10,8 @@
             this ILogger source,
             string type,
             string message,
-            string id = null,
+            string key = null,
+            string name = null,
             LogLevel level = LogLevel.Information,
             TimeSpan? duration = null,
             params object[] args)
@@ -23,7 +24,8 @@
                 {
                     [LogEventPropertyKeys.TrackType] = LogEventTrackTypeValues.Journal,
                     [LogEventPropertyKeys.TrackDuration] = duration.Value.Milliseconds,
-                    [LogEventPropertyKeys.TrackId] = id,
+                    [LogEventPropertyKeys.TrackKey] = key,
+                    [LogEventPropertyKeys.TrackName] = name,
                     [type] = true
                 }))
                 {

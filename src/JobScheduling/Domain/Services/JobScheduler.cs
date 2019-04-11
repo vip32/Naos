@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.JobScheduling.Domain
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -149,15 +150,23 @@
                 {
                     async Task Execute()
                     {
-                        // TODO: publish domain event (job started)
-                        this.logger.LogJournal(LogEventPropertyKeys.TrackStartJob, $"{{LogKey:l}} job started (key={{JobKey}}, id={registration.Identifier}, type={job.GetType().PrettyName()}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")})", args: new[] { LogEventKeys.JobScheduling, registration.Key });
-                        await job.ExecuteAsync(cancellationToken, args).AnyContext();
-                        await Run.DelayedAsync(new TimeSpan(0, 0, 1), () =>
+                        using(var timer = new Common.Timer())
+                        using(this.logger.BeginScope(new Dictionary<string, object>
                         {
-                            this.logger.LogJournal(LogEventPropertyKeys.TrackFinishJob, $"{{LogKey:l}} job finished (key={{JobKey}}, id={registration.Identifier}, type={job.GetType().PrettyName()})", args: new[] { LogEventKeys.JobScheduling, registration.Key });
-                            return Task.CompletedTask;
-                        });
-                        // TODO: publish domain event (job finished)
+                            [LogEventPropertyKeys.CorrelationId] = IdGenerator.Instance.Next
+                        }))
+                        {
+                            // TODO: publish domain event (job started)
+                            this.logger.LogJournal(LogEventPropertyKeys.TrackStartJob, $"{{LogKey:l}} job started (key={{JobKey}}, id={registration.Identifier}, type={job.GetType().PrettyName()}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")})", name: "job", args: new[] { LogEventKeys.JobScheduling, registration.Key });
+                            await job.ExecuteAsync(cancellationToken, args).AnyContext();
+                            await Run.DelayedAsync(new TimeSpan(0, 0, 1), () =>
+                            {
+                                timer.Stop();
+                                this.logger.LogJournal(LogEventPropertyKeys.TrackFinishJob, $"{{LogKey:l}} job finished (key={{JobKey}}, id={registration.Identifier}, type={job.GetType().PrettyName()})", name: "job", duration: timer.Elapsed, args: new[] { LogEventKeys.JobScheduling, registration.Key });
+                                return Task.CompletedTask;
+                            });
+                            // TODO: publish domain event (job finished)
+                        }
                     }
 
                     if(!registration.IsReentrant)

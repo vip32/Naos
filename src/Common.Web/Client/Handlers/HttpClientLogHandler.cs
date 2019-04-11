@@ -93,7 +93,7 @@
 
         private void WriteLog(
             string message,
-            string id = null,
+            string key = null,
             Exception exception = null,
             LogLevel level = LogLevel.Information,
             string journalType = null,
@@ -112,7 +112,7 @@
                 }
                 else
                 {
-                    this.logger.LogJournal(journalType, message, id, level, duration, args);
+                    this.logger.LogJournal(journalType, message, key, "http", level, duration, args);
                 }
             }
         }
