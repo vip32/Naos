@@ -24,7 +24,7 @@
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             var correlationId = this.correlationContext?.Context?.CorrelationId; // current correlationid will be set on outgoing request
-            var requestId = RandomGenerator.GenerateString(5, false); // every outgoing request needs a unique id
+            var requestId = RandomGenerator.GenerateStringFast(5, false); // every outgoing request needs a unique id
 
             var loggerState = new Dictionary<string, object>
             {

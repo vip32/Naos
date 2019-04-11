@@ -20,7 +20,7 @@
 
             this.Id = id ?? IdGenerator.Instance.Next;
             this.CorrelationId = correlationId ?? IdGenerator.Instance.Next;
-            this.Identifier = RandomGenerator.GenerateString(5, false);
+            this.Identifier = RandomGenerator.GenerateStringFast(5, false);
             this.Created = DateTime.UtcNow;
         }
 

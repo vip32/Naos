@@ -26,17 +26,20 @@
             }
 
             var characters = alphanumeric
-                ? CharactersWithAlpha
-                : Characters;
+                ? lowerCase ? CharactersLowerWithAlpha : CharactersWithAlpha
+                : lowerCase ? CharactersLower : Characters;
 
             var sb = new StringBuilder(length);
-
             for(var i = 0; i < length; i++)
             {
                 sb.Append(characters[Random.Next(0, characters.Length)]);
             }
 
             return sb.ToString();
+
+            // slower
+            //return new string(
+            //    Enumerable.Range(1, length).Select(_ => characters[Random.Next(characters.Length)]).ToArray());
         }
     }
 }
