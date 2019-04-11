@@ -1,12 +1,5 @@
 ﻿namespace Naos.Core.Operations.Domain
 {
-    using System;
-    using System.Collections.Generic;
-    using Humanizer;
-    using Naos.Core.Common;
-    using Naos.Core.Domain;
-    using Newtonsoft.Json;
-
     public class TraceEvent : LogEvent
     {
         public string Key { get; set; } // shared id (for example request id)
