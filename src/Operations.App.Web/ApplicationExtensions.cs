@@ -31,7 +31,7 @@
                     Options.Create(requestLoggingMiddlewareOptions ?? naosOptions.Context.Application.ApplicationServices.GetService<RequestLoggingMiddlewareOptions>() ?? new RequestLoggingMiddlewareOptions()))
                 .UseMiddleware<RequestStorageMiddleware>(
                     Options.Create(requestStorageMiddlewareOptions ?? naosOptions.Context.Application.ApplicationServices.GetService<RequestStorageMiddlewareOptions>() ?? new RequestStorageMiddlewareOptions()));
-            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos application builder: operations added");
+            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: operations added");
 
             var diagnosticListener = naosOptions.Context.Application.ApplicationServices.GetService<DiagnosticListener>();
             diagnosticListener?.SubscribeWithAdapter(new NaosDiagnosticListener(naosOptions.Context.Application.ApplicationServices.GetService<ILoggerFactory>()));

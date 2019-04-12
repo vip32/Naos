@@ -58,7 +58,8 @@
 
                 Interlocked.Increment(ref this.enqueuedCount);
 
-                this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item enqueued (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+                this.logger.LogJournal(LogKeys.Queueing, $"item enqueued (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", LogEventPropertyKeys.TrackEnqueue);
+                this.logger.LogTraceEvent(LogKeys.Queueing, item.Id, typeof(TData).PrettyName(), LogTraceEventNames.Queue);
                 this.LastEnqueuedDate = DateTime.UtcNow;
                 return item.Id;
             }
@@ -81,7 +82,7 @@
                 return value;
             });
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackDequeue, $"{{LogKey:l}} item lock renewed (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogJournal(LogKeys.Queueing, $"item lock renewed (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", LogEventPropertyKeys.TrackDequeue);
             this.LastDequeuedDate = DateTime.UtcNow;
             return Task.CompletedTask;
         }
@@ -105,7 +106,7 @@
             Interlocked.Increment(ref this.completedCount);
             item.MarkCompleted();
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackDequeue, $"{{LogKey:l}} item completed (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogJournal(LogKeys.Queueing, $"item completed (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", LogEventPropertyKeys.TrackDequeue);
             this.LastDequeuedDate = DateTime.UtcNow;
             return Task.CompletedTask;
         }
@@ -153,7 +154,7 @@
             Interlocked.Increment(ref this.abandonedCount);
             item.MarkAbandoned();
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackDequeue, $"{{LogKey:l}} item abandoned (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogJournal(LogKeys.Queueing, $"item abandoned (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", LogEventPropertyKeys.TrackDequeue);
             this.LastDequeuedDate = DateTime.UtcNow;
             return Task.CompletedTask;
         }
@@ -271,7 +272,8 @@
             {
                 await item.RenewLockAsync();
 
-                this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item dequeued (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+                this.logger.LogJournal(LogKeys.Queueing, $"item dequeued (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", LogEventPropertyKeys.TrackEnqueue);
+                this.logger.LogTraceEvent(LogKeys.Queueing, item.Id, typeof(TData).PrettyName(), LogTraceEventNames.Queue, DateTime.UtcNow - item.EnqueuedDate);
                 this.LastDequeuedDate = DateTime.UtcNow;
                 return item;
             }
@@ -284,7 +286,7 @@
 
             Task.Run(async () =>
             {
-                this.logger.LogInformation($"{{LogKey:l}} processing started (queue={this.options.Name}, type={this.GetType().PrettyName()})", args: new[] { LogEventKeys.Queueing });
+                this.logger.LogInformation($"{{LogKey:l}} processing started (queue={this.options.Name}, type={this.GetType().PrettyName()})", args: new[] { LogKeys.Queueing });
                 while(!linkedCancellationToken.IsCancellationRequested)
                 {
                     IQueueItem<TData> item = null;
@@ -294,7 +296,7 @@
                     }
                     catch(Exception ex)
                     {
-                        this.logger.LogError(ex, $"{{LogKey:l}} processing error: {ex.Message}", args: new[] { LogEventKeys.Queueing });
+                        this.logger.LogError(ex, $"{{LogKey:l}} processing error: {ex.Message}", args: new[] { LogKeys.Queueing });
                     }
 
                     if(linkedCancellationToken.IsCancellationRequested || item == null)
@@ -319,7 +321,7 @@
                         catch(Exception ex)
                         {
                             Interlocked.Increment(ref this.workerErrorCount);
-                            this.logger.LogError(ex, $"{{LogKey:l}} processing error: {ex.Message}", args: new[] { LogEventKeys.Queueing });
+                            this.logger.LogError(ex, $"{{LogKey:l}} processing error: {ex.Message}", args: new[] { LogKeys.Queueing });
 
                             if(!item.IsAbandoned && !item.IsCompleted)
                             {

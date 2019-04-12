@@ -33,6 +33,8 @@
 
         public string Level { get; set; }
 
+        public string Key { get; set; } // logkey
+
         public string Environment { get; set; }
 
         public string Message { get; set; }

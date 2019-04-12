@@ -41,7 +41,7 @@
                     naosOptions.Context.Descriptor.Version,
                     naosOptions.Context.Descriptor.Tags));
 
-            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: service context added");
+            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos services builder: service context added");
             naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceContext", EchoRoute = "api/echo/servicecontext" });
 
             return naosOptions;

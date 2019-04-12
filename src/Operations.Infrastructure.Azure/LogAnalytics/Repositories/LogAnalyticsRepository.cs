@@ -108,13 +108,18 @@ where LogMessage_s != '' and
                 query += $" and LogProperties_{LogEventPropertyKeys.CorrelationId}_s {spec.ToString(true).SubstringFrom(" ")}";
             }
 
+            foreach(var spec in specifications.Safe().Where(s => s.Name.SafeEquals(nameof(LogEvent.Key)))) // TODO: map this better/ more generic ISpecificationMapper?
+            {
+                query += $" and LogProperties_{LogEventPropertyKeys.LogKey}_s {spec.ToString(true).SubstringFrom(" ")}";
+            }
+
             query += $" | top {options?.Take ?? 1000} by LogProperties_{LogEventPropertyKeys.Ticks}_d desc";
 
             //order by LogProperties_{LogEventPropertyKeys.Ticks}_d desc |
             //skip ({page}-1) * {pageSize} | top {pageSize}
             // limit 100 | // 5000 = max
 
-            this.logger.LogInformation($"{{LogKey:l}} log analytics query: {query}", LogEventKeys.Operations); // TODO: move to request logging middleware (operations)
+            this.logger.LogInformation($"{{LogKey:l}} log analytics query: {query}", LogKeys.Operations); // TODO: move to request logging middleware (operations)
             // and LogProperties_ns_trktyp_s == 'journal'
 
             // query docs: https://docs.microsoft.com/en-us/azure/log-analytics/query-language/get-started-queries
@@ -173,6 +178,7 @@ where LogMessage_s != '' and
 
                         result.Id = result.Properties.TryGetValue(LogEventPropertyKeys.Id) as string;
                         result.Level = result.Properties.TryGetValue("LogLevel") as string;
+                        result.Key = result.Properties.TryGetValue(LogEventPropertyKeys.LogKey) as string;
                         result.Environment = result.Properties.TryGetValue(LogEventPropertyKeys.Environment) as string;
                         result.Message = result.Properties.TryGetValue("LogMessage") as string;
                         result.Ticks = result.Properties.TryGetValue(LogEventPropertyKeys.Ticks).To<long>();
@@ -190,10 +196,12 @@ where LogMessage_s != '' and
                         result.Properties.Remove("LogLevel");
                         result.Properties.Remove("Timestamp");
                         result.Properties.Remove("Scope");
+                        result.Properties.Remove(LogEventPropertyKeys.LogKey);
                         result.Properties.Remove(LogEventPropertyKeys.Ticks);
                         result.Properties.Remove(LogEventPropertyKeys.Environment);
                         result.Properties.Remove(LogEventPropertyKeys.TrackType);
                         result.Properties.Remove(LogEventPropertyKeys.Id);
+                        result.Properties.Remove(LogEventPropertyKeys.CorrelationId);
 
                         yield return result;
                     }

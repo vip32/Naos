@@ -38,7 +38,7 @@
                     return;
                 }
 
-                this.logger.LogJournal(LogEventPropertyKeys.TrackPublishMessage, $"{{LogKey:l}} [{notification.Message?.Identifier}] publish (type={notification.Message?.GetType().PrettyName()}, id={notification.Message?.Id}, origin={notification.Message?.Origin})", args: LogEventKeys.Messaging);
+                this.logger.LogJournal(LogKeys.Messaging, $"[{notification.Message?.Identifier}] publish (type={notification.Message?.GetType().PrettyName()}, id={notification.Message?.Id}, origin={notification.Message?.Origin})", LogEventPropertyKeys.TrackPublishMessage);
             });
         }
 
@@ -51,7 +51,7 @@
                     return;
                 }
 
-                this.logger.LogJournal(LogEventPropertyKeys.TrackReceiveMessage, $"{{LogKey:l}} [{notification.Message?.Identifier}] handle (type={notification.Message?.GetType().PrettyName()}, id={notification.Message?.Id}, service={notification.MessageScope}, origin={notification.Message?.Origin})", args: LogEventKeys.Messaging);
+                this.logger.LogJournal(LogKeys.Messaging, $"[{notification.Message?.Identifier}] handle (type={notification.Message?.GetType().PrettyName()}, id={notification.Message?.Id}, service={notification.MessageScope}, origin={notification.Message?.Origin})", LogEventPropertyKeys.TrackReceiveMessage);
             });
         }
     }

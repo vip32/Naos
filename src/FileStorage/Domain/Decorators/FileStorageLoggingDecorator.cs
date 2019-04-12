@@ -31,7 +31,7 @@
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
-            this.logger.LogInformation($"{{LogKey:l}} get {this.name} file stream: {path}", LogEventKeys.FileStorage);
+            this.logger.LogInformation($"{{LogKey:l}} get {this.name} file stream: {path}", LogKeys.FileStorage);
             return this.Decoratee.GetFileStreamAsync(path, cancellationToken);
         }
 
@@ -39,7 +39,7 @@
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
-            this.logger.LogInformation($"{{LogKey:l}} get {this.name} file info: {path}", LogEventKeys.FileStorage);
+            this.logger.LogInformation($"{{LogKey:l}} get {this.name} file info: {path}", LogKeys.FileStorage);
             return await this.GetFileInformationAsync(path);
         }
 
@@ -47,7 +47,7 @@
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
-            this.logger.LogInformation($"{{LogKey:l}} exists {this.name} file: {path}", LogEventKeys.FileStorage);
+            this.logger.LogInformation($"{{LogKey:l}} exists {this.name} file: {path}", LogKeys.FileStorage);
             return this.Decoratee.ExistsAsync(path);
         }
 
@@ -56,7 +56,7 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
             EnsureArg.IsNotNull(stream, nameof(stream));
 
-            this.logger.LogInformation($"{{LogKey:l}} save {this.name} file: {path} (size={ReadBytes(stream).Length.Bytes().ToString("#.##")})", LogEventKeys.FileStorage);
+            this.logger.LogInformation($"{{LogKey:l}} save {this.name} file: {path} (size={ReadBytes(stream).Length.Bytes().ToString("#.##")})", LogKeys.FileStorage);
             return this.Decoratee.SaveFileAsync(path, stream, cancellationToken);
         }
 
@@ -65,7 +65,7 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
             EnsureArg.IsNotNullOrEmpty(newPath, nameof(newPath));
 
-            this.logger.LogInformation($"{{LogKey:l}} rename {this.name} file: {path} > {newPath}", LogEventKeys.FileStorage);
+            this.logger.LogInformation($"{{LogKey:l}} rename {this.name} file: {path} > {newPath}", LogKeys.FileStorage);
             return this.Decoratee.RenameFileAsync(path, newPath, cancellationToken);
         }
 
@@ -74,7 +74,7 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
             EnsureArg.IsNotNullOrEmpty(targetPath, nameof(targetPath));
 
-            this.logger.LogInformation($"{{LogKey:l}} copy {this.name} file: {path} > {targetPath}", LogEventKeys.FileStorage);
+            this.logger.LogInformation($"{{LogKey:l}} copy {this.name} file: {path} > {targetPath}", LogKeys.FileStorage);
             return this.Decoratee.CopyFileAsync(path, targetPath, cancellationToken);
         }
 
@@ -82,19 +82,19 @@
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
-            this.logger.LogInformation($"{{LogKey:l}} delete {this.name} file: {path}", LogEventKeys.FileStorage);
+            this.logger.LogInformation($"{{LogKey:l}} delete {this.name} file: {path}", LogKeys.FileStorage);
             return this.Decoratee.DeleteFileAsync(path, cancellationToken);
         }
 
         public Task<int> DeleteFilesAsync(string searchPattern = null, CancellationToken cancellationToken = default)
         {
-            this.logger.LogInformation($"{{LogKey:l}} delete {this.name} files: {searchPattern}", LogEventKeys.FileStorage);
+            this.logger.LogInformation($"{{LogKey:l}} delete {this.name} files: {searchPattern}", LogKeys.FileStorage);
             return this.Decoratee.DeleteFilesAsync(searchPattern, cancellationToken);
         }
 
         public async Task<PagedResults> GetFileInformationsAsync(int pageSize = 100, string searchPattern = null, CancellationToken cancellationToken = default)
         {
-            this.logger.LogInformation($"{{LogKey:l}} get {this.name} file infos: {searchPattern}", LogEventKeys.FileStorage);
+            this.logger.LogInformation($"{{LogKey:l}} get {this.name} file infos: {searchPattern}", LogKeys.FileStorage);
             return await this.GetFileInformationsAsync(pageSize, searchPattern, cancellationToken);
         }
 

@@ -32,7 +32,7 @@
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            this.logger.LogInformation("{LogKey:l} hosted service started", LogEventKeys.Queueing);
+            this.logger.LogInformation("{LogKey:l} hosted service started", LogKeys.Queueing);
 
             if(this.handler != null)
             {
@@ -50,7 +50,7 @@
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            this.logger.LogInformation("{LogKey:l} hosted service stopped", LogEventKeys.Queueing);
+            this.logger.LogInformation("{LogKey:l} hosted service stopped", LogKeys.Queueing);
 
             return Task.CompletedTask;
         }

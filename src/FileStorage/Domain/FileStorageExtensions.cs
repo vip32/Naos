@@ -64,20 +64,21 @@
             return default;
         }
 
-        public static Task<bool> SaveFileContentsAsync(this IFileStorage storage, string path, string contents)
+        public static Task<bool> SaveFileContentsAsync(this IFileStorage storage, string path, string contents, CancellationToken cancellationToken = default)
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
             return storage.SaveFileAsync(
                 path,
-                new MemoryStream(Encoding.UTF8.GetBytes(contents ?? string.Empty)));
+                new MemoryStream(Encoding.UTF8.GetBytes(contents ?? string.Empty)),
+                cancellationToken);
         }
 
-        public static async Task<string> GetFileContentsAsync(this IFileStorage storage, string path)
+        public static async Task<string> GetFileContentsAsync(this IFileStorage storage, string path, CancellationToken cancellationToken = default)
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
-            using(var stream = await storage.GetFileStreamAsync(path).AnyContext())
+            using(var stream = await storage.GetFileStreamAsync(path, cancellationToken).AnyContext())
             {
                 if(stream != null)
                 {
@@ -88,11 +89,11 @@
             return null;
         }
 
-        public static async Task<byte[]> GetFileContentsRawAsync(this IFileStorage storage, string path)
+        public static async Task<byte[]> GetFileContentsRawAsync(this IFileStorage storage, string path, CancellationToken cancellationToken = default)
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
-            using(var stream = await storage.GetFileStreamAsync(path).AnyContext())
+            using(var stream = await storage.GetFileStreamAsync(path, cancellationToken).AnyContext())
             {
                 if(stream == null)
                 {

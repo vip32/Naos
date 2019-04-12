@@ -42,7 +42,7 @@
         {
             foreach(var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
             {
-                this.logger.LogDebug($"{LogEventKeys.DomainRepository} order: {order.Expression.ToExpressionString()}");
+                this.logger.LogDebug($"{LogKeys.DomainRepository} order: {order.Expression.ToExpressionString()}");
             }
 
             return await this.decoratee.FindAllAsync(options, cancellationToken).AnyContext();
@@ -52,12 +52,12 @@
         {
             if(specification != null)
             {
-                this.logger.LogDebug($"{LogEventKeys.DomainRepository} specification: {specification.ToString()}");
+                this.logger.LogDebug($"{LogKeys.DomainRepository} specification: {specification.ToString()}");
             }
 
             foreach(var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
             {
-                this.logger.LogDebug($"{LogEventKeys.DomainRepository} order: {order.Expression.ToExpressionString()}");
+                this.logger.LogDebug($"{LogKeys.DomainRepository} order: {order.Expression.ToExpressionString()}");
             }
 
             return await this.decoratee.FindAllAsync(specification, options, cancellationToken).AnyContext();
@@ -67,12 +67,12 @@
         {
             foreach(var specification in specifications.Safe())
             {
-                this.logger.LogDebug($"{LogEventKeys.DomainRepository} specification: {specification.ToString()}");
+                this.logger.LogDebug($"{LogKeys.DomainRepository} specification: {specification.ToString()}");
             }
 
             foreach(var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
             {
-                this.logger.LogDebug($"{LogEventKeys.DomainRepository} order: {order.Expression.ToExpressionString()}");
+                this.logger.LogDebug($"{LogKeys.DomainRepository} order: {order.Expression.ToExpressionString()}");
             }
 
             return await this.decoratee.FindAllAsync(specifications, options, cancellationToken).AnyContext();
@@ -96,7 +96,7 @@
         public async Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
         {
             var result = await this.decoratee.UpsertAsync(entity).AnyContext();
-            this.logger.LogInformation($"{{LogKey:l}} upserted entity: {result.GetType().PrettyName()}, id: {result.entity.Id}, action: {result.action.ToDescription()}", LogEventKeys.DomainRepository);
+            this.logger.LogInformation($"{{LogKey:l}} upserted entity: {result.GetType().PrettyName()}, id: {result.entity.Id}, action: {result.action.ToDescription()}", LogKeys.DomainRepository);
             return result;
         }
     }

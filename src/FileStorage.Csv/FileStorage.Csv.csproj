@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Naos.Core.FileStorage.Csv</AssemblyName>
+    <RootNamespace>Naos.Core.FileStorage.Csv</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common.Serialization.Csv\Common.Serialization.Csv.csproj" />
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\FileStorage\FileStorage.csproj" />
+  </ItemGroup>
+
+</Project>

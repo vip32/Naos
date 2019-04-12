@@ -25,14 +25,14 @@
             if(request.Command.Enable)
             {
                 Console.WriteLine("\r\nenable", Color.LimeGreen);
-                this.logger.LogInformation($"{LogEventKeys.JobScheduling:l} enabling");
+                this.logger.LogInformation($"{LogKeys.JobScheduling:l} enabling");
                 this.jobScheduler.Options.SetEnabled();
             }
 
             if(request.Command.Disable)
             {
                 Console.WriteLine("\r\ndisable", Color.LimeGreen);
-                this.logger.LogInformation($"{LogEventKeys.JobScheduling:l} disabling");
+                this.logger.LogInformation($"{LogKeys.JobScheduling:l} disabling");
                 this.jobScheduler.Options.SetEnabled(false);
             }
 

@@ -56,9 +56,18 @@
                 }
             }
 
-            this.Logger.LogJournal(LogEventPropertyKeys.TrackHandleCommand, $"{{LogKey:l}} [{request.Identifier}] handle {typeof(TRequest).Name.SubstringTill("Command")}", args: LogEventKeys.AppCommand);
+            var commandName = typeof(TRequest).Name.SubstringTill("Command");
+            this.Logger.LogJournal(LogKeys.AppCommand, $"[{request.Identifier}] handle {commandName}", LogEventPropertyKeys.TrackHandleCommand);
+            this.Logger.LogTraceEvent(LogKeys.AppCommand, request.Id, commandName, LogTraceEventNames.Command);
 
-            return await this.HandleRequest(request, cancellationToken).AnyContext();
+            using(var timer = new Common.Timer())
+            {
+                var result = await this.HandleRequest(request, cancellationToken).AnyContext();
+
+                timer.Stop();
+                this.Logger.LogTraceEvent(LogKeys.AppCommand, request.Id, commandName, LogTraceEventNames.Command, timer.Elapsed);
+                return result;
+            }
         }
     }
 }

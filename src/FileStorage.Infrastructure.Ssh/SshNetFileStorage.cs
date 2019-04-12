@@ -167,7 +167,7 @@
 
             foreach(var file in files) // batch?
             {
-                this.logger.LogInformation($"{{LogKey:l}} delete file: {file.Path}", LogEventKeys.FileStorage);
+                this.logger.LogInformation($"{{LogKey:l}} delete file: {file.Path}", LogKeys.FileStorage);
                 await this.DeleteFileAsync(file.Path, cancellationToken).AnyContext();
                 count++;
             }
@@ -366,7 +366,7 @@
                 return;
             }
 
-            this.logger.LogInformation($"{{LogKey:l}} create directory: {directory}", LogEventKeys.FileStorage);
+            this.logger.LogInformation($"{{LogKey:l}} create directory: {directory}", LogKeys.FileStorage);
             var folderSegments = directory.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
             var currentDirectory = string.Empty;
             foreach(var segment in folderSegments)

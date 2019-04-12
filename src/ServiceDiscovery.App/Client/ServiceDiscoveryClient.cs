@@ -34,7 +34,7 @@
                 httpClient.DefaultRequestHeaders.Add(ServiceDiscoveryRouterHeaders.ServiceName, serviceName);
                 httpClient.DefaultRequestHeaders.Add(ServiceDiscoveryRouterHeaders.ServiceTag, serviceTag);
 
-                this.Logger.LogInformation($"{{LogKey:l}} router (service={{ServiceName}}, tag={serviceTag}, address={httpClient.BaseAddress})", LogEventKeys.ServiceDiscovery, serviceName);
+                this.Logger.LogInformation($"{{LogKey:l}} router (service={{ServiceName}}, tag={serviceTag}, address={httpClient.BaseAddress})", LogKeys.ServiceDiscovery, serviceName);
             }
             else
             {
@@ -48,11 +48,11 @@
                 if(registration != null)
                 {
                     httpClient.BaseAddress = new Uri($"{registration.Address}:{registration.Port}".TrimEnd(':'));
-                    this.Logger.LogInformation($"{{LogKey:l}} client (service={{ServiceName}}, tag={serviceTag}, address={httpClient.BaseAddress})", LogEventKeys.ServiceDiscovery, serviceName);
+                    this.Logger.LogInformation($"{{LogKey:l}} client (service={{ServiceName}}, tag={serviceTag}, address={httpClient.BaseAddress})", LogKeys.ServiceDiscovery, serviceName);
                 }
                 else
                 {
-                    this.Logger.LogWarning($"{{LogKey:l}} client (service={{ServiceName}}, tag={serviceTag}, address=not found in registry)", LogEventKeys.ServiceDiscovery, serviceName);
+                    this.Logger.LogWarning($"{{LogKey:l}} client (service={{ServiceName}}, tag={serviceTag}, address=not found in registry)", LogKeys.ServiceDiscovery, serviceName);
                 }
             }
 

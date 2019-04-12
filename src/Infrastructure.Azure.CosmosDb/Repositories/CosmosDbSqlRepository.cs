@@ -134,7 +134,7 @@
                 }
             }
 
-            this.logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogEventKeys.DomainRepository);
+            this.logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogKeys.DomainRepository);
             var result = await this.options.Provider.UpsertAsync(entity).AnyContext();
             entity = result;
 
@@ -173,7 +173,7 @@
                     await this.options.Mediator.Publish(new EntityDeleteDomainEvent(entity)).AnyContext();
                 }
 
-                this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogEventKeys.DomainRepository);
+                this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogKeys.DomainRepository);
                 await this.options.Provider.DeleteByIdAsync(id as string).AnyContext();
 
                 if(this.options.PublishEvents && this.options.Mediator != null)

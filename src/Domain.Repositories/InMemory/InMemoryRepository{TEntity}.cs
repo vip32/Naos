@@ -201,7 +201,7 @@
                 }
             }
 
-            this.logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogEventKeys.DomainRepository);
+            this.logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogKeys.DomainRepository);
             // TODO: map to destination
             //this.entities = this.entities.Where(e => !e.Id.Equals(entity.Id)).Concat(new[] { entity }).ToList();
             this.@lock.EnterWriteLock();
@@ -258,7 +258,7 @@
                     await this.mediator.Publish(new EntityDeleteDomainEvent(entity)).AnyContext();
                 }
 
-                this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogEventKeys.DomainRepository);
+                this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogKeys.DomainRepository);
                 this.@lock.EnterWriteLock();
                 try
                 {
@@ -298,7 +298,7 @@
                 await this.mediator.Publish(new EntityDeleteDomainEvent(entity)).AnyContext();
             }
 
-            this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogEventKeys.DomainRepository);
+            this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogKeys.DomainRepository);
 
             this.@lock.EnterWriteLock();
             try

@@ -2,6 +2,7 @@
 {
     public struct LogEventPropertyKeys
     {
+        public const string LogKey = "LogKey";
         public const string EventType = "ns_evntp";
         public const string Ticks = "ns_ticks";
         public const string CorrelationId = "ns_corid";
@@ -15,7 +16,7 @@
         public const string ServiceName = "ns_svcname";
 
         public const string TrackType = "ns_trktyp";
-        public const string TrackKey = "ns_trkky";
+        public const string TrackSpan = "ns_trksp";
         public const string TrackName = "ns_trknm";
         public const string TrackDuration = "ns_trkdur";
         public const string TrackMisc = "ns_trkmsc";

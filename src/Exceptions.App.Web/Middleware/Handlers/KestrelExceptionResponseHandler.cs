@@ -40,7 +40,7 @@
                         Type = hideDetails ? null : badHttpRequestException.GetType().FullPrettyName()
                     };
 
-                    this.logger?.LogWarning(exception, $"{LogEventKeys.InboundResponse} [{requestId}] http request {details.Title} [{badHttpRequestException.GetType().PrettyName()}] {badHttpRequestException.Message}");
+                    this.logger?.LogWarning(exception, $"{LogKeys.InboundResponse} [{requestId}] http request {details.Title} [{badHttpRequestException.GetType().PrettyName()}] {badHttpRequestException.Message}");
 
                     context.Response.StatusCode = details.Status.Value;
                     context.Response.WriteJson(details, contentType: ContentType.JSONPROBLEM);

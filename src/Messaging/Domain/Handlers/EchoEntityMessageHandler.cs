@@ -22,7 +22,7 @@
 
             using(this.logger.BeginScope(loggerState))
             {
-                this.logger.LogInformation($"{{LogKey:l}} {message.Entity.Text} (name={{MessageName}}, id={{EventId}}, origin={{EventOrigin}})", LogEventKeys.Messaging, message.GetType().PrettyName(), message.Id, message.Origin);
+                this.logger.LogInformation($"{{LogKey:l}} {message.Entity.Text} (name={{MessageName}}, id={{EventId}}, origin={{EventOrigin}})", LogKeys.Messaging, message.GetType().PrettyName(), message.Id, message.Origin);
 
                 return Task.CompletedTask;
             }

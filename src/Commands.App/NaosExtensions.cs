@@ -29,7 +29,7 @@
                     .FromApplicationDependencies(a => !a.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) && !a.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase))
                     .AddClasses(classes => classes.AssignableTo(typeof(ICommandBehavior)), true));
 
-            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: commands added"); // TODO: list available commands/handlers
+            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos services builder: commands added"); // TODO: list available commands/handlers
 
             optionsAction?.Invoke(new CommandsOptions(naosOptions.Context));
             //naosOptions.Context.Services
@@ -54,7 +54,7 @@
             options.Context.Services
                     .AddSingleton<ICommandBehavior, TBehavior>();
 
-            options.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: commands behavior added (type={typeof(TBehavior).Name})"); // TODO: list available commands/handlers
+            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: commands behavior added (type={typeof(TBehavior).Name})"); // TODO: list available commands/handlers
 
             return options;
         }

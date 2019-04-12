@@ -28,7 +28,7 @@
             this.directory = this.GetDirectory(this.configuration);
 
             // TODO: inject HealthStrategy which can validate the registrations
-            this.logger.LogInformation("{LogKey:l} filesystem active", LogEventKeys.ServiceDiscovery);
+            this.logger.LogInformation("{LogKey:l} filesystem active", LogKeys.ServiceDiscovery);
         }
 
         public Task DeRegisterAsync(string id)
@@ -38,7 +38,7 @@
             var path = Path.Combine(this.directory, $"registration_{id}.json.tmp");
             if(File.Exists(path))
             {
-                this.logger.LogInformation("{LogKey:l} filesystem registration delete (id={RegistrationId})", LogEventKeys.ServiceDiscovery, id);
+                this.logger.LogInformation("{LogKey:l} filesystem registration delete (id={RegistrationId})", LogKeys.ServiceDiscovery, id);
 
                 File.Delete(path);
             }
@@ -56,7 +56,7 @@
             var pathTemp = Path.Combine(this.directory, $"registration_{registration.Id}.json.tmp");
             var path = Path.Combine(this.directory, $"registration_{registration.Id}.json");
             this.logger.LogInformation($"{{LogKey:l}} register filesystem (name={{RegistrationName}}, tags={string.Join("|", registration.Tags.Safe())}, id={{RegistrationId}}, address={registration.FullAddress}, file={path.SubstringFromLast(@"\")})",
-                LogEventKeys.ServiceDiscovery, registration.Name, registration.Id);
+                LogKeys.ServiceDiscovery, registration.Name, registration.Id);
 
             if(File.Exists(pathTemp))
             {
@@ -85,7 +85,7 @@
             {
                 this.EnsureDirectory(this.directory);
                 this.RefreshRegistrations(this.directory);
-                this.logger.LogInformation($"{{LogKey:l}} filesystem registrations watch (directory={this.directory})", LogEventKeys.ServiceDiscovery);
+                this.logger.LogInformation($"{{LogKey:l}} filesystem registrations watch (directory={this.directory})", LogKeys.ServiceDiscovery);
 
                 this.watcher = new FileSystemWatcher(this.directory)
                 {
@@ -145,7 +145,7 @@
                 if(registration != null)
                 {
                     this.logger.LogInformation($"{{LogKey:l}} filesystem registrations refresh (name={{RegistrationName}}, id={{RegistrationId}}, file={path.SubstringFromLast(@"\")})",
-                        LogEventKeys.ServiceDiscovery, registration.Name, registration.Id);
+                        LogKeys.ServiceDiscovery, registration.Name, registration.Id);
                     this.registrations.Add(registration);
                 }
             }

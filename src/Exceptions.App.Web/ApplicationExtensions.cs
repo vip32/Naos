@@ -27,7 +27,7 @@
             EnsureArg.IsNotNull(options, nameof(options));
 
             naosOptions.Context.Application.UseMiddleware<ExceptionHandlerMiddleware>(Options.Create(options));
-            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos application builder: service exceptions added");
+            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: service exceptions added");
             return naosOptions;
         }
     }

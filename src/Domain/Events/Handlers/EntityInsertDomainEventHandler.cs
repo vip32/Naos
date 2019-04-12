@@ -26,7 +26,7 @@
             {
                 if(this.CanHandle(notification))
                 {
-                    this.logger.LogInformation($"{{LogKey:l}} [{notification.Identifier}] handle {notification.GetType().Name.SubstringTill("DomainEvent")} (entity={notification.Entity.GetType().PrettyName()}, handler={this.GetType().PrettyName()})", LogEventKeys.DomainEvent);
+                    this.logger.LogInformation($"{{LogKey:l}} [{notification.Identifier}] handle {notification.GetType().Name.SubstringTill("DomainEvent")} (entity={notification.Entity.GetType().PrettyName()}, handler={this.GetType().PrettyName()})", LogKeys.DomainEvent);
 
                     if(notification?.Entity.Is<IStateEntity>() == true) // use pattern matching
                     {

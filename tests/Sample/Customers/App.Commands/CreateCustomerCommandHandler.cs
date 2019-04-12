@@ -31,7 +31,7 @@
 
             request.Properties.AddOrUpdate(this.GetType().Name, true);
 
-            this.logger.LogInformation($"{{LogKey:l}} {request.GetType().Name} (handler={this.GetType().Name})", LogEventKeys.AppCommand);
+            this.logger.LogInformation($"{{LogKey:l}} {request.GetType().Name} (handler={this.GetType().Name})", LogKeys.AppCommand);
 
             if(!request.Customer.Region.EqualsAny(new[] { "East", "West" }))
             {
@@ -42,7 +42,7 @@
             request.Customer.SetCustomerNumber();
             request.Customer = await this.repository.InsertAsync(request.Customer).AnyContext();
 
-            this.logger.LogInformation($"{{LogKey:l}} {request.GetType().Name} (response={request.Customer.Id})", LogEventKeys.AppCommand);
+            this.logger.LogInformation($"{{LogKey:l}} {request.GetType().Name} (response={request.Customer.Id})", LogKeys.AppCommand);
 
             // TODO: publish CreatedCustomer message (MessageBus)
 

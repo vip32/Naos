@@ -41,6 +41,24 @@
         }
 
         [Fact]
+        public override Task CanSaveCsvFileAsync()
+        {
+            return base.CanSaveCsvFileAsync();
+        }
+
+        [Fact]
+        public override Task CanSaveCsvWithCustomHeaderFileAsync()
+        {
+            return base.CanSaveCsvWithCustomHeaderFileAsync();
+        }
+
+        [Fact]
+        public override Task CanSaveCsvDictionaryFileAsync()
+        {
+            return base.CanSaveCsvDictionaryFileAsync();
+        }
+
+        [Fact]
         public override Task CanManageFilesAsync()
         {
             return base.CanManageFilesAsync();

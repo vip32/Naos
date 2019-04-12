@@ -75,7 +75,8 @@
 
                 var item = new QueueItem<TData>(brokeredMessage.MessageId, data, this, DateTime.UtcNow, 0);
 
-                this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item enqueued (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+                this.logger.LogJournal(LogKeys.Queueing, $"item enqueued (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", LogEventPropertyKeys.TrackEnqueue);
+                this.logger.LogTraceEvent(LogKeys.Messaging, item.Id, typeof(TData).PrettyName(), LogTraceEventNames.Queue);
                 this.LastEnqueuedDate = DateTime.UtcNow;
                 return brokeredMessage.MessageId;
             }
@@ -113,7 +114,7 @@
 
             await this.queueReceiver.RenewLockAsync(item.Id).AnyContext();
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackDequeue, $"{{LogKey:l}} item lock renewed (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogJournal(LogKeys.Queueing, $"item lock renewed (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", LogEventPropertyKeys.TrackDequeue);
             this.LastDequeuedDate = DateTime.UtcNow;
         }
 
@@ -132,7 +133,7 @@
             Interlocked.Increment(ref this.completedCount);
             item.MarkCompleted();
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackDequeue, $"{{LogKey:l}} item completed (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogJournal(LogKeys.Queueing, $"item completed (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", LogEventPropertyKeys.TrackDequeue);
             this.LastDequeuedDate = DateTime.UtcNow;
         }
 
@@ -151,7 +152,7 @@
             Interlocked.Increment(ref this.abandonedCount);
             item.MarkAbandoned();
 
-            this.logger.LogJournal(LogEventPropertyKeys.TrackDequeue, $"{{LogKey:l}} item abandoned (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogJournal(LogKeys.Queueing, $"item abandoned (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", LogEventPropertyKeys.TrackDequeue);
             this.LastDequeuedDate = DateTime.UtcNow;
         }
 
@@ -179,7 +180,7 @@
             EnsureArg.IsNotNull(handler, nameof(handler));
             await this.EnsureQueueAsync(cancellationToken).AnyContext();
 
-            this.logger.LogInformation($"{{LogKey:l}} processing started (queue={this.options.Name}, type={this.GetType().PrettyName()})", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogInformation($"{{LogKey:l}} processing started (queue={this.options.Name}, type={this.GetType().PrettyName()})", args: new[] { LogKeys.Queueing });
             this.queueReceiver.RegisterMessageHandler(async (msg, ct) =>
             {
                 var item = this.HandleDequeue(msg);
@@ -204,7 +205,7 @@
                     catch(Exception ex)
                     {
                         Interlocked.Increment(ref this.workerErrorCount);
-                        this.logger.LogError(ex, $"{{LogKey:l}} processing error: {ex.Message}", args: new[] { LogEventKeys.Queueing });
+                        this.logger.LogError(ex, $"{{LogKey:l}} processing error: {ex.Message}", args: new[] { LogKeys.Queueing });
 
                         if(!item.IsAbandoned && !item.IsCompleted)
                         {
@@ -300,7 +301,7 @@
 
         private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs e)
         {
-            this.logger.LogError(e.Exception, $"{{LogKey:l}} processing error:  {e.ExceptionReceivedContext.EntityPath} {e.Exception.Message}", args: new[] { LogEventKeys.Queueing });
+            this.logger.LogError(e.Exception, $"{{LogKey:l}} processing error:  {e.ExceptionReceivedContext.EntityPath} {e.Exception.Message}", args: new[] { LogKeys.Queueing });
             return Task.CompletedTask;
         }
 
@@ -325,7 +326,8 @@
                 [LogEventPropertyKeys.CorrelationId] = item.Data.As<IHaveCorrelationId>()?.CorrelationId,
             }))
             {
-                this.logger.LogJournal(LogEventPropertyKeys.TrackDequeue, $"{{LogKey:l}} item dequeued (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
+                this.logger.LogJournal(LogKeys.Queueing, $"item dequeued (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", LogEventPropertyKeys.TrackDequeue);
+                this.logger.LogTraceEvent(LogKeys.Queueing, item.Id, typeof(TData).PrettyName(), LogTraceEventNames.Queue, DateTime.UtcNow - item.EnqueuedDate);
                 this.LastDequeuedDate = DateTime.UtcNow;
 
                 return item;

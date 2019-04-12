@@ -25,7 +25,7 @@
                 .AddAuthentication(AuthenticationKeys.ApiKeyScheme)
                 .AddApiKey(options);
 
-            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: authentication added (type=ApiKeyStatic)");
+            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos services builder: authentication added (type=ApiKeyStatic)");
             naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Authentication", Description = "ApiKeyStatic", EchoRoute = "api/echo/authentication" });
 
             return naosOptions;
@@ -45,7 +45,7 @@
                 .AddAuthentication(AuthenticationKeys.BasicScheme)
                 .AddBasic(options);
 
-            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: authentication added (type=BasicStatic)");
+            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos services builder: authentication added (type=BasicStatic)");
             naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Authentication", Description = "BasicStatic", EchoRoute = "api/echo/authentication" });
 
             return naosOptions;

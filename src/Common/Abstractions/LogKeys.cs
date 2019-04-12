@@ -1,6 +1,6 @@
 ﻿namespace Naos.Core.Common
 {
-    public struct LogEventKeys
+    public struct LogKeys
     {
         public const string Startup = "STRTUP";
         public const string Shutdown = "SHTDWN";

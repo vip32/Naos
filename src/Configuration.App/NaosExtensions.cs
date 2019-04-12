@@ -51,7 +51,7 @@
                     capability ?? naosConfiguration.Product,
                     tags: tags ?? naosConfiguration.Tags),
             };
-            context.Messages.Add($"{LogEventKeys.Startup} naos services builder: naos services added");
+            context.Messages.Add($"{LogKeys.Startup} naos services builder: naos services added");
             context.Services.AddSingleton(new NaosFeatureInformation { Name = "Naos", EchoRoute = "api/echo" });
 
             optionsAction?.Invoke(new NaosServicesContextOptions(context));

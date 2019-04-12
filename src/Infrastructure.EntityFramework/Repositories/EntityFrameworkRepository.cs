@@ -172,7 +172,7 @@
                 }
             }
 
-            this.logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogEventKeys.DomainRepository);
+            this.logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogKeys.DomainRepository);
             this.options.DbContext.Set<TEntity>().Add(entity);
             await this.options.DbContext.SaveChangesAsync().AnyContext();
 
@@ -204,7 +204,7 @@
             var entity = await this.FindOneAsync(id).AnyContext();
             if(entity != null)
             {
-                this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogEventKeys.DomainRepository);
+                this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogKeys.DomainRepository);
                 this.options.DbContext.Remove(entity);
 
                 if(this.options.PublishEvents && this.options.Mediator != null)

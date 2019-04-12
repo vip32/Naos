@@ -31,7 +31,7 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            options.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: logging added");
+            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: logging added");
             internalCorrelationId = correlationId;
 
             var loggingOptions = new LoggingOptions(
@@ -86,7 +86,7 @@
 
                 factory = new LoggerFactory();
                 factory.AddSerilog(Log.Logger);
-                Log.Logger.Debug("{LogKey:l} naos services builder: logging initialized (type=Serilog)", LogEventKeys.Startup);
+                Log.Logger.Debug("{LogKey:l} naos services builder: logging initialized (type=Serilog)", LogKeys.Startup);
             }
 
             return factory;

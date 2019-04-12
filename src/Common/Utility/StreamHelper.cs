@@ -33,6 +33,7 @@
         //    var serializer = new XmlSerializer(typeof(T));
         //    return (T)serializer.deserialize(stream);
         // }
+
         public static Stream ToStream(string value)
         {
             if(value == null)

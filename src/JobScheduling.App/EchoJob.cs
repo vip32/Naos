@@ -28,7 +28,7 @@
             {
                 if(!text.IsNullOrEmpty())
                 {
-                    this.logger.LogInformation($"{{LogKey}} {text}", LogEventKeys.JobScheduling);
+                    this.logger.LogInformation($"{{LogKey}} {text}", LogKeys.JobScheduling);
                 }
             }, cancellationToken);
         }
@@ -42,7 +42,7 @@
 
             if(!text.IsNullOrEmpty())
             {
-                this.logger.LogInformation($"{{LogKey}} {text}", LogEventKeys.JobScheduling);
+                this.logger.LogInformation($"{{LogKey}} {text}", LogKeys.JobScheduling);
             }
 
             return Task.CompletedTask;
@@ -54,7 +54,7 @@
             {
                 if(cancellationToken.IsCancellationRequested)
                 {
-                    this.logger.LogInformation($"{{LogKey}} job cancelled", LogEventKeys.JobScheduling);
+                    this.logger.LogInformation($"{{LogKey}} job cancelled", LogKeys.JobScheduling);
                     return; //Task.FromCanceled(cancellationToken);
                 }
 

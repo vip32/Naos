@@ -104,7 +104,7 @@
 
             if(result.Count > 0)
             {
-                this.logger.LogDebug($"{{LogKey:l}} [{request.HttpContext.GetRequestId()}] http filter criterias={result.Select(c => c.ToString()).ToString("|")}", LogEventKeys.InboundRequest);
+                this.logger.LogDebug($"{{LogKey:l}} [{request.HttpContext.GetRequestId()}] http filter criterias={result.Select(c => c.ToString()).ToString("|")}", LogKeys.InboundRequest);
             }
 
             return result;
@@ -135,7 +135,7 @@
 
             if(result.Count > 0)
             {
-                this.logger.LogDebug($"{{LogKey:l}} [{request.HttpContext.GetRequestId()}] http filter orders={result.Select(o => o.ToString()).ToString("|")}", LogEventKeys.InboundRequest);
+                this.logger.LogDebug($"{{LogKey:l}} [{request.HttpContext.GetRequestId()}] http filter orders={result.Select(o => o.ToString()).ToString("|")}", LogKeys.InboundRequest);
             }
 
             return result;

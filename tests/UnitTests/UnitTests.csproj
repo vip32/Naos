@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.11.5" />
     <PackageReference Include="coverlet.msbuild" Version="2.6.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
@@ -47,6 +48,7 @@
     <ProjectReference Include="..\..\src\Common.Console\Common.Console.csproj" />
     <ProjectReference Include="..\..\src\Common.Criteria\Common.Criteria.csproj" />
     <ProjectReference Include="..\..\src\Common.Mapping\Common.Mapping.csproj" />
+    <ProjectReference Include="..\..\src\Common.Serialization.Csv\Common.Serialization.Csv.csproj" />
     <ProjectReference Include="..\..\src\Common.Serialization\Common.Serialization.csproj" />
     <ProjectReference Include="..\..\src\Common.Web\Common.Web.csproj" />
     <ProjectReference Include="..\..\src\Common\Common.csproj" />
@@ -58,6 +60,7 @@
     <ProjectReference Include="..\..\src\Domain.Specifications\Domain.Specifications.csproj" />
     <ProjectReference Include="..\..\src\Domain\Domain.csproj" />
     <ProjectReference Include="..\..\src\Exceptions.App.Web\Exceptions.App.Web.csproj" />
+    <ProjectReference Include="..\..\src\FileStorage.Csv\FileStorage.Csv.csproj" />
     <ProjectReference Include="..\..\src\FileStorage.Infrastructure.Azure\FileStorage.Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\..\src\FileStorage.Infrastructure.FileSystem\FileStorage.Infrastructure.FileSystem.csproj" />
     <ProjectReference Include="..\..\src\FileStorage.Infrastructure.Ssh\FileStorage.Infrastructure.Ssh.csproj" />

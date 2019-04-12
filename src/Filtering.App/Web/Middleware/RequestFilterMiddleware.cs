@@ -50,7 +50,7 @@
             var filterContext = contextFactory.Create(context?.Request, this.options.CriteriaQueryStringKey, this.options.OrderQueryStringKey, this.options.SkipQueryStringKey, this.options.TakeQueryStringKey);
             if(filterContext.Enabled)
             {
-                this.logger.LogInformation($"{{LogKey:l}} [{context.GetRequestId()}] http filter context={{@FilterContext}}", LogEventKeys.InboundRequest, filterContext);
+                this.logger.LogInformation($"{{LogKey:l}} [{context.GetRequestId()}] http filter context={{@FilterContext}}", LogKeys.InboundRequest, filterContext);
             }
 
             await this.next(context);

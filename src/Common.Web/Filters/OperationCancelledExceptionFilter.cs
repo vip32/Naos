@@ -28,7 +28,7 @@
         {
             if(context.Exception is OperationCanceledException)
             {
-                this.logger.LogInformation($"{LogEventKeys.InboundRequest} [{context.HttpContext?.GetRequestId()}] http request was cancelled");
+                this.logger.LogInformation($"{LogKeys.InboundRequest} [{context.HttpContext?.GetRequestId()}] http request was cancelled");
                 context.ExceptionHandled = true;
                 context.Result = new StatusCodeResult(ClientClosedRequestHttpStatusCode);
             }

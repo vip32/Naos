@@ -56,8 +56,8 @@
             await Task.Run(() =>
             {
                 var contentLength = context.Request.ContentLength ?? 0;
-                this.logger.LogJournal(LogEventPropertyKeys.TrackInboundRequest, $"{{LogKey:l}} [{requestId}] http {context.Request.Method} {{Url:l}} (size={contentLength.Bytes().ToString("#.##")})", requestId, "http", args: new object[] { LogEventKeys.InboundRequest, new Uri(context.Request.GetDisplayUrl()) });
-
+                this.logger.LogJournal(LogKeys.InboundRequest, $"[{requestId}] http {context.Request.Method} {{Url:l}} (size={contentLength.Bytes().ToString("#.##")})", LogEventPropertyKeys.TrackInboundRequest, args: new object[] { new Uri(context.Request.GetDisplayUrl()) });
+                this.logger.LogTraceEvent(LogKeys.InboundRequest, requestId, context.Request.Path, LogTraceEventNames.Http);
                 //if (context.HasServiceName())
                 //{
                 //    this.logger.LogInformation($"SERVICE [{requestId}] http request service {context.GetServiceName()}");
@@ -65,7 +65,7 @@
 
                 if(!context.Request.Headers.IsNullOrEmpty())
                 {
-                    this.logger.LogInformation($"{{LogKey:l}} [{requestId}] http headers={string.Join("|", context.Request.Headers.Select(h => $"{h.Key}={h.Value}"))}", LogEventKeys.InboundRequest);
+                    this.logger.LogInformation($"{{LogKey:l}} [{requestId}] http headers={string.Join("|", context.Request.Headers.Select(h => $"{h.Key}={h.Value}"))}", LogKeys.InboundRequest);
                 }
             });
         }
@@ -86,11 +86,12 @@
 
                 if(!context.Response.Headers.IsNullOrEmpty())
                 {
-                    this.logger.Log(level, $"{{LogKey:l}} [{requestId}] http headers={string.Join("|", context.Response.Headers.Select(h => $"{h.Key}={h.Value}"))}", LogEventKeys.InboundResponse);
+                    this.logger.Log(level, $"{{LogKey:l}} [{requestId}] http headers={string.Join("|", context.Response.Headers.Select(h => $"{h.Key}={h.Value}"))}", LogKeys.InboundResponse);
                 }
 
                 var contentLength = context.Response.ContentLength ?? 0;
-                this.logger.LogJournal(LogEventPropertyKeys.TrackInboundResponse, $"{{LogKey:l}} [{requestId}] http {context.Request.Method} {{Url:l}} {{StatusCode}} ({ReasonPhrases.GetReasonPhrase(context.Response.StatusCode)}) -> took {duration.Humanize(3)} (size={contentLength.Bytes().ToString("#.##")})", requestId, "http", level, duration, args: new object[] { LogEventKeys.InboundResponse, new Uri(context.Request.GetDisplayUrl()), context.Response.StatusCode });
+                this.logger.LogJournal(LogKeys.InboundResponse, $"[{requestId}] http {context.Request.Method} {{Url:l}} {{StatusCode}} ({ReasonPhrases.GetReasonPhrase(context.Response.StatusCode)}) -> took {duration.Humanize(3)} (size={contentLength.Bytes().ToString("#.##")})", LogEventPropertyKeys.TrackInboundResponse, duration, args: new object[] { new Uri(context.Request.GetDisplayUrl()), context.Response.StatusCode });
+                this.logger.LogTraceEvent(LogKeys.InboundResponse, requestId, context.Request.Path, LogTraceEventNames.Http, duration);
             }).AnyContext();
         }
     }

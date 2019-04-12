@@ -31,7 +31,7 @@
             //naosOptions.Context.Services.AddSingleton<IHostedService>(sp =>
             //    new QueueProcessHostedService<T>(sp.GetRequiredService<ILoggerFactory>(), null));
 
-            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: queueing added"); // TODO: list available commands/handlers
+            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos services builder: queueing added"); // TODO: list available commands/handlers
             naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Queueing", EchoRoute = "api/echo/queueing" });
 
             return naosOptions;

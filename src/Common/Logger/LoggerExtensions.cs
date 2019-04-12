@@ -8,11 +8,9 @@
     {
         public static ILogger LogJournal(
             this ILogger source,
-            string type,
+            string logKey,
             string message,
-            string key = null,
-            string name = null,
-            LogLevel level = LogLevel.Information,
+            string type,
             TimeSpan? duration = null,
             params object[] args)
         {
@@ -24,12 +22,39 @@
                 {
                     [LogEventPropertyKeys.TrackType] = LogEventTrackTypeValues.Journal,
                     [LogEventPropertyKeys.TrackDuration] = duration.Value.Milliseconds,
-                    [LogEventPropertyKeys.TrackKey] = key,
-                    [LogEventPropertyKeys.TrackName] = name,
+                    [LogEventPropertyKeys.LogKey] = logKey,
                     [type] = true
                 }))
                 {
-                    source.Log(level, message, args);
+                    source.Log(LogLevel.Information, $"{logKey:l} {message:l}", args);
+                }
+            }
+
+            return source;
+        }
+
+        public static ILogger LogTraceEvent(
+            this ILogger source,
+            string logKey,
+            string span,
+            string message, // span id
+            string name = null, // LogTraceEventNames.Http
+            TimeSpan? duration = null,
+            params object[] args)
+        {
+            if(!message.IsNullOrEmpty())
+            {
+                duration ??= TimeSpan.Zero;
+                using(source.BeginScope(new Dictionary<string, object>
+                {
+                    [LogEventPropertyKeys.TrackType] = LogEventTrackTypeValues.Trace,
+                    [LogEventPropertyKeys.TrackDuration] = duration.Value.Milliseconds,
+                    [LogEventPropertyKeys.TrackSpan] = span,
+                    [LogEventPropertyKeys.TrackName] = name,
+                    [LogEventPropertyKeys.LogKey] = logKey
+                }))
+                {
+                    source.Log(LogLevel.Information, $"{logKey:l} {message:l}", args);
                 }
             }
 

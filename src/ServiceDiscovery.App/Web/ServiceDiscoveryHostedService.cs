@@ -46,7 +46,7 @@
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            this.logger.LogInformation("{LogKey:l} hosted service started", LogEventKeys.ServiceDiscovery);
+            this.logger.LogInformation("{LogKey:l} hosted service started", LogKeys.ServiceDiscovery);
 
             this.cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             // https://github.com/cecilphillip/aspnet-servicediscovery-patterns/blob/master/self_registration/src/SchoolAPI/Infrastructure/ConsulHostedService.cs
@@ -85,7 +85,7 @@
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            this.logger.LogInformation("{LogKey:l} hosted service stopped", LogEventKeys.ServiceDiscovery);
+            this.logger.LogInformation("{LogKey:l} hosted service stopped", LogKeys.ServiceDiscovery);
 
             this.cts.Cancel();
 

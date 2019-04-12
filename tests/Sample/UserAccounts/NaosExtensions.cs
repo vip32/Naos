@@ -51,7 +51,7 @@
             options.Context.Services.AddHealthChecks()
                 .AddSqlServer(entityFrameworkConfiguration.ConnectionString, name: "UserAccounts-sqlserver");
 
-            options.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: useraccounts service added");
+            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: useraccounts service added");
 
             return options;
         }

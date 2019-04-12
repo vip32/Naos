@@ -2,9 +2,9 @@
 {
     public class TraceEvent : LogEvent
     {
-        public string Key { get; set; } // shared id (for example request id)
+        public string Span { get; set; } // shared span identifier (for example request id)
 
-        public string Name { get; set; } // api/customer or http/message/command
+        public string Name { get; set; } // http/job/message/command   >        message=api/customer or http/message/command
 
         public long Duration { get; set; } // 234.3242
 

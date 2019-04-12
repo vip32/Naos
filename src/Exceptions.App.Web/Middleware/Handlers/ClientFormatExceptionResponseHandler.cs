@@ -37,7 +37,7 @@
                         Type = hideDetails ? null : formatException.GetType().FullPrettyName(),
                     };
 
-                    this.logger?.LogWarning($"{LogEventKeys.InboundResponse} [{requestId}] http request  {details.Title} [{formatException.GetType().PrettyName()}] {formatException.Message.SubstringTill("\r\n")}");
+                    this.logger?.LogWarning($"{LogKeys.InboundResponse} [{requestId}] http request  {details.Title} [{formatException.GetType().PrettyName()}] {formatException.Message.SubstringTill("\r\n")}");
 
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                     context.Response.WriteJson(details, contentType: ContentType.JSONPROBLEM);

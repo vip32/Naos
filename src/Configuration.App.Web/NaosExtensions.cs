@@ -24,7 +24,7 @@
                 Environment = app.ApplicationServices.GetRequiredService<IHostingEnvironment>()
             };
 
-            context.Messages.Add($"{LogEventKeys.Startup} naos application builder: naos application added (environment={context.Environment.EnvironmentName})");
+            context.Messages.Add($"{LogKeys.Startup} naos application builder: naos application added (environment={context.Environment.EnvironmentName})");
 
             optionsAction?.Invoke(new NaosApplicationContextOptions(context));
 

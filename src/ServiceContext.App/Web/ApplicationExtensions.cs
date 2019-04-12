@@ -41,7 +41,7 @@
             }
 
             naosOptions.Context.Application.UseMiddleware<ServiceContextMiddleware>(Options.Create(options));
-            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos application builder: service context added");
+            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: service context added");
             return naosOptions;
         }
 
@@ -69,7 +69,7 @@
             EnsureArg.IsNotNull(options, nameof(options));
 
             naosOptions.Context.Application.UseMiddleware<ServicePoweredByMiddleware>(Options.Create(options));
-            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos application builder: powered by added");
+            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: powered by added");
             return naosOptions;
         }
     }

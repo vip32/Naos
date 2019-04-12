@@ -37,7 +37,7 @@
                 return broker;
             });
 
-            options.Context.Messages.Add($"{LogEventKeys.Startup} naos services builder: messaging added (broker={nameof(RabbitMQMessageBroker)})");
+            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: messaging added (broker={nameof(RabbitMQMessageBroker)})");
 
             return options;
         }

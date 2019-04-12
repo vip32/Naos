@@ -40,7 +40,7 @@
                     badRequestException.ModelState.Safe()
                         .ForEach(i => details.Errors.Add(i.Key, i.Value.Errors.Select(e => e.ErrorMessage).ToArray()));
 
-                    this.logger?.LogWarning($"{LogEventKeys.InboundResponse} [{requestId}] http request  {details.Title} [{badRequestException.GetType().PrettyName()}] {badRequestException.Message}");
+                    this.logger?.LogWarning($"{LogKeys.InboundResponse} [{requestId}] http request  {details.Title} [{badRequestException.GetType().PrettyName()}] {badRequestException.Message}");
 
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                     context.Response.WriteJson(details, contentType: ContentType.JSONPROBLEM);

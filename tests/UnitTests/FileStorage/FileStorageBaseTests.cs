@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.UnitTests.FileStorage
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -9,6 +10,7 @@
     using System.Xml.Linq;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
+    using Naos.Core.FileStorage.Csv.Domain;
     using Naos.Core.FileStorage.Domain;
     using Naos.Core.FileStorage.Infrastructure;
     using NSubstitute;
@@ -48,7 +50,7 @@
                 await storage.SaveFileContentsAsync(@"q\new.txt", "new");
                 await storage.SaveFileContentsAsync(@"long/path/in/here/1.hey.stuff-2.json", "archived");
 
-                Assert.Equal(3, (await FileStorageExtensions.GetFileInformationsAsync(storage)).Count());
+                Assert.Equal(3, (await Core.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage)).Count());
                 Assert.Single(await storage.GetFileInformationsAsync(limit: 1));
                 Assert.Single(await storage.GetFileInformationsAsync(@"long\path\in\here\*stuff*.json"));
 
@@ -137,15 +139,15 @@
                 var path2 = $"test-{Guid.NewGuid().ToString("N").Substring(10)}.txt";
 
                 await storage.SaveFileContentsAsync(path1, "test");
-                var file = (await FileStorageExtensions.GetFileInformationsAsync(storage)).Single();
+                var file = (await Core.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage)).Single();
                 Assert.NotNull(file);
                 Assert.Equal(path1, file.Path);
                 var content = await storage.GetFileContentsAsync(path1);
                 Assert.Equal("test", content);
                 await storage.RenameFileAsync(path1, path2);
-                Assert.Contains(await FileStorageExtensions.GetFileInformationsAsync(storage), f => f.Path == path2);
+                Assert.Contains(await Core.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage), f => f.Path == path2);
                 await storage.DeleteFileAsync(path2);
-                Assert.Empty(await FileStorageExtensions.GetFileInformationsAsync(storage));
+                Assert.Empty(await Core.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage));
             }
         }
 
@@ -167,12 +169,12 @@
                 Assert.True(await storage.SaveFileContentsAsync(path1, "test"));
                 Assert.True(await storage.RenameFileAsync(path1, @"archive\new.txt"));
                 Assert.Equal("test", await storage.GetFileContentsAsync(@"archive\new.txt"));
-                Assert.Single(await FileStorageExtensions.GetFileInformationsAsync(storage));
+                Assert.Single(await Core.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage));
 
                 Assert.True(await storage.SaveFileContentsAsync(path2, "test2"));
                 Assert.True(await storage.RenameFileAsync(path2, @"archive\new.txt"));
                 Assert.Equal("test2", await storage.GetFileContentsAsync(@"archive\new.txt"));
-                Assert.Single(await FileStorageExtensions.GetFileInformationsAsync(storage));
+                Assert.Single(await Core.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage));
             }
         }
 
@@ -197,7 +199,7 @@
                     Assert.True(result);
                 }
 
-                Assert.Single(await FileStorageExtensions.GetFileInformationsAsync(storage));
+                Assert.Single(await Core.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage));
                 Assert.True(await storage.ExistsAsync(path));
 
                 using(var stream = await storage.GetFileStreamAsync(path)) // read
@@ -205,6 +207,112 @@
                     var result = await new StreamReader(stream).ReadToEndAsync();
                     Assert.Equal("test data", result);
                 }
+            }
+        }
+
+        public virtual async Task CanSaveCsvFileAsync()
+        {
+            await this.ResetAsync();
+
+            var storage = this.GetStorage();
+            if(storage == null)
+            {
+                return;
+            }
+
+            using(storage)
+            {
+                var path = $"test-{Guid.NewGuid().ToString("N").Substring(10)}.csv";
+                Assert.False(await storage.ExistsAsync(path));
+
+                var data = new List<StubEntity>
+                {
+                    new StubEntity { FirstName = "John", LastName = RandomGenerator.GenerateStringFast(4), Age = 100000 - 12.6M },
+                    new StubEntity { FirstName = "John", LastName = RandomGenerator.GenerateStringFast(4), Age = 11 }
+                };
+
+                var result = await storage.SaveFileCsvAsync(path, data, cultureInfo: new System.Globalization.CultureInfo("de-DE")); // write
+                Assert.True(result);
+
+                Assert.Single(await Core.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage));
+                Assert.True(await storage.ExistsAsync(path));
+
+                var resultData = await storage.GetFileCsvAsync<IEnumerable<StubEntity>>(path);
+                Assert.Equal(data[0].FirstName, resultData.FirstOrDefault()?.FirstName);
+                Assert.Equal(data[0].LastName, resultData.FirstOrDefault()?.LastName);
+            }
+        }
+
+        public virtual async Task CanSaveCsvWithCustomHeaderFileAsync()
+        {
+            await this.ResetAsync();
+
+            var storage = this.GetStorage();
+            if(storage == null)
+            {
+                return;
+            }
+
+            using(storage)
+            {
+                var path = $"test-{Guid.NewGuid().ToString("N").Substring(10)}.csv";
+                Assert.False(await storage.ExistsAsync(path));
+                var headers = new Dictionary<string, string>
+                {
+                    {"FirstName", "New First name"},
+                    {"LastName", "New Last name"},
+                    {"Age", "Avg Age"},
+                    {"Value", "Val"},
+                    {"Timestamp", "created"}
+                };
+
+                var data = new List<StubEntity>
+                {
+                    new StubEntity { FirstName = "John", LastName = RandomGenerator.GenerateStringFast(4), Age = 100000 - 12.6M },
+                    new StubEntity { FirstName = "John", LastName = RandomGenerator.GenerateStringFast(4), Age = 11 }
+                };
+
+                var result = await storage.SaveFileCsvAsync<IEnumerable<StubEntity>, StubEntity>(path, data, cultureInfo: new System.Globalization.CultureInfo("de-DE"), headersMap: headers); // write
+                Assert.True(result);
+
+                Assert.Single(await Core.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage));
+                Assert.True(await storage.ExistsAsync(path));
+
+                var resultData = await storage.GetFileCsvAsync<IEnumerable<StubEntity>>(path);
+                Assert.Equal(data[0].FirstName, resultData.FirstOrDefault()?.FirstName);
+                Assert.Equal(data[0].LastName, resultData.FirstOrDefault()?.LastName);
+            }
+        }
+
+        public virtual async Task CanSaveCsvDictionaryFileAsync()
+        {
+            await this.ResetAsync();
+
+            var storage = this.GetStorage();
+            if(storage == null)
+            {
+                return;
+            }
+
+            using(storage)
+            {
+                var path = $"test-{Guid.NewGuid().ToString("N").Substring(10)}.csv";
+                Assert.False(await storage.ExistsAsync(path));
+
+                var data = new List<Dictionary<string, string>>
+                {
+                    new Dictionary<string, string> { ["FirstName"] = "John1", ["LastName"] = "Doe1" },
+                    new Dictionary<string, string> { ["FirstName"] = "John2", ["LastName"] = "Doe2" }
+                };
+
+                var result = await storage.SaveFileCsvAsync(path, data, cultureInfo: new System.Globalization.CultureInfo("de-DE")); // write
+                Assert.True(result);
+
+                Assert.Single(await Core.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage));
+                Assert.True(await storage.ExistsAsync(path));
+
+                var resultData = await storage.GetFileCsvAsync<IEnumerable<Dictionary<string, string>>>(path);
+                Assert.Equal("John1", data[0].Values.FirstOrDefault());
             }
         }
 
@@ -226,13 +334,14 @@
                 var entity = new StubEntity
                 {
                     FirstName = "John",
-                    LastName = "Doe"
+                    LastName = "Doe",
+                    Age = 100000 - 12.6M
                 };
 
                 var saveResult = await storage.SaveFileObjectAsync(path, entity, serializer); // write
                 Assert.True(saveResult);
 
-                Assert.Single(await FileStorageExtensions.GetFileInformationsAsync(storage));
+                Assert.Single(await Core.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage));
                 Assert.True(await storage.ExistsAsync(path));
 
                 var getResult = await storage.GetFileObjectAsync<StubEntity>(path, serializer); // read
@@ -255,10 +364,10 @@
             {
                 await storage.SaveFileContentsAsync(@"x\hello.txt", "hello");
                 await storage.SaveFileContentsAsync(@"x\nested\world.csv", "nested world");
-                Assert.Equal(2, (await FileStorageExtensions.GetFileInformationsAsync(storage)).Count());
+                Assert.Equal(2, (await Core.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage)).Count());
 
                 await storage.DeleteFilesAsync(@"x");
-                Assert.Empty(await FileStorageExtensions.GetFileInformationsAsync(storage));
+                Assert.Empty(await Core.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage));
             }
         }
 
@@ -276,14 +385,14 @@
             {
                 await storage.SaveFileContentsAsync(@"x\hello.txt", "hello");
                 await storage.SaveFileContentsAsync(@"x\nested\world.csv", "nested world");
-                Assert.Equal(2, (await FileStorageExtensions.GetFileInformationsAsync(storage)).Count());
+                Assert.Equal(2, (await Core.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage)).Count());
                 Assert.Single(await storage.GetFileInformationsAsync(limit: 1));
                 Assert.Equal(2, (await storage.GetFileInformationsAsync(@"x\*")).Count());
                 Assert.Single(await storage.GetFileInformationsAsync(@"x\nested\*"));
 
                 await storage.DeleteFilesAsync(@"x\*");
 
-                Assert.Empty(await FileStorageExtensions.GetFileInformationsAsync(storage));
+                Assert.Empty(await Core.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage));
             }
         }
 
@@ -302,7 +411,7 @@
                 await storage.SaveFileContentsAsync(@"x\hello.txt", "hello");
                 await storage.SaveFileContentsAsync(@"x\nested\world.csv", "nested world");
                 await storage.SaveFileContentsAsync(@"x\nested\hello.txt", "nested hello");
-                Assert.Equal(3, (await FileStorageExtensions.GetFileInformationsAsync(storage)).Count());
+                Assert.Equal(3, (await Core.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage)).Count());
                 Assert.Single(await storage.GetFileInformationsAsync(limit: 1));
                 Assert.Equal(3, (await storage.GetFileInformationsAsync(@"x\*")).Count());
                 Assert.Equal(2, (await storage.GetFileInformationsAsync(@"x\nested\*")).Count());
@@ -310,7 +419,7 @@
 
                 await storage.DeleteFilesAsync(@"x\*.txt");
 
-                Assert.Single(await FileStorageExtensions.GetFileInformationsAsync(storage));
+                Assert.Single(await Core.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage));
                 Assert.False(await storage.ExistsAsync(@"x\hello.txt"));
                 Assert.False(await storage.ExistsAsync(@"x\nested\hello.txt"));
                 Assert.True(await storage.ExistsAsync(@"x\nested\world.csv"));
@@ -332,7 +441,7 @@
                 await storage.SaveFileContentsAsync(@"x\hello.txt", "hello");
                 await storage.SaveFileContentsAsync(@"x\nested\world.csv", "nested world");
                 await storage.SaveFileContentsAsync(@"x\nested\hello.txt", "nested hello");
-                Assert.Equal(3, (await FileStorageExtensions.GetFileInformationsAsync(storage)).Count());
+                Assert.Equal(3, (await Core.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage)).Count());
                 Assert.Single(await storage.GetFileInformationsAsync(limit: 1));
                 Assert.Equal(3, (await storage.GetFileInformationsAsync(@"x\*")).Count());
                 Assert.Equal(2, (await storage.GetFileInformationsAsync(@"x\nested\*")).Count());
@@ -340,7 +449,7 @@
 
                 await storage.DeleteFilesAsync(@"x\nested");
 
-                Assert.Single(await FileStorageExtensions.GetFileInformationsAsync(storage));
+                Assert.Single(await Core.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage));
                 Assert.True(await storage.ExistsAsync(@"x\hello.txt"));
                 Assert.False(await storage.ExistsAsync(@"x\nested\hello.txt"));
                 Assert.False(await storage.ExistsAsync(@"x\nested\world.csv"));
@@ -364,7 +473,7 @@
                 await storage.SaveFileContentsAsync(@"x\nested\world.csv", "nested world");
                 await storage.SaveFileContentsAsync(@"x\nested\hello.txt", "nested hello");
                 await storage.SaveFileContentsAsync(@"x\nested\again.txt", "nested again");
-                Assert.Equal(5, (await FileStorageExtensions.GetFileInformationsAsync(storage)).Count());
+                Assert.Equal(5, (await Core.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage)).Count());
                 Assert.Single(await storage.GetFileInformationsAsync(limit: 1));
                 Assert.Equal(5, (await storage.GetFileInformationsAsync(@"x\*")).Count());
                 Assert.Equal(3, (await storage.GetFileInformationsAsync(@"x\nested\*")).Count());
@@ -372,7 +481,7 @@
 
                 await storage.DeleteFilesAsync(@"x\nested\*.txt");
 
-                Assert.Equal(3, (await FileStorageExtensions.GetFileInformationsAsync(storage)).Count());
+                Assert.Equal(3, (await Core.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage)).Count());
                 Assert.True(await storage.ExistsAsync(@"x\hello.txt"));
                 Assert.True(await storage.ExistsAsync(@"x\world.csv"));
                 Assert.False(await storage.ExistsAsync(@"x\nested\hello.txt"));
@@ -471,13 +580,13 @@
 
             using(storage)
             {
-                var files = (await FileStorageExtensions.GetFileInformationsAsync(storage)).ToList();
+                var files = (await Core.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage)).ToList();
                 if(files.Count > 0)
                 {
                     await storage.DeleteFilesAsync(files);
                 }
 
-                Assert.Empty(await FileStorageExtensions.GetFileInformationsAsync(storage));
+                Assert.Empty(await Core.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage));
             }
         }
 
@@ -491,6 +600,12 @@
             public string FirstName { get; set; }
 
             public string LastName { get; set; }
+
+            public decimal Age { get; set; }
+
+            public long Value { get; set; } = long.MaxValue;
+
+            public DateTime Timestamp { get; set; } = DateTime.UtcNow;
         }
     }
 }

@@ -41,7 +41,7 @@
             }
 
             naosOptions.Context.Application.UseMiddleware<RequestFilterMiddleware>(Options.Create(options));
-            naosOptions.Context.Messages.Add($"{LogEventKeys.Startup} naos application builder: request filtering added");
+            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: request filtering added");
             return naosOptions;
         }
     }
