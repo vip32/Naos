@@ -12,13 +12,14 @@
             string message,
             string type,
             TimeSpan? duration = null,
+            IDictionary<string, object> properties = null,
             params object[] args)
         {
             if(!message.IsNullOrEmpty())
             {
                 type ??= LogEventPropertyKeys.TrackMisc;
                 duration ??= TimeSpan.Zero;
-                using(source.BeginScope(new Dictionary<string, object>
+                using(source.BeginScope(new Dictionary<string, object>(properties.Safe())
                 {
                     [LogEventPropertyKeys.TrackType] = LogEventTrackTypeValues.Journal,
                     [LogEventPropertyKeys.TrackDuration] = duration.Value.Milliseconds,
@@ -40,12 +41,13 @@
             string message, // span id
             string name = null, // LogTraceEventNames.Http
             TimeSpan? duration = null,
+            IDictionary<string, object> properties = null,
             params object[] args)
         {
             if(!message.IsNullOrEmpty())
             {
                 duration ??= TimeSpan.Zero;
-                using(source.BeginScope(new Dictionary<string, object>
+                using(source.BeginScope(new Dictionary<string, object>(properties.Safe())
                 {
                     [LogEventPropertyKeys.TrackType] = LogEventTrackTypeValues.Trace,
                     [LogEventPropertyKeys.TrackDuration] = duration.Value.Milliseconds,

@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.Common.Web
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
     using System.Net.Http;
@@ -100,6 +101,7 @@
             LogLevel level = LogLevel.Information,
             string type = null,
             TimeSpan? duration = null,
+            IDictionary<string, object> properties = null,
             params object[] args)
         {
             if(this.logger == null)
@@ -114,7 +116,7 @@
                 }
                 else
                 {
-                    this.logger.LogJournal(logKey, message, type, duration, args);
+                    this.logger.LogJournal(logKey, message, type, duration, properties, args);
                 }
             }
         }
