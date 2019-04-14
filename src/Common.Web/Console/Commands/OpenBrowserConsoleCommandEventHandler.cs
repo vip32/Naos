@@ -26,7 +26,7 @@
             if(this.server != null)
             {
                 var url = this.server?.Features?.Get<IServerAddressesFeature>()?.Addresses?.First();
-                Console.WriteLine("opening browser {url}", Color.Gray);
+                Console.WriteLine("opening browser: {url}", Color.Gray);
 
                 var browser =
                     IsOSPlatform(Windows) ? new ProcessStartInfo("cmd", $"/c start {url}") :
