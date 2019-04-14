@@ -60,6 +60,8 @@
                 }
             }
 
+            // TODO: publish tracing notification (so other tracers can pick it up?), mediator publish
+
             return source;
         }
     }
