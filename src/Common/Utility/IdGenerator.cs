@@ -11,8 +11,10 @@
     public sealed class IdGenerator
     {
         // origin: http://www.nimaara.com/2018/10/10/generating-ids-in-csharp/
-        private const string Encode32Chars = "0123456789ABCDEFGHIJKLMNOPQRSTUV";
+        private const string Characters = "0123456789ABCDEFGHIJKLMNOPQRSTUV";
+
         private static readonly char[] Prefix = new char[6];
+
         private static readonly ThreadLocal<char[]> CharBufferThreadLocal =
             new ThreadLocal<char[]>(() =>
             {
@@ -42,7 +44,7 @@
         public static IdGenerator Instance { get; } = new IdGenerator();
 
         /// <summary>
-        /// Returns an Id. e.g: <c>XOGLN100HLHI1F5INOFA</c>
+        /// Returns an Id like: <c>XOGLN100HLHI1F5INOFA</c>
         /// </summary>
         public string Next => Generate(Interlocked.Increment(ref lastId));
 
@@ -50,35 +52,35 @@
         {
             var buffer = CharBufferThreadLocal.Value;
 
-            buffer[7] = Encode32Chars[(int)(id >> 60) & 31];
-            buffer[8] = Encode32Chars[(int)(id >> 55) & 31];
-            buffer[9] = Encode32Chars[(int)(id >> 50) & 31];
-            buffer[10] = Encode32Chars[(int)(id >> 45) & 31];
-            buffer[11] = Encode32Chars[(int)(id >> 40) & 31];
-            buffer[12] = Encode32Chars[(int)(id >> 35) & 31];
-            buffer[13] = Encode32Chars[(int)(id >> 30) & 31];
-            buffer[14] = Encode32Chars[(int)(id >> 25) & 31];
-            buffer[15] = Encode32Chars[(int)(id >> 20) & 31];
-            buffer[16] = Encode32Chars[(int)(id >> 15) & 31];
-            buffer[17] = Encode32Chars[(int)(id >> 10) & 31];
-            buffer[18] = Encode32Chars[(int)(id >> 5) & 31];
-            buffer[19] = Encode32Chars[(int)id & 31];
+            buffer[7] = Characters[(int)(id >> 60) & 31];
+            buffer[8] = Characters[(int)(id >> 55) & 31];
+            buffer[9] = Characters[(int)(id >> 50) & 31];
+            buffer[10] = Characters[(int)(id >> 45) & 31];
+            buffer[11] = Characters[(int)(id >> 40) & 31];
+            buffer[12] = Characters[(int)(id >> 35) & 31];
+            buffer[13] = Characters[(int)(id >> 30) & 31];
+            buffer[14] = Characters[(int)(id >> 25) & 31];
+            buffer[15] = Characters[(int)(id >> 20) & 31];
+            buffer[16] = Characters[(int)(id >> 15) & 31];
+            buffer[17] = Characters[(int)(id >> 10) & 31];
+            buffer[18] = Characters[(int)(id >> 5) & 31];
+            buffer[19] = Characters[(int)id & 31];
 
             return new string(buffer, 0, buffer.Length);
         }
 
         private static void PopulatePrefix()
         {
-            var machineHash = Math.Abs(Environment.MachineName.GetHashCode());
-            var machineEncoded = Base36.Encode(machineHash);
+            var machine = Base36.Encode(
+                Math.Abs(Environment.MachineName.GetHashCode()));
 
             var i = Prefix.Length - 1;
             var j = 0;
             while(i >= 0)
             {
-                if(j < machineEncoded.Length)
+                if(j < machine.Length)
                 {
-                    Prefix[i] = machineEncoded[j];
+                    Prefix[i] = machine[j];
                     j++;
                 }
                 else
