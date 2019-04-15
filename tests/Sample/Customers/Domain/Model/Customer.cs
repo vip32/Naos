@@ -28,7 +28,7 @@
         {
             if(this.CustomerNumber.IsNullOrEmpty())
             {
-                this.CustomerNumber = $"{RandomGenerator.GenerateString(2)}-{DateTime.UtcNow.Ticks}";
+                this.CustomerNumber = $"{RandomGenerator.GenerateString(2)}-{DateTimeOffset.UtcNow.Ticks}";
             }
         }
     }

@@ -40,6 +40,7 @@
     <ProjectReference Include="..\..\src\App.Web\App.Web.csproj" />
     <ProjectReference Include="..\..\src\App\App.csproj" />
     <ProjectReference Include="..\..\src\Commands.App\Commands.App.csproj" />
+    <ProjectReference Include="..\..\src\Common.Console\Common.Console.csproj" />
     <ProjectReference Include="..\..\src\Domain.Repositories.AutoMapper\Domain.Repositories.AutoMapper.csproj" />
     <ProjectReference Include="..\..\src\Domain.Repositories\Domain.Repositories.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure.Azure.CosmosDb\Infrastructure.Azure.CosmosDb.csproj" />

@@ -32,13 +32,13 @@
                 // TODO: log validation errors
                 if(this.throwOnNotIsValid)
                 {
-                    throw new ValidationException($"{request.GetType().Name} has validation errors", result.Errors);
+                    throw new ValidationException($"{request.GetType().Name} has validation errors: " + result.Errors.Safe().Select(e => $"{e.PropertyName}={e}").ToString(", "), result.Errors);
                 }
                 else
                 {
                     return await Task.FromResult(
                         new CommandBehaviorResult(
-                            $"{request.GetType().Name} has validation errors: " + result.Errors.Safe().Select(e => $"{e.PropertyName}={e.ToString()}").ToString(", "))).AnyContext();
+                            $"{request.GetType().Name} has validation errors: " + result.Errors.Safe().Select(e => $"{e.PropertyName}={e}").ToString(", "))).AnyContext();
                 }
             }
 
