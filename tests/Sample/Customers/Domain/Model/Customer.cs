@@ -4,7 +4,7 @@
     using Naos.Core.Common;
     using Naos.Core.Domain;
 
-    public class Customer : Entity<string>, ITenantEntity
+    public class Customer : Entity<string>, ITenantEntity, IAggregateRoot
     {
         public string CustomerNumber { get; set; }
 

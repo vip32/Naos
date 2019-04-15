@@ -9,7 +9,7 @@
     /// </summary>
     /// <typeparam name="TId">The type of the identifier.</typeparam>
     [DebuggerDisplay("Type={GetType().Name}, Id={Id}")]
-    public abstract class Entity<TId> : IEntity<TId>, IAggregateRoot, IStateEntity, IHaveDiscriminator, IIdentifiable // TODO: rename Entity<> to Aggregate<>
+    public abstract class Entity<TId> : IEntity<TId>, IStateEntity, IHaveDiscriminator, IIdentifiable // TODO: rename Entity<> to Aggregate<>
     {
         /// <summary>
         /// Gets or sets the entity identifier.

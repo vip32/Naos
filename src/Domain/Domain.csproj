@@ -13,6 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Common.Abstractions\Common.Abstractions.csproj" />
+    <ProjectReference Include="..\Common.Extensions\Common.Extensions.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
 

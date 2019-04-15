@@ -27,4 +27,8 @@
     <EmbeddedResource Include="Resources\logo.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Logger\" />
+  </ItemGroup>
+
 </Project>

@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Common.Extensions\Common.Extensions.csproj" />
     <ProjectReference Include="..\FileStorage\FileStorage.csproj" />
     <ProjectReference Include="..\Messaging\Messaging.csproj" />
   </ItemGroup>
