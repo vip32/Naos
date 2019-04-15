@@ -27,14 +27,6 @@
 
         public IBaseRequest Request { get; set; } // TODO: should be CommandRequest<TResponse>
 
-        public DateTime CreatedDate { get; set; }
-
-        /// <summary>
-        /// Determines whether this instance is transient (not persisted).
-        /// </summary>
-        /// <returns>
-        /// <c>true</c> if this instance is transient; otherwise, <c>false</c>.
-        /// </returns>
-        //public bool IsTransient() => this.Id.IsDefault();
+        public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.UtcNow;
     }
 }

@@ -24,28 +24,28 @@
             this.Created = DateTime.UtcNow;
         }
 
-        public string Id { get; private set; }
+        public string Id { get; set; }
 
-        public string Identifier { get; }
+        public string Identifier { get; set; }
 
-        public string CorrelationId { get; private set; }
+        public string CorrelationId { get; set; }
 
         public DateTime Created { get; }
 
         public DataDictionary Properties { get; set; } = new DataDictionary();
 
-        public void Update(string id, string correlationId)
-        {
-            if(this.Id.IsNullOrEmpty())
-            {
-                this.Id = id;
-            }
+        //public void Update(string id, string correlationId)
+        //{
+        //    if(this.Id.IsNullOrEmpty())
+        //    {
+        //        this.Id = id;
+        //    }
 
-            if(this.CorrelationId.IsNullOrEmpty())
-            {
-                this.CorrelationId = correlationId;
-            }
-        }
+        //    if(this.CorrelationId.IsNullOrEmpty())
+        //    {
+        //        this.CorrelationId = correlationId;
+        //    }
+        //}
 
         /// <summary>
         /// Validates this instance.

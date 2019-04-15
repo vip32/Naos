@@ -17,9 +17,12 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Commands.Domain;
+    using Naos.Core.Commands.Infrastructure.FileStorage;
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
     using Naos.Core.Configuration.App;
+    using Naos.Core.FileStorage.Infrastructure;
     using Naos.Core.JobScheduling.App;
     using Naos.Core.JobScheduling.Domain;
     using Naos.Core.Messaging.Domain;
@@ -80,8 +83,11 @@
                     .AddRequestFiltering()
                     .AddServiceExceptions()
                     .AddCommands(o => o
-                        .AddBehavior<Core.Commands.Domain.ValidateCommandBehavior>()
-                        .AddBehavior<Core.Commands.Domain.TrackCommandBehavior>())
+                        .AddBehavior<ValidateCommandBehavior>()
+                        .AddBehavior<TrackCommandBehavior>()
+                        .AddBehavior(new FileStoragePersistCommandBehavior(
+                            new FolderFileStorage(o => o
+                                .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "commands"))))))
                     .AddOperations(o => o
                         .AddInteractiveConsole()
                         .AddLogging(l => l

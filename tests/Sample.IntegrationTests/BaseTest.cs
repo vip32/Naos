@@ -1,12 +1,15 @@
 ﻿namespace Naos.Sample.IntegrationTests
 {
     using System;
+    using System.IO;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Core.Commands.Domain;
+    using Naos.Core.Commands.Infrastructure.FileStorage;
     using Naos.Core.Common;
     using Naos.Core.Configuration.App;
+    using Naos.Core.FileStorage.Infrastructure;
     using Naos.Core.Infrastructure.EntityFramework;
     using Naos.Sample.UserAccounts.EntityFramework;
 
@@ -39,9 +42,12 @@
 
             this.services.AddSingleton<ICommandBehavior, ValidateCommandBehavior>(); // new ValidateCommandBehavior(false)
             this.services.AddSingleton<ICommandBehavior, TrackCommandBehavior>();
+            this.services.AddSingleton<ICommandBehavior>(new FileStoragePersistCommandBehavior(
+                            new FolderFileStorage(o => o
+                                .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "commands")))));
             //this.services.AddSingleton<ICommandBehavior, ServiceContextEnrichCommandBehavior>();
-            this.services.AddSingleton<ICommandBehavior, IdempotentCommandBehavior>();
-            this.services.AddSingleton<ICommandBehavior, PersistCommandBehavior>();
+            //this.services.AddSingleton<ICommandBehavior, IdempotentCommandBehavior>();
+            //this.services.AddSingleton<ICommandBehavior, PersistCommandBehavior>();
 
             this.ServiceProvider = this.services.BuildServiceProvider();
         }

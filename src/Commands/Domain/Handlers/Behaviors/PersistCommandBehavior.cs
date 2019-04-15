@@ -16,7 +16,7 @@
         {
             EnsureArg.IsNotNull(request);
             // TODO: implement
-            // - check if command exists in repo
+            // - check if command exists in repo/filestorage
             // - if not add to repo, return CommandBehaviorResult
 
             return await Task.FromResult(new CommandBehaviorResult()).AnyContext();

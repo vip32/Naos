@@ -13,7 +13,7 @@
             this.Customer = entity;
         }
 
-        public Customer Customer { get; set; } // TODO: should be immutable
+        public Customer Customer { get; set; } // TODO: should be immutable, but settable for json deserialization
 
         public override ValidationResult Validate() =>
             new CreateCustomerCommandValidator().Validate(this);
