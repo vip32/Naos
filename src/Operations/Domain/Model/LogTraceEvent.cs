@@ -1,6 +1,6 @@
 ﻿namespace Naos.Core.Operations.Domain
 {
-    public class TraceEvent : LogEvent
+    public class LogTraceEvent : LogEvent
     {
         public string Span { get; set; } // shared span identifier (for example request id)
 

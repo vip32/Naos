@@ -6,7 +6,7 @@
     using Newtonsoft.Json;
 
     public class Command // actually a wrapped CommandRequest<TResponse>, only for persistency
-        : IEntity<string>, IAggregateRoot
+        : IEntity<string>, IAggregateRoot // TODO: command should not be an ientity<> only needed for persistency, but can be dealed with through mapping onto other entity
     {
         /// <summary>
         /// Gets or sets the identifier of this command.

@@ -26,12 +26,26 @@
             if(this.server != null)
             {
                 var url = this.server?.Features?.Get<IServerAddressesFeature>()?.Addresses?.First();
-                Console.WriteLine("opening browser: {url}", Color.Gray);
+
+                if(request.Command.Logs)
+                {
+                    url += "/api/operations/logevents/dashboard";
+                }
+                else if (request.Command.Traces)
+                {
+                    url += "/api/operations/logevents/dashboard?q=TrackType=trace";
+                }
+                else if(request.Command.Journal)
+                {
+                    url += "/api/operations/logevents/dashboard?q=TrackType=journal";
+                }
+
+                Console.WriteLine($"opening browser: {url}", Color.Gray);
 
                 var browser =
                     IsOSPlatform(Windows) ? new ProcessStartInfo("cmd", $"/c start {url}") :
                     IsOSPlatform(OSX) ? new ProcessStartInfo("open", url) :
-                    new ProcessStartInfo("xdg-open", url); //linux, unix-like
+                    new ProcessStartInfo("xdg-open", url); //linux
 
                 Process.Start(browser);
             }

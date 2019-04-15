@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="AzureMonitor\**" />
+    <EmbeddedResource Remove="AzureMonitor\**" />
+    <None Remove="AzureMonitor\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FastMember" Version="1.4.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.2.0" />
@@ -18,10 +25,6 @@
     <ProjectReference Include="..\Domain.Repositories\Domain.Repositories.csproj" />
     <ProjectReference Include="..\Infrastructure.Azure\Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\Operations\Operations.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="AzureMonitor\" />
   </ItemGroup>
 
 </Project>

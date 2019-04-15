@@ -32,7 +32,7 @@
                                     configuration.ApiAuthentication?.ClientId,
                                     configuration.ApiAuthentication?.ClientSecret)).Result;
 
-                    return new LogAnalyticsRepository(
+                    return new LogAnalyticsLogEventRepository(
                         sp.GetRequiredService<ILoggerFactory>(),
                         new System.Net.Http.HttpClient(), // TODO: resolve from container!
                         token?.AccessToken,

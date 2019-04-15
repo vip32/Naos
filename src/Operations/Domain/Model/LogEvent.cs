@@ -45,7 +45,11 @@
 
         public string CorrelationId { get; set; }
 
-        public string ServiceDescriptor { get; set; }
+        public string ServiceName { get; set; }
+
+        public string ServiceProduct { get; set; }
+
+        public string ServiceCapability { get; set; }
 
         public string SourceContext { get; set; }
 

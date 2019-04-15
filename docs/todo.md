@@ -245,6 +245,8 @@ scheduling: cron is due but check with optional Specification<DateTime> if the j
 messaging: azure storage queue messagebroker implementation
 messaging: transport alternatives https://github.com/rebus-org/RebusSamples/tree/master/PubSub
 
+messaging/queueing: sql table implementation based on https://github.com/christiandelbianco/monitor-table-change-with-sqltabledependency
+
 http://localhost:15672/ (rabbitmq)
 https://localhost:44347/api/values (billing)
 https://localhost:44377/api/values (ordering)
