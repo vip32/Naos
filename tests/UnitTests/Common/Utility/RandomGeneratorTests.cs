@@ -75,5 +75,11 @@
         {
             this.Benchmark(() => RandomGenerator.GenerateString(5), 100000, this.output);
         }
+
+        [Fact]
+        public void WhenGeneratingManyPasswords()
+        {
+            this.Benchmark(() => RandomGenerator.GeneratePassword(12), 100000, this.output);
+        }
     }
 }
