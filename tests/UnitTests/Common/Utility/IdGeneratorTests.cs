@@ -1,13 +1,11 @@
 ﻿namespace Naos.Core.UnitTests.Common
 {
-    using System;
-    using System.Diagnostics;
     using Naos.Core.Common;
     using Shouldly;
     using Xunit;
     using Xunit.Abstractions;
 
-    public class IdGeneratorTests
+    public class IdGeneratorTests : BaseTest
     {
         private readonly ITestOutputHelper output;
 
@@ -54,22 +52,8 @@
         [Fact]
         public void WhenGeneratingMany()
         {
-            var sw = Stopwatch.StartNew();
-            for(var i = 0; i < 10000; i++)
-            {
-                _ = IdGenerator.Instance.Next;
-            }
-
-            sw.Stop();
-
-            using(var process = Process.GetCurrentProcess())
-            {
-                this.output.WriteLine("execution time: {0}ms\r\n  - Gen-0: {1}, Gen-1: {2}, Gen-2: {3}",
-                        sw.Elapsed.TotalMilliseconds.ToString(),
-                        GC.CollectionCount(0),
-                        GC.CollectionCount(1),
-                        GC.CollectionCount(2));
-            }
+            this.Benchmark(() => _ = IdGenerator.Instance.Next, 100000, this.output)
+                .ShouldBeLessThan(100);
         }
     }
 }

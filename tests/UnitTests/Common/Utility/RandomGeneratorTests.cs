@@ -7,7 +7,7 @@
     using Xunit;
     using Xunit.Abstractions;
 
-    public class RandomGeneratorTests
+    public class RandomGeneratorTests : BaseTest
     {
         private readonly ITestOutputHelper output;
 
@@ -43,22 +43,7 @@
         [Fact]
         public void WhenGeneratingMany()
         {
-            var sw = Stopwatch.StartNew();
-            for(var i = 0; i < 10000; i++)
-            {
-                RandomGenerator.GenerateString(5);
-            }
-
-            sw.Stop();
-
-            using(var process = Process.GetCurrentProcess())
-            {
-                this.output.WriteLine("execution time: {0}ms\r\n  - Gen-0: {1}, Gen-1: {2}, Gen-2: {3}",
-                        sw.Elapsed.TotalMilliseconds.ToString(),
-                        GC.CollectionCount(0),
-                        GC.CollectionCount(1),
-                        GC.CollectionCount(2));
-            }
+            this.Benchmark(() => RandomGenerator.GenerateString(5), 100000, this.output);
         }
 
         [Fact]
@@ -88,22 +73,7 @@
         [Fact]
         public void WhenGeneratingManyFast()
         {
-            var sw = Stopwatch.StartNew();
-            for(var i = 0; i < 10000; i++)
-            {
-                RandomGenerator.GenerateStringFast(5);
-            }
-
-            sw.Stop();
-
-            using(var process = Process.GetCurrentProcess())
-            {
-                this.output.WriteLine("execution time: {0}ms\r\n  - Gen-0: {1}, Gen-1: {2}, Gen-2: {3}",
-                        sw.Elapsed.TotalMilliseconds.ToString(),
-                        GC.CollectionCount(0),
-                        GC.CollectionCount(1),
-                        GC.CollectionCount(2));
-            }
+            this.Benchmark(() => RandomGenerator.GenerateStringFast(5), 100000, this.output);
         }
     }
 }
