@@ -18,7 +18,7 @@
             this.entities = Builder<StubEntity>
                 .CreateListOfSize(20).All()
                 .With(x => x.FirstName, "John")
-                .With(x => x.LastName, Core.Common.RandomGenerator.GenerateStringFast(5, false))
+                .With(x => x.LastName, Core.Common.RandomGenerator.GenerateString(5, false))
                 .With(x => x.Country, "USA").Build()
                 .Concat(new[] { new StubEntity { /*Id = "Id99",*/ FirstName = "John", LastName = "Doe", Age = 38, Country = "USA" } });
         }
@@ -31,7 +31,7 @@
                 return;
             }
 
-            var lastName = Core.Common.RandomGenerator.GenerateStringFast(4, false);
+            var lastName = Core.Common.RandomGenerator.GenerateString(4, false);
             var values = new List<Value>
             {
                 new Value("part1", IdGenerator.Instance.Next)
@@ -101,7 +101,7 @@
 
             // TODO: delete table first (if exists)
 
-            var lastName = Core.Common.RandomGenerator.GenerateStringFast(4, false);
+            var lastName = Core.Common.RandomGenerator.GenerateString(4, false);
             var values = new List<StubEntity>
             {
                 new StubEntity{ PartitionKey = "part0", RowKey = IdGenerator.Instance.Next, Id = "cosmosignored", Age = 33, Country = "USA", FirstName = "John", LastName = lastName},
@@ -133,8 +133,8 @@
                 return;
             }
 
-            var tableName = "StubEntities" + Core.Common.RandomGenerator.GenerateStringFast(4, false);
-            var lastName = Core.Common.RandomGenerator.GenerateStringFast(4, false);
+            var tableName = "StubEntities" + Core.Common.RandomGenerator.GenerateString(4, false);
+            var lastName = Core.Common.RandomGenerator.GenerateString(4, false);
 
             await sut.InsertAsync(tableName, new List<Value>
             {

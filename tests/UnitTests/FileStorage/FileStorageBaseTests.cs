@@ -227,8 +227,8 @@
 
                 var data = new List<StubEntity>
                 {
-                    new StubEntity { FirstName = "John", LastName = RandomGenerator.GenerateStringFast(4), Age = 100000 - 12.6M },
-                    new StubEntity { FirstName = "John", LastName = RandomGenerator.GenerateStringFast(4), Age = 11 }
+                    new StubEntity { FirstName = "John", LastName = RandomGenerator.GenerateString(4), Age = 100000 - 12.6M },
+                    new StubEntity { FirstName = "John", LastName = RandomGenerator.GenerateString(4), Age = 11 }
                 };
 
                 var result = await storage.SaveFileCsvAsync(path, data, cultureInfo: new System.Globalization.CultureInfo("de-DE")); // write
@@ -268,8 +268,8 @@
 
                 var data = new List<StubEntity>
                 {
-                    new StubEntity { FirstName = "John", LastName = RandomGenerator.GenerateStringFast(4), Age = 100000 - 12.6M },
-                    new StubEntity { FirstName = "John", LastName = RandomGenerator.GenerateStringFast(4), Age = 11 }
+                    new StubEntity { FirstName = "John", LastName = RandomGenerator.GenerateString(4), Age = 100000 - 12.6M },
+                    new StubEntity { FirstName = "John", LastName = RandomGenerator.GenerateString(4), Age = 11 }
                 };
 
                 var result = await storage.SaveFileCsvAsync<IEnumerable<StubEntity>, StubEntity>(path, data, cultureInfo: new System.Globalization.CultureInfo("de-DE"), headersMap: headers); // write

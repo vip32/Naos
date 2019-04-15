@@ -21,7 +21,7 @@
                 .AddMediatR()
                 .AddNaos(configuration, "Product", "Capability", new[] { "All" }, n => n
                     .AddOperations(o => o
-                        .AddLogging(correlationId: $"TEST{RandomGenerator.GenerateStringFast(9)}"))
+                        .AddLogging(correlationId: $"TEST{RandomGenerator.GenerateString(9)}"))
                     .AddMessaging(o => o
                         //.AddFileSystemBroker()
                         //.AddSignalRBroker()

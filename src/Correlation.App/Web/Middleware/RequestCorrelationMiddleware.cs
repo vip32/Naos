@@ -125,7 +125,7 @@
             var isFound = httpContext.Request.Headers.TryGetValue(this.options.RequestHeader, out var id);
             if(!isFound || StringValues.IsNullOrEmpty(id))
             {
-                return RandomGenerator.GenerateStringFast(this.options.RequestIdLength, this.options.RequestIdAlphanumeric);
+                return RandomGenerator.GenerateString(this.options.RequestIdLength, this.options.RequestIdAlphanumeric);
             }
 
             return id.ToString();

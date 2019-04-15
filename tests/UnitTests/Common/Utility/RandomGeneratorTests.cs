@@ -19,7 +19,7 @@
         [Fact]
         public void WhenGeneratingAnId()
         {
-            var id = RandomGenerator.GenerateString(5);
+            var id = RandomGenerator.GenerateComplexString(5);
 
             id.ShouldNotBeNullOrWhiteSpace();
             id.Length.ShouldBe(5);
@@ -27,6 +27,36 @@
 
         [Fact]
         public void WhenGeneratingMultipleIds()
+        {
+            var one = RandomGenerator.GenerateComplexString(5);
+            var two = RandomGenerator.GenerateComplexString(5);
+
+            one.ShouldNotBeNullOrWhiteSpace();
+            one.Length.ShouldBe(5);
+
+            two.ShouldNotBeNullOrWhiteSpace();
+            two.Length.ShouldBe(5);
+
+            one.ShouldNotBe(two);
+        }
+
+        [Fact]
+        public void WhenGeneratingMany()
+        {
+            this.Benchmark(() => RandomGenerator.GenerateComplexString(5), 100000, this.output);
+        }
+
+        [Fact]
+        public void WhenGeneratingAnIdFast()
+        {
+            var id = RandomGenerator.GenerateString(5);
+
+            id.ShouldNotBeNullOrWhiteSpace();
+            id.Length.ShouldBe(5);
+        }
+
+        [Fact]
+        public void WhenGeneratingMultipleIdsFast()
         {
             var one = RandomGenerator.GenerateString(5);
             var two = RandomGenerator.GenerateString(5);
@@ -41,39 +71,9 @@
         }
 
         [Fact]
-        public void WhenGeneratingMany()
-        {
-            this.Benchmark(() => RandomGenerator.GenerateString(5), 100000, this.output);
-        }
-
-        [Fact]
-        public void WhenGeneratingAnIdFast()
-        {
-            var id = RandomGenerator.GenerateStringFast(5);
-
-            id.ShouldNotBeNullOrWhiteSpace();
-            id.Length.ShouldBe(5);
-        }
-
-        [Fact]
-        public void WhenGeneratingMultipleIdsFast()
-        {
-            var one = RandomGenerator.GenerateStringFast(5);
-            var two = RandomGenerator.GenerateStringFast(5);
-
-            one.ShouldNotBeNullOrWhiteSpace();
-            one.Length.ShouldBe(5);
-
-            two.ShouldNotBeNullOrWhiteSpace();
-            two.Length.ShouldBe(5);
-
-            one.ShouldNotBe(two);
-        }
-
-        [Fact]
         public void WhenGeneratingManyFast()
         {
-            this.Benchmark(() => RandomGenerator.GenerateStringFast(5), 100000, this.output);
+            this.Benchmark(() => RandomGenerator.GenerateString(5), 100000, this.output);
         }
     }
 }
