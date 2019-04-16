@@ -95,7 +95,7 @@
         }
 
         /// <summary>
-        /// Serializes input to string.
+        /// Serializes the specified input to string.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="source">The source.</param>
@@ -118,7 +118,7 @@
         }
 
         /// <summary>
-        /// Serializes input to bytes.
+        /// Serializes the specified input to bytes.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="source">The source.</param>
