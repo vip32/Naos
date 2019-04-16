@@ -16,12 +16,40 @@
         private CorrelationContext correlationContext;
         private FilterContext filterContext;
 
-        protected IMediator Mediator => this.mediator ?? (this.mediator = this.HttpContext.RequestServices.GetService<IMediator>());
+        /// <summary>
+        /// Gets the mediator.
+        /// </summary>
+        /// <value>
+        /// The mediator.
+        /// </value>
+        protected IMediator Mediator =>
+            this.mediator ?? (this.mediator = this.HttpContext.RequestServices.GetService<IMediator>());
 
-        protected ILogger Logger => this.logger ?? (this.logger = this.HttpContext.RequestServices.GetService<ILoggerFactory>()?.CreateLogger(this.GetType().Name));
+        /// <summary>
+        /// Gets the logger.
+        /// </summary>
+        /// <value>
+        /// The logger.
+        /// </value>
+        protected ILogger Logger =>
+            this.logger ?? (this.logger = this.HttpContext.RequestServices.GetService<ILoggerFactory>()?.CreateLogger(this.GetType().Name));
 
-        protected CorrelationContext CorrelationContext => this.correlationContext ?? (this.correlationContext = this.HttpContext.RequestServices.GetService<ICorrelationContextAccessor>()?.Context);
+        /// <summary>
+        /// Gets the correlation context.
+        /// </summary>
+        /// <value>
+        /// The correlation context.
+        /// </value>
+        protected CorrelationContext CorrelationContext =>
+            this.correlationContext ?? (this.correlationContext = this.HttpContext.RequestServices.GetService<ICorrelationContextAccessor>()?.Context);
 
-        protected FilterContext FilterContext => this.filterContext ?? (this.filterContext = this.HttpContext.RequestServices.GetService<IFilterContextAccessor>()?.Context);
+        /// <summary>
+        /// Gets the filter context.
+        /// </summary>
+        /// <value>
+        /// The filter context.
+        /// </value>
+        protected FilterContext FilterContext =>
+            this.filterContext ?? (this.filterContext = this.HttpContext.RequestServices.GetService<IFilterContextAccessor>()?.Context);
     }
 }
