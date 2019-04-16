@@ -13,15 +13,22 @@
     public class CreateCustomerCommandHandler : BehaviorCommandHandler<CreateCustomerCommand, string>
     {
         private readonly ILogger<CreateCustomerCommandHandler> logger;
+        private readonly IMediator mediator;
         private readonly ICustomerRepository repository;
 
-        public CreateCustomerCommandHandler(ILogger<CreateCustomerCommandHandler> logger, IMediator mediator, IEnumerable<ICommandBehavior> behaviors, ICustomerRepository repository)
-            : base(logger, mediator, behaviors)
+        public CreateCustomerCommandHandler(
+            ILogger<CreateCustomerCommandHandler> logger,
+            IMediator mediator,
+            IEnumerable<ICommandBehavior> behaviors,
+            ICustomerRepository repository)
+            : base(logger, behaviors)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(repository, nameof(repository));
+            EnsureArg.IsNotNull(mediator, nameof(mediator));
 
             this.logger = logger;
+            this.mediator = mediator;
             this.repository = repository;
         }
 
@@ -44,7 +51,7 @@
 
             this.logger.LogInformation($"{{LogKey:l}} {request.GetType().Name} (response={request.Customer.Id})", LogKeys.AppCommand);
 
-            // TODO: publish CreatedCustomer message (MessageBus)
+            // TODO: publish CreatedCustomer message (messaging)
 
             return new CommandResponse<string>
             {

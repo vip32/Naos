@@ -5,7 +5,6 @@
     using System.Threading.Tasks;
     using Common;
     using EnsureThat;
-    using MediatR;
     using Microsoft.Extensions.Logging;
 
     /// <summary>
@@ -25,10 +24,10 @@
         /// Initializes a new instance of the <see cref="BehaviorCommandHandler{TRequest, TResponse}" /> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="mediator">The mediator.</param>
         /// <param name="behaviors">The behaviors.</param>
-        protected BehaviorCommandHandler(ILogger logger, IMediator mediator, IEnumerable<ICommandBehavior> behaviors)
-            : base(mediator)
+        protected BehaviorCommandHandler(
+            ILogger logger,
+            IEnumerable<ICommandBehavior> behaviors)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
 

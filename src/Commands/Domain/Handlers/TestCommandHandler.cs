@@ -15,8 +15,10 @@
     public class TestCommandHandler<TRequest> : BehaviorCommandHandler<TRequest, bool>
         where TRequest : CommandRequest<bool>
     {
-        public TestCommandHandler(ILogger<TestCommandHandler<TRequest>> logger, IMediator mediator, IEnumerable<ICommandBehavior> behaviors)
-            : base(logger, mediator, behaviors)
+        public TestCommandHandler(
+            ILogger<TestCommandHandler<TRequest>> logger,
+            IEnumerable<ICommandBehavior> behaviors)
+            : base(logger, behaviors)
         {
         }
 

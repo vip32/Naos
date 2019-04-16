@@ -21,7 +21,7 @@
             this.Id = id ?? IdGenerator.Instance.Next;
             this.CorrelationId = correlationId ?? IdGenerator.Instance.Next;
             this.Identifier = RandomGenerator.GenerateString(5, false);
-            this.Created = DateTime.UtcNow;
+            this.Created = DateTimeOffset.UtcNow;
         }
 
         public string Id { get; set; }
@@ -30,7 +30,7 @@
 
         public string CorrelationId { get; set; }
 
-        public DateTime Created { get; }
+        public DateTimeOffset Created { get; }
 
         public DataDictionary Properties { get; set; } = new DataDictionary();
 

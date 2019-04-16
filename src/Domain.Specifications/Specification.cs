@@ -24,10 +24,6 @@
             EnsureArg.IsNotNullOrEmpty(expression);
 
             this.expression = ExpressionHelper.FromExpressionString<T>(expression);
-
-            // jokenizer
-            //this.expression = Evaluator.ToLambda<T, bool>(
-            //    Tokenizer.Parse($"(t) => t.{expression}"));
         }
 
         public string Name { get; set; }

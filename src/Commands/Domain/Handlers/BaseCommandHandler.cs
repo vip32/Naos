@@ -2,7 +2,6 @@
 {
     using System.Threading;
     using System.Threading.Tasks;
-    using EnsureThat;
     using MediatR;
     using Naos.Core.Common;
 
@@ -16,19 +15,6 @@
         : IRequestHandler<TRequest, CommandResponse<TResponse>>
         where TRequest : CommandRequest<TResponse>
     {
-        private readonly IMediator mediator;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BaseCommandHandler{TRequest, TResponse}"/> class.
-        /// </summary>
-        /// <param name="mediator">The mediator.</param>
-        protected BaseCommandHandler(IMediator mediator)
-        {
-            EnsureArg.IsNotNull(mediator, nameof(mediator));
-
-            this.mediator = mediator;
-        }
-
         /// <summary>
         /// Handles the specified request.
         /// </summary>
@@ -47,17 +33,5 @@
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
         public abstract Task<CommandResponse<TResponse>> HandleRequest(TRequest request, CancellationToken cancellationToken);
-
-        ///// <summary>
-        ///// Publishes the domain event so a domain event handler can handle it.
-        ///// </summary>
-        ///// <param name="domainEvent">The domain event.</param>
-        ///// <returns></returns>
-        //public async Task PublishDomainEvent(IDomainEvent domainEvent)
-        //{
-        //    EnsureArg.IsNotNull(domainEvent, nameof(domainEvent));
-
-        //    await this.mediator.Publish(domainEvent).AnyContext();
-        //}
     }
 }
