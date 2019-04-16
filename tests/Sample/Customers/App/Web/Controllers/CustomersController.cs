@@ -7,7 +7,7 @@
 
     public class CustomersController : NaosRepositoryControllerBase<Customer, ICustomerRepository>
     {
-        private readonly UserAccountsClient userAccountsClient;
+        //private readonly UserAccountsClient userAccountsClient;
 
         public CustomersController(
             ICustomerRepository repository,
@@ -16,8 +16,8 @@
         {
             EnsureArg.IsNotNull(userAccountsClient, nameof(userAccountsClient));
 
-            this.userAccountsClient = userAccountsClient;
-            var accounts = this.userAccountsClient.HttpClient.GetAsync("api/useraccounts").Result;
+            //this.userAccountsClient = userAccountsClient;
+            //var accounts = this.userAccountsClient.HttpClient.GetAsync("api/useraccounts").Result;
         }
     }
 }
