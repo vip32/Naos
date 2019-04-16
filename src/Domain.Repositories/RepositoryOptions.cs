@@ -17,6 +17,12 @@
             this.PublishEvents = publishEvents;
         }
 
+        /// <summary>
+        /// Gets or sets the mapper.
+        /// </summary>
+        /// <value>
+        /// The mapper.
+        /// </value>
         public IEntityMapper Mapper { get; set; }
 
         public bool PublishEvents { get; set; }
