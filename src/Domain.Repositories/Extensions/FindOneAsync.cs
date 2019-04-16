@@ -15,7 +15,7 @@
         /// <param name="id">The identifier.</param>
         /// <param name="tenantId">The tenant identifier.</param>
         /// <returns></returns>
-        public static async Task<TEntity> FindAsync<TEntity>(
+        public static async Task<TEntity> FindOneAsync<TEntity>(
             this IRepository<TEntity> source,
             object id,
             string tenantId)

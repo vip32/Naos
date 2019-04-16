@@ -204,7 +204,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             Assert.NotNull(result);
             Assert.Equal(this.entities.First().FirstName, result.FirstName);
 
-            result = await sut.FindAsync(id, this.tenantId).AnyContext();
+            result = await sut.FindOneAsync(id, this.tenantId).AnyContext();
 
             Assert.NotNull(result);
             Assert.Equal(this.entities.First().FirstName, result.FirstName);
@@ -224,7 +224,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             Assert.NotNull(result);
             Assert.Equal(this.entities.First().FirstName, result.FirstName);
 
-            result = await sut.FindAsync(this.entitiesGuid.First().Id, this.tenantId).AnyContext();
+            result = await sut.FindOneAsync(this.entitiesGuid.First().Id, this.tenantId).AnyContext();
 
             Assert.NotNull(result);
             Assert.Equal(this.entities.First().FirstName, result.FirstName);
