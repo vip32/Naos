@@ -11,6 +11,10 @@
     {
         private readonly ILogger<EntityUpdateDomainEventHandler> logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EntityUpdateDomainEventHandler"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
         public EntityUpdateDomainEventHandler(ILogger<EntityUpdateDomainEventHandler> logger)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
@@ -18,8 +22,21 @@
             this.logger = logger;
         }
 
+        /// <summary>
+        /// Determines whether this instance can handle the specified notification.
+        /// </summary>
+        /// <param name="notification">The notification.</param>
+        /// <returns>
+        /// <c>true</c> if this instance can handle the specified notification; otherwise, <c>false</c>.
+        /// </returns>
         public abstract bool CanHandle(EntityUpdateDomainEvent notification);
 
+        /// <summary>
+        /// Handles the specified notification.
+        /// </summary>
+        /// <param name="notification">The notification.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns></returns>
         public virtual async Task Handle(EntityUpdateDomainEvent notification, CancellationToken cancellationToken)
         {
             await Task.Run(() =>
