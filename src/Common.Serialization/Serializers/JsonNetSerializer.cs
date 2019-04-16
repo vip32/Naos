@@ -8,11 +8,20 @@
     {
         private readonly JsonSerializer serializer;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JsonNetSerializer"/> class.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
         public JsonNetSerializer(JsonSerializerSettings settings = null)
         {
             this.serializer = JsonSerializer.Create(settings ?? DefaultJsonSerializerSettings.Create());
         }
 
+        /// <summary>
+        /// Serializes the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="output">The output.</param>
         public void Serialize(object value, Stream output)
         {
             var writer = new JsonTextWriter(new StreamWriter(output));
@@ -20,6 +29,12 @@
             writer.Flush();
         }
 
+        /// <summary>
+        /// Deserializes the specified input.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <param name="type">The type.</param>
+        /// <returns></returns>
         public object Deserialize(Stream input, Type type)
         {
             using(var sr = new StreamReader(input))
@@ -29,6 +44,12 @@
             }
         }
 
+        /// <summary>
+        /// Deserializes the specified input.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="input">The input.</param>
+        /// <returns></returns>
         public T Deserialize<T>(Stream input)
         {
             using(var sr = new StreamReader(input))
