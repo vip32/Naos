@@ -9,6 +9,11 @@
     {
         //private readonly UserAccountsClient userAccountsClient;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CustomersController"/> class.
+        /// </summary>
+        /// <param name="repository">The repository.</param>
+        /// <param name="userAccountsClient">The user accounts client.</param>
         public CustomersController(
             ICustomerRepository repository,
             UserAccountsClient userAccountsClient)

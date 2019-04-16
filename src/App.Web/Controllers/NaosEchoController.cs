@@ -11,6 +11,10 @@
     {
         private readonly ILogger<NaosEchoController> logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NaosEchoController"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
         public NaosEchoController(
             ILogger<NaosEchoController> logger)
         {

@@ -12,6 +12,10 @@
         where TEntity : class, IEntity, IAggregateRoot
         where TRepo : class, IRepository<TEntity>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NaosRepositoryControllerBase{TEntity, TRepo}"/> class.
+        /// </summary>
+        /// <param name="repository">The repository.</param>
         protected NaosRepositoryControllerBase(TRepo repository)
             : base(repository)
         {
