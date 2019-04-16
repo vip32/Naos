@@ -11,7 +11,7 @@
     using Naos.Core.Configuration.App;
     using Naos.Core.FileStorage.Infrastructure;
     using Naos.Core.Infrastructure.EntityFramework;
-    using Naos.Sample.UserAccounts.EntityFramework;
+    using Naos.Sample.UserAccounts.Infrastructure.EntityFramework;
 
     public abstract class BaseTest
     {
@@ -31,7 +31,8 @@
                     .AddServices(o => o
                         .AddSampleCountries()
                         .AddSampleCustomers()
-                        .AddSampleUserAccounts(dbContext: new UserAccountsContext(new DbContextOptionsBuilder().UseNaosSqlServer(configuration, "naos:sample:userAccounts:entityFramework").Options)))
+                        .AddSampleUserAccounts(
+                            dbContext: new UserAccountsContext(new DbContextOptionsBuilder().UseNaosSqlServer(configuration, "naos:sample:userAccounts:entityFramework").Options)))
                     .AddOperations(o => o
                         .AddLogging(correlationId: $"TEST{IdGenerator.Instance.Next}"))
                     .AddMessaging(o => o

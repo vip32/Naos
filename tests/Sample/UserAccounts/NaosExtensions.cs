@@ -8,7 +8,7 @@
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Infrastructure.EntityFramework;
     using Naos.Sample.UserAccounts.Domain;
-    using Naos.Sample.UserAccounts.EntityFramework;
+    using Naos.Sample.UserAccounts.Infrastructure.EntityFramework;
 
     public static partial class NaosExtensions
     {

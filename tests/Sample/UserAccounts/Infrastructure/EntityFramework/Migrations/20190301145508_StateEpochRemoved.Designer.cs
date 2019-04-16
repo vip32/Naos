@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Naos.Sample.UserAccounts.EntityFramework;
 
 namespace Naos.Sample.UserAccounts.Infrastructure.EntityFramework.Migrations
 {
