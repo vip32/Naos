@@ -5,7 +5,7 @@
     public static partial class Extensions
     {
         /// <summary>
-        /// Also adds the item to the result list.
+        /// Adds the item to the result list atr the given index (pos).
         /// </summary>
         /// <typeparam name="TItem">the source</typeparam>
         /// <param name="source">the source collection</param>

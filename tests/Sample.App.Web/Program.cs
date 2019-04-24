@@ -18,6 +18,7 @@
                 .ConfigureAppConfiguration((context, config) =>
                     NaosConfigurationFactory.Extend(config, args, context.HostingEnvironment.EnvironmentName))
                 //.UseUrls($"https://localhost:{GetNextAvailablePort()}")
+                .CaptureStartupErrors(true)
                 .UseStartup<Startup>()
                 .UseSerilog();
 

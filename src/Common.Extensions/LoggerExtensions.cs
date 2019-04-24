@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Microsoft.Extensions.Logging;
 
     public static class LoggerExtensions
@@ -27,7 +28,21 @@
                     [type] = true
                 }))
                 {
-                    source.Log(LogLevel.Information, $"{logKey:l} {message:l}", args);
+                    try
+                    {
+                        source.Log(LogLevel.Information, $"{{LogKey}} {message:l}", args.Insert(logKey).ToArray());
+                    }
+                    catch(AggregateException ex) // IndexOutOfRangeException
+                    {
+                        if(ex.InnerException is IndexOutOfRangeException)
+                        {
+                            source.Log(LogLevel.Warning, $"{{LogKey}} {message:l}");
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
                 }
             }
 
@@ -56,7 +71,21 @@
                     [LogEventPropertyKeys.LogKey] = logKey
                 }))
                 {
-                    source.Log(LogLevel.Information, $"{logKey:l} {message:l}", args);
+                    try
+                    {
+                        source.Log(LogLevel.Information, $"{{LogKey}} {message:l}", args.Insert(logKey).ToArray());
+                    }
+                    catch(AggregateException ex) // IndexOutOfRangeException
+                    {
+                        if(ex.InnerException is IndexOutOfRangeException)
+                        {
+                            source.Log(LogLevel.Warning, $"{{LogKey}} {message:l}");
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
                 }
             }
 
