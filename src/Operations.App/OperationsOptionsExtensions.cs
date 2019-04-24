@@ -60,6 +60,8 @@
 
             if(options.Context.IsConsoleEnabled() && enabled)
             {
+                Naos.Core.Common.Console2.WriteTextLogo();
+
                 // needed for mediator, register console commands + handlers
                 options.Context.Services.Scan(scan => scan
                     .FromApplicationDependencies()

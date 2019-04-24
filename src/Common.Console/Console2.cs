@@ -13,6 +13,7 @@
         public static void WriteTextLogo()
         {
             Colorful.Console.WriteLine(ResourcesHelper.GetLogoAsString(), Color.Cyan);
+            Colorful.Console.WriteLine(string.Empty, Color.Cyan);
         }
 
         public static void WriteBitmap(Bitmap image, int sMax = 39)

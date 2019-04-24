@@ -9,7 +9,6 @@
     {
         public static void Main(string[] args)
         {
-            Core.Common.Console2.WriteTextLogo();
             CreateWebHostBuilder(args).Build().Run();
         }
 
