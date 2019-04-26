@@ -8,7 +8,8 @@
     using Naos.Core.Domain;
     using Naos.Core.Domain.Repositories;
 
-    public abstract class NaosRepositoryControllerBase<TEntity, TRepo> : NaosReadOnlyRepositoryControllerBase<TEntity, TRepo>
+    [Route("api/[controller]")]
+    public /*abstract*/ class NaosRepositoryControllerBase<TEntity, TRepo> : NaosReadOnlyRepositoryControllerBase<TEntity, TRepo>
         where TEntity : class, IEntity, IAggregateRoot
         where TRepo : class, IRepository<TEntity>
     {
@@ -16,7 +17,7 @@
         /// Initializes a new instance of the <see cref="NaosRepositoryControllerBase{TEntity, TRepo}"/> class.
         /// </summary>
         /// <param name="repository">The repository.</param>
-        protected NaosRepositoryControllerBase(TRepo repository)
+        public NaosRepositoryControllerBase(TRepo repository)
             : base(repository)
         {
         }

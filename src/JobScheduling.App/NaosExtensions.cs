@@ -33,16 +33,16 @@
 
             naosOptions.Context.Services.AddSingleton<IJobScheduler>(sp =>
             {
-                var settings = new JobSchedulerOptions(
+                var options = new JobSchedulerOptions(
                     sp.GetRequiredService<ILoggerFactory>(),
                     sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)) as IMediator,
                     new ServiceProviderJobFactory(sp));
-                optionsAction?.Invoke(settings);
+                optionsAction?.Invoke(options);
 
                 return new JobScheduler(
                     sp.GetRequiredService<ILoggerFactory>(),
                     new InProcessMutex(sp.GetRequiredService<ILoggerFactory>()),
-                    settings);
+                    options);
             });
 
             naosOptions.Context.Services.AddSingleton<IHostedService>(sp =>

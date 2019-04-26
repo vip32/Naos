@@ -17,6 +17,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.App.Web;
     using Naos.Core.Commands.Domain;
     using Naos.Core.Commands.Infrastructure.FileStorage;
     using Naos.Core.Common;
@@ -65,6 +66,12 @@
                         // https://tahirnaushad.com/2017/08/28/asp-net-core-2-0-mvc-filters/ or use controller attribute (Authorize)
                         o.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build()));
                         o.Filters.Add<OperationCancelledExceptionFilter>();
+                        o.Conventions.Add(new GeneratedControllerRouteConvention()); // needed for repository controllers below
+                    })
+                    .AddNaos(o =>
+                    {
+                        o.AddRepositoryController<Customers.Domain.Customer, Customers.Domain.ICustomerRepository>();
+                        o.AddRepositoryController<Countries.Domain.Country>(); // or IRepository<Country>
                     })
                     .AddJsonOptions(o => o.AddDefaultJsonSerializerSettings())
                     .AddControllersAsServices() // https://andrewlock.net/controller-activation-and-dependency-injection-in-asp-net-core-mvc/

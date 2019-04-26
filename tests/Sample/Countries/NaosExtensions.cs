@@ -22,7 +22,7 @@
 
             options.Context.AddTag("Countries");
 
-            options.Context.Services.AddScoped<ICountryRepository>(sp =>
+            options.Context.Services.AddScoped<IRepository<Country>>(sp => // ICountryRepository
             {
                 return new CountryRepository(
                     new RepositoryLoggingDecorator<Country>(
