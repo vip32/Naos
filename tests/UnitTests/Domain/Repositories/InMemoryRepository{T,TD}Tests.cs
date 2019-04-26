@@ -373,9 +373,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public static class StubEntityMapperConfiguration
 #pragma warning restore SA1204 // Static elements must appear before instance elements
         {
-            public static global::AutoMapper.IMapper Create()
+            public static AutoMapper.IMapper Create()
             {
-                var mapper = new global::AutoMapper.MapperConfiguration(c =>
+                var mapper = new AutoMapper.MapperConfiguration(c =>
                 {
                     // TODO: try reversemap https://stackoverflow.com/questions/13490456/automapper-bidirectional-mapping-with-reversemap-and-formember
                     //c.AddExpressionMapping();
@@ -425,9 +425,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             //    }
             //}
 
-            private class YearOfBirthResolver : global::AutoMapper.IValueResolver<StubEntity, StubDb, int>
+            private class YearOfBirthResolver : AutoMapper.IValueResolver<StubEntity, StubDb, int>
             {
-                public int Resolve(StubEntity source, StubDb destination, int destMember, global::AutoMapper.ResolutionContext context)
+                public int Resolve(StubEntity source, StubDb destination, int destMember, AutoMapper.ResolutionContext context)
                 {
                     return DateTime.UtcNow.Year - source.Age;
                 }
@@ -449,9 +449,9 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             //    }
             //}
 
-            private class AgeResolver : global::AutoMapper.IValueResolver<StubDb, StubEntity, int>
+            private class AgeResolver : AutoMapper.IValueResolver<StubDb, StubEntity, int>
             {
-                public int Resolve(StubDb source, StubEntity destination, int destMember, global::AutoMapper.ResolutionContext context)
+                public int Resolve(StubDb source, StubEntity destination, int destMember, AutoMapper.ResolutionContext context)
                 {
                     return DateTime.UtcNow.Year - source.YearOfBirth;
                 }

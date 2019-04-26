@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using Naos.Core.Domain;
     using Naos.Core.Domain.Repositories;
+    using Newtonsoft.Json;
 
     public class NaosMvcOptions
     {
@@ -15,6 +16,15 @@
             {
                 return this.controllerRegistrations;
             }
+        }
+
+        public JsonSerializerSettings JsonSerializerSettings { get; private set; }
+
+        public NaosMvcOptions AddJsonSerializerSettings(JsonSerializerSettings settings)
+        {
+            this.JsonSerializerSettings = settings;
+
+            return this;
         }
 
         public NaosMvcOptions AddRepositoryController(Type entityType, Type repositoryType = null)

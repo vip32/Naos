@@ -4,6 +4,7 @@
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
+    using NSwag.Annotations;
 
     [Route("api/echo")]
     [ApiController]
@@ -25,6 +26,7 @@
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
+        [SwaggerTag("Naos Echo")]
         public ActionResult<object> Get()
         {
             return this.Ok();

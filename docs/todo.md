@@ -108,6 +108,7 @@ https://github.com/maldworth/CacheManager.FileCaching/tree/develop
 azure deployment (ARM) https://markheath.net/post/arm-vs-azure-cli
 (CLI) https://gist.github.com/pascalnaber/75412a97a0d0b059314d193c3ab37c4c
 
+ascii https://mattwarren.org/2019/04/25/ASCII-Art-in-.NET-Code/ + codes https://msdn.microsoft.com/en-us/library/4z4t9ed1%28v=vs.71%29.aspx?f=255&MSPPError=-2147217396
 assembly builddate https://www.meziantou.net/2018/09/24/getting-the-date-of-build-of-a-net-assembly-at-runtime
 mediator pipeline for command validation http://www.kamilgrzybek.com/design/rest-api-data-validation/	
 c# script compile + run roslyn https://laurentkempe.com/2019/02/18/dynamically-compile-and-run-code-using-dotNET-Core-3.0

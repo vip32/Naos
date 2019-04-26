@@ -141,7 +141,7 @@
         /// <param name="source">The HTTP context.</param>
         /// <param name="profile">The cache profile.</param>
         /// <returns>The same HTTP context.</returns>
-        /// <exception cref="System.ArgumentNullException">context or cacheProfile.</exception>
+        /// <exception cref="ArgumentNullException">context or cacheProfile.</exception>
         public static HttpContext ApplyCacheProfile(this HttpContext source, CacheProfile profile)
         {
             const string noCache = "no-cache";

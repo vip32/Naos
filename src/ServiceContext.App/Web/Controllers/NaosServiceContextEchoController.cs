@@ -5,6 +5,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
+    using NSwag.Annotations;
 
     [Route("api/echo/servicecontext")]
     [ApiController]
@@ -25,6 +26,7 @@
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
+        [SwaggerTag("Naos Echo")]
         public ActionResult<ServiceDescriptor> Get()
         {
             return this.Ok(this.serviceContext);

@@ -73,7 +73,7 @@
                 return default;
             }
 
-            var bytes = SerializationHelper.BsonByteSerialize<T>(source);
+            var bytes = SerializationHelper.BsonByteSerialize(source);
             if(bytes.IsNullOrEmpty())
             {
                 return default;

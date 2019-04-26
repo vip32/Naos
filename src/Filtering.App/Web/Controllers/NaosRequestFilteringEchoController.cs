@@ -5,6 +5,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Naos.Core.RequestFiltering.App;
+    using NSwag.Annotations;
 
     [Route("api/echo/requestfiltering")]
     [ApiController]
@@ -25,6 +26,7 @@
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
+        [SwaggerTag("Naos Echo")]
         public ActionResult<FilterContext> Get()
         {
             return this.Ok(this.filterContext?.Context);

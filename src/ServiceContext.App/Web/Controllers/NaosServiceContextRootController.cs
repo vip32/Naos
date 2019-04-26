@@ -11,6 +11,7 @@
     using Naos.Core.Common;
     using Naos.Core.Common.Web;
     using Naos.Core.Configuration.App;
+    using NSwag.Annotations;
 
     [Route("api")]
     [ApiController]
@@ -34,6 +35,7 @@
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
+        [SwaggerTag("Naos Info")]
         public async Task<ActionResult<ServiceDescriptor>> Get()
         {
             foreach(var feature in this.features.Safe())

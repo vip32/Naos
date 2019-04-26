@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
+    <PackageReference Include="NSwag.Annotations" Version="12.2.3" />
   </ItemGroup>
 
   <ItemGroup>

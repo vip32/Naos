@@ -7,6 +7,7 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common.Web;
     using Naos.Core.Messaging.Domain;
+    using NSwag.Annotations;
 
     [Route("api/echo/messaging")]
     [ApiController]
@@ -30,6 +31,7 @@
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
+        [SwaggerTag("Naos Echo")]
         public ActionResult<IEnumerable<SubscriptionDetails>> Get()
         {
             this.messageBroker.Publish(new EchoMessage

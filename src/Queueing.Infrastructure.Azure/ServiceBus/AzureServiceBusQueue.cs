@@ -233,7 +233,7 @@
                         [LogEventPropertyKeys.CorrelationId] = i.Data.As<IHaveCorrelationId>()?.CorrelationId,
                     }))
                     {
-                        await this.options.Mediator.Send<bool>(new QueueEvent<TData>(i), ct).AnyContext();
+                        await this.options.Mediator.Send(new QueueEvent<TData>(i), ct).AnyContext();
                     }
                 },
                 autoComplete, cancellationToken).AnyContext();

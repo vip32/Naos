@@ -17,7 +17,7 @@
         private readonly ServiceDiscoveryConfiguration configuration;
         private readonly IServiceRegistryClient registryClient;
         private readonly IServer server;
-        private readonly Common.ServiceDescriptor serviceDescriptor;
+        private readonly ServiceDescriptor serviceDescriptor;
         private string serviceAddress;
         private CancellationTokenSource cts;
         private string registrationId;
@@ -28,7 +28,7 @@
             ServiceDiscoveryConfiguration configuration,
             IServiceRegistryClient registryClient,
             IServer server,
-            Common.ServiceDescriptor serviceDescriptor)
+            ServiceDescriptor serviceDescriptor)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(configuration, nameof(configuration));

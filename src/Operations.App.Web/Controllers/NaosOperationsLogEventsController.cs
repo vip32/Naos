@@ -12,6 +12,7 @@
     using Naos.Core.Common;
     using Naos.Core.Operations.Domain;
     using Naos.Core.RequestFiltering.App;
+    using NSwag.Annotations;
 
     [Route("api/operations/logevents")]
     [ApiController]
@@ -42,6 +43,7 @@
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
+        [SwaggerTag("Naos Operations")]
         public async Task<ActionResult<IEnumerable<LogEvent>>> Get()
         {
             //var acceptHeader = this.HttpContext.Request.Headers.GetValue("Accept");
@@ -59,6 +61,7 @@
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
+        [SwaggerTag("Naos Operations")]
         public Task GetHtml()
         {
             return this.GetHtmlAsync();

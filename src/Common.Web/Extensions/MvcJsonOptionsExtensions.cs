@@ -6,9 +6,11 @@
 
     public static class MvcJsonOptionsExtensions
     {
-        public static MvcJsonOptions AddDefaultJsonSerializerSettings(this MvcJsonOptions source, JsonSerializerSettings settings = null)
+        public static MvcJsonOptions AddDefaultJsonSerializerSettings(
+            this MvcJsonOptions source,
+            JsonSerializerSettings settings = null)
         {
-            settings = settings ?? DefaultJsonSerializerSettings.Create();
+            settings ??= DefaultJsonSerializerSettings.Create();
 
             // copy some json serializer settings for the mvcoptions
             source.SerializerSettings.ContractResolver = settings.ContractResolver;

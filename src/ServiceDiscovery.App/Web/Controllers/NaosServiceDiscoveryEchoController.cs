@@ -7,6 +7,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
+    using NSwag.Annotations;
 
     [Route("api/echo/servicediscovery")]
     [ApiController]
@@ -27,6 +28,7 @@
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
+        [SwaggerTag("Naos Echo")]
         public async Task<ActionResult<IEnumerable<ServiceRegistration>>> Get()
         {
             return this.Ok(await this.registry.RegistrationsAsync().AnyContext());

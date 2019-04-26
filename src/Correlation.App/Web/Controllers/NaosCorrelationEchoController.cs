@@ -5,6 +5,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Naos.Core.RequestCorrelation.App;
+    using NSwag.Annotations;
 
     [Route("api/echo/requestcorrelation")]
     [ApiController]
@@ -25,6 +26,7 @@
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
+        [SwaggerTag("Naos Echo")]
         public ActionResult<CorrelationContext> Get()
         {
             return this.Ok(this.correlationContext.Context);

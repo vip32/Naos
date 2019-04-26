@@ -8,6 +8,7 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Queueing.Domain;
+    using NSwag.Annotations;
 
     [Route("api/echo/queueing")]
     [ApiController]
@@ -28,6 +29,7 @@
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
+        [SwaggerTag("Naos Echo")]
         public async Task<ActionResult<Dictionary<string, QueueMetrics>>> Get()
         {
             var result = new List<object>();

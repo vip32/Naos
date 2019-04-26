@@ -29,6 +29,7 @@
     using Naos.Core.Messaging.Domain;
     using Newtonsoft.Json;
     using NSwag.AspNetCore;
+    using NSwag.SwaggerGeneration.Processors;
 
     public class Startup
     {
@@ -59,22 +60,36 @@
                     var factory = sp.GetRequiredService<IUrlHelperFactory>();
                     return factory?.GetUrlHelper(actionContext);
                 })
-                .AddSwaggerDocument(s => s.Description = "naos")
+                .AddSwaggerDocument(config =>
+                {
+                    config.OperationProcessors.Add(new GeneratedRepositoryControllerOperationProcessor());
+                    config.OperationProcessors.Add(new ApiVersionProcessor());
+                    config.PostProcess = document =>
+                    {
+                        document.Info.Version = "v1";
+                        document.Info.Title = "naos"; // Product.Capability-Version
+                        document.Info.Description = "naos";
+                        document.Info.TermsOfService = "None";
+                        document.Info.Contact = new NSwag.SwaggerContact
+                        {
+                            Name = "Naos",
+                            Email = string.Empty,
+                            Url = "https://github.com/vip32/Naos.Core"
+                        };
+                    };
+                })
                 .AddMediatR()
                 .AddMvc(o =>
                     {
-                        // https://tahirnaushad.com/2017/08/28/asp-net-core-2-0-mvc-filters/ or use controller attribute (Authorize)
-                        o.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build()));
-                        o.Filters.Add<OperationCancelledExceptionFilter>();
-                        o.Conventions.Add(new GeneratedControllerRouteConvention()); // needed for repository controllers below
+                        o.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build())); // https://tahirnaushad.com/2017/08/28/asp-net-core-2-0-mvc-filters/ or use controller attribute (Authorize)
                     })
+                    // naos mvc configuration
                     .AddNaos(o =>
                     {
+                        // Countries repository is exposed with a dedicated controller, no need to register here
                         o.AddRepositoryController<Customers.Domain.Customer, Customers.Domain.ICustomerRepository>();
-                        o.AddRepositoryController<Countries.Domain.Country>(); // or IRepository<Country>
+                        o.AddRepositoryController<UserAccounts.Domain.UserAccount>(); // `=implicit IRepository<UserAccount>
                     })
-                    .AddJsonOptions(o => o.AddDefaultJsonSerializerSettings())
-                    .AddControllersAsServices() // https://andrewlock.net/controller-activation-and-dependency-injection-in-asp-net-core-mvc/
                     .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // naos application services

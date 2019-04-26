@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.App.Web.Controllers
 {
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Net;
     using System.Threading.Tasks;
     using EnsureThat;
@@ -10,6 +11,7 @@
     using Naos.Core.Common.Web;
     using Naos.Core.Domain;
     using Naos.Core.Domain.Repositories;
+    using NSwag.Annotations;
 
     [Route("api/[controller]")]
     public /*abstract*/ class NaosReadOnlyRepositoryControllerBase<TEntity, TRepo> : NaosControllerBase
@@ -32,6 +34,8 @@
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
+        [SwaggerTag("Naos Entity Repository")]
+        [Description("TODO description")]
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
         public virtual async Task<ActionResult<IEnumerable<TEntity>>> Get()
         {
@@ -48,6 +52,8 @@
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
+        [SwaggerTag("Naos Entity Repository")]
+        [Description("TODO description")]
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
         public virtual async Task<ActionResult<TEntity>> Get(string id)
         {
@@ -68,6 +74,16 @@
             }
 
             return this.Ok(model);
+        }
+
+        [HttpGet]
+        [Route("echo")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [SwaggerTag("Naos Echo")]
+        [Description("TODO description")]
+        public ActionResult<object> Echo()
+        {
+            return this.Ok();
         }
     }
 }

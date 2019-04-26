@@ -6,6 +6,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Naos.Core.JobScheduling.Domain;
+    using NSwag.Annotations;
 
     [Route("api/echo/jobscheduling")]
     [ApiController]
@@ -27,6 +28,7 @@
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
+        [SwaggerTag("Naos Echo")]
         public ActionResult<IEnumerable<JobRegistration>> Get()
         {
             return this.Ok(this.jobScheduler.Options.Registrations.Keys);

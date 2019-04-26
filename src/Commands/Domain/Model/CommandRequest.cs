@@ -7,6 +7,24 @@
     using MediatR;
     using Naos.Core.Domain.Model;
 
+    /// <summary>
+    ///
+    ///                     CommandRequest
+    ///                   .----------------.                                     CommandHandler
+    ///                   | -Id            |                                    .--------------.
+    ///    -------------> .----------------.            Mediator           /--> | Handle()     |
+    ///       (request)   | -CorrelationId |-----\    .------------.      /     .--------------.
+    ///                   .----------------.      \-->| Send()     |-----/             |
+    ///                                               .------------.                   V
+    ///                                                                           CommandResponse
+    ///                                                                          .--------------.
+    ///    <---------------------------------------------------------------------| -Result      |
+    ///                                            (response)                    | -Cancelled   |
+    ///                                                                          .--------------.
+    ///
+    /// </summary>
+    /// <typeparam name="TResponse">The type of the response.</typeparam>
+    /// <seealso cref="MediatR.IRequest{CommandResponse{TResponse}}" />
     public abstract class CommandRequest<TResponse> : IRequest<CommandResponse<TResponse>>
     {
         protected CommandRequest()
@@ -26,7 +44,7 @@
 
         public string Id { get; set; }
 
-        public string Identifier { get; set; }
+        public string Identifier { get; set; } // obsolete? just a short identifier
 
         public string CorrelationId { get; set; }
 
