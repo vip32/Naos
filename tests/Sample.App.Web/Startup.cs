@@ -67,8 +67,8 @@
                     config.PostProcess = document =>
                     {
                         document.Info.Version = "v1";
-                        document.Info.Title = "naos"; // Product.Capability-Version
-                        document.Info.Description = "naos";
+                        document.Info.Title = "Naos"; // Product.Capability-Version
+                        document.Info.Description = "Naos";
                         document.Info.TermsOfService = "None";
                         document.Info.Contact = new NSwag.SwaggerContact
                         {
