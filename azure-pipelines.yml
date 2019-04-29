@@ -10,7 +10,7 @@ resources:
 - repo: self
   fetchDepth: 1
 pool:
-  vmImage: vs2017-win2016 # https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/hosted?view=azure-devops&tabs=yaml#use-a-microsoft-hosted-agent
+  vmImage: windows-2019 # https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/hosted?view=azure-devops&tabs=yaml#use-a-microsoft-hosted-agent
 
 # https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/?view=vsts
 
