@@ -8,11 +8,11 @@
     public static partial class Extensions
     {
         /// <summary>
-        /// Performs an action on each value of the enumerable
+        /// Performs an action on each value of the enumerable.
         /// </summary>
-        /// <typeparam name="T">Element type</typeparam>
+        /// <typeparam name="T">Element type.</typeparam>
         /// <param name="source">The items.</param>
-        /// <param name="action">Action to perform on every item</param>
+        /// <param name="action">Action to perform on every item.</param>
         /// <returns></returns>
         public static IEnumerable<T> ForEach<T>(this IEnumerable<T> source, Action<T> action)
         {

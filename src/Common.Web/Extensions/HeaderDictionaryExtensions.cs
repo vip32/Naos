@@ -4,7 +4,7 @@
     using Microsoft.Extensions.Primitives;
 
     /// <summary>
-    ///     Extends the HeaderDictionary type
+    ///     Extends the HeaderDictionary type.
     /// </summary>
     public static class HeaderDictionaryExtensions
     {

@@ -43,7 +43,7 @@
         /// <returns>An array of <typeparamref name="TDestination"/>.</returns>
         public static IEnumerable<TDestination> Map<TSource, TDestination>(
             this IMapper<TSource, TDestination> mapper,
-             IEnumerable<TSource> sources)
+            IEnumerable<TSource> sources)
             where TDestination : class, new()
         {
             EnsureArg.IsNotNull(mapper, nameof(mapper));

@@ -7,7 +7,7 @@
     public static class AutoMapperExtensions // TODO: split in multiple extension classes
     {
         /// <summary>
-        /// Ignores all properties that are not explicitly mapped
+        /// Ignores all properties that are not explicitly mapped.
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <typeparam name="TDest"></typeparam>
@@ -20,7 +20,7 @@
         }
 
         /// <summary>
-        /// Ignores null values in source
+        /// Ignores null values in source.
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <typeparam name="TDest"></typeparam>

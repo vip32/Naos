@@ -7,12 +7,12 @@
     public static partial class Extensions
     {
         /// <summary>
-        /// Compares strings with usage of pattern *
+        /// Compares strings with usage of pattern *.
         /// </summary>
-        /// <param name="source">the source string</param>
-        /// <param name="value">the value string to compare to</param>
-        /// <param name="ignoreCase">Ignore case</param>
-        /// <returns>true if equal, otherwhise false</returns>
+        /// <param name="source">the source string.</param>
+        /// <param name="value">the value string to compare to.</param>
+        /// <param name="ignoreCase">Ignore case.</param>
+        /// <returns>true if equal, otherwhise false.</returns>
         [DebuggerStepThrough]
         public static bool EqualsPattern(
             this string source,
@@ -35,12 +35,12 @@
         }
 
         /// <summary>
-        /// Compares strings with usage of pattern *
+        /// Compares strings with usage of pattern *.
         /// </summary>
-        /// <param name="source">the source string</param>
-        /// <param name="values">the value strings to compare to</param>
-        /// <param name="ignoreCase">Ignore case</param>
-        /// <returns>true if equal, otherwhise false</returns>
+        /// <param name="source">the source string.</param>
+        /// <param name="values">the value strings to compare to.</param>
+        /// <param name="ignoreCase">Ignore case.</param>
+        /// <returns>true if equal, otherwhise false.</returns>
         [DebuggerStepThrough]
         public static bool EqualsPatternAny(
             this string source,

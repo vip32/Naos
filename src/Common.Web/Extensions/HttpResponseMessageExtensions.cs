@@ -6,20 +6,20 @@
     using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
-    using Common;
+    using Naos.Core.Common;
     using Newtonsoft.Json;
 
     /// <summary>
-    ///     Extends the HttpResponseMessage type
+    ///     Extends the HttpResponseMessage type.
     /// </summary>
     public static class HttpResponseMessageExtensions
     {
         /// <summary>
-        ///     Returns an individual header value
+        ///     Returns an individual header value.
         /// </summary>
-        /// <param name="source">the request to use</param>
-        /// <param name="name">the key of the querystring arg</param>
-        /// <returns>the value</returns>
+        /// <param name="source">the request to use.</param>
+        /// <param name="name">the key of the querystring arg.</param>
+        /// <returns>the value.</returns>
         public static string GetHeader(this HttpResponseMessage source, string name)
         {
             if(source == null)
@@ -62,7 +62,7 @@
         }
 
         /// <summary>
-        ///     Returns all header values as a dictionary
+        ///     Returns all header values as a dictionary.
         /// </summary>
         /// <param name="source">The source.</param>
         /// <param name="prefix">The prefix.</param>
@@ -165,11 +165,11 @@
         }
 
         /// <summary>
-        ///     Returns an individual HTTP Header value
+        ///     Returns an individual HTTP Header value.
         /// </summary>
-        /// <param name="source">the request to use</param>
-        /// <param name="name">the key of the header</param>
-        /// /// <returns>the value</returns>
+        /// <param name="source">the request to use.</param>
+        /// <param name="name">the key of the header.</param>
+        /// /// <returns>the value.</returns>
         private static string GetHeaderInternal(this HttpResponseMessage source, string name)
         {
             if(source == null || source.Headers == null)

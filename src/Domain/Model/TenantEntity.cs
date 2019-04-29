@@ -3,7 +3,7 @@
     using System.Diagnostics;
 
     /// <summary>
-    /// A base entity for all tenant related entities
+    /// A base entity for all tenant related entities.
     /// </summary>
     /// <typeparam name="TId">The type of the identifier.</typeparam>
     /// <seealso cref="Domain.Entity{TId}" />

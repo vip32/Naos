@@ -6,7 +6,7 @@
     public static partial class Extensions
     {
         /// <summary>
-        /// Converts the Get expression to a Set expression
+        /// Converts the Get expression to a Set expression.
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="source">The source expression.</param>
@@ -26,7 +26,7 @@
         }
 
         /// <summary>
-        /// Converts the Get expression to a Set expression
+        /// Converts the Get expression to a Set expression.
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="source">The source expression.</param>
@@ -46,7 +46,7 @@
         }
 
         /// <summary>
-        /// Converts the Get expression to a Set expression
+        /// Converts the Get expression to a Set expression.
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="source">The source expression.</param>

@@ -12,7 +12,7 @@
         /// <summary>
         /// Finds all asynchronous.
         /// </summary>
-        /// <typeparam name="TEntity">Type of the result</typeparam>
+        /// <typeparam name="TEntity">Type of the result.</typeparam>
         /// <param name="source">The source.</param>
         /// <param name="tenantId">The tenant identifier.</param>
         /// <param name="options">The options.</param>
@@ -33,7 +33,7 @@
         /// <summary>
         /// Finds all asynchronous.
         /// </summary>
-        /// <typeparam name="TEntity">Type of the result</typeparam>
+        /// <typeparam name="TEntity">Type of the result.</typeparam>
         /// <param name="source">The source.</param>
         /// <param name="tenantId">The tenant identifier.</param>
         /// <param name="specification">The specification.</param>
@@ -61,7 +61,7 @@
         /// <summary>
         /// Finds all asynchronous.
         /// </summary>
-        /// <typeparam name="TEntity">Type of the result</typeparam>
+        /// <typeparam name="TEntity">Type of the result.</typeparam>
         /// <param name="source">The source.</param>
         /// <param name="tenantId">The tenant identifier.</param>
         /// <param name="specifications">The specifications.</param>

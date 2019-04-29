@@ -16,9 +16,9 @@
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HttpClientLogHandler"/> class.
-        /// Constructs the <see cref="HttpClientLogHandler"/> with a custom <see cref="ILogger"/> and the default <see cref="HttpClientHandler"/>
+        /// Constructs the <see cref="HttpClientLogHandler"/> with a custom <see cref="ILogger"/> and the default <see cref="HttpClientHandler"/>.
         /// </summary>
-        /// <param name="logger">User defined <see cref="ILogger"/></param>
+        /// <param name="logger">User defined <see cref="ILogger"/>.</param>
         public HttpClientLogHandler(ILogger logger)
         {
             this.logger = logger;

@@ -6,7 +6,7 @@
 
 #pragma warning disable S3925 // "ISerializable" should be implemented correctly
     /// <summary>
-    /// Standard service exception
+    /// Standard service exception.
     /// </summary>
     /// <seealso cref="ApplicationException" />
     public class CommandException : ApplicationException

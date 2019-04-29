@@ -18,7 +18,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="FilterContextFactory" /> class.
         /// </summary>
-        /// <param name="logger">The logger</param>
+        /// <param name="logger">The logger.</param>
         public FilterContextFactory(ILogger<FilterContextFactory> logger)
             : this(logger, null)
         {
@@ -27,7 +27,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="FilterContextFactory"/> class.
         /// </summary>
-        /// <param name="logger">The logger</param>
+        /// <param name="logger">The logger.</param>
         /// <param name="accessor">The <see cref="IFilterContextAccessor"/> through which the <see cref="FilterContext"/> will be set.</param>
         public FilterContextFactory(ILogger<FilterContextFactory> logger, IFilterContextAccessor accessor)
         {

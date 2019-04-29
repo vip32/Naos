@@ -4,7 +4,7 @@
     using Newtonsoft.Json;
 
     /// <summary>
-    /// This entity represents a datetime based on the epoch value
+    /// This entity represents a datetime based on the epoch value.
     /// </summary>
     /// <seealso cref="IComparable" />
     public class DateTimeEpoch : IComparable // valueobject

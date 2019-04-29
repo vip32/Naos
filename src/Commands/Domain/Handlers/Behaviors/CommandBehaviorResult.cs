@@ -1,6 +1,6 @@
 ﻿namespace Naos.Core.Commands.Domain
 {
-    using Common;
+    using Naos.Core.Common;
 
     public class CommandBehaviorResult
     {

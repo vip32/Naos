@@ -3,7 +3,7 @@
     using System.ComponentModel;
 
     /// <summary>
-    /// The statuses for an <see cref="Message"/>
+    /// The statuses for an <see cref="Message"/>.
     /// </summary>
     public enum MessageStatus
     {

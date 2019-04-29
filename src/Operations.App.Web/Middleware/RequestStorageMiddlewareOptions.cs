@@ -10,13 +10,13 @@
         public bool Enabled { get; set; } = true;
 
         /// <summary>
-        /// The path patterns to ignore
+        /// The path patterns to ignore.
         /// </summary>
         public string[] PathBlackListPatterns { get; set; } =
             new[] { "/*.js", "/*.css", "/*.html", "/swagger*", "/favicon.ico", "/api/operations/logevents*" };
 
         /// <summary>
-        /// The optional filestorage to store the request/response details
+        /// The optional filestorage to store the request/response details.
         /// </summary>
         public IFileStorage Storage { get; set; }
     }

@@ -5,7 +5,7 @@
     using EnsureThat;
 
     /// <summary>
-    /// Identity structure of the <see cref="Value"/> (row)
+    /// Identity structure of the <see cref="Value"/> (row).
     /// </summary>
     [DebuggerDisplay("PartitionKey={'PartitionKey}, RowKey={RowKey}")]
     public class Key : IEquatable<Key>
@@ -20,8 +20,8 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="Key"/> class.
         /// </summary>
-        /// <param name="partitionKey">Partition key</param>
-        /// <param name="rowKey">Row key</param>
+        /// <param name="partitionKey">Partition key.</param>
+        /// <param name="rowKey">Row key.</param>
         public Key(string partitionKey, string rowKey)
         {
             EnsureArg.IsNotNullOrEmpty(partitionKey, nameof(partitionKey));
@@ -61,7 +61,7 @@
         }
 
         /// <summary>
-        /// Hash code
+        /// Hash code.
         /// </summary>
         /// <returns></returns>
         public override int GetHashCode()

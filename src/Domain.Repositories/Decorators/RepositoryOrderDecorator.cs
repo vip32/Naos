@@ -10,7 +10,7 @@
     using Naos.Core.Domain.Specifications;
 
     /// <summary>
-    /// <para>Decorates an <see cref="Repositories.IRepository{TEntity}"/></para>
+    /// <para>Decorates an <see cref="Repositories.IRepository{TEntity}"/>.</para>
     /// <para>
     ///    .-----------.
     ///    | Decorator |

@@ -124,7 +124,7 @@
         }
 
         /// <summary>
-        /// Checks if all rows have distinct keys
+        /// Checks if all rows have distinct keys.
         /// </summary>
         /// <param name="rows"></param>
         /// <returns></returns>
@@ -141,7 +141,7 @@
         }
 
         /// <summary>
-        /// Merge rows
+        /// Merge rows.
         /// </summary>
         /// <param name="rows"></param>
         /// <returns></returns>
@@ -171,7 +171,7 @@
         }
 
         /// <summary>
-        /// Checks row equality
+        /// Checks row equality.
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
@@ -196,7 +196,7 @@
         }
 
         /// <summary>
-        /// Get enumerator for cells inside the row
+        /// Get enumerator for cells inside the row.
         /// </summary>
         /// <returns></returns>
         public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
@@ -205,7 +205,7 @@
         }
 
         /// <summary>
-        /// Get enumerator for cells inside the row
+        /// Get enumerator for cells inside the row.
         /// </summary>
         /// <returns></returns>
         IEnumerator IEnumerable.GetEnumerator()
@@ -224,7 +224,7 @@
         }
 
         /// <summary>
-        /// IDictionary.Contains
+        /// IDictionary.Contains.
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
@@ -273,7 +273,7 @@
         }
 
         /// <summary>
-        /// Clones the row
+        /// Clones the row.
         /// </summary>
         /// <param name="rowKey"></param>
         /// <param name="partitionKey"></param>

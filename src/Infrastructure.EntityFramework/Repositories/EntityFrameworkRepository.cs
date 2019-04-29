@@ -5,11 +5,11 @@
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using Domain;
     using EnsureThat;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
+    using Naos.Core.Domain;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Domain.Specifications;
 

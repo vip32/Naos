@@ -10,7 +10,7 @@
         /// <summary>
         /// Finds the entity by identifier and tenant.
         /// </summary>
-        /// <typeparam name="TEntity">Type of the result</typeparam>
+        /// <typeparam name="TEntity">Type of the result.</typeparam>
         /// <param name="source">The source.</param>
         /// <param name="id">The identifier.</param>
         /// <param name="tenantId">The tenant identifier.</param>

@@ -4,7 +4,7 @@
     using System.Net;
 
     /// <summary>
-    /// Bad request exception type for exceptions thrown by Naos api controllers
+    /// Bad request exception type for exceptions thrown by Naos api controllers.
     /// </summary>
     [Serializable]
     public class NotFoundException : HttpException

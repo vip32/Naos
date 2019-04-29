@@ -8,7 +8,7 @@
         /// <summary>
         /// Finds the index of the first item matching an expression in an enumerable.
         /// </summary>
-        /// <typeparam name="T">the item type</typeparam>
+        /// <typeparam name="T">the item type.</typeparam>
         /// <param name="items">The enumerable to search.</param>
         /// <param name="predicate">The expression to test the items against.</param>
         /// <returns>
@@ -17,7 +17,7 @@
         /// <exception cref="ArgumentNullException">
         /// items
         /// or
-        /// predicate
+        /// predicate.
         /// </exception>
         public static int IndexOf<T>(this IEnumerable<T> items, Func<T, bool> predicate)
         {
@@ -48,7 +48,7 @@
         /// <summary>
         /// Finds the index of the first occurence of an item in an enumerable.
         /// </summary>
-        /// <typeparam name="T">the item type</typeparam>
+        /// <typeparam name="T">the item type.</typeparam>
         /// <param name="items">The enumerable to search.</param>
         /// <param name="item">The item to find.</param>
         /// <returns>

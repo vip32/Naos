@@ -5,7 +5,7 @@
     using Microsoft.AspNetCore.Mvc.ModelBinding;
 
     /// <summary>
-    /// Bad request exception type for exceptions thrown by Naos api controllers
+    /// Bad request exception type for exceptions thrown by Naos api controllers.
     /// </summary>
     [Serializable]
     public class BadRequestException : HttpException

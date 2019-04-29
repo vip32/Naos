@@ -52,7 +52,7 @@
             return JwtTokenHandler.WriteToken(token);
         }
 
-        internal static(string, string) ParseConnectionString(string connectionString)
+        internal static (string, string) ParseConnectionString(string connectionString)
         {
             var properties = connectionString.Split(PropertySeparator, StringSplitOptions.RemoveEmptyEntries);
             if(properties.Length > 1)

@@ -6,7 +6,7 @@
     public struct AuthenticationKeys
     {
         /// <summary>
-        /// Default value for AuthenticationScheme
+        /// Default value for AuthenticationScheme.
         /// </summary>
         public const string ApiKeyScheme = "ApiKey";
 

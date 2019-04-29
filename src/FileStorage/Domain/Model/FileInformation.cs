@@ -23,7 +23,7 @@
         public DateTime Modified { get; set; }
 
         /// <summary>
-        /// Size in Bytes
+        /// Size in Bytes.
         /// </summary>
         public long Size { get; set; }
 

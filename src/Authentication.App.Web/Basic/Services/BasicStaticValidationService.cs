@@ -21,7 +21,7 @@
             }
         }
 
-        public(bool Authenticated, IEnumerable<Claim> Claims) Validate(string value)
+        public (bool Authenticated, IEnumerable<Claim> Claims) Validate(string value)
         {
             var headerValueBytes = Convert.FromBase64String(value);
             var userAndPassword = Encoding.UTF8.GetString(headerValueBytes);

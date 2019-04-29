@@ -13,9 +13,9 @@
     using Naos.Core.Domain.Specifications;
 
     /// <summary>
-    /// Represents an InMemoryRepository
+    /// Represents an InMemoryRepository.
     /// </summary>
-    /// <typeparam name="TEntity">The type of the domain entity</typeparam>
+    /// <typeparam name="TEntity">The type of the domain entity.</typeparam>
     /// <typeparam name="TDestination">The type of the destination/remote dto.</typeparam>
     /// <seealso cref="Domain.InMemoryRepository{T}" />
     public class InMemoryRepository<TEntity, TDestination> : InMemoryRepository<TEntity>
@@ -68,7 +68,7 @@
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        /// <exception cref="ArgumentOutOfRangeException">id</exception>
+        /// <exception cref="ArgumentOutOfRangeException">id.</exception>
         public override async Task<TEntity> FindOneAsync(object id)
         {
             if(id.IsDefault())

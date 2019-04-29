@@ -82,6 +82,7 @@
                         {
                             context.Response.Headers.Add(this.options.CorrelationHeader, correlationId);
                         }
+
                         if(!context.Response.Headers.ContainsKey(this.options.RequestHeader))
                         {
                             context.Response.Headers.Add(this.options.RequestHeader, requestId);

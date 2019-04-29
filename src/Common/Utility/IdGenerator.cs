@@ -44,7 +44,7 @@
         public static IdGenerator Instance { get; } = new IdGenerator();
 
         /// <summary>
-        /// Returns an Id like: <c>XOGLN100HLHI1F5INOFA</c>
+        /// Returns an Id like: <c>XOGLN100HLHI1F5INOFA</c>.
         /// </summary>
         public string Next => Generate(Interlocked.Increment(ref lastId));
 

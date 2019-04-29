@@ -6,7 +6,7 @@
     public static partial class Extensions
     {
         /// <summary>
-        /// Returns the property or a default value if the source was null
+        /// Returns the property or a default value if the source was null.
         /// </summary>
         /// <typeparam name="T1">The type of the source.</typeparam>
         /// <typeparam name="TValue">The type of the property.</typeparam>
@@ -24,7 +24,7 @@
         }
 
         /// <summary>
-        ///     Returns the property or a default value if the source was null
+        ///     Returns the property or a default value if the source was null.
         /// </summary>
         /// <typeparam name="T1">The type of the source.</typeparam>
         /// <typeparam name="TValue">The type of the property.</typeparam>

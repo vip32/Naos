@@ -10,10 +10,10 @@
         /// Can be used for logging object contents.
         /// </summary>
         /// <typeparam name="T">Type of the object.</typeparam>
-        /// <param name="source">The object to dump. Can be null</param>
-        /// <param name="indent">To indent the result or not</param>
+        /// <param name="source">The object to dump. Can be null.</param>
+        /// <param name="indent">To indent the result or not.</param>
         /// <param name="settings">The settings.</param>
-        /// <returns>the a string representing the object content</returns>
+        /// <returns>the a string representing the object content.</returns>
         public static string Dump<T>(
             this T source,
             bool indent = false,

@@ -3,11 +3,11 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Common;
     using EnsureThat;
     using Humanizer;
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
     using Naos.Core.Infrastructure.Azure.ServiceBus;
     using Naos.Core.Messaging.Domain;
 
@@ -45,7 +45,7 @@
         }
 
         /// <summary>
-        /// Subscribes for the message (TMessage) with a specific message handler (THandler)
+        /// Subscribes for the message (TMessage) with a specific message handler (THandler).
         /// </summary>
         /// <typeparam name="TMessage">The type of the message.</typeparam>
         /// <typeparam name="THandler">The type of the handler.</typeparam>
@@ -140,7 +140,7 @@
         }
 
         /// <summary>
-        /// Unsubscribes message (TMessage) and its message handler (THandler)
+        /// Unsubscribes message (TMessage) and its message handler (THandler).
         /// </summary>
         /// <typeparam name="TMessage">The type of the message.</typeparam>
         /// <typeparam name="THandler">The type of the message handler.</typeparam>

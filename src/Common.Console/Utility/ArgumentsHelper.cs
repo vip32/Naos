@@ -18,7 +18,7 @@
             var currentArgument = new StringBuilder();
             var currentQuote = char.MinValue;
 
-            void reset()
+            void Reset()
             {
                 result.Add(currentArgument.ToString());
                 currentArgument = new StringBuilder();
@@ -31,16 +31,16 @@
                 {
                     if(c == ' ')
                     {
-                        reset();
+                        Reset();
                     }
                     else if(c == '\'')
                     {
-                        reset();
+                        Reset();
                         currentQuote = '\'';
                     }
                     else if(c == '"')
                     {
-                        reset();
+                        Reset();
                         currentQuote = '"';
                     }
                     else
@@ -52,7 +52,7 @@
                 {
                     if(c == currentQuote)
                     {
-                        reset();
+                        Reset();
                     }
                     else
                     {
@@ -61,7 +61,7 @@
                 }
             }
 
-            reset();
+            Reset();
             return result.Where(a => !string.IsNullOrWhiteSpace(a)).ToArray();
         }
     }

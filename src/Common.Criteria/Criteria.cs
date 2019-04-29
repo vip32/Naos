@@ -75,7 +75,7 @@
         }
 
         /// <summary>
-        /// Returns a string representation for this specification
+        /// Returns a string representation for this specification.
         /// </summary>
         /// <returns></returns>
         public override string ToString()

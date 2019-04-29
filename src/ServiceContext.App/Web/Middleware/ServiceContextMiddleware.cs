@@ -37,10 +37,10 @@
         }
 
         /// <summary>
-        /// Processes a request and sets the logging context for the specified <see cref="ServiceDescriptor"/>
+        /// Processes a request and sets the logging context for the specified <see cref="ServiceDescriptor"/>.
         /// </summary>
         /// <param name="context">The <see cref="HttpContext"/> for the current request.</param>
-        /// <param name="serviceDescriptor">The <see cref="serviceDescriptor"/></param>
+        /// <param name="serviceDescriptor">The <see cref="serviceDescriptor"/>.</param>
         /// <param name="features"></param>
         /// <returns></returns>
         public async Task Invoke(HttpContext context, ServiceDescriptor serviceDescriptor, IEnumerable<NaosFeatureInformation> features)

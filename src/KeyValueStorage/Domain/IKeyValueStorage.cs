@@ -8,11 +8,11 @@
     public interface IKeyValueStorage : IDisposable
     {
         /// <summary>
-        /// Gets values by key
+        /// Gets values by key.
         /// </summary>
         /// <param name="tableName">Table name, required.</param>
         /// <param name="key">Row key to look up against. The key must have partition key populated, however row key is optional.
-        /// When row key is not set, this method returns all of the values in a specifi</param>
+        /// When row key is not set, this method returns all of the values in a specifi.</param>
         /// <returns>
         /// List of table values in the table's partition. This method never returns null and if no records
         /// are found an empty collection is returned.
@@ -40,7 +40,7 @@
         /// <param name="tableName">Table name, required.</param>
         /// <param name="values">values to insert, required. The values can belong to different partitions.</param>
         /// <exception cref="StorageException">
-        /// If input values have duplicated keys thvalues this exception with <see cref="ErrorCode.DuplicateKey"/>
+        /// If input values have duplicated keys thvalues this exception with <see cref="ErrorCode.DuplicateKey"/>.
         /// </exception>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task UpsertAsync(string tableName, IEnumerable<Value> values);
@@ -54,7 +54,7 @@
         Task UpdateAsync(string tableName, IEnumerable<Value> values);
 
         /// <summary>
-        /// Merges multiple values. Note that all values must belong to the same partition
+        /// Merges multiple values. Note that all values must belong to the same partition.
         /// </summary>
         /// <param name="tableName"></param>
         /// <param name="values"></param>
@@ -62,7 +62,7 @@
         Task MergeAsync(string tableName, IEnumerable<Value> values);
 
         /// <summary>
-        /// Deletes multiple values
+        /// Deletes multiple values.
         /// </summary>
         /// <param name="tableName"></param>
         /// <param name="keys"></param>
@@ -78,7 +78,7 @@
         /// <summary>
         /// Deletes entire table. If table doesn't exist no errors are raised.
         /// </summary>
-        /// <param name="tableName">Name of the table to delete. Passing null raises <see cref="ArgumentNullException"/></param>
+        /// <param name="tableName">Name of the table to delete. Passing null raises <see cref="ArgumentNullException"/>.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task<bool> DeleteTableAsync(string tableName);
     }

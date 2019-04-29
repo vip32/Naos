@@ -6,7 +6,7 @@
     using Naos.Core.Common;
 
     /// <summary>
-    /// Various options to specify the <see cref="IRepository{T}" /> find operations
+    /// Various options to specify the <see cref="IRepository{T}" /> find operations.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <seealso cref="Domain.IFindOptions{TEntity}" />
@@ -24,9 +24,9 @@
         /// </summary>
         /// <param name="skip">The skip amount.</param>
         /// <param name="take">The take amount.</param>
-        /// <param name="order">The order option</param>
-        /// <param name="orderExpression">the order expresion</param>
-        /// <param name="orders">The order options</param>
+        /// <param name="order">The order option.</param>
+        /// <param name="orderExpression">the order expresion.</param>
+        /// <param name="orders">The order options.</param>
         public FindOptions(int? skip = null, int? take = null, OrderOption<T> order = null, Expression<Func<T, object>> orderExpression = null, IEnumerable<OrderOption<T>> orders = null)
         {
             this.Take = take;

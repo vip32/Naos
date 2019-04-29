@@ -17,7 +17,7 @@
     public static class ApplicationExtensions
     {
         /// <summary>
-        /// Enables the service discovery router
+        /// Enables the service discovery router.
         /// </summary>
         /// <param name="naosOptions"></param>
         /// <returns></returns>
@@ -29,7 +29,7 @@
         }
 
         /// <summary>
-        /// Enables the service discovery router
+        /// Enables the service discovery router.
         /// </summary>
         /// <param name="naosOptions"></param>
         /// <param name="options"></param>

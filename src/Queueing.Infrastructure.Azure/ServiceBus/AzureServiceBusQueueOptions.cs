@@ -93,7 +93,7 @@
         public bool? EnableExpress { get; set; }
 
         /// <summary>
-        /// Returns the retry policy;
+        /// Returns the retry policy;.
         /// </summary>
         public RetryPolicy RetryPolicy { get; set; }
 

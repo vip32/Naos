@@ -26,7 +26,7 @@
         }
 
         /// <summary>
-        /// Enables correlation/request ids for the API request/responses
+        /// Enables correlation/request ids for the API request/responses.
         /// </summary>
         /// <param name="naosOptions"></param>
         /// <param name="options"></param>

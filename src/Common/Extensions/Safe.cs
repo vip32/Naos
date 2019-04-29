@@ -9,11 +9,11 @@
     {
         /// <summary>
         /// Converts a null list to an empty list. Also clears out possible 'null' items
-        /// Avoids null ref exceptions
+        /// Avoids null ref exceptions.
         /// </summary>
-        /// <typeparam name="TSource">the source</typeparam>
-        /// <param name="source">the source collection</param>
-        /// <returns>collection of sources</returns>
+        /// <typeparam name="TSource">the source.</typeparam>
+        /// <param name="source">the source collection.</param>
+        /// <returns>collection of sources.</returns>
         [DebuggerStepThrough]
         public static IEnumerable<TSource> Safe<TSource>(this IEnumerable<TSource> source)
         {
@@ -28,11 +28,11 @@
 
         /// <summary>
         /// Converts an null list to an empty list. Also clears out possible 'null' items
-        /// Avoids null ref exceptions
+        /// Avoids null ref exceptions.
         /// </summary>
-        /// <typeparam name="TSource">the source</typeparam>
-        /// <param name="source">the source collection</param>
-        /// <returns>collection of sources</returns>
+        /// <typeparam name="TSource">the source.</typeparam>
+        /// <param name="source">the source collection.</param>
+        /// <returns>collection of sources.</returns>
         [DebuggerStepThrough]
         public static ICollection<TSource> Safe<TSource>(this ICollection<TSource> source)
         {
@@ -40,12 +40,12 @@
         }
 
         /// <summary>
-        /// Converts an null dictionary to an empty dictionary. avoids null ref exceptions
+        /// Converts an null dictionary to an empty dictionary. avoids null ref exceptions.
         /// </summary>
-        /// <typeparam name="TKey">the source key type</typeparam>
-        /// <typeparam name="TValue">the source value type</typeparam>
-        /// <param name="source">the source collection</param>
-        /// <returns>collection of sources</returns>
+        /// <typeparam name="TKey">the source key type.</typeparam>
+        /// <typeparam name="TValue">the source value type.</typeparam>
+        /// <param name="source">the source collection.</param>
+        /// <returns>collection of sources.</returns>
         [DebuggerStepThrough]
         public static IDictionary<TKey, TValue> Safe<TKey, TValue>(this IDictionary<TKey, TValue> source)
         {

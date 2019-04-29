@@ -6,7 +6,7 @@
     using EnsureThat;
 
     /// <summary>
-    /// A Base36 Encoder and Decoder
+    /// A Base36 Encoder and Decoder.
     /// </summary>
     public static class Base36
     {

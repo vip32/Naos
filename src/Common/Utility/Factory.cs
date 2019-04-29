@@ -15,7 +15,7 @@
     {
         /// <summary>
         /// Create an instance by using compiled lambda expressions
-        /// https://vagifabilov.wordpress.com/2010/04/02/dont-use-activator-createinstance-or-constructorinfo-invoke-use-compiled-lambda-expressions/
+        /// https://vagifabilov.wordpress.com/2010/04/02/dont-use-activator-createinstance-or-constructorinfo-invoke-use-compiled-lambda-expressions/.
         /// </summary>
         private static readonly Func<T> CreateFunc =
             Expression.Lambda<Func<T>>(Expression.New(typeof(T))).Compile();
@@ -51,7 +51,7 @@
 
         /// <summary>
         ///  Creates an instance of the specified type <typeparamref name="T"/> using the serviceprovider to
-        ///  get instances for the constructor
+        ///  get instances for the constructor.
         /// </summary>
         /// <param name="serviceProvider"></param>
         /// <returns></returns>
@@ -88,7 +88,7 @@
 
         /// <summary>
         ///  Creates an instance of the specified type <typeparamref name="type"/> using the serviceprovider to
-        ///  get instances for the constructor
+        ///  get instances for the constructor.
         /// </summary>
         /// <param name="type"></param>
         /// <param name="serviceProvider"></param>

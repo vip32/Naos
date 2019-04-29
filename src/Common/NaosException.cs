@@ -4,7 +4,7 @@
     using System.Runtime.Serialization;
 
     /// <summary>
-    /// Base exception type for exceptions thrown by Naos
+    /// Base exception type for exceptions thrown by Naos.
     /// </summary>
     [Serializable]
     public class NaosException : Exception

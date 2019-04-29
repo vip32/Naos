@@ -7,7 +7,7 @@
     public class PersistCommandBehavior : ICommandBehavior
     {
         /// <summary>
-        /// Executes this behavior for the specified command
+        /// Executes this behavior for the specified command.
         /// </summary>
         /// <typeparam name="TResponse">The type of the response.</typeparam>
         /// <param name="request">The command.</param>

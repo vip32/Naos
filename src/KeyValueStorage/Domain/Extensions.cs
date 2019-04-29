@@ -124,7 +124,7 @@
         }
 
         /// <summary>
-        /// Gets first value by partitionkey and rowkey
+        /// Gets first value by partitionkey and rowkey.
         /// </summary>
         /// <param name="source"></param>
         /// <param name="tableName"></param>
@@ -140,7 +140,7 @@
         }
 
         /// <summary>
-        /// Gets first value by key
+        /// Gets first value by key.
         /// </summary>
         /// <param name="source"></param>
         /// <param name="tableName"></param>
@@ -155,7 +155,7 @@
         }
 
         /// <summary>
-        /// Deletes record by key
+        /// Deletes record by key.
         /// </summary>
         /// <param name="source"></param>
         /// <param name="tableName"></param>

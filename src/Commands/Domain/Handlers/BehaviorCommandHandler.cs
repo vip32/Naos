@@ -3,15 +3,15 @@
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
-    using Common;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Common;
 
     /// <summary>
-    /// A base implementation for handling application commands and ensuring all behaviors are executed with proper responses (not cancelled)
+    /// A base implementation for handling application commands and ensuring all behaviors are executed with proper responses (not cancelled).
     /// </summary>
     /// <typeparam name="TRequest">The type of the request.</typeparam>
-    /// <typeparam name="TResponse">Return value of the wrapped command handler</typeparam>
+    /// <typeparam name="TResponse">Return value of the wrapped command handler.</typeparam>
     /// <seealso cref="App.BaseCommandHandler{TRequest, TResponse}" />
     /// <seealso cref="MediatR.IRequestHandler{CommandRequest{TResponse}, CommandResponse{TResponse}}" />
     public abstract class BehaviorCommandHandler<TRequest, TResponse>

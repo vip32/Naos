@@ -92,12 +92,12 @@
                 //}
 
 #pragma warning disable SA1008 // Opening parenthesis must be spaced correctly
-                var (Authenticated, Claims) = this.service.Validate(value);
+                var (authenticated, claims) = this.service.Validate(value);
 #pragma warning restore SA1008 // Opening parenthesis must be spaced correctly
-                if(Authenticated)
+                if(authenticated)
                 {
                     var identity = new ClaimsIdentity(
-                        this.Options.Claims.Safe().Select(c => new Claim(c.Key, c.Value)).Concat(Claims.Safe())
+                        this.Options.Claims.Safe().Select(c => new Claim(c.Key, c.Value)).Concat(claims.Safe())
                             .Insert(new Claim(ClaimTypes.AuthenticationMethod, AuthenticationKeys.ApiKeyScheme)).DistinctBy(c => c.Type),
                         this.Scheme.Name);
                     var ticket = new AuthenticationTicket(new ClaimsPrincipal(identity), this.Scheme.Name);

@@ -20,7 +20,7 @@
             }
         }
 
-        public(bool Authenticated, IEnumerable<Claim> Claims) Validate(string value)
+        public (bool Authenticated, IEnumerable<Claim> Claims) Validate(string value)
         {
             // check against configured static apikey
             if(value.SafeEquals(this.configuration.ApiKey, System.StringComparison.Ordinal))

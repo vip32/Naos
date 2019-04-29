@@ -1,7 +1,7 @@
 ﻿namespace Naos.Core.Domain.Repositories
 {
     /// <summary>
-    /// Various options for the <see cref="IRepository{TEntity}"/>
+    /// Various options for the <see cref="IRepository{TEntity}"/>.
     /// </summary>
     /// <seealso cref="Domain.IRepositoryOptions" />
     public class RepositoryOptions : IRepositoryOptions

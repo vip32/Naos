@@ -8,7 +8,7 @@
 
         public long Duration { get; set; } // 234.3242
 
-        public long DurationText { get;  } // 234 milliseconds
+        public long DurationText { get; } // 234 milliseconds
 
         public int StatusCode { get; set; } // 200
     }

@@ -1,10 +1,10 @@
 ﻿namespace Naos.Core.Commands.Domain
 {
     using System;
-    using Common;
     using EnsureThat;
     using FluentValidation.Results;
     using MediatR;
+    using Naos.Core.Common;
     using Naos.Core.Domain.Model;
 
     /// <summary>
@@ -68,7 +68,7 @@
         /// <summary>
         /// Validates this instance.
         /// </summary>
-        /// <returns><see cref="ValidationResult"/></returns>
+        /// <returns><see cref="ValidationResult"/>.</returns>
         public virtual ValidationResult Validate() => new ValidationResult();
     }
 }

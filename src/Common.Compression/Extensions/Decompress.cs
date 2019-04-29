@@ -6,7 +6,7 @@
     public static partial class CompressionExtensions
     {
         /// <summary>
-        /// Decompress source stream into the destination stream
+        /// Decompress source stream into the destination stream.
         /// </summary>
         /// <param name="source"></param>
         /// <param name="destination"></param>

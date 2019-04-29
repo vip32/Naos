@@ -60,7 +60,7 @@
         }
 
         /// <summary>
-        /// Gets the value by path. If the path does not exist it will return null;
+        /// Gets the value by path. If the path does not exist it will return null;.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="source">The document.</param>
@@ -90,7 +90,7 @@
         }
 
         /// <summary>
-        /// Gets the values by path. If the path does not exist it will return null;
+        /// Gets the values by path. If the path does not exist it will return null;.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="source">The document.</param>
@@ -121,7 +121,7 @@
         }
 
         /// <summary>
-        /// Sets the value by path. If the path does not exist it will be created recursivly
+        /// Sets the value by path. If the path does not exist it will be created recursivly.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="source">The document.</param>

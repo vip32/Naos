@@ -5,7 +5,7 @@
     using System.Linq.Expressions;
 
     /// <summary>
-    /// Various options to specify the <see cref="IRepository{TEntity}"/> find operations
+    /// Various options to specify the <see cref="IRepository{TEntity}"/> find operations.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public interface IFindOptions<T>

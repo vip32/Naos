@@ -41,7 +41,7 @@
         public string Discriminator => this.GetType().FullName;
 
         /// <summary>
-        /// Gets or sets the short identifier for this message
+        /// Gets or sets the short identifier for this message.
         /// </summary>
         public string Identifier { get; set; }
 

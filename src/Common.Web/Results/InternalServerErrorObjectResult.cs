@@ -4,7 +4,7 @@
     using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
-    /// Custom action result for internal server errors (500)
+    /// Custom action result for internal server errors (500).
     /// </summary>
     /// <seealso cref="ObjectResult" />
     public class InternalServerErrorObjectResult : ObjectResult

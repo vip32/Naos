@@ -6,7 +6,7 @@
     public static partial class Extensions
     {
         /// <summary>
-        /// Ensures the first character is a capital
+        /// Ensures the first character is a capital.
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
@@ -28,7 +28,7 @@
         }
 
         /// <summary>
-        /// Ensures the first character is a not a capital
+        /// Ensures the first character is a not a capital.
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>

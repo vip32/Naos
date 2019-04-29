@@ -12,8 +12,8 @@
         /// <summary>
         /// Encodes the given <see langword="byte"/>[] into a URL and filename-safe Base64 encoded string.
         /// </summary>
-        /// <param name="input">The argument to encode</param>
-        /// <returns>Encoded result as string</returns>
+        /// <param name="input">The argument to encode.</param>
+        /// <returns>Encoded result as string.</returns>
         public static string Encode(byte[] input)
         {
             var s = Convert.ToBase64String(input); // Standard base64 encoder
@@ -29,8 +29,8 @@
         /// Decodes the given URL and filename-safe Base64 string into a
         /// <see langword="byte"/>[].
         /// </summary>
-        /// <param name="input">The argument to decode</param>
-        /// <returns>Decoded result as <see langword="byte"/>[]</returns>
+        /// <param name="input">The argument to decode.</param>
+        /// <returns>Decoded result as <see langword="byte"/>[].</returns>
         /// <exception cref="InvalidDataException">Thrown when the given
         /// <paramref name="input"/> is not a valid Base64 encoded string.
         /// </exception>

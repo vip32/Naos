@@ -5,7 +5,7 @@
     public interface ICommandBehavior
     {
         /// <summary>
-        /// Executes this behavior for the specified command
+        /// Executes this behavior for the specified command.
         /// </summary>
         /// <typeparam name="TResponse"></typeparam>
         /// <param name="request">The command request applied to this behavior.</param>

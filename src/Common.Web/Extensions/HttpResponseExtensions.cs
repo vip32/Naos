@@ -6,7 +6,7 @@
     using Newtonsoft.Json;
 
     /// <summary>
-    ///     Extends the HttpResponse type
+    ///     Extends the HttpResponse type.
     /// </summary>
     public static class HttpResponseExtensions
     {

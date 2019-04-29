@@ -7,7 +7,7 @@
     public static class ExpressionHelper
     {
         /// <summary>
-        /// Cretes expression for specific property
+        /// Cretes expression for specific property.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="propertyName">Name of the property.</param>
@@ -20,7 +20,7 @@
         }
 
         /// <summary>
-        /// Creates delegate for specific property
+        /// Creates delegate for specific property.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="propertyName">Name of the property.</param>

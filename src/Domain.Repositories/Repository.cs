@@ -24,7 +24,7 @@
         }
 
         /// <summary>
-        /// Delete entity by id
+        /// Delete entity by id.
         /// </summary>
         /// <param name="id">The entity identifier.</param>
         /// <returns></returns>
@@ -34,7 +34,7 @@
         }
 
         /// <summary>
-        /// Delete the entity
+        /// Delete the entity.
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <returns></returns>

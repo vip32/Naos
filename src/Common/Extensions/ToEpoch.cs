@@ -13,7 +13,7 @@
         ///  It does not take leap seconds into account.
         ///  </remarks>
         /// <returns>
-        /// The Unix timestamp
+        /// The Unix timestamp.
         /// </returns>
         public static long ToEpoch(this DateTime source)
         {
@@ -37,7 +37,7 @@
         ///  It does not take leap seconds into account.
         ///  </remarks>
         /// <returns>
-        /// The Unix timestamp
+        /// The Unix timestamp.
         /// </returns>
         public static long ToEpoch(this DateTimeOffset source)
         {
@@ -61,7 +61,7 @@
         ///  It does not take leap seconds into account.
         ///  </remarks>
         /// <returns>
-        /// The Unix timestamp
+        /// The Unix timestamp.
         /// </returns>
         public static long? ToEpoch(this DateTime? source)
         {
@@ -82,7 +82,7 @@
         ///  It does not take leap seconds into account.
         ///  </remarks>
         /// <returns>
-        /// The Unix timestamp
+        /// The Unix timestamp.
         /// </returns>
         public static long? ToEpoch(this DateTimeOffset? source)
         {

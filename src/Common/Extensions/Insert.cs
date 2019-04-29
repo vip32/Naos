@@ -7,10 +7,10 @@
         /// <summary>
         /// Adds the item to the result list atr the given index (pos).
         /// </summary>
-        /// <typeparam name="TItem">the source</typeparam>
-        /// <param name="source">the source collection</param>
-        /// <param name="item">The item to add to the result</param>
-        /// <param name="index">the index at which the item should inserted</param>
+        /// <typeparam name="TItem">the source.</typeparam>
+        /// <param name="source">the source collection.</param>
+        /// <param name="item">The item to add to the result.</param>
+        /// <param name="index">the index at which the item should inserted.</param>
         /// <returns></returns>
         public static IEnumerable<TItem> Insert<TItem>(
             this IEnumerable<TItem> source,

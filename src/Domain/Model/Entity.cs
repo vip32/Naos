@@ -5,7 +5,7 @@
     using Newtonsoft.Json;
 
     /// <summary>
-    /// A base class for all domain entities (layer supertype)
+    /// A base class for all domain entities (layer supertype).
     /// </summary>
     /// <typeparam name="TId">The type of the identifier.</typeparam>
     [DebuggerDisplay("Type={GetType().Name}, Id={Id}")]
@@ -62,8 +62,8 @@
         /// <summary>
         /// Implements the operator ==.
         /// </summary>
-        /// <param name="a">The first object instance</param>
-        /// <param name="b">The second object instance</param>
+        /// <param name="a">The first object instance.</param>
+        /// <param name="b">The second object instance.</param>
         /// <returns>
         /// The result of the operator.
         /// </returns>
@@ -86,8 +86,8 @@
         /// <summary>
         /// Implements the operator !=.
         /// </summary>
-        /// <param name="a">The first object instance</param>
-        /// <param name="b">The second object instance</param>
+        /// <param name="a">The first object instance.</param>
+        /// <param name="b">The second object instance.</param>
         /// <returns>
         /// The result of the operator.
         /// </returns>

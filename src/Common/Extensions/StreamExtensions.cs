@@ -29,8 +29,8 @@
         /// <summary>
         /// Detects the text encoding for the given <paramref name="source"/>.
         /// </summary>
-        /// <param name="source">The stream to detect the encoding for</param>
-        /// <param name="default">Default encoding if none found </param>
+        /// <param name="source">The stream to detect the encoding for.</param>
+        /// <param name="default">Default encoding if none found. </param>
         /// <returns></returns>
         [DebuggerStepThrough]
         public static Encoding DetectEncoding(this Stream source, Encoding @default)

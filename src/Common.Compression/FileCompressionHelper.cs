@@ -6,10 +6,10 @@
     public static class FileCompressionHelper
     {
         /// <summary>
-        /// Compress the file (Gzip)
+        /// Compress the file (Gzip).
         /// </summary>
-        /// <param name="sourcePath">Path to the file to compress</param>
-        /// <param name="destinationPath">Path to the compressed file</param>
+        /// <param name="sourcePath">Path to the file to compress.</param>
+        /// <param name="destinationPath">Path to the compressed file.</param>
         public static void Compress(string sourcePath, string destinationPath = null)
         {
             EnsureArg.IsNotNullOrEmpty(sourcePath, nameof(sourcePath));
@@ -27,10 +27,10 @@
         }
 
         /// <summary>
-        /// Decompress the file (Gzip)
+        /// Decompress the file (Gzip).
         /// </summary>
-        /// <param name="sourcePath">Path to the file to decompress</param>
-        /// <param name="destinationPath">Path to the decompressed file</param>
+        /// <param name="sourcePath">Path to the file to decompress.</param>
+        /// <param name="destinationPath">Path to the decompressed file.</param>
         public static void Decompress(string sourcePath, string destinationPath = null)
         {
             EnsureArg.IsNotNullOrEmpty(sourcePath, nameof(sourcePath));

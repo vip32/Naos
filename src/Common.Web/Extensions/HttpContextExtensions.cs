@@ -11,7 +11,7 @@
     using Microsoft.Net.Http.Headers;
 
     /// <summary>
-    ///     Extends the HttpContext type
+    ///     Extends the HttpContext type.
     /// </summary>
     public static class HttpContextExtensions
     {

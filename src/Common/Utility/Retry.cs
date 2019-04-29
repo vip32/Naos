@@ -151,7 +151,7 @@
                 }
                 catch(Exception e) when (i == retryCount)
                 {
-                    throw new RetryException((uint)retryCount, e);
+                    throw new RetryException(retryCount, e);
                 }
                 catch(Exception e) when (exceptionPredicate(e))
                 {
@@ -175,10 +175,10 @@
         public static async Task On(
             Func<Task> func,
             Func<Exception, bool> exceptionPredicate,
-            Func<uint, TimeSpan> delayFactory,
+            Func<int, TimeSpan> delayFactory,
             CancellationToken cToken)
         {
-            uint failureCount = 0;
+            var failureCount = 0;
             while(true)
             {
                 try
@@ -347,7 +347,7 @@
                 }
                 catch(Exception e) when (i == retryCount)
                 {
-                    throw new RetryException((uint)retryCount, e);
+                    throw new RetryException(retryCount, e);
                 }
                 catch(Exception e) when (exceptionPredicate(e))
                 {
@@ -373,10 +373,10 @@
         public static async Task<TResult> On<TResult>(
             Func<Task<TResult>> func,
             Func<Exception, bool> exceptionPredicate,
-            Func<uint, TimeSpan> delayFactory,
+            Func<int, TimeSpan> delayFactory,
             CancellationToken cToken)
         {
-            uint failureCount = 0;
+            var failureCount = 0;
             while(true)
             {
                 try
@@ -403,7 +403,7 @@
     public class RetryException : Exception
 #pragma warning restore SA1402 // File may only contain a single class
     {
-        public RetryException(uint retryCount, Exception innerException)
+        public RetryException(int retryCount, Exception innerException)
             : base($"retry failed after #{retryCount.ToString()} attempts", innerException)
                 => this.RetryCount = retryCount;
 
@@ -425,6 +425,6 @@
         /// <summary>
         /// Gets the number of attempts after which this exception was thrown.
         /// </summary>
-        public uint RetryCount { get; }
+        public int RetryCount { get; }
     }
 }

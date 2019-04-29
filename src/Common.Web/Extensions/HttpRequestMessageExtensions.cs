@@ -6,13 +6,13 @@
     using System.Net.Http;
     using System.Net.Http.Headers;
     using System.Text;
-    using Common;
     using Microsoft.AspNetCore.WebUtilities;
     using Microsoft.Extensions.Primitives;
+    using Naos.Core.Common;
     using Newtonsoft.Json;
 
     /// <summary>
-    ///     Extends the HttpRequestMessage type
+    ///     Extends the HttpRequestMessage type.
     /// </summary>
     public static class HttpRequestMessageExtensions
     {
@@ -21,8 +21,8 @@
         ///     than GetQueryNameValuePairs KevValuePairs collection.
         ///     If you need to pull a few single values use GetQueryString instead.
         /// </summary>
-        /// <param name="source">the request to use</param>
-        /// <returns>the querystring key/values</returns>
+        /// <param name="source">the request to use.</param>
+        /// <returns>the querystring key/values.</returns>
         public static IDictionary<string, StringValues> GetQueryValues(this HttpRequestMessage source)
         {
             if(source == null)
@@ -34,11 +34,11 @@
         }
 
         /// <summary>
-        ///     Returns an individual querystring value
+        ///     Returns an individual querystring value.
         /// </summary>
-        /// <param name="source">the request to use</param>
-        /// <param name="name">the key of the querystring arg</param>
-        /// <returns>the value</returns>
+        /// <param name="source">the request to use.</param>
+        /// <param name="name">the key of the querystring arg.</param>
+        /// <returns>the value.</returns>
         public static string GetQueryValue(this HttpRequestMessage source, string name)
         {
             if(source == null)
@@ -63,11 +63,11 @@
         }
 
         /// <summary>
-        ///     Returns individual querystring values
+        ///     Returns individual querystring values.
         /// </summary>
-        /// <param name="source">the request to use</param>
-        /// <param name="name">the key of the querystring arg</param>
-        /// <returns>the value</returns>
+        /// <param name="source">the request to use.</param>
+        /// <param name="name">the key of the querystring arg.</param>
+        /// <returns>the value.</returns>
         public static StringValues GetQueryValues(this HttpRequestMessage source, string name)
         {
             if(source == null)
@@ -92,11 +92,11 @@
         }
 
         /// <summary>
-        ///     Returns an individual querystring or header value
+        ///     Returns an individual querystring or header value.
         /// </summary>
-        /// <param name="source">the request to use</param>
-        /// <param name="name">the key of the querystring arg</param>
-        /// <returns>the value</returns>
+        /// <param name="source">the request to use.</param>
+        /// <param name="name">the key of the querystring arg.</param>
+        /// <returns>the value.</returns>
         public static string GetQueryOrHeaderValue(this HttpRequestMessage source, string name)
         {
             if(source == null)
@@ -119,11 +119,11 @@
         }
 
         /// <summary>
-        ///     Returns an individual HTTP Header value
+        ///     Returns an individual HTTP Header value.
         /// </summary>
-        /// <param name="source">the request to use</param>
-        /// <param name="name">the key of the header</param>
-        /// /// <returns>the value</returns>
+        /// <param name="source">the request to use.</param>
+        /// <param name="name">the key of the header.</param>
+        /// /// <returns>the value.</returns>
         public static string GetHeaderValue(this HttpRequestMessage source, string name)
         {
             if(source == null || source.Headers == null || string.IsNullOrEmpty(name))
@@ -135,11 +135,11 @@
         }
 
         /// <summary>
-        ///     Returns an individual HTTP Header value
+        ///     Returns an individual HTTP Header value.
         /// </summary>
-        /// <param name="source">the request to use</param>
-        /// <param name="name">the key of the header</param>
-        /// /// <returns>the value</returns>
+        /// <param name="source">the request to use.</param>
+        /// <param name="name">the key of the header.</param>
+        /// /// <returns>the value.</returns>
         public static IEnumerable<string> GetHeaderValues(this HttpRequestMessage source, string name)
         {
             if(source == null || source.Headers == null || string.IsNullOrEmpty(name))

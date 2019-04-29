@@ -6,10 +6,10 @@
     using Naos.Core.Common;
 
     /// <summary>
-    /// A base implementation for handling application commands
+    /// A base implementation for handling application commands.
     /// </summary>
     /// <typeparam name="TRequest">The type of the request.</typeparam>
-    /// <typeparam name="TResponse">Return value of the wrapped command handler</typeparam>
+    /// <typeparam name="TResponse">Return value of the wrapped command handler.</typeparam>
     /// <seealso cref="MediatR.IRequestHandler{CommandRequest{TResponse}, CommandResponse{TResponse}}" />
     public abstract class BaseCommandHandler<TRequest, TResponse>
         : IRequestHandler<TRequest, CommandResponse<TResponse>>

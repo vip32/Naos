@@ -8,8 +8,8 @@
         /// <summary>
         /// Adds or updates the entry in the dictionary.
         /// </summary>
-        /// <typeparam name="TKey">The key type</typeparam>
-        /// <typeparam name="TValue">The value type</typeparam>
+        /// <typeparam name="TKey">The key type.</typeparam>
+        /// <typeparam name="TValue">The value type.</typeparam>
         /// <param name="source">The source.</param>
         /// <param name="key">The key.</param>
         /// <param name="value">The value.</param>
@@ -41,8 +41,8 @@
         /// Adds the given <paramref name="items"/> to the given <paramref name="source"/>.
         /// <remarks>This method is used to duck-type <see cref="IDictionary{TKey, TValue}"/> with multiple pairs.</remarks>
         /// </summary>
-        /// <typeparam name="TKey">The key type</typeparam>
-        /// <typeparam name="TValue">The value type</typeparam>
+        /// <typeparam name="TKey">The key type.</typeparam>
+        /// <typeparam name="TValue">The value type.</typeparam>
         /// <param name="source">The source.</param>
         /// <param name="items">The items to add.</param>
         /// <returns></returns>

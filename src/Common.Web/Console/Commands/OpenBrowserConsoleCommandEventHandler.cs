@@ -31,7 +31,7 @@
                 {
                     url += "/api/operations/logevents/dashboard";
                 }
-                else if (request.Command.Traces)
+                else if(request.Command.Traces)
                 {
                     url += "/api/operations/logevents/dashboard?q=TrackType=trace";
                 }

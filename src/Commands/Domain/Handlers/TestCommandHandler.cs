@@ -8,7 +8,7 @@
     using Naos.Core.Common;
 
     /// <summary>
-    /// Test handler for the <see cref="TRequest" /> command request, response result is always true
+    /// Test handler for the <see cref="TRequest" /> command request, response result is always true.
     /// </summary>
     /// <typeparam name="TRequest">The type of the request.</typeparam>
     /// <seealso cref="App.BehaviorCommandHandler{TRequest, bool}" />
@@ -23,7 +23,7 @@
         }
 
         /// <summary>
-        /// Handles the command. Response will always have a true result
+        /// Handles the command. Response will always have a true result.
         /// </summary>
         /// <param name="request">The command.</param>
         /// <param name="cancellationToken">The cancellation token.</param>

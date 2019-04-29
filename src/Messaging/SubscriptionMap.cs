@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Common;
+    using Naos.Core.Common;
     using Naos.Core.Messaging.Domain;
 
     public class SubscriptionMap : ISubscriptionMap
