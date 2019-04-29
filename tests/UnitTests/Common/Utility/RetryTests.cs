@@ -9,7 +9,7 @@
 
     public class RetryTests
     {
-        private static Func<int, TimeSpan> progressive = x => TimeSpan.FromMilliseconds(
+        private static readonly Func<int, TimeSpan> Progressive = x => TimeSpan.FromMilliseconds(
             Convert.ToInt32(Math.Round((1 / (1 + Math.Exp(-x + 5))) * 100)) * 100);
 
         [Fact]
@@ -382,7 +382,7 @@
                     return 0.Seconds();
                 }
 
-                return progressive(failureCount);
+                return Progressive(failureCount);
             };
 
             var executionCounter = 0;
@@ -781,7 +781,7 @@
                     return 0.Seconds();
                 }
 
-                return progressive(failureCount);
+                return Progressive(failureCount);
             };
 
             var executionCounter = 0;

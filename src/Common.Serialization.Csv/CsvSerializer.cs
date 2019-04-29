@@ -17,7 +17,7 @@
             string dateTimeFormat = null)
         {
             this.itemSeperator = itemSeperator;
-            this.cultureInfo = cultureInfo;
+            this.cultureInfo = cultureInfo ?? new CultureInfo("en-US");
             this.dateTimeFormat = dateTimeFormat;
         }
 
@@ -29,11 +29,23 @@
             if(this.cultureInfo != null)
             {
                 ServiceStack.Text.CsvConfig.RealNumberCultureInfo = this.cultureInfo;
+                //ServiceStack.Text.CsvConfig<DateTime>
                 ServiceStack.Text.JsConfig<decimal>.SerializeFn = d => d.ToString(this.cultureInfo);
                 ServiceStack.Text.JsConfig<short>.SerializeFn = d => d.ToString(this.cultureInfo);
                 ServiceStack.Text.JsConfig<int>.SerializeFn = d => d.ToString(this.cultureInfo);
                 ServiceStack.Text.JsConfig<long>.SerializeFn = d => d.ToString(this.cultureInfo);
                 ServiceStack.Text.JsConfig<DateTime>.SerializeFn = dt => new DateTime(dt.Ticks, DateTimeKind.Utc).ToString($"{this.cultureInfo.DateTimeFormat.ShortDatePattern} {this.cultureInfo.DateTimeFormat.LongTimePattern}");
+                ServiceStack.Text.JsConfig<DateTime>.DeSerializeFn = time =>
+                {
+                    if(DateTime.TryParse(time, this.cultureInfo, DateTimeStyles.None, out var result))
+                    {
+                        return result;
+                    }
+                    else
+                    {
+                        throw new System.Runtime.Serialization.SerializationException("cannot deserialize datetime for the specific culture");
+                    }
+                };
             }
 
             if(!this.dateTimeFormat.IsNullOrEmpty())
