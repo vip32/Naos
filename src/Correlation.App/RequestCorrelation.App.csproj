@@ -10,7 +10,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="2.2.0" />
-    <PackageReference Include="NSwag.Annotations" Version="12.2.3" />
+    <PackageReference Include="NSwag.Annotations" Version="12.2.4" />
   </ItemGroup>
 
   <ItemGroup>

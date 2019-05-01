@@ -30,13 +30,13 @@
                 {
                     try
                     {
-                        source.Log(LogLevel.Information, $"{{LogKey}} {message:l}", args.Insert(logKey).ToArray());
+                        source.Log(LogLevel.Information, $"{{LogKey:l}} {message:l}", args.Insert(logKey).ToArray());
                     }
                     catch(AggregateException ex) // IndexOutOfRangeException
                     {
                         if(ex.InnerException is IndexOutOfRangeException)
                         {
-                            source.Log(LogLevel.Warning, $"{{LogKey}} {message:l}");
+                            source.Log(LogLevel.Warning, $"{{LogKey:l}} {message:l}");
                         }
                         else
                         {
@@ -73,13 +73,13 @@
                 {
                     try
                     {
-                        source.Log(LogLevel.Information, $"{{LogKey}} {message:l}", args.Insert(logKey).ToArray());
+                        source.Log(LogLevel.Information, $"{{LogKey:l}} {message:l}", args.Insert(logKey).ToArray());
                     }
                     catch(AggregateException ex) // IndexOutOfRangeException
                     {
                         if(ex.InnerException is IndexOutOfRangeException)
                         {
-                            source.Log(LogLevel.Warning, $"{{LogKey}} {message:l}");
+                            source.Log(LogLevel.Warning, $"{{LogKey:l}} {message:l}");
                         }
                         else
                         {
