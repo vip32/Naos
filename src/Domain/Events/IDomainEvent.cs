@@ -4,6 +4,6 @@
 
     public interface IDomainEvent : INotification
     {
-        string Identifier { get; }
+        string Identifier { get; } // needed?
     }
 }

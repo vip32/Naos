@@ -41,7 +41,7 @@
             sut.ShouldNotBeNull();
         }
 
-        public class StubEntity : Entity<string>, IAggregateRoot
+        public class StubEntity : TenantAggregateRoot<string>
         {
             public string FirstName { get; set; }
 

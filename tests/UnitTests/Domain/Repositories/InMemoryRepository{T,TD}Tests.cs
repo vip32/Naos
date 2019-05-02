@@ -275,7 +275,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             Assert.True(result.Id == "Id99" && result.FirstName == "John" && result.LastName == "Doe");
         }
 
-        public class StubEntity : TenantEntity<string>, IAggregateRoot
+        public class StubEntity : TenantAggregateRoot<string>
         {
             public string Country { get; set; }
 

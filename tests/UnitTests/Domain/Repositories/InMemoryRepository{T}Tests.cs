@@ -353,7 +353,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             await mediator.Received().Publish(Arg.Any<IDomainEvent>());
         }
 
-        public class StubEntityString : TenantEntity<string>, IAggregateRoot
+        public class StubEntityString : TenantAggregateRoot<string>
         {
             public string Country { get; set; }
 
@@ -364,7 +364,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             public int Age { get; set; }
         }
 
-        public class StubEntityGuid : TenantEntity<Guid>, IAggregateRoot
+        public class StubEntityGuid : TenantAggregateRoot<Guid>
         {
             public string Country { get; set; }
 

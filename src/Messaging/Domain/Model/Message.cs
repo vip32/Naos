@@ -1,5 +1,6 @@
 ﻿namespace Naos.Core.Messaging.Domain
 {
+    using System.Collections.Generic;
     using Naos.Core.Common;
     using Naos.Core.Domain;
     using Newtonsoft.Json;
@@ -68,6 +69,18 @@
         /// The status.
         /// </value>
         public MessageStatus Status { get; set; }
+
+        public IEnumerable<IDomainEvent> GetDomainEvents() => throw new System.NotImplementedException();
+
+        public void RegisterDomainEvent(IDomainEvent @event)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void ClearDomainEvents()
+        {
+            throw new System.NotImplementedException();
+        }
 
         /// <summary>
         /// Determines whether this instance is transient (not persisted).

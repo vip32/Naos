@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.Domain
 {
     using System.Collections.Generic;
+    using EnsureThat;
 
     /// <summary>
     /// <para>
@@ -27,27 +28,34 @@
     ///
     /// </para>
     /// </summary>
-    public interface IAggregateRoot
+    public class AggregateRoot<TId> : Entity<TId>, IAggregateRoot
     {
         /// <summary>
-        /// Gets the domain events.
-        /// </summary>
-        /// <value>
         /// The domain events.
-        /// </value>
-        IEnumerable<IDomainEvent> GetDomainEvents();
+        /// </summary>
+        private readonly ICollection<IDomainEvent> domainEvents = new List<IDomainEvent>();
+
+        public IEnumerable<IDomainEvent> GetDomainEvents() => this.domainEvents;
 
         /// <summary>
         /// Registers the domain event.
         /// Domain Events are only registered on the aggregate root because it is ensuring the integrity of the aggregate as a whole.
         /// </summary>
         /// <param name="event">The event.</param>
-        void RegisterDomainEvent(IDomainEvent @event);
+        public void RegisterDomainEvent(IDomainEvent @event)
+        {
+            EnsureArg.IsNotNull(@event, nameof(@event));
+
+            this.domainEvents.Add(@event);
+        }
 
         /// <summary>
         /// Clears the domain events.
         /// </summary>
         /// <param name="event">The event.</param>
-        void ClearDomainEvents();
+        public void ClearDomainEvents()
+        {
+            this.domainEvents.Clear();
+        }
     }
 }

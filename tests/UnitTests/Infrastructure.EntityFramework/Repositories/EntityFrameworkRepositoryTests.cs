@@ -235,7 +235,7 @@
     }
 
 #pragma warning disable SA1402 // File may only contain a single class
-    public class StubEntity : TenantEntity<Guid>, IAggregateRoot
+    public class StubEntity : TenantAggregateRoot<Guid>
     {
         public string FirstName { get; set; }
 

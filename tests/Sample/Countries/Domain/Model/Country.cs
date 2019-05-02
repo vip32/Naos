@@ -4,7 +4,7 @@
     using System.ComponentModel.DataAnnotations;
     using Naos.Core.Domain;
 
-    public class Country : Entity<string>, IAggregateRoot, ITenantEntity
+    public class Country : AggregateRoot<string>, ITenantEntity
     {
         [Required]
         public string Name { get; set; }
