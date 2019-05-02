@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.Domain
 {
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     /// <summary>
     /// <para>
@@ -27,7 +28,8 @@
     ///
     /// </para>
     /// </summary>
-    public class TenantAggregateRoot<TId> : TenantEntity<TId>, IAggregateRoot
+    [DebuggerDisplay("Type={GetType().Name}, Id={Id}, Tenant={TenantId}")]
+    public abstract class TenantAggregateRoot<TId> : TenantEntity<TId>, IAggregateRoot
     {
         private readonly ICollection<IDomainEvent> domainEvents = new List<IDomainEvent>();
 

@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.Domain
 {
     using System.Collections.Generic;
+    using System.Diagnostics;
     using EnsureThat;
 
     /// <summary>
@@ -28,7 +29,8 @@
     ///
     /// </para>
     /// </summary>
-    public class AggregateRoot<TId> : Entity<TId>, IAggregateRoot
+    [DebuggerDisplay("Type={GetType().Name}, Id={Id}")]
+    public abstract class AggregateRoot<TId> : Entity<TId>, IAggregateRoot
     {
         /// <summary>
         /// The domain events.
