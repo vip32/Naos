@@ -11,9 +11,16 @@
     /// </summary>
     public abstract class ValueObject
     {
-        // Source: https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/implement-value-objects
+        /// <summary>
+        /// Determines whether the specified <see cref="object" />, is equal to this instance.
+        /// </summary>
+        /// <param name="obj">The <see cref="object" /> to compare with this instance.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified <see cref="object" /> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
         public override bool Equals(object obj)
         {
+            // Source: https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/implement-value-objects
             if(obj == null || obj.GetType() != this.GetType())
             {
                 return false;
@@ -39,6 +46,12 @@
             return !thisValues.MoveNext() && !otherValues.MoveNext();
         }
 
+        /// <summary>
+        /// Returns a hash code for this instance.
+        /// </summary>
+        /// <returns>
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
+        /// </returns>
         public override int GetHashCode()
         {
             return this.GetAtomicValues()
@@ -61,6 +74,10 @@
             return !EqualOperator(left, right);
         }
 
+        /// <summary>
+        /// Gets the atomic values of the properties important for the equality.
+        /// </summary>
+        /// <returns></returns>
         protected abstract IEnumerable<object> GetAtomicValues();
     }
 }
