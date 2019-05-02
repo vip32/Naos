@@ -10,6 +10,13 @@
         [Fact]
         public void EqualityTests()
         {
+            var instance0 = new StubValueObject
+            {
+                StreetName = "One Microsoft Way",
+                HouseNumber = 1,
+                City = "Seattle"
+            };
+
             var instance1 = new StubValueObject
             {
                 StreetName = "One Microsoft Way",
@@ -24,6 +31,7 @@
                 City = "New York"
             };
 
+            instance0.ShouldBe(instance1);
             instance1.ShouldBe(instance1);
             instance1.ShouldNotBe(instance2);
         }
