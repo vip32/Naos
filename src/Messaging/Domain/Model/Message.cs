@@ -70,24 +70,6 @@
         /// </value>
         public MessageStatus Status { get; set; }
 
-        public IEnumerable<IDomainEvent> GetDomainEvents() => throw new System.NotImplementedException();
-
-        public void RegisterDomainEvent(IDomainEvent @event)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void ClearDomainEvents()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        /// <summary>
-        /// Determines whether this instance is transient (not persisted).
-        /// </summary>
-        /// <returns>
-        /// <c>true</c> if this instance is transient; otherwise, <c>false</c>.
-        /// </returns>
-        // public bool IsTransient() => this.Id.IsDefault();
+        public DomainEvents DomainEvents => new DomainEvents();
     }
 }

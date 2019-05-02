@@ -30,16 +30,6 @@
 
         public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.UtcNow;
 
-        public IEnumerable<IDomainEvent> GetDomainEvents() => throw new NotImplementedException();
-
-        public void RegisterDomainEvent(IDomainEvent @event)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ClearDomainEvents()
-        {
-            throw new NotImplementedException();
-        }
+        public DomainEvents DomainEvents => new DomainEvents();
     }
 }

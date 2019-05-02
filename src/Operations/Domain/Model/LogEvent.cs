@@ -57,7 +57,7 @@
 
         public Dictionary<string, object> Properties { get; set; } = new Dictionary<string, object>();
 
-        public IEnumerable<IDomainEvent> GetDomainEvents() => throw new NotImplementedException();
+        public DomainEvents DomainEvents => new DomainEvents();
 
         public string GetAge()
         {
@@ -68,16 +68,6 @@
             }
 
             return (DateTime.UtcNow - this.Timestamp).Humanize();
-        }
-
-        public void RegisterDomainEvent(IDomainEvent @event)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ClearDomainEvents()
-        {
-            throw new NotImplementedException();
         }
     }
 }

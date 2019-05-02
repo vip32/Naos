@@ -46,13 +46,13 @@
 
         public async Task<ActionResult> DeleteAsync(TEntity entity)
         {
-            foreach(var @event in entity?.GetDomainEvents())
+            foreach(var @event in entity?.DomainEvents.GetAll())
             {
                 this.logger.LogInformation($"{{LogKey:l}} publish (type={@event.GetType().Name.Replace("DomainEvent", string.Empty)})", LogKeys.DomainEvent);
                 await this.mediator.Publish(@event).AnyContext();
             }
 
-            entity?.ClearDomainEvents();
+            entity?.DomainEvents.Clear();
 
             return await this.decoratee.DeleteAsync(entity).AnyContext();
         }
@@ -84,37 +84,37 @@
 
         public async Task<TEntity> InsertAsync(TEntity entity)
         {
-            foreach(var @event in entity?.GetDomainEvents())
+            foreach(var @event in entity?.DomainEvents.GetAll())
             {
                 this.logger.LogInformation($"{{LogKey:l}} publish (type={@event.GetType().Name.Replace("DomainEvent", string.Empty)})", LogKeys.DomainEvent);
                 await this.mediator.Publish(@event).AnyContext();
             }
 
-            entity?.ClearDomainEvents();
+            entity?.DomainEvents.Clear();
             return await this.decoratee.InsertAsync(entity).AnyContext();
         }
 
         public async Task<TEntity> UpdateAsync(TEntity entity)
         {
-            foreach(var @event in entity?.GetDomainEvents())
+            foreach(var @event in entity?.DomainEvents.GetAll())
             {
                 this.logger.LogInformation($"{{LogKey:l}} publish (type={@event.GetType().Name.Replace("DomainEvent", string.Empty)})", LogKeys.DomainEvent);
                 await this.mediator.Publish(@event).AnyContext();
             }
 
-            entity?.ClearDomainEvents();
+            entity?.DomainEvents.Clear();
             return await this.decoratee.UpdateAsync(entity).AnyContext();
         }
 
         public async Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
         {
-            foreach(var @event in entity?.GetDomainEvents())
+            foreach(var @event in entity?.DomainEvents.GetAll())
             {
                 this.logger.LogInformation($"{{LogKey:l}} publish (type={@event.GetType().Name.Replace("DomainEvent", string.Empty)})", LogKeys.DomainEvent);
                 await this.mediator.Publish(@event).AnyContext();
             }
 
-            entity?.ClearDomainEvents();
+            entity?.DomainEvents.Clear();
             return await this.decoratee.UpsertAsync(entity).AnyContext();
         }
     }

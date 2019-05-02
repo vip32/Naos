@@ -4,7 +4,7 @@
     using System.Diagnostics;
     using Humanizer;
     using Naos.Core.Common;
-    using Naos.Core.Domain.Model;
+    using Naos.Core.Domain;
 
     [DebuggerDisplay("Path = {Path}, Created = {Created}, Modified = {Modified}, Size = {Size} bytes")]
     public class FileInformation

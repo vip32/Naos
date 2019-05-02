@@ -5,7 +5,7 @@
     using FluentValidation.Results;
     using MediatR;
     using Naos.Core.Common;
-    using Naos.Core.Domain.Model;
+    using Naos.Core.Domain;
 
     /// <summary>
     ///

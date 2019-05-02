@@ -15,8 +15,8 @@
     ///    Entity{TId}
     ///   .--------------.           IAggregateRoot
     ///   | - Id         |          .------------------------.
-    ///   |              |          | -DomainEvents()        |
-    ///   .--------------.          | -RegisterDomainEvent() |
+    ///   |              |          | -DomainEvents          |
+    ///   .--------------.          |                        |
     ///              /`\            .------------------------.
     ///               | inherits          /`\
     ///               |                    | implements
@@ -32,32 +32,6 @@
     [DebuggerDisplay("Type={GetType().Name}, Id={Id}")]
     public abstract class AggregateRoot<TId> : Entity<TId>, IAggregateRoot
     {
-        /// <summary>
-        /// The domain events.
-        /// </summary>
-        private readonly ICollection<IDomainEvent> domainEvents = new List<IDomainEvent>();
-
-        public IEnumerable<IDomainEvent> GetDomainEvents() => this.domainEvents;
-
-        /// <summary>
-        /// Registers the domain event.
-        /// Domain Events are only registered on the aggregate root because it is ensuring the integrity of the aggregate as a whole.
-        /// </summary>
-        /// <param name="event">The event.</param>
-        public void RegisterDomainEvent(IDomainEvent @event)
-        {
-            EnsureArg.IsNotNull(@event, nameof(@event));
-
-            this.domainEvents.Add(@event);
-        }
-
-        /// <summary>
-        /// Clears the domain events.
-        /// </summary>
-        /// <param name="event">The event.</param>
-        public void ClearDomainEvents()
-        {
-            this.domainEvents.Clear();
-        }
+        public DomainEvents DomainEvents => new DomainEvents();
     }
 }

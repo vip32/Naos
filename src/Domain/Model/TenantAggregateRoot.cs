@@ -11,11 +11,11 @@
     /// </para>
     /// <para>
     ///
-    ///    TenantEntity{TId}
-    ///   .-----------------.        IAggregateRoot
-    ///   | - Id            |       .------------------------.
-    ///   | - TenantId      |       | -DomainEvents()        |
-    ///   .-----------------.       | -RegisterDomainEvent() |
+    ///    Entity{TId}
+    ///   .--------------.           IAggregateRoot
+    ///   | - Id         |          .------------------------.
+    ///   |              |          | -DomainEvents          |
+    ///   .--------------.          |                        |
     ///              /`\            .------------------------.
     ///               | inherits          /`\
     ///               |                    | implements
@@ -31,18 +31,6 @@
     [DebuggerDisplay("Type={GetType().Name}, Id={Id}, Tenant={TenantId}")]
     public abstract class TenantAggregateRoot<TId> : TenantEntity<TId>, IAggregateRoot
     {
-        private readonly ICollection<IDomainEvent> domainEvents = new List<IDomainEvent>();
-
-        public IEnumerable<IDomainEvent> GetDomainEvents() => this.domainEvents;
-
-        public void RegisterDomainEvent(IDomainEvent @event)
-        {
-            this.domainEvents.Add(@event);
-        }
-
-        public void ClearDomainEvents()
-        {
-            this.domainEvents.Clear();
-        }
+        public DomainEvents DomainEvents => new DomainEvents();
     }
 }
