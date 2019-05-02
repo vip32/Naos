@@ -9,19 +9,37 @@
     using Naos.Core.Common;
     using Naos.Core.Domain.Specifications;
 
+#pragma warning disable SA1629 // Documentation text should end with a period
     /// <summary>
     /// <para>Decorates an <see cref="Repositories.IRepository{TEntity}"/>.</para>
     /// <para>
-    ///    .-----------.
-    ///    | Decorator |
-    ///    .-----------.        .------------.
-    ///          `------------> | decoratee  |
-    ///            (forward)    .------------.
+    ///
+    ///                          |Aggregate |
+    ///                          `----------`              RepositoryDomain
+    ///      | Client |               |                  | EventsDecorator |      | Decoratee|
+    ///      `--------`               |                  `-----------------`      `----------`
+    ///          |------------------->|                        |                      |
+    ///          |   Register(event)  |                        |                      |
+    ///          |                    |                        |                      |
+    ///          |                    |                        |                      |
+    ///          |--------------------|----------------------->|                      |
+    ///          |                    |   Insert(aggregate)    |--------------------->|
+    ///          |                    |                        |        Insert()      |
+    ///          |                    |                        |                      |
+    ///          |                    |                        |<---------------------|
+    ///          |                    |                        |                      |
+    ///          |                    |                        |--.                   |
+    ///          |                    |<-----------------------|  |Publish            |
+    ///          |                    |      GetAll()::events  |  |Registered         |
+    ///          |                    |<-----------------------|  |DomainEvents       |
+    ///          |                    |      Clear()           |<-`                   |
+    ///
     /// </para>
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
     /// <seealso cref="Repositories.IRepository{TEntity}" />
     public class RepositoryDomainEventsDecorator<TEntity> : IRepository<TEntity>
+#pragma warning restore SA1629 // Documentation text should end with a period
         where TEntity : class, IEntity, IAggregateRoot
     {
         private readonly ILogger<IRepository<TEntity>> logger;

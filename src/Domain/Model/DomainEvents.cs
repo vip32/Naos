@@ -13,7 +13,6 @@
         /// <summary>
         /// Gets all registered domain events.
         /// </summary>
-        /// <returns></returns>
         public IEnumerable<IDomainEvent> GetAll() => this.registrations;
 
         /// <summary>
@@ -31,7 +30,6 @@
         /// <summary>
         /// Clears the registered domain events.
         /// </summary>
-        /// <param name="event">The event.</param>
         public void Clear()
         {
             this.registrations.Clear();
