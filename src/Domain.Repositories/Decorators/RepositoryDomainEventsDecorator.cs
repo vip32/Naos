@@ -16,7 +16,7 @@
     ///
     ///                          |Aggregate |
     ///                          `----------`              RepositoryDomain
-    ///      | Client |               |                  | EventsDecorator |      | Decoratee|
+    ///      | Client |               | +DomainEvents    | EventsDecorator |      | Decoratee|
     ///      `--------`               |                  `-----------------`      `----------`
     ///          x------------------->|                        |                      |
     ///          |   Register(event)  |                        |                      |
