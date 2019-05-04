@@ -42,7 +42,7 @@
                 .Where(x => x.Entity.GetType() is IAggregateRoot
                     && !typeof(TEntity).IsAssignableFrom(x.Entity.GetType())))
             {
-                // WARN: this is not 100% fool proof: as other modified aggregate child entities are not marked to unchanged
+                // WARN: this is not 100% fool proof: as other modified aggregate child entities are not marked as unchanged
                 entry.State = EntityState.Unchanged;
             }
 
