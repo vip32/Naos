@@ -66,7 +66,7 @@
             return entities.ToList();
         }
 
-        public async Task<TEntity> FindOneAsync(object id)
+        public async Task<TEntity> FindOneAsync(object id) // partitionkey
         {
             if(id.IsDefault())
             {

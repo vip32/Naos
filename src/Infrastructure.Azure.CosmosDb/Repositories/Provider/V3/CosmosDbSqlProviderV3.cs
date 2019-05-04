@@ -49,23 +49,25 @@
         {
         }
 
-        public async Task<T> GetByIdAsync(string id)
+        public async Task<T> GetByIdAsync(string id, string partitionKey = null) // partitionkey
         {
             var response = await this.container.Items.ReadItemAsync<T>(
-                this.partitionKeyValue,
+                partitionKey ?? this.partitionKeyValue,
                 id).AnyContext();
             return response.Resource;
         }
 
-        public async Task<T> UpsertAsync(T entity)
+        public async Task<T> UpsertAsync(T entity, string partitionKey = null)
         {
             var response = await this.container.Items.UpsertItemAsync(
-                this.partitionKeyValue,
+                partitionKey ?? this.partitionKeyValue,
                 entity).AnyContext();
             return response.Resource;
         }
 
-        public /*async*/ Task<IEnumerable<T>> WhereAsync(Expression<Func<T, bool>> expression)
+        public /*async*/ Task<IEnumerable<T>> WhereAsync(
+            Expression<Func<T, bool>> expression,
+            string partitionKey = null)
         {
             // linq not supported yet https://github.com/Azure/azure-cosmos-dotnet-v3/issues/4
             //var response = await this.container.Items.CreateItemQuery()
@@ -73,21 +75,33 @@
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<T>> WhereAsync(Expression<Func<T, bool>> expression = null, IEnumerable<Expression<Func<T, bool>>> expressions = null, int count = 100, Expression<Func<T, object>> orderExpression = null, bool orderDescending = false)
+        public Task<IEnumerable<T>> WhereAsync(
+            Expression<Func<T, bool>> expression = null,
+            IEnumerable<Expression<Func<T, bool>>> expressions = null,
+            string partitionKey = null,
+            int count = 100,
+            Expression<Func<T, object>> orderExpression = null,
+            bool orderDescending = false)
         {
             // linq not supported yet https://github.com/Azure/azure-cosmos-dotnet-v3/issues/4
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<T>> WhereAsync(Expression<Func<T, bool>> expression, Expression<Func<T, T>> selector, int count = 100, Expression<Func<T, object>> orderExpression = null, bool orderDescending = false)
+        public Task<IEnumerable<T>> WhereAsync(
+            Expression<Func<T, bool>> expression,
+            Expression<Func<T, T>> selector,
+            string partitionKey = null,
+            int count = 100,
+            Expression<Func<T, object>> orderExpression = null,
+            bool orderDescending = false)
         {
             // linq not supported yet https://github.com/Azure/azure-cosmos-dotnet-v3/issues/4
             throw new NotImplementedException();
         }
 
-        public async Task<bool> DeleteByIdAsync(string id)
+        public async Task<bool> DeleteByIdAsync(string id, string partitionKey = null)
         {
-            var response = await this.container.Items.DeleteItemAsync<T>(this.partitionKeyValue, id);
+            var response = await this.container.Items.DeleteItemAsync<T>(partitionKey ?? this.partitionKeyValue, id);
             return true; // TODO
         }
 

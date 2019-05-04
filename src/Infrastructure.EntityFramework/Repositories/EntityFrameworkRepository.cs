@@ -104,14 +104,14 @@
             }
         }
 
-        public async Task<TEntity> FindOneAsync(object id)
+        public async Task<TEntity> FindOneAsync(object id) // partitionkey
         {
             if(id.IsDefault())
             {
                 return null;
             }
 
-            return await this.options.DbContext.Set<TEntity>().FindAsync(this.ConvertEntityId(id)).AnyContext();
+            return await this.options.DbContext.Set<TEntity>().FindAsync(this.TryParseGuid(id)).AnyContext();
         }
 
         public async Task<bool> ExistsAsync(object id)
@@ -235,7 +235,7 @@
             return await this.DeleteAsync(entity.Id).AnyContext();
         }
 
-        private object ConvertEntityId(object value)
+        private object TryParseGuid(object value)
         {
             try
             {
