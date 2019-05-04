@@ -8,7 +8,7 @@
     {
         public IMediator Mediator { get; set; }
 
-        public bool PublishEvents { get; set; } = true;
+        public bool PublishEvents { get; set; } = true; // Obsolete > optional decorator
 
         public DbContext DbContext { get; set; }
     }
