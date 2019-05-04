@@ -14,13 +14,14 @@
     public class UserAccountRepositoryTests : BaseTest
     {
         // https://xunit.github.io/docs/shared-context.html
-        private readonly IUserAccountRepository sut;
+        private readonly IRepository<UserAccount> sut;
         private readonly Faker<UserAccount> entityFaker;
         private readonly string tenantId = "naos_sample_test";
 
         public UserAccountRepositoryTests()
         {
-            this.sut = this.ServiceProvider.GetService<IUserAccountRepository>();
+            //this.sut = this.ServiceProvider.GetService<IUserAccountRepository>();
+            this.sut = this.ServiceProvider.GetRequiredService<IRepository<UserAccount>>();
             var domains = new[] { "East", "West" };
             this.entityFaker = new Faker<UserAccount>() //https://github.com/bchavez/Bogus
                 .RuleFor(u => u.Email, (f, u) => f.Internet.Email())

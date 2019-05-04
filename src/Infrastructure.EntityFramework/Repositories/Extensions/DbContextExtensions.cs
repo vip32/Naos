@@ -14,11 +14,11 @@
     {
         /// <summary>
         /// <para>
-        /// Saves the changes only for the TEntity type (Aggregate). All other types
+        /// Saves the changes only for the TEntity type (Aggregate). All other aggregate instances
         /// are ignored and not saved.
         /// </para>
         /// <para>
-        /// Preventing SaveChanges for other entity types can also be prevented by using
+        /// Preventing SaveChanges for other aggregates can also be prevented by using
         /// seperate DbContext instances.
         /// </para>
         /// </summary>
@@ -29,19 +29,26 @@
         {
             EnsureArg.IsNotNull(source, nameof(source));
 
+            // find all other aggregates
             var other = source.ChangeTracker.Entries()
-                .Where(x => !typeof(TEntity).IsAssignableFrom(x.Entity.GetType()) && x.State != EntityState.Unchanged)
+                .Where(x => x.Entity.GetType() is IAggregateRoot
+                    && !typeof(TEntity).IsAssignableFrom(x.Entity.GetType())
+                    && x.State != EntityState.Unchanged)
                 .GroupBy(x => x.State)
                 .ToList();
 
+            // set all other aggregates to unchanged
             foreach(var entry in source.ChangeTracker.Entries()
-                .Where(x => !typeof(TEntity).IsAssignableFrom(x.Entity.GetType())))
+                .Where(x => x.Entity.GetType() is IAggregateRoot
+                    && !typeof(TEntity).IsAssignableFrom(x.Entity.GetType())))
             {
+                // WARN: this is not 100% fool proof: as other modified aggregate child entities are not marked to unchanged
                 entry.State = EntityState.Unchanged;
             }
 
             var result = await source.SaveChangesAsync().AnyContext();
 
+            // set all other aggregates to original state
             foreach(var state in other)
             {
                 foreach(var entry in state)
