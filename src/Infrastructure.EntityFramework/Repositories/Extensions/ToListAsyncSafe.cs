@@ -6,9 +6,14 @@
     using System.Threading.Tasks;
     using Microsoft.EntityFrameworkCore;
 
+    /// <summary>
+    /// IQueryable extensions.
+    /// </summary>
     public static partial class Extensions
     {
-        public static Task<List<TSource>> ToListAsyncSafe<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken = default)
+        public static Task<List<TSource>> ToListAsyncSafe<TSource>(
+            this IQueryable<TSource> source,
+            CancellationToken cancellationToken = default)
         {
             if(source == null)
             {

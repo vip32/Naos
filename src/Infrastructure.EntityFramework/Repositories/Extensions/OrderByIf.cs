@@ -5,6 +5,9 @@
     using Naos.Core.Common;
     using Naos.Core.Domain.Repositories;
 
+    /// <summary>
+    /// IQueryable extensions.
+    /// </summary>
     public static partial class Extensions
     {
         //public static IQueryable<T> OrderByIf<T>(

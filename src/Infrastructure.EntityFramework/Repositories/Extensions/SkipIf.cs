@@ -3,6 +3,9 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    /// <summary>
+    /// IQueryable extensions.
+    /// </summary>
     public static partial class Extensions
     {
         public static IQueryable<T> SkipIf<T>(

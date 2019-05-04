@@ -5,6 +5,9 @@
     using System.Linq;
     using System.Linq.Expressions;
 
+    /// <summary>
+    /// IQueryable extensions.
+    /// </summary>
     public static partial class Extensions
     {
         public static IQueryable<TSource> WhereExpression<TSource>(

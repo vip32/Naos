@@ -174,7 +174,7 @@
 
             this.logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogKeys.DomainRepository);
             this.options.DbContext.Set<TEntity>().Add(entity);
-            await this.options.DbContext.SaveChangesAsync().AnyContext();
+            await this.options.DbContext.SaveChangesAsync<TEntity>().AnyContext();
 
             if(this.options.PublishEvents && this.options.Mediator != null)
             {
@@ -212,7 +212,7 @@
                     await this.options.Mediator.Publish(new EntityDeleteDomainEvent(entity)).AnyContext();
                 }
 
-                await this.options.DbContext.SaveChangesAsync();
+                await this.options.DbContext.SaveChangesAsync<TEntity>().AnyContext();
 
                 if(this.options.PublishEvents && this.options.Mediator != null)
                 {
