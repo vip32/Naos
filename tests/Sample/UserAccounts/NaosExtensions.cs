@@ -10,6 +10,9 @@
     using Naos.Sample.UserAccounts.Domain;
     using Naos.Sample.UserAccounts.Infrastructure.EntityFramework;
 
+    /// <summary>
+    /// Naos service extensions.
+    /// </summary>
     public static partial class NaosExtensions
     {
         public static ServiceOptions AddSampleUserAccounts(
@@ -45,7 +48,7 @@
             {
                 o.UseLoggerFactory(options.Context.Services.BuildServiceProvider().GetRequiredService<ILoggerFactory>());
                 o.UseNaosSqlServer(entityFrameworkConfiguration.ConnectionString);
-                o.UseQueryTrackingBehavior(EntityFrameworkCore.QueryTrackingBehavior.NoTracking);
+                //o.UseQueryTrackingBehavior(EntityFrameworkCore.QueryTrackingBehavior.NoTracking);
             });
 
             options.Context.Services.AddHealthChecks()

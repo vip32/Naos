@@ -1,5 +1,6 @@
 ﻿namespace Naos.Sample.UserAccounts.Infrastructure.EntityFramework
 {
+    using System;
     using Microsoft.EntityFrameworkCore;
     using Naos.Sample.UserAccounts.Domain;
 
@@ -30,26 +31,19 @@
 
             modelBuilder.Entity<UserAccount>().OwnsOne(e => e.State, od =>
             {
-                //od.OwnsOne(typeof(DateTimeEpoch), "CreatedDate");
-                //od.OwnsOne(typeof(DateTimeEpoch), "UpdatedDate");
-                //od.OwnsOne(typeof(DateTimeEpoch), "ExpiredDate");
-                //od.OwnsOne(typeof(DateTimeEpoch), "DeactivatedDate");
-                //od.OwnsOne(typeof(DateTimeEpoch), "DeletedDate");
-                //od.OwnsOne(typeof(DateTimeEpoch), "LastAccessedDate");
-                //od.OwnsOne(c => c.CreatedDate);
-                //od.OwnsOne(c => c.UpdatedDate);
-                //od.OwnsOne(c => c.ExpiredDate);
-                //od.OwnsOne(c => c.DeactivatedDate);
-                //od.OwnsOne(c => c.DeletedDate);
-                //od.OwnsOne(c => c.LastAccessedDate);
-                od.Ignore(c => c.DeactivatedReasons);
-                od.Ignore(c => c.UpdatedReasons); // TODO
-                od.ToTable("UserAccountStates");
+                od.Property(p => p.DeactivatedReasons)
+                    .HasConversion(
+                        v => string.Join(";", v),
+                        v => v.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries));
+                od.Property(p => p.UpdatedReasons)
+                    .HasConversion(
+                        v => string.Join(";", v),
+                        v => v.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries));
+                //od.ToTable("EntityStates");
             });
 
-            modelBuilder.Entity<UserAccount>().OwnsOne(e => e.LastVisitDate);
-            modelBuilder.Entity<UserAccount>().OwnsOne(e => e.RegisterDate);
-            modelBuilder.Entity<UserAccount>().OwnsOne(u => u.AdAccount);
+            modelBuilder.Entity<UserAccount>().OwnsOne(e => e.AdAccount, od =>
+                od.ToTable("AdAccounts"));
         }
     }
 }

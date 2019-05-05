@@ -15,7 +15,7 @@
 
             return source.UseSqlServer(entityFrameworkConfiguration?.ConnectionString ?? "Server=(localdb)\\mssqllocaldb;Database=naos;Trusted_Connection=True;")
                 .ConfigureWarnings(w => w.Throw(RelationalEventId.QueryClientEvaluationWarning))
-                //.EnableSensitiveDataLogging()
+                .EnableSensitiveDataLogging()
                 .EnableDetailedErrors();
         }
 
@@ -25,7 +25,7 @@
         {
             return source.UseSqlServer(connectionString ?? "Server=(localdb)\\mssqllocaldb;Database=naos;Trusted_Connection=True;")
                 .ConfigureWarnings(w => w.Throw(RelationalEventId.QueryClientEvaluationWarning))
-                //.EnableSensitiveDataLogging()
+                .EnableSensitiveDataLogging()
                 .EnableDetailedErrors();
         }
     }

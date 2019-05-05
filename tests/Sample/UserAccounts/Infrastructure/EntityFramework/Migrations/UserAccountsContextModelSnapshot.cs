@@ -3,6 +3,8 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Naos.Sample.UserAccounts.Infrastructure.EntityFramework;
 
 namespace Naos.Sample.UserAccounts.Infrastructure.EntityFramework.Migrations
 {
@@ -13,7 +15,7 @@ namespace Naos.Sample.UserAccounts.Infrastructure.EntityFramework.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.2-servicing-10034")
+                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -25,6 +27,10 @@ namespace Naos.Sample.UserAccounts.Infrastructure.EntityFramework.Migrations
                     b.Property<string>("Email");
 
                     b.Property<string>("IdentifierHash");
+
+                    b.Property<DateTimeOffset?>("LastVisitDate");
+
+                    b.Property<DateTimeOffset?>("RegisterDate");
 
                     b.Property<string>("TenantId");
 
@@ -55,6 +61,8 @@ namespace Naos.Sample.UserAccounts.Infrastructure.EntityFramework.Migrations
 
                             b1.Property<string>("DeactivatedDescription");
 
+                            b1.Property<string>("DeactivatedReasons");
+
                             b1.Property<bool?>("Deleted");
 
                             b1.Property<string>("DeletedBy");
@@ -83,9 +91,11 @@ namespace Naos.Sample.UserAccounts.Infrastructure.EntityFramework.Migrations
 
                             b1.Property<string>("UpdatedDescription");
 
+                            b1.Property<string>("UpdatedReasons");
+
                             b1.HasKey("UserAccountId");
 
-                            b1.ToTable("UserAccountStates");
+                            b1.ToTable("UserAccounts");
 
                             b1.HasOne("Naos.Sample.UserAccounts.Domain.UserAccount")
                                 .WithOne("State")
@@ -103,43 +113,11 @@ namespace Naos.Sample.UserAccounts.Infrastructure.EntityFramework.Migrations
 
                             b1.HasKey("UserAccountId");
 
-                            b1.ToTable("UserAccounts");
+                            b1.ToTable("AdAccounts");
 
                             b1.HasOne("Naos.Sample.UserAccounts.Domain.UserAccount")
                                 .WithOne("AdAccount")
                                 .HasForeignKey("Naos.Sample.UserAccounts.Domain.AdAccount", "UserAccountId")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
-
-                    b.OwnsOne("Naos.Core.Common.DateTimeEpoch", "LastVisitDate", b1 =>
-                        {
-                            b1.Property<Guid>("UserAccountId");
-
-                            b1.Property<DateTime>("DateTime");
-
-                            b1.HasKey("UserAccountId");
-
-                            b1.ToTable("UserAccounts");
-
-                            b1.HasOne("Naos.Sample.UserAccounts.Domain.UserAccount")
-                                .WithOne("LastVisitDate")
-                                .HasForeignKey("Naos.Core.Common.DateTimeEpoch", "UserAccountId")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
-
-                    b.OwnsOne("Naos.Core.Common.DateTimeEpoch", "RegisterDate", b1 =>
-                        {
-                            b1.Property<Guid>("UserAccountId");
-
-                            b1.Property<DateTime>("DateTime");
-
-                            b1.HasKey("UserAccountId");
-
-                            b1.ToTable("UserAccounts");
-
-                            b1.HasOne("Naos.Sample.UserAccounts.Domain.UserAccount")
-                                .WithOne("RegisterDate")
-                                .HasForeignKey("Naos.Core.Common.DateTimeEpoch", "UserAccountId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
                 });
