@@ -202,7 +202,7 @@
 
             var newEmail = $"{RandomGenerator.GenerateString(5)}@test.com";
             entity.Email = newEmail;
-            entity.State.SetUpdated("test", "test " + new DateTimeEpoch().Epoch);
+            entity.State.SetUpdated("test", "reason " + new DateTimeEpoch().Epoch);
             await this.sut.UpsertAsync(entity).AnyContext();
             var modifiedEntity = await this.sut.FindOneAsync(entity.Id).AnyContext();
 
@@ -210,6 +210,7 @@
             entity.ShouldNotBeNull();
             modifiedEntity.ShouldNotBeNull();
             modifiedEntity.Email.ShouldBe(newEmail);
+            modifiedEntity.State.UpdatedReasons.ToString(";").ShouldContain("reason ");
             //result.Id.ShouldBe(entities.FirstOrDefault()?.Id);
         }
 

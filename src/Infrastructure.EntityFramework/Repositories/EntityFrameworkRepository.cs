@@ -178,7 +178,7 @@
                 this.options.DbContext.Set<TEntity>().Add(entity);
             }
 
-            await this.options.DbContext.SaveChangesAsync/*<TEntity>*/().AnyContext();
+            await this.options.DbContext.SaveChangesAsync<TEntity>().AnyContext();
 
             if(this.options.PublishEvents && this.options.Mediator != null)
             {
@@ -216,7 +216,7 @@
                     await this.options.Mediator.Publish(new EntityDeleteDomainEvent(entity)).AnyContext();
                 }
 
-                await this.options.DbContext.SaveChangesAsync/*<TEntity>*/().AnyContext();
+                await this.options.DbContext.SaveChangesAsync<TEntity>().AnyContext();
 
                 if(this.options.PublishEvents && this.options.Mediator != null)
                 {
