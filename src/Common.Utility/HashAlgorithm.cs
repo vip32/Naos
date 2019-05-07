@@ -140,10 +140,29 @@
     public enum HashType
 #pragma warning restore SA1201 // Elements must appear in the correct order
     {
+        /// <summary>
+        /// MD5
+        /// </summary>
         Md5,
+
+        /// <summary>
+        /// sha1
+        /// </summary>
         Sha1,
+
+        /// <summary>
+        /// sha256
+        /// </summary>
         Sha256,
+
+        /// <summary>
+        /// sha384
+        /// </summary>
         Sha384,
+
+        /// <summary>
+        /// sha512
+        /// </summary>
         Sha512,
     }
 }

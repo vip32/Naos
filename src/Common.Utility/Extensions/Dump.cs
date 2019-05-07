@@ -3,7 +3,10 @@
     using System.Collections.Generic;
     using Newtonsoft.Json;
 
-    public static partial class Extensions
+    /// <summary>
+    /// Object instance dump extensions.
+    /// </summary>
+    public static partial class UtilityExtensions
     {
         /// <summary>
         /// Dumps the object as a json string

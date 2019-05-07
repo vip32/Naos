@@ -15,6 +15,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
     using Naos.Core.Domain.Specifications;
     using NSubstitute;
     using Xunit;
+    //using Shouldly; TODO
 
 #pragma warning disable SA1649 // File name must match first type name
     public class InMemoryRepositoryTests
@@ -60,8 +61,8 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             var logger = Substitute.For<ILogger<IRepository<StubEntityString>>>();
             var mediator = Substitute.For<IMediator>();
             var sut = new RepositorySpecificationDecorator<StubEntityString>(
-                new InMemoryRepository<StubEntityString>(logger, mediator, new InMemoryContext<StubEntityString>(this.entities)),
-                new Specification<StubEntityString>(t => t.TenantId == this.tenantId)); // = decoratee
+                new Specification<StubEntityString>(t => t.TenantId == this.tenantId),
+                new InMemoryRepository<StubEntityString>(logger, mediator, new InMemoryContext<StubEntityString>(this.entities))); // = decoratee
 
             // act
             var result = await sut.FindAllAsync().AnyContext();
@@ -190,7 +191,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         }
 
         [Fact]
-        public async Task FindEntityByStringId_Test()
+        public async Task FindOneEntityByStringId_Test()
         {
             // arrange
             var logger = Substitute.For<ILogger<IRepository<StubEntityString>>>();
@@ -211,7 +212,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         }
 
         [Fact]
-        public async Task FindEntityByGuidId_Test()
+        public async Task FindOneEntityByGuidId_Test()
         {
             // arrange
             var logger = Substitute.For<ILogger<IRepository<StubEntityGuid>>>();

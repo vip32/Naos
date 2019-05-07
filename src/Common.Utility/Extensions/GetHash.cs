@@ -1,6 +1,9 @@
 ﻿namespace Naos.Core.Common
 {
-    public static partial class Extensions
+    /// <summary>
+    /// Utility extensions.
+    /// </summary>
+    public static partial class UtilityExtensions
     {
         public static string GetHash(this byte[] bytes, HashType hashType = HashType.Sha256)
         {

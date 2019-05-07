@@ -18,7 +18,7 @@
         where TEntity : class, IEntity, ITenantEntity, IAggregateRoot
     {
         public RepositoryTenantDecorator(string tenantId, IRepository<TEntity> decoratee)
-            : base(decoratee, new Specification<TEntity>(t => t.TenantId == tenantId))
+            : base(new Specification<TEntity>(t => t.TenantId == tenantId), decoratee)
         {
         }
     }

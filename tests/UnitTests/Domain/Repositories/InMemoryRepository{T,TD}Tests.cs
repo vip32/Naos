@@ -16,6 +16,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
     using Naos.Core.Domain.Specifications;
     using NSubstitute;
     using Xunit;
+    //using Shouldly; TODO
 
 #pragma warning disable SA1649 // File name must match first type name
     public class InMemoryRepositoryDbTests
@@ -39,7 +40,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                 .With(x => x.LastName, Core.Common.RandomGenerator.GenerateString(5, false))
                 .With(x => x.TenantId, this.tenantId)
                 .With(x => x.Country, "USA").Build()
-                .Concat(new[] { new StubEntity { Id = "Id99", FirstName = "John", LastName = "Doe", Age = 38, Country = "USA" } });
+                .Concat(new[] { new StubEntity { Id = "Id99", FirstName = "John", LastName = "Doe", Age = 38, Country = "USA", TenantId = this.tenantId } });
         }
 
         [Fact]
@@ -71,18 +72,17 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             var logger = Substitute.For<ILogger<InMemoryRepository<StubEntity, StubDb>>>();
             var mediator = Substitute.For<IMediator>();
             var sut = new RepositorySpecificationDecorator<StubEntity>(
+                new Specification<StubEntity>(t => t.TenantId == this.tenantId),
                 new InMemoryRepository<StubEntity, StubDb>( // decoratee
                     logger,
                     mediator,
                     e => e.Identifier,
                     new InMemoryContext<StubEntity>(this.entities),
-                    options: new RepositoryOptions(
-                        new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
+                    options: new RepositoryOptions(new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
                     specificationMappers: new[]
                     {
                         new AutoMapperSpecificationMapper<StubEntity, StubDb>(StubEntityMapperConfiguration.Create())
-                    }),
-                new Specification<StubEntity>(t => t.TenantId == this.tenantId));
+                    }));
 
             // act
             var result = await sut.FindOneAsync("Id99").AnyContext();
@@ -122,25 +122,25 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             var logger = Substitute.For<ILogger<InMemoryRepository<StubEntity, StubDb>>>();
             var mediator = Substitute.For<IMediator>();
             var sut = new RepositorySpecificationDecorator<StubEntity>(
+                new Specification<StubEntity>(t => t.TenantId == this.tenantId),
                 new InMemoryRepository<StubEntity, StubDb>( // decoratee
                     logger,
                     mediator,
                     e => e.Identifier,
                     new InMemoryContext<StubEntity>(this.entities),
-                    options: new RepositoryOptions(
-                        new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
+                    options: new RepositoryOptions(new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
                     specificationMappers: new[]
                     {
                         new AutoMapperSpecificationMapper<StubEntity, StubDb>(StubEntityMapperConfiguration.Create())
-                    }),
-                new Specification<StubEntity>(t => t.TenantId == this.tenantId));
+                    }));
 
             // act
             var result = await sut.FindAllAsync().AnyContext();
 
             // assert
             Assert.False(result.IsNullOrEmpty());
-            Assert.Equal(20, result.Count());
+            Assert.Equal(21, result.Count());
+            Assert.NotNull(result.FirstOrDefault(e => e.Id == "Id99"));
         }
 
         [Fact]
@@ -168,7 +168,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
 
             // assert
             Assert.False(result.IsNullOrEmpty());
-            Assert.Equal(20, result.Count());
+            Assert.Equal(21, result.Count());
         }
 
         //[Fact]

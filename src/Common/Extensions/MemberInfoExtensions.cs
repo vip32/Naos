@@ -4,9 +4,9 @@
 
     public static class MemberInfoExtensions
     {
-        internal static bool IsPropertyWithSetter(this MemberInfo member)
+        public static bool IsPropertyWithSetter(this MemberInfo source)
         {
-            var property = member as PropertyInfo;
+            var property = source as PropertyInfo;
             return property?.SetMethod != null;
         }
     }

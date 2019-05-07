@@ -5,7 +5,10 @@
     using System.Linq;
     using System.Linq.Expressions;
 
-    public static partial class Extensions
+    /// <summary>
+    /// Utility extensions.
+    /// </summary>
+    public static partial class UtilityExtensions
     {
         public static IOrderedEnumerable<TSource> OrderBy<TSource>(this IEnumerable<TSource> source, string name, bool ascending = true)
         {

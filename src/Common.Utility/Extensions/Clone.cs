@@ -3,7 +3,10 @@
     using System.Collections.Generic;
     using Newtonsoft.Json;
 
-    public static partial class Extensions
+    /// <summary>
+    /// Object instance clone extensions.
+    /// </summary>
+    public static partial class UtilityExtensions
     {
         public enum CloneMode
         {

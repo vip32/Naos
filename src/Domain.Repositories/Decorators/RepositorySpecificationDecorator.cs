@@ -26,13 +26,15 @@
         private readonly IRepository<TEntity> decoratee;
         private readonly ISpecification<TEntity> specification;
 
-        public RepositorySpecificationDecorator(IRepository<TEntity> decoratee, ISpecification<TEntity> specification)
+        public RepositorySpecificationDecorator(
+            ISpecification<TEntity> specification,
+            IRepository<TEntity> decoratee)
         {
-            EnsureArg.IsNotNull(decoratee, nameof(decoratee));
             EnsureArg.IsNotNull(specification, nameof(specification));
+            EnsureArg.IsNotNull(decoratee, nameof(decoratee));
 
-            this.decoratee = decoratee;
             this.specification = specification;
+            this.decoratee = decoratee;
         }
 
         public async Task<ActionResult> DeleteAsync(object id)

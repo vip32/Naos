@@ -15,8 +15,8 @@
                 LastName = "Doe"
             };
 
-            stub.Clone(mode: Extensions.CloneMode.Json).ShouldNotBeNull();
-            stub.Clone(mode: Extensions.CloneMode.Json).FirstName.ShouldBe("John");
+            stub.Clone(mode: UtilityExtensions.CloneMode.Json).ShouldNotBeNull();
+            stub.Clone(mode: UtilityExtensions.CloneMode.Json).FirstName.ShouldBe("John");
         }
 
         [Fact]

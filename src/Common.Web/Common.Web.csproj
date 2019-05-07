@@ -24,6 +24,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Common.Console\Common.Console.csproj" />
     <ProjectReference Include="..\Common.Extensions\Common.Extensions.csproj" />
+    <ProjectReference Include="..\Common.Utility\Common.Utility.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
 
