@@ -54,8 +54,10 @@
             // assert
             result.ShouldNotBeNull();
             result.ShouldNotBeEmpty();
-            result.First().AdAccount.Domain.ShouldBe("East");
-            result.Last().AdAccount.Domain.ShouldBe("West");
+            result.FirstOrDefault()?.AdAccount.ShouldNotBeNull();
+            result.FirstOrDefault()?.AdAccount.Domain.ShouldBe("East");
+            result.LastOrDefault()?.AdAccount.ShouldNotBeNull();
+            result.LastOrDefault()?.AdAccount.Domain.ShouldBe("West");
         }
 
         //[Fact]
@@ -212,6 +214,23 @@
             modifiedEntity.Email.ShouldBe(newEmail);
             modifiedEntity.State.UpdatedReasons.ToString(";").ShouldContain("reason ");
             //result.Id.ShouldBe(entities.FirstOrDefault()?.Id);
+        }
+
+        [Fact]
+        public async Task FindOneAndDeleteAsync_Test() // SoftDelete because of decorator
+        {
+            // arrange
+            var entities = await this.sut.FindAllAsync(
+                new FindOptions<UserAccount>(take: 1)).AnyContext();
+
+            // act
+            var entity = await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).AnyContext();
+            entity.ShouldNotBeNull();
+            var result = await this.sut.DeleteAsync(entity).AnyContext();
+
+            // assert
+            result.ShouldBe(ActionResult.Deleted);
+            (await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).AnyContext()).ShouldBeNull();
         }
 
         [Fact]

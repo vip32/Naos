@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Common.Serialization
+﻿namespace Naos.Core.Common
 {
     using System.Collections.Generic;
     using System.Globalization;

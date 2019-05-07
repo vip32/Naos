@@ -37,10 +37,11 @@
                         sp.GetRequiredService<ILogger<UserAccountRepository>>(),
                         new RepositoryTenantDecorator<UserAccount>(
                             "naos_sample_test", // TODO: resolve from runtime context
-                            new EntityFrameworkRepository<UserAccount>(o => o
-                                .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
-                                .Mediator(sp.GetRequiredService<IMediator>())
-                                .DbContext(sp.GetRequiredService<UserAccountsContext>())))));
+                            new RepositorySoftDeleteDecorator<UserAccount>(
+                                new EntityFrameworkRepository<UserAccount>(o => o
+                                    .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
+                                    .Mediator(sp.GetRequiredService<IMediator>())
+                                    .DbContext(sp.GetRequiredService<UserAccountsContext>()))))));
             });
 
             var entityFrameworkConfiguration = options.Context.Configuration?.GetSection(section).Get<EntityFrameworkConfiguration>();

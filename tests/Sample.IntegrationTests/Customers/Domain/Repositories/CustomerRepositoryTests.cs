@@ -184,6 +184,9 @@
             // assert
             result.ShouldNotBeNull();
             result.Id.ShouldBe(entities.FirstOrDefault()?.Id);
+            result.State.ShouldNotBeNull();
+            result.State.CreatedDescription.ShouldNotBeNull(); // EntityInsertDomainEventHandler
+            result.State.CreatedBy.ShouldNotBeNull(); // EntityInsertDomainEventHandler
         }
 
         [Fact]

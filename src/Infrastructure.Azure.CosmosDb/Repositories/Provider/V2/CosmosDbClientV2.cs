@@ -3,6 +3,7 @@
     using System;
     using Microsoft.Azure.Documents;
     using Microsoft.Azure.Documents.Client;
+    using Naos.Core.Common;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
 
@@ -43,8 +44,9 @@
                 ? jsonSettings
                 : new JsonSerializerSettings
                 {
-                    // disabled, camel case does not work in linq queries
+                    // disabled, camel case does not work in the linq queries (incorrect translation)
                     //ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                    ContractResolver = new PrivateSetterContractResolver(), // needed to set private setters in entities
                     ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
                     NullValueHandling = NullValueHandling.Ignore,
                     Converters = new JsonConverter[]

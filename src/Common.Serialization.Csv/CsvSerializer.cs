@@ -1,9 +1,8 @@
-﻿namespace Naos.Core.Common.Serialization
+﻿namespace Naos.Core.Common
 {
     using System;
     using System.Globalization;
     using System.IO;
-    using Naos.Core.Common;
 
     public class CsvSerializer : ITextSerializer
     {

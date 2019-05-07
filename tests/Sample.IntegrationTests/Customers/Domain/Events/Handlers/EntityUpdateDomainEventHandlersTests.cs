@@ -18,7 +18,8 @@
             // arrange
             var mediator = this.ServiceProvider.GetService<IMediator>();
             var entity = new Customer { FirstName = "FirstName1", LastName = "LastName1" };
-            entity.State.CreatedDate = DateTime.UtcNow.AddDays(-1);
+            entity.State.SetCreated();
+            //entity.State.CreatedDate = DateTime.UtcNow.AddDays(-1);
 
             // act
             await mediator.Publish(new EntityUpdateDomainEvent(entity)).AnyContext();

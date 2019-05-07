@@ -8,9 +8,9 @@
 
     public class State
     {
-        public string CreatedBy { get; set; }
+        public string CreatedBy { get; private set; }
 
-        public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.UtcNow;
+        public DateTimeOffset CreatedDate { get; private set; } = DateTimeOffset.UtcNow;
 
         //public long CreatedEpoch
         //{
@@ -18,11 +18,11 @@
         //    set { this.CreatedDate = Extensions.FromEpoch(value); }
         //}
 
-        public string CreatedDescription { get; set; }
+        public string CreatedDescription { get; private set; }
 
-        public string UpdatedBy { get; set; }
+        public string UpdatedBy { get; private set; }
 
-        public DateTimeOffset UpdatedDate { get; set; } = DateTimeOffset.UtcNow;
+        public DateTimeOffset UpdatedDate { get; private set; } = DateTimeOffset.UtcNow;
 
         //public long UpdatedEpoch
         //{
@@ -32,7 +32,7 @@
 
         public string UpdatedDescription { get; set; }
 
-        public IEnumerable<string> UpdatedReasons { get; set; }
+        public IEnumerable<string> UpdatedReasons { get; private set; }
 
         public string ExpiredBy { get; set; }
 
@@ -46,13 +46,13 @@
 
         public string ExpiredDescription { get; set; }
 
-        public bool? Deactivated { get; set; }
+        public bool? Deactivated { get; private set; }
 
-        public IEnumerable<string> DeactivatedReasons { get; set; }
+        public IEnumerable<string> DeactivatedReasons { get; private set; }
 
-        public string DeactivatedBy { get; set; }
+        public string DeactivatedBy { get; private set; }
 
-        public DateTimeOffset? DeactivatedDate { get; set; }
+        public DateTimeOffset? DeactivatedDate { get; private set; }
 
         //public long? DeactivatedEpoch
         //{
@@ -62,11 +62,11 @@
 
         public string DeactivatedDescription { get; set; }
 
-        public bool? Deleted { get; set; }
+        public bool? Deleted { get; private set; }
 
-        public string DeletedBy { get; set; }
+        public string DeletedBy { get; private set; }
 
-        public DateTimeOffset? DeletedDate { get; set; }
+        public DateTimeOffset? DeletedDate { get; private set; }
 
         //public long? DeletedEpoch
         //{
@@ -74,7 +74,7 @@
         //    set { this.DeletedDate = Extensions.FromEpoch(value); }
         //}
 
-        public string DeletedReason { get; set; }
+        public string DeletedReason { get; private set; }
 
         public string DeletedDescription { get; set; }
 
@@ -122,21 +122,24 @@
             this.DeactivatedDate = DateTimeOffset.UtcNow;
             this.SetUpdated(by);
             this.Deactivated = true;
-            this.DeactivatedBy = by;
-            if(this.DeactivatedReasons.IsNullOrEmpty())
+
+            if(!by.IsNullOrEmpty())
             {
-                this.DeactivatedReasons = new List<string>();
+                this.DeactivatedBy = by;
             }
 
-            if(by.IsNullOrEmpty() && reason.IsNullOrEmpty())
+            if(!reason.IsNullOrEmpty())
             {
-                return;
-            }
+                if(this.DeactivatedReasons.IsNullOrEmpty())
+                {
+                    this.DeactivatedReasons = new List<string>();
+                }
 
-            this.DeactivatedReasons = this.DeactivatedReasons.Concat(new[]
+                this.DeactivatedReasons = this.DeactivatedReasons.Concat(new[]
                 {
                     $"{by}: ({this.DeactivatedDate.Value.ToString(CultureInfo.InvariantCulture)}) {reason}".Trim()
                 });
+            }
         }
 
         /// <summary>
@@ -147,8 +150,15 @@
         public virtual void SetCreated(string by = null, string description = null)
         {
             this.CreatedDate = DateTimeOffset.UtcNow;
-            this.CreatedBy = by;
-            this.CreatedDescription = description;
+            if(!by.IsNullOrEmpty())
+            {
+                this.CreatedBy = by;
+            }
+
+            if(!description.IsNullOrEmpty())
+            {
+                this.CreatedDescription = description;
+            }
         }
 
         /// <summary>
@@ -159,22 +169,24 @@
         public virtual void SetUpdated(string by = null, string reason = null)
         {
             this.UpdatedDate = DateTimeOffset.UtcNow;
-            this.UpdatedBy = by;
 
-            if(by.IsNullOrEmpty() && reason.IsNullOrEmpty())
+            if(!by.IsNullOrEmpty())
             {
-                return;
+                this.UpdatedBy = by;
             }
 
-            if(this.UpdatedReasons.IsNullOrEmpty())
+            if(!reason.IsNullOrEmpty())
             {
-                this.UpdatedReasons = new List<string>();
-            }
+                if(this.UpdatedReasons.IsNullOrEmpty())
+                {
+                    this.UpdatedReasons = new List<string>();
+                }
 
-            this.UpdatedReasons = this.UpdatedReasons.Concat(new[]
-            {
-                $"{by}: ({this.UpdatedDate.ToString(CultureInfo.InvariantCulture)}) {reason}".Trim()
-            });
+                this.UpdatedReasons = this.UpdatedReasons.Concat(new[]
+                {
+                    $"{by}: ({this.UpdatedDate.ToString(CultureInfo.InvariantCulture)}) {reason}".Trim()
+                });
+            }
         }
 
         /// <summary>
@@ -187,14 +199,16 @@
             this.Deleted = true;
             this.DeletedDate = DateTimeOffset.UtcNow;
             this.UpdatedDate = this.DeletedDate.Value;
-            this.DeletedBy = by;
 
-            if(by.IsNullOrEmpty() && reason.IsNullOrEmpty())
+            if(!by.IsNullOrEmpty())
             {
-                return;
+                this.DeletedBy = by;
             }
 
-            this.DeletedReason = $"{by}: ({this.DeletedDate.Value.ToString(CultureInfo.InvariantCulture)}) {reason}".Trim();
+            if(!reason.IsNullOrEmpty())
+            {
+                this.DeletedReason = $"{by}: ({this.DeletedDate.Value.ToString(CultureInfo.InvariantCulture)}) {reason}".Trim();
+            }
         }
     }
 }

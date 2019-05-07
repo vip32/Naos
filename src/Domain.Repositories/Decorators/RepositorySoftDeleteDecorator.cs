@@ -13,36 +13,56 @@
     /// <para>
     ///    .-----------.
     ///    | Decorator |
-    ///    .-----------.        .------------.
+    ///    `-----------`        .------------.
     ///          `------------> | decoratee  |
-    ///            (forward)    .------------.
+    ///            (forward)    `------------`
     /// </para>
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
     /// <seealso cref="Repositories.IRepository{TEntity}" />
-    public class RepositorySpecificationDecorator<TEntity> : IRepository<TEntity>
-        where TEntity : class, IEntity, IAggregateRoot
+    public class RepositorySoftDeleteDecorator<TEntity> : IRepository<TEntity>
+        where TEntity : class, IEntity, IAggregateRoot, IStateEntity
     {
         private readonly IRepository<TEntity> decoratee;
         private readonly ISpecification<TEntity> specification;
 
-        public RepositorySpecificationDecorator(IRepository<TEntity> decoratee, ISpecification<TEntity> specification)
+        public RepositorySoftDeleteDecorator(IRepository<TEntity> decoratee)
         {
             EnsureArg.IsNotNull(decoratee, nameof(decoratee));
-            EnsureArg.IsNotNull(specification, nameof(specification));
 
             this.decoratee = decoratee;
-            this.specification = specification;
+            this.specification = new Specification<TEntity>(e => e.State.Deleted != true);
         }
 
         public async Task<ActionResult> DeleteAsync(object id)
         {
-            return await this.decoratee.DeleteAsync(id).AnyContext();
+            if(id.IsDefault())
+            {
+                return ActionResult.None;
+            }
+
+            var entity = await this.FindOneAsync(id).AnyContext();
+            if(entity != null)
+            {
+                entity.State.SetDeleted();
+                var result = (await this.UpsertAsync(entity).AnyContext()).action;
+                if(result == ActionResult.Updated)
+                {
+                    return ActionResult.Deleted;
+                }
+            }
+
+            return ActionResult.None;
         }
 
         public async Task<ActionResult> DeleteAsync(TEntity entity)
         {
-            return await this.decoratee.DeleteAsync(entity).AnyContext();
+            if(entity?.Id.IsDefault() != false)
+            {
+                return ActionResult.None;
+            }
+
+            return await this.DeleteAsync(entity.Id).AnyContext();
         }
 
         public async Task<bool> ExistsAsync(object id)

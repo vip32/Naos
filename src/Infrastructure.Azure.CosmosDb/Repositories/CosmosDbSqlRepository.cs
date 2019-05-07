@@ -134,9 +134,21 @@
                 }
             }
 
+            if(isNew)
+            {
+                if(entity is IStateEntity stateEntity)
+                {
+                    stateEntity.State.SetCreated();
+                }
+            }
+            else if(entity is IStateEntity stateEntity)
+            {
+                stateEntity.State.SetUpdated();
+            }
+
             this.logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogKeys.DomainRepository);
             var result = await this.options.Provider.UpsertAsync(entity).AnyContext();
-            entity = result;
+            //entity = result;
 
             if(this.options.PublishEvents && this.options.Mediator != null)
             {

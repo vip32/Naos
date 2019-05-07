@@ -175,7 +175,16 @@
             this.logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogKeys.DomainRepository);
             if(isNew)
             {
+                if(entity is IStateEntity stateEntity)
+                {
+                    stateEntity.State.SetCreated();
+                }
+
                 this.options.DbContext.Set<TEntity>().Add(entity);
+            }
+            else if(entity is IStateEntity stateEntity)
+            {
+                stateEntity.State.SetUpdated();
             }
 
             await this.options.DbContext.SaveChangesAsync<TEntity>().AnyContext();
@@ -231,7 +240,7 @@
 
         public async Task<ActionResult> DeleteAsync(TEntity entity)
         {
-            if(entity == null || entity.Id.IsDefault())
+            if(entity?.Id.IsDefault() != false)
             {
                 return ActionResult.None;
             }

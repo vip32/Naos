@@ -29,6 +29,7 @@
         //private readonly string defaultIdentityPropertyName = "id";
         private readonly bool isMasterCollection;
         private readonly bool isPartitioned;
+        private readonly JsonSerializerSettings jsonSerializerSettings;
         private AsyncLazy<DocumentCollection> documentCollection;
 
         public CosmosDbSqlProviderV2( // TODO: use OptionsBuilder here
@@ -93,6 +94,11 @@
                 this.documentCollection.Value.Result.IndexingPolicy = indexingPolicy;
             }
 
+            this.jsonSerializerSettings = new JsonSerializerSettings
+            {
+                ContractResolver = new PrivateSetterContractResolver()
+            };
+
             //if (idNameFactory != null)
             //{
             //    this.TryGetIdProperty(idNameFactory);
@@ -131,7 +137,7 @@
                 UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId),
                 entity,
                 new RequestOptions { PartitionKey = new PartitionKey(partitionKey ?? this.partitionKeyValue) }).AnyContext();
-            return JsonConvert.DeserializeObject<T>(doc.Resource.ToString());
+            return JsonConvert.DeserializeObject<T>(doc.Resource.ToString(), this.jsonSerializerSettings);
         }
 
         public async Task<bool> DeleteByIdAsync(string id, string partitionKey = null)
@@ -403,7 +409,7 @@
         //        UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId),
         //        entity).AnyContext();
         //    await this.client.UpsertAttachmentAsync(doc.Resource.SelfLink, stream, new MediaOptions { ContentType = contentType, Slug = attachmentId }).AnyContext();
-        //    return JsonConvert.DeserializeObject<T>(doc.Resource.ToString());
+        //    return JsonConvert.DeserializeObject<T>(doc.Resource.ToString(), this.jsonSerializerSettings);
         //}
 
         //private async Task<Document> GetDocumentById(string id)

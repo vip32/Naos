@@ -201,6 +201,18 @@
                 }
             }
 
+            if(isNew)
+            {
+                if(entity is IStateEntity stateEntity)
+                {
+                    stateEntity.State.SetCreated();
+                }
+            }
+            else if(entity is IStateEntity stateEntity)
+            {
+                stateEntity.State.SetUpdated();
+            }
+
             this.logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogKeys.DomainRepository);
             // TODO: map to destination
             //this.entities = this.entities.Where(e => !e.Id.Equals(entity.Id)).Concat(new[] { entity }).ToList();
@@ -293,29 +305,7 @@
                 return ActionResult.None;
             }
 
-            if(this.Options?.PublishEvents != false)
-            {
-                await this.mediator.Publish(new EntityDeleteDomainEvent(entity)).AnyContext();
-            }
-
-            this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogKeys.DomainRepository);
-
-            this.@lock.EnterWriteLock();
-            try
-            {
-                this.context.Entities.Remove(entity);
-            }
-            finally
-            {
-                this.@lock.ExitWriteLock();
-            }
-
-            if(this.Options?.PublishEvents != false)
-            {
-                await this.mediator.Publish(new EntityDeletedDomainEvent(entity)).AnyContext();
-            }
-
-            return ActionResult.Deleted; // TODO: check if something actually got delete
+            return await this.DeleteAsync(entity.Id).AnyContext();
         }
 
         protected virtual Func<TEntity, bool> EnsurePredicate(ISpecification<TEntity> specification)

@@ -1,7 +1,6 @@
 ﻿namespace Naos.Core.UnitTests.Common.Serialization
 {
     using Naos.Core.Common;
-    using Naos.Core.Common.Serialization;
     using Xunit;
 
     public class CsvSerializerTests : SerializerTestsBase
