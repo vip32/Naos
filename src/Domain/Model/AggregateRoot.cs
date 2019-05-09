@@ -1,8 +1,7 @@
 ﻿namespace Naos.Core.Domain
 {
-    using System.Collections.Generic;
     using System.Diagnostics;
-    using EnsureThat;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// <para>
@@ -32,6 +31,7 @@
     [DebuggerDisplay("Type={GetType().Name}, Id={Id}")]
     public abstract class AggregateRoot<TId> : Entity<TId>, IAggregateRoot
     {
+        [JsonIgnore]
         public DomainEvents DomainEvents => new DomainEvents();
     }
 }
