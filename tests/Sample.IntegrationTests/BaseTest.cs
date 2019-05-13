@@ -26,7 +26,7 @@
 
             // naos core registrations
             this.services
-                .AddMediatR()
+                .AddMediatR(AppDomain.CurrentDomain.GetAssemblies())
                 .AddNaos(configuration, "Product", "Capability", new[] { "All" }, n => n
                     .AddServices(o => o
                         .AddSampleCountries()

@@ -10,7 +10,7 @@
     public class ValidateCommandBehaviorTests
     {
         [Fact]
-        public async Task ValidaCommand_Succeeds()
+        public async Task ValidCommand_Succeeds()
         {
             // arrange/act
             var result = await new ValidateCommandBehavior().ExecuteAsync(new StubCommand("Name1"));

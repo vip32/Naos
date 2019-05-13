@@ -77,7 +77,7 @@
                         };
                     };
                 })
-                .AddMediatR()
+                .AddMediatR(AppDomain.CurrentDomain.GetAssemblies())
                 .AddMvc(o =>
                     {
                         o.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build())); // https://tahirnaushad.com/2017/08/28/asp-net-core-2-0-mvc-filters/ or use controller attribute (Authorize)

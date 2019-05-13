@@ -1,5 +1,6 @@
 ﻿namespace Naos.Sample.App.IntegrationTests.Messaging.Infrastructure.Azure
 {
+    using System;
     using MediatR;
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Core.Common;
@@ -18,7 +19,7 @@
             var configuration = NaosConfigurationFactory.Create();
 
             this.services
-                .AddMediatR()
+                .AddMediatR(AppDomain.CurrentDomain.GetAssemblies())
                 .AddNaos(configuration, "Product", "Capability", new[] { "All" }, n => n
                     .AddOperations(o => o
                         .AddLogging(correlationId: $"TEST{RandomGenerator.GenerateString(9)}"))
