@@ -36,8 +36,7 @@
                                     .Mediator(sp.GetRequiredService<IMediator>())
                                     .Context(sp.GetRequiredService<InMemoryContext<Country>>())
                                     .Mapper(new AutoMapperEntityMapper(ModelMapperConfiguration.Create())), // singleton
-                                    e => e.Identifier,
-                                    new[] { new AutoMapperSpecificationMapper<Country, DbCountry>(ModelMapperConfiguration.Create()) })))));
+                                    e => e.Identifier)))));
             });
 
             options.Context.Services.AddSingleton(sp => new InMemoryContext<Country>(new[]

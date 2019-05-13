@@ -90,19 +90,19 @@
         }
     }
 
-    public class StubHasNameSpecificationMapper : ISpecificationMapper<StubEntity, StubDb>
-    {
-        public bool CanHandle(ISpecification<StubEntity> specification)
-        {
-            return specification.Is<StubHasNameSpecification>();
-        }
+    //public class StubHasNameSpecificationMapper : ISpecificationMapper<StubEntity, StubDb>
+    //{
+    //    public bool CanHandle(ISpecification<StubEntity> specification)
+    //    {
+    //        return specification.Is<StubHasNameSpecification>();
+    //    }
 
-        public Func<StubDb, bool> Map(ISpecification<StubEntity> specification)
-        {
-            var s = specification.As<StubHasNameSpecification>();
-            return td => td.FullName == $"{s.FirstName} {s.LastName}";
-        }
-    }
+    //    public Func<StubDb, bool> Map(ISpecification<StubEntity> specification)
+    //    {
+    //        var s = specification.As<StubHasNameSpecification>();
+    //        return td => td.FullName == $"{s.FirstName} {s.LastName}";
+    //    }
+    //}
 
 #pragma warning disable SA1204 // Static elements must appear before instance elements
     public static class StubEntityMapperConfiguration

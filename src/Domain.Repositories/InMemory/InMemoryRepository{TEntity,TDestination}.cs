@@ -19,27 +19,23 @@
     public class InMemoryRepository<TEntity, TDestination> : InMemoryRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
-        private readonly IEnumerable<ISpecificationMapper<TEntity, TDestination>> specificationMappers;
         private readonly Func<TDestination, object> idSelector;
 
         public InMemoryRepository(
             InMemoryRepositoryOptions<TEntity> options,
-            Func<TDestination, object> idSelector,
-            IEnumerable<ISpecificationMapper<TEntity, TDestination>> specificationMappers = null)
+            Func<TDestination, object> idSelector)
             : base(options)
         {
             EnsureArg.IsNotNull(idSelector, nameof(idSelector));
 
-            this.specificationMappers = specificationMappers;
             this.idSelector = idSelector; // TODO: really needed?
         }
 
         public InMemoryRepository(
             Builder<InMemoryRepositoryOptionsBuilder<TEntity>,
                 InMemoryRepositoryOptions<TEntity>> optionsBuilder,
-            Func<TDestination, object> idSelector,
-            IEnumerable<ISpecificationMapper<TEntity, TDestination>> specificationMappers = null)
-            : this(optionsBuilder(new InMemoryRepositoryOptionsBuilder<TEntity>()).Build(), idSelector, specificationMappers)
+            Func<TDestination, object> idSelector)
+            : this(optionsBuilder(new InMemoryRepositoryOptionsBuilder<TEntity>()).Build(), idSelector)
         {
         }
 
@@ -92,15 +88,17 @@
 
         protected new Func<TDestination, bool> EnsurePredicate(ISpecification<TEntity> specification)
         {
-            foreach(var specificationMapper in this.specificationMappers.Safe())
-            {
-                if(specificationMapper.CanHandle(specification))
-                {
-                    return specificationMapper.Map(specification);
-                }
-            }
+            return this.options.Mapper.MapSpecification<TEntity, TDestination>(specification);
 
-            throw new NaosException($"no applicable specification mapper found for {specification.GetType().PrettyName()}");
+            //foreach(var specificationMapper in this.specificationMappers.Safe())
+            //{
+            //    if(specificationMapper.CanHandle(specification))
+            //    {
+            //        return specificationMapper.Map(specification);
+            //    }
+            //}
+
+            //throw new NaosException($"no applicable specification mapper found for {specification.GetType().PrettyName()}");
         }
 
         protected IEnumerable<TEntity> FindAll(IEnumerable<TDestination> entities, IFindOptions<TEntity> options = null)

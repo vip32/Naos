@@ -66,11 +66,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                     .Mediator(Substitute.For<IMediator>())
                     .Context(new InMemoryContext<StubEntity>(this.entities))
                     .Mapper(new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
-                    e => e.Identifier,
-                    new[]
-                    {
-                        new AutoMapperSpecificationMapper<StubEntity, StubDb>(StubEntityMapperConfiguration.Create())
-                    }));
+                    e => e.Identifier));
 
             // act
             var result = await sut.FindOneAsync("Id99").AnyContext();
@@ -109,11 +105,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                     .Mediator(Substitute.For<IMediator>())
                     .Context(new InMemoryContext<StubEntity>(this.entities))
                     .Mapper(new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
-                    e => e.Identifier,
-                    new[]
-                    {
-                        new AutoMapperSpecificationMapper<StubEntity, StubDb>(StubEntityMapperConfiguration.Create())
-                    }));
+                    e => e.Identifier));
 
             // act
             var result = await sut.FindAllAsync().AnyContext();
@@ -134,11 +126,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                     .Mediator(Substitute.For<IMediator>())
                     .Context(new InMemoryContext<StubEntity>(this.entities))
                     .Mapper(new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
-                    e => e.Identifier,
-                    new[]
-                    {
-                        new AutoMapperSpecificationMapper<StubEntity, StubDb>(StubEntityMapperConfiguration.Create())
-                    }));
+                    e => e.Identifier));
 
             // act
             var result = await sut.FindAllAsync().AnyContext();
@@ -179,11 +167,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                 .Mediator(Substitute.For<IMediator>())
                 .Context(new InMemoryContext<StubEntity>(this.entities))
                 .Mapper(new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
-                e => e.Identifier,
-                new[]
-                {
-                    new AutoMapperSpecificationMapper<StubEntity, StubDb>(StubEntityMapperConfiguration.Create())
-                });
+                e => e.Identifier);
 
             // act
             var result = await sut.FindAllAsync(
@@ -232,11 +216,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
                 .Mediator(Substitute.For<IMediator>())
                 .Context(new InMemoryContext<StubEntity>(this.entities))
                 .Mapper(new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
-                e => e.Identifier,
-                new[]
-                {
-                    new AutoMapperSpecificationMapper<StubEntity, StubDb>(StubEntityMapperConfiguration.Create())
-                });
+                e => e.Identifier);
 
             // act
             var result = await sut.FindOneAsync("Id99").AnyContext();
