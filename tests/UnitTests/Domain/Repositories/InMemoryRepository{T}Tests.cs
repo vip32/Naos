@@ -8,7 +8,6 @@ namespace Naos.Core.UnitTests.Domain.Repositories
     using EnsureThat;
     using FizzWare.NBuilder;
     using MediatR;
-    using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
     using Naos.Core.Domain;
     using Naos.Core.Domain.Repositories;

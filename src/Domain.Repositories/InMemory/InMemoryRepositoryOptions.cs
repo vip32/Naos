@@ -3,7 +3,6 @@
     using MediatR;
     using Naos.Core.Common;
     using Naos.Core.Domain;
-    using Naos.Core.Domain.Specifications;
 
     public class InMemoryRepositoryOptions<TEntity> : BaseOptions
         where TEntity : class, IEntity, IAggregateRoot
