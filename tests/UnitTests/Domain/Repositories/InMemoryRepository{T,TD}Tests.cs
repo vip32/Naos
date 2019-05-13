@@ -47,15 +47,11 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task FindOneEntity_Test()
         {
             // arrange
-            var logger = Substitute.For<ILogger<InMemoryRepository<StubEntity, StubDb>>>();
-            var mediator = Substitute.For<IMediator>();
-            var sut = new InMemoryRepository<StubEntity, StubDb>(
-                logger,
-                mediator,
-                e => e.Identifier,
-                new InMemoryContext<StubEntity>(this.entities),
-                options: new RepositoryOptions(
-                    new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())));
+            var sut = new InMemoryRepository<StubEntity, StubDb>(o => o
+                .Mediator(Substitute.For<IMediator>())
+                .Context(new InMemoryContext<StubEntity>(this.entities))
+                .Mapper(new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
+                e => e.Identifier);
 
             // act
             var result = await sut.FindOneAsync("Id99").AnyContext();
@@ -69,17 +65,14 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task FindOneTenantEntity_Test()
         {
             // arrange
-            var logger = Substitute.For<ILogger<InMemoryRepository<StubEntity, StubDb>>>();
-            var mediator = Substitute.For<IMediator>();
             var sut = new RepositorySpecificationDecorator<StubEntity>(
                 new Specification<StubEntity>(t => t.TenantId == this.tenantId),
-                new InMemoryRepository<StubEntity, StubDb>( // decoratee
-                    logger,
-                    mediator,
+                new InMemoryRepository<StubEntity, StubDb>(o => o
+                    .Mediator(Substitute.For<IMediator>())
+                    .Context(new InMemoryContext<StubEntity>(this.entities))
+                    .Mapper(new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
                     e => e.Identifier,
-                    new InMemoryContext<StubEntity>(this.entities),
-                    options: new RepositoryOptions(new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
-                    specificationMappers: new[]
+                    new[]
                     {
                         new AutoMapperSpecificationMapper<StubEntity, StubDb>(StubEntityMapperConfiguration.Create())
                     }));
@@ -96,15 +89,11 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task FindAllEntities_Test()
         {
             // arrange
-            var logger = Substitute.For<ILogger<InMemoryRepository<StubEntity, StubDb>>>();
-            var mediator = Substitute.For<IMediator>();
-            var sut = new InMemoryRepository<StubEntity, StubDb>(
-                logger,
-                mediator,
-                e => e.Identifier,
-                new InMemoryContext<StubEntity>(this.entities),
-                options: new RepositoryOptions(
-                    new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())));
+            var sut = new InMemoryRepository<StubEntity, StubDb>(o => o
+                .Mediator(Substitute.For<IMediator>())
+                .Context(new InMemoryContext<StubEntity>(this.entities))
+                .Mapper(new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
+                e => e.Identifier);
 
             // act
             var result = await sut.FindAllAsync().AnyContext();
@@ -119,17 +108,14 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task FindAllTenantEntities_Test() // TODO: move to own test class + mocks
         {
             // arrange
-            var logger = Substitute.For<ILogger<InMemoryRepository<StubEntity, StubDb>>>();
-            var mediator = Substitute.For<IMediator>();
             var sut = new RepositorySpecificationDecorator<StubEntity>(
                 new Specification<StubEntity>(t => t.TenantId == this.tenantId),
-                new InMemoryRepository<StubEntity, StubDb>( // decoratee
-                    logger,
-                    mediator,
+                new InMemoryRepository<StubEntity, StubDb>(o => o
+                    .Mediator(Substitute.For<IMediator>())
+                    .Context(new InMemoryContext<StubEntity>(this.entities))
+                    .Mapper(new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
                     e => e.Identifier,
-                    new InMemoryContext<StubEntity>(this.entities),
-                    options: new RepositoryOptions(new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
-                    specificationMappers: new[]
+                    new[]
                     {
                         new AutoMapperSpecificationMapper<StubEntity, StubDb>(StubEntityMapperConfiguration.Create())
                     }));
@@ -147,18 +133,14 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task FindAllTenantEntities2_Test() // TODO: move to own test class + mocks
         {
             // arrange
-            var logger = Substitute.For<ILogger<InMemoryRepository<StubEntity, StubDb>>>();
-            var mediator = Substitute.For<IMediator>();
-            var sut = new RepositoryTenantDecorator<StubEntity>(
-                this.tenantId,
-                new InMemoryRepository<StubEntity, StubDb>( // decoratee
-                    logger,
-                    mediator,
+            var sut = new RepositorySpecificationDecorator<StubEntity>(
+                new Specification<StubEntity>(t => t.TenantId == this.tenantId),
+                new InMemoryRepository<StubEntity, StubDb>(o => o
+                    .Mediator(Substitute.For<IMediator>())
+                    .Context(new InMemoryContext<StubEntity>(this.entities))
+                    .Mapper(new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
                     e => e.Identifier,
-                    new InMemoryContext<StubEntity>(this.entities),
-                    options: new RepositoryOptions(
-                        new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
-                    specificationMappers: new[]
+                    new[]
                     {
                         new AutoMapperSpecificationMapper<StubEntity, StubDb>(StubEntityMapperConfiguration.Create())
                     }));
@@ -198,19 +180,15 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task FindMappedEntitiesWithSpecification_Test()
         {
             // arrange
-            var logger = Substitute.For<ILogger<InMemoryRepository<StubEntity, StubDb>>>();
-            var mediator = Substitute.For<IMediator>();
-            var sut = new InMemoryRepository<StubEntity, StubDb>(
-                logger,
-                mediator,
+            var sut = new InMemoryRepository<StubEntity, StubDb>(o => o
+                .Mediator(Substitute.For<IMediator>())
+                .Context(new InMemoryContext<StubEntity>(this.entities))
+                .Mapper(new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
                 e => e.Identifier,
-                new InMemoryContext<StubEntity>(this.entities),
-                options: new RepositoryOptions(new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
-                specificationMappers: new[]
+                new[]
                 {
-                    /*new StubHasNameSpecificationMapper(),*/
                     new AutoMapperSpecificationMapper<StubEntity, StubDb>(StubEntityMapperConfiguration.Create())
-                }); // infrastructure layer
+                });
 
             // act
             var result = await sut.FindAllAsync(
@@ -255,16 +233,15 @@ namespace Naos.Core.UnitTests.Domain.Repositories
         public async Task FindMappedEntityOne_Test()
         {
             // arrange
-            var logger = Substitute.For<ILogger<InMemoryRepository<StubEntity, StubDb>>>();
-            var mediator = Substitute.For<IMediator>();
-            var sut = new InMemoryRepository<StubEntity, StubDb>(
-                logger,
-                mediator,
+            var sut = new InMemoryRepository<StubEntity, StubDb>(o => o
+                .Mediator(Substitute.For<IMediator>())
+                .Context(new InMemoryContext<StubEntity>(this.entities))
+                .Mapper(new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
                 e => e.Identifier,
-                new InMemoryContext<StubEntity>(this.entities),
-                new RepositoryOptions(
-                    new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
-                new[] { /*new StubHasNameSpecificationMapper(),*/ new AutoMapperSpecificationMapper<StubEntity, StubDb>(StubEntityMapperConfiguration.Create()) }); // infrastructure layer
+                new[]
+                {
+                    new AutoMapperSpecificationMapper<StubEntity, StubDb>(StubEntityMapperConfiguration.Create())
+                });
 
             // act
             var result = await sut.FindOneAsync("Id99").AnyContext();

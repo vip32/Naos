@@ -14,7 +14,7 @@
     public class CosmosDbSqlRepository<TEntity> : IGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot //, IDiscriminated
     {
-        private readonly ILogger<IGenericRepository<TEntity>> logger;
+        protected readonly ILogger<IGenericRepository<TEntity>> logger;
         private readonly CosmosDbSqlRepositoryOptions<TEntity> options;
 
         public CosmosDbSqlRepository(CosmosDbSqlRepositoryOptions<TEntity> options)

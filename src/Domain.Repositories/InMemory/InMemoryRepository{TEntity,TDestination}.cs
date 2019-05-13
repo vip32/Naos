@@ -25,20 +25,24 @@
         private readonly Func<TDestination, object> idSelector;
 
         public InMemoryRepository(
-            ILogger<IGenericRepository<TEntity>> logger,
-            IMediator mediator,
+            InMemoryRepositoryOptions<TEntity> options,
             Func<TDestination, object> idSelector,
-            InMemoryContext<TEntity> context,
-            IRepositoryOptions options = null,
             IEnumerable<ISpecificationMapper<TEntity, TDestination>> specificationMappers = null)
-            : base(logger, mediator, context, options)
+            : base(options)
         {
             EnsureArg.IsNotNull(idSelector, nameof(idSelector));
-            EnsureArg.IsNotNull(options?.Mapper, nameof(options.Mapper));
 
-            //base.entities = entities.NullToEmpty().Select(d => this.Options.Mapper.Map<TEntity>(d));
             this.specificationMappers = specificationMappers;
-            this.idSelector = idSelector;
+            this.idSelector = idSelector; // TODO: really needed?
+        }
+
+        public InMemoryRepository(
+            Builder<InMemoryRepositoryOptionsBuilder<TEntity>,
+                InMemoryRepositoryOptions<TEntity>> optionsBuilder,
+            Func<TDestination, object> idSelector,
+            IEnumerable<ISpecificationMapper<TEntity, TDestination>> specificationMappers = null)
+            : this(optionsBuilder(new InMemoryRepositoryOptionsBuilder<TEntity>()).Build(), idSelector, specificationMappers)
+        {
         }
 
         /// <summary>
@@ -53,7 +57,7 @@
             IFindOptions<TEntity> options = null,
             CancellationToken cancellationToken = default)
         {
-            var result = this.context.Entities.Safe().Select(e => this.Options.Mapper.Map<TDestination>(e)); // work on destination objects
+            var result = this.options.Context.Entities.Safe().Select(e => this.options.Mapper.Map<TDestination>(e)); // work on destination objects
 
             foreach(var specification in specifications.Safe())
             {
@@ -76,13 +80,13 @@
                 return default;
             }
 
-            var result = this.context.Entities.Safe().Select(e => this.Options.Mapper.Map<TDestination>(e)) // work on destination objects
+            var result = this.options.Context.Entities.Safe().Select(e => this.options.Mapper.Map<TDestination>(e)) // work on destination objects
                 .SingleOrDefault(e => this.idSelector(e).Equals(id)); // TODO: use HasIdSpecification + MapExpression (makes idSelector obsolete)
             // return (await this.FindAllAsync(new HasIdSpecification<TEntity>(id))).FirstOrDefault();
 
-            if(this.Options?.Mapper != null && result != null)
+            if(this.options.Mapper != null && result != null)
             {
-                return await Task.FromResult(this.Options.Mapper.Map<TEntity>(result));
+                return await Task.FromResult(this.options.Mapper.Map<TEntity>(result));
             }
 
             return default;
@@ -120,11 +124,11 @@
             {
                 orderedResult = orderedResult == null
                     ? order.Direction == OrderDirection.Ascending
-                        ? result.OrderBy(this.Options.Mapper.MapExpression<Expression<Func<TDestination, object>>>(order.Expression).Compile())
-                        : result.OrderByDescending(this.Options.Mapper.MapExpression<Expression<Func<TDestination, object>>>(order.Expression).Compile())
+                        ? result.OrderBy(this.options.Mapper.MapExpression<Expression<Func<TDestination, object>>>(order.Expression).Compile())
+                        : result.OrderByDescending(this.options.Mapper.MapExpression<Expression<Func<TDestination, object>>>(order.Expression).Compile())
                     : order.Direction == OrderDirection.Ascending // replace wit CompileFast()? https://github.com/dadhi/FastExpressionCompiler
-                        ? orderedResult.ThenBy(this.Options.Mapper.MapExpression<Expression<Func<TDestination, object>>>(order.Expression).Compile())
-                        : orderedResult.ThenByDescending(this.Options.Mapper.MapExpression<Expression<Func<TDestination, object>>>(order.Expression).Compile());
+                        ? orderedResult.ThenBy(this.options.Mapper.MapExpression<Expression<Func<TDestination, object>>>(order.Expression).Compile())
+                        : orderedResult.ThenByDescending(this.options.Mapper.MapExpression<Expression<Func<TDestination, object>>>(order.Expression).Compile());
             }
 
             if(orderedResult != null)
@@ -132,9 +136,9 @@
                 result = orderedResult;
             }
 
-            if(this.Options?.Mapper != null && result != null)
+            if(this.options.Mapper != null && result != null)
             {
-                return result.Select(d => this.Options.Mapper.Map<TEntity>(d));
+                return result.Select(d => this.options.Mapper.Map<TEntity>(d));
             }
 
             return null;

@@ -31,13 +31,12 @@
                             "naos_sample_test",
                             new RepositoryOrderDecorator<Country>(
                                 e => e.Name,
-                                new InMemoryRepository<Country, DbCountry>(
-                                    sp.GetRequiredService<ILogger<IGenericRepository<Country>>>(),
-                                    sp.GetRequiredService<IMediator>(),
+                                new InMemoryRepository<Country, DbCountry>(o => o
+                                    .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
+                                    .Mediator(sp.GetRequiredService<IMediator>())
+                                    .Context(sp.GetRequiredService<InMemoryContext<Country>>())
+                                    .Mapper(new AutoMapperEntityMapper(ModelMapperConfiguration.Create())), // singleton
                                     e => e.Identifier,
-                                    sp.GetRequiredService<InMemoryContext<Country>>(), // singleton
-                                    new RepositoryOptions(
-                                        new AutoMapperEntityMapper(ModelMapperConfiguration.Create())),
                                     new[] { new AutoMapperSpecificationMapper<Country, DbCountry>(ModelMapperConfiguration.Create()) })))));
             });
 

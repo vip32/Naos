@@ -14,9 +14,15 @@
             return this;
         }
 
-        public InMemoryRepositoryOptionsBuilder<TEntity> Provider(ICosmosDbSqlProvider<TEntity> provider)
+        public InMemoryRepositoryOptionsBuilder<TEntity> Context(InMemoryContext<TEntity> context)
         {
-            this.Target.Provider = provider;
+            this.Target.Context = context;
+            return this;
+        }
+
+        public InMemoryRepositoryOptionsBuilder<TEntity> Mapper(IEntityMapper mapper)
+        {
+            this.Target.Mapper = mapper;
             return this;
         }
 
