@@ -1,6 +1,8 @@
 ﻿namespace Naos.Core.Domain.Repositories
 {
+    using System;
     using System.Linq.Expressions;
+    using Naos.Core.Domain.Specifications;
 
     /// <summary>
     /// Defines the interface to map objects.
@@ -40,5 +42,12 @@
 
         TDestination MapExpression<TDestination>(LambdaExpression expression)
             where TDestination : LambdaExpression;
+
+        /// <summary>
+        /// Maps the specified TSource specification to an expression for TDestination types.
+        /// </summary>
+        /// <param name="specification">The specification.</param>
+        /// <returns></returns>
+        Func<TDestination, bool> MapSpecification<TSource, TDestination>(ISpecification<TSource> specification);
     }
 }

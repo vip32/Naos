@@ -1,7 +1,10 @@
 ﻿namespace Naos.Core.Domain.Repositories.AutoMapper
 {
+    using System;
     using System.Linq.Expressions;
+    using EnsureThat;
     using global::AutoMapper.Extensions.ExpressionMapping;
+    using Naos.Core.Domain.Specifications;
 
     public class AutoMapperEntityMapper : IEntityMapper
     {
@@ -10,7 +13,7 @@
 
         public AutoMapperEntityMapper(global::AutoMapper.IMapper mapper)
         {
-            EnsureThat.EnsureArg.IsNotNull(mapper, nameof(mapper));
+            EnsureArg.IsNotNull(mapper, nameof(mapper));
 
             this.mapper = mapper;
         }
@@ -34,6 +37,15 @@
             where TDestination : LambdaExpression
         {
             return this.mapper.MapExpression<TDestination>(expression);
+        }
+
+        public Func<TDestination, bool> MapSpecification<TSource, TDestination>(ISpecification<TSource> specification)
+        {
+            EnsureArg.IsNotNull(specification, nameof(specification));
+
+            var expression = this.mapper
+                .MapExpression<Expression<Func<TDestination, bool>>>(specification.ToExpression());
+            return expression.Compile(); // replace wit CompileFast()? https://github.com/dadhi/FastExpressionCompiler
         }
     }
 }
