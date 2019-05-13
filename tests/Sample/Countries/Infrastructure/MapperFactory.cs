@@ -5,7 +5,7 @@
     using Naos.Core.Common;
     using Naos.Sample.Countries.Domain;
 
-    public static class ModelMapperConfiguration
+    public static class MapperFactory
     {
         public static IMapper Create()
         {

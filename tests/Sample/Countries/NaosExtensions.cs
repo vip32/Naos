@@ -35,7 +35,7 @@
                                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                                     .Mediator(sp.GetRequiredService<IMediator>())
                                     .Context(sp.GetRequiredService<InMemoryContext<Country>>())
-                                    .Mapper(new AutoMapperEntityMapper(ModelMapperConfiguration.Create())), // singleton
+                                    .Mapper(new AutoMapperEntityMapper(MapperFactory.Create())), // singleton
                                     e => e.Identifier)))));
             });
 
