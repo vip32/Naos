@@ -16,11 +16,11 @@
     /// </summary>
     /// <typeparam name="TEntity">The type of the domain entity.</typeparam>
     /// <seealso cref="Domain.IRepository{T, TId}" />
-    public class InMemoryRepository<TEntity> : IRepository<TEntity>
+    public class InMemoryRepository<TEntity> : IGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
         protected readonly InMemoryContext<TEntity> context;
-        protected readonly ILogger<IRepository<TEntity>> logger;
+        protected readonly ILogger<IGenericRepository<TEntity>> logger;
         private readonly IMediator mediator;
         private ReaderWriterLockSlim @lock = new ReaderWriterLockSlim();
 
@@ -32,7 +32,7 @@
         /// <param name="context">The context containing entities.</param>
         /// <param name="options">The options.</param>
         public InMemoryRepository(
-            ILogger<IRepository<TEntity>> logger,
+            ILogger<IGenericRepository<TEntity>> logger,
             IMediator mediator,
             InMemoryContext<TEntity> context,
             IRepositoryOptions options = null)

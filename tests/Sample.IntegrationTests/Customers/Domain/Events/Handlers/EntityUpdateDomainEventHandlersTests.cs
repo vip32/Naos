@@ -1,6 +1,5 @@
 ﻿namespace Naos.Sample.IntegrationTests.Customers.Domain
 {
-    using System;
     using System.Threading.Tasks;
     using MediatR;
     using Microsoft.Extensions.DependencyInjection;

@@ -50,7 +50,7 @@
             public int Age { get; set; }
         }
 
-        public class StubEntityRepository : IRepository<StubEntity>
+        public class StubEntityRepository : IGenericRepository<StubEntity>
         {
             public Task<ActionResult> DeleteAsync(object id)
             {

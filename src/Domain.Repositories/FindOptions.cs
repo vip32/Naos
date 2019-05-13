@@ -6,7 +6,7 @@
     using Naos.Core.Common;
 
     /// <summary>
-    /// Various options to specify the <see cref="IRepository{T}" /> find operations.
+    /// Various options to specify the <see cref="IGenericRepository{T}" /> find operations.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <seealso cref="Domain.IFindOptions{TEntity}" />

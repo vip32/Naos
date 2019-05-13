@@ -1,6 +1,5 @@
 ﻿namespace Naos.Core.Messaging.Domain
 {
-    using System.Collections.Generic;
     using Naos.Core.Common;
     using Naos.Core.Domain;
     using Newtonsoft.Json;

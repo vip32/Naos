@@ -9,7 +9,7 @@
     using Naos.Core.Domain.Specifications;
 
     /// <summary>
-    /// <para>Decorates an <see cref="Repositories.IRepository{TEntity}"/>.</para>
+    /// <para>Decorates an <see cref="Repositories.IGenericRepository{TEntity}"/>.</para>
     /// <para>
     ///    .-----------.
     ///    | Decorator |
@@ -19,14 +19,14 @@
     /// </para>
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
-    /// <seealso cref="Repositories.IRepository{TEntity}" />
-    public class RepositoryLoggingDecorator<TEntity> : IRepository<TEntity>
+    /// <seealso cref="Repositories.IGenericRepository{TEntity}" />
+    public class RepositoryLoggingDecorator<TEntity> : IGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
-        private readonly ILogger<IRepository<TEntity>> logger;
-        private readonly IRepository<TEntity> decoratee;
+        private readonly ILogger<IGenericRepository<TEntity>> logger;
+        private readonly IGenericRepository<TEntity> decoratee;
 
-        public RepositoryLoggingDecorator(ILogger<IRepository<TEntity>> logger, IRepository<TEntity> decoratee)
+        public RepositoryLoggingDecorator(ILogger<IGenericRepository<TEntity>> logger, IGenericRepository<TEntity> decoratee)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(decoratee, nameof(decoratee));

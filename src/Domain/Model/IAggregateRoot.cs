@@ -1,6 +1,6 @@
 ﻿namespace Naos.Core.Domain
 {
-    using System.Collections.Generic;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// <para>
@@ -29,6 +29,7 @@
     /// </summary>
     public interface IAggregateRoot
     {
+        [JsonIgnore]
         DomainEvents DomainEvents { get; }
     }
 }

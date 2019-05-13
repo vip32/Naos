@@ -16,7 +16,7 @@
     [Route("api/[controller]")]
     public /*abstract*/ class NaosReadOnlyRepositoryControllerBase<TEntity, TRepo> : NaosControllerBase
         where TEntity : class, IEntity, IAggregateRoot
-        where TRepo : class, IReadOnlyRepository<TEntity>
+        where TRepo : class, IReadOnlyGenericRepository<TEntity>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="NaosReadOnlyRepositoryControllerBase{TEntity, TRepo}"/> class.

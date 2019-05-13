@@ -1,7 +1,5 @@
 ﻿namespace Naos.Core.UnitTests.Common
 {
-    using System;
-    using System.Diagnostics;
     using Naos.Core.Common;
     using Shouldly;
     using Xunit;

@@ -10,7 +10,7 @@
     using Naos.Core.Domain.Specifications;
 
     /// <summary>
-    /// <para>Decorates an <see cref="Repositories.IRepository{TEntity}"/>.</para>
+    /// <para>Decorates an <see cref="Repositories.IGenericRepository{TEntity}"/>.</para>
     /// <para>
     ///    .-----------.
     ///    | Decorator |
@@ -20,17 +20,17 @@
     /// </para>
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
-    /// <seealso cref="Repositories.IRepository{TEntity}" />
-    public class RepositoryOrderDecorator<TEntity> : IRepository<TEntity>
+    /// <seealso cref="Repositories.IGenericRepository{TEntity}" />
+    public class RepositoryOrderDecorator<TEntity> : IGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
         private readonly Expression<Func<TEntity, object>> orderExpression;
         private readonly OrderDirection orderDirection;
-        private readonly IRepository<TEntity> decoratee;
+        private readonly IGenericRepository<TEntity> decoratee;
 
         public RepositoryOrderDecorator(
             Expression<Func<TEntity, object>> orderByExpression, // TODO: accept a proper OrderByOption collection
-            IRepository<TEntity> decoratee)
+            IGenericRepository<TEntity> decoratee)
             : this(orderByExpression, OrderDirection.Ascending, decoratee)
         {
         }
@@ -38,7 +38,7 @@
         public RepositoryOrderDecorator(
             Expression<Func<TEntity, object>> orderExpression, // TODO: accept a proper OrderByOption collection
             OrderDirection orderDirection,
-            IRepository<TEntity> decoratee)
+            IGenericRepository<TEntity> decoratee)
         {
             EnsureArg.IsNotNull(orderExpression, nameof(orderExpression));
             EnsureArg.IsNotNull(decoratee, nameof(decoratee));

@@ -3,7 +3,7 @@
     using System.Threading.Tasks;
     using Naos.Core.Domain.Repositories;
 
-    public interface ICountryRepository : IRepository<Country>
+    public interface ICountryRepository : IGenericRepository<Country>
     {
         Task<Country> FindOneByName(string value);
     }

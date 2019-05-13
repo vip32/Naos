@@ -2,7 +2,7 @@
 {
     using Naos.Core.Domain.Repositories;
 
-    public interface ICommandRepository : IRepository<Command>
+    public interface ICommandRepository : IGenericRepository<Command>
     {
     }
 }

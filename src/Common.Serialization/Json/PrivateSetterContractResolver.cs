@@ -1,7 +1,6 @@
 ﻿namespace Naos.Core.Common
 {
     using System.Reflection;
-    using Naos.Core.Common;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
 

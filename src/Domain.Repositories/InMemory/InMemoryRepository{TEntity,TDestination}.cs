@@ -25,7 +25,7 @@
         private readonly Func<TDestination, object> idSelector;
 
         public InMemoryRepository(
-            ILogger<IRepository<TEntity>> logger,
+            ILogger<IGenericRepository<TEntity>> logger,
             IMediator mediator,
             Func<TDestination, object> idSelector,
             InMemoryContext<TEntity> context,

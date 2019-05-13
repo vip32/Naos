@@ -13,10 +13,10 @@
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Domain.Specifications;
 
-    public class EntityFrameworkRepository<TEntity> : IRepository<TEntity>
+    public class EntityFrameworkRepository<TEntity> : IGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
-        private readonly ILogger<IRepository<TEntity>> logger;
+        private readonly ILogger<IGenericRepository<TEntity>> logger;
         private readonly EntityFrameworkRepositoryOptions options;
 
         public EntityFrameworkRepository(EntityFrameworkRepositoryOptions options)
@@ -25,7 +25,7 @@
             EnsureArg.IsNotNull(options.DbContext, nameof(options.DbContext));
 
             this.options = options;
-            this.logger = options.CreateLogger<IRepository<TEntity>>();
+            this.logger = options.CreateLogger<IGenericRepository<TEntity>>();
 
             try
             {

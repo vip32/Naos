@@ -11,7 +11,7 @@
 
 #pragma warning disable SA1629 // Documentation text should end with a period
     /// <summary>
-    /// <para>Decorates an <see cref="Repositories.IRepository{TEntity}"/>.</para>
+    /// <para>Decorates an <see cref="Repositories.IGenericRepository{TEntity}"/>.</para>
     /// <para>
     ///
     ///                          |Aggregate |
@@ -37,16 +37,16 @@
     /// </para>
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
-    /// <seealso cref="Repositories.IRepository{TEntity}" />
-    public class RepositoryDomainEventsDecorator<TEntity> : IRepository<TEntity>
+    /// <seealso cref="Repositories.IGenericRepository{TEntity}" />
+    public class RepositoryDomainEventsDecorator<TEntity> : IGenericRepository<TEntity>
 #pragma warning restore SA1629 // Documentation text should end with a period
         where TEntity : class, IEntity, IAggregateRoot
     {
-        private readonly ILogger<IRepository<TEntity>> logger;
+        private readonly ILogger<IGenericRepository<TEntity>> logger;
         private readonly IMediator mediator;
-        private readonly IRepository<TEntity> decoratee;
+        private readonly IGenericRepository<TEntity> decoratee;
 
-        public RepositoryDomainEventsDecorator(ILogger<IRepository<TEntity>> logger, IMediator mediator, IRepository<TEntity> decoratee)
+        public RepositoryDomainEventsDecorator(ILogger<IGenericRepository<TEntity>> logger, IMediator mediator, IGenericRepository<TEntity> decoratee)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(mediator, nameof(mediator));
@@ -64,6 +64,7 @@
 
         public async Task<ActionResult> DeleteAsync(TEntity entity)
         {
+            // publish all domain events before transaction ends
             foreach(var @event in entity?.DomainEvents.GetAll())
             {
                 this.logger.LogInformation($"{{LogKey:l}} publish (type={@event.GetType().Name.Replace("DomainEvent", string.Empty)})", LogKeys.DomainEvent);
@@ -102,6 +103,7 @@
 
         public async Task<TEntity> InsertAsync(TEntity entity)
         {
+            // publish all domain events before transaction ends
             foreach(var @event in entity?.DomainEvents.GetAll())
             {
                 this.logger.LogInformation($"{{LogKey:l}} publish (type={@event.GetType().Name.Replace("DomainEvent", string.Empty)})", LogKeys.DomainEvent);
@@ -114,6 +116,7 @@
 
         public async Task<TEntity> UpdateAsync(TEntity entity)
         {
+            // publish all domain events before transaction ends
             foreach(var @event in entity?.DomainEvents.GetAll())
             {
                 this.logger.LogInformation($"{{LogKey:l}} publish (type={@event.GetType().Name.Replace("DomainEvent", string.Empty)})", LogKeys.DomainEvent);
@@ -126,6 +129,7 @@
 
         public async Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
         {
+            // publish all domain events before transaction ends
             foreach(var @event in entity?.DomainEvents.GetAll())
             {
                 this.logger.LogInformation($"{{LogKey:l}} publish (type={@event.GetType().Name.Replace("DomainEvent", string.Empty)})", LogKeys.DomainEvent);

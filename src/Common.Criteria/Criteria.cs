@@ -1,7 +1,6 @@
 ﻿namespace Naos.Core.Common
 {
     using System;
-    using System.Linq;
     using System.Linq.Expressions;
     using EnsureThat;
 

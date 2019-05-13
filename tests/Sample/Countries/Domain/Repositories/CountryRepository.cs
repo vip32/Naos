@@ -6,7 +6,7 @@
 
     public class CountryRepository : Repository<Country>, ICountryRepository
     {
-        public CountryRepository(IRepository<Country> decoratee)
+        public CountryRepository(IGenericRepository<Country> decoratee)
             : base(decoratee)
         {
         }

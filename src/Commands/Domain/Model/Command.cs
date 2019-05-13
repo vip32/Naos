@@ -1,7 +1,6 @@
 ﻿namespace Naos.Core.Commands.Domain
 {
     using System;
-    using System.Collections.Generic;
     using MediatR;
     using Naos.Core.Domain;
     using Newtonsoft.Json;
@@ -28,8 +27,11 @@
 
         public IBaseRequest Request { get; set; } // TODO: should be CommandRequest<TResponse>
 
+        public string CreatedBy { get; set; }
+
         public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.UtcNow;
 
+        [JsonIgnore]
         public DomainEvents DomainEvents => new DomainEvents();
     }
 }

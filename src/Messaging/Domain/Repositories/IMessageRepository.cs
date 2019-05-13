@@ -2,7 +2,7 @@
 {
     using Naos.Core.Domain.Repositories;
 
-    public interface IMessageRepository : IRepository<Message>
+    public interface IMessageRepository : IGenericRepository<Message>
     {
     }
 }

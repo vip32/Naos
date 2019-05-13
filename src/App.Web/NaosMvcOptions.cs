@@ -51,7 +51,7 @@
 
         public NaosMvcOptions AddRepositoryController<TEntity, TRepo>()
             where TEntity : class, IEntity, IAggregateRoot
-            where TRepo : class, IRepository<TEntity>
+            where TRepo : class, IGenericRepository<TEntity>
         {
             this.controllerRegistrations.Add(new GeneratedRepositoryControllerInformation
             {

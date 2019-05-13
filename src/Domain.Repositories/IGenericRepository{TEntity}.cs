@@ -2,7 +2,7 @@
 {
     using System.Threading.Tasks;
 
-    public interface IRepository<TEntity> : IReadOnlyRepository<TEntity>
+    public interface IGenericRepository<TEntity> : IReadOnlyGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
         /// <summary>

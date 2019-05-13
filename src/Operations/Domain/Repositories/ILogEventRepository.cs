@@ -2,7 +2,7 @@
 {
     using Naos.Core.Domain.Repositories;
 
-    public interface ILogEventRepository : IReadOnlyRepository<LogEvent>
+    public interface ILogEventRepository : IReadOnlyGenericRepository<LogEvent>
     {
     }
 }

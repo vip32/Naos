@@ -6,7 +6,7 @@
 
     public class CustomerRepository : Repository<Customer>, ICustomerRepository
     {
-        public CustomerRepository(IRepository<Customer> decoratee)
+        public CustomerRepository(IGenericRepository<Customer> decoratee)
             : base(decoratee)
         {
         }

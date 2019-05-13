@@ -30,7 +30,7 @@
                 options.Context.Services.AddSingleton(dbContext); // cross wiring, warning this will be a singleton (not scoped)
             }
 
-            options.Context.Services.AddScoped<IRepository<UserAccount>>(sp =>
+            options.Context.Services.AddScoped<IGenericRepository<UserAccount>>(sp =>
             {
                 return new UserAccountRepository(
                     new RepositoryLoggingDecorator<UserAccount>(

@@ -1,7 +1,6 @@
 ﻿namespace Naos.Core.Operations.App.Web
 {
     using System;
-    using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
     using Humanizer;

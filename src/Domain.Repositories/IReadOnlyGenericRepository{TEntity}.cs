@@ -5,7 +5,7 @@
     using System.Threading.Tasks;
     using Naos.Core.Domain.Specifications;
 
-    public interface IReadOnlyRepository<TEntity>
+    public interface IReadOnlyGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
         /// <summary>

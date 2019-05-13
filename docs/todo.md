@@ -60,6 +60,9 @@ Test Coverage https://gunnarpeipman.com/aspnet/azure-devops-code-coverage
 
 OptionsBuilder instead of large ctors (for all non configration things like MessageBrokers/Repositories)
 
+Cosmos Repo
+skip/take https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-sql-query#OffsetLimitClause
+
 Inmemory Repo
 use concurrentdict instead of list https://github.com/SharpRepository/SharpRepository/blob/develop/SharpRepository.InMemoryRepository/InMemoryRepositoryBase.cs
 

@@ -4,7 +4,7 @@
 
     public class UserAccountRepository : Repository<UserAccount>, IUserAccountRepository
     {
-        public UserAccountRepository(IRepository<UserAccount> decoratee)
+        public UserAccountRepository(IGenericRepository<UserAccount> decoratee)
             : base(decoratee)
         {
         }

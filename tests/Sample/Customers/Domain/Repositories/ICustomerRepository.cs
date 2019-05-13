@@ -3,7 +3,7 @@
     using System.Threading.Tasks;
     using Naos.Core.Domain.Repositories;
 
-    public interface ICustomerRepository : IRepository<Customer>
+    public interface ICustomerRepository : IGenericRepository<Customer>
     {
         Task<Customer> FindByNumber(string value);
     }

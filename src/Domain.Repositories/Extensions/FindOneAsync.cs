@@ -16,7 +16,7 @@
         /// <param name="tenantId">The tenant identifier.</param>
         /// <returns></returns>
         public static async Task<TEntity> FindOneAsync<TEntity>(
-            this IRepository<TEntity> source,
+            this IGenericRepository<TEntity> source,
             object id,
             string tenantId)
             where TEntity : class, IEntity, ITenantEntity, IAggregateRoot

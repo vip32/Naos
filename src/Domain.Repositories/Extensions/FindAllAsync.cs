@@ -18,7 +18,7 @@
         /// <param name="options">The options.</param>
         /// <returns></returns>
         public static async Task<IEnumerable<TEntity>> FindAllAsync<TEntity>( // causes issues when used in mapped repos <TEntity, TDesitination>, Unable to cast object of type 'xxxDto' to type 'Naos.Core.Domain.ITenantEntity'. better use the tenant decorator for this
-            this IRepository<TEntity> source,
+            this IGenericRepository<TEntity> source,
             string tenantId,
             IFindOptions<TEntity> options = null)
             where TEntity : class, IEntity, ITenantEntity, IAggregateRoot
@@ -40,7 +40,7 @@
         /// <param name="options">The options.</param>
         /// <returns></returns>
         public static async Task<IEnumerable<TEntity>> FindAllAsync<TEntity>(
-            this IRepository<TEntity> source,
+            this IGenericRepository<TEntity> source,
             string tenantId,
             Specification<TEntity> specification,
             IFindOptions<TEntity> options = null)
@@ -68,7 +68,7 @@
         /// <param name="options">The options.</param>
         /// <returns></returns>
         public static async Task<IEnumerable<TEntity>> FindAllAsync<TEntity>(
-            this IRepository<TEntity> source,
+            this IGenericRepository<TEntity> source,
             string tenantId,
             IEnumerable<Specification<TEntity>> specifications,
             IFindOptions<TEntity> options = null)

@@ -2,7 +2,7 @@
 {
     using Naos.Core.Domain.Repositories;
 
-    public interface IUserAccountRepository : IRepository<UserAccount>
+    public interface IUserAccountRepository : IGenericRepository<UserAccount>
     {
     }
 }

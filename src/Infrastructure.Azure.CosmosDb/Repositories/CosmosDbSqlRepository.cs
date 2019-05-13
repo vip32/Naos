@@ -11,10 +11,10 @@
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Domain.Specifications;
 
-    public class CosmosDbSqlRepository<TEntity> : IRepository<TEntity>
+    public class CosmosDbSqlRepository<TEntity> : IGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot //, IDiscriminated
     {
-        private readonly ILogger<IRepository<TEntity>> logger;
+        private readonly ILogger<IGenericRepository<TEntity>> logger;
         private readonly CosmosDbSqlRepositoryOptions<TEntity> options;
 
         public CosmosDbSqlRepository(CosmosDbSqlRepositoryOptions<TEntity> options)
@@ -23,7 +23,7 @@
             EnsureArg.IsNotNull(options.Provider, nameof(options.Provider));
 
             this.options = options;
-            this.logger = options.CreateLogger<IRepository<TEntity>>();
+            this.logger = options.CreateLogger<IGenericRepository<TEntity>>();
         }
 
         public CosmosDbSqlRepository(Builder<CosmosDbSqlRepositoryOptionsBuilder<TEntity>, CosmosDbSqlRepositoryOptions<TEntity>> optionsBuilder)
@@ -36,7 +36,7 @@
             var order = (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order).FirstOrDefault(); // cosmos only supports single orderby
             var entities = await this.options.Provider
                 .WhereAsync(
-                    count: options?.Take ?? -1, // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
+                    count: options?.Take ?? -1, // TODO: implement cosmosdb skip/take https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-sql-query#OffsetLimitClause
                     orderExpression: order?.Expression,
                     orderDescending: order?.Direction == OrderDirection.Descending).AnyContext();
             return entities.ToList();
@@ -48,7 +48,7 @@
             var entities = await this.options.Provider
                 .WhereAsync(
                     expression: specification?.ToExpression().Expand(), // expand fixes Invoke in expression
-                    count: options?.Take ?? -1, // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
+                    count: options?.Take ?? -1, // TODO: implement cosmosdb skip/take https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-sql-query#OffsetLimitClause
                     orderExpression: order?.Expression,
                     orderDescending: order?.Direction == OrderDirection.Descending).AnyContext();
             return entities.ToList();
@@ -60,7 +60,7 @@
             var entities = await this.options.Provider
                 .WhereAsync(
                     expressions: specifications.Safe().Select(s => s.ToExpression().Expand()), // expand fixes Invoke in expression
-                    count: options?.Take ?? -1, // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
+                    count: options?.Take ?? -1, // TODO: implement cosmosdb skip/take https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-sql-query#OffsetLimitClause
                     orderExpression: order?.Expression,
                     orderDescending: order?.Direction == OrderDirection.Descending).AnyContext();
             return entities.ToList();

@@ -9,7 +9,7 @@
     using Naos.Core.Domain.Specifications;
 
     /// <summary>
-    /// <para>Decorates an <see cref="Repositories.IRepository{TEntity}"/>.</para>
+    /// <para>Decorates an <see cref="Repositories.IGenericRepository{TEntity}"/>.</para>
     /// <para>
     ///    .-----------.
     ///    | Decorator |
@@ -19,14 +19,14 @@
     /// </para>
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
-    /// <seealso cref="Repositories.IRepository{TEntity}" />
-    public class RepositorySoftDeleteDecorator<TEntity> : IRepository<TEntity>
+    /// <seealso cref="Repositories.IGenericRepository{TEntity}" />
+    public class RepositorySoftDeleteDecorator<TEntity> : IGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot, IStateEntity
     {
-        private readonly IRepository<TEntity> decoratee;
+        private readonly IGenericRepository<TEntity> decoratee;
         private readonly ISpecification<TEntity> specification;
 
-        public RepositorySoftDeleteDecorator(IRepository<TEntity> decoratee)
+        public RepositorySoftDeleteDecorator(IGenericRepository<TEntity> decoratee)
         {
             EnsureArg.IsNotNull(decoratee, nameof(decoratee));
 

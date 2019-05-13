@@ -1,6 +1,5 @@
 ﻿namespace Naos.Core.Domain
 {
-    using System.Collections.Generic;
     using System.Diagnostics;
 
     /// <summary>
