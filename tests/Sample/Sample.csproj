@@ -18,9 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="8.3.0" />
+    <PackageReference Include="FluentValidation" Version="8.4.0" />
     <PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="2.2.2" />
-    <PackageReference Include="AspNetCore.HealthChecks.DocumentDb" Version="2.2.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.DocumentDb" Version="2.2.1" />
     <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="2.2.0" />
     <PackageReference Include="Humanizer.Core" Version="2.6.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Api.Analyzers" Version="2.2.0" />
