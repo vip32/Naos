@@ -6,8 +6,19 @@
     using NSwag.SwaggerGeneration.Processors;
     using NSwag.SwaggerGeneration.Processors.Contexts;
 
+    /// <summary>
+    /// Corrects (groups by entity) the tags used for the generic repositories.
+    /// </summary>
+    /// <seealso cref="NSwag.SwaggerGeneration.Processors.IOperationProcessor" />
     public class GenericRepositoryControllerOperationProcessor : IOperationProcessor
     {
+        /// <summary>
+        /// Processes the specified method information.
+        /// </summary>
+        /// <param name="context">The processor context.</param>
+        /// <returns>
+        /// true if the operation should be added to the Swagger specification.
+        /// </returns>
         public async Task<bool> ProcessAsync(OperationProcessorContext context)
         {
             // update tags where equal 'Naos Entity Repository' to 'Naos Entity Repository (Entity type name)'
