@@ -17,7 +17,7 @@
         public void CanConstructGeneric_WithEntityRepository()
         {
             // arrange
-            var controllerType = typeof(NaosEntityRepositoryControllerBase<>);
+            var controllerType = typeof(NaosEntityGenericRepositoryControllerBase<>);
             Type[] args = { typeof(StubEntity) }; // ctor accepts IRepository<TEntity>
 
             // act
@@ -31,7 +31,7 @@
         public void CanConstructGeneric_WithRepository()
         {
             // arrange
-            var controllerType = typeof(NaosRepositoryControllerBase<,>);
+            var controllerType = typeof(NaosGenericRepositoryControllerBase<,>);
             Type[] args = { typeof(StubEntity), typeof(StubEntityRepository) }; // ctor accepts generic repo
 
             // act

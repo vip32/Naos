@@ -61,7 +61,7 @@
                 })
                 .AddSwaggerDocument(config =>
                 {
-                    config.OperationProcessors.Add(new GeneratedRepositoryControllerOperationProcessor());
+                    config.OperationProcessors.Add(new GenericRepositoryControllerOperationProcessor());
                     config.OperationProcessors.Add(new ApiVersionProcessor());
                     config.PostProcess = document =>
                     {

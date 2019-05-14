@@ -8,9 +8,9 @@
 
     public class NaosMvcOptions
     {
-        private readonly IList<GeneratedRepositoryControllerInformation> controllerRegistrations = new List<GeneratedRepositoryControllerInformation>();
+        private readonly IList<GenericRepositoryControllerInformation> controllerRegistrations = new List<GenericRepositoryControllerInformation>();
 
-        public IEnumerable<GeneratedRepositoryControllerInformation> ControllerRegistrations
+        public IEnumerable<GenericRepositoryControllerInformation> ControllerRegistrations
         {
             get
             {
@@ -29,7 +29,7 @@
 
         public NaosMvcOptions AddRepositoryController(Type entityType, Type repositoryType = null)
         {
-            this.controllerRegistrations.Add(new GeneratedRepositoryControllerInformation
+            this.controllerRegistrations.Add(new GenericRepositoryControllerInformation
             {
                 EntityType = entityType,
                 RepositoryType = repositoryType
@@ -41,7 +41,7 @@
         public NaosMvcOptions AddRepositoryController<TEntity>()
             where TEntity : class, IEntity, IAggregateRoot
         {
-            this.controllerRegistrations.Add(new GeneratedRepositoryControllerInformation
+            this.controllerRegistrations.Add(new GenericRepositoryControllerInformation
             {
                 EntityType = typeof(TEntity)
             });
@@ -53,7 +53,7 @@
             where TEntity : class, IEntity, IAggregateRoot
             where TRepo : class, IGenericRepository<TEntity>
         {
-            this.controllerRegistrations.Add(new GeneratedRepositoryControllerInformation
+            this.controllerRegistrations.Add(new GenericRepositoryControllerInformation
             {
                 EntityType = typeof(TEntity),
                 RepositoryType = typeof(TRepo)

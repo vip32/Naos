@@ -14,22 +14,23 @@
     using NSwag.Annotations;
 
     [Route("api/[controller]")]
-    public /*abstract*/ class NaosReadOnlyRepositoryControllerBase<TEntity, TRepo> : NaosControllerBase
+    public /*abstract*/ class NaosReadOnlyGenericRepositoryControllerBase<TEntity, TRepository>
+        : NaosControllerBase
         where TEntity : class, IEntity, IAggregateRoot
-        where TRepo : class, IReadOnlyGenericRepository<TEntity>
+        where TRepository : class, IReadOnlyGenericRepository<TEntity>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="NaosReadOnlyRepositoryControllerBase{TEntity, TRepo}"/> class.
+        /// Initializes a new instance of the <see cref="NaosReadOnlyGenericRepositoryControllerBase{TEntity, TRepo}"/> class.
         /// </summary>
         /// <param name="repository">The repository.</param>
-        public NaosReadOnlyRepositoryControllerBase(TRepo repository)
+        public NaosReadOnlyGenericRepositoryControllerBase(TRepository repository)
         {
             EnsureArg.IsNotNull(repository, nameof(repository));
 
             this.Repository = repository;
         }
 
-        protected TRepo Repository { get; }
+        protected TRepository Repository { get; }
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]

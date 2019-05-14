@@ -26,7 +26,7 @@
                     })
                     .ConfigureApplicationPartManager(o => o
                         .FeatureProviders.Add(
-                            new GeneratedRepositoryControllerFeatureProvider(options.ControllerRegistrations)));
+                            new GenericRepositoryControllerFeatureProvider(options.ControllerRegistrations)));
             }
 
             mvcBuilder.AddControllersAsServices(); // needed to resolve controllers through di https://andrewlock.net/controller-activation-and-dependency-injection-in-asp-net-core-mvc/

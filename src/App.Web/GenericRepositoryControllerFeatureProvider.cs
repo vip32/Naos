@@ -8,11 +8,11 @@
     using Naos.Core.App.Web.Controllers;
     using Naos.Core.Common;
 
-    public class GeneratedRepositoryControllerFeatureProvider : IApplicationFeatureProvider<ControllerFeature>
+    public class GenericRepositoryControllerFeatureProvider : IApplicationFeatureProvider<ControllerFeature>
     {
-        private readonly IEnumerable<GeneratedRepositoryControllerInformation> informations;
+        private readonly IEnumerable<GenericRepositoryControllerInformation> informations;
 
-        public GeneratedRepositoryControllerFeatureProvider(IEnumerable<GeneratedRepositoryControllerInformation> informations)
+        public GenericRepositoryControllerFeatureProvider(IEnumerable<GenericRepositoryControllerInformation> informations)
         {
             this.informations = informations;
         }
@@ -31,12 +31,12 @@
                 if(information.RepositoryType != null)
                 {
                     Type[] args = { information.EntityType, information.RepositoryType };
-                    feature.Controllers.Add(typeof(NaosRepositoryControllerBase<,>).MakeGenericType(args).GetTypeInfo());
+                    feature.Controllers.Add(typeof(NaosGenericRepositoryControllerBase<,>).MakeGenericType(args).GetTypeInfo());
                 }
                 else
                 {
                     Type[] args = { information.EntityType };
-                    feature.Controllers.Add(typeof(NaosEntityRepositoryControllerBase<>).MakeGenericType(args).GetTypeInfo());
+                    feature.Controllers.Add(typeof(NaosEntityGenericRepositoryControllerBase<>).MakeGenericType(args).GetTypeInfo());
                 }
             }
         }

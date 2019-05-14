@@ -10,7 +10,7 @@
     using Naos.Sample.Countries.Domain;
     using NSwag.Annotations;
 
-    public class CountriesController : NaosRepositoryControllerBase<Country, ICountryRepository>
+    public class CountriesController : NaosGenericRepositoryControllerBase<Country, ICountryRepository>
     {
         public CountriesController(ICountryRepository repository)
             : base(repository)

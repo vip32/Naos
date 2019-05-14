@@ -11,15 +11,16 @@
     using NSwag.Annotations;
 
     [Route("api/[controller]")]
-    public /*abstract*/ class NaosRepositoryControllerBase<TEntity, TRepo> : NaosReadOnlyRepositoryControllerBase<TEntity, TRepo>
+    public /*abstract*/ class NaosGenericRepositoryControllerBase<TEntity, TRepository>
+        : NaosReadOnlyGenericRepositoryControllerBase<TEntity, TRepository>
         where TEntity : class, IEntity, IAggregateRoot
-        where TRepo : class, IGenericRepository<TEntity>
+        where TRepository : class, IGenericRepository<TEntity>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="NaosRepositoryControllerBase{TEntity, TRepo}"/> class.
+        /// Initializes a new instance of the <see cref="NaosGenericRepositoryControllerBase{TEntity, TRepo}"/> class.
         /// </summary>
         /// <param name="repository">The repository.</param>
-        public NaosRepositoryControllerBase(TRepo repository)
+        public NaosGenericRepositoryControllerBase(TRepository repository)
             : base(repository)
         {
         }

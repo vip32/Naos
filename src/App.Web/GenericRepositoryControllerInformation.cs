@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class GeneratedRepositoryControllerInformation
+    public class GenericRepositoryControllerInformation
     {
         public Type EntityType { get; set; }
 

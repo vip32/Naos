@@ -6,7 +6,7 @@
     using NSwag.SwaggerGeneration.Processors;
     using NSwag.SwaggerGeneration.Processors.Contexts;
 
-    public class GeneratedRepositoryControllerOperationProcessor : IOperationProcessor
+    public class GenericRepositoryControllerOperationProcessor : IOperationProcessor
     {
         public async Task<bool> ProcessAsync(OperationProcessorContext context)
         {

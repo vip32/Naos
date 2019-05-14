@@ -5,14 +5,15 @@
     using Naos.Core.Domain.Repositories;
 
     [Route("api/[controller]")]
-    public /*abstract*/ class NaosEntityRepositoryControllerBase<TEntity> : NaosRepositoryControllerBase<TEntity, IGenericRepository<TEntity>>
+    public /*abstract*/ class NaosEntityGenericRepositoryControllerBase<TEntity>
+        : NaosGenericRepositoryControllerBase<TEntity, IGenericRepository<TEntity>>
         where TEntity : class, IEntity, IAggregateRoot
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="NaosEntityRepositoryControllerBase{TEntity}"/> class.
+        /// Initializes a new instance of the <see cref="NaosEntityGenericRepositoryControllerBase{TEntity}"/> class.
         /// </summary>
         /// <param name="repository">The repository.</param>
-        public NaosEntityRepositoryControllerBase(IGenericRepository<TEntity> repository)
+        public NaosEntityGenericRepositoryControllerBase(IGenericRepository<TEntity> repository)
             : base(repository)
         {
         }
