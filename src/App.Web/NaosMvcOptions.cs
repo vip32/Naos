@@ -38,7 +38,12 @@
             return this;
         }
 
-        public NaosMvcOptions AddRepositoryController<TEntity>()
+        /// <summary>
+        /// Adds the generic repository controller for the specified type.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <returns></returns>
+        public NaosMvcOptions AddGenericRepositoryController<TEntity>()
             where TEntity : class, IEntity, IAggregateRoot
         {
             this.controllerRegistrations.Add(new GenericRepositoryControllerInformation
@@ -49,14 +54,20 @@
             return this;
         }
 
-        public NaosMvcOptions AddRepositoryController<TEntity, TRepo>()
+        /// <summary>
+        /// Adds the generic repository controller for the specified type.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <typeparam name="TRepository">The type of the repo.</typeparam>
+        /// <returns></returns>
+        public NaosMvcOptions AddGenericRepositoryController<TEntity, TRepository>()
             where TEntity : class, IEntity, IAggregateRoot
-            where TRepo : class, IGenericRepository<TEntity>
+            where TRepository : class, IGenericRepository<TEntity>
         {
             this.controllerRegistrations.Add(new GenericRepositoryControllerInformation
             {
                 EntityType = typeof(TEntity),
-                RepositoryType = typeof(TRepo)
+                RepositoryType = typeof(TRepository)
             });
 
             return this;
