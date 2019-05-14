@@ -12,7 +12,8 @@
     {
         private readonly IEnumerable<GenericRepositoryControllerInformation> informations;
 
-        public GenericRepositoryControllerFeatureProvider(IEnumerable<GenericRepositoryControllerInformation> informations)
+        public GenericRepositoryControllerFeatureProvider(
+            IEnumerable<GenericRepositoryControllerInformation> informations)
         {
             this.informations = informations;
         }

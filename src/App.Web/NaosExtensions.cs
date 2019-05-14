@@ -16,6 +16,7 @@
             var options = new NaosMvcOptions();
             optionsAction?.Invoke(options);
 
+            // add the generic repo controllers for all registrations
             if(!options.ControllerRegistrations.IsNullOrEmpty())
             {
                 mvcBuilder
@@ -26,7 +27,8 @@
                     })
                     .ConfigureApplicationPartManager(o => o
                         .FeatureProviders.Add(
-                            new GenericRepositoryControllerFeatureProvider(options.ControllerRegistrations)));
+                            new GenericRepositoryControllerFeatureProvider(
+                                options.ControllerRegistrations)));
             }
 
             mvcBuilder.AddControllersAsServices(); // needed to resolve controllers through di https://andrewlock.net/controller-activation-and-dependency-injection-in-asp-net-core-mvc/
