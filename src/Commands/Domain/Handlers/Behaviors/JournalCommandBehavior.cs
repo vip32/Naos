@@ -5,11 +5,15 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
 
-    public class TrackCommandBehavior : ICommandBehavior
+    public class JournalCommandBehavior : ICommandBehavior
     {
-        private readonly ILogger<TrackCommandBehavior> logger;
+        private readonly ILogger<JournalCommandBehavior> logger;
 
-        public TrackCommandBehavior(ILogger<TrackCommandBehavior> logger)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JournalCommandBehavior"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        public JournalCommandBehavior(ILogger<JournalCommandBehavior> logger)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
 
@@ -26,7 +30,7 @@
         {
             EnsureArg.IsNotNull(request);
 
-            this.logger.LogJournal(LogKeys.AppCommand, $"[{request.Identifier}] send {request.GetType().Name.SubstringTill("Command")}", LogEventPropertyKeys.TrackSendCommand);
+            this.logger.LogJournal(LogKeys.AppCommand, $"send (name={request.GetType().Name.SubstringTill("Command")}, id={request.Id}", LogEventPropertyKeys.TrackSendCommand);
             return await Task.FromResult(new CommandBehaviorResult()).AnyContext();
         }
     }

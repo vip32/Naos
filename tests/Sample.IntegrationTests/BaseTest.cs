@@ -42,7 +42,7 @@
                     .AddCommands());
 
             this.services.AddSingleton<ICommandBehavior, ValidateCommandBehavior>(); // new ValidateCommandBehavior(false)
-            this.services.AddSingleton<ICommandBehavior, TrackCommandBehavior>();
+            this.services.AddSingleton<ICommandBehavior, JournalCommandBehavior>();
             this.services.AddSingleton<ICommandBehavior>(new FileStoragePersistCommandBehavior(
                             new FolderFileStorage(o => o
                                 .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "commands")))));

@@ -56,7 +56,7 @@
             }
 
             var commandName = typeof(TRequest).Name.SubstringTill("Command");
-            this.Logger.LogJournal(LogKeys.AppCommand, $"[{request.Identifier}] handle {commandName}", LogEventPropertyKeys.TrackHandleCommand);
+            this.Logger.LogJournal(LogKeys.AppCommand, $"handle (name={commandName}, id={request.Id})", LogEventPropertyKeys.TrackHandleCommand);
             this.Logger.LogTraceEvent(LogKeys.AppCommand, request.Id, commandName, LogTraceEventNames.Command);
 
             using(var timer = new Common.Timer())

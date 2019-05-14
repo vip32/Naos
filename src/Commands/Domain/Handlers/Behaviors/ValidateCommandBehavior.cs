@@ -10,6 +10,10 @@
     {
         private readonly bool throwOnNotIsValid;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ValidateCommandBehavior"/> class.
+        /// </summary>
+        /// <param name="throwOnNotIsValid">if set to <c>true</c> [throw on not is valid].</param>
         public ValidateCommandBehavior(bool throwOnNotIsValid = true)
         {
             this.throwOnNotIsValid = throwOnNotIsValid;

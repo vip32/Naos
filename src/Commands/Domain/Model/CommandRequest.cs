@@ -27,11 +27,19 @@
     /// <seealso cref="MediatR.IRequest{CommandResponse{TResponse}}" />
     public abstract class CommandRequest<TResponse> : IRequest<CommandResponse<TResponse>>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CommandRequest{TResponse}"/> class.
+        /// </summary>
         protected CommandRequest()
             : this(IdGenerator.Instance.Next, IdGenerator.Instance.Next)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CommandRequest{TResponse}"/> class.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="correlationId">The correlation identifier.</param>
         protected CommandRequest(string id, string correlationId = null)
         {
             EnsureArg.IsNotNullOrEmpty(id);

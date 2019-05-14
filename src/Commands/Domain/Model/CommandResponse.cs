@@ -4,6 +4,10 @@
 
     public class CommandResponse<TResponse>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CommandResponse{TResponse}"/> class.
+        /// </summary>
+        /// <param name="cancelledReason">The optional cancelled reason.</param>
         public CommandResponse(string cancelledReason = null)
         {
             if(!cancelledReason.IsNullOrEmpty())

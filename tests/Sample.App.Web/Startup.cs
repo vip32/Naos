@@ -105,7 +105,7 @@
                     .AddServiceExceptions()
                     .AddCommands(o => o
                         .AddBehavior<ValidateCommandBehavior>()
-                        .AddBehavior<TrackCommandBehavior>()
+                        .AddBehavior<JournalCommandBehavior>()
                         .AddBehavior(new FileStoragePersistCommandBehavior(
                             new FolderFileStorage(o => o
                                 .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "commands"))))))
