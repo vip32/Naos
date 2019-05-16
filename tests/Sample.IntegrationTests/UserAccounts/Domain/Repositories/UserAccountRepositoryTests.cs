@@ -4,11 +4,13 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Bogus;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Core.Common;
     using Naos.Core.Domain.Repositories;
     using Naos.Core.Domain.Specifications;
     using Naos.Sample.UserAccounts.Domain;
+    using Naos.Sample.UserAccounts.Infrastructure.EntityFramework;
     using Shouldly;
     using Xunit;
 
@@ -23,6 +25,7 @@
         {
             //this.sut = this.ServiceProvider.GetService<IUserAccountRepository>();
             this.sut = this.ServiceProvider.GetRequiredService<IGenericRepository<UserAccount>>();
+            this.ServiceProvider.GetRequiredService<UserAccountsContext>().Database.Migrate();
             var domains = new[] { "East", "West" };
             this.entityFaker = new Faker<UserAccount>() //https://github.com/bchavez/Bogus
                 .RuleFor(u => u.Email, (f, u) => f.Internet.Email())

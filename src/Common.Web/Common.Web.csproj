@@ -29,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Startup\" />
     <Folder Include="Streaming\" />
   </ItemGroup>
 

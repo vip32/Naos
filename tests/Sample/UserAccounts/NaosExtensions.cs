@@ -2,6 +2,8 @@
 {
     using EnsureThat;
     using MediatR;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Diagnostics;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Common;
@@ -17,6 +19,7 @@
     {
         public static ServiceOptions AddSampleUserAccounts(
             this ServiceOptions options,
+            string connectionString = null,
             string section = "naos:sample:userAccounts:entityFramework",
             UserAccountsContext dbContext = null)
         {
@@ -45,12 +48,20 @@
             });
 
             var entityFrameworkConfiguration = options.Context.Configuration?.GetSection(section).Get<EntityFrameworkConfiguration>();
-            options.Context.Services.AddDbContext<UserAccountsContext>(o =>
+            options.Context.Services
+                .AddDbContext<UserAccountsContext>(o =>
             {
                 o.UseLoggerFactory(options.Context.Services.BuildServiceProvider().GetRequiredService<ILoggerFactory>());
-                o.UseNaosSqlServer(entityFrameworkConfiguration.ConnectionString);
+                //o.UseNaosSqlServer(entityFrameworkConfiguration.ConnectionString); // TODO: do we need this abstraction? as everything can be setup here (o.???)
+                o.UseSqlServer(connectionString ?? entityFrameworkConfiguration.ConnectionString ?? $"Server=(localdb)\\mssqllocaldb;Database={nameof(UserAccountsContext)};Trusted_Connection=True;MultipleActiveResultSets=True;");
                 //o.UseQueryTrackingBehavior(EntityFrameworkCore.QueryTrackingBehavior.NoTracking);
+                o.ConfigureWarnings(w => w.Throw(RelationalEventId.QueryClientEvaluationWarning));
+                o.EnableSensitiveDataLogging();
+                o.EnableDetailedErrors();
             });
+
+            options.Context.Services.AddStartupTask<ApplyPendingMigrationsTask<UserAccountsContext>>();
+            options.Context.Services.AddStartupTask<Naos.Core.Common.Web.EchoStartupTask>();
 
             options.Context.Services.AddHealthChecks()
                 .AddSqlServer(entityFrameworkConfiguration.ConnectionString, name: "UserAccounts-sqlserver");

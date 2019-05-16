@@ -482,6 +482,7 @@ development-naos--operations--logging--azureLogAnalytics--workspaceName
 - Serialization
 - Web
   - Client
+  - StartupTasks
   Filters
   - Streaming
 - Mapping
