@@ -16,7 +16,10 @@
 
         public void Map(TSource source, TDestination destination)
         {
-            this.mapper.Map(source, destination);
+            if(source != null && destination != null)
+            {
+                this.mapper.Map(source, destination);
+            }
         }
     }
 }
