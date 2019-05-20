@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class Mapper<TSource, TDestination> : IMapper<TSource, TDestination>
+    public class Mapper<TSource, TDestination> : IMapper<TSource, TDestination> // TODO: rename to ActionMapper?
     {
         private readonly Action<TSource, TDestination> action;
 

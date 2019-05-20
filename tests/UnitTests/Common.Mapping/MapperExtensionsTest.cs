@@ -72,20 +72,5 @@
             Assert.Equal(1, to.FirstOrDefault()?.Property);
             Assert.Equal(2, to.LastOrDefault()?.Property);
         }
-
-        public class StubMapper : IMapper<StubMapFrom, StubMapTo>
-        {
-            public void Map(StubMapFrom source, StubMapTo destination) => destination.Property = source.Property;
-        }
-
-        public class StubMapFrom
-        {
-            public int Property { get; set; }
-        }
-
-        public class StubMapTo
-        {
-            public int Property { get; set; }
-        }
     }
 }
