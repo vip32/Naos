@@ -190,6 +190,29 @@ application's modularity.
 - Observable
 - Automation
 
+# Layers & Dependencies
+
+```
+  .-------------.
+  | Application | - Commands + Handlers 
+  | Layer       |
+  |             |
+  "-------------" 
+     |     | 
+     |     |      .-------------.
+     |     "--- > |    Domain   | - Model
+     |            |    Layer    | - Repository
+     |            |             |
+     |            "-------------"
+     |                 ^
+     V                 |
+   .----------------.  |
+   | Infrastructure |--"
+   | Layer          |
+   |                | - Repository Implementierungen
+   "----------------" 
+```
+
 # Configuration
 
 - Startup
@@ -211,6 +234,25 @@ application's modularity.
   - SignalR
   - Local filesystem
 - Publish DomainEvent as Message (DomainEventMessagingPublisher)
+```
+ .----.                                                                       .
+ | a  |    .----.                              .----------.                  /
+ "----"    | c  |             .--------.       | Domain   |                 /
+      |    "----"   x-------> | Domain |       | Event    |                /
+    .----.   /                | Event  x-----> | Message  |            .----------.
+    | b  |--"                 "--------"       | PUBLISHER|            | Message  |
+    "----"                                     |----------|            | Broker   |
+  Domain Model                                 |-Map()    |            |----------|                  External Service
+                                               |-Handle() x----------> |-Publish()|             .-----------------------.
+                                               |          |            "----x-----"            / .----. Domain Model   /
+                                               "----------"          /      |  +message       /  | x  |    .----.     /
+                                                                    /       "--------------> /   "----"    | y  |    /
+    Internal Service (origin                                       /              subscribed/         |    "----"   /
+ -----------------------------------------------------------------"                        /        .----.   /     /
+                                                                                          /         |  z |--"     /
+                                                                                         /          "----"       /
+                                                                                        "-----------------------"
+```
 
 ### Messaging setup (Azure ServiceBus)
 
@@ -311,11 +353,18 @@ can keep domain objects persistence ignorant.
 - IRepository<T>
 - Specification<T>
 - IFindOptions<T>
-- Decorators
 - Repositories
   - InMemory
   - CosmosDb (Document)
   - EntityFramework (Sql, Sqlite)
+- Decorators
+```
+ .-----------.
+ | Decorator |
+ `-----------`        .------------.
+       `------------> | decoratee  |
+         (forward)    `------------`
+``` 
 
 # Domain Specifications
 
