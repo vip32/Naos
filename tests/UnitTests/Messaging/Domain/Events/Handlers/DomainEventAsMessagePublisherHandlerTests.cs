@@ -1,5 +1,6 @@
 ﻿namespace Naos.Core.UnitTests.Messaging.Domain.Events.Handlers
 {
+    using System;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
@@ -19,22 +20,21 @@
         {
             // arrange
             var messageBroker = Substitute.For<IMessageBroker>();
-            var domainEvent = new StubEntityDomainEvent(new StubEntity { FirstName = "John", LastName = "Doe", Id = "112233", Age = 25 });
-            var sut = new DomainEventAsMessagePublisherHandler<StubEntityDomainEvent, StubMessage>(
-                Substitute.For<ILogger<DomainEventAsMessagePublisherHandler<StubEntityDomainEvent, StubMessage>>>(),
-                new StubMapper(),
+            var domainEvent = new CustomerCreatedDomainEvent(new StubEntity { FirstName = "John", LastName = "Doe", Id = "112233", Age = 25 });
+            var sut = new CustomerCreatedDomainEventPublisher(
+                Substitute.For<ILogger<CustomerCreatedDomainEventPublisher>>(),
                 messageBroker);
 
             // act
             await sut.Handle(domainEvent, CancellationToken.None);
 
             // assert
-            messageBroker.Received().Publish(Arg.Is<StubMessage>(m => m.FullName == "John Doe"));
+            messageBroker.Received().Publish(Arg.Is<CustomerCreatedMessage>(m => m.FullName == "John Doe"));
         }
 
-        public class StubEntityDomainEvent : DomainEvent
+        public class CustomerCreatedDomainEvent : DomainEvent
         {
-            public StubEntityDomainEvent(StubEntity entity)
+            public CustomerCreatedDomainEvent(StubEntity entity)
             {
                 this.Entity = entity;
             }
@@ -42,16 +42,21 @@
             public StubEntity Entity { get; }
         }
 
-        public class StubMessage : Message
+        public class CustomerCreatedMessage : Message
         {
             public string FullName { get; set; }
         }
 
-        public class StubMapper : IMapper<StubEntityDomainEvent, StubMessage>
+        public class CustomerCreatedDomainEventPublisher : DomainEventAsMessagePublisherHandler<CustomerCreatedDomainEvent, CustomerCreatedMessage>
         {
-            public void Map(StubEntityDomainEvent source, StubMessage destination)
+            public CustomerCreatedDomainEventPublisher(
+                ILogger<CustomerCreatedDomainEventPublisher> logger,
+                IMessageBroker messageBroker)
+                : base(
+                    logger,
+                    new Mapper<CustomerCreatedDomainEvent, CustomerCreatedMessage>((s, d) => d.FullName = $"{s.Entity.FirstName} {s.Entity.LastName}"),
+                    messageBroker)
             {
-                destination.FullName = $"{source.Entity?.FirstName} {source.Entity?.LastName}";
             }
         }
     }

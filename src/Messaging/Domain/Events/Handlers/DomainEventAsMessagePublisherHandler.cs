@@ -7,7 +7,7 @@
     using Naos.Core.Common;
     using Naos.Core.Domain;
 
-    public class DomainEventAsMessagePublisherHandler<TDomainEvent, TMessage> : IDomainEventHandler<IDomainEvent> // handles all domainevents
+    public abstract class DomainEventAsMessagePublisherHandler<TDomainEvent, TMessage> : IDomainEventHandler<IDomainEvent> // handles all domainevents
         where TDomainEvent : class, IDomainEvent
         where TMessage : Message, new()
     {
@@ -15,7 +15,7 @@
         private readonly IMessageBroker messageBroker;
         private readonly IMapper<TDomainEvent, TMessage> mapper;
 
-        public DomainEventAsMessagePublisherHandler(
+        protected DomainEventAsMessagePublisherHandler(
             ILogger<DomainEventAsMessagePublisherHandler<TDomainEvent, TMessage>> logger,
             IMapper<TDomainEvent, TMessage> mapper,
             IMessageBroker messageBroker)
@@ -29,12 +29,12 @@
             this.messageBroker = messageBroker;
         }
 
-        public bool CanHandle(IDomainEvent notification)
+        public virtual bool CanHandle(IDomainEvent notification)
         {
             return true;
         }
 
-        public Task Handle(IDomainEvent notification, CancellationToken cancellationToken)
+        public virtual Task Handle(IDomainEvent notification, CancellationToken cancellationToken)
         {
             var message = this.mapper.Map(notification as TDomainEvent);
             this.messageBroker.Publish(message);
