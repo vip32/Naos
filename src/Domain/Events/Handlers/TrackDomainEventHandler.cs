@@ -8,7 +8,7 @@
     using Naos.Core.Domain;
 
     public class TrackDomainEventHandler
-        : IDomainEventHandler<IDomainEvent>
+        : IDomainEventHandler<IDomainEvent> // handles all domainevents
     {
         private readonly ILogger<TrackDomainEventHandler> logger;
 

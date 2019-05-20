@@ -15,7 +15,7 @@
         /// Initializes a new instance of the <see cref="EntityInsertDomainEventHandler"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        public EntityInsertDomainEventHandler(ILogger<EntityInsertDomainEventHandler> logger)
+        protected EntityInsertDomainEventHandler(ILogger<EntityInsertDomainEventHandler> logger)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
 
