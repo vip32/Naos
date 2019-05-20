@@ -9,7 +9,7 @@
     {
         public static IMapper Create()
         {
-            var mapper = new MapperConfiguration(c =>
+            var configuration = new MapperConfiguration(c =>
             {
                 // TODO: try reversemap https://stackoverflow.com/questions/13490456/automapper-bidirectional-mapping-with-reversemap-and-formember
                 //c.AddExpressionMapping();
@@ -33,8 +33,8 @@
                     .ForMember(d => d.State, o => o.Ignore());
             });
 
-            mapper.AssertConfigurationIsValid();
-            return mapper.CreateMapper();
+            configuration.AssertConfigurationIsValid();
+            return configuration.CreateMapper();
         }
 
         private class LanguageCodesResolver : IValueResolver<Country, DbCountry, string>, IValueResolver<DbCountry, Country, IEnumerable<string>>

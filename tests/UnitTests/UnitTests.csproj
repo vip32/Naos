@@ -111,7 +111,6 @@
     <Folder Include="Domain\Events\" />
     <Folder Include="Domain\Repositories\Extensions\" />
     <Folder Include="Domain\Repositories\Decorators\" />
-    <Folder Include="Messaging\" />
     <Folder Include="App\" />
     <Folder Include="Infrastructure.CosmosDb\" />
     <Folder Include="Correlation\" />
