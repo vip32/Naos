@@ -1,6 +1,5 @@
 ﻿namespace Naos.Core.UnitTests.Messaging.Domain.Events.Handlers
 {
-    using System;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
@@ -32,7 +31,7 @@
             messageBroker.Received().Publish(Arg.Is<CustomerCreatedMessage>(m => m.FullName == "John Doe"));
         }
 
-        public class CustomerCreatedDomainEvent : DomainEvent
+        public class CustomerCreatedDomainEvent : DomainEvent // internal event
         {
             public CustomerCreatedDomainEvent(StubEntity entity)
             {
@@ -42,7 +41,7 @@
             public StubEntity Entity { get; }
         }
 
-        public class CustomerCreatedMessage : Message
+        public class CustomerCreatedMessage : Message // external event
         {
             public string FullName { get; set; }
         }

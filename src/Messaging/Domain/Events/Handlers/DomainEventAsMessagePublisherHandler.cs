@@ -7,6 +7,34 @@
     using Naos.Core.Common;
     using Naos.Core.Domain;
 
+    /// <summary>
+    /// <para>
+    /// A domain event handler which can publish the domain events as messaging messages.
+    /// Can be used to expose internal domain events as external messages, for example to notify other services.
+    /// </para>
+    /// <para>
+    ///     .----.                                                                       .
+    ///     | a  |    .----.                              .----------.                  /
+    ///     "----"    | c  |             .--------.       | Domain   |                 /
+    ///          |    "----"   x-------> | Domain |       | Event    |                /
+    ///        .----.   /                | Event  x-----> | PUBLISHER|            .---------.
+    ///        | b  |--"                 "--------"       | Handler  |            | Message |
+    ///        "----"                                     |----------|            | Broker  |
+    ///      Domain Model                                 |-Handle() x----------> |         |                  External Service
+    ///                                                   |          |  Publish() |         |              .-----------------------.
+    ///                                                   |          |            "----x----"             / .----. Domain Model   /
+    ///                                                   "----------"          /      |                 /  | x  |    .----.     /
+    ///                                                                        /       "--------------> /   "----"    | y  |    /
+    ///        Internal Service (origin                                       /              subscribed/         |    "----"   /
+    ///     -----------------------------------------------------------------"                        /        .----.   /     /
+    ///                                                                                              /         |  z |--"     /
+    ///                                                                                             /          "----"       /
+    ///                                                                                            "-----------------------"
+    /// </para>
+    ///
+    /// </summary>
+    /// <typeparam name="TDomainEvent"></typeparam>
+    /// <typeparam name="TMessage"></typeparam>
     public abstract class DomainEventAsMessagePublisherHandler<TDomainEvent, TMessage> : IDomainEventHandler<IDomainEvent> // handles all domainevents
         where TDomainEvent : class, IDomainEvent
         where TMessage : Message, new()
