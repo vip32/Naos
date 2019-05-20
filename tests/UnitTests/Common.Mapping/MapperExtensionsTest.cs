@@ -5,13 +5,13 @@
     using Naos.Core.Common;
     using Xunit;
 
-    public class MapperTest
+    public class MapperExtensionsTest
     {
         [Fact]
         public void MapNull_ToNull_Mapped()
         {
-            MapFrom from = null;
-            var mapper = new Mapper();
+            StubMapFrom from = null;
+            var mapper = new StubMapper();
 
             var to = mapper.Map(from);
 
@@ -21,9 +21,9 @@
         [Fact]
         public void Map_ToNewObject_Mapped()
         {
-            var mapper = new Mapper();
+            var mapper = new StubMapper();
 
-            var to = mapper.Map(new MapFrom() { Property = 1 });
+            var to = mapper.Map(new StubMapFrom() { Property = 1 });
 
             Assert.Equal(1, to.Property);
         }
@@ -31,13 +31,13 @@
         [Fact]
         public void MapMany_ToMany_Mapped()
         {
-            var mapper = new Mapper();
+            var mapper = new StubMapper();
 
             var to = mapper.Map(
-                new List<MapFrom>
+                new List<StubMapFrom>
                 {
-                    new MapFrom() { Property = 1 },
-                    new MapFrom() { Property = 2 }
+                    new StubMapFrom() { Property = 1 },
+                    new StubMapFrom() { Property = 2 }
                 });
 
             Assert.Equal(2, to.Count());
@@ -48,10 +48,10 @@
         [Fact]
         public void MapArray_Empty_Mapped()
         {
-            var mapper = new Mapper();
+            var mapper = new StubMapper();
 
             var to = mapper.Map(
-                new MapFrom[0]);
+                new StubMapFrom[0]);
 
             Assert.Empty(to);
         }
@@ -59,13 +59,13 @@
         [Fact]
         public void MapArray_Mapped()
         {
-            var mapper = new Mapper();
+            var mapper = new StubMapper();
 
             var to = mapper.Map(
-                new MapFrom[]
+                new StubMapFrom[]
                 {
-                    new MapFrom() { Property = 1 },
-                    new MapFrom() { Property = 2 }
+                    new StubMapFrom() { Property = 1 },
+                    new StubMapFrom() { Property = 2 }
                 });
 
             Assert.Equal(2, to.Count());
@@ -73,17 +73,17 @@
             Assert.Equal(2, to.LastOrDefault()?.Property);
         }
 
-        public class Mapper : IMapper<MapFrom, MapTo>
+        public class StubMapper : IMapper<StubMapFrom, StubMapTo>
         {
-            public void Map(MapFrom source, MapTo destination) => destination.Property = source.Property;
+            public void Map(StubMapFrom source, StubMapTo destination) => destination.Property = source.Property;
         }
 
-        public class MapFrom
+        public class StubMapFrom
         {
             public int Property { get; set; }
         }
 
-        public class MapTo
+        public class StubMapTo
         {
             public int Property { get; set; }
         }
