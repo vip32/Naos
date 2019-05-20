@@ -26,8 +26,8 @@
 
             return new AdAccount
             {
-                Domain = value.SubstringTill("\\"),
-                Name = value.SubstringFrom("\\")
+                Domain = value.SliceTill("\\"),
+                Name = value.SliceFrom("\\")
             };
         }
 

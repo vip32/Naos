@@ -30,7 +30,7 @@
         {
             EnsureArg.IsNotNull(request);
 
-            this.logger.LogJournal(LogKeys.AppCommand, $"send (name={request.GetType().Name.SubstringTill("Command")}, id={request.Id}", LogEventPropertyKeys.TrackSendCommand);
+            this.logger.LogJournal(LogKeys.AppCommand, $"send (name={request.GetType().Name.SliceTill("Command")}, id={request.Id}", LogEventPropertyKeys.TrackSendCommand);
             return await Task.FromResult(new CommandBehaviorResult()).AnyContext();
         }
     }

@@ -36,8 +36,8 @@
             {
                 var result = source.ToString();
                 // strip the parameter from the expression
-                var name = result.SubstringTill(" =>");
-                return result.Replace($"{name}.", string.Empty).SubstringFrom("=> ");
+                var name = result.SliceTill(" =>");
+                return result.Replace($"{name}.", string.Empty).SliceFrom("=> ");
             }
 
             return null;
@@ -49,8 +49,8 @@
             {
                 var result = source.ToString();
                 // strip the parameter from the expression
-                var name = result.SubstringTill(" =>");
-                return result.Replace($"{name}.", string.Empty).SubstringFrom("=> ");
+                var name = result.SliceTill(" =>");
+                return result.Replace($"{name}.", string.Empty).SliceFrom("=> ");
             }
 
             return null;

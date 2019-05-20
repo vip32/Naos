@@ -55,7 +55,7 @@
 
             var pathTemp = Path.Combine(this.directory, $"registration_{registration.Id}.json.tmp");
             var path = Path.Combine(this.directory, $"registration_{registration.Id}.json");
-            this.logger.LogInformation($"{{LogKey:l}} register filesystem (name={{RegistrationName}}, tags={string.Join("|", registration.Tags.Safe())}, id={{RegistrationId}}, address={registration.FullAddress}, file={path.SubstringFromLast(@"\")})",
+            this.logger.LogInformation($"{{LogKey:l}} register filesystem (name={{RegistrationName}}, tags={string.Join("|", registration.Tags.Safe())}, id={{RegistrationId}}, address={registration.FullAddress}, file={path.SliceFromLast(@"\")})",
                 LogKeys.ServiceDiscovery, registration.Name, registration.Id);
 
             if(File.Exists(pathTemp))
@@ -144,7 +144,7 @@
                 var registration = JsonConvert.DeserializeObject<ServiceRegistration>(this.GetFileContents(path));
                 if(registration != null)
                 {
-                    this.logger.LogInformation($"{{LogKey:l}} filesystem registrations refresh (name={{RegistrationName}}, id={{RegistrationId}}, file={path.SubstringFromLast(@"\")})",
+                    this.logger.LogInformation($"{{LogKey:l}} filesystem registrations refresh (name={{RegistrationName}}, id={{RegistrationId}}, file={path.SliceFromLast(@"\")})",
                         LogKeys.ServiceDiscovery, registration.Name, registration.Id);
                     this.registrations.Add(registration);
                 }

@@ -63,7 +63,7 @@
                 return @default;
             }
 
-            return FromExtension(fileName.SubstringFromLast("."), @default);
+            return FromExtension(fileName.SliceFromLast("."), @default);
         }
 
         public static string ToValue(this ContentType contentType)

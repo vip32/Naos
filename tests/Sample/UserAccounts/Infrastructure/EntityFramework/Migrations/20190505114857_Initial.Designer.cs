@@ -9,7 +9,7 @@ using Naos.Sample.UserAccounts.Infrastructure.EntityFramework;
 
 namespace Naos.Sample.UserAccounts.Infrastructure.EntityFramework.Migrations
 {
-    [DbContext(typeof(UserAccountsContext))]
+    [DbContext(typeof(UserAccountsDbContext))]
     [Migration("20190505114857_Initial")]
     partial class Initial
     {

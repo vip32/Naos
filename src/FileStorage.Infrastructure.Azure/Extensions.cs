@@ -25,7 +25,7 @@
             var result = new FileInformation
             {
                 Path = blob.Name,
-                Name = blob.Name.SubstringFromLast("/"),
+                Name = blob.Name.SliceFromLast("/"),
                 Size = blob.Properties.Length,
                 Created = blob.Properties.Created?.UtcDateTime ?? DateTime.MinValue,
                 Modified = blob.Properties.LastModified?.UtcDateTime ?? DateTime.MinValue,

@@ -6,7 +6,7 @@
     public static partial class Extensions
     {
         [DebuggerStepThrough]
-        public static string SubstringTill(this string source, string till, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
+        public static string SliceTill(this string source, string till, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         {
             if(source.IsNullOrEmpty())
             {
@@ -18,11 +18,11 @@
                 return source;
             }
 
-            return SubstringTillInternal(source, till, source.IndexOf(till, comparison));
+            return SliceTillInternal(source, source.IndexOf(till, comparison));
         }
 
         [DebuggerStepThrough]
-        public static string SubstringTillLast(this string source, string till, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
+        public static string SliceTillLast(this string source, string till, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         {
             if(source.IsNullOrEmpty())
             {
@@ -34,29 +34,24 @@
                 return source;
             }
 
-            return SubstringTillInternal(source, till, source.LastIndexOf(till, comparison));
+            return SliceTillInternal(source, source.LastIndexOf(till, comparison));
         }
 
-        private static string SubstringTillInternal(this string source, string till, int index)
+        private static string SliceTillInternal(this string source, int tillIndex)
         {
             if(source.IsNullOrEmpty())
             {
                 return source;
             }
 
-            if(till.IsNullOrEmpty())
-            {
-                return source;
-            }
-
-            if(index == 0)
+            if(tillIndex == 0)
             {
                 return string.Empty;
             }
 
-            if(index > 0)
+            if(tillIndex > 0)
             {
-                return source.Substring(0, index);
+                return source.Substring(0, tillIndex);
             }
 
             return source;

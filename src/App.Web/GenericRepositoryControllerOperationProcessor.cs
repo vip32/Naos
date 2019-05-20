@@ -30,7 +30,7 @@
                     if(index.HasValue && index.Value >= 0)
                     {
                         description.Operation.Tags.RemoveAt(index.Value);
-                        description.Operation.Tags.Add($"Naos Entity Repository ({description.Operation.OperationId.SubstringTill("_")})");
+                        description.Operation.Tags.Add($"Naos Entity Repository ({description.Operation.OperationId.SliceTill("_")})");
                         var operationDescription = context.OperationDescription;
                         operationDescription.Path = operationDescription.Path.ToLower();
                     }

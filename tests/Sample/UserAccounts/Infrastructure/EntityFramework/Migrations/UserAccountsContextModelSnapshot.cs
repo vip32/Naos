@@ -8,7 +8,7 @@ using Naos.Sample.UserAccounts.Infrastructure.EntityFramework;
 
 namespace Naos.Sample.UserAccounts.Infrastructure.EntityFramework.Migrations
 {
-    [DbContext(typeof(UserAccountsContext))]
+    [DbContext(typeof(UserAccountsDbContext))]
     partial class UserAccountsContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

@@ -4,13 +4,13 @@
     using Microsoft.EntityFrameworkCore;
     using Naos.Sample.UserAccounts.Domain;
 
-    public class UserAccountsContext : DbContext
+    public class UserAccountsDbContext : DbContext
     {
-        public UserAccountsContext()
+        public UserAccountsDbContext()
         {
         }
 
-        public UserAccountsContext(DbContextOptions options)
+        public UserAccountsDbContext(DbContextOptions options)
             : base(options)
         {
         }

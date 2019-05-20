@@ -55,7 +55,7 @@
                 }
             }
 
-            var commandName = typeof(TRequest).Name.SubstringTill("Command");
+            var commandName = typeof(TRequest).Name.SliceTill("Command");
             this.Logger.LogJournal(LogKeys.AppCommand, $"handle (name={commandName}, id={request.Id})", LogEventPropertyKeys.TrackHandleCommand);
             this.Logger.LogTraceEvent(LogKeys.AppCommand, request.Id, commandName, LogTraceEventNames.Command);
 

@@ -90,15 +90,15 @@
                     continue;
                 }
 
-                var name = item.SubstringTill("=");
-                var value = item.SubstringFrom("=");
-                var @operator = value.Contains(":") ? value.SubstringTill(":").Trim() : "eq";
+                var name = item.SliceTill("=");
+                var value = item.SliceFrom("=");
+                var @operator = value.Contains(":") ? value.SliceTill(":").Trim() : "eq";
 
                 result.Add(
                     new Criteria(
                         name.Trim(),
                         CriteriaExtensions.FromAbbreviation(@operator),
-                        (value.Contains(":") ? value.SubstringFrom(":") : value).Trim().EmptyToNull()));
+                        (value.Contains(":") ? value.SliceFrom(":") : value).Trim().EmptyToNull()));
                 // TODO: properly determine numeric oder not and pass to criteria
             }
 
@@ -124,8 +124,8 @@
             var result = new List<Order>();
             foreach(var item in items.Where(c => !c.IsNullOrEmpty()))
             {
-                var name = item.Contains(":") ? item.SubstringFrom(":").Trim() : item;
-                var direction = item.Contains(":") ? item.SubstringTill(":").Trim() : "ascending";
+                var name = item.Contains(":") ? item.SliceFrom(":").Trim() : item;
+                var direction = item.Contains(":") ? item.SliceTill(":").Trim() : "ascending";
 
                 result.Add(
                     new Order(

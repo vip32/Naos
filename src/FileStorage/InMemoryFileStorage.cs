@@ -93,7 +93,7 @@
                     new FileInformation
                     {
                         Path = path,
-                        Name = path.SubstringFromLast(Path.DirectorySeparatorChar.ToString()),
+                        Name = path.SliceFromLast(Path.DirectorySeparatorChar.ToString()),
                         Created = DateTime.UtcNow,
                         Modified = DateTime.UtcNow,
                         Size = contents.Length

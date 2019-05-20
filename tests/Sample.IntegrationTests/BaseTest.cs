@@ -34,7 +34,7 @@
                     .AddServices(o => o
                         .AddSampleCountries()
                         .AddSampleCustomers()
-                        .AddSampleUserAccounts($"Server=(localdb)\\mssqllocaldb;Database={nameof(UserAccountsContext)};Trusted_Connection=True;MultipleActiveResultSets=True;"))
+                        .AddSampleUserAccounts($"Server=(localdb)\\mssqllocaldb;Database={nameof(UserAccountsDbContext)};Trusted_Connection=True;MultipleActiveResultSets=True;"))
                         //.AddSampleUserAccounts(dbContext: new UserAccountsContext(
                         //    new DbContextOptionsBuilder()
                         //        .UseSqlServer(entityFrameworkConfiguration.ConnectionString)

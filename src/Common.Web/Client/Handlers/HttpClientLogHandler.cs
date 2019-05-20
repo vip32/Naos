@@ -64,7 +64,7 @@
             }
 
             this.WriteLog(LogKeys.OutboundRequest, $"[{requestId}] http {request?.Method} {{Url:l}} ({correlationId})", type: LogEventPropertyKeys.TrackOutboundRequest, args: new object[] { request.RequestUri });
-            this.logger.LogTraceEvent(LogKeys.OutboundRequest, requestId, request.RequestUri.PathAndQuery.SubstringTill("?"), LogTraceEventNames.Http);
+            this.logger.LogTraceEvent(LogKeys.OutboundRequest, requestId, request.RequestUri.PathAndQuery.SliceTill("?"), LogTraceEventNames.Http);
         }
 
         protected async Task LogHttpResponse(HttpResponseMessage response, string requestId, TimeSpan duration)
@@ -91,7 +91,7 @@
             }
 
             this.WriteLog(LogKeys.OutboundResponse, $"[{requestId}] http {response.RequestMessage.Method} {{Url:l}} {{StatusCode}} ({response.StatusCode}) -> took {duration.Humanize(3)}", type: LogEventPropertyKeys.TrackOutboundResponse, duration: duration, args: new object[] { response.RequestMessage.RequestUri, (int)response.StatusCode });
-            this.logger.LogTraceEvent(LogKeys.OutboundResponse, requestId, response.RequestMessage.RequestUri.PathAndQuery.SubstringTill("?"), LogTraceEventNames.Http, duration);
+            this.logger.LogTraceEvent(LogKeys.OutboundResponse, requestId, response.RequestMessage.RequestUri.PathAndQuery.SliceTill("?"), LogTraceEventNames.Http, duration);
         }
 
         private void WriteLog(

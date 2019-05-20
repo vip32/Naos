@@ -7,8 +7,8 @@
     {
         public ServiceDescriptor(string product = null, string capability = null, string version = null, string[] tags = null)
         {
-            this.Product = product ?? AppDomain.CurrentDomain.FriendlyName.SubstringTillLast(".");
-            this.Capability = capability ?? AppDomain.CurrentDomain.FriendlyName.SubstringFromLast(".");
+            this.Product = product ?? AppDomain.CurrentDomain.FriendlyName.SliceTillLast(".");
+            this.Capability = capability ?? AppDomain.CurrentDomain.FriendlyName.SliceFromLast(".");
             this.Tags = tags;
             this.Version = version ?? "1.0.0";
         }

@@ -138,11 +138,11 @@
                 var created = assembly.GetBuildDate();
                 foreach(var resource in assembly.GetManifestResourceNames())
                 {
-                    var path = PathHelper.Normalize(resource.SubstringTillLast(".").Replace(".", Path.DirectorySeparatorChar.ToString()) + "." + resource.SubstringFromLast("."));
+                    var path = PathHelper.Normalize(resource.SliceTillLast(".").Replace(".", Path.DirectorySeparatorChar.ToString()) + "." + resource.SliceFromLast("."));
                     var fileInfo = new FileInformation
                     {
                         Path = path,
-                        Name = path.SubstringFromLast(Path.DirectorySeparatorChar.ToString()),
+                        Name = path.SliceFromLast(Path.DirectorySeparatorChar.ToString()),
                         Created = created,
                         Modified = created
                     };

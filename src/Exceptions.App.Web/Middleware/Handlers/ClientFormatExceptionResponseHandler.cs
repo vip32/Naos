@@ -33,11 +33,11 @@
                         Title = "A request content client format error has occurred while executing the request",
                         Status = (int)HttpStatusCode.BadRequest,
                         Instance = instance,
-                        Detail = hideDetails ? null : formatException.Message.SubstringTill("\r\n"),
+                        Detail = hideDetails ? null : formatException.Message.SliceTill("\r\n"),
                         Type = hideDetails ? null : formatException.GetType().FullPrettyName(),
                     };
 
-                    this.logger?.LogWarning($"{LogKeys.InboundResponse} [{requestId}] http request  {details.Title} [{formatException.GetType().PrettyName()}] {formatException.Message.SubstringTill("\r\n")}");
+                    this.logger?.LogWarning($"{LogKeys.InboundResponse} [{requestId}] http request  {details.Title} [{formatException.GetType().PrettyName()}] {formatException.Message.SliceTill("\r\n")}");
 
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                     context.Response.WriteJson(details, contentType: ContentType.JSONPROBLEM);

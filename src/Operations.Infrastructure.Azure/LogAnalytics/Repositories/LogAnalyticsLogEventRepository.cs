@@ -123,7 +123,7 @@
                 var map = this.entityMap.FirstOrDefault(em => em.entityProperty.SafeEquals(specification.Name));
                 if(map != default)
                 {
-                    result.Add($"{map.destinationPropertyFull} {specification.ToString(true).SubstringFrom(" ")}");
+                    result.Add($"{map.destinationPropertyFull} {specification.ToString(true).SliceFrom(" ")}");
                 }
             }
 
@@ -164,7 +164,7 @@
                 var accessors = TypeAccessor.Create(typeof(LogEvent));
                 var table = response.Tables[0];
                 var keys = table.Columns.Safe().Select(c => c
-                    .ColumnName.Safe().Replace("LogProperties_", string.Empty).SubstringTillLast("_")).ToList();
+                    .ColumnName.Safe().Replace("LogProperties_", string.Empty).SliceTillLast("_")).ToList();
 
                 if(!table.Rows.IsNullOrEmpty())
                 {

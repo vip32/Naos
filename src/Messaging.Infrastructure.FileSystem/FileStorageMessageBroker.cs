@@ -72,7 +72,7 @@
                 var path = Path.Combine(this.GetDirectory(messageName, this.options.FilterScope), $"message_{message.Id}_{this.options.MessageScope}.json.tmp");
                 if(this.options.Storage.SaveFileObjectAsync(path, message).Result)
                 {
-                    this.options.Storage.RenameFileAsync(path, path.SubstringTillLast("."));
+                    this.options.Storage.RenameFileAsync(path, path.SliceTillLast("."));
                 }
 
                 if(this.options.Mediator != null)
@@ -136,7 +136,7 @@
         private async Task<bool> ProcessMessage(string path)
         {
             var processed = false;
-            var messageName = path.SubstringTillLast(@"\").SubstringFromLast(@"\");
+            var messageName = path.SliceTillLast(@"\").SliceFromLast(@"\");
             var messageBody = this.GetFileContents(path);
 
             if(this.options.Map.Exists(messageName))
@@ -154,7 +154,7 @@
                     if(message?.Origin.IsNullOrEmpty() == true)
                     {
                         //message.CorrelationId = jsonMessage.AsJToken().GetStringPropertyByToken("CorrelationId");
-                        message.Origin = path.SubstringFromLast("_").SubstringTillLast("."); // read metadata from filename
+                        message.Origin = path.SliceFromLast("_").SliceTillLast("."); // read metadata from filename
                     }
 
                     this.logger.LogJournal(LogKeys.Messaging, "process (name={MessageName}, id={MessageId}, service={Service}, origin={MessageOrigin})", LogEventPropertyKeys.TrackReceiveMessage, args: new[] { messageType.PrettyName(), message?.Id, this.options.MessageScope, message.Origin });

@@ -301,11 +301,11 @@
                 return source;
             }
 
-            var propertyName = path.SubstringFromLast(".");
+            var propertyName = path.SliceFromLast(".");
             JToken target;
             try
             {
-                target = source.SelectToken(path.SubstringTillLast("."));
+                target = source.SelectToken(path.SliceTillLast("."));
             }
             catch(Exception)
             {
@@ -375,7 +375,7 @@
                 if(token == null)
                 {
                     // find previous token so new token can be added
-                    var prevToken = source.SelectToken(pathPartFull.SubstringTillLast(".")) ?? source;
+                    var prevToken = source.SelectToken(pathPartFull.SliceTillLast(".")) ?? source;
                     if(pathPartFull != pathPartsFull.LastOrDefault())
                     {
                         // non last tokens contain just jobjects, so value can be added later

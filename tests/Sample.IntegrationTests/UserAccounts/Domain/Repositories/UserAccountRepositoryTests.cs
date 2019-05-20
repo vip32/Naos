@@ -25,7 +25,7 @@
         {
             //this.sut = this.ServiceProvider.GetService<IUserAccountRepository>();
             this.sut = this.ServiceProvider.GetRequiredService<IGenericRepository<UserAccount>>();
-            this.ServiceProvider.GetRequiredService<UserAccountsContext>().Database.Migrate();
+            this.ServiceProvider.GetRequiredService<UserAccountsDbContext>().Database.Migrate();
             var domains = new[] { "East", "West" };
             this.entityFaker = new Faker<UserAccount>() //https://github.com/bchavez/Bogus
                 .RuleFor(u => u.Email, (f, u) => f.Internet.Email())

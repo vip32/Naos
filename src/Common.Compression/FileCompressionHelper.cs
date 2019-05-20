@@ -15,7 +15,7 @@
             EnsureArg.IsNotNullOrEmpty(sourcePath, nameof(sourcePath));
             EnsureArg.IsTrue(File.Exists(sourcePath), nameof(sourcePath)); // source file does not exist
 
-            destinationPath ??= sourcePath.SubstringTillLast(".") + ".gz";
+            destinationPath ??= sourcePath.SliceTillLast(".") + ".gz";
 
             using(var source = File.OpenRead(sourcePath))
             {
@@ -36,7 +36,7 @@
             EnsureArg.IsNotNullOrEmpty(sourcePath, nameof(sourcePath));
             EnsureArg.IsTrue(File.Exists(sourcePath), nameof(sourcePath)); // source file does not exist
 
-            destinationPath ??= sourcePath.SubstringTill(".");
+            destinationPath ??= sourcePath.SliceTill(".");
 
             using(var source = File.OpenRead(sourcePath))
             {
