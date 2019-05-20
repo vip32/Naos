@@ -9,9 +9,9 @@
         /// </summary>
         public DomainEvent()
         {
-            this.Identifier = IdGenerator.Instance.Next;
+            this.Id = IdGenerator.Instance.Next;
         }
 
-        public string Identifier { get; }
+        public string Id { get; }
     }
 }
