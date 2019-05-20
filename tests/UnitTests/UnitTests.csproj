@@ -114,6 +114,7 @@
     <Folder Include="App\" />
     <Folder Include="Infrastructure.CosmosDb\" />
     <Folder Include="Correlation\" />
+    <Folder Include="Messaging\Domain\Events\Handlers\" />
     <Folder Include="RequestFiltering\App\Model\" />
   </ItemGroup>
 

@@ -12,22 +12,24 @@
     using Shouldly;
     using Xunit;
 
-    public class SendDomainEventAsMessageHandlerTests
+    public class DomainEventAsMessagePublisherHandlerTests
     {
         [Fact]
         public async Task CanMap_Test()
         {
             // arrange
+            var messageBroker = Substitute.For<IMessageBroker>();
             var domainEvent = new StubEntityDomainEvent(new StubEntity { FirstName = "John", LastName = "Doe", Id = "112233", Age = 25 });
-            var sut = new SendDomainEventAsMessageHandler<StubEntityDomainEvent, StubMessage>(
-                Substitute.For<ILogger<SendDomainEventAsMessageHandler<StubEntityDomainEvent, StubMessage>>>(),
+            var sut = new DomainEventAsMessagePublisherHandler<StubEntityDomainEvent, StubMessage>(
+                Substitute.For<ILogger<DomainEventAsMessagePublisherHandler<StubEntityDomainEvent, StubMessage>>>(),
                 new StubMapper(),
-                Substitute.For<IMessageBroker>());
+                messageBroker);
 
             // act
             await sut.Handle(domainEvent, CancellationToken.None);
 
             // assert
+            messageBroker.Received().Publish(Arg.Is<StubMessage>(m => m.FullName == "John Doe"));
         }
 
         public class StubEntityDomainEvent : DomainEvent

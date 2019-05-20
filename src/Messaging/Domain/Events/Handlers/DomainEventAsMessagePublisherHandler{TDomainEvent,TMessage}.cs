@@ -7,16 +7,16 @@
     using Naos.Core.Common;
     using Naos.Core.Domain;
 
-    public class SendDomainEventAsMessageHandler<TDomainEvent, TMessage> : IDomainEventHandler<IDomainEvent>
+    public class DomainEventAsMessagePublisherHandler<TDomainEvent, TMessage> : IDomainEventHandler<IDomainEvent>
         where TDomainEvent : class, IDomainEvent
         where TMessage : Message, new()
     {
-        private readonly ILogger<SendDomainEventAsMessageHandler<TDomainEvent, TMessage>> logger;
+        private readonly ILogger<DomainEventAsMessagePublisherHandler<TDomainEvent, TMessage>> logger;
         private readonly IMessageBroker messageBroker;
         private readonly IMapper<TDomainEvent, TMessage> mapper;
 
-        public SendDomainEventAsMessageHandler(
-            ILogger<SendDomainEventAsMessageHandler<TDomainEvent, TMessage>> logger,
+        public DomainEventAsMessagePublisherHandler(
+            ILogger<DomainEventAsMessagePublisherHandler<TDomainEvent, TMessage>> logger,
             IMapper<TDomainEvent, TMessage> mapper,
             IMessageBroker messageBroker)
         {
