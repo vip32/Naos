@@ -210,6 +210,7 @@ application's modularity.
   - Azure Eventbus
   - SignalR
   - Local filesystem
+- Publish DomainEvent as Message (DomainEventMessagingPublisher)
 
 ### Messaging setup (Azure ServiceBus)
 
