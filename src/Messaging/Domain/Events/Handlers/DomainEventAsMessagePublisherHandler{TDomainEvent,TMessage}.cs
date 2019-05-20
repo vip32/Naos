@@ -7,7 +7,7 @@
     using Naos.Core.Common;
     using Naos.Core.Domain;
 
-    public class DomainEventAsMessagePublisherHandler<TDomainEvent, TMessage> : IDomainEventHandler<IDomainEvent>
+    public class DomainEventAsMessagePublisherHandler<TDomainEvent, TMessage> : IDomainEventHandler<IDomainEvent> // handles all domainevents
         where TDomainEvent : class, IDomainEvent
         where TMessage : Message, new()
     {
@@ -36,7 +36,7 @@
 
         public Task Handle(IDomainEvent notification, CancellationToken cancellationToken)
         {
-            var message = this.mapper.Map<TDomainEvent, TMessage>(notification as TDomainEvent);
+            var message = this.mapper.Map(notification as TDomainEvent);
             this.messageBroker.Publish(message);
 
             return Task.CompletedTask;
