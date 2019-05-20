@@ -5,7 +5,7 @@
     /// </summary>
     /// <typeparam name="TSource">The type of the object to map from.</typeparam>
     /// <typeparam name="TDestination">The type of the object to map to.</typeparam>
-    public interface IMapper<in TSource, in TDestination>
+    public interface IMapper<TSource, TDestination>
     {
         /// <summary>
         /// Maps the specified source object into the destination object.
