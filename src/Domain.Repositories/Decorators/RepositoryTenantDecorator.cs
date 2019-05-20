@@ -17,7 +17,9 @@
     public class RepositoryTenantDecorator<TEntity> : RepositorySpecificationDecorator<TEntity>
         where TEntity : class, IEntity, ITenantEntity, IAggregateRoot
     {
-        public RepositoryTenantDecorator(string tenantId, IGenericRepository<TEntity> decoratee)
+        public RepositoryTenantDecorator(
+            string tenantId,
+            IGenericRepository<TEntity> decoratee)
             : base(new Specification<TEntity>(t => t.TenantId == tenantId), decoratee)
         {
         }

@@ -26,7 +26,9 @@
         private readonly ILogger<IGenericRepository<TEntity>> logger;
         private readonly IGenericRepository<TEntity> decoratee;
 
-        public RepositoryLoggingDecorator(ILogger<IGenericRepository<TEntity>> logger, IGenericRepository<TEntity> decoratee)
+        public RepositoryLoggingDecorator(
+            ILogger<IGenericRepository<TEntity>> logger,
+            IGenericRepository<TEntity> decoratee)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(decoratee, nameof(decoratee));

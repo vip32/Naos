@@ -15,22 +15,22 @@
     /// <para>
     ///
     ///                          |Aggregate |
-    ///                          `----------`              RepositoryDomain
-    ///      | Client |               | +DomainEvents    | EventsDecorator |      | Decoratee|
-    ///      `--------`               |                  `-----------------`      `----------`
+    ///                          `----------`            | RepositoryDomain|      |(repository)|
+    ///      | Client |               | +DomainEvents    | EventsDecorator |      | Decoratee  |
+    ///      `--------`               |                  `-----------------`      `------------`
     ///          x------------------->|                        |                      |
     ///          |   Register(event)  |                        |                      |
     ///          |                    |                        |                      |
     ///          |                    |                        |                      |
     ///          x--------------------|----------------------->|                      |
     ///          |                    |   Insert(aggregate)    x--------------------->|
-    ///          |                    |                        |        Insert()      |
-    ///          |                    |                        |                      |
-    ///          |                    |                        |<---------------------x
-    ///          |                    |                        |                      |
+    ///          |                    |                        x        Insert()      |
+    ///          |                    |                        x                      |
+    ///          |                    |                        x<---------------------x
+    ///          |                    |                        x                      |
     ///          |                    |                        x--.                   |
     ///          |                    |<-----------------------x  |Publish            |
-    ///          |                    |      GetAll()::events  |  |Registered         |
+    ///          |                    |      GetAll()::events  x  |Registered         |
     ///          |                    |<-----------------------x  |DomainEvents       |
     ///          |                    |      Clear()           |<-`                   |
     ///
@@ -46,7 +46,10 @@
         private readonly IMediator mediator;
         private readonly IGenericRepository<TEntity> decoratee;
 
-        public RepositoryDomainEventsDecorator(ILogger<IGenericRepository<TEntity>> logger, IMediator mediator, IGenericRepository<TEntity> decoratee)
+        public RepositoryDomainEventsDecorator(
+            ILogger<IGenericRepository<TEntity>> logger,
+            IMediator mediator,
+            IGenericRepository<TEntity> decoratee)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(mediator, nameof(mediator));
