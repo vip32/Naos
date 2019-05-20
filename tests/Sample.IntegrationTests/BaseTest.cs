@@ -3,8 +3,6 @@
     using System;
     using System.IO;
     using MediatR;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Diagnostics;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Core.Commands.Domain;
