@@ -9,10 +9,9 @@
     using Naos.Core.Messaging.Domain;
     using Naos.Core.UnitTests.Domain.Repositories;
     using NSubstitute;
-    using Shouldly;
     using Xunit;
 
-    public class DomainEventAsMessagePublisherHandlerTests
+    public class DomainEventMessagingPublisherHandlerTests
     {
         [Fact]
         public async Task CanMap_Test()
@@ -20,8 +19,8 @@
             // arrange
             var messageBroker = Substitute.For<IMessageBroker>();
             var domainEvent = new CustomerCreatedDomainEvent(new StubEntity { FirstName = "John", LastName = "Doe", Id = "112233", Age = 25 });
-            var sut = new CustomerCreatedDomainEventPublisher(
-                Substitute.For<ILogger<CustomerCreatedDomainEventPublisher>>(),
+            var sut = new CustomerCreatedDomainEventMessagingPublisher(
+                Substitute.For<ILogger<CustomerCreatedDomainEventMessagingPublisher>>(),
                 messageBroker);
 
             // act
@@ -46,10 +45,10 @@
             public string FullName { get; set; }
         }
 
-        public class CustomerCreatedDomainEventPublisher : DomainEventAsMessagePublisherHandler<CustomerCreatedDomainEvent, CustomerCreatedMessage>
+        public class CustomerCreatedDomainEventMessagingPublisher : DomainEventMessagingPublisher<CustomerCreatedDomainEvent, CustomerCreatedMessage>
         {
-            public CustomerCreatedDomainEventPublisher(
-                ILogger<CustomerCreatedDomainEventPublisher> logger,
+            public CustomerCreatedDomainEventMessagingPublisher(
+                ILogger<CustomerCreatedDomainEventMessagingPublisher> logger,
                 IMessageBroker messageBroker)
                 : base(
                     logger,

@@ -17,12 +17,12 @@
     ///     | a  |    .----.                              .----------.                  /
     ///     "----"    | c  |             .--------.       | Domain   |                 /
     ///          |    "----"   x-------> | Domain |       | Event    |                /
-    ///        .----.   /                | Event  x-----> | PUBLISHER|            .---------.
-    ///        | b  |--"                 "--------"       | Handler  |            | Message |
-    ///        "----"                                     |----------|            | Broker  |
-    ///      Domain Model                                 |-Handle() x----------> |         |                  External Service
-    ///                                                   |          |  Publish() |         |              .-----------------------.
-    ///                                                   |          |            "----x----"             / .----. Domain Model   /
+    ///        .----.   /                | Event  x-----> | Message  |            .----------.
+    ///        | b  |--"                 "--------"       | PUBLISHER|            | Message  |
+    ///        "----"                                     |----------|            | Broker   |
+    ///      Domain Model                                 |-Map()    |            |----------|                  External Service
+    ///                                                   |-Handle() x----------> |-Publish()|             .-----------------------.
+    ///                                                   |          |            "----x-----"            / .----. Domain Model   /
     ///                                                   "----------"          /      |  +message       /  | x  |    .----.     /
     ///                                                                        /       "--------------> /   "----"    | y  |    /
     ///        Internal Service (origin                                       /              subscribed/         |    "----"   /
@@ -35,16 +35,16 @@
     /// </summary>
     /// <typeparam name="TDomainEvent"></typeparam>
     /// <typeparam name="TMessage"></typeparam>
-    public abstract class DomainEventAsMessagePublisherHandler<TDomainEvent, TMessage> : IDomainEventHandler<IDomainEvent> // handles all domainevents
+    public abstract class DomainEventMessagingPublisher<TDomainEvent, TMessage> : IDomainEventHandler<IDomainEvent> // handles all domainevents
         where TDomainEvent : class, IDomainEvent
         where TMessage : Message, new()
     {
-        private readonly ILogger<DomainEventAsMessagePublisherHandler<TDomainEvent, TMessage>> logger;
+        private readonly ILogger<DomainEventMessagingPublisher<TDomainEvent, TMessage>> logger;
         private readonly IMessageBroker messageBroker;
         private readonly IMapper<TDomainEvent, TMessage> mapper;
 
-        protected DomainEventAsMessagePublisherHandler(
-            ILogger<DomainEventAsMessagePublisherHandler<TDomainEvent, TMessage>> logger,
+        protected DomainEventMessagingPublisher(
+            ILogger<DomainEventMessagingPublisher<TDomainEvent, TMessage>> logger,
             IMapper<TDomainEvent, TMessage> mapper,
             IMessageBroker messageBroker)
         {
@@ -59,7 +59,7 @@
 
         public virtual bool CanHandle(IDomainEvent notification)
         {
-            return true;
+            return notification != null && notification is TDomainEvent;
         }
 
         public virtual Task Handle(IDomainEvent notification, CancellationToken cancellationToken)
