@@ -17,6 +17,18 @@
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Message"/> class.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="correlationId">The correlation identifier.</param>
+        public Message(string id, string correlationId)
+        {
+            this.Id = id ?? IdGenerator.Instance.Next;
+            this.CorrelationId = correlationId;
+            this.Identifier = RandomGenerator.GenerateString(5, false);
+        }
+
+        /// <summary>
         /// Gets or sets the identifier of this message.
         /// </summary>
         /// <value>

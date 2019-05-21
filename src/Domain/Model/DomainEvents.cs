@@ -1,14 +1,17 @@
 ﻿namespace Naos.Core.Domain
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using EnsureThat;
+    using MediatR;
+    using Naos.Core.Common;
 
     public class DomainEvents
     {
         /// <summary>
         /// The domain registered events.
         /// </summary>
-        private readonly ICollection<IDomainEvent> registrations = new List<IDomainEvent>();
+        private readonly ICollection<IDomainEvent> registrations = new List<IDomainEvent>(); // TODO: concurrent collection?
 
         /// <summary>
         /// Gets all registered domain events.
@@ -25,6 +28,18 @@
             EnsureArg.IsNotNull(@event, nameof(@event));
 
             this.registrations.Add(@event);
+        }
+
+        public async Task DispatchAsync(IMediator mediator)
+        {
+            EnsureArg.IsNotNull(mediator, nameof(mediator));
+
+            foreach(var @event in this.GetAll())
+            {
+                await mediator.Publish(@event).AnyContext();
+            }
+
+            this.Clear();
         }
 
         /// <summary>
