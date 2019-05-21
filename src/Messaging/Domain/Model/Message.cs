@@ -45,12 +45,12 @@
         }
 
         /// <summary>
-        /// Gets the type of the entity (discriminator).
+        /// Gets or sets the correlation identifier.
         /// </summary>
         /// <value>
-        /// The type of the entity.
+        /// The correlation identifier.
         /// </value>
-        public string Discriminator => this.GetType().FullName;
+        public string CorrelationId { get; set; }
 
         /// <summary>
         /// Gets or sets the short identifier for this message.
@@ -58,12 +58,12 @@
         public string Identifier { get; set; }
 
         /// <summary>
-        /// Gets or sets the correlation identifier.
+        /// Gets the type of the entity (discriminator).
         /// </summary>
         /// <value>
-        /// The correlation identifier.
+        /// The type of the entity.
         /// </value>
-        public string CorrelationId { get; set; }
+        public string Discriminator => this.GetType().FullName;
 
         /// <summary>
         /// Gets or sets the origin service name of this <see cref="Message"/> instance.
