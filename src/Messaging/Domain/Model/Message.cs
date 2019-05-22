@@ -5,7 +5,7 @@
     using Newtonsoft.Json;
 
     public class Message
-        : IEntity<string>, IHaveDiscriminator, IAggregateRoot
+        : IEntity<string>, IHaveDiscriminator, IAggregateRoot // TODO: really need this? or just like DomainEvent (=clean)
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Message"/> class.
