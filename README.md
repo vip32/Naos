@@ -195,13 +195,13 @@ application's modularity.
 ```
   .-------------.
   | Application | - Commands + Handlers 
-  | Layer       |
-  |             |
+  | Layer       | - Messages + Handlers
+  |             | - REST Controllers
   "-------------" 
      |     | 
      |     |      .-------------.
-     |     "--- > |    Domain   | - Model
-     |            |    Layer    | - Repository
+     |     "--- > |    Domain   | - Models
+     |            |    Layer    | - Repositories
      |            |             |
      |            "-------------"
      |                 ^
@@ -211,6 +211,27 @@ application's modularity.
    | Layer          |
    |                | - Repository Implementierungen
    "----------------" 
+```
+
+# Service Integration
+```
+    Service A                                  Service B
+  .-----------------.                             .------------------.
+  | .-------------. |                             | .-------------.  |
+  | | Application |-|---------------------------->|>| Application |  |
+  | "-------------" |         - HTTP              | "-------------"  |
+  |                 |         - Messaging         |                  |
+  |  /""""""""\     |         - Queueing          |  /""""""""\      |
+  | / Domain   \    |                             | / Domain   \     |
+  | \  Model   /    |                             | \  Model   /     | 
+  |  \--------/     |                             |  \--------/      |
+  |                 |                             |                  |
+  | .-----------.   |                             | .-----------.    |
+  | | Storage   |   |                             | | Storage   |    |
+  | "-----------"   |                             | "-----------"    |
+  "-----------------"                             "------------------"
+        TEAM                                              TEAM
+
 ```
 
 # Configuration
@@ -532,9 +553,25 @@ development-naos--operations--logging--azureLogAnalytics--workspaceName
 - Serialization
 - Web
   - Client
-  - StartupTasks
-  Filters
+  - Filters
   - Streaming
+  - StartupTasks
+```
+.-----------.    .-----------.       .----------------.             .-----------.   .-----------.
+| Program   |    | WebHost   |       | StartupTask    |             | MyTask    |   | Kester    |
+`-----------`    `-----------`       | ServerDecorator|             `-----------`   | Server    |
+      |               |              `----------------`                 |           `-----------`
+      |  RunAsync()   |                     |  [decorator]              |                |  [decoratee]
+      |-------------->|=--.                 |                           |                |
+      |               |=  | Build           |                           |                |
+      |               |=  | App             |                           |                |
+      |               |=<-"                 |                           |                |
+      |               |   StartAsync()      |                           |                |
+      |               |-------------------->|   StartAsync()            |                |
+      |               |                     |-------------------------->|  StartAsync()  |
+      |               |                     |                           |--------------->|
+      |               |                     |                           |                |
+```
 - Mapping
 - Criteria
 - Console

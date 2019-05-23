@@ -59,6 +59,7 @@
         /// <param name="source">actual value</param>
         /// <param name="default">a null-safe value</param>
         /// <returns>source value, if it's not null, or safe value if the source value is null.</returns>
+        [DebuggerStepThrough]
         public static T Safe<T>(this T source, T @default)
             where T : class
         {

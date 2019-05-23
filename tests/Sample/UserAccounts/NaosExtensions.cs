@@ -48,13 +48,10 @@
             });
 
             var entityFrameworkConfiguration = options.Context.Configuration?.GetSection(section).Get<EntityFrameworkConfiguration>();
-            options.Context.Services
-                .AddDbContext<UserAccountsDbContext>(o =>
+            options.Context.Services.AddDbContext<UserAccountsDbContext>(o =>
             {
-                o.UseLoggerFactory(options.Context.Services.BuildServiceProvider().GetRequiredService<ILoggerFactory>());
-                //o.UseNaosSqlServer(entityFrameworkConfiguration.ConnectionString); // TODO: do we need this abstraction? as everything can be setup here (o.???)
                 o.UseSqlServer(connectionString ?? entityFrameworkConfiguration.ConnectionString ?? $"Server=(localdb)\\mssqllocaldb;Database={nameof(UserAccountsDbContext)};Trusted_Connection=True;MultipleActiveResultSets=True;");
-                //o.UseQueryTrackingBehavior(EntityFrameworkCore.QueryTrackingBehavior.NoTracking);
+                o.UseLoggerFactory(options.Context.Services.BuildServiceProvider().GetRequiredService<ILoggerFactory>());
                 o.ConfigureWarnings(w => w.Throw(RelationalEventId.QueryClientEvaluationWarning));
                 o.EnableSensitiveDataLogging();
                 o.EnableDetailedErrors();
