@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using System.Linq;
     using MediatR;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -27,7 +28,7 @@
 
             // naos core registrations
             this.services
-                .AddMediatR(AppDomain.CurrentDomain.GetAssemblies())
+                .AddMediatR(AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.GetName().Name.StartsWith("Microsoft.")).ToArray())
                 .AddNaos(configuration, "Product", "Capability", new[] { "All" }, n => n
                     .AddServices(o => o
                         .AddSampleCountries()
