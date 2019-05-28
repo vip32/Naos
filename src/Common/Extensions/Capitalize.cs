@@ -9,7 +9,6 @@
         /// Ensures the first character is a capital.
         /// </summary>
         /// <param name="source"></param>
-        /// <returns></returns>
         [DebuggerStepThrough]
         public static string Capitalize(this string source)
         {
@@ -31,7 +30,6 @@
         /// Ensures the first character is a not a capital.
         /// </summary>
         /// <param name="source"></param>
-        /// <returns></returns>
         [DebuggerStepThrough]
         public static string Decapitalize(this string source)
         {

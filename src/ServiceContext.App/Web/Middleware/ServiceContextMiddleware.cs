@@ -42,7 +42,6 @@
         /// <param name="context">The <see cref="HttpContext"/> for the current request.</param>
         /// <param name="serviceDescriptor">The <see cref="serviceDescriptor"/>.</param>
         /// <param name="features"></param>
-        /// <returns></returns>
         public async Task Invoke(HttpContext context, ServiceDescriptor serviceDescriptor, IEnumerable<NaosFeatureInformation> features)
         {
             var loggerState = new Dictionary<string, object>

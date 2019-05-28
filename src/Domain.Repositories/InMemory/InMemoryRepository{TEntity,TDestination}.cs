@@ -45,7 +45,6 @@
         /// <param name="specifications">The specifications.</param>
         /// <param name="options">The options.</param>
         /// <param name="cancellationToken">The cancellationToken.</param>
-        /// <returns></returns>
         public override async Task<IEnumerable<TEntity>> FindAllAsync(
             IEnumerable<ISpecification<TEntity>> specifications,
             IFindOptions<TEntity> options = null,
@@ -65,7 +64,6 @@
         /// Finds the by identifier asynchronous.
         /// </summary>
         /// <param name="id">The identifier.</param>
-        /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException">id.</exception>
         public override async Task<TEntity> FindOneAsync(object id)
         {

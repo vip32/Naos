@@ -127,7 +127,6 @@
         /// Checks if all rows have distinct keys.
         /// </summary>
         /// <param name="rows"></param>
-        /// <returns></returns>
         public static bool AreDistinct(IEnumerable<Value> rows)
         {
             if(rows == null)
@@ -144,7 +143,6 @@
         /// Merge rows.
         /// </summary>
         /// <param name="rows"></param>
-        /// <returns></returns>
         public static Value Merge(IEnumerable<Value> rows)
         {
             Value masterRow = null;
@@ -174,7 +172,6 @@
         /// Checks row equality.
         /// </summary>
         /// <param name="other"></param>
-        /// <returns></returns>
         public bool Equals(Value other)
         {
             if(ReferenceEquals(other, null))
@@ -198,7 +195,6 @@
         /// <summary>
         /// Get enumerator for cells inside the row.
         /// </summary>
-        /// <returns></returns>
         public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
         {
             return this.keyToValue.GetEnumerator();
@@ -207,7 +203,6 @@
         /// <summary>
         /// Get enumerator for cells inside the row.
         /// </summary>
-        /// <returns></returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
@@ -227,7 +222,6 @@
         /// IDictionary.Contains.
         /// </summary>
         /// <param name="item"></param>
-        /// <returns></returns>
         public bool Contains(KeyValuePair<string, object> item)
         {
             return this.keyToValue.ContainsKey(item.Key);
@@ -277,7 +271,6 @@
         /// </summary>
         /// <param name="rowKey"></param>
         /// <param name="partitionKey"></param>
-        /// <returns></returns>
         public Value Clone(string rowKey = null, string partitionKey = null)
         {
             var clone = new Value(partitionKey ?? this.PartitionKey, rowKey ?? this.RowKey);

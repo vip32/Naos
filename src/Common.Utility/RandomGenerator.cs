@@ -20,7 +20,6 @@
         /// </summary>
         /// <param name="length">Lenght of the string.</param>
         /// <param name="alphanumeric">String should also contain alphanumeric characters (0..9).</param>
-        /// <returns></returns>
         public static string GenerateString(int length, bool alphanumeric = true, bool lowerCase = false)
         {
             if(length < 0)
@@ -53,7 +52,6 @@
         /// <param name="lowerCase">Only lowercase characters.</param>
         /// <param name="nonAlphanumeric">String should also contain non alphanumeric characters (!\"§$%&/()=?*#-.,).</param>
         /// <param name="mixedCase">Mixed lowercase and uppercase characters.</param>
-        /// <returns></returns>
         public static string GenerateComplexString(int length, bool alphanumeric = true, bool lowerCase = false, bool nonAlphanumeric = false, bool mixedCase = false)
         {
             if(length < 0)

@@ -19,7 +19,6 @@
         /// <param name="naosOptions"></param>
         /// <param name="requestLoggingMiddlewareOptions"></param>
         /// <param name="requestStorageMiddlewareOptions"></param>
-        /// <returns></returns>
         public static NaosApplicationContextOptions UseOperations(this NaosApplicationContextOptions naosOptions,
             RequestLoggingMiddlewareOptions requestLoggingMiddlewareOptions = null,
             RequestStorageMiddlewareOptions requestStorageMiddlewareOptions = null)

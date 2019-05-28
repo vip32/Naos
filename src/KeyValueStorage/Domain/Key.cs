@@ -63,7 +63,6 @@
         /// <summary>
         /// Hash code.
         /// </summary>
-        /// <returns></returns>
         public override int GetHashCode()
         {
             return this.PartitionKey.GetHashCode() * this.RowKey.GetHashCode();

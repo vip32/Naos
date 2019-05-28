@@ -65,7 +65,6 @@
         /// <typeparam name="T"></typeparam>
         /// <param name="source">The document.</param>
         /// <param name="path">The path.</param>
-        /// <returns></returns>
         public static T GetValueByPath<T>(this JToken source, string path)
         {
             if(source.IsNullOrEmpty() || path.IsNullOrEmpty())
@@ -95,7 +94,6 @@
         /// <typeparam name="T"></typeparam>
         /// <param name="source">The document.</param>
         /// <param name="path">The path.</param>
-        /// <returns></returns>
         public static IEnumerable<T> GetValuesByPath<T>(this JToken source, string path)
         {
             if(path.IsNullOrEmpty())

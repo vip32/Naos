@@ -20,7 +20,6 @@
         /// Enables the service discovery router.
         /// </summary>
         /// <param name="naosOptions"></param>
-        /// <returns></returns>
         public static NaosApplicationContextOptions UseServiceDiscoveryRouter(this NaosApplicationContextOptions naosOptions)
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
@@ -33,7 +32,6 @@
         /// </summary>
         /// <param name="naosOptions"></param>
         /// <param name="options"></param>
-        /// <returns></returns>
         public static NaosApplicationContextOptions UseNaosServiceDiscoveryRouter(
             this NaosApplicationContextOptions naosOptions,
             ServiceDiscoveryRouterMiddlewareOptions options)

@@ -77,7 +77,6 @@
         /// <summary>
         /// Gets the atomic values of the properties important for the equality.
         /// </summary>
-        /// <returns></returns>
         protected abstract IEnumerable<object> GetAtomicValues();
     }
 }

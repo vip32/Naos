@@ -41,7 +41,6 @@
         /// </summary>
         /// <param name="options">The options.</param>
         /// <param name="cancellationToken">The cancellationToken.</param>
-        /// <returns></returns>
         public async Task<IEnumerable<TEntity>> FindAllAsync(
             IFindOptions<TEntity> options = null,
             CancellationToken cancellationToken = default)
@@ -55,7 +54,6 @@
         /// <param name="specification">The specification.</param>
         /// <param name="options">The options.</param>
         /// /// <param name="cancellationToken">The cancellationToken.</param>
-        /// <returns></returns>
         public async Task<IEnumerable<TEntity>> FindAllAsync(
             ISpecification<TEntity> specification,
             IFindOptions<TEntity> options = null,
@@ -72,7 +70,6 @@
         /// <param name="specifications">The specifications.</param>
         /// <param name="options">The options.</param>
         /// /// <param name="cancellationToken">The cancellationToken.</param>
-        /// <returns></returns>
         public virtual async Task<IEnumerable<TEntity>> FindAllAsync(
             IEnumerable<ISpecification<TEntity>> specifications,
             IFindOptions<TEntity> options = null,
@@ -92,7 +89,6 @@
         /// Finds the by identifier asynchronous.
         /// </summary>
         /// <param name="id">The identifier.</param>
-        /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException">id.</exception>
         public virtual async Task<TEntity> FindOneAsync(object id)
         {
@@ -123,7 +119,6 @@
         /// Asynchronous checks if element exists.
         /// </summary>
         /// <param name="id">The identifier.</param>
-        /// <returns></returns>
         public virtual async Task<bool> ExistsAsync(object id)
         {
             if(id.IsDefault())
@@ -138,7 +133,6 @@
         /// Inserts the provided entity.
         /// </summary>
         /// <param name="entity">The entity to insert.</param>
-        /// <returns></returns>
         public virtual async Task<TEntity> InsertAsync(TEntity entity)
         {
             var result = await this.UpsertAsync(entity).AnyContext();
@@ -149,7 +143,6 @@
         /// Updates the provided entity.
         /// </summary>
         /// <param name="entity">The entity to update.</param>
-        /// <returns></returns>
         public virtual async Task<TEntity> UpdateAsync(TEntity entity)
         {
             var result = await this.UpsertAsync(entity).AnyContext();
@@ -160,7 +153,6 @@
         /// Insert or updates the entity.
         /// </summary>
         /// <param name="entity">The entity to insert or update.</param>
-        /// <returns></returns>
         public async Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
         {
             if(entity == null)
@@ -240,7 +232,6 @@
         /// Deletes asynchronous.
         /// </summary>
         /// <param name="id">The identifier.</param>
-        /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException">id.</exception>
         public async Task<ActionResult> DeleteAsync(object id)
         {
@@ -283,7 +274,6 @@
         /// Deletes asynchronous.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException">Id.</exception>
         public async Task<ActionResult> DeleteAsync(TEntity entity)
         {

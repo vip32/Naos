@@ -17,7 +17,6 @@
         /// Enables correlation/request ids for the API request/responses.
         /// </summary>
         /// <param name="naosOptions"></param>
-        /// <returns></returns>
         public static NaosApplicationContextOptions UseRequestCorrelation(this NaosApplicationContextOptions naosOptions)
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
@@ -30,7 +29,6 @@
         /// </summary>
         /// <param name="naosOptions"></param>
         /// <param name="options"></param>
-        /// <returns></returns>
         public static NaosApplicationContextOptions UseNaosCorrelation(this NaosApplicationContextOptions naosOptions, RequestCorrelationMiddlewareOptions options)
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));

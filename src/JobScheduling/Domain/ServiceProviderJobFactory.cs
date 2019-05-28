@@ -29,7 +29,6 @@
         /// Creates the specified scheduled task type.
         /// </summary>
         /// <param name="jobType">Type of the job.</param>
-        /// <returns></returns>
         public IJob CreateJob(Type jobType)
         {
             return Factory.Create(jobType, this.serviceProvider) as IJob;

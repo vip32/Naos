@@ -20,7 +20,6 @@
         /// </summary>
         /// <param name="request">The request.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns></returns>
         public virtual async Task<CommandResponse<TResponse>> Handle(TRequest request, CancellationToken cancellationToken)
         {
             return await this.HandleRequest(request, cancellationToken).AnyContext();
@@ -31,7 +30,6 @@
         /// </summary>
         /// <param name="request">The request.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns></returns>
         public abstract Task<CommandResponse<TResponse>> HandleRequest(TRequest request, CancellationToken cancellationToken);
     }
 }

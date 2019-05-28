@@ -14,7 +14,6 @@
         /// </summary>
         /// <typeparam name="TDestination">The type of the destination object.</typeparam>
         /// <param name="source">The source entity.</param>
-        /// <returns></returns>
         TDestination Map<TDestination>(object source);
 
         /// <summary>
@@ -47,7 +46,6 @@
         /// Maps the specified TSource specification to an expression for TDestination types.
         /// </summary>
         /// <param name="specification">The specification.</param>
-        /// <returns></returns>
         Func<TDestination, bool> MapSpecification<TSource, TDestination>(ISpecification<TSource> specification);
     }
 }

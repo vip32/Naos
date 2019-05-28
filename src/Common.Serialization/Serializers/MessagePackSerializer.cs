@@ -42,7 +42,6 @@
         /// </summary>
         /// <param name="input">The input.</param>
         /// <param name="type">The type.</param>
-        /// <returns></returns>
         public object Deserialize(Stream input, Type type)
         {
             if(this.useCompression)
@@ -60,7 +59,6 @@
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="input">The input.</param>
-        /// <returns></returns>
         public T Deserialize<T>(Stream input)
         {
             if(this.useCompression)

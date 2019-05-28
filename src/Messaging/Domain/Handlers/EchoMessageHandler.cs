@@ -21,7 +21,6 @@
         /// Handles the specified message.
         /// </summary>
         /// <param name="message">The event.</param>
-        /// <returns></returns>
         public virtual Task Handle(EchoMessage message)
         {
             var loggerState = new Dictionary<string, object>

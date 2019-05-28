@@ -34,7 +34,6 @@
         /// </summary>
         /// <param name="input">The input.</param>
         /// <param name="type">The type.</param>
-        /// <returns></returns>
         public object Deserialize(Stream input, Type type)
         {
             using(var sr = new StreamReader(input))
@@ -49,7 +48,6 @@
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="input">The input.</param>
-        /// <returns></returns>
         public T Deserialize<T>(Stream input)
         {
             using(var sr = new StreamReader(input))

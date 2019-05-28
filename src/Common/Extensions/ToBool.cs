@@ -10,7 +10,6 @@
         /// </summary>
         /// <param name="source">The source.</param>
         /// <param name="default">The default.</param>
-        /// <returns></returns>
         [DebuggerStepThrough]
         public static bool? ToNullableBool(this string source, bool? @default = null)
         {
@@ -37,7 +36,6 @@
         /// </summary>
         /// <param name="source">The source.</param>
         /// <param name="default">if set to <c>true</c> [default].</param>
-        /// <returns></returns>
         [DebuggerStepThrough]
         public static bool ToBool(this string source, bool @default = false)
         {

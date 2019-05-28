@@ -13,7 +13,6 @@
         /// <typeparam name="T">Element type.</typeparam>
         /// <param name="source">The items.</param>
         /// <param name="action">Action to perform on every item.</param>
-        /// <returns></returns>
         public static IEnumerable<T> ForEach<T>(this IEnumerable<T> source, Action<T> action)
         {
             if(source == null)

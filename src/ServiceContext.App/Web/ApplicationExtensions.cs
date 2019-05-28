@@ -16,7 +16,6 @@
         /// Enables service context (descriptor) for the API request/responses.
         /// </summary>
         /// <param name="naosOptions"></param>
-        /// <returns></returns>
         public static NaosApplicationContextOptions UseServiceContext(this NaosApplicationContextOptions naosOptions)
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
@@ -29,7 +28,6 @@
         /// </summary>
         /// <param name="naosOptions"></param>
         /// <param name="options"></param>
-        /// <returns></returns>
         public static NaosApplicationContextOptions UseNaosServiceContext(this NaosApplicationContextOptions naosOptions, ServiceContextMiddlewareOptions options)
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
@@ -49,7 +47,6 @@
         /// Enables poweredby response headers for the API request.
         /// </summary>
         /// <param name="naosOptions"></param>
-        /// <returns></returns>
         public static NaosApplicationContextOptions UseServicePoweredBy(this NaosApplicationContextOptions naosOptions)
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
@@ -62,7 +59,6 @@
         /// </summary>
         /// <param name="naosOptions"></param>
         /// <param name="options"></param>
-        /// <returns></returns>
         public static NaosApplicationContextOptions UseNaosServicePoweredBy(this NaosApplicationContextOptions naosOptions, ServicePoweredByMiddlewareOptions options)
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));

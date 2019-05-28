@@ -15,7 +15,6 @@
         /// </summary>
         /// <param name="naosOptions"></param>
         /// <param name="optionsAction"></param>
-        /// <returns></returns>
         public static NaosServicesContextOptions AddCommands(
             this NaosServicesContextOptions naosOptions,
             Action<CommandsOptions> optionsAction = null)

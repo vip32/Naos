@@ -17,7 +17,6 @@
         /// <param name="naosOptions"></param>
         /// <param name="hideDetails"></param>
         /// <param name="options"></param>
-        /// <returns></returns>
         public static NaosServicesContextOptions AddServiceExceptions(
             this NaosServicesContextOptions naosOptions,
             bool hideDetails = false,

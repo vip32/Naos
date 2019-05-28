@@ -8,7 +8,6 @@
         /// Creates the specified scheduled job type.
         /// </summary>
         /// <param name="jobType">Type of the job.</param>
-        /// <returns></returns>
         IJob CreateJob(Type jobType);
 
         T Create<T>()

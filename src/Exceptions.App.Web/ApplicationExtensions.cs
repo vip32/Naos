@@ -20,7 +20,6 @@
         /// </summary>
         /// <param name="naosOptions"></param>
         /// <param name="options"></param>
-        /// <returns></returns>
         public static NaosApplicationContextOptions UseNaosExceptionHandling(this NaosApplicationContextOptions naosOptions, ExceptionHandlerMiddlewareOptions options)
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));

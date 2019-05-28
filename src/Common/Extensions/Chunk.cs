@@ -11,7 +11,6 @@
         /// <typeparam name="T">Element type.</typeparam>
         /// <param name="source">Enumeration source.</param>
         /// <param name="size">Size of the batch chunk.</param>
-        /// <returns></returns>
         public static IEnumerable<IEnumerable<T>> Chunk<T>(this IEnumerable<T> source, int size)
         {
             if(source.IsNullOrEmpty())

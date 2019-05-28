@@ -42,7 +42,6 @@
         /// Adds the generic repository controller for the specified type.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
-        /// <returns></returns>
         public NaosMvcOptions AddGenericRepositoryController<TEntity>()
             where TEntity : class, IEntity, IAggregateRoot
         {
@@ -59,7 +58,6 @@
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <typeparam name="TRepository">The type of the repo.</typeparam>
-        /// <returns></returns>
         public NaosMvcOptions AddGenericRepositoryController<TEntity, TRepository>()
             where TEntity : class, IEntity, IAggregateRoot
             where TRepository : class, IGenericRepository<TEntity>

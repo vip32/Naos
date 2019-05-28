@@ -16,7 +16,6 @@
         /// <summary>
         /// Determines whether the given <paramref name="ex"/> is of type <typeparamref name="TEx"/>.
         /// </summary>
-        /// <returns></returns>
         [DebuggerStepThrough]
         public static bool IsExpectedException<TEx>(this Exception ex)
             where TEx : Exception
@@ -26,7 +25,6 @@
         /// Determines whether the given <paramref name="ex"/> is any of the types <typeparamref name="TEx1"/>
         /// or <typeparamref name="TEx2"/>.
         /// </summary>
-        /// <returns></returns>
         [DebuggerStepThrough]
         public static bool IsExpectedException<TEx1, TEx2>(this Exception ex)
             where TEx1 : Exception
@@ -37,7 +35,6 @@
         /// Determines whether the given <paramref name="ex"/> is any of the types <typeparamref name="TEx1"/>,
         /// <typeparamref name="TEx2"/> or <typeparamref name="TEx3"/>.
         /// </summary>
-        /// <returns></returns>
         [DebuggerStepThrough]
         public static bool IsExpectedException<TEx1, TEx2, TEx3>(this Exception ex)
             where TEx1 : Exception
@@ -49,7 +46,6 @@
         /// Determines whether the given <paramref name="ex"/> is any of the types <typeparamref name="TEx1"/>,
         /// <typeparamref name="TEx2"/>, <typeparamref name="TEx3"/> or <typeparamref name="TEx4"/>.
         /// </summary>
-        /// <returns></returns>
         [DebuggerStepThrough]
         public static bool IsExpectedException<TEx1, TEx2, TEx3, TEx4>(this Exception ex)
             where TEx1 : Exception
@@ -63,7 +59,6 @@
         /// <typeparamref name="TEx2"/>, <typeparamref name="TEx3"/>, <typeparamref name="TEx4"/>
         /// or <typeparamref name="TEx5"/>.
         /// </summary>
-        /// <returns></returns>
         [DebuggerStepThrough]
         public static bool IsExpectedException<TEx1, TEx2, TEx3, TEx4, TEx5>(this Exception ex)
             where TEx1 : Exception
@@ -78,7 +73,6 @@
         /// <typeparamref name="TEx2"/>, <typeparamref name="TEx3"/>, <typeparamref name="TEx4"/>,
         /// <typeparamref name="TEx5"/> or <typeparamref name="TEx6"/>.
         /// </summary>
-        /// <returns></returns>
         [DebuggerStepThrough]
         public static bool IsExpectedException<TEx1, TEx2, TEx3, TEx4, TEx5, TEx6>(this Exception ex)
             where TEx1 : Exception
@@ -94,7 +88,6 @@
         /// <typeparamref name="TEx2"/>, <typeparamref name="TEx3"/>, <typeparamref name="TEx4"/>,
         /// <typeparamref name="TEx5"/>, <typeparamref name="TEx6"/> or <typeparamref name="TEx7"/>.
         /// </summary>
-        /// <returns></returns>
         [DebuggerStepThrough]
         public static bool IsExpectedException<TEx1, TEx2, TEx3, TEx4, TEx5, TEx6, TEx7>(this Exception ex)
             where TEx1 : Exception
@@ -109,7 +102,6 @@
         /// <summary>
         /// Determines whether the given <paramref name="ex"/> is any of the <paramref name="exceptionTypes"/>.
         /// </summary>
-        /// <returns></returns>
         //[DebuggerStepThrough]
         //public static bool IsExpectedException(this Exception ex, params Type[] exceptionTypes)
         //    => ex.IsExpectedException(e => exceptionTypes.Contains(e.GetType()));
@@ -117,7 +109,6 @@
         /// <summary>
         /// Determines whether the given <paramref name="ex"/> is the type matched by <paramref name="predicate"/>.
         /// </summary>
-        /// <returns></returns>
         [DebuggerStepThrough]
         public static bool IsExpectedException(this Exception ex, Func<Exception, bool> predicate)
         {

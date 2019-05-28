@@ -15,13 +15,11 @@
         /// <summary>
         /// Gets the queue metrics.
         /// </summary>
-        /// <returns></returns>
         Task<QueueMetrics> GetMetricsAsync();
 
         /// <summary>
         /// Deletes the physical queue.
         /// </summary>
-        /// <returns></returns>
         Task DeleteQueueAsync();
     }
 
@@ -32,42 +30,36 @@
         /// Enqueues an item.
         /// </summary>
         /// <param name="data">the data to queue.</param>
-        /// <returns></returns>
         Task<string> EnqueueAsync(TData data);
 
         /// <summary>
         /// Dequeues an item, if no item queued it will wait for the speficied amout (timeout).
         /// </summary>
         /// <param name="cancellationToken"></param>
-        /// <returns></returns>
         Task<IQueueItem<TData>> DequeueAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// Dequeues an item, if no item queued it will wait for the speficied amout (timeout).
         /// </summary>
         /// <param name="timeout"></param>
-        /// <returns></returns>
         Task<IQueueItem<TData>> DequeueAsync(TimeSpan? timeout = null);
 
         /// <summary>
         /// Renews the lock on a dequeued item.
         /// </summary>
         /// <param name="item"></param>
-        /// <returns></returns>
         Task RenewLockAsync(IQueueItem<TData> item);
 
         /// <summary>
         /// Completes a dequeued item, take it out of the queue permanently.
         /// </summary>
         /// <param name="item"></param>
-        /// <returns></returns>
         Task CompleteAsync(IQueueItem<TData> item);
 
         /// <summary>
         /// Cancel a dequeued item, puts it back in the queue again.
         /// </summary>
         /// <param name="item"></param>
-        /// <returns></returns>
         Task AbandonAsync(IQueueItem<TData> item);
 
         /// <summary>

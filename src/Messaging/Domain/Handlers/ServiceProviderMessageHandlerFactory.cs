@@ -23,7 +23,6 @@
         /// Creates the specified message handler type.
         /// </summary>
         /// <param name="messageHandlerType">Type of the message handler.</param>
-        /// <returns></returns>
         public object Create(Type messageHandlerType)
         {
             return Factory.Create(messageHandlerType, this.serviceProvider);

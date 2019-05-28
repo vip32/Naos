@@ -40,7 +40,6 @@
         /// </summary>
         /// <param name="notification">The notification.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns></returns>
         public async Task Handle(IDomainEvent notification, CancellationToken cancellationToken)
         {
             await Task.Run(() =>

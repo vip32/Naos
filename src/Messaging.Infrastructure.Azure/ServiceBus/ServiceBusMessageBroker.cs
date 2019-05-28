@@ -49,7 +49,6 @@
         /// </summary>
         /// <typeparam name="TMessage">The type of the message.</typeparam>
         /// <typeparam name="THandler">The type of the handler.</typeparam>
-        /// <returns></returns>
         public IMessageBroker Subscribe<TMessage, THandler>()
             where TMessage : Domain.Message
             where THandler : IMessageHandler<TMessage>
@@ -208,7 +207,6 @@
         /// Processes the message by invoking the message handler.
         /// </summary>
         /// <param name="serviceBusMessage">The servicebus message.</param>
-        /// <returns></returns>
         private async Task<bool> ProcessMessage(Microsoft.Azure.ServiceBus.Message serviceBusMessage)
         {
             var processed = false;

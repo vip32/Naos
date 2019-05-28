@@ -128,7 +128,6 @@
         /// Inserts the provided entity.
         /// </summary>
         /// <param name="entity">The entity to insert.</param>
-        /// <returns></returns>
         public async Task<TEntity> InsertAsync(TEntity entity)
         {
             var result = await this.UpsertAsync(entity).AnyContext();
@@ -139,7 +138,6 @@
         /// Updates the provided entity.
         /// </summary>
         /// <param name="entity">The entity to update.</param>
-        /// <returns></returns>
         public async Task<TEntity> UpdateAsync(TEntity entity)
         {
             var result = await this.UpsertAsync(entity).AnyContext();
@@ -150,7 +148,6 @@
         /// Insert or updates the provided entity.
         /// </summary>
         /// <param name="entity">The entity to insert or update.</param>
-        /// <returns></returns>
         public async Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
         {
             if(entity == null)

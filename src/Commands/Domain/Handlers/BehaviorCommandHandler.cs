@@ -42,7 +42,6 @@
         /// </summary>
         /// <param name="request">The request.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns></returns>
         public override async Task<CommandResponse<TResponse>> Handle(TRequest request, CancellationToken cancellationToken)
         {
             foreach(var behavior in this.behaviors.Safe())

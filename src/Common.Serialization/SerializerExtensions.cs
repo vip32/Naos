@@ -12,7 +12,6 @@
         /// <typeparam name="T"></typeparam>
         /// <param name="source">The source.</param>
         /// <param name="ìnput">The inout.</param>
-        /// <returns></returns>
         public static T Deserialize<T>(this ISerializer source, Stream ìnput)
         {
             return (T)source.Deserialize(ìnput, typeof(T));
@@ -24,7 +23,6 @@
         /// <typeparam name="T"></typeparam>
         /// <param name="source">The source.</param>
         /// <param name="input">The input.</param>
-        /// <returns></returns>
         public static T Deserialize<T>(this ISerializer source, byte[] input)
         {
             return (T)source.Deserialize(new MemoryStream(input), typeof(T));
@@ -36,7 +34,6 @@
         /// <param name="source">The source.</param>
         /// <param name="input">The input.</param>
         /// <param name="type">The type.</param>
-        /// <returns></returns>
         public static object Deserialize(this ISerializer source, byte[] input, Type type)
         {
             return source.Deserialize(new MemoryStream(input), type);
@@ -48,7 +45,6 @@
         /// <typeparam name="T"></typeparam>
         /// <param name="source">The source.</param>
         /// <param name="input">The input.</param>
-        /// <returns></returns>
         public static T Deserialize<T>(this ISerializer source, string input)
         {
             byte[] bytes;
@@ -74,7 +70,6 @@
         /// <param name="source">The source.</param>
         /// <param name="input">The input.</param>
         /// <param name="type">The type.</param>
-        /// <returns></returns>
         public static object Deserialize(this ISerializer source, string input, Type type)
         {
             byte[] bytes;
@@ -100,7 +95,6 @@
         /// <typeparam name="T"></typeparam>
         /// <param name="source">The source.</param>
         /// <param name="input">The input.</param>
-        /// <returns></returns>
         public static string SerializeToString<T>(this ISerializer source, T input)
         {
             if(input == null)
@@ -123,7 +117,6 @@
         /// <typeparam name="T"></typeparam>
         /// <param name="source">The source.</param>
         /// <param name="input">The input.</param>
-        /// <returns></returns>
         public static byte[] SerializeToBytes<T>(this ISerializer source, T input)
         {
             if(input == null)

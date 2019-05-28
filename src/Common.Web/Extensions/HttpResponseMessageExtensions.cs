@@ -66,7 +66,6 @@
         /// </summary>
         /// <param name="source">The source.</param>
         /// <param name="prefix">The prefix.</param>
-        /// <returns></returns>
         public static IDictionary<string, string> GetHeaders(
             this HttpResponseMessage source,
             string prefix = null)

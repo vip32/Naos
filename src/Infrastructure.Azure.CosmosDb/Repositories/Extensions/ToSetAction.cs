@@ -10,7 +10,6 @@
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="source">The source expression.</param>
-        /// <returns></returns>
         public static Action<T, string> ToSetAction<T>(this Expression<Func<T, string>> source)
         {
             if(source == null)
@@ -30,7 +29,6 @@
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="source">The source expression.</param>
-        /// <returns></returns>
         public static Action<T, int> ToSetAction<T>(this Expression<Func<T, int>> source)
         {
             if(source == null)
@@ -50,7 +48,6 @@
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="source">The source expression.</param>
-        /// <returns></returns>
         public static Action<T, DateTime?> ToSetAction<T>(this Expression<Func<T, DateTime?>> source)
         {
             if(source == null)

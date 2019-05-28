@@ -63,7 +63,6 @@
         /// <summary>
         /// When a cancelled token is passed into Dequeue, it will only try to dequeue one time and then exit.
         /// </summary>
-        /// <returns></returns>
         public virtual async Task CanDequeueWithCancelledTokenAsync()
         {
             var queue = this.GetQueue();

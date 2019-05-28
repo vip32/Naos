@@ -72,7 +72,6 @@
         /// <summary>
         /// Returns the list of all table names in the storage.
         /// </summary>
-        /// <returns></returns>
         Task<IEnumerable<string>> GetTableNames();
 
         /// <summary>

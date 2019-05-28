@@ -20,7 +20,6 @@
         /// Handles the specified message.
         /// </summary>
         /// <param name="message">The message.</param>
-        /// <returns></returns>
         public virtual Task Handle(EntityMessage<T> message)
         {
             var loggerState = new Dictionary<string, object>

@@ -21,7 +21,6 @@ namespace Naos.Core.Messaging.Domain
         /// Handles the specified message.
         /// </summary>
         /// <param name="message">The event.</param>
-        /// <returns></returns>
         public virtual Task Handle(DummyMessage message)
         {
             var loggerState = new Dictionary<string, object>

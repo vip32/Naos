@@ -26,7 +26,6 @@
         /// Creates a <see cref="SubscriptionDetails"/> for specified handler type.
         /// </summary>
         /// <param name="handlerType">Type of the handler.</param>
-        /// <returns></returns>
         public static SubscriptionDetails Create(Type handlerType)
         {
             EnsureArg.IsNotNull(handlerType, nameof(handlerType));

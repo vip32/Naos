@@ -76,7 +76,6 @@
         /// <summary>
         /// Returns a string representation for this specification.
         /// </summary>
-        /// <returns></returns>
         public override string ToString()
         {
             var quote = this.IsNumberValue() ? string.Empty : "\"";

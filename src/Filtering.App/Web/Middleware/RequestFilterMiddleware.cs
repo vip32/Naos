@@ -44,7 +44,6 @@
         /// </summary>
         /// <param name="context">The <see cref="HttpContext"/> for the current request.</param>
         /// <param name="contextFactory">The <see cref="IFilterContextFactory"/> which can create a <see cref="FilterContext"/>.</param>
-        /// <returns></returns>
         public async Task Invoke(HttpContext context, IFilterContextFactory contextFactory)
         {
             var filterContext = contextFactory.Create(context?.Request, this.options.CriteriaQueryStringKey, this.options.OrderQueryStringKey, this.options.SkipQueryStringKey, this.options.TakeQueryStringKey);

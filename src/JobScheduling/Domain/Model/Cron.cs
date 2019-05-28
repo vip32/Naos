@@ -10,7 +10,6 @@
         /// <summary>
         /// Returns cron expression that fires every minute.
         /// </summary>
-        /// <returns></returns>
         public static string Minutely()
         {
             return "* * * * *";
@@ -19,7 +18,6 @@
         /// <summary>
         /// Returns cron expression that fires every hour at the first minute.
         /// </summary>
-        /// <returns></returns>
         public static string Hourly()
         {
             return Hourly(minute: 0);
@@ -29,7 +27,6 @@
         /// Returns cron expression that fires every hour at the specified minute.
         /// </summary>
         /// <param name="minute">The minute in which the schedule will be activated (0-59).</param>
-        /// <returns></returns>
         public static string Hourly(int minute)
         {
             return $"{minute} * * * *";
@@ -38,7 +35,6 @@
         /// <summary>
         /// Returns cron expression that fires every day at 00:00 UTC.
         /// </summary>
-        /// <returns></returns>
         public static string Daily()
         {
             return Daily(hour: 0);
@@ -49,7 +45,6 @@
         /// the specified hour in UTC.
         /// </summary>
         /// <param name="hour">The hour in which the schedule will be activated (0-23).</param>
-        /// <returns></returns>
         public static string Daily(int hour)
         {
             return Daily(hour, minute: 0);
@@ -61,7 +56,6 @@
         /// </summary>
         /// <param name="hour">The hour in which the schedule will be activated (0-23).</param>
         /// <param name="minute">The minute in which the schedule will be activated (0-59).</param>
-        /// <returns></returns>
         public static string Daily(int hour, int minute)
         {
             return $"{minute} {hour} * * *";
@@ -70,7 +64,6 @@
         /// <summary>
         /// Returns cron expression that fires every week at Monday, 00:00 UTC.
         /// </summary>
-        /// <returns></returns>
         public static string Weekly()
         {
             return Weekly(DayOfWeek.Monday);
@@ -81,7 +74,6 @@
         /// day of the week.
         /// </summary>
         /// <param name="dayOfWeek">The day of week in which the schedule will be activated.</param>
-        /// <returns></returns>
         public static string Weekly(DayOfWeek dayOfWeek)
         {
             return Weekly(dayOfWeek, hour: 0);
@@ -93,7 +85,6 @@
         /// </summary>
         /// <param name="dayOfWeek">The day of week in which the schedule will be activated.</param>
         /// <param name="hour">The hour in which the schedule will be activated (0-23).</param>
-        /// <returns></returns>
         public static string Weekly(DayOfWeek dayOfWeek, int hour)
         {
             return Weekly(dayOfWeek, hour, minute: 0);
@@ -106,7 +97,6 @@
         /// <param name="dayOfWeek">The day of week in which the schedule will be activated.</param>
         /// <param name="hour">The hour in which the schedule will be activated (0-23).</param>
         /// <param name="minute">The minute in which the schedule will be activated (0-59).</param>
-        /// <returns></returns>
         public static string Weekly(DayOfWeek dayOfWeek, int hour, int minute)
         {
             return $"{minute} {hour} * * {(int)dayOfWeek}";
@@ -116,7 +106,6 @@
         /// Returns cron expression that fires every month at 00:00 UTC of the first
         /// day of month.
         /// </summary>
-        /// <returns></returns>
         public static string Monthly()
         {
             return Monthly(day: 1);
@@ -127,7 +116,6 @@
         /// day of month.
         /// </summary>
         /// <param name="day">The day of month in which the schedule will be activated (1-31).</param>
-        /// <returns></returns>
         public static string Monthly(int day)
         {
             return Monthly(day, hour: 0);
@@ -139,7 +127,6 @@
         /// </summary>
         /// <param name="day">The day of month in which the schedule will be activated (1-31).</param>
         /// <param name="hour">The hour in which the schedule will be activated (0-23).</param>
-        /// <returns></returns>
         public static string Monthly(int day, int hour)
         {
             return Monthly(day, hour, minute: 0);
@@ -152,7 +139,6 @@
         /// <param name="day">The day of month in which the schedule will be activated (1-31).</param>
         /// <param name="hour">The hour in which the schedule will be activated (0-23).</param>
         /// <param name="minute">The minute in which the schedule will be activated (0-59).</param>
-        /// <returns></returns>
         public static string Monthly(int day, int hour, int minute)
         {
             return $"{minute} {hour} {day} * *";
@@ -161,7 +147,6 @@
         /// <summary>
         /// Returns cron expression that fires every year on Jan, 1st at 00:00 UTC.
         /// </summary>
-        /// <returns></returns>
         public static string Yearly()
         {
             return Yearly(month: 1);
@@ -172,7 +157,6 @@
         /// of the specified month.
         /// </summary>
         /// <param name="month">The month in which the schedule will be activated (1-12).</param>
-        /// <returns></returns>
         public static string Yearly(int month)
         {
             return Yearly(month, day: 1);
@@ -184,7 +168,6 @@
         /// </summary>
         /// <param name="month">The month in which the schedule will be activated (1-12).</param>
         /// <param name="day">The day of month in which the schedule will be activated (1-31).</param>
-        /// <returns></returns>
         public static string Yearly(int month, int day)
         {
             return Yearly(month, day, hour: 0);
@@ -197,7 +180,6 @@
         /// <param name="month">The month in which the schedule will be activated (1-12).</param>
         /// <param name="day">The day of month in which the schedule will be activated (1-31).</param>
         /// <param name="hour">The hour in which the schedule will be activated (0-23).</param>
-        /// <returns></returns>
         public static string Yearly(int month, int day, int hour)
         {
             return Yearly(month, day, hour, minute: 0);
@@ -211,7 +193,6 @@
         /// <param name="day">The day of month in which the schedule will be activated (1-31).</param>
         /// <param name="hour">The hour in which the schedule will be activated (0-23).</param>
         /// <param name="minute">The minute in which the schedule will be activated (0-59).</param>
-        /// <returns></returns>
         public static string Yearly(int month, int day, int hour, int minute)
         {
             return $"{minute} {hour} {day} {month} *";
@@ -221,7 +202,6 @@
         /// Returns cron expression that fires every &lt;<paramref name="interval"></paramref>&gt; minutes.
         /// </summary>
         /// <param name="interval">The number of minutes to wait between every activation.</param>
-        /// <returns></returns>
         public static string MinuteInterval(int interval)
         {
             return $"*/{interval} * * * *";
@@ -231,7 +211,6 @@
         /// Returns cron expression that fires every &lt;<paramref name="interval"></paramref>&gt; hours.
         /// </summary>
         /// <param name="interval">The number of hours to wait between every activation.</param>
-        /// <returns></returns>
         public static string HourInterval(int interval)
         {
             return $"0 */{interval} * * *";
@@ -241,7 +220,6 @@
         /// Returns cron expression that fires every &lt;<paramref name="interval"></paramref>&gt; days.
         /// </summary>
         /// <param name="interval">The number of days to wait between every activation.</param>
-        /// <returns></returns>
         public static string DayInterval(int interval)
         {
             return $"0 0 */{interval} * *";
@@ -251,7 +229,6 @@
         /// Returns cron expression that fires every &lt;<paramref name="interval"></paramref>&gt; months.
         /// </summary>
         /// <param name="interval">The number of months to wait between every activation.</param>
-        /// <returns></returns>
         public static string MonthInterval(int interval)
         {
             return $"0 0 1 */{interval} *";

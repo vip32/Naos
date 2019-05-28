@@ -14,7 +14,6 @@
         /// <param name="handler">Function called on the dequeued item.</param>
         /// <param name="autoComplete">True to call <see cref="CompleteAsync"/> after the <paramref name="handler"/> is run, defaults to false.</param>
         /// <param name="cancellationToken">The token used to cancel the background worker.</param>
-        /// <returns></returns>
         public static Task ProcessItemsAsync<TData>(
             this IQueue<TData> source,
             Func<IQueueItem<TData>, Task> handler,

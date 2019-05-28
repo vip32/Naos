@@ -9,7 +9,6 @@
         /// </summary>
         /// <param name="source">the source to remove from.</param>
         /// <param name="value">the value to remove.</param>
-        /// <returns></returns>
         [DebuggerStepThrough]
         public static string Remove(this string source, string value)
         {

@@ -15,7 +15,6 @@
         /// See: <see href="https://blog.codinghorror.com/equipping-our-ascii-armor/"/>
         /// </remarks>
         /// </summary>
-        /// <returns></returns>
         [DebuggerStepThrough]
         public static string ToBase64(this Guid source, bool trimEnd = false)
         {
@@ -32,7 +31,6 @@
         /// See: <see href="http://madskristensen.net/post/generate-unique-strings-and-numbers-in-c"/>
         /// </remarks>
         /// </summary>
-        /// <returns></returns>
         [DebuggerStepThrough]
         public static string ToCode(this Guid source)
         {
@@ -53,7 +51,6 @@
         /// See: <see href="http://madskristensen.net/post/generate-unique-strings-and-numbers-in-c"/>
         /// </remarks>
         /// </summary>
-        /// <returns></returns>
         [DebuggerStepThrough]
         public static long ToNumber(this Guid source)
             => BitConverter.ToInt64(source.ToByteArray(), 0);

@@ -27,7 +27,6 @@
         /// Entity exists by id.
         /// </summary>
         /// <param name="id">The entity identifier.</param>
-        /// <returns></returns>
         public virtual async Task<bool> ExistsAsync(object id)
         {
             return await this.decoratee.ExistsAsync(id).AnyContext();
@@ -38,7 +37,6 @@
         /// </summary>
         /// <param name="options">The options.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns></returns>
         public virtual async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
             return await this.decoratee.FindAllAsync(options, cancellationToken).AnyContext();
@@ -50,7 +48,6 @@
         /// <param name="specification">The specification.</param>
         /// <param name="options">The options.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns></returns>
         public virtual async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
             return await this.decoratee.FindAllAsync(specification, options, cancellationToken).AnyContext();
@@ -62,7 +59,6 @@
         /// <param name="specifications">The specifications.</param>
         /// <param name="options">The options.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns></returns>
         public virtual async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
             return await this.decoratee.FindAllAsync(specifications, options, cancellationToken).AnyContext();
@@ -72,7 +68,6 @@
         /// Finds one entitiy by id.
         /// </summary>
         /// <param name="id">The entity identifier.</param>
-        /// <returns></returns>
         public virtual async Task<TEntity> FindOneAsync(object id)
         {
             return await this.decoratee.FindOneAsync(id).AnyContext();

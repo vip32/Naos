@@ -47,7 +47,6 @@
         /// </summary>
         /// <param name="context">The <see cref="HttpContext"/> for the current request.</param>
         /// <param name="contextFactory">The <see cref="ICorrelationContextFactory"/> which can create a <see cref="CorrelationContext"/>.</param>
-        /// <returns></returns>
         public async Task Invoke(HttpContext context, ICorrelationContextFactory contextFactory)
         {
             var correlationId = this.EnsureCorrelationId(context);

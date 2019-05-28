@@ -167,7 +167,6 @@
         /// </summary>
         /// <param name="messageName"></param>
         /// <param name="signalRMessage"></param>
-        /// <returns></returns>
         private async Task<bool> ProcessMessage(string messageName, object signalRMessage)
         {
             var processed = false;

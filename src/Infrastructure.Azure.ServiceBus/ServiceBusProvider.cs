@@ -74,7 +74,6 @@
         /// Ensures the topic.
         /// </summary>
         /// <param name="topicName">Name of the topic.</param>
-        /// <returns></returns>
         public async Task<ITopic> EnsureTopic(string topicName)
         {
             var topics = await this.serviceBusNamespace.Topics.ListAsync();
@@ -98,7 +97,6 @@
         /// </summary>
         /// <param name="topicName">Name of the topic.</param>
         /// <param name="subscriptionName">Name of the subscription.</param>
-        /// <returns></returns>
         public async Task<ISubscription> EnsureSubscription(string topicName, string subscriptionName)
         {
             var topic = await this.EnsureTopic(topicName);

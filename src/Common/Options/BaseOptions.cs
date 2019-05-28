@@ -17,14 +17,12 @@
         /// Creates the logger.
         /// </summary>
         /// <param name="categoryName">Name of the category.</param>
-        /// <returns></returns>
         public ILogger CreateLogger(string categoryName) => this.LoggerFactory == null ? NullLogger.Instance : this.LoggerFactory.CreateLogger(categoryName);
 
         /// <summary>
         /// Creates the typed logger.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
         public ILogger<T> CreateLogger<T>() => this.LoggerFactory == null ? new NullLogger<T>() : this.LoggerFactory.CreateLogger<T>();
     }
 }

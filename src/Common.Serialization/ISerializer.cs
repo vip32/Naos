@@ -17,7 +17,6 @@
         /// </summary>
         /// <param name="input">The input.</param>
         /// <param name="type">The type.</param>
-        /// <returns></returns>
         object Deserialize(Stream input, Type type);
 
         /// <summary>
@@ -25,7 +24,6 @@
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="input">The input.</param>
-        /// <returns></returns>
         T Deserialize<T>(Stream input);
     }
 }

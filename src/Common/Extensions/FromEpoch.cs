@@ -8,7 +8,6 @@
         /// Creates a datetime for the provided epoch value.
         /// </summary>
         /// <param name="epoch">The epoch value.</param>
-        /// <returns></returns>
         public static DateTime FromEpoch(long epoch)
         {
             return DateTimeOffset.FromUnixTimeSeconds(epoch).DateTime;
@@ -18,7 +17,6 @@
         /// Creates a datetime for the provided epoch value.
         /// </summary>
         /// <param name="epoch">The epoch value.</param>
-        /// <returns></returns>
         public static DateTime? FromEpoch(long? epoch)
         {
             if(!epoch.HasValue)

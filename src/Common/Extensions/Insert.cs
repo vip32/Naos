@@ -11,7 +11,6 @@
         /// <param name="source">the source collection.</param>
         /// <param name="item">The item to add to the result.</param>
         /// <param name="index">the index at which the item should inserted.</param>
-        /// <returns></returns>
         public static IEnumerable<TItem> Insert<TItem>(
             this IEnumerable<TItem> source,
             TItem item,

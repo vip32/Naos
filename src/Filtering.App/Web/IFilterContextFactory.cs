@@ -15,7 +15,6 @@
         /// <param name="orderQueryStringKey">The order by query string key.</param>
         /// <param name="skipQueryStringKey">The skip query string key.</param>
         /// <param name="takeQueryStringKey">The take query string key.</param>
-        /// <returns></returns>
         FilterContext Create(
             HttpRequest request,
             string criteriaQueryStringKey = QueryStringKeys.Criteria,

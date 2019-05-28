@@ -34,7 +34,6 @@
         /// </summary>
         /// <param name="type"></param>
         /// <param name="parameters"></param>
-        /// <returns></returns>
         public static T Create(Type type, params object[] parameters)
         {
             EnsureArg.IsNotNull(type, nameof(type));
@@ -54,7 +53,6 @@
         ///  get instances for the constructor.
         /// </summary>
         /// <param name="serviceProvider"></param>
-        /// <returns></returns>
         public static T Create(IServiceProvider serviceProvider)
         {
             EnsureArg.IsNotNull(serviceProvider, nameof(serviceProvider));
@@ -71,7 +69,6 @@
         /// </summary>
         /// <param name="type"></param>
         /// <param name="parameters"></param>
-        /// <returns></returns>
         public static object Create(Type type, params object[] parameters)
         {
             EnsureArg.IsNotNull(type, nameof(type));
@@ -92,7 +89,6 @@
         /// </summary>
         /// <param name="type"></param>
         /// <param name="serviceProvider"></param>
-        /// <returns></returns>
         public static object Create(Type type, IServiceProvider serviceProvider)
         {
             EnsureArg.IsNotNull(type, nameof(type));

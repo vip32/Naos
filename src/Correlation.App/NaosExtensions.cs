@@ -18,7 +18,6 @@
         /// Adds required services to support the request correlation functionality.
         /// </summary>
         /// <param name="naosOptions"></param>
-        /// <returns></returns>
         public static NaosServicesContextOptions AddRequestCorrelation(
             this NaosServicesContextOptions naosOptions)
         {

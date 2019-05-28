@@ -12,7 +12,6 @@
         /// <typeparam name="TValue">The type of the property.</typeparam>
         /// <param name="source">The source.</param>
         /// <param name="property">The property to get.</param>
-        /// <returns></returns>
         public static TValue ValueOrDefault<T1, TValue>(this T1 source, Func<T1, TValue> property)
         {
             if(typeof(T1).IsValueType)
@@ -31,7 +30,6 @@
         /// <param name="source">The source.</param>
         /// <param name="property">The property to get.</param>
         /// <param name="defaultValue">The defaule value.</param>
-        /// <returns></returns>
         public static TValue ValueOrDefault<T1, TValue>(this T1 source, Func<T1, TValue> property, TValue defaultValue = default(TValue))
         {
             if(typeof(T1).IsValueType)

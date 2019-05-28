@@ -11,7 +11,6 @@
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="propertyName">Name of the property.</param>
-        /// <returns></returns>
         public static Expression<Func<T, object>> GetExpression<T>(string propertyName)
         {
             var param = Expression.Parameter(typeof(T), "t");
@@ -24,7 +23,6 @@
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="propertyName">Name of the property.</param>
-        /// <returns></returns>
         public static Func<T, object> GetFunc<T>(string propertyName)
         {
             return GetExpression<T>(propertyName).Compile();

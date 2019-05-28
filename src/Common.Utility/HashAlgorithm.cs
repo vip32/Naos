@@ -10,7 +10,6 @@
         /// Computes the string based hash for an instance.
         /// </summary>
         /// <param name="instance">The instance.</param>
-        /// <returns></returns>
         public static string ComputeHash(object instance)
         {
             if(instance == null)

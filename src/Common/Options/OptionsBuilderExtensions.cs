@@ -7,7 +7,6 @@
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="builder">The builder.</param>
-        /// <returns></returns>
         public static T Target<T>(this IOptionsBuilder builder)
         {
             return (T)builder.Target;

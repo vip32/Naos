@@ -77,7 +77,6 @@
         /// <summary>
         /// Gets all subscription details.
         /// </summary>
-        /// <returns></returns>
         public IReadOnlyDictionary<string, IEnumerable<SubscriptionDetails>> GetAll()
         {
             var result = new Dictionary<string, IEnumerable<SubscriptionDetails>>();
@@ -93,7 +92,6 @@
         /// Gets all subscription details.
         /// </summary>
         /// <typeparam name="TMessage"></typeparam>
-        /// <returns></returns>
         public IEnumerable<SubscriptionDetails> GetAll<TMessage>()
             where TMessage : Message => this.GetAll(this.GetKey<TMessage>());
 
@@ -101,14 +99,12 @@
         /// Gets a specific subscription detail.
         /// </summary>
         /// <param name="messageName">Name of the message.</param>
-        /// <returns></returns>
         public IEnumerable<SubscriptionDetails> GetAll(string messageName) => this.map[messageName].Safe();
 
         /// <summary>
         /// Does this instance exist in the map.
         /// </summary>
         /// <typeparam name="TMessage"></typeparam>
-        /// <returns></returns>
         public bool Exists<TMessage>()
             where TMessage : Message => this.Exists(this.GetKey<TMessage>());
 
@@ -116,14 +112,12 @@
         /// Does the specified message name exist in the map.
         /// </summary>
         /// <param name="messageName">Name of the message.</param>
-        /// <returns></returns>
         public bool Exists(string messageName) => this.map.ContainsKey(messageName); // TODO: achtung casing!
 
         /// <summary>
         /// Gets the message type by name.
         /// </summary>
         /// <param name="messageName">Name of the message.</param>
-        /// <returns></returns>
         public Type GetByName(string messageName) =>
             //this.messageTypes.SingleOrDefault(t => t.Name == messageName);
             this.messageTypes.SingleOrDefault(t => this.GetKey(t).Equals(messageName, StringComparison.OrdinalIgnoreCase)
@@ -133,7 +127,6 @@
         /// Gets the key.
         /// </summary>
         /// <typeparam name="TMessage"></typeparam>
-        /// <returns></returns>
         //public string GetKey<TMessage>() => typeof(TMessage).Name;
         public string GetKey<TMessage>() => typeof(TMessage).PrettyName();
 

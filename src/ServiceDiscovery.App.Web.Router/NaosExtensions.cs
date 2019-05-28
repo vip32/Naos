@@ -42,7 +42,6 @@
         /// </summary>
         /// <param name="options"></param>
         /// <param name="section"></param>
-        /// <returns></returns>
         public static ServiceDiscoveryRouterOptions UseFileSystemRegistry(
             this ServiceDiscoveryRouterOptions options,
             string section = "naos:serviceDiscovery")

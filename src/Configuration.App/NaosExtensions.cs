@@ -26,7 +26,6 @@
         /// <param name="optionsAction"></param>
         /// <param name="environment"></param>
         /// <param name="section"></param>
-        /// <returns></returns>
         public static INaosServicesContext AddNaos(
             this IServiceCollection services,
             IConfiguration configuration,

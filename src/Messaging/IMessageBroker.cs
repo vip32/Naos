@@ -18,7 +18,6 @@
         /// </summary>
         /// <typeparam name="TMessage">The type of the message.</typeparam>
         /// <typeparam name="THandler">The type of the message handler.</typeparam>
-        /// <returns></returns>
         IMessageBroker Subscribe<TMessage, THandler>()
             where TMessage : Message
             where THandler : IMessageHandler<TMessage>;

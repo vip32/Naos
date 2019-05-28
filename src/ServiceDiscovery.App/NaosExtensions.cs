@@ -45,7 +45,6 @@
         /// </summary>
         /// <param name="options"></param>
         /// <param name="section"></param>
-        /// <returns></returns>
         public static ServiceDiscoveryOptions UseFileSystemClientRegistry(
             this ServiceDiscoveryOptions options,
             string section = "naos:serviceDiscovery")
@@ -76,7 +75,6 @@
         /// </summary>
         /// <param name="options"></param>
         /// <param name="section"></param>
-        /// <returns></returns>
         public static ServiceDiscoveryOptions UseRouterClientRegistry(
             this ServiceDiscoveryOptions options,
             string section = "naos:serviceDiscovery")

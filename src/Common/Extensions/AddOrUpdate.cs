@@ -13,7 +13,6 @@
         /// <param name="source">The source.</param>
         /// <param name="key">The key.</param>
         /// <param name="value">The value.</param>
-        /// <returns></returns>
         [DebuggerStepThrough]
         public static IDictionary<TKey, TValue> AddOrUpdate<TKey, TValue>(
             this IDictionary<TKey, TValue> source,
@@ -45,7 +44,6 @@
         /// <typeparam name="TValue">The value type.</typeparam>
         /// <param name="source">The source.</param>
         /// <param name="items">The items to add.</param>
-        /// <returns></returns>
         [DebuggerStepThrough]
         public static IDictionary<TKey, TValue> AddOrUpdate<TKey, TValue>(
             this IDictionary<TKey, TValue> source,

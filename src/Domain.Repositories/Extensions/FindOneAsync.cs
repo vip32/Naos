@@ -14,7 +14,6 @@
         /// <param name="source">The source.</param>
         /// <param name="id">The identifier.</param>
         /// <param name="tenantId">The tenant identifier.</param>
-        /// <returns></returns>
         public static async Task<TEntity> FindOneAsync<TEntity>(
             this IGenericRepository<TEntity> source,
             object id,

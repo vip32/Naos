@@ -9,7 +9,6 @@
         /// Handles the specified message.
         /// </summary>
         /// <param name="message">The event.</param>
-        /// <returns></returns>
         Task Handle(T message);
     }
 }

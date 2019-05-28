@@ -16,7 +16,6 @@
         /// Adds required services to support the service context functionality.
         /// </summary>
         /// <param name="naosOptions"></param>
-        /// <returns></returns>
         public static NaosServicesContextOptions AddServiceContext(
             this NaosServicesContextOptions naosOptions)
         {

@@ -199,7 +199,6 @@
         ///     get it from the request directly.
         /// </summary>
         /// <param name="source"></param>
-        /// <returns></returns>
         public static string GetCorrelationId(this HttpRequestMessage source)
         {
             if(source == null)
@@ -215,7 +214,6 @@
         ///     get it from the request directly.
         /// </summary>
         /// <param name="source"></param>
-        /// <returns></returns>
         public static string GetRequestId(this HttpRequestMessage source)
         {
             if(source == null)

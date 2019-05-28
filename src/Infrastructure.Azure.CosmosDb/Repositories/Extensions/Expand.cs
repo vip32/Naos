@@ -13,7 +13,6 @@
         /// </summary>
         /// <typeparam name="T">The type of the delegate.</typeparam>
         /// <param name="expression">The expression to expand.</param>
-        /// <returns></returns>
         public static Expression<T> Expand<T>(this Expression<T> expression)
         {
             // source: http://www.albahari.com/nutshell/predicatebuilder.aspx & http://www.albahari.com/nutshell/linqkit.aspx
@@ -50,7 +49,6 @@
             /// by PredicateBuilder.
             /// </summary>
             /// <param name="invocationExpression"></param>
-            /// <returns></returns>
             protected override Expression VisitInvocation(InvocationExpression invocationExpression)
             {
                 var target = invocationExpression.Expression;

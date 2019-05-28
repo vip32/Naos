@@ -11,7 +11,6 @@
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         /// <param name="target">The target timezone.</param>
-        /// <returns></returns>
         public static DateTime GetLinkerDateTime(this Assembly assembly, TimeZoneInfo target = null)
         {
             var filePath = assembly.Location;

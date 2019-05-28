@@ -132,7 +132,6 @@
         /// Processes the message by invoking the message handler.
         /// </summary>
         /// <param name="path"></param>
-        /// <returns></returns>
         private async Task<bool> ProcessMessage(string path)
         {
             var processed = false;

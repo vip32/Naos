@@ -25,7 +25,6 @@
         /// <summary>
         /// Builds this options instance.
         /// </summary>
-        /// <returns></returns>
         public virtual T Build()
         {
             return this.Target;

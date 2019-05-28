@@ -10,7 +10,6 @@
         /// Sets the logger factory.
         /// </summary>
         /// <param name="loggerFactory">The logger factory.</param>
-        /// <returns></returns>
         public TBuilder LoggerFactory(ILoggerFactory loggerFactory)
         {
             this.Target.LoggerFactory = loggerFactory;

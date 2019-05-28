@@ -51,7 +51,6 @@
         /// Does this instance exist in the map.
         /// </summary>
         /// <typeparam name="TMessage"></typeparam>
-        /// <returns></returns>
         bool Exists<TMessage>()
             where TMessage : Message;
 
@@ -59,14 +58,12 @@
         /// Does the specified message name exist in the map.
         /// </summary>
         /// <param name="messageName">Name of the message.</param>
-        /// <returns></returns>
         bool Exists(string messageName);
 
         /// <summary>
         /// Gets the message type by name.
         /// </summary>
         /// <param name="messageName">Name of the message.</param>
-        /// <returns></returns>
         Type GetByName(string messageName);
 
         /// <summary>
@@ -77,14 +74,12 @@
         /// <summary>
         /// Gets all subscription details.
         /// </summary>
-        /// <returns></returns>
         IReadOnlyDictionary<string, IEnumerable<SubscriptionDetails>> GetAll();
 
         /// <summary>
         /// Gets all subscription details.
         /// </summary>
         /// <typeparam name="TMessage"></typeparam>
-        /// <returns></returns>
         IEnumerable<SubscriptionDetails> GetAll<TMessage>()
             where TMessage : Message;
 
@@ -92,14 +87,12 @@
         /// Gets specific subscription details.
         /// </summary>
         /// <param name="messageName">Name of the message.</param>
-        /// <returns></returns>
         IEnumerable<SubscriptionDetails> GetAll(string messageName);
 
         /// <summary>
         /// Gets the key.
         /// </summary>
         /// <typeparam name="TMessage"></typeparam>
-        /// <returns></returns>
         string GetKey<TMessage>();
     }
 }

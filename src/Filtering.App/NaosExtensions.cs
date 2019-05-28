@@ -15,7 +15,6 @@
         /// Adds required services to support the request filtering functionality.
         /// </summary>
         /// <param name="naosOptions"></param>
-        /// <returns></returns>
         public static NaosServicesContextOptions AddRequestFiltering(
             this NaosServicesContextOptions naosOptions)
         {
