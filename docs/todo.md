@@ -162,6 +162,8 @@ signalr client-server streaming https://docs.microsoft.com/en-us/aspnet/core/sig
 core 3 https://blogs.msdn.microsoft.com/webdev/2019/01/29/aspnet-core-3-preview-2/
 
 metrics (AppMetrics) https://github.com/FoundatioFx/Foundatio#metrics
+        https://github.com/AppMetrics/AppMetrics
+        https://github.com/jdvor/appmetrics-applicationinsights (reporter)
 metrics prometheus https://www.olivercoding.com/2018-07-22-prometheus-dotnetcore/
 metrics azure monitor https://blog.kloud.com.au/2019/01/16/automating-azure-instrumentation-and-monitoring-part-3-custom-metrics/
 

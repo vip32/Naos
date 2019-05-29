@@ -302,7 +302,8 @@ key vault keys: (or use the json configuration above)
 
 - Enqueue
   ```
-  await this.queue.EnqueueAsync(new EchoQueueEventData { Message = "+++ hello from queue item +++" }).AnyContext();
+  await this.queue.EnqueueAsync(
+      new EchoQueueEventData { Message = "+++ hello from queue item +++" }).AnyContext();
   ```
 - Dequeue
   ```
@@ -322,7 +323,7 @@ key vault keys: (or use the json configuration above)
     ```
 	await this.queue.ProcessItemsAsync(true).AnyContext();
 	```
-	will be handled by 'EchoQueueEventHandler'
+	will be handled by 'EchoQueueEventHandler' (EchoQueueEventData)
 
 - Implementations
   - InMemory Queue
@@ -332,9 +333,38 @@ key vault keys: (or use the json configuration above)
 
 Cross Service usage:
 ![inter service](docs/Naos%20–%20Queueing.png)
+```
+        .-------.                       .-------.
+       /         \                     /         \
+      /  Service  \                   /  Service  \
+      \  A    .-----------.      .-----------. B  / 
+       \......| Queueing  |      | Queueing  |.../ 
+              | <enqueue> |      | <dequeue> | - EchoQueueEventHandler
+              "---x-------"      "-------x---"
+ + EchoQueueEventData                    |
+                  |      .-----------.   |
+                  `----->| Queueing  |<--`
+                         | <enqueue> |
+                         "-----------"
+```
 
 Inside Service usage:
 ![inside service](docs/Naos%20–%20Queueing2.png)
+```
+         + EchoQueueEventData
+              .-----------.
+              | Queueing  x-----------------.
+        .-----| <enqueue> |                 |
+       /      "-----------"            .----V--------.
+      /           \                    | Queue       |
+      |  Service  |                    | (storage/   |
+      |  A        |                    |  servicebus)|
+      \       .-----------.            "----^--------"
+       \......| Queueing  |                 |
+              | <dequeue> |-----------------"      
+              "-----------"      
+         - EchoQueueEventHandler
+```
 
 # Domain
 
