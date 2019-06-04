@@ -36,7 +36,7 @@
 
         private static IConfigurationBuilder CreateBuilder(string basePath = null, string[] args = null, IConfigurationBuilder builder = null, string environmentName = "Development")
         {
-            builder = builder ?? new ConfigurationBuilder();
+            builder ??= new ConfigurationBuilder();
             builder.SetBasePath(basePath ?? AppDomain.CurrentDomain.BaseDirectory)
                   .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                   .AddEnvironmentVariables();
