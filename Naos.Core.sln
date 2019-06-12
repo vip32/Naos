@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{FCBA001C-2530-41E7-B122-66E996367F10}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		docs\ascii.md = docs\ascii.md
 		azure-pipelines.yml = azure-pipelines.yml
 		docs\Containerized Workflow.png = docs\Containerized Workflow.png
 		Directory.Build.props = Directory.Build.props
@@ -208,7 +209,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Web.Startup", "src\C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Mapping.AutoMapper", "src\Common.Mapping.AutoMapper\Common.Mapping.AutoMapper.csproj", "{F6625092-1B0C-48FB-BDDA-E3590918A9A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.Events", "src\Domain.Events\Domain.Events.csproj", "{3F3F469C-CCF9-4D05-8BBC-B9CA5C78823F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Events", "src\Domain.Events\Domain.Events.csproj", "{3F3F469C-CCF9-4D05-8BBC-B9CA5C78823F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
