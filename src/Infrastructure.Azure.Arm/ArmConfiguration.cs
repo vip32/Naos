@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Infrastructure.Azure.Arm
+﻿namespace Naos.Foundation.Infrastructure
 {
     public class ArmConfiguration
     {

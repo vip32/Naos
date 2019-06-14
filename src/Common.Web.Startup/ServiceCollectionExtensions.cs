@@ -4,7 +4,7 @@
     using System.Linq;
     using Microsoft.AspNetCore.Hosting.Server;
     using Microsoft.Extensions.DependencyInjection;
-    using Naos.Core.Common.Web;
+    using Naos.Foundation.Application;
 
     public static class ServiceCollectionExtensions
     {

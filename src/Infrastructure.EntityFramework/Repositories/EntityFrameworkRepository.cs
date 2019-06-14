@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Infrastructure.EntityFramework
+﻿namespace Naos.Foundation.Infrastructure
 {
     using System;
     using System.Collections.Generic;
@@ -8,10 +8,7 @@
     using EnsureThat;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
-    using Naos.Core.Domain;
-    using Naos.Core.Domain.Repositories;
-    using Naos.Core.Domain.Specifications;
+    using Naos.Foundation.Domain;
 
     public class EntityFrameworkRepository<TEntity> : IGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot

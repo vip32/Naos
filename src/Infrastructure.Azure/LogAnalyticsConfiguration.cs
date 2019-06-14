@@ -1,7 +1,5 @@
-﻿namespace Naos.Core.Infrastructure.Azure
+﻿namespace Naos.Foundation.Infrastructure
 {
-    using Naos.Core.Infrastructure.Azure.Ad;
-
     public class LogAnalyticsConfiguration
     {
         public bool Enabled { get; set; } = true;

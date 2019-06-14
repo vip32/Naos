@@ -1,7 +1,5 @@
-﻿namespace Naos.Core.Domain
+﻿namespace Naos.Foundation.Domain
 {
-    using Naos.Core.Common;
-
     public class DomainEvent : IDomainEvent
     {
         /// <summary>

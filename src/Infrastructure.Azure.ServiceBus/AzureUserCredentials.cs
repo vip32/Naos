@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Infrastructure.Azure.ServiceBus
+﻿namespace Naos.Foundation.Infrastructure
 {
     public class AzureUserCredentials // TODO: move to infra.arm
     {

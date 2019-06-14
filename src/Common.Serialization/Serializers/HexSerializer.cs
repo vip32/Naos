@@ -1,9 +1,10 @@
-﻿namespace Naos.Core.Common
+﻿namespace Naos.Foundation
 {
     using System;
     using System.IO;
     using System.Linq;
     using System.Text;
+    using Naos.Foundation;
     using Newtonsoft.Json;
 
     public class HexSerializer : ISerializer

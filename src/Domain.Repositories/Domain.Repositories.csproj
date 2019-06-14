@@ -2,18 +2,18 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.Domain.Repositories</AssemblyName>
-    <RootNamespace>Naos.Core.Domain.Repositories</RootNamespace>
+    <AssemblyName>Naos.Foundation.Domain.Repositories</AssemblyName>
+    <RootNamespace>Naos.Foundation.Domain</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Mapping\Common.Mapping.csproj" />
+    <ProjectReference Include="..\Common.Mapping\Mapping.csproj" />
     <ProjectReference Include="..\Domain.Specifications\Domain.Specifications.csproj" />
     <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-      
+    <ProjectReference Include="..\Options\Options.csproj" />
   </ItemGroup>
 
 </Project>

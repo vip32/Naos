@@ -11,8 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Criteria\Common.Criteria.csproj" />
-    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\Common.Criteria\Criteria.csproj" />
     <ProjectReference Include="..\KeyValueStorage\KeyValueStorage.csproj" />
   </ItemGroup>
 

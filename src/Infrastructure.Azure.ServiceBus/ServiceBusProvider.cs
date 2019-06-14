@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Infrastructure.Azure.ServiceBus
+﻿namespace Naos.Foundation.Infrastructure
 {
     using System.Linq;
     using System.Threading.Tasks;

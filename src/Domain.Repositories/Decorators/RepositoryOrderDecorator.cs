@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Domain.Repositories
+﻿namespace Naos.Foundation.Domain
 {
     using System;
     using System.Collections.Generic;
@@ -6,8 +6,6 @@
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
-    using Naos.Core.Common;
-    using Naos.Core.Domain.Specifications;
 
     /// <summary>
     /// <para>Decorates an <see cref="Repositories.IGenericRepository{TEntity}"/>.</para>

@@ -14,9 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Criteria\Common.Criteria.csproj" />
-    <ProjectReference Include="..\Common.Web\Common.Web.csproj" />
-    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\Common.Criteria\Criteria.csproj" />
+    <ProjectReference Include="..\Common.Web\Application.Web.csproj" />
     <ProjectReference Include="..\Configuration.App.Web\Configuration.App.Web.csproj" />
     <ProjectReference Include="..\Configuration.App\Configuration.App.csproj" />
     <ProjectReference Include="..\Domain.Repositories\Domain.Repositories.csproj" />

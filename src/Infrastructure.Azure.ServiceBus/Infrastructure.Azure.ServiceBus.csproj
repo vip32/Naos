@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.Infrastructure.Azure.ServiceBus</AssemblyName>
-    <RootNamespace>Naos.Core.Infrastructure.Azure.ServiceBus</RootNamespace>
+    <AssemblyName>Naos.Foundation.Infrastructure.Azure.ServiceBus</AssemblyName>
+    <RootNamespace>Naos.Foundation.Infrastructure</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-      
+
   </ItemGroup>
 
 </Project>

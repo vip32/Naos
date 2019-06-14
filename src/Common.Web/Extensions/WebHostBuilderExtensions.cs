@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Common.Web.Extensions
+﻿namespace Naos.Foundation.Application.Extensions
 {
     using System;
     using EnsureThat;

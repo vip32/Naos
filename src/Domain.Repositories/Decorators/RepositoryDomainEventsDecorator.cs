@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Domain.Repositories
+﻿namespace Naos.Foundation.Domain
 {
     using System.Collections.Generic;
     using System.Threading;
@@ -6,8 +6,6 @@
     using EnsureThat;
     using MediatR;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
-    using Naos.Core.Domain.Specifications;
 
 #pragma warning disable SA1629 // Documentation text should end with a period
     /// <summary>

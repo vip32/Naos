@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Common.Web.Console
+﻿namespace Naos.Foundation.Application
 {
     using System.Diagnostics;
     using System.Drawing;
@@ -7,7 +7,6 @@
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Hosting.Server;
     using Microsoft.AspNetCore.Hosting.Server.Features;
-    using Naos.Core.Common.Console;
     using static System.Runtime.InteropServices.OSPlatform;
     using static System.Runtime.InteropServices.RuntimeInformation;
     using Console = Colorful.Console;

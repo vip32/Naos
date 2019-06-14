@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.Infrastructure.Azure</AssemblyName>
-    <RootNamespace>Naos.Core.Infrastructure.Azure</RootNamespace>
+    <AssemblyName>Naos.Foundation.Infrastructure.Azure</AssemblyName>
+    <RootNamespace>Naos.Foundation.Infrastructure</RootNamespace>
   </PropertyGroup>
 
 </Project>

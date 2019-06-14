@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Domain.Repositories
+﻿namespace Naos.Foundation.Domain
 {
     using System.ComponentModel;
 

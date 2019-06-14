@@ -1,7 +1,6 @@
-﻿namespace Naos.Core.Infrastructure.Azure.KeyVault
+﻿namespace Naos.Foundation.Infrastructure
 {
     using System;
-    using Naos.Core.Common;
 
     public class EnvironmentPrefixKeyVaultSecretManager : PrefixKeyVaultSecretManager
     {

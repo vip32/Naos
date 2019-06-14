@@ -1,8 +1,7 @@
-﻿namespace Naos.Core.Domain.Repositories
+﻿namespace Naos.Foundation.Domain
 {
     using System;
     using System.Linq.Expressions;
-    using Naos.Core.Domain.Specifications;
 
     /// <summary>
     /// Defines the interface to map objects.

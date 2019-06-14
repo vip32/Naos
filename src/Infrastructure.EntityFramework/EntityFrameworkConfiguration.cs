@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Infrastructure.EntityFramework
+﻿namespace Naos.Foundation.Infrastructure
 {
     public class EntityFrameworkConfiguration
     {

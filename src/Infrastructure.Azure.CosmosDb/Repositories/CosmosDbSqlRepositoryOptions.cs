@@ -1,8 +1,7 @@
-﻿namespace Naos.Core.Infrastructure.Azure.CosmosDb
+﻿namespace Naos.Foundation.Infrastructure
 {
     using MediatR;
-    using Naos.Core.Common;
-    using Naos.Core.Domain;
+    using Naos.Foundation.Domain;
 
     public class CosmosDbSqlRepositoryOptions<TEntity> : BaseOptions
         where TEntity : class, IEntity, IAggregateRoot

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Common.Web.Client
+﻿namespace Naos.Foundation.Application.Client
 {
     using System.Net.Http;
     using System.Text;

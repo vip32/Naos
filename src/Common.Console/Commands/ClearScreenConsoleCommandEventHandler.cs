@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Common.Console
+﻿namespace Naos.Foundation
 {
     using System.Threading;
     using System.Threading.Tasks;

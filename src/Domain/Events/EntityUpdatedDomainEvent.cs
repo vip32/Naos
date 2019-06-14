@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Domain
+﻿namespace Naos.Foundation.Domain
 {
     public class EntityUpdatedDomainEvent : DomainEvent
     {

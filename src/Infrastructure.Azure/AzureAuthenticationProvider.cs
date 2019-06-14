@@ -1,4 +1,4 @@
-﻿//namespace Naos.Core.Operations.Infrastructure.Azure.LogAnalytics
+﻿//namespace Naos.Foundation.Infrastructure
 //{
 //    using System.Threading.Tasks;
 //    using Microsoft.IdentityModel.Clients.ActiveDirectory;

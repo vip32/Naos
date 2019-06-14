@@ -1,9 +1,8 @@
-﻿namespace Naos.Core.Infrastructure.EntityFramework
+﻿namespace Naos.Foundation.Infrastructure
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Naos.Core.Common;
-    using Naos.Core.Domain.Repositories;
+    using Naos.Foundation.Domain;
 
     /// <summary>
     /// IQueryable extensions.

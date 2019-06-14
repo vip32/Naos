@@ -19,11 +19,9 @@
 
   <ItemGroup>
 
-    <ProjectReference Include="..\Common.Console\Common.Console.csproj" />
+    <ProjectReference Include="..\Common.Console\Console.csproj" />
 
-    <ProjectReference Include="..\Common.Extensions\Common.Extensions.csproj" />
-
-    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\Common.Extensions\Extensions.csproj" />
   </ItemGroup>
 
   <ItemGroup>

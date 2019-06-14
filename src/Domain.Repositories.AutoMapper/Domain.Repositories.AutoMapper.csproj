@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.Domain.Repositories.AutoMapper</AssemblyName>
-    <RootNamespace>Naos.Core.Domain.Repositories.AutoMapper</RootNamespace>
+    <AssemblyName>Naos.Foundation.Domain.Repositories.AutoMapper</AssemblyName>
+    <RootNamespace>Naos.Foundation.Domain</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,12 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Mapping\Common.Mapping.csproj" />
+    <ProjectReference Include="..\Common.Mapping\Mapping.csproj" />
     <ProjectReference Include="..\Domain.Repositories\Domain.Repositories.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-      
+
   </ItemGroup>
 
 </Project>

@@ -17,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Extensions\Common.Extensions.csproj" />
-    <ProjectReference Include="..\Common.Serialization\Common.Serialization.csproj" />
+    <ProjectReference Include="..\Common.Extensions\Extensions.csproj" />
+    <ProjectReference Include="..\Common.Serialization\Serialization.csproj" />
     <ProjectReference Include="..\Infrastructure.Azure.CosmosDb\Infrastructure.Azure.CosmosDb.csproj" />
     <ProjectReference Include="..\Infrastructure.Azure.ServiceBus\Infrastructure.Azure.ServiceBus.csproj" />
     <ProjectReference Include="..\Messaging\Messaging.csproj" />

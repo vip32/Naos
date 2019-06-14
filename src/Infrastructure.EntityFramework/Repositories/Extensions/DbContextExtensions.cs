@@ -1,11 +1,10 @@
-﻿namespace Naos.Core.Infrastructure.EntityFramework
+﻿namespace Naos.Foundation.Infrastructure
 {
     using System.Linq;
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.EntityFrameworkCore;
-    using Naos.Core.Common;
-    using Naos.Core.Domain;
+    using Naos.Foundation.Domain;
 
     /// <summary>
     /// DbContext extensions.

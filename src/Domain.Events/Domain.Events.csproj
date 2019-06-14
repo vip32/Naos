@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.Domain.Events</AssemblyName>
-    <RootNamespace>Naos.Core.Domain</RootNamespace>
+    <AssemblyName>Naos.Foundation.Domain.Events</AssemblyName>
+    <RootNamespace>Naos.Foundation.Domain</RootNamespace>
   </PropertyGroup>
 
 </Project>

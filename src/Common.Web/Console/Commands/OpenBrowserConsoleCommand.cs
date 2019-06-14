@@ -1,9 +1,8 @@
-﻿namespace Naos.Core.Common.Web.Console
+﻿namespace Naos.Foundation.Application
 {
     using System.Threading.Tasks;
     using CommandLine;
     using MediatR;
-    using Naos.Core.Common.Console;
 
     [Verb("browser", HelpText = "Opens the browser")]
     public class OpenBrowserConsoleCommand : IConsoleCommand

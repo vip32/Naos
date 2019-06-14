@@ -1,10 +1,9 @@
-﻿namespace Naos.Core.Domain
+﻿namespace Naos.Foundation.Domain
 {
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
 
     public abstract class EntityUpdateDomainEventHandler
         : IDomainEventHandler<EntityUpdateDomainEvent>

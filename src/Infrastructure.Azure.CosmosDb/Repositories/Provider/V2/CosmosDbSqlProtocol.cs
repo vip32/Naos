@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Infrastructure.Azure.CosmosDb
+﻿namespace Naos.Foundation.Infrastructure
 {
     public enum CosmosDbSqlProtocol
     {

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Common.Web
+﻿namespace Naos.Foundation.Application
 {
     using System;
     using System.Collections.Generic;
@@ -31,7 +31,7 @@
 
             await this.LogHttpRequest(request, correlationId, requestId);
 
-            using(var timer = new Common.Timer())
+            using(var timer = new Foundation.Timer())
             {
                 var response = await base.SendAsync(request, cancellationToken).AnyContext();
                 timer.Stop();

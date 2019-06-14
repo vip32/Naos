@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.Domain</AssemblyName>
-    <RootNamespace>Naos.Core.Domain</RootNamespace>
+    <AssemblyName>Naos.Foundation.Domain</AssemblyName>
+    <RootNamespace>Naos.Foundation.Domain</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,10 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Abstractions\Common.Abstractions.csproj" />
-    <ProjectReference Include="..\Common.Extensions\Common.Extensions.csproj" />
-    <ProjectReference Include="..\Common.Utility\Common.Utility.csproj" />
-    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\Common.Abstractions\Abstractions.csproj" />
+    <ProjectReference Include="..\Common.Extensions\Extensions.csproj" />
+    <ProjectReference Include="..\Common.Utility\Utilities.csproj" />
+    <ProjectReference Include="..\Logging\Logging.csproj" />
   </ItemGroup>
 
 </Project>

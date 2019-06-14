@@ -1,9 +1,8 @@
-﻿namespace Naos.Core.Domain.Specifications
+﻿namespace Naos.Foundation.Domain
 {
     using System;
     using System.Linq.Expressions;
     using EnsureThat;
-    using Naos.Core.Common;
 
     public /*abstract*/ class Specification<T> : ISpecification<T>
     {

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Infrastructure.Azure
+﻿namespace Naos.Foundation.Infrastructure
 {
     public class SignalRConfiguration
     {

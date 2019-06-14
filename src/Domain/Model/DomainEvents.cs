@@ -1,10 +1,9 @@
-﻿namespace Naos.Core.Domain
+﻿namespace Naos.Foundation.Domain
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using EnsureThat;
     using MediatR;
-    using Naos.Core.Common;
 
     public class DomainEvents
     {

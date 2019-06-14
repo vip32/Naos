@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.Infrastructure.EntityFramework</AssemblyName>
-    <RootNamespace>Naos.Core.Infrastructure.EntityFramework</RootNamespace>
+    <AssemblyName>Naos.Foundation.Infrastructure.EntityFramework</AssemblyName>
+    <RootNamespace>Naos.Foundation.Infrastructure</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Web.Startup\Common.Web.Startup.csproj" />
-    <ProjectReference Include="..\Common.Web\Common.Web.csproj" />
+    <ProjectReference Include="..\Common.Web.Startup\Application.Web.Startup.csproj" />
+    <ProjectReference Include="..\Common.Web\Application.Web.csproj" />
     <ProjectReference Include="..\Domain.Repositories\Domain.Repositories.csproj" />
     <ProjectReference Include="..\Domain.Specifications\Domain.Specifications.csproj" />
     <ProjectReference Include="..\Domain\Domain.csproj" />

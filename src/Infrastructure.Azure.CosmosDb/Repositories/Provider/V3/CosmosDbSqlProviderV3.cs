@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Infrastructure.Azure.CosmosDb
+﻿namespace Naos.Foundation.Infrastructure
 {
     using System;
     using System.Collections.Generic;
@@ -7,8 +7,7 @@
     using EnsureThat;
     using Humanizer;
     using Microsoft.Azure.Cosmos;
-    using Naos.Core.Common;
-    using Naos.Core.Domain;
+    using Naos.Foundation.Domain;
 
     public class CosmosDbSqlProviderV3<T> : ICosmosDbSqlProvider<T>, IDisposable
         where T : IHaveDiscriminator // needed? each type T is persisted in own collection

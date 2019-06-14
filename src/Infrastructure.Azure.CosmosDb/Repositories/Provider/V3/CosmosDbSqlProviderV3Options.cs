@@ -1,7 +1,6 @@
-﻿namespace Naos.Core.Infrastructure.Azure.CosmosDb
+﻿namespace Naos.Foundation.Infrastructure
 {
     using Microsoft.Azure.Cosmos;
-    using Naos.Core.Common;
 
     public class CosmosDbSqlProviderV3Options : BaseOptions
     {

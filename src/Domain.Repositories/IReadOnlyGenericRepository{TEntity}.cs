@@ -1,9 +1,8 @@
-﻿namespace Naos.Core.Domain.Repositories
+﻿namespace Naos.Foundation.Domain
 {
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
-    using Naos.Core.Domain.Specifications;
 
     public interface IReadOnlyGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot

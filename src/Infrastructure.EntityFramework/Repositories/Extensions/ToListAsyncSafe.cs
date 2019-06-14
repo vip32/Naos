@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Infrastructure.EntityFramework
+﻿namespace Naos.Foundation.Infrastructure
 {
     using System.Collections.Generic;
     using System.Linq;

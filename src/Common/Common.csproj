@@ -2,14 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.Common</AssemblyName>
-    <RootNamespace>Naos.Core.Common</RootNamespace>
+    <AssemblyName>Naos.Foundation.Common</AssemblyName>
+    <RootNamespace>Naos.Foundation</RootNamespace>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Resources\favicon.ico" />
-    <None Remove="Resources\logo.png" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Humanizer.Core" Version="2.6.2" />
@@ -23,12 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\favicon.ico" />
-    <EmbeddedResource Include="Resources\logo.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Logger\" />
+    <Folder Include="Extensions\" />
   </ItemGroup>
 
 </Project>

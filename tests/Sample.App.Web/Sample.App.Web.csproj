@@ -34,7 +34,7 @@
     <ProjectReference Include="..\..\src\App.Web\App.Web.csproj" />
     <ProjectReference Include="..\..\src\App\App.csproj" />
     <ProjectReference Include="..\..\src\Commands.Infrastructure.FileStorage\Commands.Infrastructure.FileStorage.csproj" />
-    <ProjectReference Include="..\..\src\Common.Web\Common.Web.csproj" />
+    <ProjectReference Include="..\..\src\Common.Web\Application.Web.csproj" />
     <ProjectReference Include="..\..\src\FileStorage.Infrastructure.Azure\FileStorage.Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\Sample.App\Sample.App.csproj" />
     <ProjectReference Include="..\Sample\Sample.csproj" />

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Infrastructure.Azure.KeyVault
+﻿namespace Naos.Foundation.Infrastructure
 {
     public class KeyVaultConfiguration
     {

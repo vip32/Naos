@@ -1,9 +1,8 @@
-﻿namespace Naos.Core.Domain.Repositories
+﻿namespace Naos.Foundation.Domain
 {
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
-    using Naos.Core.Common;
 
     /// <summary>
     /// Various options to specify the <see cref="IGenericRepository{T}" /> find operations.

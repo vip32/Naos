@@ -1,10 +1,9 @@
-﻿namespace Naos.Core.Domain.Repositories.AutoMapper
+﻿namespace Naos.Foundation.Domain
 {
     using System;
     using System.Linq.Expressions;
     using EnsureThat;
     using global::AutoMapper.Extensions.ExpressionMapping;
-    using Naos.Core.Domain.Specifications;
 
     public class AutoMapperEntityMapper : IEntityMapper
     {

@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Common.Serialization\Serialization.csproj" />
     <ProjectReference Include="..\FileStorage\FileStorage.csproj" />
-    <ProjectReference Include="..\Common.Serialization\Common.Serialization.csproj" />
   </ItemGroup>
 
 </Project>

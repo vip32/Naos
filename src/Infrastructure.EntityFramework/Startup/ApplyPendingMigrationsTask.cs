@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Infrastructure.EntityFramework
+﻿namespace Naos.Foundation.Infrastructure
 {
     using System;
     using System.Threading;
@@ -6,8 +6,7 @@
     using EnsureThat;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
-    using Naos.Core.Common;
-    using Naos.Core.Common.Web;
+    using Naos.Foundation.Application;
 
     public class ApplyPendingMigrationsTask<TDbContext> : IStartupTask
     where TDbContext : DbContext

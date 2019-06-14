@@ -1,8 +1,9 @@
-﻿namespace Naos.Core.Common.Web
+﻿namespace Naos.Foundation.Application
 {
     using System.Text;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.WebUtilities;
+    using Naos.Foundation;
     using Newtonsoft.Json;
 
     /// <summary>

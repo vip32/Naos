@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Common.Web
+﻿namespace Naos.Foundation.Application
 {
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.ApplicationModels;

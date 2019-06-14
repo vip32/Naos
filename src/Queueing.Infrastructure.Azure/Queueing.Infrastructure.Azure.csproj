@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Extensions\Common.Extensions.csproj" />
+    <ProjectReference Include="..\Common.Extensions\Extensions.csproj" />
     <ProjectReference Include="..\Queueing\Queueing.csproj" />
   </ItemGroup>
 

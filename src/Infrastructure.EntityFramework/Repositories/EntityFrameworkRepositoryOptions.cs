@@ -1,8 +1,7 @@
-﻿namespace Naos.Core.Infrastructure.EntityFramework
+﻿namespace Naos.Foundation.Infrastructure
 {
     using MediatR;
     using Microsoft.EntityFrameworkCore;
-    using Naos.Core.Common;
 
     public class EntityFrameworkRepositoryOptions : BaseOptions
     {

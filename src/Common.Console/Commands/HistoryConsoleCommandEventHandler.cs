@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Common.Console
+﻿namespace Naos.Foundation
 {
     using System;
     using System.Drawing;

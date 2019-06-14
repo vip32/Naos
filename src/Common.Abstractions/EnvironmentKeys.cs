@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Common
+﻿namespace Naos.Foundation
 {
     public struct EnvironmentKeys
     {

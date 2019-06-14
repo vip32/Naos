@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Common.Web
+﻿namespace Naos.Foundation.Application
 {
     using System.Collections.Generic;
     using System.Threading;
@@ -6,6 +6,7 @@
     using EnsureThat;
     using Microsoft.AspNetCore.Hosting.Server;
     using Microsoft.AspNetCore.Http.Features;
+    using Naos.Foundation;
 
     /// <summary>
     /// A server that executes <see cref="IStartupTask"/>s on startup,

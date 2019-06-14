@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Infrastructure.Azure.CosmosDb
+﻿namespace Naos.Foundation.Infrastructure
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -6,10 +6,7 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
-    using Naos.Core.Domain;
-    using Naos.Core.Domain.Repositories;
-    using Naos.Core.Domain.Specifications;
+    using Naos.Foundation.Domain;
 
     public class CosmosDbSqlRepository<TEntity> : IGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot //, IDiscriminated

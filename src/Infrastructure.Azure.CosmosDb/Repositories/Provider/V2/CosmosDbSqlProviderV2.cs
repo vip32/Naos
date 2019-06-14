@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Infrastructure.Azure.CosmosDb
+﻿namespace Naos.Foundation.Infrastructure
 {
     using System;
     using System.Collections.Generic;
@@ -12,8 +12,7 @@
     using Microsoft.Azure.Documents.Client;
     //using Microsoft.Azure.Documents.Linq;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
-    using Naos.Core.Domain;
+    using Naos.Foundation.Domain;
     using Newtonsoft.Json;
 
     public class CosmosDbSqlProviderV2<T> : ICosmosDbSqlProvider<T>

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Domain.Repositories
+﻿namespace Naos.Foundation.Domain
 {
     /// <summary>
     /// Various options for the <see cref="IGenericRepository{T}"/>.

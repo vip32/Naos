@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Infrastructure.Azure.Ad
+﻿namespace Naos.Foundation.Infrastructure
 {
     public class AdAuthenticationConfiguration
     {

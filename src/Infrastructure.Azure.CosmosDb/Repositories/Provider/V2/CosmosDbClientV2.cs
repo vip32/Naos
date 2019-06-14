@@ -1,9 +1,8 @@
-﻿namespace Naos.Core.Infrastructure.Azure.CosmosDb
+﻿namespace Naos.Foundation.Infrastructure
 {
     using System;
     using Microsoft.Azure.Documents;
     using Microsoft.Azure.Documents.Client;
-    using Naos.Core.Common;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
 

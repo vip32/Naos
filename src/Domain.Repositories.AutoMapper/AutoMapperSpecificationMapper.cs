@@ -1,4 +1,4 @@
-﻿//namespace Naos.Core.Domain.Repositories.AutoMapper
+﻿//namespace Naos.Foundation.Domain
 //{
 //    using System;
 //    using System.Linq.Expressions;

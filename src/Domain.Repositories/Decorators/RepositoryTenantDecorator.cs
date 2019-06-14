@@ -1,7 +1,5 @@
-﻿namespace Naos.Core.Domain.Repositories
+﻿namespace Naos.Foundation.Domain
 {
-    using Naos.Core.Domain.Specifications;
-
     /// <summary>
     /// <para>Decorates an <see cref="Repositories.IGenericRepository{TEntity}"/>.</para>
     /// <para>

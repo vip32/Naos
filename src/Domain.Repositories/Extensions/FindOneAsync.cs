@@ -1,9 +1,7 @@
-﻿namespace Naos.Core.Domain.Repositories
+﻿namespace Naos.Foundation.Domain
 {
     using System.Threading.Tasks;
     using EnsureThat;
-    using Naos.Core.Common;
-    using Naos.Core.Domain.Specifications;
 
     public static partial class Extensions
     {

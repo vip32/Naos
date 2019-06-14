@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Domain
+﻿namespace Naos.Foundation.Domain
 {
     public interface IHaveDiscriminator // TODO: obsolete when seperate cosmos collections are used (cosmosrepo V3)
     {

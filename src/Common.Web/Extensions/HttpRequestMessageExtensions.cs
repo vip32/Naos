@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Common.Web
+﻿namespace Naos.Foundation.Application
 {
     using System;
     using System.Collections.Generic;
@@ -8,7 +8,6 @@
     using System.Text;
     using Microsoft.AspNetCore.WebUtilities;
     using Microsoft.Extensions.Primitives;
-    using Naos.Core.Common;
     using Newtonsoft.Json;
 
     /// <summary>

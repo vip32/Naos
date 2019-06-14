@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.Infrastructure.Azure.KeyVault</AssemblyName>
-    <RootNamespace>Naos.Core.Infrastructure.Azure.KeyVault</RootNamespace>
+    <AssemblyName>Naos.Foundation.Infrastructure.Azure.KeyVault</AssemblyName>
+    <RootNamespace>Naos.Foundation.Infrastructure</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,8 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Abstractions\Common.Abstractions.csproj" />
-    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\Common.Abstractions\Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

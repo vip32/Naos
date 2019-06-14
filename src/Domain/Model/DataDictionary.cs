@@ -1,8 +1,7 @@
-﻿namespace Naos.Core.Domain
+﻿namespace Naos.Foundation.Domain
 {
     using System;
     using System.Collections.Generic;
-    using Naos.Core.Common;
 
     public class DataDictionary : Dictionary<string, object>
     {

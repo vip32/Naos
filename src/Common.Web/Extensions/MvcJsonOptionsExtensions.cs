@@ -1,7 +1,6 @@
-﻿namespace Naos.Core.Common.Web
+﻿namespace Naos.Foundation.Application
 {
     using Microsoft.AspNetCore.Mvc;
-    using Naos.Core.Common;
     using Newtonsoft.Json;
 
     public static class MvcJsonOptionsExtensions

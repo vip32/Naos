@@ -1,8 +1,7 @@
-﻿namespace Naos.Core.Domain.Repositories
+﻿namespace Naos.Foundation.Domain
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Naos.Core.Common;
 
     public class InMemoryContext<TEntity>
     {

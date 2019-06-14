@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Infrastructure.Azure.KeyVault
+﻿namespace Naos.Foundation.Infrastructure
 {
     using Microsoft.Azure.KeyVault.Models;
     using Microsoft.Extensions.Configuration;

@@ -1,7 +1,6 @@
-﻿namespace Naos.Core.Domain
+﻿namespace Naos.Foundation.Domain
 {
     using System.Diagnostics;
-    using Naos.Core.Common;
     using Newtonsoft.Json;
 
     /// <summary>

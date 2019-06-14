@@ -1,8 +1,6 @@
-﻿namespace Naos.Core.Domain.Repositories
+﻿namespace Naos.Foundation.Domain
 {
     using MediatR;
-    using Naos.Core.Common;
-    using Naos.Core.Domain;
 
     public class InMemoryRepositoryOptions<TEntity> : BaseOptions
         where TEntity : class, IEntity, IAggregateRoot
