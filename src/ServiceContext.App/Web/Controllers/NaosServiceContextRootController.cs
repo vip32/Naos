@@ -64,6 +64,8 @@
                     // TODO: get these endpoints through DI for all active capabilities
                     ["name"] = Assembly.GetEntryAssembly().GetName().Name,
                     ["version"] = Assembly.GetEntryAssembly().GetName().Version.ToString(),
+                    //["versionFile"] = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>().Version,
+                    ["versionInformation"] = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion,
                     ["buildDate"] = Assembly.GetEntryAssembly().GetBuildDate().ToString("o")
                 },
                 Actions = new Dictionary<string, string>

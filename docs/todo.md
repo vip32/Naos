@@ -37,6 +37,9 @@ Marketing
 
 TODO:
 
+Drop .Core from the namespace (net5!)
+  - Naos.Foundation + Naos.XYZ
+
 Server > Client tracing like zipkin (https://zipkin.io/pages/data_model.html), based on serilog logevents (journal)
 4 journal types are relevant (web): TrackOutboundRequest/Response + TrackInboundRequest/Response 
 2 journal types are relevant (messaging): TrackPublishMessage/TrackReceiveMessage
