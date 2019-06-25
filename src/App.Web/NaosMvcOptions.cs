@@ -2,8 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using Naos.Core.Domain;
-    using Naos.Core.Domain.Repositories;
+    using Naos.Foundation.Domain;
     using Newtonsoft.Json;
 
     public class NaosMvcOptions

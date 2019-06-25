@@ -1,8 +1,7 @@
 ﻿namespace Naos.Core.App.Web.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
-    using Naos.Core.Domain;
-    using Naos.Core.Domain.Repositories;
+    using Naos.Foundation.Domain;
 
     [Route("api/[controller]")]
     public /*abstract*/ class NaosEntityGenericRepositoryControllerBase<TEntity>

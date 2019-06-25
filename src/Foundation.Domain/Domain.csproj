@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Naos.Foundation.Domain</AssemblyName>
+    <RootNamespace>Naos.Foundation.Domain</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="7.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Foundation.Abstractions\Abstractions.csproj" />
+    <ProjectReference Include="..\Foundation.Extensions\Extensions.csproj" />
+    <ProjectReference Include="..\Foundation.Utilities\Utilities.csproj" />
+    <ProjectReference Include="..\Foundation.Logging\Logging.csproj" />
+  </ItemGroup>
+
+</Project>

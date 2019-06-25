@@ -21,11 +21,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{FCBA001C-2
 		docs\todo.md = docs\todo.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Web", "src\Common.Web\Application.Web.csproj", "{D2A2D706-F821-4BAC-892F-B5F1FEAB82B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Web", "src\Foundation.Application.Web\Application.Web.csproj", "{D2A2D706-F821-4BAC-892F-B5F1FEAB82B5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "src\Domain\Domain.csproj", "{635C5135-B567-4DE0-8CCA-76FA97C2F540}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "src\Foundation.Domain\Domain.csproj", "{635C5135-B567-4DE0-8CCA-76FA97C2F540}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Azure.CosmosDb", "src\Infrastructure.Azure.CosmosDb\Infrastructure.Azure.CosmosDb.csproj", "{B5FC5E1B-B108-43EF-80FF-99DF8C490F72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Azure.CosmosDb", "src\Foundation.Infrastructure.Azure.CosmosDb\Infrastructure.Azure.CosmosDb.csproj", "{B5FC5E1B-B108-43EF-80FF-99DF8C490F72}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App", "src\App\App.csproj", "{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}"
 EndProject
@@ -41,29 +41,29 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commands.App", "src\Command
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.Infrastructure.Azure", "src\Messaging.Infrastructure.Azure\Messaging.Infrastructure.Azure.csproj", "{BD63E3F7-598B-470E-B33D-1EF4D446DF6B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Azure.KeyVault", "src\Infrastructure.Azure.KeyVault\Infrastructure.Azure.KeyVault.csproj", "{DBA9758B-BED6-45E3-BB95-D95F4CBADCFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Azure.KeyVault", "src\Foundation.Infrastructure.Azure.KeyVault\Infrastructure.Azure.KeyVault.csproj", "{DBA9758B-BED6-45E3-BB95-D95F4CBADCFB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.App", "tests\Sample.App\Sample.App.csproj", "{575579C0-66B3-4161-A42D-4DE94D1EACE2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configuration.App", "src\Configuration.App\Configuration.App.csproj", "{9803F2B8-8EF2-45E1-94CE-23FD16BAD91F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Azure.Arm", "src\Infrastructure.Azure.Arm\Infrastructure.Azure.Arm.csproj", "{DDFC8D91-9E8B-45DA-8BFC-CC3282100608}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Azure.Arm", "src\Foundation.Infrastructure.Azure.Arm\Infrastructure.Azure.Arm.csproj", "{DDFC8D91-9E8B-45DA-8BFC-CC3282100608}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.App.IntegrationTests", "tests\Sample.App.IntegrationTests\Sample.App.IntegrationTests.csproj", "{67FC16FB-7B11-4B17-85B7-607784DC0729}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Repositories", "src\Domain.Repositories\Domain.Repositories.csproj", "{31977D83-B6D2-4AEE-B340-8F0C366AD180}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Repositories", "src\Foundation.Domain.Repositories\Domain.Repositories.csproj", "{31977D83-B6D2-4AEE-B340-8F0C366AD180}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Specifications", "src\Domain.Specifications\Domain.Specifications.csproj", "{2E8FA2A7-7EDA-4DFF-8741-F3B06FCF386E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Specifications", "src\Foundation.Domain.Specifications\Domain.Specifications.csproj", "{2E8FA2A7-7EDA-4DFF-8741-F3B06FCF386E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Repositories.AutoMapper", "src\Domain.Repositories.AutoMapper\Domain.Repositories.AutoMapper.csproj", "{F9EB6C35-7301-4121-940D-4060F6B127FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Repositories.AutoMapper", "src\Foundation.Domain.Repositories.AutoMapper\Domain.Repositories.AutoMapper.csproj", "{F9EB6C35-7301-4121-940D-4060F6B127FE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.EntityFramework", "src\Infrastructure.EntityFramework\Infrastructure.EntityFramework.csproj", "{A26FB96B-CF4E-4D6B-ABC5-E085F81751DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.EntityFramework", "src\Foundation.Infrastructure.EntityFramework\Infrastructure.EntityFramework.csproj", "{A26FB96B-CF4E-4D6B-ABC5-E085F81751DF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample", "tests\Sample\Sample.csproj", "{07C25C4B-004A-423B-920D-25CD3D8857B9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.IntegrationTests", "tests\Sample.IntegrationTests\Sample.IntegrationTests.csproj", "{3EB3AF35-6FFE-49BE-AD7A-4BCB916029FB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Azure.ServiceBus", "src\Infrastructure.Azure.ServiceBus\Infrastructure.Azure.ServiceBus.csproj", "{E11B662F-19F4-4B16-9818-4CED64A83CB0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Azure.ServiceBus", "src\Foundation.Infrastructure.Azure.ServiceBus\Infrastructure.Azure.ServiceBus.csproj", "{E11B662F-19F4-4B16-9818-4CED64A83CB0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Operations", "src\Operations\Operations.csproj", "{0B254852-E2BC-4D7C-84C6-A189E5D9091F}"
 EndProject
@@ -145,7 +145,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileStorage.Infrastructure.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileStorage.Infrastructure.FileSystem", "src\FileStorage.Infrastructure.FileSystem\FileStorage.Infrastructure.FileSystem.csproj", "{0D0E557E-99F5-4612-A6D8-AD8628D10703}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serialization", "src\Common.Serialization\Serialization.csproj", "{8295FF40-338A-42CD-9F3E-01C4BDCAE96E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serialization", "src\Foundation.Serialization\Serialization.csproj", "{8295FF40-338A-42CD-9F3E-01C4BDCAE96E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileStorage.Infrastructure.Ssh", "src\FileStorage.Infrastructure.Ssh\FileStorage.Infrastructure.Ssh.csproj", "{5E99E54E-C80C-43C2-8200-EAC38CE4AAA0}"
 EndProject
@@ -163,9 +163,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Operations.App.Web.Dashboar
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configuration.App.Web", "src\Configuration.App.Web\Configuration.App.Web.csproj", "{5FA2F253-A90C-49DC-8C3C-B3AAEFFB537B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Azure", "src\Infrastructure.Azure\Infrastructure.Azure.csproj", "{852128CB-3ED3-4EDE-A868-7DC94B327C6D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Azure", "src\Foundation.Infrastructure.Azure\Infrastructure.Azure.csproj", "{852128CB-3ED3-4EDE-A868-7DC94B327C6D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mapping", "src\Common.Mapping\Mapping.csproj", "{4BD1636F-9A52-4D5A-B5F4-5CB1ABCF0662}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mapping", "src\Foundation.Mapping\Mapping.csproj", "{4BD1636F-9A52-4D5A-B5F4-5CB1ABCF0662}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Queueing", "Queueing", "{801F8254-1F3C-427F-B650-B98E728A5795}"
 EndProject
@@ -177,7 +177,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Queueing.App", "src\Queuein
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Queueing.App.Web", "src\Queueing.App.Web\Queueing.App.Web.csproj", "{DB906E06-2208-42BC-B61D-AD3062CCD1BE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Console", "src\Common.Console\Console.csproj", "{7E7AEAAD-3600-48D2-81AE-5DADF32447C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Console", "src\Foundation.Console\Console.csproj", "{7E7AEAAD-3600-48D2-81AE-5DADF32447C5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeyValueStorage.Infrastructure.Azure", "src\KeyValueStorage.Infrastructure.Azure\KeyValueStorage.Infrastructure.Azure.csproj", "{F396131C-509C-4E60-9804-9773CC49A43F}"
 EndProject
@@ -185,39 +185,39 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeyValueStorage", "src\KeyV
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "KeyValueStorage", "KeyValueStorage", "{DA64F0A2-4145-4163-B591-DB9374BEABBA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Criteria", "src\Common.Criteria\Criteria.csproj", "{F05D35AB-D17C-43E5-9861-050644144255}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Criteria", "src\Foundation.Criteria\Criteria.csproj", "{F05D35AB-D17C-43E5-9861-050644144255}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Compression", "src\Common.Compression\Compression.csproj", "{D3667218-DDF8-4D50-9397-94BE97B4E076}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Compression", "src\Foundation.Compression\Compression.csproj", "{D3667218-DDF8-4D50-9397-94BE97B4E076}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeyValueStorage.Infrastructure.FileStorage", "src\KeyValueStorage.Infrastructure.FileStorage\KeyValueStorage.Infrastructure.FileStorage.csproj", "{2B95EFB8-D48D-40C3-BAD9-A444C371A293}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileStorage.Csv", "src\FileStorage.Csv\FileStorage.Csv.csproj", "{FBF89968-D886-4088-9367-B6370C51EC3D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serialization.Csv", "src\Common.Serialization.Csv\Serialization.Csv.csproj", "{4B047C9E-FECF-44A3-8FD6-8409CC04695D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serialization.Csv", "src\Foundation.Serialization.Csv\Serialization.Csv.csproj", "{4B047C9E-FECF-44A3-8FD6-8409CC04695D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abstractions", "src\Common.Abstractions\Abstractions.csproj", "{23442C1E-3E47-4C5E-9190-2DACDF6A382A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abstractions", "src\Foundation.Abstractions\Abstractions.csproj", "{23442C1E-3E47-4C5E-9190-2DACDF6A382A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Extensions", "src\Common.Extensions\Extensions.csproj", "{B1558580-856D-4A24-A057-8FF1F240B56D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Extensions", "src\Foundation.Extensions\Extensions.csproj", "{B1558580-856D-4A24-A057-8FF1F240B56D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commands.Infrastructure.FileStorage", "src\Commands.Infrastructure.FileStorage\Commands.Infrastructure.FileStorage.csproj", "{75ADBC3C-FA73-495A-97FC-894775837859}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities", "src\Common.Utility\Utilities.csproj", "{51822BFD-6551-48BB-8DFE-AFFB2DA39CB0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities", "src\Foundation.Utilities\Utilities.csproj", "{51822BFD-6551-48BB-8DFE-AFFB2DA39CB0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Web.Startup", "src\Common.Web.Startup\Application.Web.Startup.csproj", "{6B1C7FE4-43FE-4E3B-AA85-7284F3F1EC4B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Web.Startup", "src\Foundation.Application.Web.Startup\Application.Web.Startup.csproj", "{6B1C7FE4-43FE-4E3B-AA85-7284F3F1EC4B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mapping.AutoMapper", "src\Common.Mapping.AutoMapper\Mapping.AutoMapper.csproj", "{F6625092-1B0C-48FB-BDDA-E3590918A9A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mapping.AutoMapper", "src\Foundation.Mapping.AutoMapper\Mapping.AutoMapper.csproj", "{F6625092-1B0C-48FB-BDDA-E3590918A9A9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Events", "src\Domain.Events\Domain.Events.csproj", "{3F3F469C-CCF9-4D05-8BBC-B9CA5C78823F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Events", "src\Foundation.Domain.Events\Domain.Events.csproj", "{3F3F469C-CCF9-4D05-8BBC-B9CA5C78823F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Encoding", "src\Encoding\Encoding.csproj", "{5F80ACC4-1675-4966-902E-7B1ED7B7D49A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Encoding", "src\Foundation.Encoding\Encoding.csproj", "{5F80ACC4-1675-4966-902E-7B1ED7B7D49A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContentTypes", "src\ContentTypes\ContentTypes.csproj", "{4F60C77C-DDE8-462A-8DFB-C35C4004C88E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContentTypes", "src\Foundation.ContentTypes\ContentTypes.csproj", "{4F60C77C-DDE8-462A-8DFB-C35C4004C88E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logging", "src\Logging\Logging.csproj", "{2863978A-AD57-476B-8F91-D7C4E7AF07A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logging", "src\Foundation.Logging\Logging.csproj", "{2863978A-AD57-476B-8F91-D7C4E7AF07A8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Options", "src\Options\Options.csproj", "{3B9AD10D-B864-48A9-B34B-3F57FE63EF6D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Options", "src\Foundation.Options\Options.csproj", "{3B9AD10D-B864-48A9-B34B-3F57FE63EF6D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Resources", "src\Resources\Resources.csproj", "{C8A7A98E-1545-4092-B3FF-0E67068CBE1D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Resources", "src\Foundation.Resources\Resources.csproj", "{C8A7A98E-1545-4092-B3FF-0E67068CBE1D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

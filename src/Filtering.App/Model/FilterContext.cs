@@ -2,9 +2,8 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Naos.Core.Common;
-    using Naos.Core.Domain.Repositories;
-    using Naos.Core.Domain.Specifications;
+    using Naos.Foundation;
+    using Naos.Foundation.Domain;
 
     /// <summary>
     /// Provides access to the filter information.

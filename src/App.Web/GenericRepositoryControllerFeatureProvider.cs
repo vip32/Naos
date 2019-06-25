@@ -6,7 +6,7 @@
     using Microsoft.AspNetCore.Mvc.ApplicationParts;
     using Microsoft.AspNetCore.Mvc.Controllers;
     using Naos.Core.App.Web.Controllers;
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
     public class GenericRepositoryControllerFeatureProvider : IApplicationFeatureProvider<ControllerFeature>
     {

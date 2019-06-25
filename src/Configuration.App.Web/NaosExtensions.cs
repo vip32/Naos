@@ -5,7 +5,7 @@
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
     /// <summary>
     /// Extension methods for the naos middleware.

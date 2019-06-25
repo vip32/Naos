@@ -1,15 +1,15 @@
 ﻿namespace Naos.Core.UnitTests.Common.Mapping
 {
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
 #pragma warning disable SA1649 // File name should match first type name
 #pragma warning disable SA1402 // File may only contain a single type
-    public class StubMapper : IMapper<StubMapFrom, StubMapTo>
+    public class StubMapper : IMapper<StubMapSource, StubMapDestination>
     {
-        public void Map(StubMapFrom source, StubMapTo destination) => destination.Property = source.Property;
+        public void Map(StubMapSource source, StubMapDestination destination) => destination.Property = source.Property;
     }
 
-    public class StubMapFrom
+    public class StubMapSource
     {
         public int Property { get; set; }
 
@@ -18,7 +18,7 @@
         public string LastName { get; set; }
     }
 
-    public class StubMapTo
+    public class StubMapDestination
     {
         public int Property { get; set; }
 

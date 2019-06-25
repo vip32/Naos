@@ -5,7 +5,7 @@
     using EnsureThat;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
+    using Naos.Foundation;
     using Naos.Core.Configuration.App;
     using Console = Colorful.Console;
 

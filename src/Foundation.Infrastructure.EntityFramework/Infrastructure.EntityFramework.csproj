@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Naos.Foundation.Infrastructure.EntityFramework</AssemblyName>
+    <RootNamespace>Naos.Foundation.Infrastructure</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.2.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="2.2.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Foundation.Application.Web.Startup\Application.Web.Startup.csproj" />
+    <ProjectReference Include="..\Foundation.Application.Web\Application.Web.csproj" />
+    <ProjectReference Include="..\Foundation.Domain.Repositories\Domain.Repositories.csproj" />
+    <ProjectReference Include="..\Foundation.Domain.Specifications\Domain.Specifications.csproj" />
+    <ProjectReference Include="..\Foundation.Domain\Domain.csproj" />
+  </ItemGroup>
+
+</Project>

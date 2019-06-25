@@ -15,8 +15,13 @@
     <PackageReference Include="NSwag.Annotations" Version="12.3.1" />
     <PackageReference Include="NSwag.SwaggerGeneration" Version="12.3.1" />
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\Common.Web\Application.Web.csproj" />
+    <ProjectReference Include="..\Foundation.Application.Web\Application.Web.csproj" />
+    <ProjectReference Include="..\Foundation.Domain.Repositories\Domain.Repositories.csproj" />
+    <ProjectReference Include="..\Foundation.Domain.Specifications\Domain.Specifications.csproj" />
+    <ProjectReference Include="..\Foundation.Domain\Domain.csproj" />
+    <ProjectReference Include="..\Foundation.Extensions\Extensions.csproj" />
     <ProjectReference Include="..\Correlation.App\RequestCorrelation.App.csproj" />
     <ProjectReference Include="..\Filtering.App\RequestFiltering.App.csproj" />
     <ProjectReference Include="..\Authentication.App.Web\Authentication.App.Web.csproj" />

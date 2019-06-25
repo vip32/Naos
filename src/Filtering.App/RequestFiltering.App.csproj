@@ -14,12 +14,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Criteria\Criteria.csproj" />
-    <ProjectReference Include="..\Common.Web\Application.Web.csproj" />
+    <ProjectReference Include="..\Foundation.Criteria\Criteria.csproj" />
+    <ProjectReference Include="..\Foundation.Application.Web\Application.Web.csproj" />
+    <ProjectReference Include="..\Foundation.Domain.Repositories\Domain.Repositories.csproj" />
+    <ProjectReference Include="..\Foundation.Domain.Specifications\Domain.Specifications.csproj" />
+    <ProjectReference Include="..\Foundation.Extensions\Extensions.csproj" />
     <ProjectReference Include="..\Configuration.App.Web\Configuration.App.Web.csproj" />
     <ProjectReference Include="..\Configuration.App\Configuration.App.csproj" />
-    <ProjectReference Include="..\Domain.Repositories\Domain.Repositories.csproj" />
-    <ProjectReference Include="..\Domain.Specifications\Domain.Specifications.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,8 +3,8 @@
     using System;
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.Extensions.DependencyInjection;
-    using Naos.Core.Common;
-    using Naos.Core.Common.Web;
+    using Naos.Foundation;
+    using Naos.Foundation.Application;
 
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions

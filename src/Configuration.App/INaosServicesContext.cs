@@ -9,7 +9,7 @@
 
         string Environment { get; set; }
 
-        Naos.Core.Common.ServiceDescriptor Descriptor { get; set; }
+        Naos.Foundation.ServiceDescriptor Descriptor { get; set; }
 
         IServiceCollection Services { get; set; }
 

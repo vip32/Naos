@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Naos.Foundation.Logging</AssemblyName>
+    <RootNamespace>Naos.Foundation</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Foundation.Abstractions\Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

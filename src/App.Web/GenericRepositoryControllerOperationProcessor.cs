@@ -2,7 +2,7 @@
 {
     using System.Linq;
     using System.Threading.Tasks;
-    using Naos.Core.Common;
+    using Naos.Foundation;
     using NSwag.SwaggerGeneration.Processors;
     using NSwag.SwaggerGeneration.Processors.Contexts;
 

@@ -26,8 +26,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Infrastructure.Azure.KeyVault\Infrastructure.Azure.KeyVault.csproj" />
-    <ProjectReference Include="..\Infrastructure.Azure.CosmosDb\Infrastructure.Azure.CosmosDb.csproj" />
+    <ProjectReference Include="..\Foundation.Abstractions\Abstractions.csproj" />
+    <ProjectReference Include="..\Foundation.Infrastructure.Azure.KeyVault\Infrastructure.Azure.KeyVault.csproj" />
+    <ProjectReference Include="..\Foundation.Azure.CosmosDb\Infrastructure.Azure.CosmosDb.csproj" />
   </ItemGroup>
 
 </Project>

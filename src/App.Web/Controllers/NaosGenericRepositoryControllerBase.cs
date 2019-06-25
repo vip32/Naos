@@ -4,10 +4,9 @@
     using System.Net;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
-    using Naos.Core.Common;
-    using Naos.Core.Common.Web;
-    using Naos.Core.Domain;
-    using Naos.Core.Domain.Repositories;
+    using Naos.Foundation;
+    using Naos.Foundation.Application;
+    using Naos.Foundation.Domain;
     using NSwag.Annotations;
 
     [Route("api/[controller]")]

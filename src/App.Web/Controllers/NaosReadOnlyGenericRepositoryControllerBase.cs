@@ -7,10 +7,9 @@
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
-    using Naos.Core.Common.Web;
-    using Naos.Core.Domain;
-    using Naos.Core.Domain.Repositories;
+    using Naos.Foundation;
+    using Naos.Foundation.Application;
+    using Naos.Foundation.Domain;
     using NSwag.Annotations;
 
     [Route("api/[controller]")]

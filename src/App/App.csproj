@@ -15,6 +15,8 @@
     <ProjectReference Include="..\Configuration.App\Configuration.App.csproj" />
     <ProjectReference Include="..\Correlation.App\RequestCorrelation.App.csproj" />
     <ProjectReference Include="..\Filtering.App\RequestFiltering.App.csproj" />
+    <ProjectReference Include="..\Foundation.Application.Web\Application.Web.csproj" />
+    <ProjectReference Include="..\Foundation.Extensions\Extensions.csproj" />
     <ProjectReference Include="..\JobScheduling.App\JobScheduling.App.csproj" />
     <ProjectReference Include="..\Messaging.App.Azure.SignalR\Messaging.App.Azure.SignalR.csproj" />
     <ProjectReference Include="..\Messaging.App.Azure\Messaging.App.Azure.csproj" />
