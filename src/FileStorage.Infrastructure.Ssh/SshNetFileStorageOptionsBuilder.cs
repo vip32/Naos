@@ -3,7 +3,7 @@
     using System;
     using System.IO;
     using System.Text;
-    using Naos.Core.Common;
+    using Naos.Foundation;
     using Renci.SshNet;
 
     public class SshNetFileStorageOptionsBuilder :

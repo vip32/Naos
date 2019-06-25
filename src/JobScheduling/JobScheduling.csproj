@@ -18,14 +18,13 @@
   </ItemGroup>
 
   <ItemGroup>
-
-    <ProjectReference Include="..\Common.Console\Console.csproj" />
-
-    <ProjectReference Include="..\Common.Extensions\Extensions.csproj" />
+    <ProjectReference Include="..\Foundation.Console\Console.csproj" />
+    <ProjectReference Include="..\Foundation.Domain\Domain.csproj" />
+    <ProjectReference Include="..\Foundation.Extensions\Extensions.csproj" />
+    <ProjectReference Include="..\Foundation.Utilities\Utilities.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 
 </Project>

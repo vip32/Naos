@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Threading.Tasks;
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
     public class PagedResults : IHasNextPageFunc
     {

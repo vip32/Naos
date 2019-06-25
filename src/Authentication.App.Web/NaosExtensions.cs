@@ -5,8 +5,8 @@
     using EnsureThat;
     using Microsoft.Extensions.Configuration;
     using Naos.Core.Authentication.App.Web;
-    using Naos.Core.Common;
     using Naos.Core.Configuration.App;
+    using Naos.Foundation;
 
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions

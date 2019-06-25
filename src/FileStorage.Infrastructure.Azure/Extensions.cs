@@ -5,8 +5,8 @@
     using System.Linq;
     using System.Text.RegularExpressions;
     using Microsoft.WindowsAzure.Storage.Blob;
-    using Naos.Core.Common;
     using Naos.Core.FileStorage.Domain;
+    using Naos.Foundation;
 
     public static class Extensions
     {

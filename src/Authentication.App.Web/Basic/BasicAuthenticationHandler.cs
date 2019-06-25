@@ -10,7 +10,7 @@
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
     public class BasicAuthenticationHandler : BaseAuthenticationHandler<AuthenticationHandlerOptions, AuthenticationHandlerEvents>
     {

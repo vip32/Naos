@@ -4,8 +4,8 @@
     using EnsureThat;
     using FluentValidation.Results;
     using MediatR;
-    using Naos.Core.Common;
-    using Naos.Core.Domain;
+    using Naos.Foundation;
+    using Naos.Foundation.Domain;
 
     /// <summary>
     ///

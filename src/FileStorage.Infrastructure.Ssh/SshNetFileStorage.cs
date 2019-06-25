@@ -9,8 +9,8 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
     using Naos.Core.FileStorage.Domain;
+    using Naos.Foundation;
     using Renci.SshNet;
     using Renci.SshNet.Common;
 

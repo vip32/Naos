@@ -12,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Extensions\Extensions.csproj" />
-    <ProjectReference Include="..\Domain.Repositories\Domain.Repositories.csproj" />
+    <ProjectReference Include="..\Foundation.Extensions\Extensions.csproj" />
+    <ProjectReference Include="..\Foundation.Domain.Repositories\Domain.Repositories.csproj" />
   </ItemGroup>
 
 </Project>

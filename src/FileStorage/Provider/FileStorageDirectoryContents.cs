@@ -5,8 +5,8 @@
     using System.Linq;
     using EnsureThat;
     using Microsoft.Extensions.FileProviders;
-    using Naos.Core.Common;
     using Naos.Core.FileStorage.Domain;
+    using Naos.Foundation;
 
     public class FileStorageDirectoryContents : IDirectoryContents
     {

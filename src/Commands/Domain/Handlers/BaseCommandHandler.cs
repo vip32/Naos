@@ -3,7 +3,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using MediatR;
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
     /// <summary>
     /// A base implementation for handling application commands.

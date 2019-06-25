@@ -1,6 +1,6 @@
 ﻿namespace Naos.Core.FileStorage
 {
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
     public class InMemoryFileStorageOptions : BaseOptions
     {

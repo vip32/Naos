@@ -1,7 +1,7 @@
 ﻿namespace Naos.Core.FileStorage.Infrastructure
 {
     using System.IO;
-    using Naos.Core.Common;
+    using Naos.Foundation;
     using Renci.SshNet;
 
     public class SshNetFileStorageOptions : BaseOptions

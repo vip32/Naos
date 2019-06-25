@@ -5,7 +5,7 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
     /// <summary>
     /// A base implementation for handling application commands and ensuring all behaviors are executed with proper responses (not cancelled).
@@ -58,7 +58,7 @@
             this.Logger.LogJournal(LogKeys.AppCommand, $"handle (name={commandName}, id={request.Id})", LogEventPropertyKeys.TrackHandleCommand);
             this.Logger.LogTraceEvent(LogKeys.AppCommand, request.Id, commandName, LogTraceEventNames.Command);
 
-            using(var timer = new Common.Timer())
+            using(var timer = new Foundation.Timer())
             {
                 var result = await this.HandleRequest(request, cancellationToken).AnyContext();
 

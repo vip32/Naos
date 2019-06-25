@@ -3,7 +3,7 @@
     using System;
     using Microsoft.Extensions.Configuration;
     using Naos.Foundation;
-    using Naos.Core.Infrastructure.Azure.KeyVault;
+    using Naos.Foundation.Infrastructure;
 
     public static class NaosConfigurationFactory
     {

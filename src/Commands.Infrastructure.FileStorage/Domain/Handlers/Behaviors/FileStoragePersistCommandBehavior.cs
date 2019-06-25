@@ -3,8 +3,8 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Naos.Core.Commands.Domain;
-    using Naos.Core.Common;
     using Naos.Core.FileStorage.Domain;
+    using Naos.Foundation;
 
     public class FileStoragePersistCommandBehavior : ICommandBehavior
     {

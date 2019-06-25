@@ -4,7 +4,7 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using FluentValidation;
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
     public class ValidateCommandBehavior : ICommandBehavior
     {

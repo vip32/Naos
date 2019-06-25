@@ -6,9 +6,9 @@
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
-    using Naos.Core.Common.Web;
     using Naos.Core.JobScheduling.Domain;
+    using Naos.Foundation;
+    using Naos.Foundation.Application;
     using NSwag.Annotations;
 
     [Route("api/jobregistrations")]

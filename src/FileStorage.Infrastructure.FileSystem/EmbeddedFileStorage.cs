@@ -8,8 +8,8 @@
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
-    using Naos.Core.Common;
     using Naos.Core.FileStorage.Domain;
+    using Naos.Foundation;
 
     public class EmbeddedFileStorage : IFileStorage
     {

@@ -1,6 +1,6 @@
 ﻿namespace Naos.Core.Commands.Domain
 {
-    using Naos.Core.Domain.Repositories;
+    using Naos.Foundation.Domain;
 
     public interface ICommandRepository : IGenericRepository<Command>
     {

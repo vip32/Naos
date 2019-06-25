@@ -5,8 +5,8 @@
     using EnsureThat;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using Naos.Foundation;
     using Naos.Core.Configuration.App;
+    using Naos.Foundation;
     using Console = Colorful.Console;
 
     [ExcludeFromCodeCoverage]
@@ -45,7 +45,7 @@
                 Services = services,
                 Configuration = configuration,
                 Environment = environment ?? Environment.GetEnvironmentVariable(EnvironmentKeys.Environment) ?? "Production",
-                Descriptor = new Naos.Core.Common.ServiceDescriptor(
+                Descriptor = new Naos.Foundation.ServiceDescriptor(
                     product ?? naosConfiguration.Product,
                     capability ?? naosConfiguration.Product,
                     tags: tags ?? naosConfiguration.Tags),

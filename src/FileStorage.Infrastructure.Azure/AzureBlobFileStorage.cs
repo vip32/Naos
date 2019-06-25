@@ -10,8 +10,8 @@
     using EnsureThat;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;
-    using Naos.Core.Common;
     using Naos.Core.FileStorage.Domain;
+    using Naos.Foundation;
 
     public class AzureBlobFileStorage : IFileStorage
     {

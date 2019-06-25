@@ -1,7 +1,7 @@
 ﻿namespace Naos.Core.Commands.Domain
 {
-    using Naos.Core.Common;
-    using Naos.Core.Domain.Repositories;
+    using Naos.Foundation;
+    using Naos.Foundation.Domain;
 
     public class CommandInMemoryRepository : InMemoryRepository<Command>, ICommandRepository
     {

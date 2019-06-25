@@ -2,7 +2,7 @@
 {
     using System;
     using MediatR;
-    using Naos.Core.Domain;
+    using Naos.Foundation.Domain;
 
     public class JobEvent<TData> : IRequest<bool>
         where TData : class

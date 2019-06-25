@@ -6,7 +6,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
     public static class FileStorageExtensions
     {

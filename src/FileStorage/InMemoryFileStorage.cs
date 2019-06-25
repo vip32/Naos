@@ -9,8 +9,8 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Humanizer;
-    using Naos.Core.Common;
     using Naos.Core.FileStorage.Domain;
+    using Naos.Foundation;
 
     public class InMemoryFileStorage : IFileStorage
     {

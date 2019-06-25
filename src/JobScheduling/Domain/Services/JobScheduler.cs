@@ -7,7 +7,7 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
     public class JobScheduler : IJobScheduler
     {
@@ -150,7 +150,7 @@
                 {
                     async Task Execute()
                     {
-                        using(var timer = new Common.Timer())
+                        using(var timer = new Foundation.Timer())
                         using(this.logger.BeginScope(new Dictionary<string, object>
                         {
                             [LogEventPropertyKeys.CorrelationId] = IdGenerator.Instance.Next

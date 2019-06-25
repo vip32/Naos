@@ -4,9 +4,8 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
-    using Naos.Core.Common.Console;
     using Naos.Core.JobScheduling.Domain;
+    using Naos.Foundation;
     using Console = Colorful.Console;
 
     public class JobSchedulerConsoleCommandEventHandler : ConsoleCommandEventHandler<JobSchedulerConsoleCommand>

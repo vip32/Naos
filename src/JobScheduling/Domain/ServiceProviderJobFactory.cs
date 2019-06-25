@@ -2,7 +2,7 @@
 {
     using System;
     using EnsureThat;
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
     public class ServiceProviderJobFactory : IJobFactory
     {

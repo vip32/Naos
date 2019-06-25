@@ -2,8 +2,8 @@
 {
     using System;
     using EnsureThat;
-    using Naos.Core.Common;
     using Naos.Core.ServiceDiscovery.App;
+    using Naos.Foundation;
 
     public static class NaosExtensions
     {

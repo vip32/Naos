@@ -12,8 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Serialization\Serialization.csproj" />
-    <ProjectReference Include="..\Domain\Domain.csproj" />
+    <ProjectReference Include="..\Foundation.ContentTypes\ContentTypes.csproj" />
+    <ProjectReference Include="..\Foundation.Options\Options.csproj" />
+    <ProjectReference Include="..\Foundation.Serialization\Serialization.csproj" />
+    <ProjectReference Include="..\Foundation.Domain\Domain.csproj" />
   </ItemGroup>
 
 </Project>

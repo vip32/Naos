@@ -6,7 +6,7 @@
     using EnsureThat;
     using Humanizer;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
     public class FileStorageLoggingDecorator : IFileStorage
     {

@@ -3,8 +3,7 @@
     using System.Threading.Tasks;
     using CommandLine;
     using MediatR;
-    using Naos.Core.Common;
-    using Naos.Core.Common.Console;
+    using Naos.Foundation;
 
     [Verb("jobscheduler", HelpText = "Job scheduler command")]
     public class JobSchedulerConsoleCommand : IConsoleCommand

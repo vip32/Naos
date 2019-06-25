@@ -9,8 +9,8 @@
     using EnsureThat;
     using MediatR;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
     using Naos.Core.JobScheduling.Domain;
+    using Naos.Foundation;
 
     public class JobSchedulerOptions
     {

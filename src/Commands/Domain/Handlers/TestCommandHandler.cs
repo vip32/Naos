@@ -4,7 +4,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
     /// <summary>
     /// Test handler for the <see cref="TRequest" /> command request, response result is always true.

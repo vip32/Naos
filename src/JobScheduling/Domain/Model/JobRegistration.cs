@@ -4,7 +4,7 @@
     using System.Linq;
     using Cronos;
     using EnsureThat;
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
     public class JobRegistration
     {

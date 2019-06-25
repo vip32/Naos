@@ -4,7 +4,7 @@
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
     public interface IReadOnlyFileStorage : IDisposable
     {

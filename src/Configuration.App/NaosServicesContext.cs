@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.Extensions.Configuration;
+    using Naos.Foundation;
 
     public class NaosServicesContext : INaosServicesContext
     {
@@ -20,7 +21,7 @@
 
         public INaosServicesContext AddTag(string tag)
         {
-            this.Descriptor = this.Descriptor ?? new Naos.Foundation.ServiceDescriptor();
+            this.Descriptor ??= new Naos.Foundation.ServiceDescriptor();
             this.Descriptor.Tags = this.Descriptor.Tags.Insert(tag).ToArray();
             return this;
         }

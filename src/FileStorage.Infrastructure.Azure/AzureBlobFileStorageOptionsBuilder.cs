@@ -1,7 +1,7 @@
 ﻿namespace Naos.Core.FileStorage.Infrastructure
 {
     using System.Linq;
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
     public class AzureBlobFileStorageOptionsBuilder :
         BaseOptionsBuilder<AzureBlobFileStorageOptions, AzureBlobFileStorageOptionsBuilder>

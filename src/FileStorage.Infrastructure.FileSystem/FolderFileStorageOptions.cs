@@ -1,6 +1,6 @@
 ﻿namespace Naos.Core.FileStorage.Infrastructure
 {
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
     public class FolderFileStorageOptions : BaseOptions
     {

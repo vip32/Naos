@@ -3,8 +3,8 @@
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
-    using Naos.Core.Common;
     using Naos.Core.FileStorage.Domain;
+    using Naos.Foundation;
 
     public class AzureKeyVaultFileStorage : IFileStorage
     {

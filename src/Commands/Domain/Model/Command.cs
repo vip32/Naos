@@ -2,7 +2,7 @@
 {
     using System;
     using MediatR;
-    using Naos.Core.Domain;
+    using Naos.Foundation.Domain;
     using Newtonsoft.Json;
 
     public class Command // actually a wrapped CommandRequest<TResponse>, only for persistency

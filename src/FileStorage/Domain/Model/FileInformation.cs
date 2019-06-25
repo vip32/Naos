@@ -3,8 +3,8 @@
     using System;
     using System.Diagnostics;
     using Humanizer;
-    using Naos.Core.Common;
-    using Naos.Core.Domain;
+    using Naos.Foundation;
+    using Naos.Foundation.Domain;
 
     [DebuggerDisplay("Path = {Path}, Created = {Created}, Modified = {Modified}, Size = {Size} bytes")]
     public class FileInformation

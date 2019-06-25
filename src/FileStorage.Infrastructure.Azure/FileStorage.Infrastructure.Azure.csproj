@@ -11,7 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Serialization\Serialization.csproj" />
+    <ProjectReference Include="..\Foundation.Options\Options.csproj" />
+    <ProjectReference Include="..\Foundation.Serialization\Serialization.csproj" />
     <ProjectReference Include="..\FileStorage\FileStorage.csproj" />
   </ItemGroup>
 
