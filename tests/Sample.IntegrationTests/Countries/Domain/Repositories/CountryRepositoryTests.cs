@@ -4,9 +4,8 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
-    using Naos.Core.Common;
-    using Naos.Core.Domain.Repositories;
-    using Naos.Core.Domain.Specifications;
+    using Naos.Foundation;
+    using Naos.Foundation.Domain;
     using Naos.Sample.Countries.Domain;
     using Shouldly;
     using Xunit;

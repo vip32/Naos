@@ -5,9 +5,9 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
-    using Naos.Core.Common;
-    using Naos.Core.Common.Web;
     using Naos.Core.RequestFiltering.App;
+    using Naos.Foundation;
+    using Naos.Foundation.Application;
 
     /// <summary>
     /// Middleware which attempts to reads / creates a Correlation ID that can then be used in logs and

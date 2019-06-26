@@ -8,9 +8,9 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
     using Naos.Core.Operations.Domain;
     using Naos.Core.RequestFiltering.App;
+    using Naos.Foundation;
     using NSwag.Annotations;
 
     [Route("api/operations/logevents")]

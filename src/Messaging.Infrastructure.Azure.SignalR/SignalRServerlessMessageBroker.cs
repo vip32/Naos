@@ -10,8 +10,8 @@
     using EnsureThat;
     using Microsoft.AspNetCore.SignalR.Client;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
     using Naos.Core.Messaging.Domain;
+    using Naos.Foundation;
     using Newtonsoft.Json;
 
     public class SignalRServerlessMessageBroker : IMessageBroker, IDisposable

@@ -6,9 +6,10 @@
     using Microsoft.EntityFrameworkCore.Diagnostics;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
-    using Naos.Core.Domain.Repositories;
-    using Naos.Core.Infrastructure.EntityFramework;
+    using Naos.Foundation;
+    using Naos.Foundation.Application;
+    using Naos.Foundation.Domain;
+    using Naos.Foundation.Infrastructure;
     using Naos.Sample.UserAccounts.Domain;
     using Naos.Sample.UserAccounts.Infrastructure.EntityFramework;
 
@@ -58,7 +59,7 @@
             });
 
             options.Context.Services.AddStartupTask<ApplyPendingMigrationsTask<UserAccountsDbContext>>();
-            options.Context.Services.AddStartupTask<Naos.Core.Common.Web.EchoStartupTask>();
+            options.Context.Services.AddStartupTask<EchoStartupTask>();
 
             options.Context.Services.AddHealthChecks()
                 .AddSqlServer(entityFrameworkConfiguration.ConnectionString, name: "UserAccounts-sqlserver");

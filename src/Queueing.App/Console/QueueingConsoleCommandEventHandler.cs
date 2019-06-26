@@ -5,9 +5,8 @@
     using System.Threading.Tasks;
     using MediatR;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
-    using Naos.Core.Common.Console;
     using Naos.Core.Queueing.Domain;
+    using Naos.Foundation;
     using Console = Colorful.Console;
 
     public class QueueingConsoleCommandEventHandler : ConsoleCommandEventHandler<QueueingConsoleCommand>

@@ -8,9 +8,9 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
-    using Naos.Core.Domain;
     using Naos.Core.Queueing.Domain;
+    using Naos.Foundation;
+    using Naos.Foundation.Domain;
 
     public class InMemoryQueue<TData> : BaseQueue<TData, InMemoryQueueOptions>
         where TData : class

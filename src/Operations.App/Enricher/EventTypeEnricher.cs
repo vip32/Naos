@@ -5,7 +5,7 @@
     using global::Serilog.Core;
     using global::Serilog.Events;
     using Murmur;
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
     public class EventTypeEnricher : ILogEventEnricher
     {

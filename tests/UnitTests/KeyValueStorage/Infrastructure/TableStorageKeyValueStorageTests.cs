@@ -1,9 +1,9 @@
 ﻿namespace Naos.Core.UnitTests.KeyValueStorage.Infrastructure
 {
     using System.Threading.Tasks;
-    using Naos.Core.Common;
     using Naos.Core.KeyValueStorage.Domain;
     using Naos.Core.KeyValueStorage.Infrastructure.Azure;
+    using Naos.Foundation;
     using Xunit;
 
     public class TableStorageKeyValueStorageTests : KeyValueStorageBaseTests

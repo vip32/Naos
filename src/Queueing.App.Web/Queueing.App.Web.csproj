@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Web\Application.Web.csproj" />
+    <ProjectReference Include="..\Foundation.Application.Web\Application.Web.csproj" />
     <ProjectReference Include="..\Queueing\Queueing.csproj" />
   </ItemGroup>
 

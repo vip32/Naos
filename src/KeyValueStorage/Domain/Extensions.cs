@@ -6,8 +6,8 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Humanizer;
-    using Naos.Core.Common;
     using Naos.Core.KeyValueStorage;
+    using Naos.Foundation;
 
     public static class Extensions
     {

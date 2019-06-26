@@ -6,8 +6,8 @@
     using EnsureThat;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
     using Naos.Core.Queueing.Domain;
+    using Naos.Foundation;
 
     public class QueueProcessHostedService<T> : IHostedService, IDisposable
         where T : class

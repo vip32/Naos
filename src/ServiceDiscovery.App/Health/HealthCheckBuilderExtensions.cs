@@ -4,8 +4,8 @@
     using System.Collections.Generic;
     using HealthChecks.Uris;
     using Microsoft.Extensions.Diagnostics.HealthChecks;
-    using Naos.Core.Common;
     using Naos.Core.ServiceDiscovery.App;
+    using Naos.Foundation;
 
     public static class HealthCheckBuilderExtensions
     {

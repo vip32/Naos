@@ -8,10 +8,9 @@
     using EnsureThat;
     using FastMember;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
-    using Naos.Core.Domain.Repositories;
-    using Naos.Core.Domain.Specifications;
     using Naos.Core.Operations.Domain;
+    using Naos.Foundation;
+    using Naos.Foundation.Domain;
 
     public class LogAnalyticsLogEventRepository : ILogEventRepository
     {

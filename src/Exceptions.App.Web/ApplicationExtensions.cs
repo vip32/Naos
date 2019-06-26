@@ -3,8 +3,8 @@
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Options;
-    using Naos.Core.Common;
     using Naos.Core.ServiceExceptions.App.Web;
+    using Naos.Foundation;
 
     public static class ApplicationExtensions
     {

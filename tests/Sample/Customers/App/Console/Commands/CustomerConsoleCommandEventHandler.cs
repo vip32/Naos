@@ -4,8 +4,7 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using MediatR;
-    using Naos.Core.Common;
-    using Naos.Core.Common.Console;
+    using Naos.Foundation;
 
     public class CustomerConsoleCommandEventHandler : ConsoleCommandEventHandler<CustomerConsoleCommand>
     {

@@ -5,8 +5,8 @@
     using System.Threading.Tasks;
     using Humanizer;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
-    using Naos.Core.Domain;
+    using Naos.Foundation;
+    using Naos.Foundation.Domain;
 
     public abstract class BaseQueue<TData, TOptions> : IQueue<TData>
         where TData : class

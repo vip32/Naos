@@ -1,7 +1,7 @@
 ﻿namespace Naos.Core.UnitTests.Domain.Model
 {
     using System.Collections.Generic;
-    using Naos.Core.Domain;
+    using Naos.Foundation.Domain;
     using Shouldly;
     using Xunit;
 

@@ -7,9 +7,9 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
     using Naos.Core.FileStorage.Domain;
     using Naos.Core.KeyValueStorage.Domain;
+    using Naos.Foundation;
 
     /// <summary>
     /// A table keyvalue provider for file storage.

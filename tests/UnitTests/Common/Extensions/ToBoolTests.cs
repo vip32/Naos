@@ -1,6 +1,6 @@
 ﻿namespace Naos.Core.UnitTests.Common
 {
-    using Naos.Core.Common;
+    using Naos.Foundation;
     using Xunit;
 
     public partial class IsDefaultTests

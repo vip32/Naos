@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using Naos.Core.Domain;
+    using Naos.Foundation.Domain;
 
     public class Country : AggregateRoot<string>, ITenantEntity
     {

@@ -3,8 +3,7 @@
     using System.Threading.Tasks;
     using CommandLine;
     using MediatR;
-    using Naos.Core.Common;
-    using Naos.Core.Common.Console;
+    using Naos.Foundation;
 
     [Verb("customer", HelpText = "Sample customer command")]
     public class CustomerConsoleCommand : IConsoleCommand

@@ -1,7 +1,6 @@
 ﻿namespace Naos.Foundation
 {
     using System.Reflection;
-    using Naos.Foundation;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
 

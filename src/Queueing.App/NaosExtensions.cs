@@ -3,11 +3,11 @@
     using System;
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
-    //using Microsoft.Extensions.Hosting;
-    //using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
     using Naos.Core.Configuration.App;
     using Naos.Core.Queueing.App;
+    //using Microsoft.Extensions.Hosting;
+    //using Microsoft.Extensions.Logging;
+    using Naos.Foundation;
 
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions

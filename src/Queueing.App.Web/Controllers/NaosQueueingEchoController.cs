@@ -6,8 +6,8 @@
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
     using Naos.Core.Queueing.Domain;
+    using Naos.Foundation;
     using NSwag.Annotations;
 
     [Route("api/echo/queueing")]

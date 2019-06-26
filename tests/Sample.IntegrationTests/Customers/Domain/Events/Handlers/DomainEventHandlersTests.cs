@@ -5,8 +5,8 @@
     using System.Threading.Tasks;
     using MediatR;
     using Microsoft.Extensions.DependencyInjection;
-    using Naos.Core.Common;
-    using Naos.Core.Domain;
+    using Naos.Foundation;
+    using Naos.Foundation.Domain;
     using Naos.Sample.Customers.Domain;
     using Shouldly;
     using Xunit;

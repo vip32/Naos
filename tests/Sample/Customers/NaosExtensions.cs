@@ -4,12 +4,11 @@
     using MediatR;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
-    using Naos.Core.Domain.Repositories;
-    using Naos.Core.Infrastructure.Azure;
-    using Naos.Core.Infrastructure.Azure.CosmosDb;
     using Naos.Core.Queueing.Domain;
     using Naos.Core.Queueing.Infrastructure.Azure;
+    using Naos.Foundation;
+    using Naos.Foundation.Domain;
+    using Naos.Foundation.Infrastructure;
     using Naos.Sample.Customers.App.Client;
     using Naos.Sample.Customers.Domain;
 

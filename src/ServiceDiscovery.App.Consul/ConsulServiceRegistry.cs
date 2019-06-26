@@ -6,7 +6,7 @@
     using EnsureThat;
     using global::Consul;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
     public class ConsulServiceRegistry : IServiceRegistry
     {

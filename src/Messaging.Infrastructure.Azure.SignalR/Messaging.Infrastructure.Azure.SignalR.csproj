@@ -14,9 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Abstractions\Abstractions.csproj" />
-    <ProjectReference Include="..\Common.Serialization\Serialization.csproj" />
-    <ProjectReference Include="..\Infrastructure.Azure\Infrastructure.Azure.csproj" />
+    <ProjectReference Include="..\Foundation.Abstractions\Abstractions.csproj" />
+    <ProjectReference Include="..\Foundation.Serialization\Serialization.csproj" />
+    <ProjectReference Include="..\Foundation.Infrastructure.Azure\Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\Messaging\Messaging.csproj" />
   </ItemGroup>
 

@@ -5,7 +5,7 @@
 //    using EnsureThat;
 //    using global::AutoMapper;
 //    using global::AutoMapper.Extensions.ExpressionMapping;
-//    using Naos.Core.Domain.Specifications;
+//    using Naos.Foundation.Domain;
 
 //    public class AutoMapperSpecificationMapper<T, TDestination> : ISpecificationMapper<T, TDestination>
 //        where T : class

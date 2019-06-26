@@ -6,8 +6,8 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
-    using Naos.Core.Common;
-    using Naos.Core.Common.Web;
+    using Naos.Foundation;
+    using Naos.Foundation.Application;
 
     public class RequestStorageMiddleware
     {

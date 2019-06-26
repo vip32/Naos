@@ -3,7 +3,7 @@
     using System;
     using System.Threading;
     using System.Threading.Tasks;
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
     public class AutoCompleteQueueDecorator<T> : IQueue<T>
         where T : class

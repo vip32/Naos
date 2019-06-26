@@ -2,7 +2,7 @@
 {
     using System.Linq;
     using System.Threading.Tasks;
-    using Naos.Core.Domain.Repositories;
+    using Naos.Foundation.Domain;
 
     public class CountryRepository : Repository<Country>, ICountryRepository
     {

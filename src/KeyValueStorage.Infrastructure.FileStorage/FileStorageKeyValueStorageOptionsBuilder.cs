@@ -1,7 +1,7 @@
 ﻿namespace Naos.Core.KeyValueStorage.Infrastructure.FileStorage
 {
-    using Naos.Core.Common;
     using Naos.Core.FileStorage.Domain;
+    using Naos.Foundation;
 
     public class FileStorageKeyValueStorageOptionsBuilder :
         BaseOptionsBuilder<FileStorageKeyValueStorageOptions, FileStorageKeyValueStorageOptionsBuilder>

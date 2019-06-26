@@ -1,8 +1,8 @@
 ﻿namespace Naos.Core.Messaging.Infrastructure.RabbitMQ
 {
     using MediatR;
-    using Naos.Core.Common;
     using Naos.Core.Messaging.Domain;
+    using Naos.Foundation;
 
     public class RabbitMQMessageBrokerOptionsBuilder :
         BaseOptionsBuilder<RabbitMQMessageBrokerOptions, RabbitMQMessageBrokerOptionsBuilder>

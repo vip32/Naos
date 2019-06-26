@@ -8,12 +8,12 @@
     using Microsoft.Azure.Management.ResourceManager.Fluent;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
-    using Naos.Core.Infrastructure.Azure.ServiceBus;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.App;
     using Naos.Core.Messaging.Domain;
     using Naos.Core.Messaging.Infrastructure.Azure;
+    using Naos.Foundation;
+    using Naos.Foundation.Infrastructure;
 
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions

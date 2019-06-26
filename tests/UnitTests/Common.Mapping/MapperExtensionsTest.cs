@@ -12,9 +12,9 @@
         {
             StubMapSource source = null;
             var mapper = new StubMapper();
-            var destination = mapper.Map(source);
+            var target = mapper.Map(source);
 
-            Assert.Null(destination);
+            Assert.Null(target);
         }
 
         [Fact]
@@ -22,34 +22,34 @@
         {
             StubMapSource source = null;
             var mapper = new StubMapper();
-            var destination = mapper.Map(source, true);
+            var target = mapper.Map(source, true);
 
-            Assert.NotNull(destination);
+            Assert.NotNull(target);
         }
 
         [Fact]
         public void Map_ToNewObject_Mapped()
         {
             var mapper = new StubMapper();
-            var destination = mapper.Map(new StubMapSource() { Property = 1 });
+            var target = mapper.Map(new StubMapSource() { Property = 1 });
 
-            Assert.Equal(1, destination.Property);
+            Assert.Equal(1, target.Property);
         }
 
         [Fact]
         public void MapMany_ToMany_Mapped()
         {
             var mapper = new StubMapper();
-            var destination = mapper.Map(
+            var target = mapper.Map(
                 new List<StubMapSource>
                 {
                     new StubMapSource() { Property = 1 },
                     new StubMapSource() { Property = 2 }
                 });
 
-            Assert.Equal(2, destination.Count());
-            Assert.Equal(1, destination.FirstOrDefault()?.Property);
-            Assert.Equal(2, destination.LastOrDefault()?.Property);
+            Assert.Equal(2, target.Count());
+            Assert.Equal(1, target.FirstOrDefault()?.Property);
+            Assert.Equal(2, target.LastOrDefault()?.Property);
         }
 
         [Fact]
@@ -57,26 +57,26 @@
         {
             var mapper = new StubMapper();
 
-            var destination = mapper.Map(
+            var target = mapper.Map(
                 new StubMapSource[0]);
 
-            Assert.Empty(destination);
+            Assert.Empty(target);
         }
 
         [Fact]
         public void MapArray_Mapped()
         {
             var mapper = new StubMapper();
-            var destination = mapper.Map(
+            var target = mapper.Map(
                 new StubMapSource[]
                 {
                     new StubMapSource() { Property = 1 },
                     new StubMapSource() { Property = 2 }
                 });
 
-            Assert.Equal(2, destination.Count());
-            Assert.Equal(1, destination.FirstOrDefault()?.Property);
-            Assert.Equal(2, destination.LastOrDefault()?.Property);
+            Assert.Equal(2, target.Count());
+            Assert.Equal(1, target.FirstOrDefault()?.Property);
+            Assert.Equal(2, target.LastOrDefault()?.Property);
         }
     }
 }

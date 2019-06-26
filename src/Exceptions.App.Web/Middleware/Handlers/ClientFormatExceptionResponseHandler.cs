@@ -5,8 +5,8 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
-    using Naos.Core.Common.Web;
+    using Naos.Foundation;
+    using Naos.Foundation.Application;
 
     public class ClientFormatExceptionResponseHandler : IExceptionResponseHandler
     {

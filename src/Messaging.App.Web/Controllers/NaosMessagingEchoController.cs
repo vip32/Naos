@@ -5,8 +5,8 @@
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common.Web;
     using Naos.Core.Messaging.Domain;
+    using Naos.Foundation.Application;
     using NSwag.Annotations;
 
     [Route("api/echo/messaging")]

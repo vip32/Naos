@@ -2,9 +2,9 @@
 {
     using System.IO;
     using MediatR;
-    using Naos.Core.Common;
     using Naos.Core.FileStorage.Domain;
     using Naos.Core.Messaging.Domain;
+    using Naos.Foundation;
 
     public class FileStorageMessageBrokerOptions : BaseOptions
     {

@@ -1,7 +1,7 @@
 ﻿namespace Naos.Core.Queueing.Domain
 {
     using System;
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
     public class BaseQueueOptions : BaseOptions
     {

@@ -1,6 +1,6 @@
 ﻿namespace Naos.Core.UnitTests.Common.Utility
 {
-    using Naos.Core.Common;
+    using Naos.Foundation;
     using Shouldly;
     using Xunit;
 

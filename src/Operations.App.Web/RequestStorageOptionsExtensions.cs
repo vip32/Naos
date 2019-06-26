@@ -5,12 +5,12 @@
     using EnsureThat;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
     using Naos.Core.FileStorage.Domain;
     using Naos.Core.FileStorage.Infrastructure;
-    using Naos.Core.Infrastructure.Azure;
     using Naos.Core.Operations.App;
     using Naos.Core.Operations.App.Web;
+    using Naos.Foundation;
+    using Naos.Foundation.Infrastructure;
 
     [ExcludeFromCodeCoverage]
     public static class RequestStorageOptionsExtensions

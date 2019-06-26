@@ -1,6 +1,6 @@
 ﻿namespace Naos.Core.KeyValueStorage.Infrastructure.Azure
 {
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
     public class TableKeyValueStorageOptions : BaseOptions
     {

@@ -8,10 +8,10 @@
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Core.Commands.Domain;
     using Naos.Core.Commands.Infrastructure.FileStorage;
-    using Naos.Core.Common;
     using Naos.Core.Configuration.App;
     using Naos.Core.FileStorage.Infrastructure;
-    using Naos.Core.Infrastructure.EntityFramework;
+    using Naos.Foundation;
+    using Naos.Foundation.Infrastructure;
     using Naos.Sample.UserAccounts.Infrastructure.EntityFramework;
 
     public abstract class BaseTest

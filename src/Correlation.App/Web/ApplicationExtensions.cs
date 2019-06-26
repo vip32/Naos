@@ -5,8 +5,8 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Options;
     using Naos.Core.Commands.Correlation.App.Web;
-    using Naos.Core.Common;
     using Naos.Core.RequestCorrelation.App;
+    using Naos.Foundation;
 
     /// <summary>
     /// Extension methods for the correlation middleware.

@@ -6,6 +6,7 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.FileStorage.Domain;
     using Naos.Core.FileStorage.Infrastructure;
+    using Naos.Foundation;
     using NSubstitute;
     using Xunit;
 
@@ -24,7 +25,7 @@
             {
                 var fileInfo = await storage.GetFileInformationAsync(@"Naos\Core\UnitTests/FileStorage\StubFile.txt");
                 Assert.NotNull(fileInfo);
-                Assert.True(fileInfo.ContentType == Core.Common.ContentType.TEXT);
+                Assert.True(fileInfo.ContentType == ContentType.TEXT);
             }
         }
 
@@ -41,7 +42,7 @@
             {
                 var fileInfo = await storage.GetFileInformationAsync(@"Naos\Core\UnitTests/FileStorage\StubFile.json");
                 Assert.NotNull(fileInfo);
-                Assert.True(fileInfo.ContentType == Core.Common.ContentType.JSON);
+                Assert.True(fileInfo.ContentType == ContentType.JSON);
             }
         }
 

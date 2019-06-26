@@ -3,10 +3,10 @@
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection.Extensions;
-    using Naos.Core.Common;
     using Naos.Core.Configuration.App;
     using Naos.Core.RequestCorrelation.App;
     using Naos.Core.RequestCorrelation.App.Web;
+    using Naos.Foundation;
 
     /// <summary>
     /// Extensions on the <see cref="IServiceCollection"/>.

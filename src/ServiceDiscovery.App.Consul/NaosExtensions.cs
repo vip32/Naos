@@ -8,11 +8,11 @@
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
     using Naos.Core.Configuration.App;
     using Naos.Core.ServiceDiscovery.App;
     using Naos.Core.ServiceDiscovery.App.Consul;
     using Naos.Core.ServiceDiscovery.App.Web;
+    using Naos.Foundation;
 
     /// <summary>
     /// Extensions on the <see cref="IServiceCollection"/>.

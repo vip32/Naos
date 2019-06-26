@@ -6,9 +6,9 @@
     using EnsureThat;
     using global::Serilog;
     using Microsoft.Extensions.Configuration;
-    using Naos.Core.Common;
-    using Naos.Core.Infrastructure.Azure;
     using Naos.Core.Operations.App;
+    using Naos.Foundation;
+    using Naos.Foundation.Infrastructure;
 
     [ExcludeFromCodeCoverage]
     public static class LoggingOptionsExtensions

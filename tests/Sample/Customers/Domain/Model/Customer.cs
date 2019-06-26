@@ -1,8 +1,8 @@
 ﻿namespace Naos.Sample.Customers.Domain
 {
     using System;
-    using Naos.Core.Common;
-    using Naos.Core.Domain;
+    using Naos.Foundation;
+    using Naos.Foundation.Domain;
 
     public class Customer : AggregateRoot<string>, ITenantEntity
     {

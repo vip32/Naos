@@ -2,9 +2,9 @@
 {
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
-    using Naos.Core.Common;
     using Naos.Core.Configuration.App;
     using Naos.Core.Operations.Domain;
+    using Naos.Foundation;
     using Shouldly;
     using Xunit;
 

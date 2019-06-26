@@ -1,6 +1,6 @@
 ﻿namespace Naos.Core.KeyValueStorage
 {
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
     public class InMemoryKeyValueStorageOptions : BaseOptions
     {

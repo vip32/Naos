@@ -2,9 +2,9 @@
 {
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
-    using Naos.Core.Common;
     using Naos.Core.Configuration.App;
     using Naos.Core.ServiceContext.App.Web;
+    using Naos.Foundation;
 
     /// <summary>
     /// Extensions on the <see cref="IServiceCollection"/>.
@@ -34,7 +34,7 @@
 
             naosOptions.Context.Services.AddTransient<HttpClientServiceContextHandler>();
             naosOptions.Context.Services.AddSingleton(sp =>
-                new Naos.Core.Common.ServiceDescriptor(
+                new Naos.Foundation.ServiceDescriptor(
                     naosOptions.Context.Descriptor.Product,
                     naosOptions.Context.Descriptor.Capability,
                     naosOptions.Context.Descriptor.Version,

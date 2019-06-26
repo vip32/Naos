@@ -6,8 +6,8 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
-    using Naos.Core.Common.Web.Client;
+    using Naos.Foundation;
+    using Naos.Foundation.Application;
 
     public class RouterServiceRegistry : IServiceRegistry
     {
@@ -40,7 +40,10 @@
         {
             EnsureArg.IsNotNull(registration, nameof(registration));
 
-            await this.httpClient.PostAsync("api/servicediscovery/router/registrations", new JsonContent(registration)).AnyContext();
+            using(var content = new JsonContent(registration))
+            {
+                await this.httpClient.PostAsync("api/servicediscovery/router/registrations", content).AnyContext();
+            }
         }
 
         public Task<IEnumerable<ServiceRegistration>> RegistrationsAsync()

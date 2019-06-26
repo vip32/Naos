@@ -4,7 +4,7 @@
     using FluentValidation;
     using FluentValidation.Results;
     using Naos.Core.Commands.Domain;
-    using Naos.Core.Common;
+    using Naos.Foundation;
     using Xunit;
 
     public class ValidateCommandBehaviorTests

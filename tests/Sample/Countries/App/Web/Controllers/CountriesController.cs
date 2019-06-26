@@ -5,8 +5,8 @@
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Naos.Core.App.Web.Controllers;
-    using Naos.Core.Common;
-    using Naos.Core.Common.Web;
+    using Naos.Foundation;
+    using Naos.Foundation.Application;
     using Naos.Sample.Countries.Domain;
     using NSwag.Annotations;
 

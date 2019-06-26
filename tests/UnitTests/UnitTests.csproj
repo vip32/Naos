@@ -68,6 +68,12 @@
     <ProjectReference Include="..\..\src\Foundation.Serialization.Csv\Serialization.Csv.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Serialization\Serialization.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Utilities\Utilities.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure.Arm\Infrastructure.Azure.Arm.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure.Cosmosdb\Infrastructure.Azure.CosmosDb.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure.KeyVault\Infrastructure.Azure.KeyVault.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure.ServiceBus\Infrastructure.Azure.ServiceBus.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure\Infrastructure.Azure.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Infrastructure.EntityFramework\Infrastructure.EntityFramework.csproj" />
     <ProjectReference Include="..\..\src\App.Web\App.Web.csproj" />
     <ProjectReference Include="..\..\src\Authentication.App.Web\Authentication.App.Web.csproj" />
     <ProjectReference Include="..\..\src\Commands.App\Commands.App.csproj" />
@@ -84,12 +90,6 @@
     <ProjectReference Include="..\..\src\FileStorage.Infrastructure.Ssh\FileStorage.Infrastructure.Ssh.csproj" />
     <ProjectReference Include="..\..\src\FileStorage\FileStorage.csproj" />
     <ProjectReference Include="..\..\src\Filtering.App\RequestFiltering.App.csproj" />
-    <ProjectReference Include="..\..\src\Infrastructure.Azure.Arm\Infrastructure.Azure.Arm.csproj" />
-    <ProjectReference Include="..\..\src\Infrastructure.Azure.Cosmosdb\Infrastructure.Azure.CosmosDb.csproj" />
-    <ProjectReference Include="..\..\src\Infrastructure.Azure.KeyVault\Infrastructure.Azure.KeyVault.csproj" />
-    <ProjectReference Include="..\..\src\Infrastructure.Azure.ServiceBus\Infrastructure.Azure.ServiceBus.csproj" />
-    <ProjectReference Include="..\..\src\Infrastructure.Azure\Infrastructure.Azure.csproj" />
-    <ProjectReference Include="..\..\src\Infrastructure.EntityFramework\Infrastructure.EntityFramework.csproj" />
     <ProjectReference Include="..\..\src\JobScheduling.App.Web\JobScheduling.App.Web.csproj" />
     <ProjectReference Include="..\..\src\JobScheduling.App\JobScheduling.App.csproj" />
     <ProjectReference Include="..\..\src\JobScheduling\JobScheduling.csproj" />

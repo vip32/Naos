@@ -4,8 +4,8 @@
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Options;
-    using Naos.Core.Common;
     using Naos.Core.ServiceContext.App.Web;
+    using Naos.Foundation;
 
     /// <summary>
     /// Extension methods for the correlation middleware.
@@ -33,7 +33,7 @@
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
             EnsureArg.IsNotNull(options, nameof(options));
 
-            if(naosOptions.Context.Application.ApplicationServices.GetService(typeof(Naos.Core.Common.ServiceDescriptor)) == null)
+            if(naosOptions.Context.Application.ApplicationServices.GetService(typeof(Naos.Foundation.ServiceDescriptor)) == null)
             {
                 throw new InvalidOperationException("Unable to find the required services. You must call the AddServiceContext method in ConfigureServices in the application startup code.");
             }

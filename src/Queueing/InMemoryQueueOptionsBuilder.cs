@@ -2,7 +2,7 @@
 {
     using System;
     using MediatR;
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
     public class InMemoryQueueOptionsBuilder :
         BaseOptionsBuilder<InMemoryQueueOptions, InMemoryQueueOptionsBuilder>

@@ -3,8 +3,8 @@
     using System;
     using System.Diagnostics;
     using Microsoft.Extensions.Configuration;
-    using Naos.Core.Common;
     using Naos.Core.Configuration.App;
+    using Naos.Foundation;
     using Xunit.Abstractions;
 
     public abstract class BaseTest

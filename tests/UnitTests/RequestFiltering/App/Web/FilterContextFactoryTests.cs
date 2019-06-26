@@ -6,8 +6,8 @@
     using Microsoft.AspNetCore.Http.Internal;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Primitives;
-    using Naos.Core.Common;
     using Naos.Core.RequestFiltering.App.Web;
+    using Naos.Foundation;
     using NSubstitute;
     using Shouldly;
     using Xunit;

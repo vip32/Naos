@@ -20,12 +20,12 @@
     using Naos.Core.App.Web;
     using Naos.Core.Commands.Domain;
     using Naos.Core.Commands.Infrastructure.FileStorage;
-    using Naos.Core.Common;
     using Naos.Core.Configuration.App;
     using Naos.Core.FileStorage.Infrastructure;
     using Naos.Core.JobScheduling.App;
     using Naos.Core.JobScheduling.Domain;
     using Naos.Core.Messaging.Domain;
+    using Naos.Foundation;
     using Newtonsoft.Json;
     using NSwag.AspNetCore;
     using NSwag.SwaggerGeneration.Processors;

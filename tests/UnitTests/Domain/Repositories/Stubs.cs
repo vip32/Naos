@@ -4,9 +4,7 @@
     using System.Linq;
     using System.Linq.Expressions;
     using EnsureThat;
-    using Naos.Core.Common;
-    using Naos.Core.Domain;
-    using Naos.Core.Domain.Specifications;
+    using Naos.Foundation.Domain;
 
 #pragma warning disable SA1649 // File name should match first type name
 #pragma warning disable SA1402 // File may only contain a single type

@@ -1,6 +1,6 @@
 ﻿namespace Naos.Sample.Customers.Domain
 {
-    using Naos.Core.Domain.Specifications;
+    using Naos.Foundation.Domain;
 
     public class HasGenderSpecification : Specification<Customer>
     {

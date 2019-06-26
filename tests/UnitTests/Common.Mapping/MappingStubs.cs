@@ -4,9 +4,9 @@
 
 #pragma warning disable SA1649 // File name should match first type name
 #pragma warning disable SA1402 // File may only contain a single type
-    public class StubMapper : IMapper<StubMapSource, StubMapDestination>
+    public class StubMapper : IMapper<StubMapSource, StubMapTarget>
     {
-        public void Map(StubMapSource source, StubMapDestination destination) => destination.Property = source.Property;
+        public void Map(StubMapSource source, StubMapTarget target) => target.Property = source.Property;
     }
 
     public class StubMapSource
@@ -18,7 +18,7 @@
         public string LastName { get; set; }
     }
 
-    public class StubMapDestination
+    public class StubMapTarget
     {
         public int Property { get; set; }
 

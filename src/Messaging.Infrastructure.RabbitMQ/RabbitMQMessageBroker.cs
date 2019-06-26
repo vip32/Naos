@@ -3,8 +3,8 @@
     using System;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
     using Naos.Core.Messaging.Domain;
+    using Naos.Foundation;
 
     public class RabbitMQMessageBroker : IMessageBroker
     {

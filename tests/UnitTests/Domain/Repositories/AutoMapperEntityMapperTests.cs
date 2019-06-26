@@ -1,6 +1,6 @@
 ﻿namespace Naos.Core.UnitTests.Domain.Repositories
 {
-    using Naos.Core.Domain.Repositories.AutoMapper;
+    using Naos.Foundation.Domain;
     using Shouldly;
     using Xunit;
 

@@ -2,7 +2,7 @@
 {
     using System;
     using MediatR;
-    using Naos.Core.Domain;
+    using Naos.Foundation.Domain;
 
     public class QueueEvent<TData> : IRequest<bool>
         where TData : class

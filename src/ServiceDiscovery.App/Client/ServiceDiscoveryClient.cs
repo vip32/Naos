@@ -5,8 +5,8 @@
     using System.Net.Http;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
     using Naos.Core.ServiceDiscovery.App.Web;
+    using Naos.Foundation;
 
     public abstract class ServiceDiscoveryClient
     {

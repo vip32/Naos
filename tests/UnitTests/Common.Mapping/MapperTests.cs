@@ -11,14 +11,14 @@
         {
             // arrange
             var source = new StubMapSource { FirstName = "John", LastName = "Doe" };
-            var mapper = new Mapper<StubMapSource, StubMapDestination>((s, d) => d.FullName = $"{s.FirstName} {s.LastName}");
+            var mapper = new Mapper<StubMapSource, StubMapTarget>((s, d) => d.FullName = $"{s.FirstName} {s.LastName}");
 
             // act
-            var destination = mapper.Map(source);
+            var target = mapper.Map(source);
 
             // assert
-            destination.ShouldNotBeNull();
-            destination.FullName.ShouldBe("John Doe");
+            target.ShouldNotBeNull();
+            target.FullName.ShouldBe("John Doe");
         }
 
         [Fact]
@@ -26,16 +26,16 @@
         {
             // arrange
             StubMapSource source = null;
-            var mapper = new Mapper<StubMapSource, StubMapDestination>((s, d) => d.FullName = $"{s.FirstName} {s.LastName}");
+            var mapper = new Mapper<StubMapSource, StubMapTarget>((s, d) => d.FullName = $"{s.FirstName} {s.LastName}");
 
             // act
-            var destination1 = mapper.Map(source);
-            var destination2 = mapper.Map(source, true);
+            var target1 = mapper.Map(source);
+            var target2 = mapper.Map(source, true);
 
             // assert
-            destination1.ShouldBeNull();
-            destination2.ShouldNotBeNull();
-            destination2.FullName.ShouldBeNull();
+            target1.ShouldBeNull();
+            target2.ShouldNotBeNull();
+            target2.FullName.ShouldBe(" ");
         }
     }
 }

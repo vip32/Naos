@@ -1,6 +1,6 @@
 ﻿namespace Naos.Core.UnitTests.Domain.Specifications
 {
-    using Naos.Core.Domain.Specifications;
+    using Naos.Foundation.Domain;
     using Shouldly;
     using Xunit;
 

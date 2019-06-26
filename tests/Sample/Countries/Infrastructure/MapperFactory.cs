@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using AutoMapper;
-    using Naos.Core.Common;
+    using Naos.Foundation;
     using Naos.Sample.Countries.Domain;
 
     public static class MapperFactory

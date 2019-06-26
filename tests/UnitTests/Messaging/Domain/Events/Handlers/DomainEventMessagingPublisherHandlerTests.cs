@@ -3,11 +3,11 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
-    using Naos.Core.Domain;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.Domain;
     using Naos.Core.UnitTests.Domain.Repositories;
+    using Naos.Foundation;
+    using Naos.Foundation.Domain;
     using NSubstitute;
     using Xunit;
 

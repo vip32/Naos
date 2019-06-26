@@ -1,9 +1,9 @@
 ﻿namespace Naos.Core.Messaging.Infrastructure
 {
     using MediatR;
-    using Naos.Core.Common;
     using Naos.Core.FileStorage.Domain;
     using Naos.Core.Messaging.Domain;
+    using Naos.Foundation;
 
     public class FileStorageMessageBrokerOptionsBuilder :
         BaseOptionsBuilder<FileStorageMessageBrokerOptions, FileStorageMessageBrokerOptionsBuilder>

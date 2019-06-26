@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Console\Console.csproj" />
+    <ProjectReference Include="..\Foundation.Console\Console.csproj" />
     <ProjectReference Include="..\Configuration.App\Configuration.App.csproj" />
     <ProjectReference Include="..\Queueing\Queueing.csproj" />
   </ItemGroup>

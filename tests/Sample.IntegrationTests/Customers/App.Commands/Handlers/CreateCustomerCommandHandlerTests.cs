@@ -4,7 +4,7 @@
     using Bogus;
     using MediatR;
     using Microsoft.Extensions.DependencyInjection;
-    using Naos.Core.Common;
+    using Naos.Foundation;
     using Naos.Sample.Customers.App;
     using Naos.Sample.Customers.Domain;
     using Shouldly;

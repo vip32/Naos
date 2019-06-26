@@ -3,8 +3,8 @@
     using System;
     using System.Collections.Generic;
     using Humanizer;
-    using Naos.Core.Common;
-    using Naos.Core.Domain;
+    using Naos.Foundation;
+    using Naos.Foundation.Domain;
     using Newtonsoft.Json;
 
     public class LogEvent : IEntity<string>, IAggregateRoot

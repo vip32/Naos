@@ -7,9 +7,9 @@
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Microsoft.Extensions.Primitives;
-    using Naos.Core.Common;
-    using Naos.Core.Common.Web;
     using Naos.Core.RequestCorrelation.App;
+    using Naos.Foundation;
+    using Naos.Foundation.Application;
 
     /// <summary>
     /// Middleware which attempts to reads / creates a Correlation ID that can then be used in logs and

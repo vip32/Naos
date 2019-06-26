@@ -7,7 +7,7 @@
     using MediatR;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Commands.Domain;
-    using Naos.Core.Common;
+    using Naos.Foundation;
     using Naos.Sample.Customers.Domain;
 
     public class CreateCustomerCommandHandler : BehaviorCommandHandler<CreateCustomerCommand, string>

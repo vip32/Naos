@@ -1,9 +1,9 @@
 ﻿namespace Naos.Core.Messaging.Infrastructure.Azure
 {
     using MediatR;
-    using Naos.Core.Common;
-    using Naos.Core.Infrastructure.Azure.ServiceBus;
     using Naos.Core.Messaging.Domain;
+    using Naos.Foundation;
+    using Naos.Foundation.Infrastructure;
 
     public class ServiceBusMessageBrokerOptions : BaseOptions
     {

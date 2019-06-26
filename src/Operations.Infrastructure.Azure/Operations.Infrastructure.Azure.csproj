@@ -21,9 +21,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Foundation.ContentTypes\ContentTypes.csproj" />
+    <ProjectReference Include="..\Foundation.Domain.Repositories\Domain.Repositories.csproj" />
+    <ProjectReference Include="..\Foundation.Infrastructure.Azure\Infrastructure.Azure.csproj" />
+    <ProjectReference Include="..\Foundation.Domain.Repositories\Domain.Repositories.csproj" />
     <ProjectReference Include="..\Configuration.App\Configuration.App.csproj" />
-    <ProjectReference Include="..\Domain.Repositories\Domain.Repositories.csproj" />
-    <ProjectReference Include="..\Infrastructure.Azure\Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\Operations\Operations.csproj" />
   </ItemGroup>
 

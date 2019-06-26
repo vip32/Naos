@@ -1,6 +1,6 @@
 ﻿namespace Naos.Core.UnitTests.Common.Console
 {
-    using Naos.Core.Common.Console;
+    using Naos.Foundation;
     using Shouldly;
     using Xunit;
 

@@ -8,10 +8,8 @@ namespace Naos.Core.UnitTests.Domain.Repositories
     using EnsureThat;
     using FizzWare.NBuilder;
     using MediatR;
-    using Naos.Core.Common;
-    using Naos.Core.Domain;
-    using Naos.Core.Domain.Repositories;
-    using Naos.Core.Domain.Specifications;
+    using Naos.Foundation;
+    using Naos.Foundation.Domain;
     using NSubstitute;
     using Xunit;
     //using Shouldly; TODO

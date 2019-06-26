@@ -7,9 +7,9 @@
     using Humanizer;
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
-    using Naos.Core.Infrastructure.Azure.ServiceBus;
     using Naos.Core.Messaging.Domain;
+    using Naos.Foundation;
+    using Naos.Foundation.Infrastructure;
 
     public class ServiceBusMessageBroker : IMessageBroker
     {

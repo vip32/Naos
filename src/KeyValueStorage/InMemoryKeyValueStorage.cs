@@ -4,8 +4,8 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
     using Naos.Core.KeyValueStorage.Domain;
+    using Naos.Foundation;
 
     public class InMemoryKeyValueStorage : IKeyValueStorage
     {

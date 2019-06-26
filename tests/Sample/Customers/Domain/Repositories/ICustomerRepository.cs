@@ -1,7 +1,7 @@
 ﻿namespace Naos.Sample.Customers.Domain
 {
     using System.Threading.Tasks;
-    using Naos.Core.Domain.Repositories;
+    using Naos.Foundation.Domain;
 
     public interface ICustomerRepository : IGenericRepository<Customer>
     {

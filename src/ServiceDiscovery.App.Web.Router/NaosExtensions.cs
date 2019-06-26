@@ -6,10 +6,10 @@
     using EnsureThat;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
     using Naos.Core.Configuration.App;
     using Naos.Core.ServiceDiscovery.App;
     using Naos.Core.ServiceDiscovery.App.Web.Router;
+    using Naos.Foundation;
     using ProxyKit;
 
     /// <summary>

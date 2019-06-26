@@ -9,7 +9,7 @@
 //    using Microsoft.AspNetCore.Http.Features;
 //    using Microsoft.Extensions.Configuration;
 //    using Microsoft.Extensions.DependencyInjection;
-//    using Naos.Core.Common;
+//    using Naos.Foundation;
 //    using Naos.Core.ServiceDiscovery.App;
 
 //    /// <summary>

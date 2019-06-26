@@ -7,10 +7,10 @@
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
-    using Naos.Core.Common.Web;
     using Naos.Core.ServiceDiscovery.App;
     using Naos.Core.ServiceDiscovery.App.Web.Router;
+    using Naos.Foundation;
+    using Naos.Foundation.Application;
     using NSwag.Annotations;
 
     [Route("api/servicediscovery/router/registrations")]

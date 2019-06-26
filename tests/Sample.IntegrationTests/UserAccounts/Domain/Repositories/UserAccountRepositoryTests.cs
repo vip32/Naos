@@ -6,9 +6,8 @@
     using Bogus;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
-    using Naos.Core.Common;
-    using Naos.Core.Domain.Repositories;
-    using Naos.Core.Domain.Specifications;
+    using Naos.Foundation;
+    using Naos.Foundation.Domain;
     using Naos.Sample.UserAccounts.Domain;
     using Naos.Sample.UserAccounts.Infrastructure.EntityFramework;
     using Shouldly;

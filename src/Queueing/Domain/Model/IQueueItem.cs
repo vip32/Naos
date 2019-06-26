@@ -2,7 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
-    using Naos.Core.Domain;
+    using Naos.Foundation.Domain;
 
     public interface IQueueItem<TData> : IDisposable
         where TData : class

@@ -3,9 +3,9 @@
     using System;
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
-    using Naos.Core.Common;
     using Naos.Core.Configuration.App;
     using Naos.Core.Operations.App;
+    using Naos.Foundation;
 
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions

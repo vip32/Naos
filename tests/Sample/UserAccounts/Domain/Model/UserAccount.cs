@@ -1,7 +1,7 @@
 ﻿namespace Naos.Sample.UserAccounts.Domain
 {
     using System;
-    using Naos.Core.Domain;
+    using Naos.Foundation.Domain;
 
     public class UserAccount : AggregateRoot<Guid>, ITenantEntity
     {

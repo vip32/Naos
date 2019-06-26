@@ -1,6 +1,6 @@
 ﻿namespace Naos.Sample.Countries.Domain
 {
-    using Naos.Core.Domain.Specifications;
+    using Naos.Foundation.Domain;
 
     public class HasCodeSpecification : Specification<Country>
     {

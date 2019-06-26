@@ -1,7 +1,7 @@
 ﻿namespace Naos.Core.Messaging.Domain
 {
-    using Naos.Core.Common;
-    using Naos.Core.Domain;
+    using Naos.Foundation;
+    using Naos.Foundation.Domain;
     using Newtonsoft.Json;
 
     public class Message

@@ -9,11 +9,9 @@
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Http;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
-    using Naos.Core.Common.Console;
-    using Naos.Core.Common.Console.App;
-    using Naos.Core.Common.Web;
     using Naos.Core.Operations.App;
+    using Naos.Foundation;
+    using Naos.Foundation.Application;
 
     [ExcludeFromCodeCoverage]
     public static class OperationsOptionsExtensions
@@ -60,7 +58,7 @@
 
             if(options.Context.IsConsoleEnabled() && enabled)
             {
-                Naos.Core.Common.Console2.WriteTextLogo();
+                Console2.WriteTextLogo();
 
                 // needed for mediator, register console commands + handlers
                 options.Context.Services.Scan(scan => scan

@@ -1,7 +1,7 @@
 ﻿namespace Naos.Core.UnitTests.Common
 {
     using System.Collections.Generic;
-    using Naos.Core.Common;
+    using Naos.Foundation;
     using Xunit;
 
     public class AddOrUpdateTests

@@ -5,7 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using EnsureThat;
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
     public class ServiceRegistryClient : IServiceRegistryClient // acts as a facade for IServiceRegistry
     {

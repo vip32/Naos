@@ -6,8 +6,8 @@
     using EnsureThat;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
-    using Naos.Core.Common.Web;
+    using Naos.Foundation;
+    using Naos.Foundation.Application;
 
     /// <inheritdoc />
     public class FilterContextFactory : IFilterContextFactory

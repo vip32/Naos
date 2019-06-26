@@ -10,8 +10,8 @@
     using EnsureThat;
     using Microsoft.Azure.Cosmos.Table;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
     using Naos.Core.KeyValueStorage.Domain;
+    using Naos.Foundation;
 
     /// <summary>
     /// A table keyvalue provider for Azure Table Storage AND Azure Cosmos DB Table API.

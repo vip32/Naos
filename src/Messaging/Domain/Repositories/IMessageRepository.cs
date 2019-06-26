@@ -1,6 +1,6 @@
 ﻿//namespace Naos.Core.Messaging.Domain
 //{
-//    using Naos.Core.Domain.Repositories;
+//    using Naos.Foundation.Domain;
 
 //    public interface IMessageRepository : IGenericRepository<Message>
 //    {

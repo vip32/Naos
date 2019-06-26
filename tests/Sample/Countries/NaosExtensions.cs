@@ -5,9 +5,8 @@
     using EnsureThat;
     using MediatR;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
-    using Naos.Core.Domain.Repositories;
-    using Naos.Core.Domain.Repositories.AutoMapper;
+    using Naos.Foundation;
+    using Naos.Foundation.Domain;
     using Naos.Sample.Countries.Domain;
     using Naos.Sample.Countries.Infrastructure;
 

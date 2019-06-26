@@ -5,10 +5,8 @@ namespace Naos.Core.UnitTests.Domain.Repositories
     using System.Threading.Tasks;
     using FizzWare.NBuilder;
     using MediatR;
-    using Naos.Core.Common;
-    using Naos.Core.Domain.Repositories;
-    using Naos.Core.Domain.Repositories.AutoMapper;
-    using Naos.Core.Domain.Specifications;
+    using Naos.Foundation;
+    using Naos.Foundation.Domain;
     using NSubstitute;
     using Xunit;
     //using Shouldly; TODO
@@ -32,7 +30,7 @@ namespace Naos.Core.UnitTests.Domain.Repositories
             this.entities = Builder<StubEntity>
                 .CreateListOfSize(20).All()
                 .With(x => x.FirstName, "John")
-                .With(x => x.LastName, Core.Common.RandomGenerator.GenerateString(5, false))
+                .With(x => x.LastName, Foundation.RandomGenerator.GenerateString(5, false))
                 .With(x => x.TenantId, this.tenantId)
                 .With(x => x.Country, "USA").Build()
                 .Concat(new[] { new StubEntity { Id = "Id99", FirstName = "John", LastName = "Doe", Age = 38, Country = "USA", TenantId = this.tenantId } });

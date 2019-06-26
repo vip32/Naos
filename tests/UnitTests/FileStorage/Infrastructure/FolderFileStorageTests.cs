@@ -3,9 +3,9 @@
     using System.IO;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
     using Naos.Core.FileStorage.Domain;
     using Naos.Core.FileStorage.Infrastructure;
+    using Naos.Foundation;
     using NSubstitute;
     using Xunit;
 

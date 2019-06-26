@@ -1,6 +1,6 @@
 ﻿namespace Naos.Core.Messaging.Domain
 {
-    using Naos.Core.Domain;
+    using Naos.Foundation.Domain;
 
     public class MessageHandledDomainEvent : DomainEvent
     {

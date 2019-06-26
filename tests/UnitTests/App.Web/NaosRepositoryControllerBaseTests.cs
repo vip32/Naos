@@ -5,9 +5,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Naos.Core.App.Web.Controllers;
-    using Naos.Core.Domain;
-    using Naos.Core.Domain.Repositories;
-    using Naos.Core.Domain.Specifications;
+    using Naos.Foundation.Domain;
     using Shouldly;
     using Xunit;
 

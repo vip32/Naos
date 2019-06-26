@@ -3,8 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Naos.Core.Common;
-    using Naos.Core.Domain.Repositories;
+    using Naos.Foundation;
+    using Naos.Foundation.Domain;
 
     public static class FindOptionsFactory
     {
@@ -27,7 +27,7 @@
                 {
                     result.Add(new OrderOption<T>(
                         ExpressionHelper.GetExpression<T>(order.Name),
-                        order.Direction == OrderDirection.Asc ? Domain.Repositories.OrderDirection.Ascending : Domain.Repositories.OrderDirection.Descending));
+                        order.Direction == OrderDirection.Asc ? Foundation.Domain.OrderDirection.Ascending : Foundation.Domain.OrderDirection.Descending));
                 }
                 catch(ArgumentException ex)
                 {

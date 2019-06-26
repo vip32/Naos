@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using BenchmarkDotNet.Attributes;
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
     [MemoryDiagnoser]
     [ShortRunJob]

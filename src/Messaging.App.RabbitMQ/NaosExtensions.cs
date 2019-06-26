@@ -7,11 +7,11 @@
     using EnsureThat;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Common;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.App;
     using Naos.Core.Messaging.Domain;
     using Naos.Core.Messaging.Infrastructure.RabbitMQ;
+    using Naos.Foundation;
 
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions

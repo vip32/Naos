@@ -1,7 +1,7 @@
 ﻿namespace Naos.Core.UnitTests.Common
 {
     using System.Linq;
-    using Naos.Core.Common;
+    using Naos.Foundation;
     using Newtonsoft.Json.Linq;
     using Xunit;
 

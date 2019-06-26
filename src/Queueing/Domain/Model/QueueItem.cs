@@ -3,7 +3,7 @@
     using System;
     using System.Diagnostics;
     using System.Threading.Tasks;
-    using Naos.Core.Domain;
+    using Naos.Foundation.Domain;
 
     [DebuggerDisplay("Id={Id}, Queue={Name}")]
     public class QueueItem<TData> : IQueueItem<TData>

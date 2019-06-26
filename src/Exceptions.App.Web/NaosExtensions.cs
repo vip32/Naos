@@ -4,9 +4,9 @@
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
-    using Naos.Core.Common;
     using Naos.Core.Configuration.App;
     using Naos.Core.ServiceExceptions.App.Web;
+    using Naos.Foundation;
 
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions

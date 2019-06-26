@@ -2,7 +2,7 @@
 {
     using System;
     using System.IO;
-    using Naos.Core.Common;
+    using Naos.Foundation;
     using Shouldly;
     using Xunit;
 

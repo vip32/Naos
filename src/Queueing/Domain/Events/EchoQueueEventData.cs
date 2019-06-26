@@ -1,6 +1,6 @@
 ﻿namespace Naos.Core.Queueing.Domain
 {
-    using Naos.Core.Domain;
+    using Naos.Foundation.Domain;
 
     public class EchoQueueEventData : IHaveCorrelationId
     {

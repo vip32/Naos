@@ -6,7 +6,7 @@
     using System.Diagnostics;
     using System.Linq;
     using EnsureThat;
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
     /// <summary>
     /// Represents a row in the table structure.

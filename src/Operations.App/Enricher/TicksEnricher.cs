@@ -3,7 +3,7 @@
     using System;
     using global::Serilog.Core;
     using global::Serilog.Events;
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
     public class TicksEnricher : ILogEventEnricher
     {

@@ -9,10 +9,8 @@
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Domain;
-    using Naos.Core.Domain.Repositories;
-    using Naos.Core.Domain.Specifications;
-    using Naos.Core.Infrastructure.EntityFramework;
+    using Naos.Foundation.Domain;
+    using Naos.Foundation.Infrastructure;
     using NSubstitute;
     using Xunit;
 

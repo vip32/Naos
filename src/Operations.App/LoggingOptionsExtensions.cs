@@ -6,8 +6,8 @@
     using EnsureThat;
     using global::Serilog;
     using Microsoft.Extensions.Configuration;
-    using Naos.Core.Common;
     using Naos.Core.Operations.App;
+    using Naos.Foundation;
 
     [ExcludeFromCodeCoverage]
     public static class LoggingOptionsExtensions

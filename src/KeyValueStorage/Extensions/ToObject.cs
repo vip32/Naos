@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using Naos.Core.Common;
+    using Naos.Foundation;
 
     public static partial class Extensions
     {
