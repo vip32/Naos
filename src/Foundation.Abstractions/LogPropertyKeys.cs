@@ -19,6 +19,7 @@
         public const string TrackSpan = "ns_trksp";
         public const string TrackName = "ns_trknm";
         public const string TrackDuration = "ns_trkdur";
+        public const string TrackTimestamp = "ns_trktsp";
         public const string TrackMisc = "ns_trkmsc";
         public const string TrackSendDomainEvent = "ns_trksdm";
         public const string TrackHandleDomainEvent = "ns_trkhdm";

@@ -24,6 +24,7 @@
                 {
                     [LogPropertyKeys.TrackType] = LogTrackTypeValues.Journal,
                     [LogPropertyKeys.TrackDuration] = duration.Value.Milliseconds,
+                    [LogPropertyKeys.TrackTimestamp] = DateTimeOffset.UtcNow,
                     [LogPropertyKeys.LogKey] = logKey,
                     [type] = true
                 }))
@@ -65,9 +66,10 @@
                 using(source.BeginScope(new Dictionary<string, object>(properties.Safe())
                 {
                     [LogPropertyKeys.TrackType] = LogTrackTypeValues.Trace,
-                    [LogPropertyKeys.TrackDuration] = duration.Value.Milliseconds,
                     [LogPropertyKeys.TrackSpan] = span,
                     [LogPropertyKeys.TrackName] = name,
+                    [LogPropertyKeys.TrackDuration] = duration.Value.Milliseconds,
+                    [LogPropertyKeys.TrackTimestamp] = DateTimeOffset.UtcNow,
                     [LogPropertyKeys.LogKey] = logKey
                 }))
                 {

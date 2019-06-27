@@ -6,6 +6,7 @@
     using EnsureThat;
     using Microsoft.AspNetCore.Hosting.Server;
     using Microsoft.AspNetCore.Http.Features;
+    using Microsoft.Extensions.Logging;
     using Naos.Foundation;
 
     /// <summary>
@@ -16,18 +17,20 @@
     {
         private readonly IEnumerable<IStartupTask> tasks;
         private readonly IServer decoratee;
+        private readonly ILogger<StartupTaskServerDecorator> logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StartupTaskServerDecorator"/> class.
         /// </summary>
         /// <param name="tasks">The tasks to execute on startup</param>
         /// <param name="decoratee">The decorated server instance </param>
-        public StartupTaskServerDecorator(IEnumerable<IStartupTask> tasks, IServer decoratee)
+        public StartupTaskServerDecorator(ILoggerFactory loggerFactory, IEnumerable<IStartupTask> tasks, IServer decoratee)
         {
             EnsureArg.IsNotNull(decoratee, nameof(decoratee));
 
             this.tasks = tasks.Safe();
             this.decoratee = decoratee;
+            this.logger = loggerFactory.CreateLogger<StartupTaskServerDecorator>();
         }
 
         /// <inheritdoc />
@@ -38,6 +41,7 @@
         {
             foreach(var task in this.tasks)
             {
+                this.logger.LogInformation($"{{LogKey:l}} start task (name={task.GetType().PrettyName()})", LogKeys.StartupTask);
                 await task.StartAsync(cancellationToken).AnyContext();
             }
 
@@ -54,6 +58,7 @@
 
             foreach(var task in this.tasks)
             {
+                this.logger.LogInformation($"{{LogKey:l}} stop task (name={task.GetType().PrettyName()})", LogKeys.StartupTask);
                 await task.ShutdownAsync(cancellationToken).AnyContext();
             }
         }

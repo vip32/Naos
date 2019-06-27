@@ -2,8 +2,9 @@
 {
     public struct LogKeys
     {
-        public const string Startup = "STRTUP";
+        public const string Startup = "STUTUP";
         public const string Shutdown = "SHTDWN";
+        public const string StartupTask = "STUTSK";
         public const string InboundRequest = "INBREQ";
         public const string InboundResponse = "INBRES";
         public const string OutboundRequest = "OUTREQ";

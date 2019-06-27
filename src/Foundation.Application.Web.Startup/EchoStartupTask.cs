@@ -18,13 +18,12 @@
 
         public Task StartAsync(CancellationToken cancellationToken = default)
         {
-            this.logger.LogInformation("startup task: echo");
+            this.logger.LogInformation("{LogKey:l} +++ hello from echo startup task", LogKeys.StartupTask);
             return Task.CompletedTask;
         }
 
         public Task ShutdownAsync(CancellationToken cancellationToken = default)
         {
-            this.logger.LogInformation("shutdown task: echo");
             return Task.CompletedTask;
         }
     }
