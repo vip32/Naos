@@ -20,6 +20,8 @@
 
         public override Task<bool> Handle(ConsoleCommandEvent<StartupTaskConsoleCommand> request, CancellationToken cancellationToken)
         {
+            // TODO: provide possibility to start a specific task (task.StartAsync())
+
             if(request.Command.List)
             {
                 foreach(var task in this.tasks.Safe())
