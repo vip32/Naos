@@ -37,6 +37,21 @@
                     .AddStartupTaskServerDecorator()
                     .AddTransient<IStartupTask, TStartupTask>();
 
+        public static IServiceCollection AddStartupTask<TStartupTask>(this IServiceCollection services, TimeSpan delay)
+            where TStartupTask : class, IStartupTask
+                => services
+                    .AddStartupTaskServerDecorator()
+                    .AddTransient<IStartupTask>(sp =>
+                    {
+                        var task = ActivatorUtilities.GetServiceOrCreateInstance<TStartupTask>(sp);
+                        if(task != null)
+                        {
+                            task.Delay = delay;
+                        }
+
+                        return task;
+                    });
+
         private static IServiceCollection AddStartupTaskServerDecorator(this IServiceCollection services)
         {
             if(isDecorated)

@@ -24,6 +24,9 @@
             this.logger = loggerFactory.CreateLogger<ApplyPendingMigrationsTask<TDbContext>>();
         }
 
+        //public TimeSpan? Delay => TimeSpan.Zero;
+        public TimeSpan? Delay { get; set; }
+
         public async Task StartAsync(CancellationToken cancellationToken = default)
         {
             // create a new scope to retrieve scoped services

@@ -1,5 +1,6 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
+    using System;
     using EnsureThat;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
@@ -59,7 +60,7 @@
             });
 
             options.Context.Services.AddStartupTask<ApplyPendingMigrationsTask<UserAccountsDbContext>>();
-            options.Context.Services.AddStartupTask<EchoStartupTask>();
+            options.Context.Services.AddStartupTask<EchoStartupTask>(new TimeSpan(0, 0, 3));
 
             options.Context.Services.AddHealthChecks()
                 .AddSqlServer(entityFrameworkConfiguration.ConnectionString, name: "UserAccounts-sqlserver");

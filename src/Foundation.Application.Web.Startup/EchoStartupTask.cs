@@ -1,5 +1,6 @@
 ﻿namespace Naos.Foundation.Application
 {
+    using System;
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
@@ -15,6 +16,9 @@
 
             this.logger = loggerFactory.CreateLogger<EchoStartupTask>();
         }
+
+        public TimeSpan? Delay { get; set; }
+        //public TimeSpan? Delay => new TimeSpan(0, 0, 1); //TimeSpan.Zero;
 
         public Task StartAsync(CancellationToken cancellationToken = default)
         {

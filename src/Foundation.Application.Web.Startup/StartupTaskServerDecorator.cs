@@ -1,5 +1,6 @@
 ﻿namespace Naos.Foundation.Application
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
@@ -41,8 +42,19 @@
         {
             foreach(var task in this.tasks)
             {
-                this.logger.LogInformation($"{{LogKey:l}} start task (name={task.GetType().PrettyName()})", LogKeys.StartupTask);
-                await task.StartAsync(cancellationToken).AnyContext();
+                if(task.Delay.HasValue && task.Delay.Value > TimeSpan.Zero)
+                {
+                    _ = Run.DelayedAsync(task.Delay.Value, async () =>
+                      {
+                          this.logger.LogInformation($"{{LogKey:l}} start task delayed (name={task.GetType().PrettyName()})", LogKeys.StartupTask);
+                          await task.StartAsync(cancellationToken).AnyContext();
+                      });
+                }
+                else
+                {
+                    this.logger.LogInformation($"{{LogKey:l}} start task (name={task.GetType().PrettyName()})", LogKeys.StartupTask);
+                    await task.StartAsync(cancellationToken).AnyContext();
+                }
             }
 
             await this.decoratee.StartAsync(application, cancellationToken).AnyContext();

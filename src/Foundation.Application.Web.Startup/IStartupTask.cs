@@ -1,5 +1,6 @@
 ﻿namespace Naos.Foundation.Application
 {
+    using System;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -8,6 +9,9 @@
     /// </summary>
     public interface IStartupTask
     {
+        public TimeSpan? Delay { get; set; }
+        //public TimeSpan? Delay { get => TimeSpan.Zero; set { } }; // TODO: c#8
+
         /// <summary>
         /// Execute the startup task, before the WebHost is run
         /// </summary>
