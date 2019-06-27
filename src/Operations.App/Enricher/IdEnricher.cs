@@ -9,7 +9,7 @@
         public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
         {
             logEvent.AddPropertyIfAbsent(
-                propertyFactory.CreateProperty(LogEventPropertyKeys.Id, IdGenerator.Instance.Next));
+                propertyFactory.CreateProperty(LogPropertyKeys.Id, IdGenerator.Instance.Next));
         }
     }
 }

@@ -46,9 +46,9 @@
         {
             var loggerState = new Dictionary<string, object>
             {
-                [LogEventPropertyKeys.ServiceProduct] = serviceDescriptor.Product,
-                [LogEventPropertyKeys.ServiceCapability] = serviceDescriptor.Capability,
-                [LogEventPropertyKeys.ServiceName] = serviceDescriptor.Name,
+                [LogPropertyKeys.ServiceProduct] = serviceDescriptor.Product,
+                [LogPropertyKeys.ServiceCapability] = serviceDescriptor.Capability,
+                [LogPropertyKeys.ServiceName] = serviceDescriptor.Name,
             };
 
             using(this.logger.BeginScope(loggerState))

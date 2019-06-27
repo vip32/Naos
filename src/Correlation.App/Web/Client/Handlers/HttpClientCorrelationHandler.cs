@@ -28,7 +28,7 @@
 
             var loggerState = new Dictionary<string, object>
             {
-                [LogEventPropertyKeys.CorrelationId] = correlationId
+                [LogPropertyKeys.CorrelationId] = correlationId
             };
 
             using(this.logger.BeginScope(loggerState))

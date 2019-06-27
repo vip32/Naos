@@ -24,19 +24,19 @@
 
         private readonly IEnumerable<(string entityProperty, string destinationProperty, string destinationPropertyFull)> entityMap = new[]
             {
-                (nameof(LogEvent.Environment), LogEventPropertyKeys.Environment, $"LogProperties_{LogEventPropertyKeys.Environment}_s"),
+                (nameof(LogEvent.Environment), LogPropertyKeys.Environment, $"LogProperties_{LogPropertyKeys.Environment}_s"),
                 (nameof(LogEvent.Level), "LogLevel", "LogLevel_s"),
-                (nameof(LogEvent.Ticks), LogEventPropertyKeys.Ticks, $"LogProperties_{LogEventPropertyKeys.Ticks}_d"), // .To<long>()
-                (nameof(LogEvent.TrackType), LogEventPropertyKeys.TrackType, $"LogProperties_{LogEventPropertyKeys.TrackType}_s"),
-                (nameof(LogEvent.Id), LogEventPropertyKeys.Id, $"LogProperties_{LogEventPropertyKeys.Id}_s"),
-                (nameof(LogEvent.CorrelationId), LogEventPropertyKeys.CorrelationId, $"LogProperties_{LogEventPropertyKeys.CorrelationId}_s"),
-                (nameof(LogEvent.Key), LogEventPropertyKeys.LogKey, $"LogProperties_{LogEventPropertyKeys.LogKey}_s"),
+                (nameof(LogEvent.Ticks), LogPropertyKeys.Ticks, $"LogProperties_{LogPropertyKeys.Ticks}_d"), // .To<long>()
+                (nameof(LogEvent.TrackType), LogPropertyKeys.TrackType, $"LogProperties_{LogPropertyKeys.TrackType}_s"),
+                (nameof(LogEvent.Id), LogPropertyKeys.Id, $"LogProperties_{LogPropertyKeys.Id}_s"),
+                (nameof(LogEvent.CorrelationId), LogPropertyKeys.CorrelationId, $"LogProperties_{LogPropertyKeys.CorrelationId}_s"),
+                (nameof(LogEvent.Key), LogPropertyKeys.LogKey, $"LogProperties_{LogPropertyKeys.LogKey}_s"),
                 (nameof(LogEvent.Message), "LogMessage", "LogMessage"),
                 (nameof(LogEvent.Timestamp), "Timestamp", "Timestamp"), // to DateTime
                 (nameof(LogEvent.SourceContext), "SourceContext", "SourceContext"),
-                (nameof(LogEvent.ServiceName), LogEventPropertyKeys.ServiceName, $"LogProperties_{LogEventPropertyKeys.ServiceName}_s"),
-                (nameof(LogEvent.ServiceProduct), LogEventPropertyKeys.ServiceProduct, $"LogProperties_{LogEventPropertyKeys.ServiceProduct}_s"),
-                (nameof(LogEvent.ServiceCapability), LogEventPropertyKeys.ServiceCapability, $"LogProperties_{LogEventPropertyKeys.ServiceCapability}_s"),
+                (nameof(LogEvent.ServiceName), LogPropertyKeys.ServiceName, $"LogProperties_{LogPropertyKeys.ServiceName}_s"),
+                (nameof(LogEvent.ServiceProduct), LogPropertyKeys.ServiceProduct, $"LogProperties_{LogPropertyKeys.ServiceProduct}_s"),
+                (nameof(LogEvent.ServiceCapability), LogPropertyKeys.ServiceCapability, $"LogProperties_{LogPropertyKeys.ServiceCapability}_s"),
             };
 
         public LogAnalyticsLogEventRepository( // TODO: use options+builder here
@@ -96,7 +96,7 @@
             var query = $@"
 {this.logName} |
  where {this.BuildQueryWhereParts(specifications).ToString(" and ")} |
- top {options?.Take ?? 1000} by LogProperties_{LogEventPropertyKeys.Ticks}_d desc";
+ top {options?.Take ?? 1000} by LogProperties_{LogPropertyKeys.Ticks}_d desc";
 
             //order by LogProperties_{LogEventPropertyKeys.Ticks}_d desc |
             //skip ({page}-1) * {pageSize} | top {pageSize}

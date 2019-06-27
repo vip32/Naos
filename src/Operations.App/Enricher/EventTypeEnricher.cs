@@ -15,7 +15,7 @@
         {
             // origin: https://nblumhardt.com/2015/10/assigning-event-types-to-serilog-events/
             logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(
-                LogEventPropertyKeys.EventType,
+                LogPropertyKeys.EventType,
                 BitConverter.ToUInt32(HashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(logEvent.MessageTemplate.Text)), 0)));
         }
     }

@@ -58,7 +58,7 @@
 
             if(!this.options.Map.Exists<TMessage>())
             {
-                this.logger.LogJournal(LogKeys.Messaging, "subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, entityPath={EntityPath})", LogEventPropertyKeys.TrackSubscribeMessage, args: new[] { messageName, this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name, this.options.Provider.EntityPath });
+                this.logger.LogJournal(LogKeys.Messaging, "subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, entityPath={EntityPath})", LogPropertyKeys.TrackSubscribeMessage, args: new[] { messageName, this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name, this.options.Provider.EntityPath });
 
                 try
                 {
@@ -94,7 +94,7 @@
 
             var loggerState = new Dictionary<string, object>
             {
-                [LogEventPropertyKeys.CorrelationId] = message.CorrelationId,
+                [LogPropertyKeys.CorrelationId] = message.CorrelationId,
             };
 
             using(this.logger.BeginScope(loggerState))
@@ -131,8 +131,8 @@
                 };
                 serviceBusMessage.UserProperties.AddOrUpdate("Origin", this.options.MessageScope);
 
-                this.logger.LogJournal(LogKeys.Messaging, $"publish (name={{MessageName}}, id={{MessageId}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes().ToString("#.##")})", LogEventPropertyKeys.TrackPublishMessage, args: new[] { messageName, message.Id, message.Origin });
-                this.logger.LogTraceEvent(LogKeys.Messaging, message.Id, messageName, LogTraceEventNames.Message);
+                this.logger.LogJournal(LogKeys.Messaging, $"publish (name={{MessageName}}, id={{MessageId}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes().ToString("#.##")})", LogPropertyKeys.TrackPublishMessage, args: new[] { messageName, message.Id, message.Origin });
+                this.logger.LogTrace(LogKeys.Messaging, message.Id, messageName, LogTraceNames.Message);
 
                 this.options.Provider.CreateModel().SendAsync(serviceBusMessage).GetAwaiter().GetResult();
             }
@@ -224,7 +224,7 @@
 
                     var loggerState = new Dictionary<string, object>
                     {
-                        [LogEventPropertyKeys.CorrelationId] = serviceBusMessage.CorrelationId,
+                        [LogPropertyKeys.CorrelationId] = serviceBusMessage.CorrelationId,
                     };
 
                     using(this.logger.BeginScope(loggerState))
@@ -240,8 +240,8 @@
                             message.Origin = serviceBusMessage.UserProperties.ContainsKey("Origin") ? serviceBusMessage.UserProperties["Origin"] as string : string.Empty;
                         }
 
-                        this.logger.LogJournal(LogKeys.Messaging, $"process (name={{MessageName}}, id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes().ToString("#.##")})", LogEventPropertyKeys.TrackReceiveMessage, args: new[] { serviceBusMessage.Label, message?.Id, this.options.MessageScope, message.Origin });
-                        this.logger.LogTraceEvent(LogKeys.Messaging, message.Id, serviceBusMessage.Label, LogTraceEventNames.Message);
+                        this.logger.LogJournal(LogKeys.Messaging, $"process (name={{MessageName}}, id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes().ToString("#.##")})", LogPropertyKeys.TrackReceiveMessage, args: new[] { serviceBusMessage.Label, message?.Id, this.options.MessageScope, message.Origin });
+                        this.logger.LogTrace(LogKeys.Messaging, message.Id, serviceBusMessage.Label, LogTraceNames.Message);
 
                         // construct the handler by using the DI container
                         var handler = this.options.HandlerFactory.Create(subscription.HandlerType); // should not be null, did you forget to register your generic handler (EntityMessageHandler<T>)

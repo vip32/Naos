@@ -61,7 +61,7 @@
 
             var loggerState = new Dictionary<string, object>
             {
-                [LogEventPropertyKeys.CorrelationId] = message.CorrelationId,
+                [LogPropertyKeys.CorrelationId] = message.CorrelationId,
             };
 
             using(this.logger.BeginScope(loggerState))
@@ -87,8 +87,8 @@
 
                 var messageName = /*message.Name*/ message.GetType().PrettyName();
 
-                this.logger.LogJournal(LogKeys.Messaging, "publish (name={MessageName}, id={MessageId}, origin={MessageOrigin})", LogEventPropertyKeys.TrackPublishMessage, args: new[] { message.GetType().PrettyName(), message.Id, message.Origin });
-                this.logger.LogTraceEvent(LogKeys.Messaging, message.Id, messageName, LogTraceEventNames.Message);
+                this.logger.LogJournal(LogKeys.Messaging, "publish (name={MessageName}, id={MessageId}, origin={MessageOrigin})", LogPropertyKeys.TrackPublishMessage, args: new[] { message.GetType().PrettyName(), message.Id, message.Origin });
+                this.logger.LogTrace(LogKeys.Messaging, message.Id, messageName, LogTraceNames.Message);
 
                 var url = $"{this.serviceUtils.Endpoint}/api/v1/hubs/{this.HubName}";
                 var request = new HttpRequestMessage(HttpMethod.Post, url);
@@ -121,7 +121,7 @@
 
             if(!this.options.Map.Exists<TMessage>())
             {
-                this.logger.LogJournal(LogKeys.Messaging, "subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, endpoint={Endpoint}, hub={Hub})", LogEventPropertyKeys.TrackSubscribeMessage,
+                this.logger.LogJournal(LogKeys.Messaging, "subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, endpoint={Endpoint}, hub={Hub})", LogPropertyKeys.TrackSubscribeMessage,
                     args: new[] { typeof(TMessage).PrettyName(), this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name, this.serviceUtils.Endpoint, this.HubName });
 
                 this.options.Map.Add<TMessage, THandler>();
@@ -184,8 +184,8 @@
                     var jsonMessage = JsonConvert.DeserializeObject(signalRMessage.ToString(), messageType);
                     var message = jsonMessage as Message;
 
-                    this.logger.LogJournal(LogKeys.Messaging, "process (name={MessageName}, id={MessageId}, service={Service}, origin={MessageOrigin})", LogEventPropertyKeys.TrackReceiveMessage, args: new[] { messageType.PrettyName(), message?.Id, this.options.MessageScope, message?.Origin });
-                    this.logger.LogTraceEvent(LogKeys.Messaging, message.Id, messageType.PrettyName(), LogTraceEventNames.Message);
+                    this.logger.LogJournal(LogKeys.Messaging, "process (name={MessageName}, id={MessageId}, service={Service}, origin={MessageOrigin})", LogPropertyKeys.TrackReceiveMessage, args: new[] { messageType.PrettyName(), message?.Id, this.options.MessageScope, message?.Origin });
+                    this.logger.LogTrace(LogKeys.Messaging, message.Id, messageType.PrettyName(), LogTraceNames.Message);
 
                     // construct the handler by using the DI container
                     var handler = this.options.HandlerFactory.Create(subscription.HandlerType); // should not be null, did you forget to register your generic handler (EntityMessageHandler<T>)

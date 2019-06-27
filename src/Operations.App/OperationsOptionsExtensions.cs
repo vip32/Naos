@@ -107,15 +107,15 @@
                 .Enrich.With(new IdEnricher())
                 .Enrich.With(new ExceptionEnricher())
                 .Enrich.With(new TicksEnricher())
-                .Enrich.WithProperty(LogEventPropertyKeys.Environment, loggingOptions.Context.Environment)
-                .Enrich.WithProperty(LogEventPropertyKeys.ServiceName, loggingOptions.Context.Descriptor.Name)
-                .Enrich.WithProperty(LogEventPropertyKeys.ServiceProduct, loggingOptions.Context.Descriptor.Product)
-                .Enrich.WithProperty(LogEventPropertyKeys.ServiceCapability, loggingOptions.Context.Descriptor.Capability)
+                .Enrich.WithProperty(LogPropertyKeys.Environment, loggingOptions.Context.Environment)
+                .Enrich.WithProperty(LogPropertyKeys.ServiceName, loggingOptions.Context.Descriptor.Name)
+                .Enrich.WithProperty(LogPropertyKeys.ServiceProduct, loggingOptions.Context.Descriptor.Product)
+                .Enrich.WithProperty(LogPropertyKeys.ServiceCapability, loggingOptions.Context.Descriptor.Capability)
                 .Enrich.FromLogContext();
 
             if(!internalCorrelationId.IsNullOrEmpty())
             {
-                loggingOptions.LoggerConfiguration.Enrich.WithProperty(LogEventPropertyKeys.CorrelationId, internalCorrelationId);
+                loggingOptions.LoggerConfiguration.Enrich.WithProperty(LogPropertyKeys.CorrelationId, internalCorrelationId);
             }
         }
     }

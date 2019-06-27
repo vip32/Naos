@@ -55,7 +55,7 @@
 
             using(this.logger.BeginScope(new Dictionary<string, object>
             {
-                [LogEventPropertyKeys.CorrelationId] = data.As<IHaveCorrelationId>()?.CorrelationId,
+                [LogPropertyKeys.CorrelationId] = data.As<IHaveCorrelationId>()?.CorrelationId,
             }))
             {
                 await this.EnsureQueueAsync().AnyContext();
@@ -75,8 +75,8 @@
 
                 var item = new QueueItem<TData>(brokeredMessage.MessageId, data, this, DateTime.UtcNow, 0);
 
-                this.logger.LogJournal(LogKeys.Queueing, $"item enqueued (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", LogEventPropertyKeys.TrackEnqueue);
-                this.logger.LogTraceEvent(LogKeys.Messaging, item.Id, typeof(TData).PrettyName(), LogTraceEventNames.Queue);
+                this.logger.LogJournal(LogKeys.Queueing, $"item enqueued (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", LogPropertyKeys.TrackEnqueue);
+                this.logger.LogTrace(LogKeys.Messaging, item.Id, typeof(TData).PrettyName(), LogTraceNames.Queue);
                 this.LastEnqueuedDate = DateTime.UtcNow;
                 return brokeredMessage.MessageId;
             }
@@ -114,7 +114,7 @@
 
             await this.queueReceiver.RenewLockAsync(item.Id).AnyContext();
 
-            this.logger.LogJournal(LogKeys.Queueing, $"item lock renewed (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", LogEventPropertyKeys.TrackDequeue);
+            this.logger.LogJournal(LogKeys.Queueing, $"item lock renewed (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", LogPropertyKeys.TrackDequeue);
             this.LastDequeuedDate = DateTime.UtcNow;
         }
 
@@ -133,7 +133,7 @@
             Interlocked.Increment(ref this.completedCount);
             item.MarkCompleted();
 
-            this.logger.LogJournal(LogKeys.Queueing, $"item completed (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", LogEventPropertyKeys.TrackDequeue);
+            this.logger.LogJournal(LogKeys.Queueing, $"item completed (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", LogPropertyKeys.TrackDequeue);
             this.LastDequeuedDate = DateTime.UtcNow;
         }
 
@@ -152,7 +152,7 @@
             Interlocked.Increment(ref this.abandonedCount);
             item.MarkAbandoned();
 
-            this.logger.LogJournal(LogKeys.Queueing, $"item abandoned (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", LogEventPropertyKeys.TrackDequeue);
+            this.logger.LogJournal(LogKeys.Queueing, $"item abandoned (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", LogPropertyKeys.TrackDequeue);
             this.LastDequeuedDate = DateTime.UtcNow;
         }
 
@@ -187,7 +187,7 @@
 
                 using(this.logger.BeginScope(new Dictionary<string, object>
                 {
-                    [LogEventPropertyKeys.CorrelationId] = item.Data.As<IHaveCorrelationId>()?.CorrelationId,
+                    [LogPropertyKeys.CorrelationId] = item.Data.As<IHaveCorrelationId>()?.CorrelationId,
                 }))
                 {
                     try
@@ -230,7 +230,7 @@
                 {
                     using(this.logger.BeginScope(new Dictionary<string, object>
                     {
-                        [LogEventPropertyKeys.CorrelationId] = i.Data.As<IHaveCorrelationId>()?.CorrelationId,
+                        [LogPropertyKeys.CorrelationId] = i.Data.As<IHaveCorrelationId>()?.CorrelationId,
                     }))
                     {
                         await this.options.Mediator.Send(new QueueEvent<TData>(i), ct).AnyContext();
@@ -323,11 +323,11 @@
 
             using(this.logger.BeginScope(new Dictionary<string, object>
             {
-                [LogEventPropertyKeys.CorrelationId] = item.Data.As<IHaveCorrelationId>()?.CorrelationId,
+                [LogPropertyKeys.CorrelationId] = item.Data.As<IHaveCorrelationId>()?.CorrelationId,
             }))
             {
-                this.logger.LogJournal(LogKeys.Queueing, $"item dequeued (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", LogEventPropertyKeys.TrackDequeue);
-                this.logger.LogTraceEvent(LogKeys.Queueing, item.Id, typeof(TData).PrettyName(), LogTraceEventNames.Queue, DateTime.UtcNow - item.EnqueuedDate);
+                this.logger.LogJournal(LogKeys.Queueing, $"item dequeued (id={item.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", LogPropertyKeys.TrackDequeue);
+                this.logger.LogTrace(LogKeys.Queueing, item.Id, typeof(TData).PrettyName(), LogTraceNames.Queue, DateTime.UtcNow - item.EnqueuedDate);
                 this.LastDequeuedDate = DateTime.UtcNow;
 
                 return item;

@@ -153,19 +153,19 @@
                         using(var timer = new Foundation.Timer())
                         using(this.logger.BeginScope(new Dictionary<string, object>
                         {
-                            [LogEventPropertyKeys.CorrelationId] = IdGenerator.Instance.Next
+                            [LogPropertyKeys.CorrelationId] = IdGenerator.Instance.Next
                         }))
                         {
                             // TODO: publish domain event (job started)
                             var span = IdGenerator.Instance.Next;
-                            this.logger.LogJournal(LogKeys.JobScheduling, $"job started (key={{JobKey}}, id={registration.Identifier}, type={job.GetType().PrettyName()}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")})", LogEventPropertyKeys.TrackStartJob, args: new[] { registration.Key });
-                            this.logger.LogTraceEvent(LogKeys.JobScheduling, span, registration.Key, LogTraceEventNames.Job);
+                            this.logger.LogJournal(LogKeys.JobScheduling, $"job started (key={{JobKey}}, id={registration.Identifier}, type={job.GetType().PrettyName()}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")})", LogPropertyKeys.TrackStartJob, args: new[] { registration.Key });
+                            this.logger.LogTrace(LogKeys.JobScheduling, span, registration.Key, LogTraceNames.Job);
                             await job.ExecuteAsync(cancellationToken, args).AnyContext();
                             await Run.DelayedAsync(new TimeSpan(0, 0, 1), () =>
                             {
                                 timer.Stop();
-                                this.logger.LogJournal(LogKeys.JobScheduling, $"job finished (key={{JobKey}}, id={registration.Identifier}, type={job.GetType().PrettyName()})", LogEventPropertyKeys.TrackFinishJob, args: new[] { LogKeys.JobScheduling, registration.Key });
-                                this.logger.LogTraceEvent(LogKeys.JobScheduling, span, registration.Key, LogTraceEventNames.Job, timer.Elapsed);
+                                this.logger.LogJournal(LogKeys.JobScheduling, $"job finished (key={{JobKey}}, id={registration.Identifier}, type={job.GetType().PrettyName()})", LogPropertyKeys.TrackFinishJob, args: new[] { LogKeys.JobScheduling, registration.Key });
+                                this.logger.LogTrace(LogKeys.JobScheduling, span, registration.Key, LogTraceNames.Job, timer.Elapsed);
                                 return Task.CompletedTask;
                             });
                             // TODO: publish domain event (job finished)

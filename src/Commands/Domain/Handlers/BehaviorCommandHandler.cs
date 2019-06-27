@@ -55,15 +55,15 @@
             }
 
             var commandName = typeof(TRequest).Name.SliceTill("Command");
-            this.Logger.LogJournal(LogKeys.AppCommand, $"handle (name={commandName}, id={request.Id})", LogEventPropertyKeys.TrackHandleCommand);
-            this.Logger.LogTraceEvent(LogKeys.AppCommand, request.Id, commandName, LogTraceEventNames.Command);
+            this.Logger.LogJournal(LogKeys.AppCommand, $"handle (name={commandName}, id={request.Id})", LogPropertyKeys.TrackHandleCommand);
+            this.Logger.LogTrace(LogKeys.AppCommand, request.Id, commandName, LogTraceNames.Command);
 
             using(var timer = new Foundation.Timer())
             {
                 var result = await this.HandleRequest(request, cancellationToken).AnyContext();
 
                 timer.Stop();
-                this.Logger.LogTraceEvent(LogKeys.AppCommand, request.Id, commandName, LogTraceEventNames.Command, timer.Elapsed);
+                this.Logger.LogTrace(LogKeys.AppCommand, request.Id, commandName, LogTraceNames.Command, timer.Elapsed);
                 return result;
             }
         }

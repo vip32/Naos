@@ -15,7 +15,7 @@
             }
 
             logEvent.AddPropertyIfAbsent(
-                new LogEventProperty(LogEventPropertyKeys.Ticks, new ScalarValue(DateTime.UtcNow.Ticks)));
+                new LogEventProperty(LogPropertyKeys.Ticks, new ScalarValue(DateTime.UtcNow.Ticks)));
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Naos.Foundation
 {
-    public struct LogEventPropertyKeys
+    public struct LogPropertyKeys
     {
         public const string LogKey = "LogKey";
         public const string EventType = "ns_evntp";

@@ -18,13 +18,13 @@
         {
             if(!message.IsNullOrEmpty())
             {
-                type ??= LogEventPropertyKeys.TrackMisc;
+                type ??= LogPropertyKeys.TrackMisc;
                 duration ??= TimeSpan.Zero;
                 using(source.BeginScope(new Dictionary<string, object>(properties.Safe())
                 {
-                    [LogEventPropertyKeys.TrackType] = LogEventTrackTypeValues.Journal,
-                    [LogEventPropertyKeys.TrackDuration] = duration.Value.Milliseconds,
-                    [LogEventPropertyKeys.LogKey] = logKey,
+                    [LogPropertyKeys.TrackType] = LogTrackTypeValues.Journal,
+                    [LogPropertyKeys.TrackDuration] = duration.Value.Milliseconds,
+                    [LogPropertyKeys.LogKey] = logKey,
                     [type] = true
                 }))
                 {
@@ -49,7 +49,7 @@
             return source;
         }
 
-        public static ILogger LogTraceEvent(
+        public static ILogger LogTrace(
             this ILogger source,
             string logKey,
             string span,
@@ -64,11 +64,11 @@
                 duration ??= TimeSpan.Zero;
                 using(source.BeginScope(new Dictionary<string, object>(properties.Safe())
                 {
-                    [LogEventPropertyKeys.TrackType] = LogEventTrackTypeValues.Trace,
-                    [LogEventPropertyKeys.TrackDuration] = duration.Value.Milliseconds,
-                    [LogEventPropertyKeys.TrackSpan] = span,
-                    [LogEventPropertyKeys.TrackName] = name,
-                    [LogEventPropertyKeys.LogKey] = logKey
+                    [LogPropertyKeys.TrackType] = LogTrackTypeValues.Trace,
+                    [LogPropertyKeys.TrackDuration] = duration.Value.Milliseconds,
+                    [LogPropertyKeys.TrackSpan] = span,
+                    [LogPropertyKeys.TrackName] = name,
+                    [LogPropertyKeys.LogKey] = logKey
                 }))
                 {
                     try

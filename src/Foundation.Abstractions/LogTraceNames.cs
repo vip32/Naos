@@ -1,6 +1,6 @@
 ﻿namespace Naos.Foundation
 {
-    public struct LogTraceEventNames
+    public struct LogTraceNames
     {
         public const string Http = "http";
         public const string Rpc = "rpc";

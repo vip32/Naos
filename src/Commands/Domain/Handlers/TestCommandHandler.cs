@@ -28,7 +28,7 @@
         /// <param name="cancellationToken">The cancellation token.</param>
         public override async Task<CommandResponse<bool>> HandleRequest(TRequest request, CancellationToken cancellationToken)
         {
-            this.Logger.LogJournal(LogKeys.AppCommand, $"[{request.Identifier}] handle {typeof(TRequest).Name.SliceTill("Command")}", LogEventPropertyKeys.TrackHandleCommand);
+            this.Logger.LogJournal(LogKeys.AppCommand, $"[{request.Identifier}] handle {typeof(TRequest).Name.SliceTill("Command")}", LogPropertyKeys.TrackHandleCommand);
 
             return await Task.FromResult(new CommandResponse<bool>
             {

@@ -25,7 +25,7 @@ namespace Naos.Core.Messaging.Domain
         {
             var loggerState = new Dictionary<string, object>
             {
-                [LogEventPropertyKeys.CorrelationId] = message.CorrelationId,
+                [LogPropertyKeys.CorrelationId] = message.CorrelationId,
             };
 
             using(this.logger.BeginScope(loggerState))
