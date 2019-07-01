@@ -25,6 +25,7 @@
                 using(var childScope = tracer.BuildSpan("spanB").Start())
                 {
                     childScope.Span.OperationName.ShouldBe("spanB");
+                    childScope.Span.TraceId.ShouldBe(parentScope.Span.TraceId);
                     childScope.Span.SpanId.ShouldNotBe(parentScope.Span.SpanId);
                     tracer.ActiveSpan.ShouldNotBeNull();
                     tracer.ActiveSpan.OperationName.ShouldBe("spanB");
