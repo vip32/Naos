@@ -20,7 +20,7 @@
                 tracer.ActiveSpan.OperationName.ShouldBe("spanA");
                 tracer.ActiveSpan.SpanId.ShouldBe(parentScope.Span.SpanId);
 
-                parentScope.Span.SetTag("x", "xxx");
+                parentScope.Span.WithTag("x", "xxx");
 
                 using(var childScope = tracer.BuildSpan("spanB").Start())
                 {
@@ -30,7 +30,7 @@
                     tracer.ActiveSpan.OperationName.ShouldBe("spanB");
                     tracer.ActiveSpan.SpanId.ShouldNotBe(parentScope.Span.SpanId);
 
-                    childScope.Span.SetTag("y", "yyy");
+                    childScope.Span.WithTag("y", "yyy");
                     childScope.Span.Failed = true;
 
                     var httpClient = new System.Net.Http.HttpClient();

@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.Operations.Domain
 {
     using System;
+    using Naos.Foundation.Domain;
 
     public interface ISpan
     {
@@ -18,12 +19,14 @@
 
         bool Failed { get; set; }
 
-        ISpan SetStartedDate(DateTimeOffset? date = null);
+        ISpan Start(DateTimeOffset? date = null);
 
-        ISpan SetFinishedDate(DateTimeOffset? date = null);
+        ISpan Finish(DateTimeOffset? date = null);
 
-        ISpan SetTag(string key, object value);
+        ISpan WithOperationName(string operationName);
 
-        ISpan SetOperationName(string operationName);
+        ISpan WithTag(string key, object value);
+
+        ISpan WithTags(DataDictionary tags);
     }
 }

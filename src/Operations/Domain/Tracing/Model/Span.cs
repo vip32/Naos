@@ -1,11 +1,12 @@
 ﻿namespace Naos.Core.Operations.Domain
 {
     using System;
+    using Naos.Foundation;
     using Naos.Foundation.Domain;
 
     public class Span : ISpan
     {
-        private DataDictionary tags = new DataDictionary();
+        private readonly DataDictionary tags = new DataDictionary();
 
         public Span(string traceId, string spanId)
         {
@@ -34,7 +35,7 @@
 
         public bool Failed { get; set; }
 
-        public ISpan SetStartedDate(DateTimeOffset? date = null)
+        public ISpan Start(DateTimeOffset? date = null)
         {
             if(date.HasValue)
             {
@@ -48,7 +49,7 @@
             return this;
         }
 
-        public ISpan SetFinishedDate(DateTimeOffset? date = null)
+        public ISpan Finish(DateTimeOffset? date = null)
         {
             if(date.HasValue)
             {
@@ -62,15 +63,25 @@
             return this;
         }
 
-        public ISpan SetOperationName(string operationName)
+        public ISpan WithOperationName(string operationName)
         {
             this.OperationName = operationName;
             return this;
         }
 
-        public ISpan SetTag(string key, object value)
+        public ISpan WithTag(string key, object value)
         {
             this.tags.AddOrUpdate(key, value);
+            return this;
+        }
+
+        public ISpan WithTags(DataDictionary tags)
+        {
+            foreach(var tag in tags.Safe())
+            {
+                this.tags.AddOrUpdate(tag.Key, tag.Value);
+            }
+
             return this;
         }
     }
