@@ -1,6 +1,8 @@
 ﻿namespace Naos.Core.UnitTests.Operations.Domain
 {
+    using MediatR;
     using Naos.Core.Operations.Domain;
+    using NSubstitute;
     using Shouldly;
     using Xunit;
 
@@ -9,7 +11,8 @@
         [Fact]
         public void TracerTests()
         {
-            var tracer = new Tracer(new AsyncLocalScopeManager(null));
+            var tracer = new Tracer(
+                new AsyncLocalScopeManager(Substitute.For<IMediator>()));
             tracer.ActiveSpan.ShouldBeNull();
 
             using(var parentScope = tracer.BuildSpan("spanA").Start())
