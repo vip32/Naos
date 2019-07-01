@@ -10,13 +10,13 @@
 
         public AsyncLocalScope(
             AsyncLocalScopeManager scopeManager,
-            ISpan wrappedSpan,
+            ISpan span,
             bool finishOnDispose = true)
         {
             EnsureArg.IsNotNull(scopeManager, nameof(scopeManager));
 
             this.scopeManager = scopeManager;
-            this.Span = wrappedSpan;
+            this.Span = span;
             this.finishOnDispose = finishOnDispose;
             this.previousScope = scopeManager.Active;
             scopeManager.Active = this;
@@ -26,12 +26,7 @@
 
         public void Dispose()
         {
-            if(this.scopeManager.Active != this)
-            {
-                return; // shouldn't happen if users call methods in the expected order. ignore.
-            }
-
-            if(this.finishOnDispose)
+            if(this.finishOnDispose && this.Span != null)
             {
                 this.Span.Finish();
                 this.scopeManager.Finish(this.Span).Wait(); // publishes domainevent

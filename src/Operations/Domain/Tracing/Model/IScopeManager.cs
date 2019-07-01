@@ -6,7 +6,7 @@
     {
         IScope Active { get; }
 
-        IScope Activate(ISpan span, bool finishSpanOnDispose = true);
+        IScope Activate(ISpan span, bool finishOnDispose = true);
 
         Task Finish(ISpan span);
     }
