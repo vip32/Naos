@@ -19,7 +19,7 @@
         public static string ToBase64(this Guid source, bool trimEnd = false)
         {
             var result = Convert.ToBase64String(source.ToByteArray());
-            return trimEnd ? result.Substring(0, result.Length - 2) : result;
+            return trimEnd ? result.Substring(0, result.Length - 2) : result; // TODO: optimize https://www.stevejgordon.co.uk/using-high-performance-dotnetcore-csharp-techniques-to-base64-encode-a-guid
         }
 
         /// <summary>
@@ -34,13 +34,13 @@
         [DebuggerStepThrough]
         public static string ToCode(this Guid source)
         {
-            long i = 1;
+            long result = 1;
             foreach(var b in source.ToByteArray())
             {
-                i *= b + 1;
+                result *= b + 1;
             }
 
-            return (i - DateTime.Now.Ticks).ToString("x");
+            return (result - DateTime.Now.Ticks).ToString("x");
         }
 
         /// <summary>
