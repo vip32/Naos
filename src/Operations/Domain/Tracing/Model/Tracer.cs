@@ -4,7 +4,7 @@
 
     public class Tracer : ITracer
     {
-        public Tracer(IScopeManager scopeManager) // needs mediator
+        public Tracer(IScopeManager scopeManager) // needs correlationid (=traceid) get from ICorrelationContextAccessor
         {
             EnsureArg.IsNotNull(scopeManager, nameof(scopeManager));
 
@@ -17,7 +17,7 @@
 
         public ISpanBuilder BuildSpan(string operationName)
         {
-            return new SpanBuilder(this, operationName, this.ActiveSpan);
+            return new SpanBuilder(this, operationName, this.ActiveSpan); // pass correlationid as traceid
         }
     }
 }

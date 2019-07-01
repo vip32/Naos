@@ -36,12 +36,16 @@
 
         public ISpanBuilder ChildOf(ISpan parent)
         {
+            //       1---2---4 (siblings)
+            //     / | \
+            //    1a |  1c     (children) *
+            //       1b
             return this;
         }
 
         public ISpanBuilder SiblingOf(ISpan parent)
         {
-            //       1---2---4 (siblings)
+            //       1---2---4 (siblings) *
             //     / | \
             //    1a |  1c     (children)
             //       1b

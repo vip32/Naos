@@ -10,6 +10,8 @@
     using Microsoft.Extensions.Http;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Operations.App;
+    using Naos.Core.Operations.Domain;
+    using Naos.Core.RequestCorrelation.App;
     using Naos.Foundation;
     using Naos.Foundation.Application;
 
@@ -74,6 +76,23 @@
                           sp.GetServices<IConsoleCommand>());
                     });
             }
+
+            return options;
+        }
+
+        public static OperationsOptions AddTracing(
+            this OperationsOptions options)
+        {
+            EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.Context, nameof(options.Context));
+
+            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: tracing added");
+            options.Context.Services.AddScoped<ITracer>(sp =>
+            {
+                return new Tracer(
+                    new AsyncLocalScopeManager((IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator))));
+                    //sp.GetRequiredService<ICorrelationContextAccessor>().Context.CorrelationId
+                });
 
             return options;
         }
