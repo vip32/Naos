@@ -17,4 +17,9 @@
     <ProjectReference Include="..\Foundation.Domain\Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Domain\Tracing\Events\" />
+    <Folder Include="Domain\Tracing\Handlers\" />
+  </ItemGroup>
+
 </Project>

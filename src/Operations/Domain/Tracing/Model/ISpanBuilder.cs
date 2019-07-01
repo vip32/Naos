@@ -2,9 +2,9 @@
 {
     public interface ISpanBuilder
     {
-        ISpanBuilder AsChildOf(ISpan parent); // child
+        ISpanBuilder ChildOf(ISpan parent); // child
 
-        ISpanBuilder AsReferenceFrom(ISpan parent); // reference
+        ISpanBuilder SiblingOf(ISpan parent); // reference
 
         ISpanBuilder IgnoreActiveSpan();
 
@@ -12,6 +12,6 @@
 
         ISpan Build();
 
-        IScope Activate(bool finishSpanOnDispose = true);
+        IScope Start(bool finishOnDispose = true);
     }
 }

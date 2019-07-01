@@ -4,18 +4,26 @@
 
     public interface ISpan
     {
+        string OperationName { get; }
+
         string SpanId { get; }
 
         string TraceId { get; }
 
-        DateTimeOffset StartedTimestamp { get; set; }
+        DateTimeOffset? StartedDate { get; }
 
-        DateTimeOffset FinishedTimestamp { get; set; }
+        DateTimeOffset? FinishedDate { get;  }
 
         TimeSpan Duration { get; }
 
         bool Failed { get; set; }
 
-        ISpan SetTag(string key, string value);
+        ISpan SetStartedDate(DateTimeOffset? date = null);
+
+        ISpan SetFinishedDate(DateTimeOffset? date = null);
+
+        ISpan SetTag(string key, object value);
+
+        ISpan SetOperationName(string operationName);
     }
 }

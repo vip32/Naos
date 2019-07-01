@@ -33,7 +33,7 @@
             }
         }
 
-        public DataDictionary AddOrUpdate<T>(string key, object value)
+        public DataDictionary AddOrUpdate(string key, object value)
         {
             if(key.IsNullOrEmpty())
             {

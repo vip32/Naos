@@ -1,52 +1,55 @@
 ﻿namespace Naos.Core.Operations.Domain
 {
-    using System;
     using Naos.Foundation;
 
     public class SpanBuilder : ISpanBuilder
     {
         private readonly ITracer tracer;
-        private readonly string traceId;
         private readonly string operationName;
+        private readonly string traceId;
 
-        public SpanBuilder(ITracer tracer, string operationName = null, ISpan parent = null)
+        public SpanBuilder(ITracer tracer, string operationName, ISpan parent = null)
         {
             this.tracer = tracer;
-            this.traceId = parent?.TraceId;
-            this.operationName = operationName ?? RandomGenerator.GenerateString(5);
+            this.traceId = tracer.ActiveSpan?.TraceId;
+            this.operationName = operationName;
         }
 
         public ISpan Build()
         {
-            return new Span(this.traceId ?? RandomGenerator.GenerateString(13), this.operationName) // TODO: set all builder stuff
-            {
-                StartedTimestamp = DateTimeOffset.UtcNow
-            };
+            return new Span(this.traceId ?? IdGenerator.Instance.Next, RandomGenerator.GenerateString(5))
+            .SetOperationName(this.operationName)
+            .SetStartedDate();
         }
 
-        public IScope Activate(bool finishSpanOnDispose = true)
+        public IScope Start(bool finishOnDispose = true)
         {
-            return this.tracer.ScopeManager.Activate(this.Build(), finishSpanOnDispose);
+            return this.tracer.ScopeManager.Activate(this.Build(), finishOnDispose);
         }
 
-        public ISpanBuilder AsChildOf(ISpan parent)
+        public ISpanBuilder ChildOf(ISpan parent)
         {
-            throw new NotImplementedException();
+            return this;
         }
 
-        public ISpanBuilder AsReferenceFrom(ISpan parent)
+        public ISpanBuilder SiblingOf(ISpan parent)
         {
-            throw new NotImplementedException();
+            //       1---2---4 (siblings)
+            //     / | \
+            //    1a |  1c  (children)
+            //       1b
+            return this;
         }
 
         public ISpanBuilder IgnoreActiveSpan()
         {
-            throw new NotImplementedException();
+            //this.traceId = null;
+            return this;
         }
 
         public ISpanBuilder WithTag(string key, string value)
         {
-            throw new NotImplementedException();
+            return this;
         }
     }
 }

@@ -33,8 +33,8 @@
 
             if(this.finishOnDispose)
             {
-                this.Span.FinishedTimestamp = DateTimeOffset.UtcNow;
-                this.scopeManager.Finish(this.Span).Wait();
+                this.Span.SetFinishedDate();
+                this.scopeManager.Finish(this.Span).Wait(); // publishes domainevent
             }
 
             this.scopeManager.Active = this.scopeToRestore;
