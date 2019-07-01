@@ -5,7 +5,6 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Messaging;
     using Naos.Core.Messaging.Domain;
-    using Naos.Core.UnitTests.Domain.Repositories;
     using Naos.Foundation;
     using Naos.Foundation.Domain;
     using NSubstitute;
@@ -56,6 +55,19 @@
                     messageBroker)
             {
             }
+        }
+
+        public class StubEntity
+        {
+            public string Id { get; set; }
+
+            public string FirstName { get; set; }
+
+            public string LastName { get; set; }
+
+            public decimal Age { get; set; }
+
+            public long Value { get; set; } = long.MaxValue;
         }
     }
 }
