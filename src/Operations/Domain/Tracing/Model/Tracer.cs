@@ -1,13 +1,17 @@
 ﻿namespace Naos.Core.Operations.Domain
 {
+    using EnsureThat;
+
     public class Tracer : ITracer
     {
         public Tracer(IScopeManager scopeManager) // needs mediator
         {
+            EnsureArg.IsNotNull(scopeManager, nameof(scopeManager));
+
             this.ScopeManager = scopeManager;
         }
 
-        public ISpan ActiveSpan => this.ScopeManager?.Active?.Span; // use in outbound httpclient
+        public ISpan ActiveSpan => this.ScopeManager.Active?.Span; // use in outbound httpclient
 
         public IScopeManager ScopeManager { get; }
 
