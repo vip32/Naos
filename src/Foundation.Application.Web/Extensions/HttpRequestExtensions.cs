@@ -2,6 +2,7 @@
 {
     using System;
     using System.Net;
+    using System.Text;
     using Microsoft.AspNetCore.Http;
 
     public static class HttpRequestExtensions
@@ -13,7 +14,35 @@
                 return null;
             }
 
-            return new Uri($"{source.Scheme}://{source.Host}{source.Path}{source.QueryString}");
+            var builder = new StringBuilder();
+            builder.Append(source.Scheme).Append("://");
+
+            if(source.Host.HasValue)
+            {
+                builder.Append(source.Host.Value);
+            }
+            else
+            {
+                // HTTP 1.0 request with NO host header would result in empty Host. Use placeholder to avoid incorrect URL like "http:///"
+                builder.Append("UNKNOWN-HOST");
+            }
+
+            if(source.PathBase.HasValue)
+            {
+                builder.Append(source.PathBase.Value);
+            }
+
+            if(source.Path.HasValue)
+            {
+                builder.Append(source.Path.Value);
+            }
+
+            if(source.QueryString.HasValue)
+            {
+                builder.Append(source.QueryString);
+            }
+
+            return new Uri(builder.ToString());
         }
 
         public static bool IsLocal(this HttpRequest source)
