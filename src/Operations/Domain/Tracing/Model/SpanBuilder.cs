@@ -16,8 +16,9 @@
             EnsureArg.IsNotNull(tracer, nameof(tracer));
 
             this.tracer = tracer;
-            this.traceId = tracer.ActiveSpan?.TraceId;
+            this.traceId = parent?.TraceId;
             this.operationName = operationName;
+            // TODO: copy baggage items from parent
         }
 
         public ISpan Build()
