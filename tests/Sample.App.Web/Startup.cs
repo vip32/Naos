@@ -3,8 +3,8 @@
     using System;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Threading;
-    using MediatR;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -16,6 +16,7 @@
     using Microsoft.AspNetCore.Mvc.Routing;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.DependencyModel;
     using Microsoft.Extensions.Logging;
     using Naos.Core.App.Web;
     using Naos.Core.Commands.Domain;
@@ -77,7 +78,7 @@
                         };
                     };
                 })
-                .AddMediatR(AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.GetName().Name.StartsWith("Microsoft.")).ToArray()) // TODO: make nicer + more excludes
+                .AddMediatr()
                 .AddMvc(o =>
                     {
                         o.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build())); // https://tahirnaushad.com/2017/08/28/asp-net-core-2-0-mvc-filters/ or use controller attribute (Authorize)

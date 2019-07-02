@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using MediatR;
     using Microsoft.Extensions.DependencyInjection;
+    using Naos.Core.Operations.Domain;
     using Naos.Foundation;
     using Naos.Foundation.Domain;
     using Naos.Sample.Customers.Domain;
@@ -13,6 +14,20 @@
 
     public class DomainEventHandlersTests : BaseTest
     {
+        // TODO: make this more like a real unit tests
+        [Fact]
+        public async Task SpanDomainEvent_Test()
+        {
+            // arrange
+            var mediator = this.ServiceProvider.GetService<IMediator>();
+            var domainEvent = new SpanEndedDomainEvent(new Span(null, null));
+
+            // act
+            await mediator.Publish(domainEvent).AnyContext();
+
+            // assert
+        }
+
         // TODO: make this more like a real unit tests
         [Fact]
         public async Task DomainEvent_Test()
