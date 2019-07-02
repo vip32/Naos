@@ -31,7 +31,8 @@
                 parentScope.Span.WithTag("x", "xxx");
                 span = parentScope.Span;
 
-                using(var childScope = tracer.BuildSpan("spanB", SpanKind.Server).Activate())
+                using(var childScope = tracer.BuildSpan("spanB", SpanKind.Server)
+                    .WithTag("a", "aaa").Activate())
                 {
                     childScope.Span.OperationName.ShouldBe("spanB");
                     childScope.Span.TraceId.ShouldBe(parentScope.Span.TraceId);
