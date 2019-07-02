@@ -36,9 +36,9 @@
     ///             │              │               │  deactivate              │
     ///             │              │               │                          │
     ///             │              │               x------------------------->│
-    ///             │              │               │      publish             │
-    ///             │              │               │      SpanEndedDomainEvent│
-    ///
+    ///             │              │               │      publish             │─┐----> handler
+    ///             │              │               │      SpanEndedDomainEvent│ │----> handler
+    ///                                                                       │<┘
     /// * = newly created, no shared state
     /// </para>
     /// <para>

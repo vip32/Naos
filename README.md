@@ -509,7 +509,7 @@ The same registries as Client-side can be used in the router.
 
 # Operations
 
-- Logging
+### Logging
   - Debug
   - Console
   - File
@@ -517,7 +517,7 @@ The same registries as Client-side can be used in the router.
   - Azure DiagnosticsLogStream
   - Azure ApplicationInsights
   - Azure LogAnalytics
-
+   
 ```
 development-naos--operations--logging--azureLogAnalytics--apiAuthentication--clientId
 development-naos--operations--logging--azureLogAnalytics--apiAuthentication--clientSecret
@@ -529,8 +529,41 @@ development-naos--operations--logging--azureLogAnalytics--workspaceId
 development-naos--operations--logging--azureLogAnalytics--workspaceName
 ```
 
-- Journal
-- Dashboard
+### Tracing
+```
+           (scoped)                         (scoped)                  (scoped)
+       ┌─────────┐                  ┌─────────────┐             ┌──────────┐
+       │ Tracer  │                  │ ScopeManager│             │ Mediator │
+       └─────────┘  ┌──────────── * └─────────────┘             └──────────┘
+            │       │ SpanBuilder │        │                          │
+            │       └─────────────┘        │                          │
+            │       create │               │                          │
+            x------------->│               │                          │
+            │      withtag │               │                          │
+            x------------->│               │                          │
+            │              x─┐             │                          │
+            │              │ │build()      │                          │
+            │              │<┘             │        ┌────── *         │
+            │              | activate(span)│        │ Scope │         │
+            |              x-------------->│        └───────┘         │
+            │              │               x----------->│             │
+            │              │               │     create │             │
+            │        scope │               │<-----------x             │
+            │<-----------------------------x            │             │
+            │              │               │            │             │
+ DISPOSE   ...            ...             ...          ...            │
+   scope    │              │               │            │             │
+            │              │               │<-----------x             │
+            │              │               │  deactivate              │
+            │              │               │                          │
+            │              │               x------------------------->│
+            │              │               │      publish             │─┐----> handler
+            │              │               │      SpanEndedDomainEvent│ │----> handler
+                                                                      │<┘
+* = newly created, no shared state
+```
+### Journal
+### Dashboard
 
 ### operations setup (Azure Log Analytics)
 
