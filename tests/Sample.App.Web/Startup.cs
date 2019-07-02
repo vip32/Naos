@@ -77,7 +77,7 @@
                         };
                     };
                 })
-                .AddMediatR(AppDomain.CurrentDomain.GetAssemblies())
+                .AddMediatR(AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.GetName().Name.StartsWith("Microsoft.")).ToArray()) // TODO: make nicer + more excludes
                 .AddMvc(o =>
                     {
                         o.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build())); // https://tahirnaushad.com/2017/08/28/asp-net-core-2-0-mvc-filters/ or use controller attribute (Authorize)
