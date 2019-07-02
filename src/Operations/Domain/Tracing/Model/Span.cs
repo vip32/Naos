@@ -8,10 +8,12 @@
     {
         private readonly DataDictionary tags = new DataDictionary();
 
-        public Span(string traceId, string spanId)
+        public Span(string traceId, string spanId, SpanKind kind = SpanKind.Internal, string parentSpanId = null)
         {
             this.TraceId = traceId;
             this.SpanId = spanId;
+            this.Kind = kind;
+            this.ParentSpanId = parentSpanId;
         }
 
         public string OperationName { get; private set; }
@@ -26,38 +28,46 @@
         /// </summary>
         public string SpanId { get; }
 
-        public DateTimeOffset? StartedDate { get; private set; }
+        public string ParentSpanId { get; }
 
-        public DateTimeOffset? FinishedDate { get; private set; }
+        public SpanKind? Kind { get; }
+
+        public SpanStatus? Status { get; private set; }
+
+        public string StatusDescription { get; private set; }
+
+        public DateTimeOffset? StartTime { get; private set; }
+
+        public DateTimeOffset? EndTime { get; private set; }
 
         public TimeSpan Duration =>
-            this.FinishedDate.HasValue && this.StartedDate.HasValue ? this.FinishedDate.Value - this.StartedDate.Value : TimeSpan.Zero;
-
-        public bool Failed { get; set; }
+            this.EndTime.HasValue && this.StartTime.HasValue ? this.EndTime.Value - this.StartTime.Value : TimeSpan.Zero;
 
         public ISpan Start(DateTimeOffset? date = null)
         {
             if(date.HasValue)
             {
-                this.StartedDate = date;
+                this.StartTime = date;
             }
             else
             {
-                this.StartedDate = DateTimeOffset.UtcNow;
+                this.StartTime = DateTimeOffset.UtcNow;
             }
 
             return this;
         }
 
-        public ISpan Finish(DateTimeOffset? date = null)
+        public ISpan End(SpanStatus status = SpanStatus.Succeeded, string statusDescription = null, DateTimeOffset? date = null)
         {
+            this.Status = status;
+            this.StatusDescription = statusDescription;
             if(date.HasValue)
             {
-                this.FinishedDate = date;
+                this.EndTime = date;
             }
             else
             {
-                this.FinishedDate = DateTimeOffset.UtcNow;
+                this.EndTime = DateTimeOffset.UtcNow;
             }
 
             return this;
@@ -82,6 +92,13 @@
                 this.tags.AddOrUpdate(tag.Key, tag.Value);
             }
 
+            return this;
+        }
+
+        public ISpan SetStatus(SpanStatus status, string description = null)
+        {
+            this.Status = status;
+            this.StatusDescription = description;
             return this;
         }
     }

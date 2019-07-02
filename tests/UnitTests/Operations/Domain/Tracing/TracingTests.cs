@@ -14,29 +14,34 @@
             var tracer = new Tracer(
                 new AsyncLocalScopeManager(Substitute.For<IMediator>()));
             tracer.ActiveSpan.ShouldBeNull();
-
-            using(var parentScope = tracer.BuildSpan("spanA").Start())
+            ISpan scope = null;
+            using(var parentScope = tracer.BuildSpan("spanA").Activate())
             {
                 parentScope.Span.OperationName.ShouldBe("spanA");
                 parentScope.Span.TraceId.ShouldNotBeNull();
                 parentScope.Span.SpanId.ShouldNotBeNull();
+                parentScope.Span.Status.ShouldBe(SpanStatus.Transient);
+                parentScope.Span.Kind.ShouldBe(SpanKind.Internal);
+
                 tracer.ActiveSpan.ShouldNotBeNull();
                 tracer.ActiveSpan.OperationName.ShouldBe("spanA");
                 tracer.ActiveSpan.SpanId.ShouldBe(parentScope.Span.SpanId);
 
                 parentScope.Span.WithTag("x", "xxx");
+                scope = parentScope.Span;
 
-                using(var childScope = tracer.BuildSpan("spanB").Start())
+                using(var childScope = tracer.BuildSpan("spanB", SpanKind.Server).Activate())
                 {
                     childScope.Span.OperationName.ShouldBe("spanB");
                     childScope.Span.TraceId.ShouldBe(parentScope.Span.TraceId);
                     childScope.Span.SpanId.ShouldNotBe(parentScope.Span.SpanId);
+                    childScope.Span.Kind.ShouldBe(SpanKind.Server);
+
                     tracer.ActiveSpan.ShouldNotBeNull();
                     tracer.ActiveSpan.OperationName.ShouldBe("spanB");
                     tracer.ActiveSpan.SpanId.ShouldNotBe(parentScope.Span.SpanId);
 
                     childScope.Span.WithTag("y", "yyy");
-                    childScope.Span.Failed = true;
 
                     var httpClient = new System.Net.Http.HttpClient();
                     // add ActiveSpan to http headers
@@ -45,13 +50,14 @@
                 }
 
                 using(var childScope = tracer.BuildSpan("message")
-                    .IgnoreActiveSpan().Start())
+                    .IgnoreActiveSpan().Activate())
                 {
                     // this happens in message handler (subscriber)
                     // get span TRACEID from message headers
                 }
             }
 
+            scope.Status.ShouldBe(SpanStatus.Succeeded);
             tracer.ActiveSpan.ShouldBeNull();
         }
     }

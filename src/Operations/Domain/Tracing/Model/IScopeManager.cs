@@ -4,10 +4,10 @@
 
     public interface IScopeManager
     {
-        IScope Active { get; }
+        IScope Current { get; }
 
         IScope Activate(ISpan span, bool finishOnDispose = true);
 
-        Task Finish(ISpan span);
+        Task Deactivate(ISpan span);
     }
 }

@@ -15,7 +15,7 @@
             this.mediator = mediator;
         }
 
-        public IScope Active
+        public IScope Current
         {
             get => this.current.Value;
             set => this.current.Value = value;
@@ -26,11 +26,11 @@
             return new AsyncLocalScope(this, span, finishOnDispose);
         }
 
-        public async Task Finish(ISpan span)
+        public async Task Deactivate(ISpan span)
         {
             if(this.mediator != null && span != null)
             {
-                await this.mediator.Publish(span).AnyContext(); // TODO: publish SpanFinishedDomainEvent
+                await this.mediator.Publish(span).AnyContext(); // TODO: publish SpanEndedDomainEvent
             }
         }
     }

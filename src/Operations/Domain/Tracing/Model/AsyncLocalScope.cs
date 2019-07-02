@@ -6,7 +6,7 @@
     {
         private readonly AsyncLocalScopeManager scopeManager;
         private readonly bool finishOnDispose;
-        private readonly IScope previousScope;
+        private readonly IScope originalScope;
 
         public AsyncLocalScope(
             AsyncLocalScopeManager scopeManager,
@@ -18,8 +18,8 @@
             this.scopeManager = scopeManager;
             this.Span = span;
             this.finishOnDispose = finishOnDispose;
-            this.previousScope = scopeManager.Active;
-            scopeManager.Active = this;
+            this.originalScope = scopeManager.Current;
+            scopeManager.Current = this;
         }
 
         public ISpan Span { get; }
@@ -28,11 +28,11 @@
         {
             if(this.finishOnDispose && this.Span != null)
             {
-                this.Span.Finish();
-                this.scopeManager.Finish(this.Span).Wait(); // publishes domainevent
+                this.Span.End();
+                this.scopeManager.Deactivate(this.Span).Wait(); // publishes domainevent
             }
 
-            this.scopeManager.Active = this.previousScope;
+            this.scopeManager.Current = this.originalScope;
         }
     }
 }

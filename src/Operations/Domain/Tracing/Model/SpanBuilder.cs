@@ -8,48 +8,36 @@
     {
         private readonly ITracer tracer;
         private readonly string operationName;
+        private readonly ISpan parent;
+        private readonly SpanKind kind;
         private readonly string traceId;
         private readonly DataDictionary tags = new DataDictionary();
 
-        public SpanBuilder(ITracer tracer, string operationName, ISpan parent = null)
+        public SpanBuilder(ITracer tracer, string operationName, SpanKind kind = SpanKind.Internal, ISpan parent = null)
         {
             EnsureArg.IsNotNull(tracer, nameof(tracer));
+            EnsureArg.IsNotNullOrEmpty(operationName, nameof(operationName));
 
             this.tracer = tracer;
             this.traceId = parent?.TraceId;
             this.operationName = operationName;
+            this.kind = kind;
+            this.parent = parent;
             // TODO: copy baggage items from parent
         }
 
         public ISpan Build()
         {
-            return new Span(this.traceId ?? IdGenerator.Instance.Next, RandomGenerator.GenerateString(5))
-            .WithOperationName(this.operationName)
-            .WithTags(this.tags)
-            .Start();
-        }
+            return new Span(this.traceId ?? IdGenerator.Instance.Next, RandomGenerator.GenerateString(5), this.kind, this.parent?.SpanId)
+                .WithOperationName(this.operationName)
+                .WithTags(this.tags)
+                .SetStatus(SpanStatus.Transient)
+                .Start();
+            }
 
-        public IScope Start(bool finishOnDispose = true)
+        public IScope Activate(bool finishOnDispose = true)
         {
             return this.tracer.ScopeManager.Activate(this.Build(), finishOnDispose);
-        }
-
-        public ISpanBuilder ChildOf(ISpan parent)
-        {
-            //       1---2---4 (siblings)
-            //     / | \
-            //    1a |  1c     (children) *
-            //       1b
-            return this;
-        }
-
-        public ISpanBuilder SiblingOf(ISpan parent)
-        {
-            //       1---2---4 (siblings) *
-            //     / | \
-            //    1a |  1c     (children)
-            //       1b
-            return this;
         }
 
         public ISpanBuilder IgnoreActiveSpan()

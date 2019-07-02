@@ -6,6 +6,6 @@
 
         IScopeManager ScopeManager { get; }
 
-        ISpanBuilder BuildSpan(string operationName);
+        ISpanBuilder BuildSpan(string operationName, SpanKind kind = SpanKind.Internal);
     }
 }
