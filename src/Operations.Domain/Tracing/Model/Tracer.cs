@@ -63,9 +63,9 @@
 
         public IScopeManager ScopeManager { get; }
 
-        public ISpanBuilder BuildSpan(string operationName, SpanKind kind = SpanKind.Internal)
+        public ISpanBuilder BuildSpan(string operationName, SpanKind kind = SpanKind.Internal, ISpan parent = null)
         {
-            return new SpanBuilder(this, operationName, kind, this.ActiveSpan); // pass correlationid as traceid
+            return new SpanBuilder(this, operationName, kind, parent ?? this.ActiveSpan); // pass correlationid as traceid
         }
 
         public void End(IScope scope = null, SpanStatus status = SpanStatus.Succeeded, string statusDescription = null)
