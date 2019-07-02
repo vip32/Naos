@@ -6,6 +6,7 @@
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Naos.Core.Operations.App.Web;
+    using Naos.Core.Operations.Domain;
     using Naos.Foundation;
 
     /// <summary>
@@ -19,7 +20,8 @@
         /// <param name="naosOptions"></param>
         /// <param name="requestLoggingMiddlewareOptions"></param>
         /// <param name="requestStorageMiddlewareOptions"></param>
-        public static NaosApplicationContextOptions UseOperations(this NaosApplicationContextOptions naosOptions,
+        public static NaosApplicationContextOptions UseOperationsLogging(
+            this NaosApplicationContextOptions naosOptions,
             RequestLoggingMiddlewareOptions requestLoggingMiddlewareOptions = null,
             RequestStorageMiddlewareOptions requestStorageMiddlewareOptions = null)
         {
@@ -30,10 +32,29 @@
                     Options.Create(requestLoggingMiddlewareOptions ?? naosOptions.Context.Application.ApplicationServices.GetService<RequestLoggingMiddlewareOptions>() ?? new RequestLoggingMiddlewareOptions()))
                 .UseMiddleware<RequestStorageMiddleware>(
                     Options.Create(requestStorageMiddlewareOptions ?? naosOptions.Context.Application.ApplicationServices.GetService<RequestStorageMiddlewareOptions>() ?? new RequestStorageMiddlewareOptions()));
-            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: operations added");
+            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: operations logging added");
 
             var diagnosticListener = naosOptions.Context.Application.ApplicationServices.GetService<DiagnosticListener>();
             diagnosticListener?.SubscribeWithAdapter(new NaosDiagnosticListener(naosOptions.Context.Application.ApplicationServices.GetService<ILoggerFactory>()));
+
+            return naosOptions;
+        }
+
+        /// <summary>
+        /// Enables tracing for the API request/responses.
+        /// </summary>
+        /// <param name="naosOptions"></param>
+        /// <param name="requestTracingMiddlewareOptions"></param>
+        public static NaosApplicationContextOptions UseOperationsTracing(
+            this NaosApplicationContextOptions naosOptions,
+            RequestTracingMiddlewareOptions requestTracingMiddlewareOptions = null)
+        {
+            EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
+
+            naosOptions.Context.Application
+                .UseMiddleware<RequestTracingMiddleware>(
+                    Options.Create(requestTracingMiddlewareOptions ?? naosOptions.Context.Application.ApplicationServices.GetService<RequestTracingMiddlewareOptions>() ?? new RequestTracingMiddlewareOptions()));
+            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: operations tracing added");
 
             return naosOptions;
         }

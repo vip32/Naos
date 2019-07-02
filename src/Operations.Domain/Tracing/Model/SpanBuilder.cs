@@ -8,10 +8,10 @@
     {
         private readonly ITracer tracer;
         private readonly string operationName;
-        private readonly ISpan parent;
         private readonly SpanKind kind;
         private readonly string traceId;
         private readonly DataDictionary tags = new DataDictionary();
+        private ISpan parent;
 
         public SpanBuilder(ITracer tracer, string operationName, SpanKind kind = SpanKind.Internal, ISpan parent = null)
         {
@@ -40,9 +40,9 @@
             return this.tracer.ScopeManager.Activate(this.Build(), finishOnDispose);
         }
 
-        public ISpanBuilder IgnoreActiveSpan()
+        public ISpanBuilder IgnoreParentSpan()
         {
-            //this.traceId = null;
+            this.parent = null;
             return this;
         }
 

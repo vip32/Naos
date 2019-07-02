@@ -2,7 +2,7 @@
 {
     public interface ISpanBuilder
     {
-        ISpanBuilder IgnoreActiveSpan();
+        ISpanBuilder IgnoreParentSpan();
 
         ISpanBuilder WithTag(string key, string value);
 

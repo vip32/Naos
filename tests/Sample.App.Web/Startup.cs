@@ -117,7 +117,8 @@
                             //.UseAzureBlobStorage()
                             .UseAzureLogAnalytics())
                         .AddRequestStorage(r => r
-                            .UseAzureBlobStorage()))
+                            .UseAzureBlobStorage())
+                        .AddTracing())
                     //.AddQueries()
                     //.AddSwaggerDocument() // s.Description = Product.Capability\
                     .AddJobScheduling(o => o
@@ -159,7 +160,8 @@
                     .UseRequestCorrelation()
                     .UseServiceContext()
                     .UseServicePoweredBy()
-                    .UseOperations()
+                    .UseOperationsLogging()
+                    .UseOperationsTracing()
                     .UseRequestFiltering()
                     .UseServiceExceptions()
                     .UseServiceDiscoveryRouter())

@@ -68,7 +68,7 @@
                 }
 
                 using(var childScope = tracer.BuildSpan("message")
-                    .IgnoreActiveSpan().Activate())
+                    .IgnoreParentSpan().Activate())
                 {
                     // this happens in message handler (subscriber)
                     // get span TRACEID from message headers
