@@ -29,7 +29,7 @@
             if(this.finishOnDispose && this.Span != null)
             {
                 this.Span.End();
-                this.scopeManager.Deactivate(this.Span).Wait(); // publishes domainevent
+                this.scopeManager.Deactivate(this).Wait(); // publishes domainevent
             }
 
             this.scopeManager.Current = this.originalScope;

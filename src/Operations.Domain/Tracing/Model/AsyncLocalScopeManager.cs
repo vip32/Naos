@@ -26,11 +26,11 @@
             return new AsyncLocalScope(this, span, finishOnDispose);
         }
 
-        public async Task Deactivate(ISpan span)
+        public async Task Deactivate(IScope scope)
         {
-            if(this.mediator != null && span != null)
+            if(this.mediator != null && scope?.Span != null)
             {
-                await this.mediator.Publish(new SpanEndedDomainEvent(span)).AnyContext();
+                await this.mediator.Publish(new SpanEndedDomainEvent(scope.Span)).AnyContext();
             }
         }
     }

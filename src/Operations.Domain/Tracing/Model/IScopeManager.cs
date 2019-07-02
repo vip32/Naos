@@ -8,6 +8,6 @@
 
         IScope Activate(ISpan span, bool finishOnDispose = true);
 
-        Task Deactivate(ISpan span);
+        Task Deactivate(IScope scop);
     }
 }

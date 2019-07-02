@@ -8,6 +8,6 @@
 
         ISpanBuilder BuildSpan(string operationName, SpanKind kind = SpanKind.Internal);
 
-        void End(ISpan span = null, SpanStatus status = SpanStatus.Succeeded, string statusDescription = null);
+        void End(IScope scope = null, SpanStatus status = SpanStatus.Succeeded, string statusDescription = null);
     }
 }
