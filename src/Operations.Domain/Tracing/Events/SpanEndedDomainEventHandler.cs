@@ -3,6 +3,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
+    using Naos.Foundation;
     using Naos.Foundation.Domain;
 
     public class SpanEndedDomainEventHandler
@@ -22,7 +23,7 @@
 
         public Task Handle(SpanEndedDomainEvent notification, CancellationToken cancellationToken)
         {
-            this.logger.LogInformation($"{{LogKey:l}} TRACING!!!!!!!!!!! {notification.Span.OperationName} {notification.Span.SpanId}");
+            this.logger.LogInformation($"{{LogKey:l}} TRACING!!!!!!!!!!! {notification.Span.OperationName} {notification.Span.SpanId}", LogKeys.Tracing);
             return Task.CompletedTask;
         }
     }

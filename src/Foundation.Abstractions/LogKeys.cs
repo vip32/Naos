@@ -20,5 +20,6 @@
         public const string FileStorage = "FILSTR";
         public const string Queueing = "QUEUNG";
         public const string KeyValueStorage = "KVLSTR";
+        public const string Tracing = "TRACNG";
     }
 }
