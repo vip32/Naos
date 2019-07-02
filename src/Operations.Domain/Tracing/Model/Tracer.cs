@@ -1,6 +1,8 @@
 ﻿namespace Naos.Core.Operations.Domain
 {
+    using System;
     using EnsureThat;
+    using Naos.Foundation;
 
     public class Tracer : ITracer
     {
@@ -24,6 +26,13 @@
         {
             scope ??= this.ScopeManager.Current;
             scope?.Span?.End(status, statusDescription);
+            this.ScopeManager.Deactivate(scope);
+        }
+
+        public void Fail(IScope scope = null, Exception exception = null)
+        {
+            scope ??= this.ScopeManager.Current;
+            scope?.Span?.End(SpanStatus.Failed, exception?.GetFullMessage());
             this.ScopeManager.Deactivate(scope);
         }
     }

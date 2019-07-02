@@ -60,6 +60,7 @@
                     catch(Exception ex)
                     {
                         tracer.End(status: SpanStatus.Failed, statusDescription: ex.Message);
+                        tracer.Fail(exception: ex);
                         failedSpan.Status.ShouldBe(SpanStatus.Failed);
                     }
                 }
