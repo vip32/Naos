@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.Operations</AssemblyName>
-    <RootNamespace>Naos.Core.Operations</RootNamespace>
+    <AssemblyName>Naos.Core.Operations.Domain</AssemblyName>
+    <RootNamespace>Naos.Core.Operations.Domain</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,8 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\Tracing\Events\" />
-    <Folder Include="Domain\Tracing\Handlers\" />
+    <Folder Include="Tracing\Events\" />
+    <Folder Include="Tracing\Handlers\" />
   </ItemGroup>
 
 </Project>

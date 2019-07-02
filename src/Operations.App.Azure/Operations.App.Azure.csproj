@@ -15,7 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Operations.App\Operations.App.csproj" />
     <ProjectReference Include="..\Operations.Infrastructure.Azure\Operations.Infrastructure.Azure.csproj" />
-    <ProjectReference Include="..\Operations\Operations.csproj" />
+    <ProjectReference Include="..\Operations.Domain\Operations.Domain.csproj" />
   </ItemGroup>
 
 </Project>

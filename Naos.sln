@@ -65,7 +65,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.IntegrationTests", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Azure.ServiceBus", "src\Foundation.Infrastructure.Azure.ServiceBus\Infrastructure.Azure.ServiceBus.csproj", "{E11B662F-19F4-4B16-9818-4CED64A83CB0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Operations", "src\Operations\Operations.csproj", "{0B254852-E2BC-4D7C-84C6-A189E5D9091F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Operations.Domain", "src\Operations.Domain\Operations.Domain.csproj", "{0B254852-E2BC-4D7C-84C6-A189E5D9091F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobScheduling", "src\JobScheduling\JobScheduling.csproj", "{D0514A2A-4BEE-4898-9344-6EACA9069182}"
 EndProject

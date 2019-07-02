@@ -26,7 +26,7 @@
     <ProjectReference Include="..\Foundation.Infrastructure.Azure\Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\Foundation.Domain.Repositories\Domain.Repositories.csproj" />
     <ProjectReference Include="..\Configuration.App\Configuration.App.csproj" />
-    <ProjectReference Include="..\Operations\Operations.csproj" />
+    <ProjectReference Include="..\Operations.Domain\Operations.Domain.csproj" />
   </ItemGroup>
 
 </Project>

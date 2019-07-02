@@ -24,6 +24,6 @@
     <ProjectReference Include="..\FileStorage\FileStorage.csproj" />
     <ProjectReference Include="..\Filtering.App\RequestFiltering.App.csproj" />
     <ProjectReference Include="..\Operations.App\Operations.App.csproj" />
-    <ProjectReference Include="..\Operations\Operations.csproj" />
+    <ProjectReference Include="..\Operations.Domain\Operations.Domain.csproj" />
   </ItemGroup>
 </Project>
