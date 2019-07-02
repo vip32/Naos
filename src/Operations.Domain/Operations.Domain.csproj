@@ -18,7 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Tracing\Events\" />
     <Folder Include="Tracing\Handlers\" />
   </ItemGroup>
 

@@ -30,7 +30,7 @@
         {
             if(this.mediator != null && span != null)
             {
-                await this.mediator.Publish(span).AnyContext(); // TODO: publish SpanEndedDomainEvent
+                await this.mediator.Publish(new SpanEndedDomainEvent(span)).AnyContext();
             }
         }
     }
