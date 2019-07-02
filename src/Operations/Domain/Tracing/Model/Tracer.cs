@@ -20,8 +20,9 @@
             return new SpanBuilder(this, operationName, kind, this.ActiveSpan); // pass correlationid as traceid
         }
 
-        public void End(ISpan span, SpanStatus status = SpanStatus.Succeeded, string statusDescription = null)
+        public void End(ISpan span = null, SpanStatus status = SpanStatus.Succeeded, string statusDescription = null)
         {
+            span ??= this.ActiveSpan;
             span.End(status, statusDescription);
             this.ScopeManager.Deactivate(span);
         }

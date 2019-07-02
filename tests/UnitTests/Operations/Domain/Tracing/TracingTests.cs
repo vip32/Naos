@@ -1,5 +1,6 @@
 ﻿namespace Naos.Core.UnitTests.Operations.Domain
 {
+    using System;
     using MediatR;
     using Naos.Core.Operations.Domain;
     using NSubstitute;
@@ -14,7 +15,7 @@
             var tracer = new Tracer(
                 new AsyncLocalScopeManager(Substitute.For<IMediator>()));
             tracer.ActiveSpan.ShouldBeNull();
-            ISpan scope = null;
+            ISpan span = null;
             using(var parentScope = tracer.BuildSpan("spanA").Activate())
             {
                 parentScope.Span.OperationName.ShouldBe("spanA");
@@ -28,7 +29,7 @@
                 tracer.ActiveSpan.SpanId.ShouldBe(parentScope.Span.SpanId);
 
                 parentScope.Span.WithTag("x", "xxx");
-                scope = parentScope.Span;
+                span = parentScope.Span;
 
                 using(var childScope = tracer.BuildSpan("spanB", SpanKind.Server).Activate())
                 {
@@ -49,6 +50,20 @@
                     // server should create span based on httpheaders
                 }
 
+                using(var failedScope = tracer.BuildSpan("failure").Activate())
+                {
+                    var failedSpan = tracer.ActiveSpan;
+                    try
+                    {
+                        throw new Exception("oops");
+                    }
+                    catch(Exception ex)
+                    {
+                        tracer.End(status: SpanStatus.Failed, statusDescription: ex.Message);
+                        failedSpan.Status.ShouldBe(SpanStatus.Failed);
+                    }
+                }
+
                 using(var childScope = tracer.BuildSpan("message")
                     .IgnoreActiveSpan().Activate())
                 {
@@ -57,7 +72,7 @@
                 }
             }
 
-            scope.Status.ShouldBe(SpanStatus.Succeeded);
+            span.Status.ShouldBe(SpanStatus.Succeeded);
             tracer.ActiveSpan.ShouldBeNull();
         }
     }
