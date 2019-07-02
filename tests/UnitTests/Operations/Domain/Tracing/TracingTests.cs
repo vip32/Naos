@@ -61,8 +61,9 @@
                     {
                         //tracer.End(status: SpanStatus.Failed, statusDescription: ex.Message);
                         tracer.Fail(exception: ex);
-                        failedSpan.Status.ShouldBe(SpanStatus.Failed);
                     }
+
+                    failedSpan.Status.ShouldBe(SpanStatus.Failed);
                 }
 
                 using(var childScope = tracer.BuildSpan("message")
