@@ -65,7 +65,8 @@
 
         public ISpanBuilder BuildSpan(string operationName, SpanKind kind = SpanKind.Internal, ISpan parent = null)
         {
-            return new SpanBuilder(this, operationName, kind, parent ?? this.ActiveSpan); // pass correlationid as traceid
+            return new SpanBuilder(this, operationName, kind, parent ?? this.ActiveSpan)
+                .WithTag(SpanTagKey.SpanKind, kind.ToString()); // pass correlationid as traceid
         }
 
         public void End(IScope scope = null, SpanStatus status = SpanStatus.Succeeded, string statusDescription = null)
@@ -78,6 +79,12 @@
         public void Fail(IScope scope = null, Exception exception = null)
         {
             scope ??= this.ScopeManager.Current;
+            scope?.Span?
+                .WithTag(SpanTagKey.Error, true)
+                .AddLog(SpanLogKey.ErrorKind, "exception")
+                .AddLog(SpanLogKey.Message, $"[{exception.GetType().Name}] {exception.GetFullMessage()}")
+                .AddLog(SpanLogKey.StackTrace, exception.StackTrace);
+
             scope?.Span?.End(SpanStatus.Failed, exception?.GetFullMessage());
             this.ScopeManager.Deactivate(scope);
         }

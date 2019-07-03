@@ -38,17 +38,25 @@
             else
             {
                 using(var scope = tracer
-                    .BuildSpan("API", SpanKind.Server, new Span(context.GetCorrelationId(), null)) // TODO: get service name as operationname (servicedescriptor?)
+                    .BuildSpan(
+                        context.Request.Uri().AbsolutePath,
+                        SpanKind.Server,
+                        new Span(context.GetCorrelationId(), null)) // TODO: get service name as operationname (servicedescriptor?)
                     .IgnoreParentSpan()
-                    .WithTag("http.method", context.Request.Method)
-                    .WithTag("http.url", context.Request.GetDisplayUrl())
-                    .WithTag("http.requestid", context.GetRequestId()).Activate())
+                    .WithTag(SpanTagKey.HttpMethod, context.Request.Method)
+                    .WithTag(SpanTagKey.HttpUrl, context.Request.GetDisplayUrl())
+                    .WithTag(SpanTagKey.HttpHost, context.Request.Uri().Host)
+                    .WithTag(SpanTagKey.HttpPath, context.Request.Uri().AbsolutePath)
+                    // TODO: request size? SpanTagKey.HttpRequestSize
+                    .WithTag(SpanTagKey.HttpRequestId, context.GetRequestId()).Activate())
                 {
                     try
                     {
                         await this.next.Invoke(context).AnyContext();
 
                         scope.Span.WithTag("http.status_code", context.Response.StatusCode);
+                        // TODO: response size?
+
                         if(context.Response.StatusCode > 399)
                         {
                             scope.Span.SetStatus(SpanStatus.Failed, $"{context.Response.StatusCode} ({ReasonPhrases.GetReasonPhrase(context.Response.StatusCode)})");

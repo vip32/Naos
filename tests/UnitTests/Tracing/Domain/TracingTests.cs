@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.UnitTests.Tracing.Domain
 {
     using System;
+    using System.Linq;
     using MediatR;
     using Naos.Core.Tracing.Domain;
     using NSubstitute;
@@ -18,11 +19,13 @@
             ISpan span = null;
             using(var parentScope = tracer.BuildSpan("spanA").Activate())
             {
+                parentScope.Span.AddLog(SpanLogKey.Message, "test123");
                 parentScope.Span.OperationName.ShouldBe("spanA");
                 parentScope.Span.TraceId.ShouldNotBeNull();
                 parentScope.Span.SpanId.ShouldNotBeNull();
                 parentScope.Span.Status.ShouldBe(SpanStatus.Transient);
                 parentScope.Span.Kind.ShouldBe(SpanKind.Internal);
+                parentScope.Span.Logs.Count().ShouldBe(1); // contain logs
 
                 tracer.ActiveSpan.ShouldNotBeNull();
                 tracer.ActiveSpan.OperationName.ShouldBe("spanA");
@@ -65,6 +68,7 @@
                     }
 
                     failedSpan.Status.ShouldBe(SpanStatus.Failed);
+                    failedSpan.Logs.Count().ShouldBeGreaterThan(0); // contain error logs
                 }
 
                 using(var childScope = tracer.BuildSpan("message")

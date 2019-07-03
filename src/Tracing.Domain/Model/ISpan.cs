@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.Tracing.Domain
 {
     using System;
+    using System.Collections.Generic;
     using Naos.Foundation.Domain;
 
     public interface ISpan
@@ -25,6 +26,8 @@
 
         DataDictionary Tags { get; }
 
+        IEnumerable<SpanLogItem> Logs { get; }
+
         TimeSpan Duration { get; }
 
         ISpan Start(DateTimeOffset? date = null);
@@ -38,5 +41,9 @@
         ISpan WithTags(DataDictionary tags);
 
         ISpan SetStatus(SpanStatus status, string description = null);
+
+        ISpan AddLog(string message);
+
+        ISpan AddLog(string key, string message);
     }
 }

@@ -1,11 +1,14 @@
 ﻿namespace Naos.Core.Tracing.Domain
 {
     using System;
+    using System.Collections.Generic;
     using Naos.Foundation;
     using Naos.Foundation.Domain;
 
     public class Span : ISpan
     {
+        private readonly List<SpanLogItem> logs = new List<SpanLogItem>();
+
         public Span(string traceId, string spanId, SpanKind kind = SpanKind.Internal, string parentSpanId = null)
         {
             this.TraceId = traceId;
@@ -39,6 +42,11 @@
         public DateTimeOffset? EndTime { get; private set; }
 
         public DataDictionary Tags { get; } = new DataDictionary();
+
+        public IEnumerable<SpanLogItem> Logs
+        {
+            get { return this.logs; }
+        }
 
         public TimeSpan Duration =>
             this.EndTime.HasValue && this.StartTime.HasValue ? this.EndTime.Value - this.StartTime.Value : TimeSpan.Zero;
@@ -80,6 +88,11 @@
 
         public ISpan WithOperationName(string operationName)
         {
+            if(operationName.IsNullOrEmpty())
+            {
+                return this;
+            }
+
             this.OperationName = operationName;
             return this;
         }
@@ -104,6 +117,23 @@
         {
             this.Status = status;
             this.StatusDescription = description;
+            return this;
+        }
+
+        public ISpan AddLog(string message)
+        {
+            return this.AddLog(SpanLogKey.Message, message);
+        }
+
+        public ISpan AddLog(string key, string message)
+        {
+            this.logs.Add(new SpanLogItem
+            {
+                Timestamp = DateTimeOffset.UtcNow,
+                Key = key ?? SpanLogKey.Message,
+                Message = message
+            });
+
             return this;
         }
     }
