@@ -59,8 +59,13 @@
 
         public ISpan End(SpanStatus status = SpanStatus.Succeeded, string statusDescription = null, DateTimeOffset? date = null)
         {
-            this.Status = status;
-            this.StatusDescription = statusDescription;
+            // only set default status if none has been set already
+            if(this.Status == SpanStatus.Transient || this.Status == null)
+            {
+                this.Status = status;
+                this.StatusDescription = statusDescription;
+            }
+
             if(date.HasValue)
             {
                 this.EndTime = date;
