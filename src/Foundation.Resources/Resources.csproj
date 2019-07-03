@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="favicon.ico" />
-    <EmbeddedResource Include="logo.png" />
+    <EmbeddedResource Include="Resources\favicon.ico" />
+    <EmbeddedResource Include="Resources\logo.png" />
   </ItemGroup>
 
   <ItemGroup>

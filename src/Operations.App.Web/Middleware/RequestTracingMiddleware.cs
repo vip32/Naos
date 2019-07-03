@@ -37,6 +37,7 @@
             }
             else
             {
+                var uri = context.Request.Uri();
                 using(var scope = tracer
                     .BuildSpan(
                         context.Request.Uri().AbsolutePath,
@@ -45,8 +46,8 @@
                     .IgnoreParentSpan()
                     .WithTag(SpanTagKey.HttpMethod, context.Request.Method)
                     .WithTag(SpanTagKey.HttpUrl, context.Request.GetDisplayUrl())
-                    .WithTag(SpanTagKey.HttpHost, context.Request.Uri().Host)
-                    .WithTag(SpanTagKey.HttpPath, context.Request.Uri().AbsolutePath)
+                    .WithTag(SpanTagKey.HttpHost, uri.Port > 0 ? $"{uri.Host}:{uri.Port}" : uri.Host)
+                    .WithTag(SpanTagKey.HttpPath, uri.AbsolutePath)
                     // TODO: request size? SpanTagKey.HttpRequestSize
                     .WithTag(SpanTagKey.HttpRequestId, context.GetRequestId()).Activate())
                 {
