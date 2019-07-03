@@ -1,9 +1,7 @@
 ﻿namespace Naos.Core.Tracing.Domain
 {
     using System.Threading;
-    using System.Threading.Tasks;
     using MediatR;
-    using Naos.Foundation;
 
     public class AsyncLocalScopeManager : IScopeManager
     {
@@ -31,11 +29,11 @@
             return new AsyncLocalScope(this, span, finishOnDispose);
         }
 
-        public async Task Deactivate(IScope scope)
+        public void Deactivate(IScope scope)
         {
             if(this.mediator != null && scope?.Span != null)
             {
-                await this.mediator.Publish(new SpanEndedDomainEvent(scope.Span)).AnyContext();
+                this.mediator.Publish(new SpanEndedDomainEvent(scope.Span));
             }
         }
     }

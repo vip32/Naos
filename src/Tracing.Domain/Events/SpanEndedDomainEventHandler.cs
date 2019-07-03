@@ -31,11 +31,11 @@
         {
             if(notification.Span.Status == SpanStatus.Failed)
             {
-                this.logger.LogError($"{{LogKey:l}} end span {notification.Span.OperationName} (id={notification.Span.SpanId}, kind={notification.Span.Kind}) {notification.Span.StatusDescription}", LogKeys.Tracing);
+                this.logger.LogError($"{{LogKey:l}} span ended: {notification.Span.OperationName} (id={notification.Span.SpanId}, kind={notification.Span.Kind}) {notification.Span.StatusDescription}", LogKeys.Tracing);
             }
             else
             {
-                this.logger.LogInformation($"{{LogKey:l}} end span {notification.Span.OperationName} (id={notification.Span.SpanId}, kind={notification.Span.Kind}) {notification.Span.StatusDescription}", LogKeys.Tracing);
+                this.logger.LogInformation($"{{LogKey:l}} span ended: {notification.Span.OperationName} (id={notification.Span.SpanId}, kind={notification.Span.Kind}) {notification.Span.StatusDescription}", LogKeys.Tracing);
             }
 
             return Task.CompletedTask;
@@ -43,7 +43,7 @@
 
         public Task Handle(SpanStartedDomainEvent notification, CancellationToken cancellationToken)
         {
-            this.logger.LogInformation($"{{LogKey:l}} start span {notification.Span.OperationName} (id={notification.Span.SpanId}, kind={notification.Span.Kind}, tags={string.Join("|", notification.Span.Tags.Select(t => $"{t.Key}={t.Value}"))})", LogKeys.Tracing);
+            this.logger.LogInformation($"{{LogKey:l}} span started: {notification.Span.OperationName} (id={notification.Span.SpanId}, kind={notification.Span.Kind}, tags={string.Join("|", notification.Span.Tags.Select(t => $"{t.Key}={t.Value}"))})", LogKeys.Tracing);
             return Task.CompletedTask;
         }
     }
