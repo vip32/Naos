@@ -37,14 +37,12 @@
             }
             else
             {
-                var correlationId = context.GetCorrelationId();
-                //var requestId = context.GetRequestId(); // TODO: needed?
-
                 using(var scope = tracer
-                    .BuildSpan("API", SpanKind.Server, new Span(correlationId, null)) // TODO: get service name as operationname
+                    .BuildSpan("API", SpanKind.Server, new Span(context.GetCorrelationId(), null)) // TODO: get service name as operationname (servicedescriptor?)
                     .IgnoreParentSpan()
                     .WithTag("http.method", context.Request.Method)
-                    .WithTag("http.url", context.Request.GetDisplayUrl()).Activate())
+                    .WithTag("http.url", context.Request.GetDisplayUrl())
+                    .WithTag("http.requestid", context.GetRequestId()).Activate())
                 {
                     try
                     {
