@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Operations.Domain
+﻿namespace Naos.Core.Tracing.Domain
 {
     using System.Threading;
     using System.Threading.Tasks;

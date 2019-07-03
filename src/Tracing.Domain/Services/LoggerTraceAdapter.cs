@@ -1,7 +1,6 @@
-﻿namespace Naos.Core.Operations.Infrastructure.Azure
+﻿namespace Naos.Core.Tracing.Domain
 {
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Operations.Domain;
 
     public class LoggerTraceAdapter : ITraceAdapter
     {

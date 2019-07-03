@@ -1,8 +1,8 @@
-﻿namespace Naos.Core.UnitTests.Operations.Domain
+﻿namespace Naos.Core.UnitTests.Tracing.Domain
 {
     using System;
     using MediatR;
-    using Naos.Core.Operations.Domain;
+    using Naos.Core.Tracing.Domain;
     using NSubstitute;
     using Shouldly;
     using Xunit;

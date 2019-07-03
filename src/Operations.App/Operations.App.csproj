@@ -18,7 +18,8 @@
     <PackageReference Include="Serilog.Sinks.Literate" Version="3.0.0" />
     <PackageReference Include="Ben.Demystifier" Version="0.1.4" />
     <PackageReference Include="Scrutor" Version="3.0.2" />
-  </ItemGroup>
+    <PackageReference Include="MediatR" Version="7.0.0" />
+ </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Foundation.Console\Console.csproj" />
@@ -26,6 +27,7 @@
     <ProjectReference Include="..\Configuration.App\Configuration.App.csproj" />
     <ProjectReference Include="..\Filtering.App\RequestFiltering.App.csproj" />
     <ProjectReference Include="..\Operations.Domain\Operations.Domain.csproj" />
+    <ProjectReference Include="..\Tracing.Domain\Tracing.Domain.csproj" />
   </ItemGroup>
 
 </Project>

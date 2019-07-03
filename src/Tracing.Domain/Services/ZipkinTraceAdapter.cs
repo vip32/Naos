@@ -1,9 +1,9 @@
-﻿namespace Naos.Core.Operations.Infrastructure.Azure
+﻿namespace Naos.Core.Tracing.Domain
 {
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Operations.Domain;
+    using Naos.Core.Tracing.Domain;
 
-    public class ZipkinTraceAdapter : ITraceAdapter
+    public class ZipkinTraceAdapter : ITraceAdapter // TODO: move to infrastructure
     {
         private readonly ILogger<LoggerTraceAdapter> logger;
 
