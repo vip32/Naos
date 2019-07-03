@@ -3,6 +3,8 @@
     using System;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Http.Extensions;
+    using Microsoft.AspNetCore.WebUtilities;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Naos.Core.Tracing.Domain;
@@ -39,12 +41,24 @@
                 //var requestId = context.GetRequestId(); // TODO: needed?
 
                 using(var scope = tracer
-                    .BuildSpan("API", SpanKind.Server, new Span(correlationId, null))
-                    .IgnoreParentSpan().Activate())
+                    .BuildSpan("API", SpanKind.Server, new Span(correlationId, null)) // TODO: get service name as operationname
+                    .IgnoreParentSpan()
+                    .WithTag("http.method", context.Request.Method)
+                    .WithTag("http.url", context.Request.GetDisplayUrl()).Activate())
                 {
                     try
                     {
                         await this.next.Invoke(context).AnyContext();
+
+                        scope.Span.WithTag("http.status_code", context.Response.StatusCode);
+                        if(context.Response.StatusCode > 399)
+                        {
+                            scope.Span.SetStatus(SpanStatus.Failed, $"{context.Response.StatusCode} ({ReasonPhrases.GetReasonPhrase(context.Response.StatusCode)})");
+                        }
+                        else
+                        {
+                            scope.Span.SetStatus(SpanStatus.Succeeded, $"{context.Response.StatusCode} ({ReasonPhrases.GetReasonPhrase(context.Response.StatusCode)})");
+                        }
                     }
                     catch(Exception ex)
                     {

@@ -74,11 +74,11 @@
             await Task.Run(() =>
             {
                 var level = LogLevel.Information;
-                if((int)context.Response.StatusCode > 499)
+                if(context.Response.StatusCode > 499)
                 {
                     level = LogLevel.Error;
                 }
-                else if((int)context.Response.StatusCode > 399)
+                else if(context.Response.StatusCode > 399)
                 {
                     level = LogLevel.Warning;
                 }

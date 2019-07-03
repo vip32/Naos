@@ -23,6 +23,8 @@
 
         DateTimeOffset? EndTime { get;  }
 
+        DataDictionary Tags { get; }
+
         TimeSpan Duration { get; }
 
         ISpan Start(DateTimeOffset? date = null);

@@ -6,8 +6,6 @@
 
     public class Span : ISpan
     {
-        private readonly DataDictionary tags = new DataDictionary();
-
         public Span(string traceId, string spanId, SpanKind kind = SpanKind.Internal, string parentSpanId = null)
         {
             this.TraceId = traceId;
@@ -39,6 +37,8 @@
         public DateTimeOffset? StartTime { get; private set; }
 
         public DateTimeOffset? EndTime { get; private set; }
+
+        public DataDictionary Tags { get; } = new DataDictionary();
 
         public TimeSpan Duration =>
             this.EndTime.HasValue && this.StartTime.HasValue ? this.EndTime.Value - this.StartTime.Value : TimeSpan.Zero;
@@ -81,7 +81,7 @@
 
         public ISpan WithTag(string key, object value)
         {
-            this.tags.AddOrUpdate(key, value);
+            this.Tags.AddOrUpdate(key, value);
             return this;
         }
 
@@ -89,7 +89,7 @@
         {
             foreach(var tag in tags.Safe())
             {
-                this.tags.AddOrUpdate(tag.Key, tag.Value);
+                this.Tags.AddOrUpdate(tag.Key, tag.Value);
             }
 
             return this;

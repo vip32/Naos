@@ -21,8 +21,13 @@
             set => this.current.Value = value;
         }
 
-        public IScope Activate(ISpan span, bool finishOnDispose = true)
+        public /*async*/ IScope Activate(ISpan span, bool finishOnDispose = true)
         {
+            //if(this.mediator != null && span != null)
+            //{
+            //    await this.mediator.Publish(new SpanStartedDomainEvent(span)).AnyContext();
+            //}
+
             return new AsyncLocalScope(this, span, finishOnDispose);
         }
 
