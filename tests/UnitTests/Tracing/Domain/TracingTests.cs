@@ -1,8 +1,10 @@
 ﻿namespace Naos.Core.UnitTests.Tracing.Domain
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using MediatR;
+    using Naos.Core.Tracing.App;
     using Naos.Core.Tracing.Domain;
     using NSubstitute;
     using Shouldly;
@@ -17,8 +19,11 @@
                 new AsyncLocalScopeManager(Substitute.For<IMediator>()));
             tracer.ActiveSpan.ShouldBeNull();
             ISpan span = null;
+            var capturedSpans = new List<ISpan>();
+
             using(var parentScope = tracer.BuildSpan("spanA").Activate())
             {
+                capturedSpans.Add(parentScope.Span);
                 parentScope.Span.AddLog(SpanLogKey.Message, "test123");
                 parentScope.Span.OperationName.ShouldBe("spanA");
                 parentScope.Span.TraceId.ShouldNotBeNull();
@@ -37,6 +42,7 @@
                 using(var childScope = tracer.BuildSpan("spanB", SpanKind.Server)
                     .WithTag("a", "aaa").Activate())
                 {
+                    capturedSpans.Add(childScope.Span);
                     childScope.Span.OperationName.ShouldBe("spanB");
                     childScope.Span.TraceId.ShouldBe(parentScope.Span.TraceId);
                     childScope.Span.SpanId.ShouldNotBe(parentScope.Span.SpanId);
@@ -56,6 +62,7 @@
 
                 using(var failedScope = tracer.BuildSpan("failure").Activate())
                 {
+                    capturedSpans.Add(failedScope.Span);
                     var failedSpan = tracer.ActiveSpan;
                     try
                     {
@@ -71,9 +78,9 @@
                     failedSpan.Logs.Count().ShouldBeGreaterThan(0); // contain error logs
                 }
 
-                using(var childScope = tracer.BuildSpan("message")
-                    .IgnoreParentSpan().Activate())
+                using(var childScope = tracer.BuildSpan("message").Activate())
                 {
+                    capturedSpans.Add(childScope.Span);
                     // this happens in message handler (subscriber)
                     // get span TRACEID from message headers
                 }

@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Naos.Core.Tracing.App</AssemblyName>
+    <RootNamespace>Naos.Core.Tracing.App</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Tracing.Domain\Tracing.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
