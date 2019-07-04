@@ -17,7 +17,7 @@
         {
             var tracer = new Tracer(
                 new AsyncLocalScopeManager(Substitute.For<IMediator>()));
-            tracer.ActiveSpan.ShouldBeNull();
+            tracer.CurrentSpan.ShouldBeNull();
             ISpan span = null;
             var capturedSpans = new List<ISpan>();
 
@@ -32,9 +32,9 @@
                 parentScope.Span.Kind.ShouldBe(SpanKind.Internal);
                 parentScope.Span.Logs.Count().ShouldBe(1); // contain logs
 
-                tracer.ActiveSpan.ShouldNotBeNull();
-                tracer.ActiveSpan.OperationName.ShouldBe("spanA");
-                tracer.ActiveSpan.SpanId.ShouldBe(parentScope.Span.SpanId);
+                tracer.CurrentSpan.ShouldNotBeNull();
+                tracer.CurrentSpan.OperationName.ShouldBe("spanA");
+                tracer.CurrentSpan.SpanId.ShouldBe(parentScope.Span.SpanId);
 
                 parentScope.Span.WithTag("x", "xxx");
                 span = parentScope.Span;
@@ -48,9 +48,9 @@
                     childScope.Span.SpanId.ShouldNotBe(parentScope.Span.SpanId);
                     childScope.Span.Kind.ShouldBe(SpanKind.Server);
 
-                    tracer.ActiveSpan.ShouldNotBeNull();
-                    tracer.ActiveSpan.OperationName.ShouldBe("spanB");
-                    tracer.ActiveSpan.SpanId.ShouldNotBe(parentScope.Span.SpanId);
+                    tracer.CurrentSpan.ShouldNotBeNull();
+                    tracer.CurrentSpan.OperationName.ShouldBe("spanB");
+                    tracer.CurrentSpan.SpanId.ShouldNotBe(parentScope.Span.SpanId);
 
                     childScope.Span.WithTag("y", "yyy");
 
@@ -63,7 +63,7 @@
                 using(var failedScope = tracer.BuildSpan("failure").Activate())
                 {
                     capturedSpans.Add(failedScope.Span);
-                    var failedSpan = tracer.ActiveSpan;
+                    var failedSpan = tracer.CurrentSpan;
                     try
                     {
                         throw new Exception("oops");
@@ -87,7 +87,7 @@
             }
 
             span.Status.ShouldBe(SpanStatus.Succeeded);
-            tracer.ActiveSpan.ShouldBeNull();
+            tracer.CurrentSpan.ShouldBeNull();
         }
     }
 }
