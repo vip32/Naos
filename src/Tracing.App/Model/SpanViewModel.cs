@@ -8,6 +8,8 @@
 
     public class SpanViewModel
     {
+        public string SpanId { get; set; }
+
         public long StartTime { get; set; } // ms
 
         public long EndTime { get; set; } // ms
@@ -30,6 +32,7 @@
             {
                 var result = new SpanViewModel()
                 {
+                    SpanId = rootSpan.SpanId,
                     StartTime = rootSpan.StartTime.Value.ToEpochMilliseconds(),
                     EndTime = rootSpan.EndTime.Value.ToEpochMilliseconds(),
                     Duration = rootSpan.EndTime.Value.ToEpochMilliseconds() - rootSpan.StartTime.Value.ToEpochMilliseconds(),
@@ -44,6 +47,7 @@
                     {
                         var viewModel = new SpanViewModel()
                         {
+                            SpanId = span.SpanId,
                             StartTime = rootSpan.StartTime.Value.ToEpochMilliseconds(),
                             EndTime = rootSpan.EndTime.Value.ToEpochMilliseconds(),
                             Duration = rootSpan.EndTime.Value.ToEpochMilliseconds() - rootSpan.StartTime.Value.ToEpochMilliseconds(),
