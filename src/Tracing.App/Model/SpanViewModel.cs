@@ -48,10 +48,10 @@
                         var viewModel = new SpanViewModel()
                         {
                             SpanId = span.SpanId,
-                            StartTime = rootSpan.StartTime.Value.ToEpochMilliseconds(),
-                            EndTime = rootSpan.EndTime.Value.ToEpochMilliseconds(),
-                            Duration = rootSpan.EndTime.Value.ToEpochMilliseconds() - rootSpan.StartTime.Value.ToEpochMilliseconds(),
-                            DurationPercentage = decimal.ToInt32((rootSpan.EndTime.Value.ToEpochMilliseconds() - rootSpan.StartTime.Value.ToEpochMilliseconds()) / result.Duration * 100),
+                            StartTime = span.StartTime.Value.ToEpochMilliseconds(),
+                            EndTime = span.EndTime.Value.ToEpochMilliseconds(),
+                            Duration = span.EndTime.Value.ToEpochMilliseconds() - span.StartTime.Value.ToEpochMilliseconds(),
+                            DurationPercentage = decimal.ToInt32((span.EndTime.Value.ToEpochMilliseconds() - span.StartTime.Value.ToEpochMilliseconds()) / result.Duration * 100),
                             NestingLevel = 1,
                         };
 
