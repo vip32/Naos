@@ -17,7 +17,7 @@
         /// Converted object.
         /// </returns>
         [DebuggerStepThrough]
-        public static T To<T>(this object source, bool throws = false, T defaultValue = default)
+        public static T To<T>(this object source, bool throws = false, T defaultValue = default, CultureInfo cultureInfo = null)
             where T : struct
         {
             if(source == null)
@@ -32,7 +32,7 @@
                     return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(source.ToString());
                 }
 
-                return (T)Convert.ChangeType(source, typeof(T), CultureInfo.InvariantCulture);
+                return (T)Convert.ChangeType(source, typeof(T), cultureInfo ?? CultureInfo.InvariantCulture);
             }
             catch(FormatException)
             {
@@ -46,7 +46,7 @@
         }
 
         [DebuggerStepThrough]
-        public static bool TryTo<T>(this object source, out T result)
+        public static bool TryTo<T>(this object source, out T result, CultureInfo cultureInfo = null)
             where T : struct
         {
             if(source == null)
@@ -63,7 +63,7 @@
                     return true;
                 }
 
-                result = (T)Convert.ChangeType(source, typeof(T), CultureInfo.InvariantCulture);
+                result = (T)Convert.ChangeType(source, typeof(T), cultureInfo ?? CultureInfo.InvariantCulture);
                 return true;
             }
             catch(OverflowException)
