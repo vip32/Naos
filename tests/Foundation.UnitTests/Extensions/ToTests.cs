@@ -23,10 +23,31 @@
             "ABC".To(defaultValue: true).ShouldBeOfType<bool>().ShouldBe(true);
             "2260afec-bbfd-42d4-a91a-dcb11e09b17f".To<Guid>().ShouldBeOfType<Guid>().ShouldBe(new Guid("2260afec-bbfd-42d4-a91a-dcb11e09b17f"));
             s.To<Guid>().ShouldBeOfType<Guid>().ShouldBe(Guid.Empty);
-
+            "Reptile".To<StubEnum>().ShouldBe(StubEnum.Reptile);
+            16.To<StubEnum>().ShouldBe(StubEnum.Reptile);
+            //99.To<StubEnum>().ShouldBe(StubEnum.Unk);
+            "Abc".To<StubEnum>(defaultValue: StubEnum.Dog).ShouldBe(StubEnum.None); // defaultvalue ignored with enums
+            13.To<StubEnum>().ShouldBe(StubEnum.Dog | StubEnum.Fish | StubEnum.Bird); // dog 1 |fish 4 |bird 8 = 13
             Assert.Throws<FormatException>(() => "test".To<bool>(true));
             Assert.Throws<FormatException>(() => "test".To(true, defaultValue: false));
             Assert.Throws<FormatException>(() => "test".To<int>(true));
+            //Assert.Throws<FormatException>(() => "abc".To<StubEnum>(true));
+        }
+
+#pragma warning disable SA1201 // Elements should appear in the correct order
+#pragma warning disable SA1602 // Enumeration items should be documented
+        [Flags]
+        public enum StubEnum
+        {
+            None = 0,
+            Dog = 1,
+            Cat = 2,
+            Fish = 4,
+            Bird = 8,
+            Reptile = 16,
+            Other = 32
+#pragma warning restore SA1201 // Elements should appear in the correct order
+#pragma warning restore SA1602 // Enumeration items should be documented
         }
     }
 }
