@@ -44,6 +44,9 @@
 
             // get all descendants from root node (=flatten)
             nodes.Single().Descendants.Count().ShouldBe(5);
+
+            // find the root from anywhere
+            nodes.Single().Descendants.FirstOrDefault(c => c.Value.Name == "child of 10")?.Root.Value.Id.ShouldBe(1);
         }
 
         public class StubNode

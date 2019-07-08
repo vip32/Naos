@@ -92,6 +92,14 @@
             }
         }
 
+        public IEnumerable<Node<T>> Leaves
+        {
+            get
+            {
+                return this.Descendants.Where(n => !n.Children.Any());
+            }
+        }
+
         public IEnumerable<Node<T>> All
         {
             get
