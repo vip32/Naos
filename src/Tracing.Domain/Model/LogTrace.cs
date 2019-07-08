@@ -1,15 +1,73 @@
-﻿//namespace Naos.Core.Tracing.Domain
-//{
-//    public class LogTrace : LogEvent
-//    {
-//        public string Span { get; set; } // shared span identifier (for example request id)
+﻿namespace Naos.Core.Tracing.Domain
+{
+    using System;
+    using System.Collections.Generic;
+    using Humanizer;
+    using Naos.Foundation;
+    using Naos.Foundation.Domain;
+    using Newtonsoft.Json;
 
-//        public string Name { get; set; } // http/job/message/command   >        message=api/customer or http/message/command
+    public class LogTrace : IEntity<string>, IAggregateRoot
+    {
+        /// <summary>
+        /// Gets or sets the entity identifier.
+        /// </summary>
+        /// <value>
+        /// The identifier.
+        /// </value>
+        [JsonIgnore]
+        public string Id { get; set; }
 
-//        public long Duration { get; set; } // 234.3242
+        /// <summary>
+        /// Gets the identifier value.
+        /// </summary>
+        /// <value>
+        /// The identifier.
+        /// </value>
+        [JsonProperty(PropertyName = "id")]
+        object IEntity.Id
+        {
+            get { return this.Id; }
+            set { this.Id = (string)value; }
+        }
 
-//        public long DurationText { get; } // 234 milliseconds
+        public string Level { get; set; }
 
-//        public int StatusCode { get; set; } // 200
-//    }
-//}
+        public string Key { get; set; } // logkey
+
+        public string Environment { get; set; }
+
+        public string Message { get; set; }
+
+        public DateTime Timestamp { get; set; }
+
+        public long Ticks { get; set; }
+
+        public string CorrelationId { get; set; }
+
+        public string ServiceName { get; set; }
+
+        public string ServiceProduct { get; set; }
+
+        public string ServiceCapability { get; set; }
+
+        public string SourceContext { get; set; }
+
+        public string TrackType { get; set; }
+
+        public Dictionary<string, object> Properties { get; set; } = new Dictionary<string, object>();
+
+        public DomainEvents DomainEvents => new DomainEvents();
+
+        public string GetAge()
+        {
+            var timestamp = this.Timestamp;
+            if(timestamp.IsDefault())
+            {
+                return string.Empty;
+            }
+
+            return (DateTime.UtcNow - this.Timestamp).Humanize();
+        }
+    }
+}
