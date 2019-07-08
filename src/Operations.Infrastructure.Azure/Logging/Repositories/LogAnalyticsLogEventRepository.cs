@@ -169,9 +169,8 @@
                 {
                     foreach(var values in table.Rows)
                     {
-                        var result = new LogEvent();
-                        foreach(var key in keys
-                            .Where(k => !k.EqualsAny(new[] { "TenantId", "SourceSystem", "TimeGenerated", "ConnectionId" })))
+                        var result = Factory<LogEvent>.Create();
+                        foreach(var key in keys.Ignore(new[] { "TenantId", "SourceSystem", "TimeGenerated", "ConnectionId" }))
                         {
                             var value = values[keys.IndexOf(key)];
                             if(value != null && !string.IsNullOrEmpty(value.ToString()))
