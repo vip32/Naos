@@ -5,6 +5,7 @@
     using EnsureThat;
     using MediatR;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
     using Naos.Foundation.Domain;
     using Naos.Sample.Countries.Domain;
@@ -24,18 +25,20 @@
             options.Context.Services.AddScoped<ICountryRepository>(sp =>
             {
                 return new CountryRepository(
-                    new RepositoryLoggingDecorator<Country>(
-                        sp.GetRequiredService<ILogger<CountryRepository>>(),
-                        new RepositoryTenantDecorator<Country>(
-                            "naos_sample_test",
-                            new RepositoryOrderDecorator<Country>(
-                                e => e.Name,
-                                new InMemoryRepository<Country, DbCountry>(o => o
-                                    .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
-                                    .Mediator(sp.GetRequiredService<IMediator>())
-                                    .Context(sp.GetRequiredService<InMemoryContext<Country>>())
-                                    .Mapper(new AutoMapperEntityMapper(MapperFactory.Create())), // singleton
-                                    e => e.Identifier)))));
+                    new RepositoryTracingDecorator<Country>(
+                        sp.GetRequiredService<ITracer>(),
+                        new RepositoryLoggingDecorator<Country>(
+                            sp.GetRequiredService<ILogger<CountryRepository>>(),
+                            new RepositoryTenantDecorator<Country>(
+                                "naos_sample_test",
+                                new RepositoryOrderDecorator<Country>(
+                                    e => e.Name,
+                                    new InMemoryRepository<Country, DbCountry>(o => o
+                                        .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
+                                        .Mediator(sp.GetRequiredService<IMediator>())
+                                        .Context(sp.GetRequiredService<InMemoryContext<Country>>())
+                                        .Mapper(new AutoMapperEntityMapper(MapperFactory.Create())), // singleton
+                                        e => e.Identifier))))));
             });
 
             options.Context.Services.AddSingleton(sp => new InMemoryContext<Country>(new[]

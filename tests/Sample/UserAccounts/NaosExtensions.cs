@@ -7,6 +7,7 @@
     using Microsoft.EntityFrameworkCore.Diagnostics;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
     using Naos.Foundation.Application;
     using Naos.Foundation.Domain;
@@ -38,15 +39,17 @@
             options.Context.Services.AddScoped<IGenericRepository<UserAccount>>(sp =>
             {
                 return new UserAccountRepository(
-                    new RepositoryLoggingDecorator<UserAccount>(
-                        sp.GetRequiredService<ILogger<UserAccountRepository>>(),
-                        new RepositoryTenantDecorator<UserAccount>(
-                            "naos_sample_test", // TODO: resolve from runtime context
-                            new RepositorySoftDeleteDecorator<UserAccount>(
-                                new EntityFrameworkRepository<UserAccount>(o => o
-                                    .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
-                                    .Mediator(sp.GetRequiredService<IMediator>())
-                                    .DbContext(sp.GetRequiredService<UserAccountsDbContext>()))))));
+                    new RepositoryTracingDecorator<UserAccount>(
+                        sp.GetRequiredService<ITracer>(),
+                        new RepositoryLoggingDecorator<UserAccount>(
+                            sp.GetRequiredService<ILogger<UserAccountRepository>>(),
+                            new RepositoryTenantDecorator<UserAccount>(
+                                "naos_sample_test", // TODO: resolve from runtime context
+                                new RepositorySoftDeleteDecorator<UserAccount>(
+                                    new EntityFrameworkRepository<UserAccount>(o => o
+                                        .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
+                                        .Mediator(sp.GetRequiredService<IMediator>())
+                                        .DbContext(sp.GetRequiredService<UserAccountsDbContext>())))))));
             });
 
             var entityFrameworkConfiguration = options.Context.Configuration?.GetSection(section).Get<EntityFrameworkConfiguration>();

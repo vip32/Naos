@@ -52,6 +52,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\ServiceDiscovery.App\ServiceDiscovery.App.csproj" />
+    <ProjectReference Include="..\..\src\Tracing.Domain\Tracing.Domain.csproj" />
   </ItemGroup>
 
 </Project>

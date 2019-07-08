@@ -6,6 +6,7 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Queueing.Domain;
     using Naos.Core.Queueing.Infrastructure.Azure;
+    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
     using Naos.Foundation.Domain;
     using Naos.Foundation.Infrastructure;
@@ -28,21 +29,23 @@
             options.Context.Services.AddScoped<ICustomerRepository>(sp =>
             {
                 return new CustomerRepository(
-                    new RepositoryLoggingDecorator<Customer>(
-                        sp.GetRequiredService<ILogger<CustomerRepository>>(),
-                        new RepositoryTenantDecorator<Customer>(
-                            "naos_sample_test",
-                            new CosmosDbSqlRepository<Customer>(o => o
-                                .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
-                                .Mediator(sp.GetRequiredService<IMediator>())
-                                .Provider(new CosmosDbSqlProviderV2<Customer>(
-                                    logger: sp.GetRequiredService<ILogger<CosmosDbSqlProviderV2<Customer>>>(),
-                                    client: CosmosDbClientV2.Create(cosmosDbConfiguration.ServiceEndpointUri, cosmosDbConfiguration.AuthKeyOrResourceToken),
-                                    databaseId: cosmosDbConfiguration.DatabaseId,
-                                    collectionIdFactory: () => cosmosDbConfiguration.CollectionId,
-                                    partitionKeyPath: cosmosDbConfiguration.CollectionPartitionKey,
-                                    throughput: cosmosDbConfiguration.CollectionOfferThroughput,
-                                    isMasterCollection: cosmosDbConfiguration.IsMasterCollection))))));
+                    new RepositoryTracingDecorator<Customer>(
+                        sp.GetRequiredService<ITracer>(),
+                        new RepositoryLoggingDecorator<Customer>(
+                            sp.GetRequiredService<ILogger<CustomerRepository>>(),
+                            new RepositoryTenantDecorator<Customer>(
+                                "naos_sample_test",
+                                new CosmosDbSqlRepository<Customer>(o => o
+                                    .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
+                                    .Mediator(sp.GetRequiredService<IMediator>())
+                                    .Provider(new CosmosDbSqlProviderV2<Customer>(
+                                        logger: sp.GetRequiredService<ILogger<CosmosDbSqlProviderV2<Customer>>>(),
+                                        client: CosmosDbClientV2.Create(cosmosDbConfiguration.ServiceEndpointUri, cosmosDbConfiguration.AuthKeyOrResourceToken),
+                                        databaseId: cosmosDbConfiguration.DatabaseId,
+                                        collectionIdFactory: () => cosmosDbConfiguration.CollectionId,
+                                        partitionKeyPath: cosmosDbConfiguration.CollectionPartitionKey,
+                                        throughput: cosmosDbConfiguration.CollectionOfferThroughput,
+                                        isMasterCollection: cosmosDbConfiguration.IsMasterCollection)))))));
             });
 
             options.Context.Services.AddScoped<ICosmosDbSqlProvider<Customer>>(sp =>

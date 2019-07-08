@@ -2,9 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using Naos.Foundation;
     using Naos.Foundation.Domain;
 
+    [DebuggerDisplay("SpanId = {SpanId}, OperationName = {OperationName}")]
     public class Span : ISpan
     {
         private readonly List<SpanLogItem> logs = new List<SpanLogItem>();

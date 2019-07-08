@@ -109,15 +109,15 @@
                 foreach(var entity in entities) // .Where(l => !l.TrackType.EqualsAny(new[] { LogTrackTypes.Trace }))
                 {
                     var levelColor = "lime";
-                    if(entity.Level.Equals("Verbose", StringComparison.OrdinalIgnoreCase) || entity.Level.Equals("Debug", StringComparison.OrdinalIgnoreCase))
+                    if(entity.Status.SafeEquals("Transient"))
                     {
                         levelColor = "#75715E";
                     }
-                    else if(entity.Level.Equals("Warning", StringComparison.OrdinalIgnoreCase))
+                    else if(entity.Status.SafeEquals("Cancelled"))
                     {
                         levelColor = "#FF8C00";
                     }
-                    else if(entity.Level.Equals("Error", StringComparison.OrdinalIgnoreCase) || entity.Level.Equals("Fatal", StringComparison.OrdinalIgnoreCase))
+                    else if(entity.Status.SafeEquals("Failed"))
                     {
                         levelColor = "#FF0000";
                     }
@@ -129,7 +129,7 @@
                     await this.HttpContext.Response.WriteAsync($"{entity.Timestamp.ToUniversalTime():u}");
                     await this.HttpContext.Response.WriteAsync("</span>");
                     await this.HttpContext.Response.WriteAsync($"&nbsp;[<span style='color: {levelColor}'>");
-                    await this.HttpContext.Response.WriteAsync($"{entity.Level.ToUpper().Truncate(3, string.Empty)}</span>]");
+                    await this.HttpContext.Response.WriteAsync($"{entity.Kind?.ToUpper().Truncate(6, string.Empty)}</span>]");
                     await this.HttpContext.Response.WriteAsync(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logtraces/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;");
                     await this.HttpContext.Response.WriteAsync($"<span style='color: {messageColor}; {extraStyles}'>");
                     //await this.HttpContext.Response.WriteAsync(logEvent.TrackType.SafeEquals("journal") ? "*" : "&nbsp;"); // journal prefix

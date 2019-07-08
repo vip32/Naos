@@ -109,15 +109,15 @@
                     .Where(l => !l.TrackType.EqualsAny(new[] { LogTrackTypes.Trace })))
                 {
                     var levelColor = "lime";
-                    if(entity.Level.Equals("Verbose", StringComparison.OrdinalIgnoreCase) || entity.Level.Equals("Debug", StringComparison.OrdinalIgnoreCase))
+                    if(entity.Level.SafeEquals("Verbose") || entity.Level.SafeEquals("Debug"))
                     {
                         levelColor = "#75715E";
                     }
-                    else if(entity.Level.Equals("Warning", StringComparison.OrdinalIgnoreCase))
+                    else if(entity.Level.SafeEquals("Warning"))
                     {
                         levelColor = "#FF8C00";
                     }
-                    else if(entity.Level.Equals("Error", StringComparison.OrdinalIgnoreCase) || entity.Level.Equals("Fatal", StringComparison.OrdinalIgnoreCase))
+                    else if(entity.Level.SafeEquals("Error") || entity.Level.SafeEquals("Fatal"))
                     {
                         levelColor = "#FF0000";
                     }

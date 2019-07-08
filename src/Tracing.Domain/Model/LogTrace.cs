@@ -33,7 +33,7 @@
 
         public string Level { get; set; }
 
-        public string Key { get; set; } // MAPPEd
+        public string Key { get; set; }
 
         public string Environment { get; set; }
 
@@ -53,21 +53,21 @@
 
         public string SourceContext { get; set; }
 
-        public string TrackType { get; set; } // MAPPEd
+        public string TrackType { get; set; }
 
-        public string OperationName { get; set; } // MAPPEd
+        public string OperationName { get; set; }
 
-        public string TraceId { get; set; } // // MAPPEd to correlationid
+        public string TraceId { get; set; } // to correlationid
 
-        public string SpanId { get; set; } // MAPPEd
+        public string SpanId { get; set; }
 
-        public string ParentSpanId { get; set; } // MAPPEd
+        public string ParentSpanId { get; set; }
 
-        public string Kind { get; set; } // MAPPEd
+        public string Kind { get; set; }
 
-        public string Status { get; set; } // MAPPEd
+        public string Status { get; set; }
 
-        public string StatusDescription { get; set; } // MAPPEd
+        public string StatusDescription { get; set; }
 
         public DateTime? StartTime { get; set; }
 
