@@ -27,6 +27,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "src\Foundation.Do
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Azure.CosmosDb", "src\Foundation.Infrastructure.Azure.CosmosDb\Infrastructure.Azure.CosmosDb.csproj", "{B5FC5E1B-B108-43EF-80FF-99DF8C490F72}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Azure.LogAnalytics", "src\Foundation.Infrastructure.Azure.LogAnalytics\Infrastructure.Azure.LogAnalytics.csproj", "{EF1B2EF1-6CC0-492A-AC49-83E27A7697C3}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App", "src\App\App.csproj", "{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging", "src\Messaging\Messaging.csproj", "{B86418EA-FEE2-42E1-B03E-CAAA43D3DBA5}"
@@ -225,8 +227,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tracing", "Tracing", "{252D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tracing.Domain", "src\Tracing.Domain\Tracing.Domain.csproj", "{4FFDF411-6C7B-458B-BC06-67B22AEADA5C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tracing.App", "src\Tracing.App\Tracing.App.csproj", "{C1A2EC25-C51A-4080-A276-4676417332DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tracing.App", "src\Tracing.App\Tracing.App.csproj", "{C1A2EC25-C51A-4080-A276-4676417332DE}"
 EndProject
+
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1245,6 +1248,18 @@ Global
 		{C1A2EC25-C51A-4080-A276-4676417332DE}.Release|x64.Build.0 = Release|Any CPU
 		{C1A2EC25-C51A-4080-A276-4676417332DE}.Release|x86.ActiveCfg = Release|Any CPU
 		{C1A2EC25-C51A-4080-A276-4676417332DE}.Release|x86.Build.0 = Release|Any CPU
+		{EF1B2EF1-6CC0-492A-AC49-83E27A7697C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF1B2EF1-6CC0-492A-AC49-83E27A7697C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF1B2EF1-6CC0-492A-AC49-83E27A7697C3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EF1B2EF1-6CC0-492A-AC49-83E27A7697C3}.Debug|x64.Build.0 = Debug|Any CPU
+		{EF1B2EF1-6CC0-492A-AC49-83E27A7697C3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EF1B2EF1-6CC0-492A-AC49-83E27A7697C3}.Debug|x86.Build.0 = Debug|Any CPU
+		{EF1B2EF1-6CC0-492A-AC49-83E27A7697C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF1B2EF1-6CC0-492A-AC49-83E27A7697C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF1B2EF1-6CC0-492A-AC49-83E27A7697C3}.Release|x64.ActiveCfg = Release|Any CPU
+		{EF1B2EF1-6CC0-492A-AC49-83E27A7697C3}.Release|x64.Build.0 = Release|Any CPU
+		{EF1B2EF1-6CC0-492A-AC49-83E27A7697C3}.Release|x86.ActiveCfg = Release|Any CPU
+		{EF1B2EF1-6CC0-492A-AC49-83E27A7697C3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1353,6 +1368,7 @@ Global
 		{252D518E-8483-4F75-961A-7224A4F1B32B} = {09D80029-71E3-4B4D-AA1A-CD153787AED0}
 		{4FFDF411-6C7B-458B-BC06-67B22AEADA5C} = {252D518E-8483-4F75-961A-7224A4F1B32B}
 		{C1A2EC25-C51A-4080-A276-4676417332DE} = {252D518E-8483-4F75-961A-7224A4F1B32B}
+		{EF1B2EF1-6CC0-492A-AC49-83E27A7697C3} = {C441E12D-3F09-4E93-B490-6E77B8FB7CD5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BD699E0F-4BC9-41A9-93D5-E89FDDA8FC17}
