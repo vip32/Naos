@@ -35,8 +35,15 @@
 
             nodes.Single().Children.All(c => c.Value.Name == "child of 1").ShouldBeTrue(); // direct children of root node
             nodes.Single().Descendants.Count(c => c.Value.Name == "child of 10").ShouldBe(2); // find descendants somewhere down the tree
-            nodes.Single().Descendants.FirstOrDefault(c => c.Value.Name == "child of 10")?.Ancestors.Count().ShouldBe(2); // find the parents (up)
-            nodes.Single().Descendants.FirstOrDefault(c => c.Value.Name == "child of 10")?.Ancestors.Select(a => a.Value.Id).ShouldContain(t => t == 11 || t == 1); // find the parents (up)
+            nodes.Single().Descendants.FirstOrDefault(c => c.Value.Name == "child of 10")?.Ancestors.Count().ShouldBe(2); // find the parents/ancestors (up)
+            nodes.Single().Descendants.FirstOrDefault(c => c.Value.Name == "child of 10")?.Ancestors.Select(a => a.Value.Id).ShouldContain(t => t == 11 || t == 1); // find the parents/ancestors (up)
+
+            // add another child for item 10, note no parent or parentid is provided
+            nodes.Single().Children.FirstOrDefault(c => c.Value.Id == 10)?.Add(new StubNode { Id = 22, Name = "child of 10" });
+            nodes.Single().Children.FirstOrDefault(c => c.Value.Id == 10)?.Children.Count().ShouldBe(3);
+
+            // get all descendants from root node (=flatten)
+            nodes.Single().Descendants.Count().ShouldBe(5);
         }
 
         public class StubNode
