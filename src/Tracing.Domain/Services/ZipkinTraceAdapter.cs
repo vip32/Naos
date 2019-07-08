@@ -1,7 +1,6 @@
 ﻿namespace Naos.Core.Tracing.Domain
 {
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Tracing.Domain;
 
     public class ZipkinTraceAdapter : ITraceAdapter // TODO: move to infrastructure
     {

@@ -14,7 +14,7 @@
             HttpClient httpClient,
             LogAnalyticsConfiguration configuration,
             string accessToken,
-            IEnumerable<LogAnalyticstEntityMap> entityMap = null)
+            IEnumerable<LogAnalyticsEntityMap> entityMap = null)
             : base(loggerFactory, httpClient, configuration, accessToken, entityMap)
         {
         }

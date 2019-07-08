@@ -6,7 +6,6 @@
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Naos.Core.Operations.App.Web;
-    using Naos.Core.Operations.Domain;
     using Naos.Foundation;
 
     /// <summary>

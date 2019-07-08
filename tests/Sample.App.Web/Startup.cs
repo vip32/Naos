@@ -3,7 +3,6 @@
     using System;
     using System.IO;
     using System.Linq;
-    using System.Reflection;
     using System.Threading;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Builder;
@@ -16,7 +15,6 @@
     using Microsoft.AspNetCore.Mvc.Routing;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.DependencyModel;
     using Microsoft.Extensions.Logging;
     using Naos.Core.App.Web;
     using Naos.Core.Commands.Domain;

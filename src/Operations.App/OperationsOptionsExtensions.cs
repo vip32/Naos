@@ -10,7 +10,6 @@
     using Microsoft.Extensions.Http;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Operations.App;
-    using Naos.Core.Operations.Domain;
     using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
     using Naos.Foundation.Application;

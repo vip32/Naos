@@ -18,14 +18,14 @@
         private readonly HttpClient httpClient;
         private readonly LogAnalyticsConfiguration configuration;
         private readonly string accessToken;
-        private readonly IEnumerable<LogAnalyticstEntityMap> entityMap;
+        private readonly IEnumerable<LogAnalyticsEntityMap> entityMap;
 
         public LogAnalyticsRepository( // TODO: use options+builder here
             ILoggerFactory loggerFactory,
             HttpClient httpClient,
             LogAnalyticsConfiguration configuration,
             string accessToken,
-            IEnumerable<LogAnalyticstEntityMap> entityMap = null)
+            IEnumerable<LogAnalyticsEntityMap> entityMap = null)
         {
             EnsureArg.IsNotNull(loggerFactory, nameof(loggerFactory));
             EnsureArg.IsNotNull(httpClient, nameof(httpClient));
@@ -40,7 +40,7 @@
             this.httpClient = httpClient;
             this.configuration = configuration;
             this.accessToken = accessToken;
-            this.entityMap = LogAnalyticstEntityMap.CreateDefault()
+            this.entityMap = LogAnalyticsEntityMap.CreateDefault()
                 .Concat(entityMap.Safe()).DistinctBy(e => e.SourceProperty);
         }
 
