@@ -32,7 +32,7 @@
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        [SwaggerTag("Naos JobScheduling")]
+        [OpenApiTag("Naos JobScheduling")]
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
         public ActionResult<IEnumerable<JobRegistration>> Get()
         {
@@ -45,7 +45,7 @@
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        [SwaggerTag("Naos JobScheduling")]
+        [OpenApiTag("Naos JobScheduling")]
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
         public ActionResult<JobRegistration> Get(string key)
         {

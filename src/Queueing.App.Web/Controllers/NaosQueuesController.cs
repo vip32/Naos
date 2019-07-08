@@ -28,7 +28,7 @@
         [HttpGet]
         [Route("{name}")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        [SwaggerTag("Naos Queueing")]
+        [OpenApiTag("Naos Queueing")]
         public ActionResult<Dictionary<string, QueueMetrics>> Get(string name)
         {
             return this.Ok();

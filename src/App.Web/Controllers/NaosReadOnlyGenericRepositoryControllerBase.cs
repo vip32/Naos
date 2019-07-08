@@ -34,7 +34,7 @@
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        [SwaggerTag("Naos Entity Repository")]
+        [OpenApiTag("Naos Entity Repository")]
         [Description("TODO description")]
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
         public virtual async Task<ActionResult<IEnumerable<TEntity>>> Get()
@@ -52,7 +52,7 @@
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        [SwaggerTag("Naos Entity Repository")]
+        [OpenApiTag("Naos Entity Repository")]
         [Description("TODO description")]
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
         public virtual async Task<ActionResult<TEntity>> Get(string id)
@@ -79,7 +79,7 @@
         [HttpGet]
         [Route("echo")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        [SwaggerTag("Naos Echo")]
+        [OpenApiTag("Naos Echo")]
         [Description("TODO description")]
         public ActionResult<object> Echo()
         {

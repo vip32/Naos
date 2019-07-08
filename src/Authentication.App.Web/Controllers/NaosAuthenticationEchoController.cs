@@ -24,7 +24,7 @@
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        [SwaggerTag("Naos Echo")]
+        [OpenApiTag("Naos Echo")]
         public ActionResult<object> Get()
         {
             return this.Ok(new

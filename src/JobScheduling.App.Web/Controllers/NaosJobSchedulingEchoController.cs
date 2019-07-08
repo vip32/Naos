@@ -28,7 +28,7 @@
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        [SwaggerTag("Naos Echo")]
+        [OpenApiTag("Naos Echo")]
         public ActionResult<IEnumerable<JobRegistration>> Get()
         {
             return this.Ok(this.jobScheduler.Options.Registrations.Keys);

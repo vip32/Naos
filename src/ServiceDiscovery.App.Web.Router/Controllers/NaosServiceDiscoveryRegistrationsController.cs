@@ -34,7 +34,7 @@
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        [SwaggerTag("Naos ServiceDiscovery")]
+        [OpenApiTag("Naos ServiceDiscovery")]
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
         public async Task<ActionResult<IEnumerable<ServiceRegistration>>> Get([FromQuery] string name, [FromQuery] string tag)
         {
@@ -47,7 +47,7 @@
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        [SwaggerTag("Naos ServiceDiscovery")]
+        [OpenApiTag("Naos ServiceDiscovery")]
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
         public async Task<ActionResult<ServiceRegistration>> Post(ServiceRegistration model)
         {
@@ -74,7 +74,7 @@
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         //[ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        [SwaggerTag("Naos ServiceDiscovery")]
+        [OpenApiTag("Naos ServiceDiscovery")]
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
         public async Task<IActionResult> Delete(string id)
         {

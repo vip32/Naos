@@ -27,7 +27,7 @@
     using Naos.Foundation;
     using Newtonsoft.Json;
     using NSwag.AspNetCore;
-    using NSwag.SwaggerGeneration.Processors;
+    using NSwag.Generation.Processors;
 
     public class Startup
     {
@@ -68,7 +68,7 @@
                         document.Info.Title = "Naos"; // Product.Capability-Version
                         document.Info.Description = "Naos";
                         document.Info.TermsOfService = "None";
-                        document.Info.Contact = new NSwag.SwaggerContact
+                        document.Info.Contact = new NSwag.OpenApiContact
                         {
                             Name = "Naos",
                             Email = string.Empty,
@@ -164,7 +164,7 @@
                     .UseRequestFiltering()
                     .UseServiceExceptions()
                     .UseServiceDiscoveryRouter())
-                .UseSwagger()
+                .UseOpenApi()
                 .UseSwaggerUi3();
 
             // https://blog.elmah.io/asp-net-core-2-2-health-checks-explained/

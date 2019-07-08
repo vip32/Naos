@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Serilog.Sinks.AzureAnalytics" Version="4.5.0" />
-    <PackageReference Include="Serilog.Sinks.AzureBlobStorage" Version="1.3.0" />
+    <PackageReference Include="Serilog.Sinks.AzureBlobStorage" Version="1.4.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
   </ItemGroup>
 

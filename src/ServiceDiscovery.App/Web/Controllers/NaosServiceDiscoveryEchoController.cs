@@ -28,7 +28,7 @@
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        [SwaggerTag("Naos Echo")]
+        [OpenApiTag("Naos Echo")]
         public async Task<ActionResult<IEnumerable<ServiceRegistration>>> Get()
         {
             return this.Ok(await this.registry.RegistrationsAsync().AnyContext());

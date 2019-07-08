@@ -3,8 +3,8 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Naos.Foundation;
-    using NSwag.SwaggerGeneration.Processors;
-    using NSwag.SwaggerGeneration.Processors.Contexts;
+    using NSwag.Generation.Processors;
+    using NSwag.Generation.Processors.Contexts;
 
     /// <summary>
     /// Corrects (groups by entity) the tags used for the generic repositories.
@@ -19,7 +19,7 @@
         /// <returns>
         /// true if the operation should be added to the Swagger specification.
         /// </returns>
-        public async Task<bool> ProcessAsync(OperationProcessorContext context)
+        public bool Process(OperationProcessorContext context)
         {
             // update tags where equal 'Naos Entity Repository' to 'Naos Entity Repository (Entity type name)'
             foreach(var description in context.Document.Operations.Safe().ToList())
@@ -44,7 +44,7 @@
                 }
             }
 
-            return await Task.FromResult(true).AnyContext();
+            return true;
         }
     }
 }

@@ -35,7 +35,7 @@
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        [SwaggerTag("Naos Info")]
+        [OpenApiTag("Naos Info")]
         public async Task<ActionResult<ServiceDescriptor>> Get()
         {
             foreach(var feature in this.features.Safe())

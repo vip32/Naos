@@ -26,7 +26,7 @@
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        [SwaggerTag("Naos Echo")]
+        [OpenApiTag("Naos Echo")]
         public ActionResult<FilterContext> Get()
         {
             return this.Ok(this.filterContext?.Context);

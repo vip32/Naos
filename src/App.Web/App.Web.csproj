@@ -12,8 +12,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Api.Analyzers" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="MediatR" Version="7.0.0" />
-    <PackageReference Include="NSwag.Annotations" Version="12.3.1" />
-    <PackageReference Include="NSwag.SwaggerGeneration" Version="12.3.1" />
+    <PackageReference Include="NSwag.Annotations" Version="13.0.4" />
+    <PackageReference Include="NSwag.Generation" Version="13.0.4" />
   </ItemGroup>
 
   <ItemGroup>

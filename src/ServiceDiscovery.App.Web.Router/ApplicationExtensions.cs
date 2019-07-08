@@ -39,6 +39,7 @@
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
             EnsureArg.IsNotNull(options, nameof(options));
 
+#pragma warning disable CS0618 // Type or member is obsolete >> naosOptions.Context.Application.Map("/api/servicediscovery/router/proxy", async proxy => { proxy.UseProxy() } )
             naosOptions.Context.Application.RunProxy("/api/servicediscovery/router/proxy", async context =>
             {
                 var logger = naosOptions.Context.Application.ApplicationServices.GetRequiredService<ILogger>();
@@ -76,6 +77,7 @@
                     .AddXForwardedHeaders() // adds the current proxy proto/host/for/pathbase to the X-Forwarded headers
                     .Send();
             });
+#pragma warning restore CS0618 // Type or member is obsolete
 
             naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: job scheduling added"); // TODO: list available commands/handlers
 

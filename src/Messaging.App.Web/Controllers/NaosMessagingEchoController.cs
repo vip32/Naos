@@ -31,7 +31,7 @@
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        [SwaggerTag("Naos Echo")]
+        [OpenApiTag("Naos Echo")]
         public ActionResult<IEnumerable<SubscriptionDetails>> Get()
         {
             this.messageBroker.Publish(new EchoMessage
