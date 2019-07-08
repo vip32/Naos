@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Foundation.ContentTypes\ContentTypes.csproj" />
     <ProjectReference Include="..\Foundation.Domain.Repositories\Domain.Repositories.csproj" />
+    <ProjectReference Include="..\Foundation.Infrastructure.Azure.LogAnalytics\Infrastructure.Azure.LogAnalytics.csproj" />
     <ProjectReference Include="..\Foundation.Infrastructure.Azure\Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\Foundation.Domain.Repositories\Domain.Repositories.csproj" />
     <ProjectReference Include="..\Configuration.App\Configuration.App.csproj" />

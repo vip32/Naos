@@ -11,43 +11,35 @@
     using Naos.Foundation;
     using Naos.Foundation.Domain;
 
-    public class LogAnalyticstRepository<TEntity> : IReadOnlyGenericRepository<TEntity>
+    public class LogAnalyticsRepository<TEntity> : IReadOnlyGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot, new() //, IDiscriminated
     {
-        private readonly ILogger<LogAnalyticstRepository<TEntity>> logger;
+        private readonly ILogger<LogAnalyticsRepository<TEntity>> logger;
         private readonly HttpClient httpClient;
+        private readonly LogAnalyticsConfiguration configuration;
         private readonly string accessToken;
-        private readonly string subscriptionId;
-        private readonly string resourceGroupName;
-        private readonly string workspaceName;
-        private readonly string logName;
         private readonly IEnumerable<LogAnalyticstEntityMap> entityMap;
 
-        public LogAnalyticstRepository( // TODO: use options+builder here
+        public LogAnalyticsRepository( // TODO: use options+builder here
             ILoggerFactory loggerFactory,
             HttpClient httpClient,
+            LogAnalyticsConfiguration configuration,
             string accessToken,
-            string subscriptionId,
-            string resourceGroupName,
-            string workspaceName,
-            string logName,
             IEnumerable<LogAnalyticstEntityMap> entityMap = null)
         {
             EnsureArg.IsNotNull(loggerFactory, nameof(loggerFactory));
-            EnsureArg.IsNotNullOrEmpty(accessToken, nameof(accessToken));
             EnsureArg.IsNotNull(httpClient, nameof(httpClient));
-            EnsureArg.IsNotNullOrEmpty(subscriptionId, nameof(subscriptionId));
-            EnsureArg.IsNotNullOrEmpty(resourceGroupName, nameof(resourceGroupName));
-            EnsureArg.IsNotNullOrEmpty(workspaceName, nameof(workspaceName));
-            EnsureArg.IsNotNullOrEmpty(logName, nameof(logName));
+            EnsureArg.IsNotNull(configuration, nameof(configuration));
+            EnsureArg.IsNotNullOrEmpty(accessToken, nameof(accessToken));
+            EnsureArg.IsNotNullOrEmpty(configuration.SubscriptionId, nameof(configuration.SubscriptionId));
+            EnsureArg.IsNotNullOrEmpty(configuration.ResourceGroupName, nameof(configuration.ResourceGroupName));
+            EnsureArg.IsNotNullOrEmpty(configuration.WorkspaceName, nameof(configuration.WorkspaceName));
+            EnsureArg.IsNotNullOrEmpty(configuration.LogName, nameof(configuration.LogName));
 
-            this.logger = loggerFactory.CreateLogger<LogAnalyticstRepository<TEntity>>();
+            this.logger = loggerFactory.CreateLogger<LogAnalyticsRepository<TEntity>>();
             this.httpClient = httpClient;
+            this.configuration = configuration;
             this.accessToken = accessToken;
-            this.subscriptionId = subscriptionId;
-            this.resourceGroupName = resourceGroupName;
-            this.workspaceName = workspaceName;
-            this.logName = logName;
             this.entityMap = LogAnalyticstEntityMap.CreateDefault()
                 .Concat(entityMap.Safe()).DistinctBy(e => e.SourceProperty);
         }
@@ -81,7 +73,7 @@
         public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
             var query = $@"
-{this.logName} |
+{this.configuration.LogName} |
  where {this.BuildQueryWhereParts(specifications).ToString(" and ")} |
  top {options?.Take ?? 1000} by LogProperties_{LogPropertyKeys.Ticks}_d desc";
 
@@ -129,7 +121,7 @@
 
         protected HttpRequestMessage PrepareRequest(string query)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, $"https://management.azure.com/subscriptions/{this.subscriptionId}/resourceGroups/{this.resourceGroupName}/providers/Microsoft.OperationalInsights/workspaces/{this.workspaceName}/api/query?api-version=2017-01-01-preview");
+            var request = new HttpRequestMessage(HttpMethod.Post, $"https://management.azure.com/subscriptions/{this.configuration.SubscriptionId}/resourceGroups/{this.configuration.ResourceGroupName}/providers/Microsoft.OperationalInsights/workspaces/{this.configuration.WorkspaceName}/api/query?api-version=2017-01-01-preview");
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", this.accessToken);
             request.Content = new StringContent(
                 SerializationHelper.JsonSerialize(
