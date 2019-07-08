@@ -13,7 +13,7 @@
         /// The path patterns to ignore.
         /// </summary>
         public string[] PathBlackListPatterns { get; set; } =
-            new[] { "/*.js", "/*.css", "/*.html", "/swagger*", "/favicon.ico", "/api/operations/logevents*" };
+            new[] { "/*.js", "/*.css", "/*.html", "/swagger*", "/favicon.ico", "/api/operations/*" };
 
         /// <summary>
         /// The optional filestorage to store the request/response details.
