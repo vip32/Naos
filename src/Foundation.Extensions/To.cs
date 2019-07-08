@@ -126,45 +126,43 @@
             }
         }
 
-        private static TEnum ToEnum<TEnum>(this int val)
+        private static TEnum ToEnum<TEnum>(this int source)
             where TEnum : struct//, IComparable, IFormattable, IConvertible
         {
             if(!typeof(TEnum).IsEnum)
             {
-                return default(TEnum);
+                return default;
             }
 
-            if(Enum.IsDefined(typeof(TEnum), val))
-            {//if a straightforward single value, return that
-                return (TEnum)Enum.ToObject(typeof(TEnum), val);
+            if(Enum.IsDefined(typeof(TEnum), source))
+            {
+                //if a straightforward single value, return that
+                return (TEnum)Enum.ToObject(typeof(TEnum), source);
             }
 
-            var candidates = Enum
-                .GetValues(typeof(TEnum))
+            var values = Enum.GetValues(typeof(TEnum))
                 .Cast<int>()
                 .ToList();
 
-            var isBitwise = candidates
-                .Select((n, i) =>
+            var isBitwise = values.Select((n, i) =>
+            {
+                if(i < 2)
                 {
-                    if(i < 2)
-                    {
-                        return n == 0 || n == 1;
-                    }
+                    return n == 0 || n == 1;
+                }
 
-                    return n / 2 == candidates[i - 1];
-                })
-                .All(y => y);
+                return n / 2 == values[i - 1];
+            })
+            .All(y => y);
 
-            var maxPossible = candidates.Sum();
+            var maxValue = values.Sum();
 
-            if(
-                Enum.TryParse(val.ToString(), out TEnum asEnum)
-                && (val <= maxPossible || !isBitwise)
-            )
-            {//if it can be parsed as a bitwise enum with multiple flags,
-             //or is not bitwise, return the result of TryParse
-                return asEnum;
+            if(Enum.TryParse(source.ToString(), out TEnum result)
+                && (source <= maxValue || !isBitwise))
+            {
+                //if it can be parsed as a bitwise enum with multiple flags,
+                //or is not bitwise, return the result of TryParse
+                return result;
             }
 
             //If the value is higher than all possible combinations,
@@ -172,10 +170,10 @@
             var excess = Enumerable
                 .Range(0, 32)
                 .Select(n => (int)Math.Pow(2, n))
-                .Where(n => n <= val && n > 0 && !candidates.Contains(n))
+                .Where(n => n <= source && n > 0 && !values.Contains(n))
                 .Sum();
 
-            return Enum.TryParse((val - excess).ToString(), out asEnum) ? asEnum : default(TEnum);
+            return Enum.TryParse((source - excess).ToString(), out result) ? result : default;
         }
     }
 }
