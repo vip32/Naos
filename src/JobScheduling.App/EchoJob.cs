@@ -5,20 +5,24 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
+    //using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
 
     public class EchoJob
     {
         private static readonly Random Random = new Random(DateTime.Now.GetHashCode());
         private readonly ILogger<EchoJob> logger;
+        //private readonly ITracer tracer;
         private readonly IHttpClientFactory httpClientFactory;
 
-        public EchoJob(ILogger<EchoJob> logger, IHttpClientFactory httpClientFactory)
+        public EchoJob(ILogger<EchoJob> logger/*, ITracer tracer*/, IHttpClientFactory httpClientFactory)
         {
             EnsureThat.EnsureArg.IsNotNull(logger, nameof(logger));
+            //EnsureThat.EnsureArg.IsNotNull(tracer, nameof(tracer));
             EnsureThat.EnsureArg.IsNotNull(httpClientFactory, nameof(httpClientFactory));
 
             this.logger = logger;
+            //this.tracer = tracer;
             this.httpClientFactory = httpClientFactory;
         }
 
@@ -26,10 +30,15 @@
         {
             await Task.Run(() =>
             {
-                if(!text.IsNullOrEmpty())
-                {
-                    this.logger.LogInformation($"{{LogKey:l}} {text}", LogKeys.JobScheduling);
-                }
+                //using(var scope = this.tracer.BuildSpan(this.GetType().Name.ToLower()).Activate())
+                //{
+                    Thread.Sleep(new TimeSpan(0, 0, 2));
+                    if(!text.IsNullOrEmpty())
+                    {
+                        this.logger.LogInformation($"{{LogKey:l}} {text}", LogKeys.JobScheduling);
+                    }
+
+                //}
             }, cancellationToken);
         }
 

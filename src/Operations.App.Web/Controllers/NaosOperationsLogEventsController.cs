@@ -101,23 +101,23 @@
             {
                 this.EnsureFilterContext();
 
-                var logEvents = await this.repository.FindAllAsync(
+                var entities = await this.repository.FindAllAsync(
                     this.filterContext.GetSpecifications<LogEvent>(),
                     this.filterContext.GetFindOptions<LogEvent>()).AnyContext();
 
-                foreach(var logEvent in logEvents
+                foreach(var entity in entities
                     .Where(l => !l.TrackType.EqualsAny(new[] { LogTrackTypes.Trace })))
                 {
                     var levelColor = "lime";
-                    if(logEvent.Level.Equals("Verbose", StringComparison.OrdinalIgnoreCase) || logEvent.Level.Equals("Debug", StringComparison.OrdinalIgnoreCase))
+                    if(entity.Level.Equals("Verbose", StringComparison.OrdinalIgnoreCase) || entity.Level.Equals("Debug", StringComparison.OrdinalIgnoreCase))
                     {
                         levelColor = "#75715E";
                     }
-                    else if(logEvent.Level.Equals("Warning", StringComparison.OrdinalIgnoreCase))
+                    else if(entity.Level.Equals("Warning", StringComparison.OrdinalIgnoreCase))
                     {
                         levelColor = "#FF8C00";
                     }
-                    else if(logEvent.Level.Equals("Error", StringComparison.OrdinalIgnoreCase) || logEvent.Level.Equals("Fatal", StringComparison.OrdinalIgnoreCase))
+                    else if(entity.Level.Equals("Error", StringComparison.OrdinalIgnoreCase) || entity.Level.Equals("Fatal", StringComparison.OrdinalIgnoreCase))
                     {
                         levelColor = "#FF0000";
                     }
@@ -126,14 +126,14 @@
                     var extraStyles = string.Empty;
 
                     await this.HttpContext.Response.WriteAsync("<div style='white-space: nowrap;'><span style='color: #EB1864; font-size: x-small;'>");
-                    await this.HttpContext.Response.WriteAsync($"{logEvent.Timestamp.ToUniversalTime():u}");
+                    await this.HttpContext.Response.WriteAsync($"{entity.Timestamp.ToUniversalTime():u}");
                     await this.HttpContext.Response.WriteAsync("</span>");
                     await this.HttpContext.Response.WriteAsync($"&nbsp;[<span style='color: {levelColor}'>");
-                    await this.HttpContext.Response.WriteAsync($"{logEvent.Level.ToUpper().Truncate(3, string.Empty)}</span>]");
-                    await this.HttpContext.Response.WriteAsync(!logEvent.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logevents/dashboard?q=CorrelationId={logEvent.CorrelationId}\">{logEvent.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;");
+                    await this.HttpContext.Response.WriteAsync($"{entity.Level.ToUpper().Truncate(3, string.Empty)}</span>]");
+                    await this.HttpContext.Response.WriteAsync(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logevents/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;");
                     await this.HttpContext.Response.WriteAsync($"<span style='color: {messageColor}; {extraStyles}'>");
                     //await this.HttpContext.Response.WriteAsync(logEvent.TrackType.SafeEquals("journal") ? "*" : "&nbsp;"); // journal prefix
-                    await this.HttpContext.Response.WriteAsync($"{logEvent.Message} <a target=\"blank\" href=\"/api/operations/logevents?q=Id={logEvent.Id}\">*</a>");
+                    await this.HttpContext.Response.WriteAsync($"{entity.Message} <a target=\"blank\" href=\"/api/operations/logevents?q=Id={entity.Id}\">*</a>");
                     await this.HttpContext.Response.WriteAsync("</span>");
                     await this.HttpContext.Response.WriteAsync("</div>");
                 }

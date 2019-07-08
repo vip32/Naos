@@ -45,7 +45,7 @@
             EnsureArg.IsNotNullOrEmpty(registration.Cron, nameof(registration.Cron));
             EnsureArg.IsNotNull(job, nameof(job));
 
-            registration.Key = registration.Key ?? HashAlgorithm.ComputeHash(job);
+            registration.Key ??= HashAlgorithm.ComputeHash(job);
             this.logger.LogInformation($"{{LogKey:l}} registration (key={{JobKey}}, id={registration.Identifier}, cron={registration.Cron}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")}, enabled={registration.Enabled})", LogKeys.JobScheduling, registration.Key);
 
             var item = this.Options.Registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(registration.Key));

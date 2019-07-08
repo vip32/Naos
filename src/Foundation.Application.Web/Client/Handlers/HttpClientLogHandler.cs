@@ -90,7 +90,7 @@
                 this.WriteLog(LogKeys.OutboundResponse, $"[{requestId}] http headers={string.Join("|", response.Headers.Select(h => $"{h.Key}={string.Join("|", h.Value)}"))}", level: level);
             }
 
-            this.WriteLog(LogKeys.OutboundResponse, $"[{requestId}] http {response.RequestMessage.Method} {{Url:l}} {{StatusCode}} ({response.StatusCode}) -> took {duration.Humanize(3)}", type: LogPropertyKeys.TrackOutboundResponse, duration: duration, args: new object[] { response.RequestMessage.RequestUri, (int)response.StatusCode });
+            this.WriteLog(LogKeys.OutboundResponse, $"[{requestId}] http {response.RequestMessage.Method} {{Url:l}} {{StatusCode}} ({response.StatusCode}) -> took {duration.Humanize()}", type: LogPropertyKeys.TrackOutboundResponse, duration: duration, args: new object[] { response.RequestMessage.RequestUri, (int)response.StatusCode });
             Foundation.LoggerExtensions.LogTrace(this.logger, LogKeys.OutboundResponse, requestId, response.RequestMessage.RequestUri.PathAndQuery.SliceTill("?"), LogTraceNames.Http, duration);
         }
 

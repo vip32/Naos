@@ -89,7 +89,7 @@
                 }
 
                 var contentLength = context.Response.ContentLength ?? 0;
-                this.logger.LogJournal(LogKeys.InboundResponse, $"[{requestId}] http {context.Request.Method} {{Url:l}} {{StatusCode}} ({ReasonPhrases.GetReasonPhrase(context.Response.StatusCode)}) -> took {duration.Humanize(3)} (size={contentLength.Bytes().ToString("#.##")})", LogPropertyKeys.TrackInboundResponse, duration, args: new object[] { new Uri(context.Request.GetDisplayUrl()), context.Response.StatusCode });
+                this.logger.LogJournal(LogKeys.InboundResponse, $"[{requestId}] http {context.Request.Method} {{Url:l}} {{StatusCode}} ({ReasonPhrases.GetReasonPhrase(context.Response.StatusCode)}) -> took {duration.Humanize()} (size={contentLength.Bytes().ToString("#.##")})", LogPropertyKeys.TrackInboundResponse, duration, args: new object[] { new Uri(context.Request.GetDisplayUrl()), context.Response.StatusCode });
                 this.logger.LogTrace(LogKeys.InboundResponse, requestId, context.Request.Path, LogTraceNames.Http, duration);
             }).AnyContext();
         }
