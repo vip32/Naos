@@ -55,6 +55,24 @@
 
         public string TrackType { get; set; }
 
+        public string OperationName { get; set; }
+
+        public string TraceId { get; } // correlationid
+
+        public string SpanId { get; }
+
+        public string ParentSpanId { get; }
+
+        public SpanKind? Kind { get; }
+
+        public SpanStatus? Status { get; set; }
+
+        public string StatusDescription { get; set; }
+
+        public DateTimeOffset? StartTime { get; set; }
+
+        public DateTimeOffset? EndTime { get; set; }
+
         public Dictionary<string, object> Properties { get; set; } = new Dictionary<string, object>();
 
         public DomainEvents DomainEvents => new DomainEvents();
