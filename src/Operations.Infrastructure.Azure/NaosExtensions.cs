@@ -32,14 +32,12 @@
                                     configuration.ApiAuthentication?.ClientId,
                                     configuration.ApiAuthentication?.ClientSecret)).Result;
 
+                    configuration.LogName ??= $"{logName.Replace("_CL", string.Empty)}_CL";
                     return new LogAnalyticsLogEventRepository(
                         sp.GetRequiredService<ILoggerFactory>(),
                         new System.Net.Http.HttpClient(), // TODO: resolve from container!
-                        token?.AccessToken,
-                        configuration.SubscriptionId,
-                        configuration.ResourceGroupName,
-                        configuration.WorkspaceName,
-                        $"{logName.Replace("_CL", string.Empty)}_CL");
+                        configuration,
+                        token?.AccessToken);
                 });
                 context.Messages.Add($"{LogKeys.Startup} naos services builder: logging azure loganalytics repository added (name={logName}_CL, workspace={configuration.WorkspaceId})");
             }

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Operations.Infrastructure.Azure
+﻿namespace Naos.Foundation.Infrastructure.Azure
 {
     public class LogAnalyticsResponse
     {
