@@ -1,8 +1,10 @@
 ﻿namespace Naos.Core.UnitTests.Tracing.Domain
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using MediatR;
+    using Naos.Core.Tracing.App;
     using Naos.Core.Tracing.Domain;
     using NSubstitute;
     using Shouldly;
@@ -15,10 +17,13 @@
         {
             var tracer = new Tracer(
                 new AsyncLocalScopeManager(Substitute.For<IMediator>()));
-            tracer.ActiveSpan.ShouldBeNull();
+            tracer.CurrentSpan.ShouldBeNull();
             ISpan span = null;
+            var capturedSpans = new List<ISpan>();
+
             using(var parentScope = tracer.BuildSpan("spanA").Activate())
             {
+                capturedSpans.Add(parentScope.Span);
                 parentScope.Span.AddLog(SpanLogKey.Message, "test123");
                 parentScope.Span.OperationName.ShouldBe("spanA");
                 parentScope.Span.TraceId.ShouldNotBeNull();
@@ -27,9 +32,9 @@
                 parentScope.Span.Kind.ShouldBe(SpanKind.Internal);
                 parentScope.Span.Logs.Count().ShouldBe(1); // contain logs
 
-                tracer.ActiveSpan.ShouldNotBeNull();
-                tracer.ActiveSpan.OperationName.ShouldBe("spanA");
-                tracer.ActiveSpan.SpanId.ShouldBe(parentScope.Span.SpanId);
+                tracer.CurrentSpan.ShouldNotBeNull();
+                tracer.CurrentSpan.OperationName.ShouldBe("spanA");
+                tracer.CurrentSpan.SpanId.ShouldBe(parentScope.Span.SpanId);
 
                 parentScope.Span.WithTag("x", "xxx");
                 span = parentScope.Span;
@@ -37,14 +42,15 @@
                 using(var childScope = tracer.BuildSpan("spanB", SpanKind.Server)
                     .WithTag("a", "aaa").Activate())
                 {
+                    capturedSpans.Add(childScope.Span);
                     childScope.Span.OperationName.ShouldBe("spanB");
                     childScope.Span.TraceId.ShouldBe(parentScope.Span.TraceId);
                     childScope.Span.SpanId.ShouldNotBe(parentScope.Span.SpanId);
                     childScope.Span.Kind.ShouldBe(SpanKind.Server);
 
-                    tracer.ActiveSpan.ShouldNotBeNull();
-                    tracer.ActiveSpan.OperationName.ShouldBe("spanB");
-                    tracer.ActiveSpan.SpanId.ShouldNotBe(parentScope.Span.SpanId);
+                    tracer.CurrentSpan.ShouldNotBeNull();
+                    tracer.CurrentSpan.OperationName.ShouldBe("spanB");
+                    tracer.CurrentSpan.SpanId.ShouldNotBe(parentScope.Span.SpanId);
 
                     childScope.Span.WithTag("y", "yyy");
 
@@ -56,7 +62,8 @@
 
                 using(var failedScope = tracer.BuildSpan("failure").Activate())
                 {
-                    var failedSpan = tracer.ActiveSpan;
+                    capturedSpans.Add(failedScope.Span);
+                    var failedSpan = tracer.CurrentSpan;
                     try
                     {
                         throw new Exception("oops");
@@ -71,16 +78,16 @@
                     failedSpan.Logs.Count().ShouldBeGreaterThan(0); // contain error logs
                 }
 
-                using(var childScope = tracer.BuildSpan("message")
-                    .IgnoreParentSpan().Activate())
+                using(var childScope = tracer.BuildSpan("message").Activate())
                 {
+                    capturedSpans.Add(childScope.Span);
                     // this happens in message handler (subscriber)
                     // get span TRACEID from message headers
                 }
             }
 
             span.Status.ShouldBe(SpanStatus.Succeeded);
-            tracer.ActiveSpan.ShouldBeNull();
+            tracer.CurrentSpan.ShouldBeNull();
         }
     }
 }

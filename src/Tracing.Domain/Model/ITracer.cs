@@ -4,7 +4,7 @@
 
     public interface ITracer
     {
-        ISpan ActiveSpan { get; }
+        ISpan CurrentSpan { get; }
 
         IScopeManager ScopeManager { get; }
 

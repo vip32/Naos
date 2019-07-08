@@ -59,13 +59,13 @@
             this.ScopeManager = scopeManager;
         }
 
-        public ISpan ActiveSpan => this.ScopeManager.Current?.Span; // use in outbound httpclient
+        public ISpan CurrentSpan => this.ScopeManager.Current?.Span; // use in outbound httpclient
 
         public IScopeManager ScopeManager { get; }
 
         public ISpanBuilder BuildSpan(string operationName, SpanKind kind = SpanKind.Internal, ISpan parent = null)
         {
-            return new SpanBuilder(this, operationName, kind, parent ?? this.ActiveSpan)
+            return new SpanBuilder(this, operationName, kind, parent ?? this.CurrentSpan)
                 .WithTag(SpanTagKey.SpanKind, kind.ToString()); // pass correlationid as traceid
         }
 
