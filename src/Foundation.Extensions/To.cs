@@ -29,7 +29,7 @@
             {
                 if(typeof(T) == typeof(Guid))
                 {
-                    return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(source.ToString());
+                    return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFrom(Convert.ToString(source, cultureInfo ?? CultureInfo.InvariantCulture));
                 }
 
                 return (T)Convert.ChangeType(source, typeof(T), cultureInfo ?? CultureInfo.InvariantCulture);
@@ -59,7 +59,7 @@
             {
                 if(typeof(T) == typeof(Guid))
                 {
-                    result = (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(source.ToString());
+                    result = (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFrom(Convert.ToString(source, cultureInfo ?? CultureInfo.InvariantCulture));
                     return true;
                 }
 
