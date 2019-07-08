@@ -16,6 +16,8 @@
 
         SpanKind? Kind { get; }
 
+        string LogKey { get; }
+
         SpanStatus? Status { get; }
 
         string StatusDescription { get; }
@@ -35,6 +37,8 @@
         ISpan End(SpanStatus status = SpanStatus.Succeeded, string statusDescription = null, DateTimeOffset? date = null);
 
         ISpan WithOperationName(string operationName);
+
+        ISpan WithLogKey(string logKey);
 
         ISpan WithTag(string key, object value);
 

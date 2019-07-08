@@ -7,26 +7,30 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
 
     public class JobScheduler : IJobScheduler
     {
         private readonly ILogger<JobScheduler> logger;
+        private readonly ITracer tracer;
         private readonly IMutex mutex;
         private int activeCount;
         private Action<Exception> errorHandler;
 
-        public JobScheduler(ILoggerFactory loggerFactory, IMutex mutex)
-            : this(loggerFactory, mutex, null)
+        public JobScheduler(ILoggerFactory loggerFactory, ITracer tracer, IMutex mutex)
+            : this(loggerFactory, tracer, mutex, null)
         {
         }
 
-        public JobScheduler(ILoggerFactory loggerFactory, IMutex mutex, JobSchedulerOptions options)
+        public JobScheduler(ILoggerFactory loggerFactory, ITracer tracer, IMutex mutex, JobSchedulerOptions options)
         {
             EnsureArg.IsNotNull(loggerFactory, nameof(loggerFactory));
+            EnsureArg.IsNotNull(tracer, nameof(tracer));
             EnsureArg.IsNotNull(options, nameof(options));
 
             this.logger = loggerFactory.CreateLogger<JobScheduler>();
+            this.tracer = tracer;
             this.mutex = mutex ?? new InProcessMutex(null);
             this.Options = options;
         }
@@ -157,17 +161,14 @@
                         }))
                         {
                             // TODO: publish domain event (job started)
-                            var span = IdGenerator.Instance.Next;
                             this.logger.LogJournal(LogKeys.JobScheduling, $"job started (key={{JobKey}}, id={registration.Identifier}, type={job.GetType().PrettyName()}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")})", LogPropertyKeys.TrackStartJob, args: new[] { registration.Key });
-                            this.logger.LogTrace(LogKeys.JobScheduling, span, registration.Key, LogTraceNames.Job);
-                            await job.ExecuteAsync(cancellationToken, args).AnyContext();
-                            await Run.DelayedAsync(new TimeSpan(0, 0, 1), () =>
+                            using(var scope = this.tracer?.BuildSpan(registration.Key, LogKeys.JobScheduling, SpanKind.Producer).Activate())
                             {
-                                timer.Stop();
-                                this.logger.LogJournal(LogKeys.JobScheduling, $"job finished (key={{JobKey}}, id={registration.Identifier}, type={job.GetType().PrettyName()})", LogPropertyKeys.TrackFinishJob, args: new[] { LogKeys.JobScheduling, registration.Key });
-                                this.logger.LogTrace(LogKeys.JobScheduling, span, registration.Key, LogTraceNames.Job, timer.Elapsed);
-                                return Task.CompletedTask;
-                            });
+                                await job.ExecuteAsync(cancellationToken, args).AnyContext();
+                            }
+
+                            this.logger.LogJournal(LogKeys.JobScheduling, $"job finished (key={{JobKey}}, id={registration.Identifier}, type={job.GetType().PrettyName()})", LogPropertyKeys.TrackFinishJob, args: new[] { LogKeys.JobScheduling, registration.Key });
+
                             // TODO: publish domain event (job finished)
                         }
                     }

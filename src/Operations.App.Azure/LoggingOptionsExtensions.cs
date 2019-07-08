@@ -126,7 +126,8 @@
                     if(dashboardEnabled) // registers the loganalytics repo which is used by the dashboard (NaosOperationsLogEventsController)
                     {
                         // configure the repository for the dashboard (controller)
-                        options.Context.AddAzureLogAnalytics(logName);
+                        options.Context.AddAzureLogAnalyticsLogging(logName);
+                        options.Context.AddAzureLogAnalyticsTracing(logName);
                     }
                 }
             }

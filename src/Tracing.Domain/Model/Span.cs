@@ -15,6 +15,7 @@
             this.SpanId = spanId;
             this.Kind = kind;
             this.ParentSpanId = parentSpanId;
+            this.LogKey = LogKeys.Tracing;
         }
 
         public string OperationName { get; private set; }
@@ -32,6 +33,8 @@
         public string ParentSpanId { get; }
 
         public SpanKind? Kind { get; }
+
+        public string LogKey { get; set; }
 
         public SpanStatus? Status { get; private set; }
 
@@ -94,6 +97,17 @@
             }
 
             this.OperationName = operationName;
+            return this;
+        }
+
+        public ISpan WithLogKey(string logKey)
+        {
+            if(logKey.IsNullOrEmpty())
+            {
+                return this;
+            }
+
+            this.LogKey = logKey;
             return this;
         }
 

@@ -162,8 +162,15 @@
                         // dynamicly map all specified properties defined in entityMaps
                         foreach(var item in this.entityMap)
                         {
-                            accessors[result, item.SourceProperty] = properties.TryGetValue(item.TargetProperty);
-                            properties.Remove(item.TargetProperty);
+                            try
+                            {
+                                accessors[result, item.SourceProperty] = properties.TryGetValue(item.TargetProperty);
+                                //properties.Remove(item.TargetProperty); // TODO: remove only if no further mappings based on TargetProperty
+                            }
+                            catch(System.ArgumentOutOfRangeException)
+                            {
+                                // target property not found, fastmember cannot set it
+                            }
                         }
 
                         yield return result;

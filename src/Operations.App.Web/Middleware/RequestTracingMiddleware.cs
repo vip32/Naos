@@ -41,6 +41,7 @@
                 using(var scope = tracer
                     .BuildSpan(
                         context.Request.Uri().AbsolutePath,
+                        LogKeys.InboundRequest,
                         SpanKind.Server,
                         new Span(context.GetCorrelationId(), null)) // TODO: get service name as operationname (servicedescriptor?)
                     .IgnoreParentSpan()

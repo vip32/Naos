@@ -1,6 +1,6 @@
 ﻿namespace Naos.Foundation
 {
-    public struct LogTrackTypeValues
+    public struct LogTrackTypes
     {
         public const string Journal = "journal";
         public const string Trace = "trace";

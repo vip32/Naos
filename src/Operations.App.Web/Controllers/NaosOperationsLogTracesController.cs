@@ -11,21 +11,22 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Operations.Domain;
     using Naos.Core.RequestFiltering.App;
+    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
     using NSwag.Annotations;
 
-    [Route("api/operations/logevents")]
+    [Route("api/operations/logtraces")]
     [ApiController]
-    public class NaosOperationsLogEventsController : ControllerBase
+    public class NaosOperationsLogTracesController : ControllerBase
     {
-        private readonly ILogger<NaosOperationsLogEventsController> logger;
+        private readonly ILogger<NaosOperationsLogTracesController> logger;
         private readonly FilterContext filterContext;
-        private readonly ILogEventRepository repository;
+        private readonly ILogTraceRepository repository;
         private readonly ILogEventService service;
 
-        public NaosOperationsLogEventsController(
+        public NaosOperationsLogTracesController(
             ILoggerFactory loggerFactory,
-            ILogEventRepository repository,
+            ILogTraceRepository repository,
             ILogEventService service,
             IFilterContextAccessor filterContext)
         {
@@ -33,7 +34,7 @@
             EnsureThat.EnsureArg.IsNotNull(repository, nameof(repository));
             EnsureThat.EnsureArg.IsNotNull(service, nameof(service));
 
-            this.logger = loggerFactory.CreateLogger<NaosOperationsLogEventsController>();
+            this.logger = loggerFactory.CreateLogger<NaosOperationsLogTracesController>();
             this.filterContext = filterContext.Context ?? new FilterContext();
             this.repository = repository;
             this.service = service;
@@ -44,7 +45,7 @@
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         [OpenApiTag("Naos Operations")]
-        public async Task<ActionResult<IEnumerable<LogEvent>>> Get()
+        public async Task<ActionResult<IEnumerable<LogTrace>>> Get()
         {
             //var acceptHeader = this.HttpContext.Request.Headers.GetValue("Accept");
             //if (acceptHeader.ContainsAny(new[] { ContentType.HTML.ToValue(), ContentType.HTM.ToValue() }))
@@ -67,13 +68,13 @@
             return this.GetHtmlAsync();
         }
 
-        private async Task<IEnumerable<LogEvent>> GetJsonAsync()
+        private async Task<IEnumerable<LogTrace>> GetJsonAsync()
         {
             this.EnsureFilterContext();
 
             return await this.repository.FindAllAsync(
-                this.filterContext.GetSpecifications<LogEvent>(),
-                this.filterContext.GetFindOptions<LogEvent>()).AnyContext();
+                this.filterContext.GetSpecifications<LogTrace>(),
+                this.filterContext.GetFindOptions<LogTrace>()).AnyContext();
         }
 
         private async Task GetHtmlAsync()
@@ -102,11 +103,10 @@
                 this.EnsureFilterContext();
 
                 var logEvents = await this.repository.FindAllAsync(
-                    this.filterContext.GetSpecifications<LogEvent>(),
-                    this.filterContext.GetFindOptions<LogEvent>()).AnyContext();
+                    this.filterContext.GetSpecifications<LogTrace>(),
+                    this.filterContext.GetFindOptions<LogTrace>()).AnyContext();
 
-                foreach(var logEvent in logEvents
-                    .Where(l => !l.TrackType.EqualsAny(new[] { LogTrackTypes.Trace })))
+                foreach(var logEvent in logEvents) // .Where(l => !l.TrackType.EqualsAny(new[] { LogTrackTypes.Trace }))
                 {
                     var levelColor = "lime";
                     if(logEvent.Level.Equals("Verbose", StringComparison.OrdinalIgnoreCase) || logEvent.Level.Equals("Debug", StringComparison.OrdinalIgnoreCase))
@@ -130,10 +130,10 @@
                     await this.HttpContext.Response.WriteAsync("</span>");
                     await this.HttpContext.Response.WriteAsync($"&nbsp;[<span style='color: {levelColor}'>");
                     await this.HttpContext.Response.WriteAsync($"{logEvent.Level.ToUpper().Truncate(3, string.Empty)}</span>]");
-                    await this.HttpContext.Response.WriteAsync(!logEvent.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logevents/dashboard?q=CorrelationId={logEvent.CorrelationId}\">{logEvent.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;");
+                    await this.HttpContext.Response.WriteAsync(!logEvent.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logtraces/dashboard?q=CorrelationId={logEvent.CorrelationId}\">{logEvent.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;");
                     await this.HttpContext.Response.WriteAsync($"<span style='color: {messageColor}; {extraStyles}'>");
                     //await this.HttpContext.Response.WriteAsync(logEvent.TrackType.SafeEquals("journal") ? "*" : "&nbsp;"); // journal prefix
-                    await this.HttpContext.Response.WriteAsync($"{logEvent.Message} <a target=\"blank\" href=\"/api/operations/logevents?q=Id={logEvent.Id}\">*</a>");
+                    await this.HttpContext.Response.WriteAsync($"{logEvent.Message} <a target=\"blank\" href=\"/api/operations/logtraces?q=Id={logEvent.Id}\">*</a>");
                     await this.HttpContext.Response.WriteAsync("</span>");
                     await this.HttpContext.Response.WriteAsync("</div>");
                 }

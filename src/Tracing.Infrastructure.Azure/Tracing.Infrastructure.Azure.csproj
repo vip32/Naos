@@ -2,15 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.Operations.Infrastructure.Azure</AssemblyName>
-    <RootNamespace>Naos.Core.Operations.Infrastructure.Azure</RootNamespace>
+    <AssemblyName>Naos.Core.Tracing.Infrastructure.Azure</AssemblyName>
+    <RootNamespace>Naos.Core.Tracing.Infrastructure.Azure</RootNamespace>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="AzureMonitor\**" />
-    <EmbeddedResource Remove="AzureMonitor\**" />
-    <None Remove="AzureMonitor\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.2.0" />
@@ -24,8 +18,7 @@
     <ProjectReference Include="..\Foundation.Infrastructure.Azure.LogAnalytics\Infrastructure.Azure.LogAnalytics.csproj" />
     <ProjectReference Include="..\Foundation.Infrastructure.Azure\Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\Foundation.Domain.Repositories\Domain.Repositories.csproj" />
+    <ProjectReference Include="..\Tracing.Domain\Tracing.Domain.csproj" />
     <ProjectReference Include="..\Configuration.App\Configuration.App.csproj" />
-    <ProjectReference Include="..\Operations.Domain\Operations.Domain.csproj" />
   </ItemGroup>
-
 </Project>

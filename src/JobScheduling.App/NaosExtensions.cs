@@ -10,6 +10,7 @@
     using Naos.Core.JobScheduling;
     using Naos.Core.JobScheduling.App;
     using Naos.Core.JobScheduling.Domain;
+    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
 
     [ExcludeFromCodeCoverage]
@@ -41,6 +42,7 @@
 
                 return new JobScheduler(
                     sp.GetRequiredService<ILoggerFactory>(),
+                    sp.CreateScope().ServiceProvider.GetService(typeof(ITracer)) as ITracer,
                     new InProcessMutex(sp.GetRequiredService<ILoggerFactory>()),
                     options);
             });

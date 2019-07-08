@@ -38,7 +38,7 @@
                 parentScope.Span.WithTag("x", "xxx");
                 span = parentScope.Span;
 
-                using(var childScope = tracer.BuildSpan("spanB", SpanKind.Server)
+                using(var childScope = tracer.BuildSpan("spanB", kind: SpanKind.Server)
                     .WithTag("a", "aaa").Activate())
                 {
                     capturedSpans.Add(childScope.Span);

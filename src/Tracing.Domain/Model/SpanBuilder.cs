@@ -8,12 +8,13 @@
     {
         private readonly ITracer tracer;
         private readonly string operationName;
+        private readonly string logKey;
         private readonly SpanKind kind;
         private readonly string traceId;
         private readonly DataDictionary tags = new DataDictionary();
         private ISpan parent;
 
-        public SpanBuilder(ITracer tracer, string operationName, SpanKind kind = SpanKind.Internal, ISpan parent = null)
+        public SpanBuilder(ITracer tracer, string operationName, string logKey = LogKeys.Tracing, SpanKind kind = SpanKind.Internal, ISpan parent = null)
         {
             EnsureArg.IsNotNull(tracer, nameof(tracer));
             EnsureArg.IsNotNullOrEmpty(operationName, nameof(operationName));
@@ -21,6 +22,7 @@
             this.tracer = tracer;
             this.traceId = parent?.TraceId;
             this.operationName = operationName;
+            this.logKey = logKey;
             this.kind = kind;
             this.parent = parent;
             // TODO: copy baggage items from parent
@@ -30,6 +32,7 @@
         {
             return new Span(this.traceId ?? IdGenerator.Instance.Next, RandomGenerator.GenerateString(5), this.kind, this.parent?.SpanId)
                 .WithOperationName(this.operationName)
+                .WithLogKey(this.logKey)
                 .WithTags(this.tags)
                 .SetStatus(SpanStatus.Transient)
                 .Start();

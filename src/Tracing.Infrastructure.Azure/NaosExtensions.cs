@@ -5,15 +5,16 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Microsoft.IdentityModel.Clients.ActiveDirectory;
-    using Naos.Core.Operations.Domain;
-    using Naos.Core.Operations.Infrastructure.Azure;
+    using Naos.Core.Tracing.Domain;
+    using Naos.Core.Tracing.Infrastructure.Azure;
     using Naos.Foundation;
     using Naos.Foundation.Infrastructure;
+    using Naos.Foundation.Infrastructure.Azure;
 
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions
     {
-        public static INaosServicesContext AddAzureLogAnalyticsLogging(this INaosServicesContext context, string logName)
+        public static INaosServicesContext AddAzureLogAnalyticsTracing(this INaosServicesContext context, string logName)
         {
             EnsureArg.IsNotNull(context, nameof(context));
             EnsureArg.IsNotNull(context.Services, nameof(context.Services));
@@ -21,7 +22,7 @@
             var configuration = context.Configuration?.GetSection("naos:operations:logging:azureLogAnalytics").Get<LogAnalyticsConfiguration>(); // TODO: move to operations:logevents:azureLogAnalytics
             if(configuration != null)
             {
-                context.Services.AddScoped<ILogEventRepository>(sp =>
+                context.Services.AddScoped<ILogTraceRepository>(sp =>
                 {
                     // authenticate api https://dev.int.loganalytics.io/documentation/1-Tutorials/ARM-API
                     var token = new AuthenticationContext(
@@ -33,7 +34,7 @@
                                     configuration.ApiAuthentication?.ClientSecret)).Result;
 
                     configuration.LogName ??= $"{logName.Replace("_CL", string.Empty)}_CL";
-                    return new LogAnalyticsLogEventRepository(
+                    return new LogAnalyticsLogTraceRepository(
                         sp.GetRequiredService<ILoggerFactory>(),
                         new System.Net.Http.HttpClient(), // TODO: resolve from container!
                         configuration,

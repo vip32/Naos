@@ -16,8 +16,14 @@
         public const string ServiceName = "ns_svcname";
 
         public const string TrackType = "ns_trktyp";
-        public const string TrackSpan = "ns_trksp";
         public const string TrackName = "ns_trknm";
+        public const string TrackId = "ns_trkid";
+        public const string TrackParentId = "ns_trkpid";
+        public const string TrackKind = "ns_trkknd";
+        public const string TrackStatus = "ns_trksts";
+        public const string TrackStatusDescription = "ns_trkstd";
+        public const string TrackStartTime = "ns_trkstt";
+        public const string TrackEndTime = "ns_trkent";
         public const string TrackDuration = "ns_trkdur";
         public const string TrackTimestamp = "ns_trktsp";
         public const string TrackMisc = "ns_trkmsc";

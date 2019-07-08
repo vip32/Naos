@@ -33,7 +33,7 @@
 
         public string Level { get; set; }
 
-        public string Key { get; set; } // logkey
+        public string Key { get; set; } // MAPPEd
 
         public string Environment { get; set; }
 
@@ -53,27 +53,34 @@
 
         public string SourceContext { get; set; }
 
-        public string TrackType { get; set; }
+        public string TrackType { get; set; } // MAPPEd
 
-        public string OperationName { get; set; }
+        public string OperationName { get; set; } // MAPPEd
 
-        public string TraceId { get; } // correlationid
+        public string TraceId { get; set; } // // MAPPEd to correlationid
 
-        public string SpanId { get; }
+        public string SpanId { get; set; } // MAPPEd
 
-        public string ParentSpanId { get; }
+        public string ParentSpanId { get; set; } // MAPPEd
 
-        public SpanKind? Kind { get; }
+        public string Kind { get; set; } // MAPPEd
 
-        public SpanStatus? Status { get; set; }
+        public string Status { get; set; } // MAPPEd
 
-        public string StatusDescription { get; set; }
+        public string StatusDescription { get; set; } // MAPPEd
 
-        public DateTimeOffset? StartTime { get; set; }
+        public DateTime? StartTime { get; set; }
 
-        public DateTimeOffset? EndTime { get; set; }
+        public DateTime? EndTime { get; set; }
+
+        public TimeSpan Duration =>
+            this.EndTime.HasValue && this.StartTime.HasValue ? this.EndTime.Value - this.StartTime.Value : TimeSpan.Zero;
 
         public Dictionary<string, object> Properties { get; set; } = new Dictionary<string, object>();
+
+        public Dictionary<string, object> Tags { get; set; } = new Dictionary<string, object>();
+
+        public Dictionary<string, object> Logs { get; set; } = new Dictionary<string, object>();
 
         public DomainEvents DomainEvents => new DomainEvents();
 
