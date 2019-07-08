@@ -7,13 +7,13 @@
         /// <summary>
         /// Adds the item to the result list atr the given index (pos).
         /// </summary>
-        /// <typeparam name="TItem">the source.</typeparam>
+        /// <typeparam name="T">the source.</typeparam>
         /// <param name="source">the source collection.</param>
         /// <param name="item">The item to add to the result.</param>
         /// <param name="index">the index at which the item should inserted.</param>
-        public static IEnumerable<TItem> Insert<TItem>(
-            this IEnumerable<TItem> source,
-            TItem item,
+        public static IEnumerable<T> Insert<T>(
+            this IEnumerable<T> source,
+            T item,
             int index = 0)
         {
             if(item == null)
@@ -23,13 +23,13 @@
 
             if(source == null)
             {
-                return new List<TItem>
+                return new List<T>
                 {
                     item
                 };
             }
 
-            var result = new List<TItem>(source);
+            var result = new List<T>(source);
             if(index >= 0)
             {
                 result.Insert(index, item);
