@@ -50,7 +50,7 @@
                 {
                     try
                     {
-                        this.logger.Log(LogLevel.Information, $"{{LogKey:l}} {notification.Span.OperationName:l} (parent={notification.Span.ParentSpanId})", notification.Span.LogKey);
+                        this.logger.Log(LogLevel.Information, $"{{LogKey:l}} {notification.Span.OperationName:l}", notification.Span.LogKey);
                     }
                     catch(AggregateException ex) // IndexOutOfRangeException
                     {
