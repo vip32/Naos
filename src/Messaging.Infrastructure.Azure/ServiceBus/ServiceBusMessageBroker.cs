@@ -92,12 +92,10 @@
                 message.CorrelationId = IdGenerator.Instance.Next;
             }
 
-            var loggerState = new Dictionary<string, object>
+            using(this.logger.BeginScope(new Dictionary<string, object>
             {
-                [LogPropertyKeys.CorrelationId] = message.CorrelationId,
-            };
-
-            using(this.logger.BeginScope(loggerState))
+                [LogPropertyKeys.CorrelationId] = message.CorrelationId
+            }))
             {
                 if(message.Id.IsNullOrEmpty())
                 {
