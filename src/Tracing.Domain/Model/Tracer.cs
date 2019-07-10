@@ -63,9 +63,9 @@
 
         public IScopeManager ScopeManager { get; }
 
-        public ISpanBuilder BuildSpan(string operationName, string logKey = LogKeys.Tracing, SpanKind kind = SpanKind.Internal, ISpan parent = null)
+        public ISpanBuilder BuildSpan(string operationName, string logKey = LogKeys.Tracing, SpanKind kind = SpanKind.Internal, ISpan parent = null, bool ignoreCurrentSpan = false)
         {
-            return new SpanBuilder(this, operationName, logKey ?? LogKeys.Tracing, kind, parent ?? this.CurrentSpan)
+            return new SpanBuilder(this, operationName, logKey ?? LogKeys.Tracing, kind, parent == null && ignoreCurrentSpan ? null : parent ?? this.CurrentSpan)
                 .WithTag(SpanTagKey.SpanKind, kind.ToString()); // pass correlationid as traceid
         }
 
