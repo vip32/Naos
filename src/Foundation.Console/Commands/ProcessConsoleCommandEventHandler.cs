@@ -29,6 +29,12 @@
             Console.WriteLine($"Is64BitOperatingSystem: {Environment.Is64BitOperatingSystem}", Color.Gray);
             Console.WriteLine($"Is64BitProcess: {Environment.Is64BitProcess}", Color.Gray);
 
+            if(request.Command.Collect)
+            {
+                Console.WriteLine("GC collect", Color.Gray);
+                GC.Collect();
+            }
+
             //"PhysicalPath", HostingEnvironment.ApplicationPhysicalPath);
             //"Machine", Environment.MachineName);
             //"ProcessorCount", Environment.ProcessorCount);
