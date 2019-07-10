@@ -41,7 +41,7 @@
 
         public ServiceBusMessageBrokerOptionsBuilder Map(ISubscriptionMap map)
         {
-            this.Target.Map = map;
+            this.Target.Subscriptions = map;
             return this;
         }
 

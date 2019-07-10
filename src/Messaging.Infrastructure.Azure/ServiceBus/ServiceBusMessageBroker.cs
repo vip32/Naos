@@ -30,7 +30,7 @@
             EnsureArg.IsNotNullOrEmpty(options.SubscriptionName, nameof(options.SubscriptionName));
 
             this.options = options;
-            this.options.Map = options.Map ?? new SubscriptionMap();
+            this.options.Subscriptions = options.Subscriptions ?? new SubscriptionMap();
             this.options.MessageScope = options.MessageScope ?? options.SubscriptionName;
             this.logger = options.CreateLogger<ServiceBusMessageBroker>();
             this.serializer = this.options.Serializer ?? DefaultSerializer.Create;
@@ -56,7 +56,7 @@
             var messageName = typeof(TMessage).PrettyName();
             var ruleName = this.GetRuleName(messageName);
 
-            if(!this.options.Map.Exists<TMessage>())
+            if(!this.options.Subscriptions.Exists<TMessage>())
             {
                 this.logger.LogJournal(LogKeys.Messaging, "subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, entityPath={EntityPath})", LogPropertyKeys.TrackSubscribeMessage, args: new[] { messageName, this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name, this.options.Provider.EntityPath });
 
@@ -74,7 +74,7 @@
                     this.logger.LogDebug($"{{LogKey:l}} servicebus found subscription rule: {ruleName}", LogKeys.Messaging);
                 }
 
-                this.options.Map.Add<TMessage, THandler>();
+                this.options.Subscriptions.Add<TMessage, THandler>();
             }
 
             return this;
@@ -84,7 +84,7 @@
         /// Publishes the specified message.
         /// </summary>
         /// <param name="message">The message.</param>
-        public void Publish(Domain.Message message)
+        public void Publish(Domain.Message message) // TODO: provide (parent) SPAN here? as ITracer is scope and this broker is a singleton
         {
             EnsureArg.IsNotNull(message, nameof(message));
             if(message.CorrelationId.IsNullOrEmpty())
@@ -163,7 +163,7 @@
                 this.logger.LogDebug($"{{LogKey:l}} servicebus subscription rule not found: {ruleName}", LogKeys.Messaging);
             }
 
-            this.options.Map.Remove<TMessage, THandler>();
+            this.options.Subscriptions.Remove<TMessage, THandler>();
         }
 
         private string GetRuleName(string messageName)
@@ -210,11 +210,11 @@
             var processed = false;
             var messageName = serviceBusMessage.Label;
 
-            if(this.options.Map.Exists(messageName))
+            if(this.options.Subscriptions.Exists(messageName))
             {
-                foreach(var subscription in this.options.Map.GetAll(messageName))
+                foreach(var subscription in this.options.Subscriptions.GetAll(messageName))
                 {
-                    var messageType = this.options.Map.GetByName(messageName);
+                    var messageType = this.options.Subscriptions.GetByName(messageName);
                     if(messageType == null)
                     {
                         continue;

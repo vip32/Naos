@@ -17,7 +17,7 @@
 
         public string SubscriptionName { get; set; }
 
-        public ISubscriptionMap Map { get; set; } = new SubscriptionMap();
+        public ISubscriptionMap Subscriptions { get; set; } = new SubscriptionMap();
 
         public string FilterScope { get; set; } // for machine scope
 
