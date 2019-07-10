@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Humanizer;
+    using MediatR;
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Messaging.Domain;
@@ -30,13 +31,11 @@
             EnsureArg.IsNotNullOrEmpty(options.SubscriptionName, nameof(options.SubscriptionName));
 
             this.options = options;
-            this.options.Subscriptions = options.Subscriptions ?? new SubscriptionMap();
-            this.options.MessageScope = options.MessageScope ?? options.SubscriptionName;
             this.logger = options.CreateLogger<ServiceBusMessageBroker>();
             this.serializer = this.options.Serializer ?? DefaultSerializer.Create;
 
             //this.client = this.ClientFactory(options.Provider, options.Provider.ConnectionStringBuilder.EntityPath, options.SubscriptionName);
-            this.RegisterMessageHandler(this.options.Client);
+            //this.RegisterMessageHandler(this.options.Client);
         }
 
         public ServiceBusMessageBroker(Builder<ServiceBusMessageBrokerOptionsBuilder, ServiceBusMessageBrokerOptions> optionsBuilder)
@@ -178,14 +177,21 @@
             return ruleName.Replace("<", "_").Replace(">", "_");
         }
 
+#pragma warning disable SA1204 // Static elements should appear before instance elements
+#pragma warning disable SA1202 // Elements should be ordered by access
         /// <summary>
         /// Processes the message by invoking the message handler.
         /// </summary>
-        /// <param name="serviceBusMessage">The servicebus message.</param>
-        private async Task<bool> ProcessMessage(
+        public static async Task<bool> ProcessMessage(
             ILogger<ServiceBusMessageBroker> logger,
             ISubscriptionMap subscriptions,
+            IMessageHandlerFactory handlerFactory,
+            ISerializer serializer,
+            string messageScope,
+            IMediator mediator,
             Microsoft.Azure.ServiceBus.Message serviceBusMessage)
+#pragma warning restore SA1204 // Static elements should appear before instance elements
+#pragma warning restore SA1202 // Elements should be ordered by access
         {
             var processed = false;
             var messageName = serviceBusMessage.Label;
@@ -208,7 +214,7 @@
                         // map some message properties to the typed message
                         //var jsonMessage = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(serviceBusMessage.Body), messageType); // TODO: use ISerializer here, compacter messages
                         //var message = jsonMessage as Domain.Message;
-                        var message = this.serializer.Deserialize(serviceBusMessage.Body, messageType) as Domain.Message;
+                        var message = serializer.Deserialize(serviceBusMessage.Body, messageType) as Domain.Message;
                         // TODO: message can be null, skip
                         if(message.Origin.IsNullOrEmpty())
                         {
@@ -216,19 +222,20 @@
                             message.Origin = serviceBusMessage.UserProperties.ContainsKey("Origin") ? serviceBusMessage.UserProperties["Origin"] as string : string.Empty;
                         }
 
-                        logger.LogJournal(LogKeys.Messaging, $"process (name={{MessageName}}, id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes().ToString("#.##")})", LogPropertyKeys.TrackReceiveMessage, args: new[] { serviceBusMessage.Label, message?.Id, this.options.MessageScope, message.Origin });
+                        logger.LogJournal(LogKeys.Messaging, $"process (name={{MessageName}}, id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes().ToString("#.##")})",
+                            LogPropertyKeys.TrackReceiveMessage, args: new[] { serviceBusMessage.Label, message?.Id, messageScope, message.Origin });
                         logger.LogTrace(LogKeys.Messaging, message.Id, serviceBusMessage.Label, LogTraceNames.Message);
 
                         // construct the handler by using the DI container
-                        var handler = this.options.HandlerFactory.Create(subscription.HandlerType); // should not be null, did you forget to register your generic handler (EntityMessageHandler<T>)
+                        var handler = handlerFactory.Create(subscription.HandlerType); // should not be null, did you forget to register your generic handler (EntityMessageHandler<T>)
                         var concreteType = typeof(IMessageHandler<>).MakeGenericType(messageType);
 
                         var method = concreteType.GetMethod("Handle");
                         if(handler != null && method != null)
                         {
-                            if(this.options.Mediator != null)
+                            if(mediator != null)
                             {
-                                await this.options.Mediator.Publish(new MessageHandledDomainEvent(message, this.options.MessageScope)).AnyContext();
+                                await mediator.Publish(new MessageHandledDomainEvent(message, messageScope)).AnyContext();
                             }
 
                             await (Task)method.Invoke(handler, new object[] { message as object });
@@ -236,7 +243,7 @@
                         else
                         {
                             logger.LogWarning("{LogKey:l} process failed, message handler could not be created. is the handler registered in the service provider? (name={MessageName}, service={Service}, id={MessageId}, origin={MessageOrigin})",
-                                LogKeys.Messaging, serviceBusMessage.Label, this.options.MessageScope, message.Id, message.Origin);
+                                LogKeys.Messaging, serviceBusMessage.Label, messageScope, message.Id, message.Origin);
                         }
                     }
                 }
@@ -273,34 +280,34 @@
         //    return client;
         //}
 
-        private void RegisterMessageHandler(ISubscriptionClient client)
-        {
-            client.RegisterMessageHandler(
-                async (m, t) =>
-                {
-                    //this.logger.LogInformation("message received (id={MessageId}, name={MessageName})", message.MessageId, message.Label);
+        //private void RegisterMessageHandler(ISubscriptionClient client)
+        //{
+        //    client.RegisterMessageHandler(
+        //        async (m, t) =>
+        //        {
+        //            //this.logger.LogInformation("message received (id={MessageId}, name={MessageName})", message.MessageId, message.Label);
 
-                    if(await this.ProcessMessage(this.logger, this.options.Subscriptions, m))
-                    {
-                        // complete message so it is not received again
-                        await client.CompleteAsync(m.SystemProperties.LockToken);
-                    }
-                },
-                new MessageHandlerOptions(this.ExceptionReceivedHandler)
-                {
-                    MaxConcurrentCalls = 10,
-                    AutoComplete = false,
-                    MaxAutoRenewDuration = new TimeSpan(0, 5, 0)
-                });
+        //            if(await ProcessMessage(this.logger, this.options.Subscriptions, this.options.HandlerFactory, this.serializer, this.options.MessageScope, this.options.Mediator, m))
+        //            {
+        //                // complete message so it is not received again
+        //                await client.CompleteAsync(m.SystemProperties.LockToken);
+        //            }
+        //        },
+        //        new MessageHandlerOptions(this.ExceptionReceivedHandler)
+        //        {
+        //            MaxConcurrentCalls = 10,
+        //            AutoComplete = false,
+        //            MaxAutoRenewDuration = new TimeSpan(0, 5, 0)
+        //        });
 
-            this.logger.LogInformation("{LogKey:l} servicebus handler registered", LogKeys.Messaging);
-        }
+        //    this.logger.LogInformation("{LogKey:l} servicebus handler registered", LogKeys.Messaging);
+        //}
 
-        private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs args)
-        {
-            var context = args.ExceptionReceivedContext;
-            this.logger.LogWarning($"{{LogKey:l}} servicebus handler error: topic={context?.EntityPath}, action={context?.Action}, endpoint={context?.Endpoint}, {args.Exception?.Message}, {args.Exception?.StackTrace}", LogKeys.Messaging);
-            return Task.CompletedTask;
-        }
+        //private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs args)
+        //{
+        //    var context = args.ExceptionReceivedContext;
+        //    this.logger.LogWarning($"{{LogKey:l}} servicebus handler error: topic={context?.EntityPath}, action={context?.Action}, endpoint={context?.Endpoint}, {args.Exception?.Message}, {args.Exception?.StackTrace}", LogKeys.Messaging);
+        //    return Task.CompletedTask;
+        //}
     }
 }

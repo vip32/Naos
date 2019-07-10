@@ -43,6 +43,11 @@
         public ServiceBusMessageBrokerOptionsBuilder SubscriptionName(string subscriptionName)
         {
             this.Target.SubscriptionName = subscriptionName;
+            if(this.Target.MessageScope.IsNullOrEmpty())
+            {
+                this.Target.MessageScope = subscriptionName;
+            }
+
             return this;
         }
 

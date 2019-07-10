@@ -2,6 +2,7 @@
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Threading.Tasks;
     using EnsureThat;
     using Humanizer;
     using MediatR;
@@ -47,6 +48,7 @@
 
             options.Context.Services.AddSingleton<Azure.ServiceBus.ISubscriptionClient>(sp =>
             {
+                var logger = sp.GetRequiredService<ILogger<ServiceBusMessageBroker>>();
                 var provider = sp.GetRequiredService<IServiceBusProvider>();
                 provider.EnsureTopicSubscription(provider.ConnectionStringBuilder.EntityPath, subscriptionName);
 
@@ -62,6 +64,35 @@
                 {
                     // do nothing, default rule not found
                 }
+
+                client.RegisterMessageHandler(
+                    async (m, t) =>
+                    {
+                        //this.logger.LogInformation("message received (id={MessageId}, name={MessageName})", message.MessageId, message.Label);
+                        if(await ServiceBusMessageBroker.ProcessMessage(
+                            logger,
+                            sp.GetRequiredService<ISubscriptionMap>(),
+                            new ServiceProviderMessageHandlerFactory(sp),
+                            DefaultSerializer.Create,
+                            subscriptionName,
+                            (IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)),
+                            m).AnyContext())
+                        {
+                            // complete message so it is not received again
+                            await client.CompleteAsync(m.SystemProperties.LockToken);
+                        }
+                    },
+                    new MessageHandlerOptions(args =>
+                    {
+                        var context = args.ExceptionReceivedContext;
+                        logger.LogWarning($"{{LogKey:l}} servicebus handler error: topic={context?.EntityPath}, action={context?.Action}, endpoint={context?.Endpoint}, {args.Exception?.Message}, {args.Exception?.StackTrace}", LogKeys.Messaging);
+                        return Task.CompletedTask;
+                    })
+                    {
+                        MaxConcurrentCalls = 10,
+                        AutoComplete = false,
+                        MaxAutoRenewDuration = new TimeSpan(0, 5, 0)
+                    });
 
                 return client;
             });
