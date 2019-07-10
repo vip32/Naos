@@ -97,7 +97,7 @@
                 return client;
             });
 
-            options.Context.Services.AddSingleton<IMessageBroker>(sp =>
+            options.Context.Services.AddSingleton<IMessageBroker>(sp => // TODO: scoped with ITracer injected
             {
                 var broker = new ServiceBusMessageBroker(o => o
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
