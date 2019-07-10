@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.Messaging.Infrastructure.Azure
 {
     using MediatR;
+    using Microsoft.Azure.ServiceBus;
     using Naos.Core.Messaging.Domain;
     using Naos.Foundation;
     using Naos.Foundation.Infrastructure;
@@ -24,6 +25,12 @@
         public ServiceBusMessageBrokerOptionsBuilder Provider(IServiceBusProvider provider)
         {
             this.Target.Provider = provider;
+            return this;
+        }
+
+        public ServiceBusMessageBrokerOptionsBuilder Client(ISubscriptionClient client)
+        {
+            this.Target.Client = client;
             return this;
         }
 

@@ -6,6 +6,7 @@
     using Humanizer;
     using MediatR;
     using Microsoft.Azure.Management.ResourceManager.Fluent;
+    using Microsoft.Azure.ServiceBus;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Messaging;
@@ -28,6 +29,7 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
+            subscriptionName ??= options.Context.Descriptor.Name;
             var configuration = options.Context.Configuration.GetSection(section).Get<ServiceBusConfiguration>();
             configuration.EntityPath = topicName ?? $"{Environment.GetEnvironmentVariable(EnvironmentKeys.Environment) ?? "Production"}-Naos.Messaging";
             options.Context.Services.AddSingleton<IServiceBusProvider>(sp =>
@@ -43,9 +45,26 @@
                 throw new NotImplementedException("no messaging servicebus is enabled");
             });
 
-            //options.Context.Services.AddSingleton<ISubscriptionClient>(sp =>
-            //{
-            //}
+            options.Context.Services.AddSingleton<Azure.ServiceBus.ISubscriptionClient>(sp =>
+            {
+                var provider = sp.GetRequiredService<IServiceBusProvider>();
+                provider.EnsureTopicSubscription(provider.ConnectionStringBuilder.EntityPath, subscriptionName);
+
+                var client = new Azure.ServiceBus.SubscriptionClient(provider.ConnectionStringBuilder, subscriptionName);
+                try
+                {
+                    client
+                     .RemoveRuleAsync(RuleDescription.DefaultRuleName)
+                     .GetAwaiter()
+                     .GetResult();
+                }
+                catch(MessagingEntityNotFoundException)
+                {
+                    // do nothing, default rule not found
+                }
+
+                return client;
+            });
 
             options.Context.Services.AddSingleton<IMessageBroker>(sp =>
             {
@@ -53,9 +72,10 @@
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                     .Mediator((IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)))
                     .Provider(sp.GetRequiredService<IServiceBusProvider>()) // singleton
+                    .Client(sp.GetRequiredService<Azure.ServiceBus.ISubscriptionClient>()) // singleton
                     .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
                     .Subscriptions(sp.GetRequiredService<ISubscriptionMap>()) // singleton
-                    .SubscriptionName(subscriptionName ?? options.Context.Descriptor.Name) //AppDomain.CurrentDomain.FriendlyName, // PRODUCT.CAPABILITY
+                    .SubscriptionName(subscriptionName) //AppDomain.CurrentDomain.FriendlyName, // PRODUCT.CAPABILITY
                     //.MessageScope(options.Context.Descriptor.Name)
                     .FilterScope(Environment.GetEnvironmentVariable(EnvironmentKeys.IsLocal).ToBool()
                             ? Environment.MachineName.Humanize().Dehumanize().ToLower()

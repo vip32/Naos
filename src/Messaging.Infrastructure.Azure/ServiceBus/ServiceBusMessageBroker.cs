@@ -16,7 +16,6 @@
         private readonly ServiceBusMessageBrokerOptions options;
         private readonly ILogger<ServiceBusMessageBroker> logger;
         private readonly ISerializer serializer;
-        private ISubscriptionClient client;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ServiceBusMessageBroker"/> class.
@@ -26,6 +25,7 @@
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Provider, nameof(options.Provider));
+            EnsureArg.IsNotNull(options.Client, nameof(options.Client));
             EnsureArg.IsNotNull(options.HandlerFactory, nameof(options.HandlerFactory));
             EnsureArg.IsNotNullOrEmpty(options.SubscriptionName, nameof(options.SubscriptionName));
 
@@ -35,8 +35,8 @@
             this.logger = options.CreateLogger<ServiceBusMessageBroker>();
             this.serializer = this.options.Serializer ?? DefaultSerializer.Create;
 
-            this.client = this.ClientFactory(options.Provider, options.Provider.ConnectionStringBuilder.EntityPath, options.SubscriptionName);
-            this.RegisterMessageHandler(this.client);
+            //this.client = this.ClientFactory(options.Provider, options.Provider.ConnectionStringBuilder.EntityPath, options.SubscriptionName);
+            this.RegisterMessageHandler(this.options.Client);
         }
 
         public ServiceBusMessageBroker(Builder<ServiceBusMessageBrokerOptionsBuilder, ServiceBusMessageBrokerOptions> optionsBuilder)
@@ -63,7 +63,7 @@
                 try
                 {
                     this.logger.LogInformation($"{{LogKey:l}} servicebus add subscription rule: {ruleName} (name={messageName}, type={typeof(TMessage).Name})", LogKeys.Messaging);
-                    this.client.AddRuleAsync(new RuleDescription
+                    this.options.Client.AddRuleAsync(new RuleDescription
                     {
                         Filter = new CorrelationFilter { Label = messageName, To = this.options.FilterScope }, // filterscope ist used to lock the rule for a specific machine
                         Name = ruleName
@@ -153,7 +153,7 @@
             try
             {
                 this.logger.LogInformation($"{{LogKey:l}} servicebus remove subscription rule: {ruleName}", LogKeys.Messaging);
-                this.client
+                this.options.Client
                  .RemoveRuleAsync(ruleName)
                  .GetAwaiter()
                  .GetResult();
@@ -251,27 +251,27 @@
             return processed;
         }
 
-        private ISubscriptionClient ClientFactory(IServiceBusProvider provider, string topicName, string subscriptionName)
-        {
-            provider.EnsureTopicSubscription(topicName, subscriptionName);
-            var client = new SubscriptionClient(provider.ConnectionStringBuilder, subscriptionName);
+        //private ISubscriptionClient ClientFactory(IServiceBusProvider provider, string topicName, string subscriptionName)
+        //{
+        //    provider.EnsureTopicSubscription(topicName, subscriptionName);
+        //    var client = new SubscriptionClient(provider.ConnectionStringBuilder, subscriptionName);
 
-            this.logger.LogInformation($"{{LogKey:l}} servicebus initialize (topic={topicName}, subscription={subscriptionName})", LogKeys.Messaging);
+        //    this.logger.LogInformation($"{{LogKey:l}} servicebus initialize (topic={topicName}, subscription={subscriptionName})", LogKeys.Messaging);
 
-            try
-            {
-                client
-                 .RemoveRuleAsync(RuleDescription.DefaultRuleName)
-                 .GetAwaiter()
-                 .GetResult();
-            }
-            catch(MessagingEntityNotFoundException)
-            {
-                // do nothing, default rule not found
-            }
+        //    try
+        //    {
+        //        client
+        //         .RemoveRuleAsync(RuleDescription.DefaultRuleName)
+        //         .GetAwaiter()
+        //         .GetResult();
+        //    }
+        //    catch(MessagingEntityNotFoundException)
+        //    {
+        //        // do nothing, default rule not found
+        //    }
 
-            return client;
-        }
+        //    return client;
+        //}
 
         private void RegisterMessageHandler(ISubscriptionClient client)
         {
