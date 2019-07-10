@@ -220,12 +220,10 @@
                         continue;
                     }
 
-                    var loggerState = new Dictionary<string, object>
+                    using(this.logger.BeginScope(new Dictionary<string, object>
                     {
                         [LogPropertyKeys.CorrelationId] = serviceBusMessage.CorrelationId,
-                    };
-
-                    using(this.logger.BeginScope(loggerState))
+                    }))
                     {
                         // map some message properties to the typed message
                         //var jsonMessage = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(serviceBusMessage.Body), messageType); // TODO: use ISerializer here, compacter messages
