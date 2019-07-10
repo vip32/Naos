@@ -10,10 +10,10 @@
 
         string EntityPath { get; }
 
-        ITopicClient CreateModel();
+        ITopicClient TopicClientFactory();
 
         Task<ITopic> EnsureTopic(string topicName);
 
-        Task<ISubscription> EnsureSubscription(string topicName, string subscriptionName);
+        Task<ISubscription> EnsureTopicSubscription(string topicName, string subscriptionName);
     }
 }

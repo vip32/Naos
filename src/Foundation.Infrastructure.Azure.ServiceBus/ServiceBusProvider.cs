@@ -12,7 +12,7 @@
     {
         private readonly ILogger<ServiceBusProvider> logger;
         private readonly IServiceBusNamespace serviceBusNamespace;
-        private ITopicClient client;
+        private ITopicClient topicClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ServiceBusProvider" /> class.
@@ -54,20 +54,20 @@
 
         public string EntityPath { get; }
 
-        public ITopicClient CreateModel()
+        public ITopicClient TopicClientFactory()
         {
-            if(this.client == null)
+            if(this.topicClient == null)
             {
-                this.client = new TopicClient(this.ConnectionStringBuilder, RetryPolicy.Default);
+                this.topicClient = new TopicClient(this.ConnectionStringBuilder, RetryPolicy.Default);
             }
 
-            if(this.client.IsClosedOrClosing)
+            if(this.topicClient.IsClosedOrClosing)
             {
                 this.logger.LogInformation("create new servicebus topic client instance");
-                this.client = new TopicClient(this.ConnectionStringBuilder, RetryPolicy.Default);
+                this.topicClient = new TopicClient(this.ConnectionStringBuilder, RetryPolicy.Default);
             }
 
-            return this.client;
+            return this.topicClient;
         }
 
         /// <summary>
@@ -97,10 +97,9 @@
         /// </summary>
         /// <param name="topicName">Name of the topic.</param>
         /// <param name="subscriptionName">Name of the subscription.</param>
-        public async Task<ISubscription> EnsureSubscription(string topicName, string subscriptionName)
+        public async Task<ISubscription> EnsureTopicSubscription(string topicName, string subscriptionName)
         {
             var topic = await this.EnsureTopic(topicName);
-
             var subscriptions = await topic.Subscriptions.ListAsync();
             var subscription = subscriptions.FirstOrDefault(s => s.Name == subscriptionName);
 

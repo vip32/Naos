@@ -16,7 +16,7 @@
         private readonly ServiceBusMessageBrokerOptions options;
         private readonly ILogger<ServiceBusMessageBroker> logger;
         private readonly ISerializer serializer;
-        private SubscriptionClient client;
+        private ISubscriptionClient client;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ServiceBusMessageBroker"/> class.
@@ -35,8 +35,8 @@
             this.logger = options.CreateLogger<ServiceBusMessageBroker>();
             this.serializer = this.options.Serializer ?? DefaultSerializer.Create;
 
-            this.InitializeClient(options.Provider, options.Provider.ConnectionStringBuilder.EntityPath, options.SubscriptionName);
-            this.RegisterMessageHandler();
+            this.client = this.ClientFactory(options.Provider, options.Provider.ConnectionStringBuilder.EntityPath, options.SubscriptionName);
+            this.RegisterMessageHandler(this.client);
         }
 
         public ServiceBusMessageBroker(Builder<ServiceBusMessageBrokerOptionsBuilder, ServiceBusMessageBrokerOptions> optionsBuilder)
@@ -84,7 +84,7 @@
         /// Publishes the specified message.
         /// </summary>
         /// <param name="message">The message.</param>
-        public void Publish(Domain.Message message) // TODO: provide (parent) SPAN here? as ITracer is scope and this broker is a singleton
+        public void Publish(Domain.Message message) // TODO: provide (parent) SPAN here? as ITracer is scope and this broker is singleton
         {
             EnsureArg.IsNotNull(message, nameof(message));
             if(message.CorrelationId.IsNullOrEmpty())
@@ -132,7 +132,7 @@
                 this.logger.LogJournal(LogKeys.Messaging, $"publish (name={{MessageName}}, id={{MessageId}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes().ToString("#.##")})", LogPropertyKeys.TrackPublishMessage, args: new[] { messageName, message.Id, message.Origin });
                 this.logger.LogTrace(LogKeys.Messaging, message.Id, messageName, LogTraceNames.Message);
 
-                this.options.Provider.CreateModel().SendAsync(serviceBusMessage).GetAwaiter().GetResult();
+                this.options.Provider.TopicClientFactory().SendAsync(serviceBusMessage).GetAwaiter().GetResult();
             }
         }
 
@@ -178,49 +178,29 @@
             return ruleName.Replace("<", "_").Replace(">", "_");
         }
 
-        private void RegisterMessageHandler()
-        {
-            this.client.RegisterMessageHandler(
-                async (m, t) =>
-                {
-                    //this.logger.LogInformation("message received (id={MessageId}, name={MessageName})", message.MessageId, message.Label);
-
-                    if(await this.ProcessMessage(m))
-                    {
-                        // complete message so it is not received again
-                        await this.client.CompleteAsync(m.SystemProperties.LockToken);
-                    }
-                },
-                new MessageHandlerOptions(this.ExceptionReceivedHandler)
-                {
-                    MaxConcurrentCalls = 10,
-                    AutoComplete = false,
-                    MaxAutoRenewDuration = new TimeSpan(0, 5, 0)
-                });
-
-            this.logger.LogInformation("{LogKey:l} servicebus handler registered", LogKeys.Messaging);
-        }
-
         /// <summary>
         /// Processes the message by invoking the message handler.
         /// </summary>
         /// <param name="serviceBusMessage">The servicebus message.</param>
-        private async Task<bool> ProcessMessage(Microsoft.Azure.ServiceBus.Message serviceBusMessage)
+        private async Task<bool> ProcessMessage(
+            ILogger<ServiceBusMessageBroker> logger,
+            ISubscriptionMap subscriptions,
+            Microsoft.Azure.ServiceBus.Message serviceBusMessage)
         {
             var processed = false;
             var messageName = serviceBusMessage.Label;
 
-            if(this.options.Subscriptions.Exists(messageName))
+            if(subscriptions.Exists(messageName))
             {
-                foreach(var subscription in this.options.Subscriptions.GetAll(messageName))
+                foreach(var subscription in subscriptions.GetAll(messageName))
                 {
-                    var messageType = this.options.Subscriptions.GetByName(messageName);
+                    var messageType = subscriptions.GetByName(messageName);
                     if(messageType == null)
                     {
                         continue;
                     }
 
-                    using(this.logger.BeginScope(new Dictionary<string, object>
+                    using(logger.BeginScope(new Dictionary<string, object>
                     {
                         [LogPropertyKeys.CorrelationId] = serviceBusMessage.CorrelationId,
                     }))
@@ -236,8 +216,8 @@
                             message.Origin = serviceBusMessage.UserProperties.ContainsKey("Origin") ? serviceBusMessage.UserProperties["Origin"] as string : string.Empty;
                         }
 
-                        this.logger.LogJournal(LogKeys.Messaging, $"process (name={{MessageName}}, id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes().ToString("#.##")})", LogPropertyKeys.TrackReceiveMessage, args: new[] { serviceBusMessage.Label, message?.Id, this.options.MessageScope, message.Origin });
-                        this.logger.LogTrace(LogKeys.Messaging, message.Id, serviceBusMessage.Label, LogTraceNames.Message);
+                        logger.LogJournal(LogKeys.Messaging, $"process (name={{MessageName}}, id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes().ToString("#.##")})", LogPropertyKeys.TrackReceiveMessage, args: new[] { serviceBusMessage.Label, message?.Id, this.options.MessageScope, message.Origin });
+                        logger.LogTrace(LogKeys.Messaging, message.Id, serviceBusMessage.Label, LogTraceNames.Message);
 
                         // construct the handler by using the DI container
                         var handler = this.options.HandlerFactory.Create(subscription.HandlerType); // should not be null, did you forget to register your generic handler (EntityMessageHandler<T>)
@@ -255,7 +235,7 @@
                         }
                         else
                         {
-                            this.logger.LogWarning("{LogKey:l} process failed, message handler could not be created. is the handler registered in the service provider? (name={MessageName}, service={Service}, id={MessageId}, origin={MessageOrigin})",
+                            logger.LogWarning("{LogKey:l} process failed, message handler could not be created. is the handler registered in the service provider? (name={MessageName}, service={Service}, id={MessageId}, origin={MessageOrigin})",
                                 LogKeys.Messaging, serviceBusMessage.Label, this.options.MessageScope, message.Id, message.Origin);
                         }
                     }
@@ -265,22 +245,22 @@
             }
             else
             {
-                this.logger.LogDebug($"{{LogKey:l}} unprocessed: {messageName}", LogKeys.Messaging);
+                logger.LogDebug($"{{LogKey:l}} unprocessed: {messageName}", LogKeys.Messaging);
             }
 
             return processed;
         }
 
-        private void InitializeClient(IServiceBusProvider provider, string topicName, string subscriptionName)
+        private ISubscriptionClient ClientFactory(IServiceBusProvider provider, string topicName, string subscriptionName)
         {
-            this.options.Provider.EnsureSubscription(topicName, subscriptionName);
-            this.client = new SubscriptionClient(provider.ConnectionStringBuilder, subscriptionName);
+            provider.EnsureTopicSubscription(topicName, subscriptionName);
+            var client = new SubscriptionClient(provider.ConnectionStringBuilder, subscriptionName);
 
             this.logger.LogInformation($"{{LogKey:l}} servicebus initialize (topic={topicName}, subscription={subscriptionName})", LogKeys.Messaging);
 
             try
             {
-                this.client
+                client
                  .RemoveRuleAsync(RuleDescription.DefaultRuleName)
                  .GetAwaiter()
                  .GetResult();
@@ -289,6 +269,31 @@
             {
                 // do nothing, default rule not found
             }
+
+            return client;
+        }
+
+        private void RegisterMessageHandler(ISubscriptionClient client)
+        {
+            client.RegisterMessageHandler(
+                async (m, t) =>
+                {
+                    //this.logger.LogInformation("message received (id={MessageId}, name={MessageName})", message.MessageId, message.Label);
+
+                    if(await this.ProcessMessage(this.logger, this.options.Subscriptions, m))
+                    {
+                        // complete message so it is not received again
+                        await client.CompleteAsync(m.SystemProperties.LockToken);
+                    }
+                },
+                new MessageHandlerOptions(this.ExceptionReceivedHandler)
+                {
+                    MaxConcurrentCalls = 10,
+                    AutoComplete = false,
+                    MaxAutoRenewDuration = new TimeSpan(0, 5, 0)
+                });
+
+            this.logger.LogInformation("{LogKey:l} servicebus handler registered", LogKeys.Messaging);
         }
 
         private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs args)

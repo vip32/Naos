@@ -43,15 +43,20 @@
                 throw new NotImplementedException("no messaging servicebus is enabled");
             });
 
+            //options.Context.Services.AddSingleton<ISubscriptionClient>(sp =>
+            //{
+            //}
+
             options.Context.Services.AddSingleton<IMessageBroker>(sp =>
             {
                 var broker = new ServiceBusMessageBroker(o => o
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                     .Mediator((IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)))
-                    .Provider(sp.GetRequiredService<IServiceBusProvider>())
+                    .Provider(sp.GetRequiredService<IServiceBusProvider>()) // singleton
                     .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
-                    .Map(sp.GetRequiredService<ISubscriptionMap>())
+                    .Subscriptions(sp.GetRequiredService<ISubscriptionMap>()) // singleton
                     .SubscriptionName(subscriptionName ?? options.Context.Descriptor.Name) //AppDomain.CurrentDomain.FriendlyName, // PRODUCT.CAPABILITY
+                    //.MessageScope(options.Context.Descriptor.Name)
                     .FilterScope(Environment.GetEnvironmentVariable(EnvironmentKeys.IsLocal).ToBool()
                             ? Environment.MachineName.Humanize().Dehumanize().ToLower()
                             : string.Empty));

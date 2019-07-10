@@ -39,7 +39,7 @@
             return this;
         }
 
-        public ServiceBusMessageBrokerOptionsBuilder Map(ISubscriptionMap map)
+        public ServiceBusMessageBrokerOptionsBuilder Subscriptions(ISubscriptionMap map)
         {
             this.Target.Subscriptions = map;
             return this;
