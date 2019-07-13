@@ -72,6 +72,7 @@
                         //this.logger.LogInformation("message received (id={MessageId}, name={MessageName})", message.MessageId, message.Label);
                         if(await ServiceBusMessageBroker.ProcessMessage(
                             logger,
+                            (ITracer)sp.CreateScope().ServiceProvider.GetService(typeof(ITracer)),
                             sp.GetRequiredService<ISubscriptionMap>(),
                             new ServiceProviderMessageHandlerFactory(sp),
                             DefaultSerializer.Create,

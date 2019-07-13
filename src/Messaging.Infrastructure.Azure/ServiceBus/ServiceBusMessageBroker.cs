@@ -8,6 +8,7 @@
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Messaging.Domain;
+    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
 
     public class ServiceBusMessageBroker : IMessageBroker
@@ -188,6 +189,7 @@
         /// </summary>
         public static async Task<bool> ProcessMessage(
             ILogger<ServiceBusMessageBroker> logger,
+            ITracer tracer,
             ISubscriptionMap subscriptions,
             IMessageHandlerFactory handlerFactory,
             ISerializer serializer,
@@ -210,44 +212,52 @@
                         continue;
                     }
 
-                    using(logger.BeginScope(new Dictionary<string, object>
+                    // get parent span infos from message
+                    var traceId = serviceBusMessage.UserProperties.ContainsKey("TraceId") ? serviceBusMessage.UserProperties["TraceId"] as string : string.Empty;
+                    var spanId = serviceBusMessage.UserProperties.ContainsKey("SpanId") ? serviceBusMessage.UserProperties["SpanId"] as string : string.Empty;
+                    var parentSpan = new Span(traceId, spanId);
+
+                    using(var scope = tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Consumer, parentSpan).Activate())
                     {
-                        [LogPropertyKeys.CorrelationId] = serviceBusMessage.CorrelationId,
-                    }))
-                    {
-                        // map some message properties to the typed message
-                        //var jsonMessage = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(serviceBusMessage.Body), messageType); // TODO: use ISerializer here, compacter messages
-                        //var message = jsonMessage as Domain.Message;
-                        var message = serializer.Deserialize(serviceBusMessage.Body, messageType) as Domain.Message;
-                        // TODO: message can be null, skip
-                        if(message.Origin.IsNullOrEmpty())
+                        using(logger.BeginScope(new Dictionary<string, object>
                         {
-                            //message.CorrelationId = jsonMessage.AsJToken().GetStringPropertyByToken("CorrelationId");
-                            message.Origin = serviceBusMessage.UserProperties.ContainsKey("Origin") ? serviceBusMessage.UserProperties["Origin"] as string : string.Empty;
-                        }
-
-                        logger.LogJournal(LogKeys.Messaging, $"process (name={{MessageName}}, id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes().ToString("#.##")})",
-                            LogPropertyKeys.TrackReceiveMessage, args: new[] { serviceBusMessage.Label, message?.Id, messageScope, message.Origin });
-                        logger.LogTrace(LogKeys.Messaging, message.Id, serviceBusMessage.Label, LogTraceNames.Message);
-
-                        // construct the handler by using the DI container
-                        var handler = handlerFactory.Create(subscription.HandlerType); // should not be null, did you forget to register your generic handler (EntityMessageHandler<T>)
-                        var concreteType = typeof(IMessageHandler<>).MakeGenericType(messageType);
-
-                        var method = concreteType.GetMethod("Handle");
-                        if(handler != null && method != null)
+                            [LogPropertyKeys.CorrelationId] = serviceBusMessage.CorrelationId,
+                        }))
                         {
-                            if(mediator != null)
+                            // map some message properties to the typed message
+                            //var jsonMessage = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(serviceBusMessage.Body), messageType); // TODO: use ISerializer here, compacter messages
+                            //var message = jsonMessage as Domain.Message;
+                            var message = serializer.Deserialize(serviceBusMessage.Body, messageType) as Domain.Message;
+                            // TODO: message can be null, skip
+                            if(message.Origin.IsNullOrEmpty())
                             {
-                                await mediator.Publish(new MessageHandledDomainEvent(message, messageScope)).AnyContext();
+                                //message.CorrelationId = jsonMessage.AsJToken().GetStringPropertyByToken("CorrelationId");
+                                message.Origin = serviceBusMessage.UserProperties.ContainsKey("Origin") ? serviceBusMessage.UserProperties["Origin"] as string : string.Empty;
                             }
 
-                            await (Task)method.Invoke(handler, new object[] { message as object });
-                        }
-                        else
-                        {
-                            logger.LogWarning("{LogKey:l} process failed, message handler could not be created. is the handler registered in the service provider? (name={MessageName}, service={Service}, id={MessageId}, origin={MessageOrigin})",
-                                LogKeys.Messaging, serviceBusMessage.Label, messageScope, message.Id, message.Origin);
+                            logger.LogJournal(LogKeys.Messaging, $"process (name={{MessageName}}, id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes().ToString("#.##")})",
+                            LogPropertyKeys.TrackReceiveMessage, args: new[] { serviceBusMessage.Label, message?.Id, messageScope, message.Origin });
+                            logger.LogTrace(LogKeys.Messaging, message.Id, serviceBusMessage.Label, LogTraceNames.Message);
+
+                            // construct the handler by using the DI container
+                            var handler = handlerFactory.Create(subscription.HandlerType); // should not be null, did you forget to register your generic handler (EntityMessageHandler<T>)
+                            var concreteType = typeof(IMessageHandler<>).MakeGenericType(messageType);
+
+                            var method = concreteType.GetMethod("Handle");
+                            if(handler != null && method != null)
+                            {
+                                if(mediator != null)
+                                {
+                                    await mediator.Publish(new MessageHandledDomainEvent(message, messageScope)).AnyContext();
+                                }
+
+                                await (Task)method.Invoke(handler, new object[] { message as object });
+                            }
+                            else
+                            {
+                                logger.LogWarning("{LogKey:l} process failed, message handler could not be created. is the handler registered in the service provider? (name={MessageName}, service={Service}, id={MessageId}, origin={MessageOrigin})",
+                                    LogKeys.Messaging, serviceBusMessage.Label, messageScope, message.Id, message.Origin);
+                            }
                         }
                     }
                 }

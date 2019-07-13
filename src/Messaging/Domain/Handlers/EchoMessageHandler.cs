@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.Messaging.Domain
 {
     using System.Collections.Generic;
+    using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
@@ -31,7 +32,7 @@
             using(this.logger.BeginScope(loggerState))
             {
                 this.logger.LogInformation($"{{LogKey:l}} {message.Text} (name={{MessageName}}, id={{MessageId}}, origin={{MessageOrigin}}) ", LogKeys.Messaging, message.GetType().PrettyName(), message.Id, message.Origin);
-
+                Thread.Sleep(1500);
                 return Task.CompletedTask;
             }
         }
