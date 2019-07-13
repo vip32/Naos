@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-
+    <ProjectReference Include="..\Tracing.Domain\Tracing.Domain.csproj" />
   </ItemGroup>
 
 </Project>

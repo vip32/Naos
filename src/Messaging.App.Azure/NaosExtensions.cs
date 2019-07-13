@@ -14,6 +14,7 @@
     using Naos.Core.Messaging.App;
     using Naos.Core.Messaging.Domain;
     using Naos.Core.Messaging.Infrastructure.Azure;
+    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
     using Naos.Foundation.Infrastructure;
 
@@ -101,6 +102,7 @@
             {
                 var broker = new ServiceBusMessageBroker(o => o
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
+                    .Tracer(sp.GetService<ITracer>())
                     .Mediator(sp.GetService<IMediator>())
                     .Provider(sp.GetRequiredService<IServiceBusProvider>()) // singleton
                     .Client(sp.GetRequiredService<Azure.ServiceBus.ISubscriptionClient>()) // singleton

@@ -89,47 +89,50 @@
                 message.CorrelationId = IdGenerator.Instance.Next;
             }
 
-            using(this.logger.BeginScope(new Dictionary<string, object>
+            var messageName = message.GetType().PrettyName();
+            using(var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.Messaging, Tracing.Domain.SpanKind.Producer).Activate())
             {
-                [LogPropertyKeys.CorrelationId] = message.CorrelationId
-            }))
-            {
-                if(message.Id.IsNullOrEmpty())
+                using(this.logger.BeginScope(new Dictionary<string, object>
                 {
-                    message.Id = IdGenerator.Instance.Next;
-                    this.logger.LogDebug($"{{LogKey:l}} set message (id={message.Id})", LogKeys.Messaging);
+                    [LogPropertyKeys.CorrelationId] = message.CorrelationId
+                }))
+                {
+                    if(message.Id.IsNullOrEmpty())
+                    {
+                        message.Id = IdGenerator.Instance.Next;
+                        this.logger.LogDebug($"{{LogKey:l}} set message (id={message.Id})", LogKeys.Messaging);
+                    }
+
+                    if(message.Origin.IsNullOrEmpty())
+                    {
+                        message.Origin = this.options.MessageScope;
+                        this.logger.LogDebug($"{{LogKey:l}} set message (origin={message.Origin})", LogKeys.Messaging);
+                    }
+
+                    // TODO: async publish!
+                    if(this.options.Mediator != null)
+                    {
+                        /*await */
+                        this.options.Mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.AnyContext();*/
+                    }
+
+                    // TODO: really need non-async Result?
+                    var serviceBusMessage = new Microsoft.Azure.ServiceBus.Message
+                    {
+                        Label = messageName,
+                        MessageId = message.Id,
+                        CorrelationId = message.CorrelationId.IsNullOrEmpty() ? IdGenerator.Instance.Next : message.CorrelationId,
+                        //Body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)), // TODO: use ISerializer here, compacter messages
+                        Body = this.serializer.SerializeToBytes(message),
+                        To = this.options.FilterScope
+                    };
+                    serviceBusMessage.UserProperties.AddOrUpdate("Origin", this.options.MessageScope);
+
+                    this.logger.LogJournal(LogKeys.Messaging, $"publish (name={{MessageName}}, id={{MessageId}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes().ToString("#.##")})", LogPropertyKeys.TrackPublishMessage, args: new[] { messageName, message.Id, message.Origin });
+                    this.logger.LogTrace(LogKeys.Messaging, message.Id, messageName, LogTraceNames.Message);
+
+                    this.options.Provider.TopicClientFactory().SendAsync(serviceBusMessage).GetAwaiter().GetResult();
                 }
-
-                if(message.Origin.IsNullOrEmpty())
-                {
-                    message.Origin = this.options.MessageScope;
-                    this.logger.LogDebug($"{{LogKey:l}} set message (origin={message.Origin})", LogKeys.Messaging);
-                }
-
-                // TODO: async publish!
-                if(this.options.Mediator != null)
-                {
-                    /*await */
-                    this.options.Mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.AnyContext();*/
-                }
-
-                var messageName = message.GetType().PrettyName();
-                // TODO: really need non-async Result?
-                var serviceBusMessage = new Microsoft.Azure.ServiceBus.Message
-                {
-                    Label = messageName,
-                    MessageId = message.Id,
-                    CorrelationId = message.CorrelationId.IsNullOrEmpty() ? IdGenerator.Instance.Next : message.CorrelationId,
-                    //Body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)), // TODO: use ISerializer here, compacter messages
-                    Body = this.serializer.SerializeToBytes(message),
-                    To = this.options.FilterScope
-                };
-                serviceBusMessage.UserProperties.AddOrUpdate("Origin", this.options.MessageScope);
-
-                this.logger.LogJournal(LogKeys.Messaging, $"publish (name={{MessageName}}, id={{MessageId}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes().ToString("#.##")})", LogPropertyKeys.TrackPublishMessage, args: new[] { messageName, message.Id, message.Origin });
-                this.logger.LogTrace(LogKeys.Messaging, message.Id, messageName, LogTraceNames.Message);
-
-                this.options.Provider.TopicClientFactory().SendAsync(serviceBusMessage).GetAwaiter().GetResult();
             }
         }
 

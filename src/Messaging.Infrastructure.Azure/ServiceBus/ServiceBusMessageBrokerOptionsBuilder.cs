@@ -3,12 +3,19 @@
     using MediatR;
     using Microsoft.Azure.ServiceBus;
     using Naos.Core.Messaging.Domain;
+    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
     using Naos.Foundation.Infrastructure;
 
     public class ServiceBusMessageBrokerOptionsBuilder :
         BaseOptionsBuilder<ServiceBusMessageBrokerOptions, ServiceBusMessageBrokerOptionsBuilder>
     {
+        public ServiceBusMessageBrokerOptionsBuilder Tracer(ITracer tracer)
+        {
+            this.Target.Tracer= tracer;
+            return this;
+        }
+
         public ServiceBusMessageBrokerOptionsBuilder Mediator(IMediator mediator)
         {
             this.Target.Mediator = mediator;
