@@ -1,6 +1,5 @@
 ﻿namespace Naos.Core.Messaging.Infrastructure.Azure
 {
-    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using EnsureThat;
@@ -10,7 +9,6 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Messaging.Domain;
     using Naos.Foundation;
-    using Naos.Foundation.Infrastructure;
 
     public class ServiceBusMessageBroker : IMessageBroker
     {

@@ -97,11 +97,11 @@
                 return client;
             });
 
-            options.Context.Services.AddSingleton<IMessageBroker>(sp => // TODO: scoped with ITracer injected
+            options.Context.Services.AddScoped<IMessageBroker>(sp => // TODO: scoped with ITracer injected
             {
                 var broker = new ServiceBusMessageBroker(o => o
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
-                    .Mediator((IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)))
+                    .Mediator(sp.GetService<IMediator>())
                     .Provider(sp.GetRequiredService<IServiceBusProvider>()) // singleton
                     .Client(sp.GetRequiredService<Azure.ServiceBus.ISubscriptionClient>()) // singleton
                     .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
