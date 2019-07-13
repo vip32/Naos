@@ -127,6 +127,9 @@
                         To = this.options.FilterScope
                     };
                     serviceBusMessage.UserProperties.AddOrUpdate("Origin", this.options.MessageScope);
+                    // propagate the span infos
+                    serviceBusMessage.UserProperties.AddOrUpdate("TraceId", scope.Span.TraceId);
+                    serviceBusMessage.UserProperties.AddOrUpdate("SpanId", scope.Span.SpanId);
 
                     this.logger.LogJournal(LogKeys.Messaging, $"publish (name={{MessageName}}, id={{MessageId}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes().ToString("#.##")})", LogPropertyKeys.TrackPublishMessage, args: new[] { messageName, message.Id, message.Origin });
                     this.logger.LogTrace(LogKeys.Messaging, message.Id, messageName, LogTraceNames.Message);
