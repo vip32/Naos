@@ -2,12 +2,12 @@
        |-----|-----|-----|-----|-----|-----|-----|-----|-----|-----| =100%
 
 INBREQ [SPAN /api/customers-------------------------]                                        SERVER receives request
-......     |---[SPAN validatemodel -----------------]                                        INTERNAL validates the model
+INTERN     |---[SPAN validatemodel -----------------]                                        INTERNAL validates the model
 INBREQ     |---[SPAN /api/accounts------------------]                                        SERVER receives request for data
-DOMREP     .       |---[SPAN getaccount---------]                                            INTERNAL repositpry finds entity
+DOMREP     :       |---[SPAN getaccount---------]                                            INTERNAL repositpry finds entity
 DOMREP     |---[SPAN createentity---------------]                                            INTERNAL repositpry stores entity
-DOMEVT     .       |---[SPAN entitycreated------]                                            CONSUMER handles event
-MESSAG     .       |---[SPAN customercreated-----------------------]                         CONSUMER handles message
+DOMEVT     :       |---[SPAN entitycreated------]                                            CONSUMER handles event
+MESSAG     :       |---[SPAN customercreated-----------------------]                         CONSUMER handles message
 QUEUNG     |---[SPAN emailnewcustomer --------------]                                        CONSUMER handles queue item
 ```
 
