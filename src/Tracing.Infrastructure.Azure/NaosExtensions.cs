@@ -9,7 +9,6 @@
     using Naos.Core.Tracing.Infrastructure.Azure;
     using Naos.Foundation;
     using Naos.Foundation.Infrastructure;
-    using Naos.Foundation.Infrastructure.Azure;
 
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions

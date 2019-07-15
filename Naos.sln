@@ -17,7 +17,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{FCBA001C-2
 		docs\Naos - Service Communication Overview.vsdx = docs\Naos - Service Communication Overview.vsdx
 		README.md = README.md
 		SAMPLE.md = SAMPLE.md
-		..\..\Users\vvproosdij\AppData\Roaming\Microsoft\UserSecrets\37944f49-6ac2-4ab4-a800-f1271b29984f\secrets.json = ..\..\Users\vvproosdij\AppData\Roaming\Microsoft\UserSecrets\37944f49-6ac2-4ab4-a800-f1271b29984f\secrets.json
 		docs\todo.md = docs\todo.md
 	EndProjectSection
 EndProject
@@ -229,7 +228,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tracing.Domain", "src\Traci
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tracing.App", "src\Tracing.App\Tracing.App.csproj", "{C1A2EC25-C51A-4080-A276-4676417332DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tracing.Infrastructure.Azure", "src\Tracing.Infrastructure.Azure\Tracing.Infrastructure.Azure.csproj", "{C7BB2750-AF12-4853-9B4E-860B674388E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tracing.Infrastructure.Azure", "src\Tracing.Infrastructure.Azure\Tracing.Infrastructure.Azure.csproj", "{C7BB2750-AF12-4853-9B4E-860B674388E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
