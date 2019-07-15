@@ -26,7 +26,7 @@
         public JobScheduler(ILoggerFactory loggerFactory, ITracer tracer, IMutex mutex, JobSchedulerOptions options)
         {
             EnsureArg.IsNotNull(loggerFactory, nameof(loggerFactory));
-            EnsureArg.IsNotNull(tracer, nameof(tracer));
+            //EnsureArg.IsNotNull(tracer, nameof(tracer));
             EnsureArg.IsNotNull(options, nameof(options));
 
             this.logger = loggerFactory.CreateLogger<JobScheduler>();

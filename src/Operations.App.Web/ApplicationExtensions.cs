@@ -1,11 +1,13 @@
 ﻿namespace Microsoft.AspNetCore.Builder
 {
+    using System;
     using System.Diagnostics;
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Naos.Core.Operations.App.Web;
+    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
 
     /// <summary>
@@ -49,6 +51,11 @@
             RequestTracingMiddlewareOptions requestTracingMiddlewareOptions = null)
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
+
+            if((ITracer)naosOptions.Context.Application.ApplicationServices.CreateScope().ServiceProvider.GetService(typeof(ITracer)) == null) // resolve scoped service
+            {
+                throw new InvalidOperationException("Unable to find the required services. You must call the AddTracing method in ConfigureServices in the application startup code.");
+            }
 
             naosOptions.Context.Application
                 .UseMiddleware<RequestTracingMiddleware>(
