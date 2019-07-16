@@ -62,7 +62,6 @@
                     [LogPropertyKeys.TrackId] = scope.Span.SpanId
                 }))
                 {
-                    this.logger.LogInformation("TTTTTEEEEESSSST SPANID " + scope.Span.SpanId);
                     try
                     {
                         await this.next.Invoke(context).AnyContext();
