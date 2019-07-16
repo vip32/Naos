@@ -52,13 +52,12 @@
             var correlationId = this.EnsureCorrelationId(context);
             var requestId = this.EnsureRequestId(context);
 
-            var loggerState = new Dictionary<string, object>
+            using(this.logger.BeginScope(new Dictionary<string, object>
             {
                 [LogPropertyKeys.CorrelationId] = correlationId,
-                [LogPropertyKeys.RequestId] = requestId
-            };
-
-            using(this.logger.BeginScope(loggerState))
+                [LogPropertyKeys.RequestId] = requestId,
+                [LogPropertyKeys.TrackId] = requestId
+            }))
             {
                 // needed by other request middlewares (requestresponselogging, filtering)
                 context.SetCorrelationId(correlationId);

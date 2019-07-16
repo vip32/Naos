@@ -22,7 +22,7 @@
 
         public override async Task<bool> Handle(JobEvent<EchoJobEventData> request, CancellationToken cancellationToken)
         {
-            using(var scope = this.tracer.BuildSpan(this.GetType().Name.ToLower()).Activate())
+            using(var scope = this.tracer.BuildSpan(this.GetType().Name.ToLower()).Activate(this.logger))
             {
                await Run.DelayedAsync(
                    new System.TimeSpan(0, 0, 3),

@@ -20,7 +20,7 @@
             ISpan span = null;
             var capturedSpans = new List<ISpan>();
 
-            using(var parentScope = tracer.BuildSpan("spanA").Activate())
+            using(var parentScope = tracer.BuildSpan("spanA").Activate(null))
             {
                 capturedSpans.Add(parentScope.Span);
                 parentScope.Span.AddLog(SpanLogKey.Message, "test123");
@@ -39,7 +39,7 @@
                 span = parentScope.Span;
 
                 using(var childScope = tracer.BuildSpan("spanB", kind: SpanKind.Server)
-                    .WithTag("a", "aaa").Activate())
+                    .WithTag("a", "aaa").Activate(null))
                 {
                     capturedSpans.Add(childScope.Span);
                     childScope.Span.OperationName.ShouldBe("spanB");
@@ -59,7 +59,7 @@
                     // server should create span based on httpheaders
                 }
 
-                using(var failedScope = tracer.BuildSpan("failure").Activate())
+                using(var failedScope = tracer.BuildSpan("failure").Activate(null))
                 {
                     capturedSpans.Add(failedScope.Span);
                     var failedSpan = tracer.CurrentSpan;
@@ -77,7 +77,7 @@
                     failedSpan.Logs.Count().ShouldBeGreaterThan(0); // contain error logs
                 }
 
-                using(var childScope = tracer.BuildSpan("message").Activate())
+                using(var childScope = tracer.BuildSpan("message").Activate(null))
                 {
                     capturedSpans.Add(childScope.Span);
                     // this happens in message handler (subscriber)

@@ -51,17 +51,20 @@
                         SpanKind.Server,
                         new Span(context.GetCorrelationId(), null)) // TODO: get service name as operationname (servicedescriptor?)
                     .IgnoreParentSpan()
+                    .SetSpanId(context.GetRequestId())
                     .WithTag(SpanTagKey.HttpMethod, context.Request.Method)
                     .WithTag(SpanTagKey.HttpUrl, context.Request.GetDisplayUrl())
                     .WithTag(SpanTagKey.HttpHost, uri.Port > 0 ? $"{uri.Host}:{uri.Port}" : uri.Host)
                     .WithTag(SpanTagKey.HttpPath, uri.AbsolutePath)
                     // TODO: request size? SpanTagKey.HttpRequestSize
-                    .WithTag(SpanTagKey.HttpRequestId, context.GetRequestId()).Activate())
-                using(this.logger.BeginScope(new Dictionary<string, object>()
+                    .WithTag(SpanTagKey.HttpRequestId, context.GetRequestId()).Activate(this.logger))
+                //using(this.logger.BeginScope(new Dictionary<string, object>()
+                //{
+                //    [LogPropertyKeys.TrackId] = scope.Span.SpanId
+                //}))
                 {
-                    [LogPropertyKeys.TrackId] = scope.Span.SpanId
-                }))
-                {
+                    this.logger.LogInformation("TTTTTEEEEESSSST SPANID " + scope.Span.SpanId);
+
                     try
                     {
                         await this.next.Invoke(context).AnyContext();

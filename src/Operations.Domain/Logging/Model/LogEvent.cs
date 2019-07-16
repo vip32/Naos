@@ -55,7 +55,7 @@
 
         public string TrackType { get; set; }
 
-        public string SpanId { get; set; }
+        public string TrackId { get; set; }
 
         public Dictionary<string, object> Properties { get; set; } = new Dictionary<string, object>();
 

@@ -2,6 +2,7 @@
 {
     using System.Threading;
     using MediatR;
+    using Microsoft.Extensions.Logging;
 
     public class AsyncLocalScopeManager : IScopeManager
     {
@@ -19,14 +20,14 @@
             set => this.current.Value = value;
         }
 
-        public IScope Activate(ISpan span, bool finishOnDispose = true)
+        public IScope Activate(ISpan span, ILogger logger, bool finishOnDispose = true)
         {
             if(this.mediator != null && span != null)
             {
                 this.mediator.Publish(new SpanStartedDomainEvent(span)); // no await here
             }
 
-            return new AsyncLocalScope(this, span, finishOnDispose);
+            return new AsyncLocalScope(this, span, logger, finishOnDispose);
         }
 
         public void Deactivate(IScope scope)

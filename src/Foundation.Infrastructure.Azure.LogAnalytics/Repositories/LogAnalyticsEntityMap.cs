@@ -25,9 +25,9 @@
                 new LogAnalyticsEntityMap("Level", "LogLevel", "LogLevel_s"),
                 new LogAnalyticsEntityMap("Ticks", LogPropertyKeys.Ticks, $"LogProperties_{LogPropertyKeys.Ticks}_d"), // .To<long>()
                 new LogAnalyticsEntityMap("TrackType", LogPropertyKeys.TrackType, $"LogProperties_{LogPropertyKeys.TrackType}_s"),
+                new LogAnalyticsEntityMap("TrackId", LogPropertyKeys.TrackId, $"LogProperties_{LogPropertyKeys.TrackId}_s"),
                 new LogAnalyticsEntityMap("Id", LogPropertyKeys.Id, $"LogProperties_{LogPropertyKeys.Id}_s"),
                 new LogAnalyticsEntityMap("CorrelationId", LogPropertyKeys.CorrelationId, $"LogProperties_{LogPropertyKeys.CorrelationId}_s"),
-                new LogAnalyticsEntityMap("SpanId", LogPropertyKeys.TrackId, $"LogProperties_{LogPropertyKeys.TrackId}_s"),
                 new LogAnalyticsEntityMap("Key", LogPropertyKeys.LogKey, $"LogProperties_{LogPropertyKeys.LogKey}_s"),
                 new LogAnalyticsEntityMap("Message", "LogMessage", "LogMessage"),
                 new LogAnalyticsEntityMap("Timestamp", "Timestamp", "Timestamp"), // to DateTime

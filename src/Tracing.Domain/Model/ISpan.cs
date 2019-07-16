@@ -40,6 +40,8 @@
 
         ISpan WithLogKey(string logKey);
 
+        ISpan SetSpanId(string spanId);
+
         ISpan WithTag(string key, object value);
 
         ISpan WithTags(DataDictionary tags);

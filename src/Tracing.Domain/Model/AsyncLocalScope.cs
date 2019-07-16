@@ -1,16 +1,22 @@
 ﻿namespace Naos.Core.Tracing.Domain
 {
+    using System;
+    using System.Collections.Generic;
     using EnsureThat;
+    using Microsoft.Extensions.Logging;
+    using Naos.Foundation;
 
     public class AsyncLocalScope : IScope
     {
         private readonly AsyncLocalScopeManager scopeManager;
         private readonly bool finishOnDispose;
         private readonly IScope originalScope;
+        private readonly IDisposable loggerScope;
 
         public AsyncLocalScope(
             AsyncLocalScopeManager scopeManager,
             ISpan span,
+            ILogger logger,
             bool finishOnDispose = true)
         {
             EnsureArg.IsNotNull(scopeManager, nameof(scopeManager));
@@ -20,6 +26,10 @@
             this.finishOnDispose = finishOnDispose;
             this.originalScope = scopeManager.Current;
             scopeManager.Current = this;
+            this.loggerScope = logger?.BeginScope(new Dictionary<string, object>()
+            {
+                [LogPropertyKeys.TrackId] = span.SpanId
+            });
         }
 
         public ISpan Span { get; }
@@ -32,6 +42,7 @@
                 this.scopeManager.Deactivate(this); // publishes domainevent
             }
 
+            this.loggerScope?.Dispose();
             this.scopeManager.Current = this.originalScope;
         }
     }

@@ -31,6 +31,7 @@
                 return new CustomerRepository(
                     new RepositoryTracingDecorator<Customer>(
                         sp.GetRequiredService<ITracer>(),
+                        sp.GetRequiredService<ILogger<CustomerRepository>>(),
                         new RepositoryLoggingDecorator<Customer>(
                             sp.GetRequiredService<ILogger<CustomerRepository>>(),
                             new RepositoryTenantDecorator<Customer>(

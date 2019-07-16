@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.Tracing.Domain
 {
     using EnsureThat;
+    using Microsoft.Extensions.Logging;
     using Naos.Foundation;
     using Naos.Foundation.Domain;
 
@@ -13,6 +14,7 @@
         private readonly string traceId;
         private readonly DataDictionary tags = new DataDictionary();
         private ISpan parent;
+        private string spanId;
 
         public SpanBuilder(ITracer tracer, string operationName, string logKey = LogKeys.Tracing, SpanKind kind = SpanKind.Internal, ISpan parent = null)
         {
@@ -35,12 +37,13 @@
                 .WithLogKey(this.logKey)
                 .WithTags(this.tags)
                 .SetStatus(SpanStatus.Transient)
+                .SetSpanId(this.spanId)
                 .Start();
             }
 
-        public IScope Activate(bool finishOnDispose = true)
+        public IScope Activate(ILogger logger, bool finishOnDispose = true)
         {
-            return this.tracer.ScopeManager.Activate(this.Build(), finishOnDispose);
+            return this.tracer.ScopeManager.Activate(this.Build(), logger, finishOnDispose);
         }
 
         public ISpanBuilder IgnoreParentSpan()
@@ -52,6 +55,12 @@
         public ISpanBuilder WithTag(string key, string value)
         {
             this.tags.AddOrUpdate(key, value);
+            return this;
+        }
+
+        public ISpanBuilder SetSpanId(string spanId)
+        {
+            this.spanId = spanId;
             return this;
         }
     }

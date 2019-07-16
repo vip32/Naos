@@ -41,6 +41,7 @@
                 return new UserAccountRepository(
                     new RepositoryTracingDecorator<UserAccount>(
                         sp.GetRequiredService<ITracer>(),
+                        sp.GetRequiredService<ILogger<UserAccountRepository>>(),
                         new RepositoryLoggingDecorator<UserAccount>(
                             sp.GetRequiredService<ILogger<UserAccountRepository>>(),
                             new RepositoryTenantDecorator<UserAccount>(

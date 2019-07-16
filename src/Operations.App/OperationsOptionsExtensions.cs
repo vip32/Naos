@@ -24,7 +24,7 @@
         this OperationsOptions options,
         Action<LoggingOptions> optionsAction = null,
         string environment = null,
-        string correlationId = null,
+        string correlationId = null, // needed when testing (static correlationid)
         LoggerConfiguration loggerConfiguration = null)
         {
             EnsureArg.IsNotNull(options, nameof(options));

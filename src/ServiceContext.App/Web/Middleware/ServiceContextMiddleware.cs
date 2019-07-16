@@ -44,14 +44,12 @@
         /// <param name="features"></param>
         public async Task Invoke(HttpContext context, ServiceDescriptor serviceDescriptor, IEnumerable<NaosFeatureInformation> features)
         {
-            var loggerState = new Dictionary<string, object>
+            using(this.logger.BeginScope(new Dictionary<string, object>
             {
                 [LogPropertyKeys.ServiceProduct] = serviceDescriptor.Product,
                 [LogPropertyKeys.ServiceCapability] = serviceDescriptor.Capability,
                 [LogPropertyKeys.ServiceName] = serviceDescriptor.Name,
-            };
-
-            using(this.logger.BeginScope(loggerState))
+            }))
             {
                 context.SetServiceName(serviceDescriptor.Name);
                 // TODO: log below should take blacklistpatterns in account (RequestResponseLoggingOptions)

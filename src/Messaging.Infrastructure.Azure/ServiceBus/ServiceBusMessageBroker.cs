@@ -91,11 +91,12 @@
             }
 
             var messageName = message.GetType().PrettyName();
-            using(var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.Messaging, Tracing.Domain.SpanKind.Producer).Activate())
+            using(var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Producer).Activate(this.logger))
             {
                 using(this.logger.BeginScope(new Dictionary<string, object>
                 {
                     [LogPropertyKeys.CorrelationId] = message.CorrelationId
+                    //[LogPropertyKeys.TrackId] = scope.Span.SpanId
                 }))
                 {
                     if(message.Id.IsNullOrEmpty())
@@ -220,12 +221,12 @@
                     var spanId = serviceBusMessage.UserProperties.ContainsKey("SpanId") ? serviceBusMessage.UserProperties["SpanId"] as string : string.Empty;
                     var parentSpan = new Span(traceId, spanId);
 
-                    using(var scope = tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Consumer, parentSpan).Activate())
+                    using(var scope = tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Consumer, parentSpan).Activate(logger))
                     {
                         using(logger.BeginScope(new Dictionary<string, object>
                         {
                             [LogPropertyKeys.CorrelationId] = serviceBusMessage.CorrelationId,
-                            [LogPropertyKeys.TrackId] = scope.Span.SpanId
+                            //[LogPropertyKeys.TrackId] = scope.Span.SpanId
                         }))
                         {
                             // map some message properties to the typed message

@@ -55,9 +55,11 @@
 
         public string TrackType { get; set; }
 
+        public string TrackId { get; set; }
+
         public string OperationName { get; set; }
 
-        public string TraceId { get; set; } // to correlationid
+        public string TraceId { get; set; }
 
         public string SpanId { get; set; }
 

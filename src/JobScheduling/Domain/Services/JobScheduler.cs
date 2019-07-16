@@ -162,7 +162,7 @@
                         {
                             // TODO: publish domain event (job started)
                             this.logger.LogJournal(LogKeys.JobScheduling, $"job started (key={{JobKey}}, id={registration.Identifier}, type={job.GetType().PrettyName()}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")})", LogPropertyKeys.TrackStartJob, args: new[] { registration.Key });
-                            using(var scope = this.tracer?.BuildSpan(registration.Key, LogKeys.JobScheduling, SpanKind.Producer).Activate())
+                            using(var scope = this.tracer?.BuildSpan(registration.Key, LogKeys.JobScheduling, SpanKind.Producer).Activate(this.logger))
                             {
                                 await job.ExecuteAsync(cancellationToken, args).AnyContext();
                             }

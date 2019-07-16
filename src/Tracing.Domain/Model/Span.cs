@@ -30,7 +30,7 @@
         /// <summary>
         /// Unique within a trace. Each span within a trace contains a different ID.
         /// </summary>
-        public string SpanId { get; }
+        public string SpanId { get; private set; }
 
         public string ParentSpanId { get; }
 
@@ -110,6 +110,16 @@
             }
 
             this.LogKey = logKey;
+            return this;
+        }
+
+        public ISpan SetSpanId(string spanId)
+        {
+            if(!spanId.IsNullOrEmpty())
+            {
+                this.SpanId = spanId;
+            }
+
             return this;
         }
 
