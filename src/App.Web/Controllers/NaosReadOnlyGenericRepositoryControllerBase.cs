@@ -37,7 +37,7 @@
         [OpenApiTag("Naos Entity Repository")]
         [Description("TODO description")]
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
-        public virtual async Task<ActionResult<IEnumerable<TEntity>>> Get()
+        public virtual async Task<ActionResult<IEnumerable<TEntity>>> FindAll()
         {
             this.Logger.LogInformation($"+++ hello from {this.GetType().Name} >> {this.CorrelationContext?.CorrelationId}");
 
@@ -55,7 +55,7 @@
         [OpenApiTag("Naos Entity Repository")]
         [Description("TODO description")]
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
-        public virtual async Task<ActionResult<TEntity>> GetById(string id)
+        public virtual async Task<ActionResult<TEntity>> FindOne(string id)
         {
             if(id.IsNullOrEmpty())
             {

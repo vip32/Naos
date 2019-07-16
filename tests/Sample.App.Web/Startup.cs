@@ -156,7 +156,6 @@
 
             app
                 .UseHttpsRedirection()
-                .UseEndpointRouting()
                 .UseNaos(s => s
                     .UseRequestCorrelation()
                     .UseServiceContext()

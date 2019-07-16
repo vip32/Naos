@@ -56,7 +56,7 @@
             }
 
             model = await this.Repository.UpdateAsync(model).AnyContext();
-            return this.Accepted(this.Url.Action(nameof(this.Get), new { id = model.Id }), model);
+            return this.Accepted(this.Url.Action(nameof(this.FindAll), new { id = model.Id }), model);
         }
 
         [HttpPost]
@@ -80,7 +80,7 @@
             }
 
             model = await this.Repository.InsertAsync(model).AnyContext();
-            return this.CreatedAtAction(nameof(this.Get), new { id = model.Id }, model);
+            return this.CreatedAtAction(nameof(this.FindAll), new { id = model.Id }, model);
         }
 
         [HttpDelete]

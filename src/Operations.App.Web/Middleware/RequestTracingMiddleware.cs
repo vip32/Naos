@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
+    using Humanizer;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Http.Extensions;
     using Microsoft.AspNetCore.Routing;
@@ -44,7 +45,7 @@
 
                 using(var scope = tracer
                     .BuildSpan(
-                        $"{action ?? context.Request.Method} {controller ?? uri.AbsolutePath}",
+                        $"{action ?? context.Request.Method} {(controller != null ? controller.ToString().Singularize() : uri.AbsolutePath)}".ToLowerInvariant(),
                         LogKeys.InboundRequest,
                         SpanKind.Server,
                         new Span(context.GetCorrelationId(), null)) // TODO: get service name as operationname (servicedescriptor?)

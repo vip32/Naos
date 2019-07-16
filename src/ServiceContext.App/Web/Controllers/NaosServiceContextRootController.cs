@@ -79,8 +79,9 @@
                     // TODO: discover below
                     ["sample-logevents"] = this.Url.AbsolutePath("api/operations/logevents"),
                     ["sample-logevents2"] = this.Url.AbsolutePath("api/operations/logevents?q=Ticks=gt:636855734000000000,Environment=Development"),
-                    ["sample-countries1"] = this.Url.AbsolutePath("api/countries?q=name=Belgium&order=name&take=1"),
-                    ["sample-countries2"] = this.Url.AbsolutePath("api/countries?q=name=Belgium"),
+                    ["sample-countries1"] = this.Url.AbsolutePath("api/countries/be"),
+                    ["sample-countries2"] = this.Url.AbsolutePath("api/countries?q=name=Belgium&order=name&take=1"),
+                    ["sample-countries3"] = this.Url.AbsolutePath("api/countries?q=name=Belgium"),
                     ["sample-customers1"] = this.Url.AbsolutePath("api/customers?q=region=East,state.createdDate=ge:2010-01-01&order=lastName"),
                     ["sample-customers2"] = this.Url.AbsolutePath("api/customers?q=region=East,state.createdDate=ge:2010-01-01"),
                     ["sample-useraccounts1"] = this.Url.AbsolutePath("api/useraccounts?q=visitCount=ge:1&order=email&take=10"),
