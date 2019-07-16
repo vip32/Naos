@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.Operations.App.Web
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Humanizer;
     using Microsoft.AspNetCore.Http;
@@ -56,7 +57,12 @@
                     .WithTag(SpanTagKey.HttpPath, uri.AbsolutePath)
                     // TODO: request size? SpanTagKey.HttpRequestSize
                     .WithTag(SpanTagKey.HttpRequestId, context.GetRequestId()).Activate())
+                using(this.logger.BeginScope(new Dictionary<string, object>()
                 {
+                    [LogPropertyKeys.TrackId] = scope.Span.SpanId
+                }))
+                {
+                    this.logger.LogInformation("TTTTTEEEEESSSST SPANID " + scope.Span.SpanId);
                     try
                     {
                         await this.next.Invoke(context).AnyContext();

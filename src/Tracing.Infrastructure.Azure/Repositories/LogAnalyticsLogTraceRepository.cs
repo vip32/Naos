@@ -23,7 +23,7 @@
                 {
                     new LogAnalyticsEntityMap("OperationName", LogPropertyKeys.TrackName, $"LogProperties_{LogPropertyKeys.TrackName}_s"),
                     new LogAnalyticsEntityMap("TraceId", LogPropertyKeys.CorrelationId, $"LogProperties_{LogPropertyKeys.CorrelationId}_s"),
-                    new LogAnalyticsEntityMap("SpanId", LogPropertyKeys.TrackId, $"LogProperties_{LogPropertyKeys.TrackId}_s"),
+                    //new LogAnalyticsEntityMap("SpanId", LogPropertyKeys.TrackId, $"LogProperties_{LogPropertyKeys.TrackId}_s"), part of logevent
                     new LogAnalyticsEntityMap("ParentSpanId", LogPropertyKeys.TrackParentId, $"LogProperties_{LogPropertyKeys.TrackParentId}_s"),
                     new LogAnalyticsEntityMap("Kind", LogPropertyKeys.TrackKind, $"LogProperties_{LogPropertyKeys.TrackKind}_s"),
                     new LogAnalyticsEntityMap("Status", LogPropertyKeys.TrackStatus, $"LogProperties_{LogPropertyKeys.TrackStatus}_s"),

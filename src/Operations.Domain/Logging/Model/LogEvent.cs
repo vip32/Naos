@@ -55,6 +55,8 @@
 
         public string TrackType { get; set; }
 
+        public string SpanId { get; set; }
+
         public Dictionary<string, object> Properties { get; set; } = new Dictionary<string, object>();
 
         public DomainEvents DomainEvents => new DomainEvents();

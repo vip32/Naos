@@ -225,6 +225,7 @@
                         using(logger.BeginScope(new Dictionary<string, object>
                         {
                             [LogPropertyKeys.CorrelationId] = serviceBusMessage.CorrelationId,
+                            [LogPropertyKeys.TrackId] = scope.Span.SpanId
                         }))
                         {
                             // map some message properties to the typed message
