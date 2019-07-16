@@ -50,7 +50,7 @@
             return source;
         }
 
-        public static ILogger LogTrace(
+        public static ILogger LogTrace( // TODO: obsolete
             this ILogger source,
             string logKey,
             string span,

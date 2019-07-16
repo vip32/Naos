@@ -55,7 +55,7 @@
         [OpenApiTag("Naos Entity Repository")]
         [Description("TODO description")]
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
-        public virtual async Task<ActionResult<TEntity>> Get(string id)
+        public virtual async Task<ActionResult<TEntity>> GetById(string id)
         {
             if(id.IsNullOrEmpty())
             {

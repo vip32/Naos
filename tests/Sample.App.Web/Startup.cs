@@ -9,6 +9,7 @@
     using Microsoft.AspNetCore.Diagnostics.HealthChecks;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Internal;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Authorization;
     using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -155,6 +156,7 @@
 
             app
                 .UseHttpsRedirection()
+                .UseEndpointRouting()
                 .UseNaos(s => s
                     .UseRequestCorrelation()
                     .UseServiceContext()

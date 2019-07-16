@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Http.Extensions;
+    using Microsoft.AspNetCore.Routing;
     using Microsoft.AspNetCore.WebUtilities;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
@@ -38,9 +39,12 @@
             else
             {
                 var uri = context.Request.Uri();
+                context.GetRouteData().Values.TryGetValue("Action", out var action);
+                context.GetRouteData().Values.TryGetValue("Controller", out var controller);
+
                 using(var scope = tracer
                     .BuildSpan(
-                        context.Request.Uri().AbsolutePath,
+                        $"{action ?? context.Request.Method} {controller ?? uri.AbsolutePath}",
                         LogKeys.InboundRequest,
                         SpanKind.Server,
                         new Span(context.GetCorrelationId(), null)) // TODO: get service name as operationname (servicedescriptor?)
