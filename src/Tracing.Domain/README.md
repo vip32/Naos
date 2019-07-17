@@ -15,17 +15,17 @@ QUEUNG     |---[SPAN emailnewcustomer ----------]                               
 
 ### Sequence view
 ```
-LOGKEY OPERATIONANAME (^=logs)                                 TOOK  KIND     DESCRIPTION
+SPANID LOGKEY KIND     OPERATIONANAME (^=logs)                                 TOOK   DESCRIPTION
 ----------------------------------------------------------------------------------------------------------
-INBREQ [SPAN /api/customers]^                                  300ms SERVER   receives request
-......     |---[SPAN validatemodel]^                           100ms INTERNAL validates the model
-INBREQ     |---[SPAN /api/accounts]^                            10ms SERVER   receives request for data
-DOMREP     |       `---[SPAN getaccount]^                        9ms INTERNAL repository finds entity
-DOMREP     |---[SPAN createentity]^                              9ms INTERNAL repository stores entity
-DOMEVT     |       |---[SPAN entitycreated]^                     3ms CONSUMER handles event
-MESSAG     |       `---[SPAN customercreated]^                   2ms PRODUCER publishes message
-MESSAG     |               `---[SPAN customercreatedhandler]^   21ms CONSUMER handles message, takes longer
-QUEUNG     `---[SPAN emailnewcustomer]^                         11ms CONSUMER handles queue item
+61ASV  INBREQ SERVER   [SPAN /api/customers]^                                  300ms  receives request
+ZZH7U  ...... INTERNAL     |---[SPAN validatemodel]^                           100ms  validates the model
+ ..    INBREQ SERVER       |---[SPAN /api/accounts]^                            10ms  receives request for data
+ ..    DOMREP INTERNAL     |       `---[SPAN getaccount]^                        9ms  repository finds entity
+ ..    DOMREP INTERNAL     |---[SPAN createentity]^                              9ms  repository stores entity
+ ..    DOMEVT CONSUMER     |       |---[SPAN entitycreated]^                     3ms  handles event
+ ..    MESSAG PRODUCER     |       `---[SPAN customercreated]^                   2ms  publishes message
+ ..    MESSAG CONSUMER     |               `---[SPAN customercreatedhandler]^   21ms  handles message, takes longer
+ ..    QUEUNG CONSUMER     `---[SPAN emailnewcustomer]^                         11ms  handles queue item
 ```
 
 SPANNAME >> PRODUCT.CAPABILITY::OPERATIONNAME
