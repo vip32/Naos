@@ -46,7 +46,7 @@
 
                 using(var scope = tracer
                     .BuildSpan(
-                        $"{action ?? context.Request.Method} {(controller != null ? controller.ToString().Singularize() : uri.AbsolutePath)}".ToLowerInvariant(),
+                        $"http {action ?? context.Request.Method} {(controller != null ? controller.ToString().Singularize() : uri.AbsolutePath)}".ToLowerInvariant(),
                         LogKeys.InboundRequest,
                         SpanKind.Server,
                         new Span(context.GetCorrelationId(), null)) // TODO: get service name as operationname (servicedescriptor?)
@@ -58,13 +58,7 @@
                     .WithTag(SpanTagKey.HttpPath, uri.AbsolutePath)
                     // TODO: request size? SpanTagKey.HttpRequestSize
                     .WithTag(SpanTagKey.HttpRequestId, context.GetRequestId()).Activate(this.logger))
-                //using(this.logger.BeginScope(new Dictionary<string, object>()
-                //{
-                //    [LogPropertyKeys.TrackId] = scope.Span.SpanId
-                //}))
                 {
-                    this.logger.LogInformation("TTTTTEEEEESSSST SPANID " + scope.Span.SpanId);
-
                     try
                     {
                         await this.next.Invoke(context).AnyContext();

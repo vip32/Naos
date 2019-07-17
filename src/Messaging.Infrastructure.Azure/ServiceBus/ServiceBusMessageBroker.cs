@@ -96,7 +96,6 @@
                 using(this.logger.BeginScope(new Dictionary<string, object>
                 {
                     [LogPropertyKeys.CorrelationId] = message.CorrelationId
-                    //[LogPropertyKeys.TrackId] = scope.Span.SpanId
                 }))
                 {
                     if(message.Id.IsNullOrEmpty())

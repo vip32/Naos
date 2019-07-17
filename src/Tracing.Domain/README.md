@@ -15,18 +15,20 @@ QUEUNG     |---[SPAN emailnewcustomer ----------]                               
 
 ### Sequence view
 ```
-LOGKEY OPERATIONANAME                                               KIND     DESCRIPTION
+LOGKEY OPERATIONANAME (^=logs)                                 TOOK  KIND     DESCRIPTION
 ----------------------------------------------------------------------------------------------------------
-INBREQ [SPAN /api/customers]                                        SERVER   receives request
-......     |---[SPAN validatemodel]                                 INTERNAL validates the model
-INBREQ     |---[SPAN /api/accounts]                                 SERVER   receives request for data
-DOMREP     |       `---[SPAN getaccount]                            INTERNAL repository finds entity
-DOMREP     |---[SPAN createentity]                                  INTERNAL repository stores entity
-DOMEVT     |       |---[SPAN entitycreated]                         CONSUMER handles event
-MESSAG     |       `---[SPAN customercreated]                       PRODUCER publishes message
-MESSAG     |               `---[SPAN customercreatedhandler]        CONSUMER handles message, takes longer
-QUEUNG     `---[SPAN emailnewcustomer]                              CONSUMER handles queue item
+INBREQ [SPAN /api/customers]^                                  300ms SERVER   receives request
+......     |---[SPAN validatemodel]^                           100ms INTERNAL validates the model
+INBREQ     |---[SPAN /api/accounts]^                            10ms SERVER   receives request for data
+DOMREP     |       `---[SPAN getaccount]^                        9ms INTERNAL repository finds entity
+DOMREP     |---[SPAN createentity]^                              9ms INTERNAL repository stores entity
+DOMEVT     |       |---[SPAN entitycreated]^                     3ms CONSUMER handles event
+MESSAG     |       `---[SPAN customercreated]^                   2ms PRODUCER publishes message
+MESSAG     |               `---[SPAN customercreatedhandler]^   21ms CONSUMER handles message, takes longer
+QUEUNG     `---[SPAN emailnewcustomer]^                         11ms CONSUMER handles queue item
 ```
+
+SPANNAME >> PRODUCT.CAPABILITY::OPERATIONNAME
 
 QUERIES:
 - group by operationname where span=root (hit count / avg duration / total duration=sum of all durations)
