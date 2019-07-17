@@ -1,4 +1,5 @@
-﻿```
+﻿### Timeline view
+```
        |-----|-----|-----|-----|-----|-----|-----|-----|-----|-----| =100%
 
 INBREQ [SPAN /api/customers-------------------------]                                        SERVER receives request
@@ -10,6 +11,21 @@ DOMEVT     :       |---[SPAN entitycreated------]                               
 MESSAG     :       |---[SPAN customercreated----]                                            PRODUCER publishes message
 MESSAG     :               |---[SPAN customercreatedhandler--------]                         CONSUMER handles message, takes longer
 QUEUNG     |---[SPAN emailnewcustomer ----------]                                            CONSUMER handles queue item
+```
+
+### Sequence view
+```
+LOGKEY OPERATIONANAME                                               KIND     DESCRIPTION
+----------------------------------------------------------------------------------------------------------
+INBREQ [SPAN /api/customers]                                        SERVER   receives request
+......     |---[SPAN validatemodel]                                 INTERNAL validates the model
+INBREQ     |---[SPAN /api/accounts]                                 SERVER   receives request for data
+DOMREP     |       `---[SPAN getaccount]                            INTERNAL repository finds entity
+DOMREP     |---[SPAN createentity]                                  INTERNAL repository stores entity
+DOMEVT     |       |---[SPAN entitycreated]                         CONSUMER handles event
+MESSAG     |       `---[SPAN customercreated]                       PRODUCER publishes message
+MESSAG     |               `---[SPAN customercreatedhandler]        CONSUMER handles message, takes longer
+QUEUNG     `---[SPAN emailnewcustomer]                              CONSUMER handles queue item
 ```
 
 QUERIES:
