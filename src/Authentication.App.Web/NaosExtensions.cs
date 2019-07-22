@@ -64,7 +64,9 @@
 
             naosOptions.Context.Services
                 .AddAuthorization()
-                .AddScoped<IPolicyEvaluator, EasyAuthPolicyEvaluator>()
+                .AddScoped<IPolicyEvaluator>(sp => new EasyAuthPolicyEvaluator(
+                    sp.GetRequiredService<IAuthorizationService>(),
+                    configuration.Provider.EmptyToNull() ?? EasyAuthProviders.AzureActiveDirectory))
                 .AddAuthentication(AuthenticationKeys.EasyAuthScheme)
                 .AddEasyAuth(options);
 

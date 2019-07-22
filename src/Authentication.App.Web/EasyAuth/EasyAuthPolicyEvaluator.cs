@@ -5,13 +5,15 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Authorization.Policy;
     using Microsoft.AspNetCore.Http;
-    using Naos.Foundation.Application;
 
     public class EasyAuthPolicyEvaluator : PolicyEvaluator
     {
-        public EasyAuthPolicyEvaluator(IAuthorizationService authorization)
+        private readonly string provider;
+
+        public EasyAuthPolicyEvaluator(IAuthorizationService authorization, string provider)
             : base(authorization)
         {
+            this.provider = provider;
         }
 
         public override async Task<PolicyAuthorizationResult> AuthorizeAsync(
@@ -27,7 +29,7 @@
                 if(!context.User.Identity.IsAuthenticated)
                 {
                     context.Response.StatusCode = 302;
-                    context.Response.Redirect("/.auth/login/aad");
+                    context.Response.Redirect($"/.auth/login/{this.provider}");
                     //return PolicyAuthorizationResult.Success(); // handled
                 }
             }
