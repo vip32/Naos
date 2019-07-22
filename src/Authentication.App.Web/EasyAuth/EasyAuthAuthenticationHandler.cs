@@ -53,7 +53,7 @@
                 var principalEncoded = this.Context.Request.Headers["X-MS-CLIENT-PRINCIPAL"].FirstOrDefault();
                 if(principalEncoded.IsNullOrEmpty())
                 {
-                    return AuthenticateResult.Fail("no easyauth headers"); // TODO: redirect https://docs.microsoft.com/en-us/azure/app-service/app-service-authentication-how-to?WT.mc_id=easyauth-github-marouill
+                    return AuthenticateResult.Fail("no easyauth headers present"); // TODO: redirect https://docs.microsoft.com/en-us/azure/app-service/app-service-authentication-how-to?WT.mc_id=easyauth-github-marouill
                 }
 
                 var principalBytes = Convert.FromBase64String(principalEncoded);

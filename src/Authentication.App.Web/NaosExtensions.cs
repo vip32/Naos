@@ -63,15 +63,7 @@
             var configuration = naosOptions.Context.Configuration.GetSection(section).Get<EasyAuthConfiguration>();
 
             naosOptions.Context.Services
-                //.AddSingleton<IAuthorizationHandler, EasyAuthHeadersRequirementHandler>()
-                //.AddAuthorization(o =>
-                //    o.AddPolicy("validate", p =>
-                //    {
-                //        //p.RequireAuthenticatedUser();
-                //        p.Requirements.Add(
-                //            new EasyAuthHeadersRequirement(configuration?.Provider.EmptyToNull() ?? EasyAuthProviders.AzureActiveDirectory)); // needed for login redirect
-                //    }))
-                .AddScoped<IPolicyEvaluator, RedirectingPolicyEvaluator>()
+                .AddScoped<IPolicyEvaluator, EasyAuthPolicyEvaluator>()
                 .AddAuthentication(AuthenticationKeys.EasyAuthScheme)
                 .AddEasyAuth(options);
 
