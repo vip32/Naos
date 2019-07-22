@@ -6,6 +6,9 @@
     using Microsoft.AspNetCore.Authorization.Policy;
     using Microsoft.AspNetCore.Http;
 
+    /// <summary>
+    /// Will forces a redirect to the easyauth login url when the user is not authenticated
+    /// </summary>
     public class EasyAuthPolicyEvaluator : PolicyEvaluator
     {
         private readonly string provider;
