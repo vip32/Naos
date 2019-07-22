@@ -48,7 +48,7 @@
 
                 using(var scope = tracer
                     .BuildSpan(
-                        $"http {action ?? context.Request.Method} {(controller != null ? controller.ToString().Singularize() : uri.AbsolutePath)}".ToLowerInvariant(),
+                        $"http {action ?? context.Request.Method} {(controller != null ? controller.ToString().Singularize() ?? controller : uri.AbsolutePath)}".ToLowerInvariant(),
                         LogKeys.InboundRequest,
                         SpanKind.Server,
                         new Span(context.GetCorrelationId(), null)) // TODO: get service name as operationname (servicedescriptor?)
