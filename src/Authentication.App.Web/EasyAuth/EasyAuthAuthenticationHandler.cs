@@ -43,11 +43,11 @@
                 //    return AuthenticateResult.Success(ticket);
                 //}
 
-                //var isEnabled = string.Equals(Environment.GetEnvironmentVariable("WEBSITE_AUTH_ENABLED", EnvironmentVariableTarget.Process), "True", StringComparison.InvariantCultureIgnoreCase);
-                //if(!isEnabled)
-                //{
-                //    return AuthenticateResult.NoResult();
-                //}
+                var isEnabled = string.Equals(Environment.GetEnvironmentVariable("WEBSITE_AUTH_ENABLED", EnvironmentVariableTarget.Process), "True", StringComparison.InvariantCultureIgnoreCase);
+                if(!isEnabled)
+                {
+                    return AuthenticateResult.NoResult();
+                }
 
                 var provider = this.Context.Request.Headers["X-MS-CLIENT-PRINCIPAL-IDP"].FirstOrDefault();
                 var principalEncoded = this.Context.Request.Headers["X-MS-CLIENT-PRINCIPAL"].FirstOrDefault();

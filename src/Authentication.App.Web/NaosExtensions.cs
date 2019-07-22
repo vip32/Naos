@@ -61,12 +61,14 @@
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
 
             var configuration = naosOptions.Context.Configuration.GetSection(section).Get<EasyAuthConfiguration>();
+            var handlerOptions = new AuthenticationHandlerOptions();
+            options?.Invoke(handlerOptions);
 
             naosOptions.Context.Services
                 .AddAuthorization()
                 .AddScoped<IPolicyEvaluator>(sp => new EasyAuthPolicyEvaluator(
                     sp.GetRequiredService<IAuthorizationService>(),
-                    configuration.Provider.EmptyToNull() ?? EasyAuthProviders.AzureActiveDirectory))
+                    handlerOptions.Provider.EmptyToNull() ?? configuration.Provider.EmptyToNull() ?? EasyAuthProviders.AzureActiveDirectory))
                 .AddAuthentication(AuthenticationKeys.EasyAuthScheme)
                 .AddEasyAuth(options);
 

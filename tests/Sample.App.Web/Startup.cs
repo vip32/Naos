@@ -102,7 +102,7 @@
                         .AddSampleUserAccounts())
                     .AddServiceContext()
                     //.AddAuthenticationApiKeyStatic()
-                    .AddEasyAuthentication()
+                    .AddEasyAuthentication(/*o => o.Provider = EasyAuthProviders.AzureActiveDirectory*/)
                     .AddRequestCorrelation()
                     .AddRequestFiltering()
                     .AddServiceExceptions()
