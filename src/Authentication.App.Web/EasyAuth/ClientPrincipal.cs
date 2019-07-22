@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using Newtonsoft.Json;
 
-    public class MsClientPrincipal
+    public class ClientPrincipal
     {
         [JsonProperty("auth_typ")]
         public string AuthenticationType { get; set; }

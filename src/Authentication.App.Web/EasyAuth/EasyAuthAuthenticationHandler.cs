@@ -58,7 +58,7 @@
 
                 var principalBytes = Convert.FromBase64String(principalEncoded);
                 var principalDecoded = System.Text.Encoding.Default.GetString(principalBytes);
-                var clientPrincipal = JsonConvert.DeserializeObject<MsClientPrincipal>(principalDecoded);
+                var clientPrincipal = JsonConvert.DeserializeObject<ClientPrincipal>(principalDecoded);
 
                 var principal = new ClaimsPrincipal();
                 var claims = clientPrincipal.Claims.Select(c => new Claim(c.Type, c.Value));
