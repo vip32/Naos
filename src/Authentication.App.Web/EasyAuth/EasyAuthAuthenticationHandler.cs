@@ -28,20 +28,20 @@
             {
                 this.Logger.LogInformation("{LogKey:l} easyauth handle", LogKeys.Authentication);
 
-                //if(this.Request.Host.Host.SafeEquals("localhost") && this.Options.IgnoreLocal)
-                //{
-                //    // ignore for localhost
-                //    var identity = new ClaimsIdentity(
-                //        this.Options.Claims.Safe().Select(c => new Claim(c.Key, c.Value))
-                //        .Insert(new Claim(ClaimTypes.AuthenticationMethod, AuthenticationKeys.ApiKeyScheme))
-                //        .Insert(new Claim(ClaimTypes.Name, ClaimsIdentity.DefaultIssuer))
-                //        .DistinctBy(c => c.Type),
-                //        this.Scheme.Name);
-                //    var ticket = new AuthenticationTicket(new ClaimsPrincipal(identity), this.Scheme.Name);
-                //    this.Logger.LogInformation($"{{LogKey:l}} apikey authenticated (name={identity.Name})", LogKeys.Authentication);
+                if(this.Request.Host.Host.SafeEquals("localhost") && this.Options.IgnoreLocal)
+                {
+                    // ignore for localhost
+                    var identity = new ClaimsIdentity(
+                        this.Options.Claims.Safe().Select(c => new Claim(c.Key, c.Value))
+                        .Insert(new Claim(ClaimTypes.AuthenticationMethod, AuthenticationKeys.ApiKeyScheme))
+                        .Insert(new Claim(ClaimTypes.Name, ClaimsIdentity.DefaultIssuer))
+                        .DistinctBy(c => c.Type),
+                        this.Scheme.Name);
+                    var ticket = new AuthenticationTicket(new ClaimsPrincipal(identity), this.Scheme.Name);
+                    this.Logger.LogInformation($"{{LogKey:l}} easyauth authenticated (name={identity.Name})", LogKeys.Authentication);
 
-                //    return AuthenticateResult.Success(ticket);
-                //}
+                    return AuthenticateResult.Success(ticket);
+                }
 
                 var isEnabled = string.Equals(Environment.GetEnvironmentVariable("WEBSITE_AUTH_ENABLED", EnvironmentVariableTarget.Process), "True", StringComparison.InvariantCultureIgnoreCase);
                 if(!isEnabled)
@@ -65,8 +65,9 @@
                 principal.AddIdentity(
                     new ClaimsIdentity(claims, clientPrincipal.AuthenticationType, clientPrincipal.NameType, clientPrincipal.RoleType));
 
-                return AuthenticateResult.Success(
-                    new AuthenticationTicket(principal, provider));
+                this.Logger.LogInformation($"{{LogKey:l}} easyauth authenticated (name={principal.Identity.Name})", LogKeys.Authentication);
+
+                return AuthenticateResult.Success(new AuthenticationTicket(principal, provider));
             }
             catch(Exception ex)
             {
