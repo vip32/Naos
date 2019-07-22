@@ -33,7 +33,7 @@
                     // ignore for localhost
                     var identity = new ClaimsIdentity(
                         this.Options.Claims.Safe().Select(c => new Claim(c.Key, c.Value))
-                        .Insert(new Claim(ClaimTypes.AuthenticationMethod, AuthenticationKeys.ApiKeyScheme))
+                        .Insert(new Claim(ClaimTypes.AuthenticationMethod, AuthenticationKeys.EasyAuthScheme))
                         .Insert(new Claim(ClaimTypes.Name, ClaimsIdentity.DefaultIssuer))
                         .DistinctBy(c => c.Type),
                         this.Scheme.Name);
