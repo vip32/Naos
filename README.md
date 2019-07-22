@@ -620,6 +620,18 @@ development-naos--operations--logging--azureLogAnalytics--workspaceName
   Registers an AuthenticationHandler that will interpret the X-MS-CLIENT-PRINCIPAL-IDP and X-MS-CLIENT-PRINCIPAL HTTP headers that are sent by EasyAuth once a user is logged in.
   If no user is logged in a PolicyEvaluator will redirect to the appropriate login page.
 
+  ```
+                              .--Naos-------------Azure-----.
+   R      .---Azure---.       |  Easy     |       App       |
+   e ---->| EasyAuth  |-----> |  Auth     |       Service   |
+   q      `-----------`       |  Handler  |     ^           |
+   u            |             `-----x-----------|-----------`
+   e            |                   |           |  
+   s            |                   `-----------`
+   t            V                      provide 
+            redirect to                claimsprincipal
+            auth provider (login)
+  ``` 
 # (Workflow)?
 
 # Foundation
