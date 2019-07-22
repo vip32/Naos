@@ -12,6 +12,8 @@
 
         public const string BasicScheme = "Basic";
 
+        public const string EasyAuthScheme = "EasyAuth";
+
         public const string AuthorizationHeaderName = "Authorization";
     }
 }

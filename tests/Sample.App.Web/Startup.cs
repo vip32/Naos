@@ -18,6 +18,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Naos.Core.App.Web;
+    using Naos.Core.Authentication.App.Web;
     using Naos.Core.Commands.Domain;
     using Naos.Core.Commands.Infrastructure.FileStorage;
     using Naos.Core.Configuration.App;
@@ -81,6 +82,7 @@
                 .AddMvc(o =>
                     {
                         o.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build())); // https://tahirnaushad.com/2017/08/28/asp-net-core-2-0-mvc-filters/ or use controller attribute (Authorize)
+                        //o.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().AddRequirements(new[] { new EasyAuthHeadersRequirement("aad") }).Build())); // https://tahirnaushad.com/2017/08/28/asp-net-core-2-0-mvc-filters/ or use controller attribute (Authorize)
                     })
                     // naos mvc configuration
                     .AddNaos(o =>
@@ -99,7 +101,8 @@
                         .AddSampleCustomers()
                         .AddSampleUserAccounts())
                     .AddServiceContext()
-                    .AddAuthenticationApiKeyStatic()
+                    //.AddAuthenticationApiKeyStatic()
+                    .AddEasyAuthentication()
                     .AddRequestCorrelation()
                     .AddRequestFiltering()
                     .AddServiceExceptions()

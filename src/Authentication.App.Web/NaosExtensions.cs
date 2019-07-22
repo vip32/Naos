@@ -3,6 +3,8 @@
     using System;
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Authorization.Policy;
     using Microsoft.Extensions.Configuration;
     using Naos.Core.Authentication.App.Web;
     using Naos.Core.Configuration.App;
@@ -25,7 +27,7 @@
                 .AddAuthentication(AuthenticationKeys.ApiKeyScheme)
                 .AddApiKey(options);
 
-            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos services builder: authentication added (type=ApiKeyStatic)");
+            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos services builder: authentication added (type={AuthenticationKeys.ApiKeyScheme})");
             naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Authentication", Description = "ApiKeyStatic", EchoRoute = "api/echo/authentication" });
 
             return naosOptions;
@@ -45,8 +47,36 @@
                 .AddAuthentication(AuthenticationKeys.BasicScheme)
                 .AddBasic(options);
 
-            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos services builder: authentication added (type=BasicStatic)");
+            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos services builder: authentication added (type={AuthenticationKeys.BasicScheme})");
             naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Authentication", Description = "BasicStatic", EchoRoute = "api/echo/authentication" });
+
+            return naosOptions;
+        }
+
+        public static NaosServicesContextOptions AddEasyAuthentication(
+            this NaosServicesContextOptions naosOptions,
+            Action<AuthenticationHandlerOptions> options = null,
+            string section = "naos:authentication:easyauth")
+        {
+            EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
+
+            var configuration = naosOptions.Context.Configuration.GetSection(section).Get<EasyAuthConfiguration>();
+
+            naosOptions.Context.Services
+                //.AddSingleton<IAuthorizationHandler, EasyAuthHeadersRequirementHandler>()
+                //.AddAuthorization(o =>
+                //    o.AddPolicy("validate", p =>
+                //    {
+                //        //p.RequireAuthenticatedUser();
+                //        p.Requirements.Add(
+                //            new EasyAuthHeadersRequirement(configuration?.Provider.EmptyToNull() ?? EasyAuthProviders.AzureActiveDirectory)); // needed for login redirect
+                //    }))
+                .AddScoped<IPolicyEvaluator, RedirectingPolicyEvaluator>()
+                .AddAuthentication(AuthenticationKeys.EasyAuthScheme)
+                .AddEasyAuth(options);
+
+            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos services builder: authentication added (type={AuthenticationKeys.EasyAuthScheme})");
+            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Authentication", Description = "EasyAuth", EchoRoute = "api/echo/authentication" });
 
             return naosOptions;
         }

@@ -41,8 +41,10 @@
             else
             {
                 var uri = context.Request.Uri();
-                context.GetRouteData().Values.TryGetValue("Action", out var action);
-                context.GetRouteData().Values.TryGetValue("Controller", out var controller);
+                object action = null;
+                object controller = null;
+                context.GetRouteData()?.Values.TryGetValue("Action", out action);
+                context.GetRouteData()?.Values.TryGetValue("Controller", out controller);
 
                 using(var scope = tracer
                     .BuildSpan(

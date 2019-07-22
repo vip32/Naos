@@ -56,8 +56,11 @@
             await Task.Run(() =>
             {
                 var contentLength = context.Request.ContentLength ?? 0;
-                context.GetRouteData().Values.TryGetValue("Action", out var action);
-                context.GetRouteData().Values.TryGetValue("Controller", out var controller);
+                object action = null;
+                object controller = null;
+                context.GetRouteData()?.Values.TryGetValue("Action", out action);
+                context.GetRouteData()?.Values.TryGetValue("Controller", out controller);
+
                 this.logger.LogJournal(LogKeys.InboundRequest, $"[{requestId}] http {context.Request.Method} {{Url:l}} (endpoint={$"{action ?? context.Request.Method} {(controller != null ? controller.ToString().Singularize() : context.Request.Uri().AbsolutePath)}".ToLowerInvariant()}, size={contentLength.Bytes().ToString("#.##")})", LogPropertyKeys.TrackInboundRequest, args: new object[] { new Uri(context.Request.GetDisplayUrl()) });
                 this.logger.LogTrace(LogKeys.InboundRequest, requestId, context.Request.Path, LogTraceNames.Http); // TODO: obsolete
                 //if (context.HasServiceName())
