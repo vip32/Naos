@@ -621,7 +621,7 @@ development-naos--operations--logging--azureLogAnalytics--workspaceName
   If no user is logged in a PolicyEvaluator will redirect to the appropriate login page.
 
   ```
-                              .--Naos-------------Azure-----.
+                             .--Naos-------------Azure-----.
    R      .---Azure---.       |  Easy     |       App       |
    e ---->| EasyAuth  |-----> |  Auth     |       Service   |
    q      `-----------`       |  Handler  |     ^           |
