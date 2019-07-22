@@ -63,6 +63,7 @@
             var configuration = naosOptions.Context.Configuration.GetSection(section).Get<EasyAuthConfiguration>();
 
             naosOptions.Context.Services
+                .AddAuthorization()
                 .AddScoped<IPolicyEvaluator, EasyAuthPolicyEvaluator>()
                 .AddAuthentication(AuthenticationKeys.EasyAuthScheme)
                 .AddEasyAuth(options);

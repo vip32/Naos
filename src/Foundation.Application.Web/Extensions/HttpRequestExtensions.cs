@@ -7,7 +7,7 @@
 
     public static class HttpRequestExtensions
     {
-        public static Uri Uri(this HttpRequest source)
+        public static Uri Uri(this HttpRequest source, bool hostOnly = false)
         {
             if(source == null)
             {
@@ -27,17 +27,17 @@
                 builder.Append("UNKNOWN-HOST");
             }
 
-            if(source.PathBase.HasValue)
+            if(source.PathBase.HasValue && !hostOnly)
             {
                 builder.Append(source.PathBase.Value);
             }
 
-            if(source.Path.HasValue)
+            if(source.Path.HasValue && !hostOnly)
             {
                 builder.Append(source.Path.Value);
             }
 
-            if(source.QueryString.HasValue)
+            if(source.QueryString.HasValue && !hostOnly)
             {
                 builder.Append(source.QueryString);
             }

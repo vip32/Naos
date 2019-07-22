@@ -12,7 +12,7 @@
         public ApiKeyStaticValidationService(ApiKeyStaticValidationServiceConfiguration configuration)
         {
             this.configuration = configuration ?? new ApiKeyStaticValidationServiceConfiguration();
-            this.configuration.Claims = this.configuration.Claims ?? new Dictionary<string, string>();
+            this.configuration.Claims ??= new Dictionary<string, string>();
             if(!this.configuration.Claims.ContainsKey(ClaimTypes.Name))
             {
                 // add the static user

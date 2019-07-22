@@ -13,7 +13,7 @@
         public BasicStaticValidationService(BasicStaticValidationServiceConfiguration configuration)
         {
             this.configuration = configuration ?? new BasicStaticValidationServiceConfiguration();
-            this.configuration.Claims = this.configuration.Claims ?? new Dictionary<string, string>();
+            this.configuration.Claims ??= new Dictionary<string, string>();
             if(!this.configuration.Claims.ContainsKey(ClaimTypes.Name))
             {
                 // add the static user

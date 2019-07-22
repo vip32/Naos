@@ -5,6 +5,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Authorization.Policy;
     using Microsoft.AspNetCore.Http;
+    using Naos.Foundation.Application;
 
     public class EasyAuthPolicyEvaluator : PolicyEvaluator
     {
@@ -25,8 +26,9 @@
                 // If user is not authenticated, send them to the easyauth login
                 if(!context.User.Identity.IsAuthenticated)
                 {
-                    context.Response.Redirect($"/.auth/login/aad");
-                    return PolicyAuthorizationResult.Success(); // handled
+                    context.Response.StatusCode = 302;
+                    context.Response.Redirect("/.auth/login/aad");
+                    //return PolicyAuthorizationResult.Success(); // handled
                 }
             }
 

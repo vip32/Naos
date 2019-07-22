@@ -6,6 +6,6 @@
     {
         public string Provider { get; set; }
 
-        public IDictionary<string, string> Claims { get; set; }
+        //public IDictionary<string, string> Claims { get; set; }
     }
 }

@@ -53,7 +53,7 @@
                 var principalEncoded = this.Context.Request.Headers["X-MS-CLIENT-PRINCIPAL"].FirstOrDefault();
                 if(principalEncoded.IsNullOrEmpty())
                 {
-                    return AuthenticateResult.Fail("no easyauth headers present"); // TODO: redirect https://docs.microsoft.com/en-us/azure/app-service/app-service-authentication-how-to?WT.mc_id=easyauth-github-marouill
+                    return AuthenticateResult.NoResult();
                 }
 
                 var principalBytes = Convert.FromBase64String(principalEncoded);
@@ -61,8 +61,9 @@
                 var clientPrincipal = JsonConvert.DeserializeObject<MsClientPrincipal>(principalDecoded);
 
                 var principal = new ClaimsPrincipal();
-                var claims = clientPrincipal.Claims.Select(x => new Claim(x.Type, x.Value));
-                principal.AddIdentity(new ClaimsIdentity(claims, clientPrincipal.AuthenticationType, clientPrincipal.NameType, clientPrincipal.RoleType));
+                var claims = clientPrincipal.Claims.Select(c => new Claim(c.Type, c.Value));
+                principal.AddIdentity(
+                    new ClaimsIdentity(claims, clientPrincipal.AuthenticationType, clientPrincipal.NameType, clientPrincipal.RoleType));
 
                 return AuthenticateResult.Success(
                     new AuthenticationTicket(principal, provider));
@@ -117,8 +118,8 @@
                 }
             }
 
-            this.Response.Headers["WWW-Authenticate"] = $"{AuthenticationKeys.ApiKeyScheme} realm=\"{this.Options.Realm}\", charset=\"UTF-8\"";
-            this.Response.StatusCode = (int)eventContext.StatusCode;
+            this.Response.Headers["WWW-Authenticate"] = $"{AuthenticationKeys.EasyAuthScheme} realm=\"{this.Options.Realm}\", charset=\"UTF-8\"";
+            //this.Response.StatusCode = 401; //(int)eventContext.StatusCode;
         }
     }
 }
