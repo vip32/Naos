@@ -606,6 +606,20 @@ development-naos--operations--logging--azureLogAnalytics--workspaceName
 - Azure Table Storage
 - CosmosDb (Table)
 
+# Authentication
+- Basic
+- ApiKey
+- EasyAuth
+
+  Provides support for filling up the request ClaimsPrincipal for an Azure webapp that has been setup to use [EasyAuth](https://docs.microsoft.com/en-us/azure/app-service/overview-authentication-authorization?WT.mc_id=easyauth-github-marouill).
+  ```
+  services.AddNaos(this.Configuration, "Product", "Capability", new[] { "All" }, n => n
+          ...
+          .AddEasyAuthentication(o => o.Provider = EasyAuthProviders.AzureActiveDirectory)
+  ```
+  Registers an AuthenticationHandler that will interpret the X-MS-CLIENT-PRINCIPAL-IDP and X-MS-CLIENT-PRINCIPAL HTTP headers that are sent by EasyAuth once a user is logged in.
+  If no user is logged in a PolicyEvaluator will redirect to the appropriate login page.
+
 # (Workflow)?
 
 # Foundation

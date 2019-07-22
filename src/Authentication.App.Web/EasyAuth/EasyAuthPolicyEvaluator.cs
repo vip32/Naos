@@ -29,7 +29,7 @@
                 if(!context.User.Identity.IsAuthenticated)
                 {
                     context.Response.StatusCode = 302;
-                    context.Response.Redirect($"/.auth/login/{this.provider}");
+                    context.Response.Redirect($"/.auth/login/{this.provider}?post_login_redirect_url=/");
                     //return PolicyAuthorizationResult.Success(); // handled
                 }
             }
