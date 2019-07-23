@@ -5,6 +5,25 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// <para>
+    /// The pipeline consists of a chain of processing steps, arranged so that the output of each step is the input of the next step.
+    /// The pipeline is linear and one-directional.
+    /// </para>
+    /// <para>
+    ///     [TPipeIn]-----.
+    ///                   |
+    ///               .---v-Pipeline<TPipeIn, TPipeOut>---------.
+    ///               |   |--------.   .--------.   .--------.  |
+    ///               |   | step   |-->| step   |-->| step   |  |
+    ///               |   `--------`   `--------`   `--------|  |
+    ///               `--------------------------------------|--`
+    ///                                                      |
+    ///                                                      `----> [TPipeOut]
+    /// </para>
+    /// </summary>
+    /// <typeparam name="TPipeIn"></typeparam>
+    /// <typeparam name="TPipeOut"></typeparam>
     public class Pipeline<TPipeIn, TPipeOut>
     {
         private readonly List<object> pipelineSteps = new List<object>();
