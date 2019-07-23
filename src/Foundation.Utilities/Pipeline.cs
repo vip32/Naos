@@ -36,15 +36,15 @@
         public Task<TPipeOut> Execute(TPipeIn input)
         {
             var firstStep = this.pipelineSteps[0] as IPipelineStep<TPipeIn>;
-            var task = new TaskCompletionSource<TPipeOut>();
+            var tcs = new TaskCompletionSource<TPipeOut>();
 
             firstStep.Buffer.Add(/*input*/new InputItem<TPipeIn>()
             {
                 Value = input,
-                TaskCompletionSource = task
+                TaskCompletionSource = tcs
             });
 
-            return task.Task;
+            return tcs.Task;
         }
 
         public PipelineStep<TStepIn, TStepOut> GenerateStep<TStepIn, TStepOut>()
