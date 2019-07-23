@@ -84,7 +84,10 @@
             var item = this.Options.Registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(key));
             if(item.Key != null)
             {
-                await this.TriggerAsync(key, new CancellationTokenSource(item.Key.Timeout).Token, args);
+                using(var cts = new CancellationTokenSource(item.Key.Timeout))
+                {
+                    await this.TriggerAsync(key, cts.Token, args).AnyContext();
+                }
             }
             else
             {
