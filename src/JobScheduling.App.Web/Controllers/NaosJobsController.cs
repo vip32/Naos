@@ -44,13 +44,13 @@
                 throw new BadRequestException("key cannot be empty");
             }
 
-            var model = this.jobScheduler.Options.Registrations.Where(r => r.Key.Key.SafeEquals(key)).Select(r => r.Key).FirstOrDefault();
-            if(model == null)
+            var job = this.jobScheduler.Options.Registrations.Where(r => r.Key.Key.SafeEquals(key)).Select(r => r.Key).FirstOrDefault();
+            if(job == null)
             {
                 return this.NotFound(); // TODO: throw notfoundexception?
             }
 
-            await this.jobScheduler.TriggerAsync(key).AnyContext();
+            await this.jobScheduler.TriggerAsync(key).AnyContext(); // TODO: querystring args as trigger args
             return this.Accepted();
         }
     }
