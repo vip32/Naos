@@ -8,6 +8,14 @@
     public static class Cron
     {
         /// <summary>
+        /// Returns cron expression that fires never.
+        /// </summary>
+        public static string Never()
+        {
+            return string.Empty;
+        }
+
+        /// <summary>
         /// Returns cron expression that fires every minute.
         /// </summary>
         public static string Minutely()

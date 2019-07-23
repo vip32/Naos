@@ -50,6 +50,8 @@
                 return this.NotFound(); // TODO: throw notfoundexception?
             }
 
+            //var a = Newtonsoft.Json.JsonConvert.DeserializeObject("request content");
+            // TODO: pass the content json as an object to the job
             await this.jobScheduler.TriggerAsync(key).AnyContext(); // TODO: querystring args as trigger args
             return this.Accepted();
         }

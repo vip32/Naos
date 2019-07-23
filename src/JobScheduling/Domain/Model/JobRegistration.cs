@@ -12,8 +12,6 @@
 
         public JobRegistration(string key, string cron, string[] args = null, bool isReentrant = false, TimeSpan? timeout = null, bool enabled = true)
         {
-            EnsureArg.IsNotNullOrEmpty(cron, nameof(cron));
-
             this.Key = key;
             this.Cron = cron;
             this.Args = args;
@@ -21,13 +19,17 @@
             this.Timeout = timeout ?? new TimeSpan(0, 20, 0);
             this.Enabled = enabled;
             this.Identifier = RandomGenerator.GenerateString(5, false);
-            if(cron.Count(char.IsWhiteSpace) == 4) // mi ho da mo yy
+
+            if(!this.Cron.IsNullOrEmpty())
             {
-                this.cronExpression = CronExpression.Parse(this.Cron, CronFormat.Standard);
-            }
-            else
-            {
-                this.cronExpression = CronExpression.Parse(this.Cron, CronFormat.IncludeSeconds);
+                if(this.Cron.Count(char.IsWhiteSpace) == 4) // mi ho da mo yy
+                {
+                    this.cronExpression = CronExpression.Parse(this.Cron, CronFormat.Standard);
+                }
+                else
+                {
+                    this.cronExpression = CronExpression.Parse(this.Cron, CronFormat.IncludeSeconds);
+                }
             }
         }
 
@@ -49,7 +51,12 @@
         {
             EnsureArg.IsTrue(fromUtc.Kind == DateTimeKind.Utc);
 
-            span = span ?? TimeSpan.FromMinutes(1);
+            if(this.cronExpression == null)
+            {
+                return false;
+            }
+
+            span ??= TimeSpan.FromMinutes(1);
             var occurrence = this.cronExpression.GetNextOccurrence(fromUtc, true);
 
             if(!occurrence.HasValue)
@@ -65,6 +72,11 @@
             EnsureArg.IsTrue(fromUtc.Kind == DateTimeKind.Utc);
             EnsureArg.IsTrue(toUtc.Kind == DateTimeKind.Utc);
             EnsureArg.IsTrue(fromUtc < toUtc);
+
+            if(this.cronExpression == null)
+            {
+                return false;
+            }
 
             return this.cronExpression.GetOccurrences(fromUtc, toUtc, true)?.Any() == true;
         }
