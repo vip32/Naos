@@ -1,6 +1,7 @@
 ﻿namespace Naos.Foundation.UnitTests.Utilities
 {
     using System.Linq;
+    using System.Threading.Tasks;
     using Naos.Foundation;
     using Shouldly;
     using Xunit;
@@ -8,42 +9,39 @@
     public class PipelineTests
     {
         [Fact]
-        public void ThreeStepWithBoolResultTest()
+        public async Task ThreeStepWithBoolResultTest()
         {
-            var result = false;
-            var sut = new Pipeline<string, bool>((i, p) =>
-                i.Step(p, input => FindMostCommon(input))
-                    .Step(p, input => input.Length)
-                    .Step(p, input => input % 2 == 1));
+            var sut = new Pipeline<string, bool>((input, p) =>
+                input.Step(p, FindMostUsedWord)
+                     .Step(p, input => input.Length)
+                     .Step(p, input => input % 2 == 1));
 
-            sut.Finished += res => result = res;
-            sut.Execute("The pipeline pattern is the best pattern");
-
-            result.ShouldBeTrue();
+            var result = await sut.Execute("aaa bbb ccc bbb");
+            result.ShouldBe(true);
         }
 
         [Fact]
-        public void TwoStepWithBoolResultTest()
+        public async Task TwoStepWithBoolResultTest()
         {
-            var sut = new Pipeline<string, bool>((i, p) =>
-                i.Step(p, input => FindMostCommon(input))
-                    .Step(p, input => input == "pattern"));
+            var sut = new Pipeline<string, bool>((input, p) =>
+                input.Step(p, FindMostUsedWord)
+                     .Step(p, input => input == "bbb"));
 
-            sut.Finished += res => res.ShouldBeTrue();
-            sut.Execute("The pipeline pattern is the best pattern");
+            var result = await sut.Execute("aaa bbb ccc bbb");
+            result.ShouldBe(true);
         }
 
         [Fact]
-        public void SingleStepWithStringResultTest()
+        public async Task SingleStepWithStringResultTest()
         {
-            var sut = new Pipeline<string, string>((inputFirst, p) =>
-                inputFirst.Step(p, input => FindMostCommon(input)));
+            var sut = new Pipeline<string, string>((input, p) =>
+                input.Step(p, FindMostUsedWord));
 
-            sut.Finished += res => res.ShouldBe("pattern");
-            sut.Execute("The pipeline pattern is the best pattern");
+            var result = await sut.Execute("aaa bbb ccc bbb");
+            result.ShouldBe("bbb");
         }
 
-        private static string FindMostCommon(string input)
+        private static string FindMostUsedWord(string input)
         {
             return input.Split(' ')
                 .GroupBy(word => word)
