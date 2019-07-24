@@ -127,7 +127,7 @@
 
             if(!Directory.Exists(fullPath))
             {
-                this.logger.LogWarning($"{{LogKey:l}} filesystem folder cannot be created (folder={fullPath})", LogKeys.ServiceDiscovery);
+                this.logger.LogWarning($"{{LogKey:l}} filesystem folder could not be created (folder={fullPath})", LogKeys.ServiceDiscovery);
             }
         }
 
