@@ -88,8 +88,8 @@
                     .AddNaos(o =>
                     {
                         // Countries repository is exposed with a dedicated controller, no need to register here
-                        o.AddGenericRepositoryController<Customers.Domain.Customer, Customers.Domain.ICustomerRepository>();
-                        o.AddGenericRepositoryController<UserAccounts.Domain.UserAccount>(); // `=implicit IRepository<UserAccount>
+                        o.AddGenericRepositoryController<Sample.Customers.Domain.Customer, Sample.Customers.Domain.ICustomerRepository>();
+                        o.AddGenericRepositoryController<Sample.UserAccounts.Domain.UserAccount>(); // `=implicit IRepository<UserAccount>
                     })
                     .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
