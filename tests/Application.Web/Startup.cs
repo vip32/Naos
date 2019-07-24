@@ -139,10 +139,10 @@
                         //.UseRabbitMQBroker(s => s
                         .UseServiceBusBroker(s => s
                             .Subscribe<EchoMessage, EchoMessageHandler>()))
-                    .AddServiceDiscovery(o => o
-                        .UseFileSystemClientRegistry())
-                    //.UseConsulClientRegistry())
-                    //.UseRouterClientRegistry())
+                    //.AddServiceDiscovery(o => o
+                        //.UseFileSystemClientRegistry())
+                        //.UseConsulClientRegistry())
+                        //.UseRouterClientRegistry())
                     .AddServiceDiscoveryRouter(o => o
                         .UseFileSystemRegistry()));
 
