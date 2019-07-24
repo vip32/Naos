@@ -59,6 +59,8 @@
 
             if(this.serviceAddress != null)
             {
+                this.logger.LogInformation($"{{LogKey:l}} service registration (address={this.serviceAddress})", LogKeys.ServiceDiscovery);
+
                 // Register this service (use ServiceDescriptor for more infos)
                 var uri = new Uri(this.serviceAddress);
                 this.registrationId = $"{this.serviceDescriptor.Name}-{HashAlgorithm.ComputeMd5Hash(uri.ToString())}";
@@ -77,7 +79,7 @@
             }
             else
             {
-                // log warning : no address
+                this.logger.LogWarning("{LogKey:l} service registration failed, missing address", LogKeys.ServiceDiscovery);
             }
 
             return Task.CompletedTask;

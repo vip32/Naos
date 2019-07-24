@@ -85,7 +85,7 @@
             {
                 this.EnsureDirectory(this.directory);
                 this.RefreshRegistrations(this.directory);
-                this.logger.LogInformation($"{{LogKey:l}} filesystem registrations watch (directory={this.directory})", LogKeys.ServiceDiscovery);
+                this.logger.LogInformation($"{{LogKey:l}} filesystem registrations watch (folder={this.directory})", LogKeys.ServiceDiscovery);
 
                 this.watcher = new FileSystemWatcher(this.directory)
                 {
