@@ -15,7 +15,7 @@ pool:
 # https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/?view=vsts
 
 steps:
-  - task: gittools.gitversion.gitversion-task.GitVersion@3
+  - task: GitVersion@4
     displayName: gitversion
 
   - task: DotNetCoreInstaller@0
