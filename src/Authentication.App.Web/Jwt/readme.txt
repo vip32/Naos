@@ -22,3 +22,9 @@ services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 		options.Authority = "{yourAuthorizationServerAddress}";
 		options.Audience = "{yourAudience}";
 	});
+
+--------------------------------------------------------------------------------
+POLICY BASED AUTH + JWT (AAD)
+https://joonasw.net/view/azure-ad-authentication-aspnet-core-api-part-1
+https://joonasw.net/view/azure-ad-authentication-aspnet-core-api-part-2
+https://github.com/juunas11/Joonasw.AzureAdApiSample
