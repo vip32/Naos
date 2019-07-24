@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.App.Web
+﻿namespace Naos.Application.Web
 {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore;

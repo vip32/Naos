@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.App.Web
+﻿namespace Naos.Application.Web
 {
     using System;
     using System.IO;
