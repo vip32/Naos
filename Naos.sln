@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{FCBA001C-2
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		docs\ascii.md = docs\ascii.md
+		azure-pipelines-deploy.yml = azure-pipelines-deploy.yml
 		azure-pipelines.yml = azure-pipelines.yml
 		docs\Containerized Workflow.png = docs\Containerized Workflow.png
 		Directory.Build.props = Directory.Build.props

@@ -1,85 +1,192 @@
+# https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/?view=vsts
+# https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema
+# https://docs.microsoft.com/en-us/azure/devops/pipelines/process/expressions?view=azure-devops
 variables:
-  solution: "**/*.sln"
-  buildConfiguration: "Release"
+  solution: '**/*.sln'
+  buildConfiguration: 'Release'
+  publishFunctionApp: false
+  publishWebApp: false
+  publishArtifacts: false
+  pushNuGet: false
+  nuGetFeed: ''
+  deployEnabled: false
+  deployAzureSubscription: 'Visual Studio Premium with MSDN (bIT) (b527698f-a403-465f-8005-932acc5d9f7d)' # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/resources?view=azure-devops#troubleshooting-authorization-for-a-yaml-pipeline
+  deployAppName: 'naos-sample'
+  vmImage: 'windows-2019' # https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/hosted?view=azure-devops&tabs=yaml#use-a-microsoft-hosted-agent
   group: vars # azure pipelines variable group https://docs.microsoft.com/en-us/azure/devops/pipelines/library/variable-groups?view=azdevops&tabs=yaml
+
 trigger:
 - master
+- develop
 - refs/tags/v*
 
 resources:
 - repo: self
   fetchDepth: 1
-pool:
-  vmImage: windows-2019 # https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/hosted?view=azure-devops&tabs=yaml#use-a-microsoft-hosted-agent
 
-# https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/?view=vsts
+stages:
+- stage: Build
+  displayName: Build stage
+  jobs:
+  - job: Build
+    displayName: Build job
+    pool:
+      vmImage: $(vmImage)
+    steps:
+    - task: GitVersion@4
+      displayName: Apply git version
 
-steps:
-  - task: GitVersion@4
-    displayName: gitversion
+    - task: DotNetCoreInstaller@0
+      displayName: Install dotnet SDK
+      inputs:
+        version: 2.2.203
+        packageType: sdk
 
-  - task: DotNetCoreInstaller@0
-    displayName: "dotnet install sdk"
-    inputs:
-      version: 2.2.100
-      packageType: sdk
+    - task: DotNetCoreCLI@2 # https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/dotnet-core?view=azure-devops#restore-nuget-packages
+      displayName: Restore project dependencies
+      inputs:
+        command: restore
+        projects: '**/*.csproj'
+        verbosityRestore: Normal
+        feedsToUse: 'config'
+        nugetConfigPath: 'nuget.config'
 
-  - task: DotNetCoreCLI@2
-    displayName: "dotnet restore"
-    inputs:
-      command: restore
-      projects: "**/*.csproj"
-      verbosityRestore: Normal
+    - task: DotNetCoreCLI@2
+      displayName: Build projects
+      inputs:
+        projects: '$(solution)'
+        arguments: '--configuration $(buildConfiguration) --no-restore /p:Version=$(GitVersion.NuGetVersionV2);AssemblyVersion=$(GitVersion.AssemblySemVer);FileVersion=$(GitVersion.AssemblySemVer);InformationalVersion=$(GitVersion.InformationalVersion)'
+        # assembly versioning: https://pleasereleaseme.net/versioning-net-core-assemblies-in-azure-devops-isnt-straightforward-and-probably-wont-be-in-other-ci-cd-tools-either/
 
-  - task: DotNetCoreCLI@2
-    displayName: "dotnet build"
-    inputs:
-      projects: "$(solution)"
-      arguments: "--configuration $(buildConfiguration) /p:AssemblyVersion=$(GitVersion.AssemblySemVer);FileVersion=$(GitVersion.AssemblySemVer);InformationalVersion=$(GitVersion.InformationalVersion)"
+    - task: DotNetCoreCLI@2
+      displayName: Run unit tests
+      enabled: false
+      env:
+        'naos__secrets__vault__clientId': $(key-vault-clientId) # from vars group
+        'naos__secrets__vault__clientSecret': $(key-vault-clientSecret) # from vars group
+        'naos__secrets__vault__name': 'naos'
+      inputs:
+        command: test
+        projects: '**/*[Tt]ests/*UnitTests.csproj'
+        arguments: '--configuration $(buildConfiguration) --no-restore --no-build'
 
-  - task: DotNetCoreCLI@2
-    displayName: "dotnet test"
-    env:
-        "naos__secrets__vault__clientId": $(key-vault-clientId) # from vars group
-        "naos__secrets__vault__clientSecret": $(key-vault-clientSecret) # from vars group
-        "naos__secrets__vault__name": "naos"
-    inputs:
-      command: test
-      projects: "**/*[Tt]ests/*UnitTests.csproj"
-      arguments: "/p:Configuration=$(buildConfiguration)"
-#      arguments: "/p:Configuration=$(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=$(Build.ArtifactStagingDirectory)/coverage.xml" # https://github.com/tonerdo/coverlet
+    - task: PublishPipelineArtifact@0 # https://docs.microsoft.com/en-us/azure/devops/pipelines/artifacts/pipeline-artifacts?view=azure-devops&tabs=yaml
+      displayName: Publish sources
+      enabled: true
+      inputs:
+        artifactName: 'sources'
+        targetPath: '$(Build.SourcesDirectory)'
 
-#  - task: Bash@3
-#    displayName: "codecov upload" # https://docs.codecov.io/docs/about-the-codecov-bash-uploader
-#    inputs:
-#      targetType: "filePath"
-#      filePath: "./tests/UnitTests/CodecovUploader.sh"
-#      workingDirectory: $(Build.ArtifactStagingDirectory)
-#      arguments: "-f coverage.xml -t b4c5d4f3-0f3a-470e-9d5d-4c63cba2e611 -B $(Build.SourceBranchName) -C $(Build.SourceVersion) -b $(Build.BuildNumber)"
+    - task: DotNetCoreCLI@2
+      displayName: Publish web app
+      enabled: true
+      condition: eq(variables['publishWebApp'], 'true')
+      inputs:
+        command: publish
+        publishWebProjects: True
+        projects: '**/Application.Web.csproj'
+        arguments: '--configuration $(buildConfiguration) --no-restore --no-build --output $(System.DefaultWorkingDirectory)/artifacts'
+        zipAfterPublish: True
 
-  - task: DotNetCoreCLI@2
-    displayName: "dotnet publish"
-    inputs:
-      command: publish
-      publishWebProjects: True
-      arguments: "--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)"
-      zipAfterPublish: True
+    - task: DotNetCoreCLI@2
+      displayName: Publish function app
+      enabled: true
+      condition: eq(variables['publishFunctionApp'], 'true')
+      inputs:
+        command: publish
+        publishWebProjects: False
+        projects: '**/Application.Functions.csproj'
+        arguments: '--configuration $(buildConfiguration) --no-restore --no-build  --output $(System.DefaultWorkingDirectory)/artifacts'
+        zipAfterPublish: True
 
-#  - task: DotNetCoreCLI@2
-#    displayName: "dotnet nuget pack"
-#    inputs:
-#      command: pack
-#      buildProperties: "Version=$(GitVersion.NuGetVersion)"
-#      verbosityPack: Normal
+    - task: PublishPipelineArtifact@0 # https://docs.microsoft.com/en-us/azure/devops/pipelines/artifacts/pipeline-artifacts?view=azure-devops&tabs=yaml
+      displayName: Publish pipeline artifacts
+      enabled: true
+      condition: eq(variables['publishArtifacts'], 'true')
+      inputs:
+        artifactName: 'artifacts'
+        targetPath: '$(System.DefaultWorkingDirectory)/artifacts'
+
+    - task: DotNetCoreCLI@2 # https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/dotnet-core?view=azure-devops#pack-nuget-packages
+      displayName: Package nugets
+      enabled: true
+      condition: |
+        and
+        (
+           eq(variables['pushNuGet'], 'true'),
+           eq(variables['Build.SourceBranch'], 'refs/heads/master')
+        )
+      inputs:
+        command: pack
+        configuration: $(buildConfiguration)
+        packagesToPack: '**/*.csproj'
+        nobuild: true
+        packDirectory: '$(System.DefaultWorkingDirectory)/packages'
+        buildProperties: 'Version=$(GitVersion.NuGetVersion)'
+        verbosityPack: Normal
 #
-#  - task: DotNetCoreCLI@2
-#    displayName: "dotnet nuget push"
-#    inputs:
-#      command: push
-#    enabled: false
-#    continueOnError: true
+    - task: DotNetCoreCLI@2 # https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/dotnet-core?view=azure-devops#push-nuget-packages
+      displayName: Push nugets
+      enabled: true
+      condition: |
+        and
+        (
+           eq(variables['pushNuGet'], 'true'),
+           eq(variables['Build.SourceBranch'], 'refs/heads/master')
+        )
+      inputs:
+        command: push
+        nuGetFeedType: internal
+        packagesToPush: '$(System.DefaultWorkingDirectory)/packages/*.nupkg'
+        publishVstsFeed: $(nuGetFeed)
 
-  - task: PublishBuildArtifacts@1
-    displayName: "publish artifacts"
-    inputs:
-      PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+- stage: DeployDev
+  displayName: Deploy stage (dev)
+  condition: |
+    and
+    (
+        eq(variables['deployEnabled'], 'true'),
+        eq(variables['Build.SourceBranch'], 'refs/heads/develop')
+    )
+  jobs:
+  - template: azure-pipelines-deploy.yml
+    parameters:
+      environment: 'dev'
+      deployFunctionApp: false # $(publishFunctionApp) #
+      deployWebApp: false # $(publishWebApp)
+      azureSubscription: $(deployAzureSubscription)
+      appName: $(deployAppName)
+
+- stage: DeployQas
+  displayName: Deploy stage (qas)
+  condition: |
+    and
+    (
+        eq(variables['deployEnabled'], 'true'),
+        eq(variables['Build.SourceBranch'], 'refs/heads/master')
+    )
+  jobs:
+  - template: azure-pipelines-deploy.yml
+    parameters:
+      environment: 'qas'
+      deployFunctionApp: false # $(publishFunctionApp)
+      deployWebApp: false # $(publishWebApp)
+      azureSubscription: $(deployAzureSubscription)
+      appName: $(deployAppName)
+
+- stage: DeployPro
+  displayName: Deploy stage (pro)
+  condition: |
+    and
+    (
+        eq(variables['deployEnabled'], 'true'),
+        eq(variables['Build.SourceBranch'], 'refs/heads/master')
+    )
+  jobs:
+  - template: azure-pipelines-deploy.yml
+    parameters:
+      environment: 'pro'
+      deployFunctionApp: false # $(publishFunctionApp)
+      deployWebApp: false # $(publishWebApp)
+      azureSubscription: $(deployAzureSubscription)
+      appName: $(deployAppName)

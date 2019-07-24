@@ -1,0 +1,60 @@
+# https://docs.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops
+parameters:
+  environment: 'dev'
+  provisionInfrastructure: true
+  deployFunctionApp: false
+  deployWebApp: false
+  appName: 'unknown'
+  slotName: 'staging'
+  vmImage: 'windows-2019' # https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/hosted?view=azure-devops&tabs=yaml#use-a-microsoft-hosted-agent
+  azureSubscription: ''
+
+jobs:
+  - job: Deploy
+    displayName: Deploy job
+    pool:
+      vmImage: '${{ parameters.vmImage }}'
+    steps:
+    - task: DownloadPipelineArtifact@0 # https://docs.microsoft.com/en-us/azure/devops/pipelines/artifacts/pipeline-artifacts?view=azure-devops&tabs=yaml + https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?tabs=yaml&view=azure-devops#artifact-download
+      displayName: Download artifacts
+      enabled: true
+      inputs:
+        artifactName: 'artifacts'
+        targetPath: '$(System.DefaultWorkingDirectory)/artifacts'
+
+    - ${{ if eq(parameters.provisionInfrastructure, 'true') }}:
+      - task: AzureCLI@1
+        displayName: Provision infrastructure
+        inputs:
+          azureSubscription: '${{ parameters.azureSubscription }}'
+          scriptLocation: 'inlineScript'
+          addSpnToEnvironment: true
+          inlineScript: 'az account show'
+
+    - ${{ if eq(parameters.deployFunctionApp, 'true') }}:
+      - task: AzureFunctionApp@1
+        displayName: Deploy function app
+        inputs:
+          azureSubscription: '${{ parameters.azureSubscription }}'
+          appType: 'functionApp'
+          appName: '${{ parameters.environment }}-${{ parameters.appName }}'
+          package: '$(System.DefaultWorkingDirectory)/artifacts/**/Application.Functions.zip'
+          deploymentMethod: 'auto'
+          ${{ if eq(parameters.environment, 'pro') }}:
+            deployToSlotOrASE: true
+            resourceGroupName: '${{ parameters.environment }}-api'
+            slotName: '${{ parameters.slotName }}'
+
+    - ${{ if eq(parameters.deployWebApp, 'true') }}:
+      - task: AzureWebApp@1
+        displayName: Deploy web app
+        inputs:
+          azureSubscription: '${{ parameters.azureSubscription }}'
+          appType: 'webApp'
+          appName: '${{ parameters.environment }}-${{ parameters.appName }}'
+          package: '$(System.DefaultWorkingDirectory)/artifacts/**/Application.Functions.zip'
+          deploymentMethod: 'auto'
+          ${{ if eq(parameters.environment, 'pro') }}:
+            deployToSlotOrASE: true
+            resourceGroupName: '${{ parameters.environment }}-api'
+            slotName: '${{ parameters.slotName }}'
