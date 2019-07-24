@@ -152,7 +152,7 @@ stages:
   - template: azure-pipelines-deploy.yml
     parameters:
       environment: 'dev'
-      deployFunctionApp: false # $(publishFunctionApp) #
+      deployFunctionApp: false # $(publishFunctionApp)
       deployWebApp: false # $(publishWebApp)
       azureSubscription: $(deployAzureSubscription)
       appName: $(deployAppName)
