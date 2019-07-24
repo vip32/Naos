@@ -122,7 +122,8 @@
         {
             if(!Directory.Exists(fullPath))
             {
-                Directory.CreateDirectory(fullPath);
+                var directory = Directory.CreateDirectory(fullPath);
+                this.logger.LogWarning($"{{LogKey:l}} filesystem folder created (folder={fullPath}, exists={directory.Exists})", LogKeys.ServiceDiscovery);
             }
 
             if(!Directory.Exists(fullPath))
