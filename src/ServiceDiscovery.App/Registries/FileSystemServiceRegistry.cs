@@ -28,7 +28,7 @@
             this.directory = this.GetDirectory(this.configuration);
 
             // TODO: inject HealthStrategy which can validate the registrations
-            this.logger.LogInformation("{LogKey:l} filesystem active", LogKeys.ServiceDiscovery);
+            this.logger.LogInformation($"{{LogKey:l}} filesystem active (folder={this.directory})", LogKeys.ServiceDiscovery);
         }
 
         public Task DeRegisterAsync(string id)
@@ -123,6 +123,11 @@
             if(!Directory.Exists(fullPath))
             {
                 Directory.CreateDirectory(fullPath);
+            }
+
+            if(!Directory.Exists(fullPath))
+            {
+                this.logger.LogWarning($"{{LogKey:l}} filesystem folder cannot be created (folder={fullPath})", LogKeys.ServiceDiscovery);
             }
         }
 
