@@ -49,6 +49,8 @@
             builder.AddIf(!configuration["naos:secrets:userSecretsId"].IsNullOrEmpty(), b =>
                 b.AddUserSecrets(configuration["naos:secrets:userSecretsId"])); // https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets
 
+            //TODO: also add azure app configuration (needs connstring) https://docs.microsoft.com/en-us/azure/azure-app-configuration/quickstart-aspnet-core-app
+
             configuration = builder.Build();
             builder.AddIf(configuration["naos:secrets:vault:enabled"].ToBool(true), b =>
             {
