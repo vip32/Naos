@@ -19,7 +19,7 @@
                 //    NaosConfigurationFactory.Extend(config, args, context.HostingEnvironment.EnvironmentName))
 
                 //.UseUrls($"https://localhost:{GetNextAvailablePort()}")
-                .CaptureStartupErrors(true)
+                //.CaptureStartupErrors(true)
                 .UseStartup<Startup>()
                 .UseSerilog();
 
