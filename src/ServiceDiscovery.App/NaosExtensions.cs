@@ -67,7 +67,7 @@
                     sp.GetRequiredService<ILogger<FileSystemServiceRegistry>>(),
                     registryConfiguration));
 
-            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: service discovery registry added (type={nameof(FileSystemServiceRegistry)})");
+            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: service discovery registry added (type={nameof(FileSystemServiceRegistry)}, folder={registryConfiguration.Folder})");
             options.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceDiscovery", Description = "FileSystemClientRegistry", EchoRoute = "api/echo/servicediscovery" });
 
             return options;
