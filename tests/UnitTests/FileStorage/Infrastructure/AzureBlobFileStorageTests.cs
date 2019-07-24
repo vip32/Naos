@@ -120,7 +120,11 @@
 
         protected override IFileStorage GetStorage()
         {
-            var connectionString = Configuration["naos:tests:storage:connectionString"];
+            var connectionString = string.Empty; //Configuration["naos:tests:storage:connectionString"];
+            if(connectionString.IsNullOrEmpty())
+            {
+                return null;
+            }
 
             if(!connectionString.IsNullOrEmpty())
             {
