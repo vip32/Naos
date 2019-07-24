@@ -84,67 +84,67 @@
                         //o.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build())); // https://tahirnaushad.com/2017/08/28/asp-net-core-2-0-mvc-filters/ or use controller attribute (Authorize)
                     })
                     // naos mvc configuration
-                    //.AddNaos(o =>
-                    //{
-                    //    // Countries repository is exposed with a dedicated controller, no need to register here
-                    //    o.AddGenericRepositoryController<Sample.Customers.Domain.Customer, Sample.Customers.Domain.ICustomerRepository>();
-                    //    o.AddGenericRepositoryController<Sample.UserAccounts.Domain.UserAccount>(); // `=implicit IRepository<UserAccount>
-                    //})
+                    .AddNaos(o =>
+                    {
+                        // Countries repository is exposed with a dedicated controller, no need to register here
+                        o.AddGenericRepositoryController<Sample.Customers.Domain.Customer, Sample.Customers.Domain.ICustomerRepository>();
+                        o.AddGenericRepositoryController<Sample.UserAccounts.Domain.UserAccount>(); // `=implicit IRepository<UserAccount>
+                    })
                     .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // naos application services
-            //services
-            //    .AddNaos(this.Configuration, "Product", "Capability", new[] { "All" }, n => n
-            //        .AddServices(s => s
-            //            .AddSampleCountries()
-            //            .AddSampleCustomers()
-            //            .AddSampleUserAccounts())
-            //        .AddServiceContext()
-            //        //.AddAuthenticationApiKeyStatic()
-            //        //.AddEasyAuthentication(/*o => o.Provider = EasyAuthProviders.AzureActiveDirectory*/)
-            //        .AddRequestCorrelation()
-            //        .AddRequestFiltering()
-            //        .AddServiceExceptions()
-            //        .AddCommands(o => o
-            //            .AddBehavior<ValidateCommandBehavior>()
-            //            .AddBehavior<JournalCommandBehavior>()
-            //            .AddBehavior(new FileStoragePersistCommandBehavior(
-            //                new FolderFileStorage(o => o
-            //                    .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "commands"))))))
-            //        .AddOperations(o => o
-            //            .AddInteractiveConsole()
-            //            .AddLogging(l => l
-            //                .UseConsole()
-            //                .UseFile()
-            //                //.UseAzureBlobStorage()
-            //                .UseAzureLogAnalytics())
-            //            .AddRequestStorage(r => r
-            //                .UseAzureBlobStorage())
-            //            .AddTracing())
-            //        //.AddQueries()
-            //        //.AddSwaggerDocument() // s.Description = Product.Capability\
-            //        .AddJobScheduling(o => o
-            //            //.SetEnabled(true)
-            //            .Register<EchoJob>("echojob1", Cron.MinuteInterval(5), (j) => j.EchoAsync("+++ hello from echojob1 +++", CancellationToken.None))
-            //            .Register<EchoJob>("manualjob1", Cron.Never(), (j) => j.EchoAsync("+++ hello from manualjob1 +++", CancellationToken.None)))
-            //            //.Register("anonymousjob2", Cron.Minutely(), (j) => Console.WriteLine("+++ hello from anonymousjob2 " + j))
-            //            //.Register("jobevent1", Cron.Minutely(), () => new EchoJobEventData { Text = "+++ hello from jobevent1 +++" }))
-            //            //.Register<EchoJob>("echojob2", Cron.MinuteInterval(2), j => j.EchoAsync("+++ hello from echojob2 +++", CancellationToken.None, true), enabled: false)
-            //            //.Register<EchoJob>("testlongjob4", Cron.Minutely(), j => j.EchoLongAsync("+++ hello from testlongjob4 +++", CancellationToken.None)))
-            //        .AddServiceClient("default")
-            //        .AddQueueing()
-            //        .AddMessaging(o => o
-            //            //.UseFileSystemBroker(s => s
-            //            //.UseSignalRBroker(s => s
-            //            //.UseRabbitMQBroker(s => s
-            //            .UseServiceBusBroker(s => s
-            //                .Subscribe<EchoMessage, EchoMessageHandler>()))
-            //        .AddServiceDiscovery(o => o
-            //            .UseFileSystemClientRegistry())
-            //        //.UseConsulClientRegistry())
-            //        //.UseRouterClientRegistry())
-            //        .AddServiceDiscoveryRouter(o => o
-            //            .UseFileSystemRegistry()));
+            services
+                .AddNaos(this.Configuration, "Product", "Capability", new[] { "All" }, n => n
+                    .AddServices(s => s
+                        .AddSampleCountries()
+                        .AddSampleCustomers()
+                        .AddSampleUserAccounts())
+                    .AddServiceContext()
+                    //.AddAuthenticationApiKeyStatic()
+                    //.AddEasyAuthentication(/*o => o.Provider = EasyAuthProviders.AzureActiveDirectory*/)
+                    .AddRequestCorrelation()
+                    .AddRequestFiltering()
+                    .AddServiceExceptions()
+                    .AddCommands(o => o
+                        .AddBehavior<ValidateCommandBehavior>()
+                        .AddBehavior<JournalCommandBehavior>()
+                        .AddBehavior(new FileStoragePersistCommandBehavior(
+                            new FolderFileStorage(o => o
+                                .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "commands"))))))
+                    .AddOperations(o => o
+                        .AddInteractiveConsole()
+                        .AddLogging(l => l
+                            .UseConsole()
+                            .UseFile()
+                            //.UseAzureBlobStorage()
+                            .UseAzureLogAnalytics())
+                        .AddRequestStorage(r => r
+                            .UseAzureBlobStorage())
+                        .AddTracing())
+                    //.AddQueries()
+                    //.AddSwaggerDocument() // s.Description = Product.Capability\
+                    .AddJobScheduling(o => o
+                        //.SetEnabled(true)
+                        .Register<EchoJob>("echojob1", Cron.MinuteInterval(5), (j) => j.EchoAsync("+++ hello from echojob1 +++", CancellationToken.None))
+                        .Register<EchoJob>("manualjob1", Cron.Never(), (j) => j.EchoAsync("+++ hello from manualjob1 +++", CancellationToken.None)))
+                    //.Register("anonymousjob2", Cron.Minutely(), (j) => Console.WriteLine("+++ hello from anonymousjob2 " + j))
+                    //.Register("jobevent1", Cron.Minutely(), () => new EchoJobEventData { Text = "+++ hello from jobevent1 +++" }))
+                    //.Register<EchoJob>("echojob2", Cron.MinuteInterval(2), j => j.EchoAsync("+++ hello from echojob2 +++", CancellationToken.None, true), enabled: false)
+                    //.Register<EchoJob>("testlongjob4", Cron.Minutely(), j => j.EchoLongAsync("+++ hello from testlongjob4 +++", CancellationToken.None)))
+                    .AddServiceClient("default")
+                    .AddQueueing()
+                    .AddMessaging(o => o
+                        //.UseFileSystemBroker(s => s
+                        //.UseSignalRBroker(s => s
+                        //.UseRabbitMQBroker(s => s
+                        .UseServiceBusBroker(s => s
+                            .Subscribe<EchoMessage, EchoMessageHandler>()))
+                    .AddServiceDiscovery(o => o
+                        .UseFileSystemClientRegistry())
+                    //.UseConsulClientRegistry())
+                    //.UseRouterClientRegistry())
+                    .AddServiceDiscoveryRouter(o => o
+                        .UseFileSystemRegistry()));
 
             // TODO: need to find a way to start the MessageBroker (done by resolving the IMessageBroker somewhere, HostedService? like scheduling)
         }
@@ -157,43 +157,43 @@
                 app.UseHsts();
             }
 
-            //app
-            //    .UseHttpsRedirection()
-            //    .UseNaos(s => s
-            //        .UseRequestCorrelation()
-            //        .UseServiceContext()
-            //        .UseServicePoweredBy()
-            //        .UseOperationsLogging()
-            //        .UseOperationsTracing()
-            //        .UseRequestFiltering()
-            //        .UseServiceExceptions()
-            //        .UseServiceDiscoveryRouter())
-            //    .UseOpenApi()
-            //    .UseSwaggerUi3();
+            app
+                .UseHttpsRedirection()
+                .UseNaos(s => s
+                    .UseRequestCorrelation()
+                    .UseServiceContext()
+                    .UseServicePoweredBy()
+                    .UseOperationsLogging()
+                    .UseOperationsTracing()
+                    .UseRequestFiltering()
+                    .UseServiceExceptions()
+                    .UseServiceDiscoveryRouter())
+                .UseOpenApi()
+                .UseSwaggerUi3();
 
             // https://blog.elmah.io/asp-net-core-2-2-health-checks-explained/
             // https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks/blob/master/src/HealthChecks.UI/ServiceCollectionExtensions.cs
-            //app.UseHealthChecks("/health", new HealthCheckOptions // TODO: move to UseNaosOperationsHealthChecks
-            //{
-            //    ResponseWriter = async (c, r) =>
-            //    {
-            //        c.Response.ContentType = ContentType.JSON.ToValue();
-            //        await c.Response.WriteAsync(JsonConvert.SerializeObject(new
-            //        {
-            //            status = r.Status.ToString(),
-            //            took = r.TotalDuration.ToString(),
-            //            checks = r.Entries.Select(e => new
-            //            {
-            //                //service = c.GetServiceName(),
-            //                key = e.Key,
-            //                status = e.Value.Status.ToString(),
-            //                took = e.Value.Duration.ToString(),
-            //                message = e.Value.Exception?.Message,
-            //                data = e.Value.Data
-            //            })
-            //        }, DefaultJsonSerializerSettings.Create()));
-            //    }
-            //});
+            app.UseHealthChecks("/health", new HealthCheckOptions // TODO: move to UseNaosOperationsHealthChecks
+            {
+                ResponseWriter = async (c, r) =>
+                {
+                    c.Response.ContentType = ContentType.JSON.ToValue();
+                    await c.Response.WriteAsync(JsonConvert.SerializeObject(new
+                    {
+                        status = r.Status.ToString(),
+                        took = r.TotalDuration.ToString(),
+                        checks = r.Entries.Select(e => new
+                        {
+                            //service = c.GetServiceName(),
+                            key = e.Key,
+                            status = e.Value.Status.ToString(),
+                            took = e.Value.Duration.ToString(),
+                            message = e.Value.Exception?.Message,
+                            data = e.Value.Data
+                        })
+                    }, DefaultJsonSerializerSettings.Create()));
+                }
+            });
 
             //app.UseHealthChecksUI(s =>
             //{
