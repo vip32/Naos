@@ -4,7 +4,6 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AssemblyName>Naos.Application.Web</AssemblyName>
     <RootNamespace>Naos.Application.Web</RootNamespace>
-    <DockerTargetOS>Linux</DockerTargetOS>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
   </PropertyGroup>
 
