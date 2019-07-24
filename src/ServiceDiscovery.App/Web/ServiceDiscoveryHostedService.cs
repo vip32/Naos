@@ -66,7 +66,7 @@
                 this.registrationId = $"{this.serviceDescriptor.Name}-{HashAlgorithm.ComputeMd5Hash(uri.ToString())}";
                 var registration = new ServiceRegistration
                 {
-                    Id = this.registrationId, // TODO: use resolved servicedescriptor for id/name  (AppDomain.CurrentDomain.FriendlyName)
+                    Id = this.registrationId, // TODO: use resolved servicedescriptor for id/name (AppDomain.CurrentDomain.FriendlyName)
                     Name = this.serviceDescriptor.Name,
                     Address = $"{uri.Scheme}://{uri.Host}",
                     Port = uri.Port,
