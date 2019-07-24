@@ -30,6 +30,7 @@
 
             naosOptions.Context.Services.AddSingleton(sp =>
                 naosOptions.Context.Configuration?.GetSection(section).Get<ServiceDiscoveryConfiguration>());
+
             naosOptions.Context.Services.AddSingleton<IServiceRegistryClient>(sp =>
                 new ServiceRegistryClient(sp.GetRequiredService<IServiceRegistry>()));
 

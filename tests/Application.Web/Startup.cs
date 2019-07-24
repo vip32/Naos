@@ -139,8 +139,9 @@
                         //.UseRabbitMQBroker(s => s
                         .UseServiceBusBroker(s => s
                             .Subscribe<EchoMessage, EchoMessageHandler>()))
-                    //.AddServiceDiscovery(o => o
-                        //.UseFileSystemClientRegistry())
+                    .AddServiceDiscovery(o => o
+                        .UseFileSystemClientRegistry())
+                        // TODO: create a cloud based registry (storage)
                         //.UseConsulClientRegistry())
                         //.UseRouterClientRegistry())
                     .AddServiceDiscoveryRouter(o => o

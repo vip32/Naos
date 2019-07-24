@@ -22,7 +22,7 @@
             EnsureArg.IsNotNull(loggerFactory, nameof(loggerFactory));
             EnsureArg.IsNotNull(registryClient, nameof(registryClient));
 
-            configuration = configuration ?? new ServiceDiscoveryConfiguration();
+            configuration ??= new ServiceDiscoveryConfiguration();
             this.Logger = loggerFactory.CreateLogger<ServiceDiscoveryClient>();
 
             if(configuration.RouterEnabled && !configuration.RouterAddress.IsNullOrEmpty())
