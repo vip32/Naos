@@ -52,9 +52,13 @@
             // https://github.com/cecilphillip/aspnet-servicediscovery-patterns/blob/master/self_registration/src/SchoolAPI/Infrastructure/ConsulHostedService.cs
             if(this.serviceAddress.IsNullOrEmpty())
             {
+                this.logger.LogInformation("{LogKey:l} 1", LogKeys.ServiceDiscovery);
                 var features = this.server.Features;
+                this.logger.LogInformation("{LogKey:l} 2", LogKeys.ServiceDiscovery);
                 var addressFeature = features?.Get<IServerAddressesFeature>();
-                this.serviceAddress = addressFeature?.Addresses?.First();
+                this.logger.LogInformation("{LogKey:l} 3", LogKeys.ServiceDiscovery);
+                this.serviceAddress = addressFeature?.Addresses?.FirstOrDefault();
+                this.logger.LogInformation("{LogKey:l} 4", LogKeys.ServiceDiscovery);
             }
 
             if(this.serviceAddress != null)
