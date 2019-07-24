@@ -36,7 +36,7 @@
 
             optionsAction?.Invoke(new ServiceDiscoveryOptions(naosOptions.Context));
 
-            //context.Messages.Add($"{LogEventKeys.General} naos services builder: service discovery added");
+            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos services builder: service discovery added");
 
             return naosOptions;
         }
