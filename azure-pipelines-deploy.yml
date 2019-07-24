@@ -52,7 +52,7 @@ jobs:
           azureSubscription: '${{ parameters.azureSubscription }}'
           appType: 'webApp'
           appName: '${{ parameters.environment }}-${{ parameters.appName }}'
-          package: '$(System.DefaultWorkingDirectory)/artifacts/**/Application.Functions.zip'
+          package: '$(System.DefaultWorkingDirectory)/artifacts/**/Application.Web.zip'
           deploymentMethod: 'auto'
           ${{ if eq(parameters.environment, 'pro') }}:
             deployToSlotOrASE: true
