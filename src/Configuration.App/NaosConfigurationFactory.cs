@@ -62,7 +62,7 @@
                     $"https://{configuration["naos:secrets:vault:name"]}.vault.azure.net/",
                     configuration["naos:secrets:vault:clientId"],
                     configuration["naos:secrets:vault:clientSecret"],
-                    //new CachedKeyVaultClient() // howto create new keyvault instance https://github.com/aspnet/Configuration/blob/master/src/Config.AzureKeyVault/AzureKeyVaultConfigurationExtensions.cs
+                    // new CachedKeyVaultClient() // howto create new keyvault instance https://github.com/aspnet/Configuration/blob/master/src/Config.AzureKeyVault/AzureKeyVaultConfigurationExtensions.cs
                     new EnvironmentPrefixKeyVaultSecretManager());
 
                 return b;
