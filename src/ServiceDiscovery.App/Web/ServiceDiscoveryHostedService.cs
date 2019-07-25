@@ -42,7 +42,7 @@
             this.registryClient = registryClient;
             this.server = server;
             this.serviceDescriptor = serviceDescriptor;
-            this.serviceAddress = this.configuration.ServiceAddresses?.FirstOrDefault();
+            this.serviceAddress = this.configuration.ServiceAddresses?.FirstOrDefault(); // TODO: register all addresses (foreach)
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -54,16 +54,9 @@
 
             if(this.serviceAddress.IsNullOrEmpty())
             {
-                this.logger.LogInformation("{LogKey:l} 1", LogKeys.ServiceDiscovery);
-
                 var features = this.server.Features;
-                this.logger.LogInformation($"{{LogKey:l}} 2 (features={features != null})", LogKeys.ServiceDiscovery);
-
                 var addressFeature = features?.Get<IServerAddressesFeature>();
-                this.logger.LogInformation($"{{LogKey:l}} 3 (addressFeature={addressFeature != null})", LogKeys.ServiceDiscovery);
-
                 this.serviceAddress = addressFeature?.Addresses?.FirstOrDefault(); // TODO: register all addresses (foreach)
-                this.logger.LogInformation("{LogKey:l} 4", LogKeys.ServiceDiscovery);
             }
 
             if(!this.serviceAddress.IsNullOrEmpty())
