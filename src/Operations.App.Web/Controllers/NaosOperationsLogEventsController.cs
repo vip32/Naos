@@ -158,11 +158,41 @@
                 this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Message), CriteriaOperator.NotEqual, string.Empty));
             }
 
-            // level (default: Information)
+            // level (default: >= Information)
             if(!this.filterContext.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Level))))
             {
-                this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, "Verbose"));
-                this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, "Debug"));
+                this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Trace)));
+                this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Debug)));
+            }
+            else
+            {
+                var criteria = this.filterContext.Criterias.FirstOrDefault(c => c.Name.SafeEquals(nameof(LogEvent.Level)));
+                if(criteria.Value != null)
+                {
+                    if(criteria.Value.ToString().Equals(nameof(LogLevel.Debug), StringComparison.OrdinalIgnoreCase))
+                    {
+                        this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Trace)));
+                    }
+                    else if(criteria.Value.ToString().Equals(nameof(LogLevel.Information), StringComparison.OrdinalIgnoreCase))
+                    {
+                        this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Trace)));
+                        this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Debug)));
+                    }
+                    else if(criteria.Value.ToString().Equals(nameof(LogLevel.Warning), StringComparison.OrdinalIgnoreCase))
+                    {
+                        this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Trace)));
+                        this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Debug)));
+                        this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Information)));
+                    }
+                    else if(criteria.Value.ToString().Equals(nameof(LogLevel.Error), StringComparison.OrdinalIgnoreCase)
+                        || criteria.Value.ToString().Equals(nameof(LogLevel.Critical), StringComparison.OrdinalIgnoreCase))
+                    {
+                        this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Trace)));
+                        this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Debug)));
+                        this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Information)));
+                        this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Warning)));
+                    }
+                }
             }
 
             // time range (default: last 7 days)
