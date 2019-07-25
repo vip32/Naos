@@ -120,16 +120,21 @@
 
         private void EnsureDirectory(string fullPath)
         {
+            this.logger.LogInformation($"EnsureDirectory #1 {fullPath}");
             if(!Directory.Exists(fullPath))
             {
+                this.logger.LogInformation("EnsureDirectory #2");
                 var directory = Directory.CreateDirectory(fullPath);
+                this.logger.LogInformation("EnsureDirectory #3");
                 this.logger.LogWarning($"{{LogKey:l}} filesystem folder created (folder={fullPath}, exists={directory.Exists})", LogKeys.ServiceDiscovery);
             }
 
+            this.logger.LogInformation("EnsureDirectory #4");
             if(!Directory.Exists(fullPath))
             {
                 this.logger.LogWarning($"{{LogKey:l}} filesystem folder could not be created (folder={fullPath})", LogKeys.ServiceDiscovery);
             }
+            this.logger.LogInformation("EnsureDirectory #5");
         }
 
         private string GetFileContents(string fullPath)
