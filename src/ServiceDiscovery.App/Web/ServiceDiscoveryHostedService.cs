@@ -54,9 +54,9 @@
             {
                 this.logger.LogInformation("{LogKey:l} 1", LogKeys.ServiceDiscovery);
                 var features = this.server.Features;
-                this.logger.LogInformation("{LogKey:l} 2", LogKeys.ServiceDiscovery);
+                this.logger.LogInformation($"{{LogKey:l}} 2 (features={features != null})", LogKeys.ServiceDiscovery);
                 var addressFeature = features?.Get<IServerAddressesFeature>();
-                this.logger.LogInformation("{LogKey:l} 3", LogKeys.ServiceDiscovery);
+                this.logger.LogInformation($"{{LogKey:l}} 3 (addressFeature={addressFeature != null})", LogKeys.ServiceDiscovery);
                 this.serviceAddress = addressFeature?.Addresses?.FirstOrDefault();
                 this.logger.LogInformation("{LogKey:l} 4", LogKeys.ServiceDiscovery);
             }
