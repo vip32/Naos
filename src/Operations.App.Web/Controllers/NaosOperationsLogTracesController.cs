@@ -167,6 +167,8 @@
             else
             {
                 var criteria = this.filterContext.Criterias.FirstOrDefault(c => c.Name.SafeEquals(nameof(LogEvent.Level)));
+                this.filterContext.Criterias = this.filterContext.Criterias.Where(c => c != criteria); // filter
+
                 if(criteria.Value != null)
                 {
                     if(criteria.Value.ToString().SafeEquals(nameof(LogLevel.Debug)))
