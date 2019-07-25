@@ -1,11 +1,12 @@
 ﻿namespace Naos.Foundation
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     public static partial class Extensions
     {
         /// <summary>
-        /// Adds the item to the result list atr the given index (pos).
+        /// Adds the item to the result list at the given index (pos).
         /// </summary>
         /// <typeparam name="T">the source.</typeparam>
         /// <param name="source">the source collection.</param>
@@ -40,6 +41,26 @@
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Adds the items to the result list at the given index (pos).
+        /// </summary>
+        /// <typeparam name="T">the source.</typeparam>
+        /// <param name="source">the source collection.</param>
+        /// <param name="items">The items to add to the result.</param>
+        /// <param name="index">the index at which the item should inserted.</param>
+        public static IEnumerable<T> Insert<T>(
+            this IEnumerable<T> source,
+            IEnumerable<T> items,
+            int index = 0)
+        {
+            foreach(var item in items.Safe().Reverse())
+            {
+                source = source.Insert(item, index);
+            }
+
+            return source;
         }
     }
 }

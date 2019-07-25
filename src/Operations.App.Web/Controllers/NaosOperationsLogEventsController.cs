@@ -69,7 +69,7 @@
 
         private async Task<IEnumerable<LogEvent>> GetJsonAsync()
         {
-            this.EnsureFilterContext();
+            LoggingFilterContext.Prepare(this.filterContext);
 
             return await this.repository.FindAllAsync(
                 this.filterContext.GetSpecifications<LogEvent>(),
@@ -99,7 +99,7 @@
 "); // TODO: reuse from ServiceContextMiddleware.cs
             try
             {
-                this.EnsureFilterContext();
+                LoggingFilterContext.Prepare(this.filterContext);
 
                 var entities = await this.repository.FindAllAsync(
                     this.filterContext.GetSpecifications<LogEvent>(),
@@ -144,92 +144,92 @@
             }
         }
 
-        private void EnsureFilterContext()
-        {
-            // environment (default: current environment)
-            if(!this.filterContext.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Environment))))
-            {
-                this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Environment), CriteriaOperator.Equal, Environment.GetEnvironmentVariable(EnvironmentKeys.Environment) ?? "Production"));
-            }
+        //private void EnsureFilterContext()
+        //{
+        //    // environment (default: current environment)
+        //    if(!this.filterContext.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Environment))))
+        //    {
+        //        this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Environment), CriteriaOperator.Equal, Environment.GetEnvironmentVariable(EnvironmentKeys.Environment) ?? "Production"));
+        //    }
 
-            // message
-            if(!this.filterContext.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Message))))
-            {
-                this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Message), CriteriaOperator.NotEqual, string.Empty));
-            }
+        //    // message
+        //    if(!this.filterContext.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Message))))
+        //    {
+        //        this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Message), CriteriaOperator.NotEqual, string.Empty));
+        //    }
 
-            // level (default: >= Information)
-            if(!this.filterContext.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Level))))
-            {
-                this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Trace)));
-                this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Debug)));
-            }
-            else
-            {
-                var criteria = this.filterContext.Criterias.FirstOrDefault(c => c.Name.SafeEquals(nameof(LogEvent.Level)));
-                this.filterContext.Criterias = this.filterContext.Criterias.Where(c => c != criteria); // filter
+        //    // level (default: >= Debug)
+        //    if(!this.filterContext.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Level))))
+        //    {
+        //        this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Trace)));
+        //        //this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Debug)));
+        //    }
+        //    else
+        //    {
+        //        var criteria = this.filterContext.Criterias.FirstOrDefault(c => c.Name.SafeEquals(nameof(LogEvent.Level)));
+        //        this.filterContext.Criterias = this.filterContext.Criterias.Where(c => c != criteria); // filter
 
-                if(criteria.Value != null)
-                {
-                    if(criteria.Value.ToString().SafeEquals(nameof(LogLevel.Debug)))
-                    {
-                        this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Trace)));
-                    }
-                    else if(criteria.Value.ToString().SafeEquals(nameof(LogLevel.Information)))
-                    {
-                        this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Trace)));
-                        this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Debug)));
-                    }
-                    else if(criteria.Value.ToString().SafeEquals(nameof(LogLevel.Warning)))
-                    {
-                        this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Trace)));
-                        this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Debug)));
-                        this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Information)));
-                    }
-                    else if(criteria.Value.ToString().SafeEquals(nameof(LogLevel.Error))
-                        || criteria.Value.ToString().SafeEquals(nameof(LogLevel.Critical)))
-                    {
-                        this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Trace)));
-                        this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Debug)));
-                        this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Information)));
-                        this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Warning)));
-                    }
-                }
-            }
+        //        if(criteria.Value != null)
+        //        {
+        //            if(criteria.Value.ToString().SafeEquals(nameof(LogLevel.Debug)))
+        //            {
+        //                this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Trace)));
+        //            }
+        //            else if(criteria.Value.ToString().SafeEquals(nameof(LogLevel.Information)))
+        //            {
+        //                this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Trace)));
+        //                this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Debug)));
+        //            }
+        //            else if(criteria.Value.ToString().SafeEquals(nameof(LogLevel.Warning)))
+        //            {
+        //                this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Trace)));
+        //                this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Debug)));
+        //                this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Information)));
+        //            }
+        //            else if(criteria.Value.ToString().SafeEquals(nameof(LogLevel.Error))
+        //                || criteria.Value.ToString().SafeEquals(nameof(LogLevel.Critical)))
+        //            {
+        //                this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Trace)));
+        //                this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Debug)));
+        //                this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Information)));
+        //                this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Warning)));
+        //            }
+        //        }
+        //    }
 
-            // time range (default: last 7 days)
-            if(!this.filterContext.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Ticks))))
-            {
-                if(!this.filterContext.Criterias.SafeAny(c => c.Name.SafeEquals("Epoch")))
-                {
-                    // add default range based on ticks
-                    this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Ticks), CriteriaOperator.LessThanOrEqual, DateTime.UtcNow.Ticks));
-                    this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Ticks), CriteriaOperator.GreaterThanOrEqual, DateTime.UtcNow.AddHours(-24 * 7).Ticks));
-                }
-                else
-                {
-                    // convert provided epoch criterias to tick criterias
-                    foreach(var criteria in this.filterContext.Criterias.Where(c => c.Name.SafeEquals("Epoch")))
-                    {
-                        this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Ticks), criteria.Operator, Extensions.FromEpoch(criteria.Value.To<long>()).Ticks));
-                    }
+        //    // time range (default: last 7 days)
+        //    if(!this.filterContext.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Ticks))))
+        //    {
+        //        if(!this.filterContext.Criterias.SafeAny(c => c.Name.SafeEquals("Epoch")))
+        //        {
+        //            // add default range based on ticks
+        //            this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Ticks), CriteriaOperator.LessThanOrEqual, DateTime.UtcNow.Ticks));
+        //            this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Ticks), CriteriaOperator.GreaterThanOrEqual, DateTime.UtcNow.AddHours(-24 * 7).Ticks));
+        //        }
+        //        else
+        //        {
+        //            // convert provided epoch criterias to tick criterias
+        //            foreach(var criteria in this.filterContext.Criterias.Where(c => c.Name.SafeEquals("Epoch")))
+        //            {
+        //                this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Ticks), criteria.Operator, Extensions.FromEpoch(criteria.Value.To<long>()).Ticks));
+        //            }
 
-                    this.filterContext.Criterias = this.filterContext.Criterias.Where(c => !c.Name.SafeEquals("Epoch")); // filter epoch
-                }
-            }
+        //            this.filterContext.Criterias = this.filterContext.Criterias.Where(c => !c.Name.SafeEquals("Epoch")); // filter epoch
+        //        }
+        //    }
 
-            //foreach(var criteria in this.filterContext.Criterias)
-            //{
-            //    await this.HttpContext.Response.WriteAsync($"criteria: {criteria}<br/>");
-            //}
+        //    //foreach(var criteria in this.filterContext.Criterias)
+        //    //{
+        //    //    await this.HttpContext.Response.WriteAsync($"criteria: {criteria}<br/>");
+        //    //}
 
-            this.filterContext.Take ??= 1000; // get amount per request, repeat while logevents.ticks >= past
+        //    this.filterContext.Take ??= 1000; // get amount per request, repeat while logevents.ticks >= past
 
-            //await foreach(var name in this.service.GetLogEventsAsync(this.filterContext))
-            //{
-            //    this.logger.LogInformation(name);
-            //}
-        }
+        //    //await foreach(var name in this.service.GetLogEventsAsync(this.filterContext))
+        //    //{
+        //    //    this.logger.LogInformation(name);
+        //    //}
+        //}
 
         // Application parts? https://docs.microsoft.com/en-us/aspnet/core/mvc/advanced/app-parts?view=aspnetcore-2.1
     }

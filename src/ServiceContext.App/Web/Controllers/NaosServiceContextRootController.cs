@@ -77,8 +77,9 @@
                     ["swagger"] = this.Url.AbsolutePath("swagger/v1/swagger.json"),
                     ["health"] = this.Url.AbsolutePath("health"),
                     // TODO: discover below
-                    ["sample-logevents"] = this.Url.AbsolutePath("api/operations/logevents"),
+                    ["sample-logevents1"] = this.Url.AbsolutePath("api/operations/logevents"),
                     ["sample-logevents2"] = this.Url.AbsolutePath("api/operations/logevents?q=Ticks=gt:636855734000000000,Environment=Development"),
+                    ["sample-logevents3"] = this.Url.AbsolutePath("api/operations/logevents?q=Epoch=ge:1546347600,Level=Warning"),
                     ["sample-countries1"] = this.Url.AbsolutePath("api/countries/be"),
                     ["sample-countries2"] = this.Url.AbsolutePath("api/countries?q=name=Belgium&order=name&take=1"),
                     ["sample-countries3"] = this.Url.AbsolutePath("api/countries?q=name=Belgium"),
