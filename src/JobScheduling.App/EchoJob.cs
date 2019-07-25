@@ -28,11 +28,12 @@
 
         public async Task EchoAsync(string text, CancellationToken cancellationToken)
         {
+            Thread.Sleep(new TimeSpan(0, 0, 3));
+
             await Task.Run(() =>
             {
                 //using(var scope = this.tracer.BuildSpan(this.GetType().Name.ToLower()).Activate())
                 //{
-                    Thread.Sleep(new TimeSpan(0, 0, 2));
                     if(!text.IsNullOrEmpty())
                     {
                         this.logger.LogInformation($"{{LogKey:l}} {text}", LogKeys.JobScheduling);
@@ -44,6 +45,8 @@
 
         public Task EchoAsync(string text, CancellationToken cancellationToken, bool breakable)
         {
+            Thread.Sleep(new TimeSpan(0, 0, 3));
+
             if(breakable && Random.Next(2) == 0)// throw randomly
             {
                 throw new NaosException("error from job");
