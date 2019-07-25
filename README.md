@@ -123,7 +123,8 @@ The [SECRETSID] should be a guid and must be configured in the appsettings file.
 
 #### Configuration
 
-TODO (appsettings)
+- TODO (appsettings)
+- InProcess [*](https://weblog.west-wind.com/posts/2019/Mar/16/ASPNET-Core-Hosting-on-IIS-with-ASPNET-Core-22#outofprocess-or-inprocess-use-inprocess)
 
 #### Bootstrapping
 
