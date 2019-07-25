@@ -61,7 +61,7 @@
                 var addressFeature = features?.Get<IServerAddressesFeature>();
                 this.logger.LogInformation($"{{LogKey:l}} 3 (addressFeature={addressFeature != null})", LogKeys.ServiceDiscovery);
 
-                this.serviceAddress = addressFeature?.Addresses?.FirstOrDefault();
+                this.serviceAddress = addressFeature?.Addresses?.FirstOrDefault(); // TODO: register all addresses (foreach)
                 this.logger.LogInformation("{LogKey:l} 4", LogKeys.ServiceDiscovery);
             }
 
