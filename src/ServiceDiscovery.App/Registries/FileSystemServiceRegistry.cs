@@ -134,6 +134,7 @@
             {
                 this.logger.LogWarning($"{{LogKey:l}} filesystem folder could not be created (folder={fullPath})", LogKeys.ServiceDiscovery);
             }
+
             this.logger.LogInformation("EnsureDirectory #5");
         }
 
