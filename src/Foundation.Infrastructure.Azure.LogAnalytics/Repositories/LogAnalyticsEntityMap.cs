@@ -29,7 +29,7 @@
                 new LogAnalyticsEntityMap("Id", LogPropertyKeys.Id, $"LogProperties_{LogPropertyKeys.Id}_s"),
                 new LogAnalyticsEntityMap("CorrelationId", LogPropertyKeys.CorrelationId, $"LogProperties_{LogPropertyKeys.CorrelationId}_s"),
                 new LogAnalyticsEntityMap("Key", LogPropertyKeys.LogKey, $"LogProperties_{LogPropertyKeys.LogKey}_s"),
-                new LogAnalyticsEntityMap("Message", "LogMessage", "LogMessage"),
+                new LogAnalyticsEntityMap("Message", "LogMessage", "LogMessage_s"),
                 new LogAnalyticsEntityMap("Timestamp", "Timestamp", "Timestamp"), // to DateTime
                 new LogAnalyticsEntityMap("SourceContext", "SourceContext", "SourceContext"),
                 new LogAnalyticsEntityMap("ServiceName", LogPropertyKeys.ServiceName, $"LogProperties_{LogPropertyKeys.ServiceName}_s"),

@@ -92,8 +92,9 @@
         {
             var result = new List<string>
             {
-                "LogMessage_s != ''",
-                "LogLevel_s != 'Verbose'"
+                //"LogMessage_s != ''",
+                //"LogLevel_s != 'Verbose'",
+                //"LogLevel_s != 'Debug'"
             };
 
             foreach(var specification in specifications.Safe())

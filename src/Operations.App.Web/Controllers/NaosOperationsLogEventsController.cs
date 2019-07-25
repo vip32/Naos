@@ -152,10 +152,17 @@
                 this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Environment), CriteriaOperator.Equal, Environment.GetEnvironmentVariable(EnvironmentKeys.Environment) ?? "Production"));
             }
 
+            // message
+            if(!this.filterContext.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Message))))
+            {
+                this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Message), CriteriaOperator.NotEqual, string.Empty));
+            }
+
             // level (default: Information)
             if(!this.filterContext.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Level))))
             {
-                this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.Equal, "Information"));
+                this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, "Verbose"));
+                this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, "Debug"));
             }
 
             // time range (default: last 7 days)
