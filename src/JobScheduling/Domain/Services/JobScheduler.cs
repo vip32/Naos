@@ -124,10 +124,8 @@
             }
 
             Interlocked.Increment(ref this.activeCount);
-            this.logger.LogInformation($"{{LogKey:l}} run started (activeCount=#{this.activeCount}, moment={moment.ToString("o")})", LogKeys.JobScheduling);
             await this.ExecuteJobsAsync(moment).AnyContext();
             Interlocked.Decrement(ref this.activeCount);
-            this.logger.LogInformation($"{{LogKey:l}} run finished (activeCount=#{this.activeCount})", LogKeys.JobScheduling);
         }
 
         private async Task ExecuteJobsAsync(DateTime moment)
@@ -145,8 +143,12 @@
             {
                 this.logger.LogInformation($"{{LogKey:l}} run has no due jobs at moment {moment.ToString("o")}", LogKeys.JobScheduling);
             }
-
-            await Task.WhenAll(dueJobs).AnyContext(); // really wait for completion (await)?
+            else
+            {
+                this.logger.LogInformation($"{{LogKey:l}} run started (activeCount=#{this.activeCount}, moment={moment.ToString("o")})", LogKeys.JobScheduling);
+                await Task.WhenAll(dueJobs).AnyContext(); // really wait for completion (await)?
+                this.logger.LogInformation($"{{LogKey:l}} run finished (activeCount=#{this.activeCount})", LogKeys.JobScheduling);
+            }
         }
 
         private async Task ExecuteJobAsync(JobRegistration registration, IJob job, CancellationToken cancellationToken, string[] args = null)
