@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.ServiceContext.App.Web.Controllers
 {
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Net;
     using System.Reflection;
@@ -66,7 +67,8 @@
                     ["version"] = Assembly.GetEntryAssembly().GetName().Version.ToString(),
                     //["versionFile"] = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>().Version,
                     ["versionInformation"] = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion,
-                    ["buildDate"] = Assembly.GetEntryAssembly().GetBuildDate().ToString("o")
+                    ["buildDate"] = Assembly.GetEntryAssembly().GetBuildDate().ToString("o"),
+                    ["processName"] = Process.GetCurrentProcess().ProcessName.SafeEquals("dotnet") ? $"{Process.GetCurrentProcess().ProcessName} (kestrel)" : Process.GetCurrentProcess().ProcessName
                 },
                 Actions = new Dictionary<string, string>
                 {
