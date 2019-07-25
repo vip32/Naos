@@ -108,6 +108,7 @@
 
         public void Dispose()
         {
+            this.cts?.Dispose();
         }
     }
 }
