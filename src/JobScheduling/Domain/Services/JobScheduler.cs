@@ -141,7 +141,7 @@
 
             if(dueJobs.IsNullOrEmpty())
             {
-                this.logger.LogInformation($"{{LogKey:l}} run has no due jobs, not starting (activeCount=#{this.activeCount}, moment={moment.ToString("o")}}", LogKeys.JobScheduling);
+                this.logger.LogInformation($"{{LogKey:l}} run has no due jobs, not starting (activeCount=#{this.activeCount}, moment={moment.ToString("o")})", LogKeys.JobScheduling);
             }
             else
             {
