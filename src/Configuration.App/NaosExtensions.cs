@@ -60,7 +60,7 @@
                 var logger = services.BuildServiceProvider().GetRequiredService<ILoggerFactory>().CreateLogger("Naos");
                 foreach(var message in context.Messages.Safe())
                 {
-                    logger.LogInformation(message);
+                    logger.LogDebug(message);
                 }
             }
             catch(InvalidOperationException)

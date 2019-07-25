@@ -200,8 +200,22 @@
             // time range (default: last 7 days)
             if(!this.filterContext.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Ticks))))
             {
-                this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Ticks), CriteriaOperator.LessThanOrEqual, DateTime.UtcNow.Ticks));
-                this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Ticks), CriteriaOperator.GreaterThanOrEqual, DateTime.UtcNow.AddHours(-24 * 7).Ticks));
+                if(!this.filterContext.Criterias.SafeAny(c => c.Name.SafeEquals("Epoch")))
+                {
+                    // add default range based on ticks
+                    this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Ticks), CriteriaOperator.LessThanOrEqual, DateTime.UtcNow.Ticks));
+                    this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Ticks), CriteriaOperator.GreaterThanOrEqual, DateTime.UtcNow.AddHours(-24 * 7).Ticks));
+                }
+                else
+                {
+                    // convert provided epoch criterias to tick criterias
+                    foreach(var criteria in this.filterContext.Criterias.Where(c => c.Name.SafeEquals("Epoch")))
+                    {
+                        this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Ticks), criteria.Operator, Extensions.FromEpoch(criteria.Value.To<long>()).Ticks));
+                    }
+
+                    this.filterContext.Criterias = this.filterContext.Criterias.Where(c => !c.Name.SafeEquals("Epoch")); // filter epoch
+                }
             }
 
             //foreach(var criteria in this.filterContext.Criterias)
