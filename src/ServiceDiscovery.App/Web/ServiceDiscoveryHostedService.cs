@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.ServiceDiscovery.App.Web
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -20,8 +21,8 @@
         private readonly ServiceDescriptor serviceDescriptor;
         private string serviceAddress;
         private CancellationTokenSource cts;
-        private string registrationId;
         private bool registered = false;
+        private List<string> registrationIds = new List<string>();
 
         public ServiceDiscoveryHostedService(
             ILogger<ServiceDiscoveryHostedService> logger,
@@ -67,14 +68,14 @@
 
             if(!this.serviceAddress.IsNullOrEmpty())
             {
-                this.logger.LogInformation($"{{LogKey:l}} service registration (address={this.serviceAddress})", LogKeys.ServiceDiscovery);
-
                 // Register this service (use ServiceDescriptor for more infos)
                 var uri = new Uri(this.serviceAddress);
-                this.registrationId = $"{this.serviceDescriptor.Name}-{HashAlgorithm.ComputeMd5Hash(uri.ToString())}";
+                var registrationId = $"{this.serviceDescriptor.Name}-{HashAlgorithm.ComputeMd5Hash(uri.ToString())}";
+                this.logger.LogInformation($"{{LogKey:l}} service registration (id={registrationId}, address={this.serviceAddress})", LogKeys.ServiceDiscovery);
+
                 var registration = new ServiceRegistration
                 {
-                    Id = this.registrationId, // TODO: use resolved servicedescriptor for id/name (AppDomain.CurrentDomain.FriendlyName)
+                    Id = registrationId, // TODO: use resolved servicedescriptor for id/name (AppDomain.CurrentDomain.FriendlyName)
                     Name = this.serviceDescriptor.Name,
                     Address = $"{uri.Scheme}://{uri.Host}",
                     Port = uri.Port,
@@ -83,6 +84,7 @@
 
                 //this.logger.LogInformation($"{LogEventIdentifiers.ServiceDiscovery} register (name={{RegistrationName}}, address={registration.FullAddress})", registration.Name);
                 this.registryClient.RegisterAsync(registration);
+                this.registrationIds.Add(registrationId);
                 this.registered = true;
             }
             else
@@ -101,7 +103,10 @@
 
             if(this.registered)
             {
-                this.registryClient.DeRegisterAsync(this.registrationId);
+                foreach(var registrationId in this.registrationIds)
+                {
+                    this.registryClient.DeRegisterAsync(registrationId);
+                }
             }
 
             return Task.CompletedTask;
