@@ -109,7 +109,7 @@
                     .Where(l => !l.TrackType.EqualsAny(new[] { LogTrackTypes.Trace })))
                 {
                     var levelColor = "lime";
-                    if(entity.Level.SafeEquals(nameof(LogLevel.Trace)) || entity.Level.SafeEquals(nameof(LogLevel.Debug)))
+                    if(entity.Level.SafeEquals(nameof(LogLevel.Trace)) || entity.Level.SafeEquals(nameof(LogLevel.Debug)) || entity.Level.SafeEquals("Verbose"))
                     {
                         levelColor = "#75715E";
                     }
@@ -117,7 +117,7 @@
                     {
                         levelColor = "#FF8C00";
                     }
-                    else if(entity.Level.SafeEquals(nameof(LogLevel.Critical)) || entity.Level.SafeEquals(nameof(LogLevel.Error)))
+                    else if(entity.Level.SafeEquals(nameof(LogLevel.Critical)) || entity.Level.SafeEquals(nameof(LogLevel.Error)) || entity.Level.SafeEquals("Fatal"))
                     {
                         levelColor = "#FF0000";
                     }
