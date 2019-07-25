@@ -50,6 +50,7 @@
 
             this.cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             // https://github.com/cecilphillip/aspnet-servicediscovery-patterns/blob/master/self_registration/src/SchoolAPI/Infrastructure/ConsulHostedService.cs
+
             if(this.serviceAddress.IsNullOrEmpty())
             {
                 this.logger.LogInformation("{LogKey:l} 1", LogKeys.ServiceDiscovery);
@@ -64,7 +65,7 @@
                 this.logger.LogInformation("{LogKey:l} 4", LogKeys.ServiceDiscovery);
             }
 
-            if(this.serviceAddress != null)
+            if(!this.serviceAddress.IsNullOrEmpty())
             {
                 this.logger.LogInformation($"{{LogKey:l}} service registration (address={this.serviceAddress})", LogKeys.ServiceDiscovery);
 
