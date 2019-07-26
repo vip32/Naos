@@ -63,7 +63,7 @@
             {
                 // Register this service (use ServiceDescriptor for more infos)
                 var uri = new Uri(this.serviceAddress);
-                var registrationId = $"{this.serviceDescriptor.Name}-{HashAlgorithm.ComputeMd5Hash(uri.ToString())}";
+                var registrationId = $"AA{this.serviceDescriptor.Name}-{HashAlgorithm.ComputeMd5Hash(uri.ToString())}";
                 this.logger.LogInformation($"{{LogKey:l}} service registration (id={registrationId}, address={this.serviceAddress})", LogKeys.ServiceDiscovery);
 
                 var registration = new ServiceRegistration
