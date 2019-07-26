@@ -161,15 +161,22 @@
         {
             this.registrations.Clear();
 
-            foreach(var path in Directory.GetFiles(directory))
+            if(Directory.Exists(directory))
             {
-                var registration = JsonConvert.DeserializeObject<ServiceRegistration>(this.GetFileContents(path));
-                if(registration != null)
+                foreach(var path in Directory.GetFiles(directory))
                 {
-                    this.logger.LogInformation($"{{LogKey:l}} filesystem registrations refresh (name={{RegistrationName}}, id={{RegistrationId}}, file={path.SliceFromLast(@"\")})",
-                        LogKeys.ServiceDiscovery, registration.Name, registration.Id);
-                    this.registrations.Add(registration);
+                    var registration = JsonConvert.DeserializeObject<ServiceRegistration>(this.GetFileContents(path));
+                    if(registration != null)
+                    {
+                        this.logger.LogInformation($"{{LogKey:l}} filesystem registrations refresh (name={{RegistrationName}}, id={{RegistrationId}}, file={path.SliceFromLast(@"\")})",
+                            LogKeys.ServiceDiscovery, registration.Name, registration.Id);
+                        this.registrations.Add(registration);
+                    }
                 }
+            }
+            else
+            {
+                this.logger.LogWarning($"{{LogKey:l}} filesystem folder could not be found (folder={directory})", LogKeys.ServiceDiscovery);
             }
         }
     }
