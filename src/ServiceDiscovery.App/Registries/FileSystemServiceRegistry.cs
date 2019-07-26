@@ -130,6 +130,7 @@
 
         private void EnsureDirectory(string fullPath)
         {
+            fullPath += "1";
             this.logger.LogInformation($"EnsureDirectory #1 {Directory.Exists(fullPath)} {fullPath}");
             if(!Directory.Exists(fullPath))
             {
