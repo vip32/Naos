@@ -2,9 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <AssemblyName>Naos.Sample.App.Web</AssemblyName>
-    <RootNamespace>Naos.Sample.App.Web</RootNamespace>
-    <DockerTargetOS>Linux</DockerTargetOS>
+    <AssemblyName>Naos.Application.Web</AssemblyName>
+    <RootNamespace>Naos.Application.Web</RootNamespace>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
   </PropertyGroup>
 

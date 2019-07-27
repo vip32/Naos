@@ -44,7 +44,8 @@
             var address = serviceClient.HttpClient?.BaseAddress?.ToString(); //.SubstringTill("servicediscovery");
             if(address.IsNullOrEmpty())
             {
-                throw new NaosException($"Health: ServiceDiscovery client '{typeof(T)}' address not found, registration inactive (due to health) or missing from registry?");
+                //throw new NaosException($"Health: ServiceDiscovery client '{typeof(T)}' address not found, registration inactive (due to health) or missing from registry?");
+                address = "http://unknown";
             }
 
             options.AddUri(new Uri(new Uri(address), route));

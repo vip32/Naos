@@ -5,30 +5,31 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.FileStorage.Domain;
     using Naos.Foundation;
     using Newtonsoft.Json;
 
-    public class FileSystemServiceRegistry : IServiceRegistry
+    public class FileStorageServiceRegistry : IServiceRegistry
     {
-        private readonly ILogger<FileSystemServiceRegistry> logger;
-        private readonly FileSystemServiceRegistryConfiguration configuration;
-        private readonly string directory;
+        private readonly ILogger<FileStorageServiceRegistry> logger;
+        private readonly IFileStorage fileStorage;
         private readonly List<ServiceRegistration> registrations = new List<ServiceRegistration>();
+        private string directory;
         private FileSystemWatcher watcher;
 
-        public FileSystemServiceRegistry(
-            ILogger<FileSystemServiceRegistry> logger,
-            FileSystemServiceRegistryConfiguration configuration)
+        public FileStorageServiceRegistry(
+            ILogger<FileStorageServiceRegistry> logger,
+            IFileStorage fileStorage)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
-            EnsureArg.IsNotNull(configuration, nameof(configuration));
+            EnsureArg.IsNotNull(fileStorage, nameof(fileStorage));
 
             this.logger = logger;
-            this.configuration = configuration ?? new FileSystemServiceRegistryConfiguration();
-            this.directory = this.GetDirectory(this.configuration);
+            this.fileStorage = fileStorage;
 
             // TODO: inject HealthStrategy which can validate the registrations
-            this.logger.LogInformation($"{{LogKey:l}} filesystem active (folder={this.directory})", LogKeys.ServiceDiscovery);
+            this.logger.LogInformation($"{{LogKey:l}} filestorage active (type={this.fileStorage.GetType().Name})", LogKeys.ServiceDiscovery);
+            this.directory = "OBSOLETE";
         }
 
         public Task DeRegisterAsync(string id)
@@ -84,7 +85,6 @@
 
             this.logger.LogInformation("RegisterAsync #6");
             File.Move(pathTemp, path); // rename file
-            this.logger.LogInformation("RegisterAsync #7");
 
             return Task.CompletedTask;
         }
@@ -136,7 +136,7 @@
                 this.logger.LogInformation("EnsureDirectory #2");
                 var directory = Directory.CreateDirectory(fullPath);
                 this.logger.LogInformation("EnsureDirectory #3");
-                this.logger.LogInformation($"{{LogKey:l}} filesystem folder created (folder={fullPath}, exists={directory.Exists})", LogKeys.ServiceDiscovery);
+                this.logger.LogWarning($"{{LogKey:l}} filesystem folder created (folder={fullPath}, exists={directory.Exists})", LogKeys.ServiceDiscovery);
             }
 
             this.logger.LogInformation("EnsureDirectory #4");
@@ -161,22 +161,15 @@
         {
             this.registrations.Clear();
 
-            if(Directory.Exists(directory))
+            foreach(var path in Directory.GetFiles(directory))
             {
-                foreach(var path in Directory.GetFiles(directory))
+                var registration = JsonConvert.DeserializeObject<ServiceRegistration>(this.GetFileContents(path));
+                if(registration != null)
                 {
-                    var registration = JsonConvert.DeserializeObject<ServiceRegistration>(this.GetFileContents(path));
-                    if(registration != null)
-                    {
-                        this.logger.LogInformation($"{{LogKey:l}} filesystem registrations refresh (name={{RegistrationName}}, id={{RegistrationId}}, file={path.SliceFromLast(@"\")})",
-                            LogKeys.ServiceDiscovery, registration.Name, registration.Id);
-                        this.registrations.Add(registration);
-                    }
+                    this.logger.LogInformation($"{{LogKey:l}} filesystem registrations refresh (name={{RegistrationName}}, id={{RegistrationId}}, file={path.SliceFromLast(@"\")})",
+                        LogKeys.ServiceDiscovery, registration.Name, registration.Id);
+                    this.registrations.Add(registration);
                 }
-            }
-            else
-            {
-                this.logger.LogWarning($"{{LogKey:l}} filesystem folder could not be found (folder={directory})", LogKeys.ServiceDiscovery);
             }
         }
     }

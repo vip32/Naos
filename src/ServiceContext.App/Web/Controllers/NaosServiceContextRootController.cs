@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.ServiceContext.App.Web.Controllers
 {
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Net;
     using System.Reflection;
@@ -66,7 +67,8 @@
                     ["version"] = Assembly.GetEntryAssembly().GetName().Version.ToString(),
                     //["versionFile"] = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>().Version,
                     ["versionInformation"] = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion,
-                    ["buildDate"] = Assembly.GetEntryAssembly().GetBuildDate().ToString("o")
+                    ["buildDate"] = Assembly.GetEntryAssembly().GetBuildDate().ToString("o"),
+                    ["processName"] = Process.GetCurrentProcess().ProcessName.SafeEquals("dotnet") ? $"{Process.GetCurrentProcess().ProcessName} (kestrel)" : Process.GetCurrentProcess().ProcessName
                 },
                 Actions = new Dictionary<string, string>
                 {
@@ -77,8 +79,9 @@
                     ["swagger"] = this.Url.AbsolutePath("swagger/v1/swagger.json"),
                     ["health"] = this.Url.AbsolutePath("health"),
                     // TODO: discover below
-                    ["sample-logevents"] = this.Url.AbsolutePath("api/operations/logevents"),
+                    ["sample-logevents1"] = this.Url.AbsolutePath("api/operations/logevents"),
                     ["sample-logevents2"] = this.Url.AbsolutePath("api/operations/logevents?q=Ticks=gt:636855734000000000,Environment=Development"),
+                    ["sample-logevents3"] = this.Url.AbsolutePath("api/operations/logevents?q=Epoch=ge:1546347600,Level=Warning"),
                     ["sample-countries1"] = this.Url.AbsolutePath("api/countries/be"),
                     ["sample-countries2"] = this.Url.AbsolutePath("api/countries?q=name=Belgium&order=name&take=1"),
                     ["sample-countries3"] = this.Url.AbsolutePath("api/countries?q=name=Belgium"),

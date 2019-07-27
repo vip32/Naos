@@ -75,7 +75,7 @@
             var query = $@"
 {this.configuration.LogName} |
  where {this.BuildQueryWhereParts(specifications).ToString(" and ")} |
- top {options?.Take ?? 1000} by LogProperties_{LogPropertyKeys.Ticks}_d desc";
+ top {options?.Take ?? 2000} by LogProperties_{LogPropertyKeys.Ticks}_d desc"; // by TimeGenerated
 
             //order by LogProperties_{LogEventPropertyKeys.Ticks}_d desc |
             //skip ({page}-1) * {pageSize} | top {pageSize}
@@ -92,8 +92,10 @@
         {
             var result = new List<string>
             {
-                "LogMessage_s != ''",
-                "LogLevel_s != 'Verbose'"
+                // default where parts
+                //"LogMessage_s != ''",
+                //"LogLevel_s != 'Verbose'",
+                //"LogLevel_s != 'Debug'"
             };
 
             foreach(var specification in specifications.Safe())

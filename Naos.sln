@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.Infrastructure.Ra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "tests\UnitTests\UnitTests.csproj", "{2515C160-1A6A-4E8A-9853-D25A5D08BDCC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.App.Web", "tests\Sample.App.Web\Sample.App.Web.csproj", "{8EBF6580-FA63-4078-AB0F-B97771C3DCE0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Web", "tests\Application.Web\Application.Web.csproj", "{8EBF6580-FA63-4078-AB0F-B97771C3DCE0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commands.App", "src\Commands.App\Commands.App.csproj", "{D199A34D-6FE9-48A7-BDEE-3F01572BF3D4}"
 EndProject

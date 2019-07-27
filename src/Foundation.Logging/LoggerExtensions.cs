@@ -13,6 +13,7 @@
             string message,
             string type,
             TimeSpan? duration = null,
+            LogLevel level = LogLevel.Information,
             IDictionary<string, object> properties = null,
             params object[] args)
         {
@@ -31,7 +32,7 @@
                 {
                     try
                     {
-                        source.Log(LogLevel.Information, $"{{LogKey:l}} {message:l}", args.Insert(logKey).ToArray());
+                        source.Log(level, $"{{LogKey:l}} {message:l}", args.Insert(logKey).ToArray());
                     }
                     catch(AggregateException ex) // IndexOutOfRangeException
                     {

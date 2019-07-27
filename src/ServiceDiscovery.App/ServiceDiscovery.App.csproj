@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FileStorage\FileStorage.csproj" />
     <ProjectReference Include="..\Foundation.Application.Web\Application.Web.csproj" />
     <ProjectReference Include="..\Configuration.App\Configuration.App.csproj" />
   </ItemGroup>

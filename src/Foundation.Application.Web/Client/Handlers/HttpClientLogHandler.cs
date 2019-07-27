@@ -116,7 +116,7 @@
                 }
                 else
                 {
-                    this.logger.LogJournal(logKey, message, type, duration, properties, args);
+                    this.logger.LogJournal(logKey, message, type, duration, level, properties, args);
                 }
             }
         }

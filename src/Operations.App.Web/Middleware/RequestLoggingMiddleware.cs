@@ -62,7 +62,7 @@
                 context.GetRouteData()?.Values.TryGetValue("Controller", out controller);
 
                 this.logger.LogJournal(LogKeys.InboundRequest, $"[{requestId}] http {context.Request.Method} {{Url:l}} (endpoint={$"{action ?? context.Request.Method} {(controller != null ? controller.ToString().Singularize() ?? controller : context.Request.Uri().AbsolutePath)}".ToLowerInvariant()}, size={contentLength.Bytes().ToString("#.##")})", LogPropertyKeys.TrackInboundRequest, args: new object[] { new Uri(context.Request.GetDisplayUrl()) });
-                this.logger.LogTrace(LogKeys.InboundRequest, requestId, context.Request.Path, LogTraceNames.Http); // TODO: obsolete
+                //this.logger.LogTrace(LogKeys.InboundRequest, requestId, context.Request.Path, LogTraceNames.Http); // TODO: obsolete
                 //if (context.HasServiceName())
                 //{
                 //    this.logger.LogInformation($"SERVICE [{requestId}] http request service {context.GetServiceName()}");
@@ -95,8 +95,8 @@
                 }
 
                 var contentLength = context.Response.ContentLength ?? 0;
-                this.logger.LogJournal(LogKeys.InboundResponse, $"[{requestId}] http {context.Request.Method} {{Url:l}} {{StatusCode}} ({ReasonPhrases.GetReasonPhrase(context.Response.StatusCode)}) -> took {duration.Humanize()} (size={contentLength.Bytes().ToString("#.##")})", LogPropertyKeys.TrackInboundResponse, duration, args: new object[] { new Uri(context.Request.GetDisplayUrl()), context.Response.StatusCode });
-                this.logger.LogTrace(LogKeys.InboundResponse, requestId, context.Request.Path, LogTraceNames.Http, duration); // TODO: obsolete
+                this.logger.LogJournal(LogKeys.InboundResponse, $"[{requestId}] http {context.Request.Method} {{Url:l}} {{StatusCode}} ({ReasonPhrases.GetReasonPhrase(context.Response.StatusCode)}) -> took {duration.Humanize()} (size={contentLength.Bytes().ToString("#.##")})", LogPropertyKeys.TrackInboundResponse, duration, level, args: new object[] { new Uri(context.Request.GetDisplayUrl()), context.Response.StatusCode });
+                //this.logger.LogTrace(LogKeys.InboundResponse, requestId, context.Request.Path, LogTraceNames.Http, duration); // TODO: obsolete
             }).AnyContext();
         }
     }

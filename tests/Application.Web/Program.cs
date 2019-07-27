@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.App.Web
+﻿namespace Naos.Application.Web
 {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore;
@@ -18,7 +18,7 @@
                 .ConfigureAppConfiguration((context, config) =>
                     NaosConfigurationFactory.Extend(config, args, context.HostingEnvironment.EnvironmentName))
                 //.UseUrls($"https://localhost:{GetNextAvailablePort()}")
-                .CaptureStartupErrors(true)
+                //.CaptureStartupErrors(true)
                 .UseStartup<Startup>()
                 .UseSerilog();
 

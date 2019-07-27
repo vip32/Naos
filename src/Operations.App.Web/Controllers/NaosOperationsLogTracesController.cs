@@ -70,7 +70,7 @@
 
         private async Task<IEnumerable<LogTrace>> GetJsonAsync()
         {
-            this.EnsureFilterContext();
+            LoggingFilterContext.Prepare(this.filterContext);
 
             return await this.repository.FindAllAsync(
                 this.filterContext.GetSpecifications<LogTrace>(),
@@ -100,7 +100,7 @@
 "); // TODO: reuse from ServiceContextMiddleware.cs
             try
             {
-                this.EnsureFilterContext();
+                LoggingFilterContext.Prepare(this.filterContext);
 
                 var entities = await this.repository.FindAllAsync(
                     this.filterContext.GetSpecifications<LogTrace>(),
@@ -109,15 +109,15 @@
                 foreach(var entity in entities) // .Where(l => !l.TrackType.EqualsAny(new[] { LogTrackTypes.Trace }))
                 {
                     var levelColor = "lime";
-                    if(entity.Status.SafeEquals("Transient"))
+                    if(entity.Status.SafeEquals(nameof(SpanStatus.Transient)))
                     {
                         levelColor = "#75715E";
                     }
-                    else if(entity.Status.SafeEquals("Cancelled"))
+                    else if(entity.Status.SafeEquals(nameof(SpanStatus.Cancelled)))
                     {
                         levelColor = "#FF8C00";
                     }
-                    else if(entity.Status.SafeEquals("Failed"))
+                    else if(entity.Status.SafeEquals(nameof(SpanStatus.Failed)))
                     {
                         levelColor = "#FF0000";
                     }
@@ -142,40 +142,6 @@
             {
                 await this.HttpContext.Response.WriteAsync("</body></html>");
             }
-        }
-
-        private void EnsureFilterContext()
-        {
-            // environment (default: current environment)
-            if(!this.filterContext.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Environment))))
-            {
-                this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Environment), CriteriaOperator.Equal, Environment.GetEnvironmentVariable(EnvironmentKeys.Environment) ?? "Production"));
-            }
-
-            // level (default: Information)
-            if(!this.filterContext.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Level))))
-            {
-                this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.Equal, "Information"));
-            }
-
-            // time range (default: last 24 hours)
-            if(!this.filterContext.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Ticks))))
-            {
-                this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Ticks), CriteriaOperator.LessThanOrEqual, DateTime.UtcNow.Ticks));
-                this.filterContext.Criterias = this.filterContext.Criterias.Insert(new Criteria(nameof(LogEvent.Ticks), CriteriaOperator.GreaterThanOrEqual, DateTime.UtcNow.AddHours(-24).Ticks));
-            }
-
-            //foreach(var criteria in this.filterContext.Criterias)
-            //{
-            //    await this.HttpContext.Response.WriteAsync($"criteria: {criteria}<br/>");
-            //}
-
-            this.filterContext.Take ??= 1000; // get amount per request, repeat while logevents.ticks >= past
-
-            //await foreach(var name in this.service.GetLogEventsAsync(this.filterContext))
-            //{
-            //    this.logger.LogInformation(name);
-            //}
         }
 
         // Application parts? https://docs.microsoft.com/en-us/aspnet/core/mvc/advanced/app-parts?view=aspnetcore-2.1

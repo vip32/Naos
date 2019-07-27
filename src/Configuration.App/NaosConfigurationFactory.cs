@@ -48,6 +48,9 @@
             var configuration = builder.Build();
             builder.AddIf(!configuration["naos:secrets:userSecretsId"].IsNullOrEmpty(), b =>
                 b.AddUserSecrets(configuration["naos:secrets:userSecretsId"])); // https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets
+
+            //TODO: also add azure app configuration (needs connstring) https://docs.microsoft.com/en-us/azure/azure-app-configuration/quickstart-aspnet-core-app
+
             configuration = builder.Build();
             builder.AddIf(configuration["naos:secrets:vault:enabled"].ToBool(true), b =>
             {
@@ -62,7 +65,7 @@
                     $"https://{configuration["naos:secrets:vault:name"]}.vault.azure.net/",
                     configuration["naos:secrets:vault:clientId"],
                     configuration["naos:secrets:vault:clientSecret"],
-                    //new CachedKeyVaultClient() // howto create new keyvault instance https://github.com/aspnet/Configuration/blob/master/src/Config.AzureKeyVault/AzureKeyVaultConfigurationExtensions.cs
+                    // new CachedKeyVaultClient() // howto create new keyvault instance https://github.com/aspnet/Configuration/blob/master/src/Config.AzureKeyVault/AzureKeyVaultConfigurationExtensions.cs
                     new EnvironmentPrefixKeyVaultSecretManager());
 
                 return b;
