@@ -284,9 +284,11 @@ done.
 
 - create a servicebus (standard pricing)
 - `Get-AzureRmSubscription` (=subscriptionId/tenantId)
-- `$p = ConvertTo-SecureString -asplaintext -string "PRINCIPAL_PASSWORD" -force` (=clientSecret)
-- `$sp = New-AzureRmADServicePrincipal -DisplayName "PRINCIPAL_NAME" -Password $p`
+- `$sp = New-AzureRmADServicePrincipal -DisplayName "PRINCIPAL_NAME"`
 - `Write-Host "clientid:" $sp.ApplicationId` (=clientId)
+- `$pBSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($sp.Secret)`
+- `$p = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($pBSTR)`
+- `Write-Host "clientsecret:" $p` (=clientSecret)
 - `New-AzureRmRoleAssignment -ServicePrincipalName $sp.ApplicationId -ResourceGroupName RESOURCE_GROUP -ResourceName RESOURCE_NAME -RoleDefinitionName Contributor -ResourceType Microsoft.ServiceBus/namespaces`
 
 key vault keys: (or use the json configuration above)
