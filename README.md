@@ -53,17 +53,31 @@ C#, .Net Core 2.x, EnsureThat, Serilog, Mediator, FluentValidation, AutoMapper, 
 
 ## Secrets Setup
 
-- Create a key vault [^](https://docs.microsoft.com/en-us/azure/key-vault/key-vault-get-started)
-- Register an application with Azure Active Directory [^](https://docs.microsoft.com/en-us/azure/key-vault/key-vault-get-started)
+Setup key vault:
+- Create a key vault [^](https://docs.microsoft.com/en-us/azure/key-vault/key-vault-get-started) [=RESOURCE_NAME]
+- Register an application with Azure Active Directory [^](https://docs.microsoft.com/en-us/azure/key-vault/key-vault-get-started) [=AAD_APPLICATION_ID]
+- Create a client secret for the application (Certificates & secrets) [=AAD_APPLICATION_KEY]
+
+Add key vault access policy:
+- `Set-AzureRmKeyVaultAccessPolicy -VaultName '[RESOURCE_NAME]' -ServicePrincipalName [AAD_APPLICATION_ID] -PermissionsToKeys decrypt,sign,get,unwrapKey,list -PermissionsToSecrets get,list -PermissionsToCertificates get,list`
+
+or
+
+- Open createad Key Vault in Azure Portal
+- Select Access Policies
+- Click the [+ Add new] button at the top of the blade
+- Click Select Principal to select the created Azure Active Directory Application
+- From the Key permissions drop down, select "Decrypt", "Sign", "Get", "UnwrapKey" permissions
+- Save changes
 
 ##### Local setup
 
-- (1) Either Store application clientId (ApplicationId) and clientSecret (ApplicationKey) in environment variables
-  - `naos__secrets__vault__name=[VAULT_NAME]`
+- (1) Either Store application clientId (AAD_APPLICATION_ID) and clientSecret (AAD_APPLICATION_KEY) in environment variables
+  - `naos__secrets__vault__name=[RESOURCE_NAME]`
   - `naos__secrets__vault__clientId=[AAD_APPLICATION_ID]`
   - `naos__secrets__vault__clientSecret=[AAD_APPLICATION_KEY]`
-- (2) Or store application clientId (ApplicationId) and clientSecret (ApplicationKey) in an user secrets files
-- (3) Or store the application clientId (ApplicationId) and clientSecret (ApplicationKey) in the appsettings file
+- (2) Or store application clientId (AAD_APPLICATION_ID) and clientSecret (AAD_APPLICATION_KEY) in an user secrets files
+- (3) Or store the application clientId (AAD_APPLICATION_ID) and clientSecret (AAD_APPLICATION_KEY) in the appsettings file
 - Authorize the application to use the key or secret [^](https://docs.microsoft.com/en-us/azure/key-vault/key-vault-get-started)
 
 optionally use a multitude of the usual [netcore configuration providers](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-2.1#providers) to store the settings
@@ -72,7 +86,7 @@ optionally use a multitude of the usual [netcore configuration providers](https:
 
 ```
 {
-  "naos:secrets:vault:name": "[VAULT_NAME]",
+  "naos:secrets:vault:name": "[RESOURCE_NAME]",
   "naos:secrets:vault:clientId": "[AAD_APPLICATION_ID]",
   "naos:secrets:vault:clientSecret": "[AAD_APPLICATION_KEY]",
 }
@@ -99,7 +113,7 @@ The [SECRETSID] should be a guid and must be configured in the appsettings file.
   "naos": {
     "secrets": {
       "vault": {
-        "name": "[VAULT_NAME]",
+        "name": "[RESOURCE_NAME]",
         "clientId": "[AAD_APPLICATION_ID]",
         "clientSecret": "[AAD_APPLICATION_KEY]"
       }
