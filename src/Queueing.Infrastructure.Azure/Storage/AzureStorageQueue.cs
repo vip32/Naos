@@ -232,7 +232,7 @@
                 {
                     if(!cancellationToken.IsCancellationRequested)
                     {
-                        Task.Delay(this.options.DequeueInterval.Milliseconds).Wait();
+                        Task.Delay(this.options.DequeueInterval, cancellationToken).Wait();
                     }
 
                     //try
@@ -276,7 +276,7 @@
 
                     if(linkedCancellationToken.IsCancellationRequested || item == null)
                     {
-                        await Task.Delay(this.options.ProcessTimeout.Milliseconds);
+                        await Task.Delay(this.options.ProcessTimeout, linkedCancellationToken.Token);
                         continue;
                     }
 

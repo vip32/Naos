@@ -252,7 +252,7 @@
                     && !cancellationToken.IsCancellationRequested
                     && this.options.DequeueInterval.Milliseconds > 0)
                 {
-                    Task.Delay(this.options.DequeueInterval.Milliseconds).Wait();
+                    Task.Delay(this.options.DequeueInterval, cancellationToken).Wait();
                 }
             }
 
@@ -296,7 +296,6 @@
                 this.logger.LogInformation($"{{LogKey:l}} processing started (queue={this.options.Name}, type={this.GetType().PrettyName()})", args: new[] { LogKeys.Queueing });
                 while(!linkedCancellationToken.IsCancellationRequested)
                 {
-                    //this.logger.LogInformation("-");
                     IQueueItem<TData> item = null;
                     try
                     {
@@ -309,8 +308,8 @@
 
                     if(linkedCancellationToken.IsCancellationRequested || item == null)
                     {
-                        //Thread.Sleep(this.options.ProcessTimeout.Milliseconds);
-                        await Task.Delay(this.options.ProcessTimeout.Milliseconds);
+                        await Task.Delay(this.options.ProcessTimeout, linkedCancellationToken.Token);
+                        this.logger.LogInformation("-");
                         continue;
                     }
 
