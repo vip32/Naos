@@ -26,7 +26,6 @@
     <ProjectReference Include="..\Filtering.App\RequestFiltering.App.csproj" />
     <ProjectReference Include="..\Authentication.App.Web\Authentication.App.Web.csproj" />
     <ProjectReference Include="..\JobScheduling.App.Web\JobScheduling.App.Web.csproj" />
-    <ProjectReference Include="..\Operations.App.Web.Dashboard\Operations.App.Web.Dashboard.csproj" />
     <ProjectReference Include="..\Operations.App.Web\Operations.App.Web.csproj" />
     <ProjectReference Include="..\Queueing.App.Web\Queueing.App.Web.csproj" />
     <ProjectReference Include="..\ServiceDiscovery.App.Web.Router\ServiceDiscovery.App.Web.Router.csproj" />
