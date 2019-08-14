@@ -309,7 +309,6 @@
                     if(linkedCancellationToken.IsCancellationRequested || item == null)
                     {
                         await Task.Delay(this.options.ProcessTimeout, linkedCancellationToken.Token);
-                        this.logger.LogInformation("-");
                         continue;
                     }
 
