@@ -60,6 +60,7 @@ Setup key vault:
 
 Add key vault access policy:
 - `Set-AzureRmKeyVaultAccessPolicy -VaultName '[RESOURCE_NAME]' -ServicePrincipalName [AAD_APPLICATION_ID] -PermissionsToKeys decrypt,sign,get,unwrapKey,list -PermissionsToSecrets get,list -PermissionsToCertificates get,list`
+- `az keyvault set-policy --name [RESOURCE_NAME] --certificate-permissions get list --key-permissions get list decrypt unwrapKey verify --object-id [AAD_APPLICATION_ID] --secret-permissions get list`
 
 or
 
