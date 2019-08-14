@@ -23,6 +23,7 @@
         private long abandonedCount;
         private long workerErrorCount;
         private bool queueCreated;
+        private bool isProcessing;
 
         public AzureStorageQueue()
             : this(o => o)
@@ -181,9 +182,13 @@
                 throw new NaosException("queue processing error: no mediator instance provided");
             }
 
-            this.ProcessItems(
-                async (i, ct) => await this.options.Mediator.Send(new QueueEvent<TData>(i), ct).AnyContext(),
-                autoComplete, cancellationToken);
+            if(!this.isProcessing)
+            {
+                this.ProcessItems(
+                    async (i, ct) => await this.options.Mediator.Send(new QueueEvent<TData>(i), ct).AnyContext(),
+                    autoComplete, cancellationToken);
+                this.isProcessing = true;
+            }
         }
 
         public override async Task DeleteQueueAsync()
@@ -271,6 +276,7 @@
 
                     if(linkedCancellationToken.IsCancellationRequested || item == null)
                     {
+                        await Task.Delay(this.options.ProcessTimeout.Milliseconds);
                         continue;
                     }
 

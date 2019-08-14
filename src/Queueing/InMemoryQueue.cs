@@ -24,6 +24,7 @@
         private int completedCount;
         private int abandonedCount;
         private int workerErrorCount;
+        private bool isProcessing;
 
         public InMemoryQueue()
             : this(o => o)
@@ -194,18 +195,22 @@
                 throw new NaosException("queue processing error: no mediator instance provided");
             }
 
-            this.ProcessItems(
-                async (i, ct) =>
-                {
-                    using(this.logger.BeginScope(new Dictionary<string, object>
+            if(!this.isProcessing)
+            {
+                this.ProcessItems(
+                    async (i, ct) =>
                     {
-                        [LogPropertyKeys.CorrelationId] = i.Data.As<IHaveCorrelationId>()?.CorrelationId,
-                    }))
-                    {
-                        await this.options.Mediator.Send(new QueueEvent<TData>(i), ct).AnyContext();
-                    }
-                },
-                autoComplete, cancellationToken);
+                        using(this.logger.BeginScope(new Dictionary<string, object>
+                        {
+                            [LogPropertyKeys.CorrelationId] = i.Data.As<IHaveCorrelationId>()?.CorrelationId,
+                        }))
+                        {
+                            await this.options.Mediator.Send(new QueueEvent<TData>(i), ct).AnyContext();
+                        }
+                    },
+                    autoComplete, cancellationToken);
+                this.isProcessing = true;
+            }
         }
 
         public override Task DeleteQueueAsync()
@@ -243,7 +248,9 @@
             {
                 this.logger.LogDebug($"no queue items, waiting (name={this.options.Name})");
 
-                while(this.queue.Count == 0 && !cancellationToken.IsCancellationRequested)
+                while(this.queue.Count == 0
+                    && !cancellationToken.IsCancellationRequested
+                    && this.options.DequeueInterval.Milliseconds > 0)
                 {
                     Task.Delay(this.options.DequeueInterval.Milliseconds).Wait();
                 }
@@ -289,6 +296,7 @@
                 this.logger.LogInformation($"{{LogKey:l}} processing started (queue={this.options.Name}, type={this.GetType().PrettyName()})", args: new[] { LogKeys.Queueing });
                 while(!linkedCancellationToken.IsCancellationRequested)
                 {
+                    //this.logger.LogInformation("-");
                     IQueueItem<TData> item = null;
                     try
                     {
@@ -301,6 +309,7 @@
 
                     if(linkedCancellationToken.IsCancellationRequested || item == null)
                     {
+                        //Thread.Sleep(this.options.ProcessTimeout.Milliseconds);
                         await Task.Delay(this.options.ProcessTimeout.Milliseconds);
                         continue;
                     }
