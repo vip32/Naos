@@ -41,7 +41,8 @@
                         //        .EnableDetailedErrors().Options))) // "Server=(localdb)\\mssqllocaldb;Database=naos;Trusted_Connection=True;MultipleActiveResultSets=True;"
                             //dbContext: new UserAccountsContext(new DbContextOptionsBuilder().UseNaosSqlServer(configuration, "naos:sample:userAccounts:entityFramework").Options)))
                     .AddOperations(o => o
-                        .AddLogging(correlationId: $"TEST{IdGenerator.Instance.Next}"))
+                        .AddLogging(correlationId: $"TEST{IdGenerator.Instance.Next}")
+                        .AddTracing())
                     .AddMessaging(o => o
                         //.AddFileSystemBroker()
                         //.AddSignalRBroker()
