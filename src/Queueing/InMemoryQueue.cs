@@ -251,7 +251,7 @@
                 while(this.queue.Count == 0
                     && !cancellationToken.IsCancellationRequested)
                 {
-                    Task.Delay(this.options.DequeueInterval, cancellationToken).Wait();
+                    Task.Delay(this.options.DequeueInterval).Wait();
                 }
             }
 
