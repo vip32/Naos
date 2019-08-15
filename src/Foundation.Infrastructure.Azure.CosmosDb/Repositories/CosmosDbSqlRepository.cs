@@ -21,6 +21,8 @@
 
             this.options = options;
             this.logger = options.CreateLogger<IGenericRepository<TEntity>>();
+
+            this.logger.LogInformation($"{{LogKey:l}} construct cosmos repository (type={typeof(TEntity).PrettyName()})", LogKeys.DomainRepository);
         }
 
         public CosmosDbSqlRepository(Builder<CosmosDbSqlRepositoryOptionsBuilder<TEntity>, CosmosDbSqlRepositoryOptions<TEntity>> optionsBuilder)

@@ -42,6 +42,8 @@
             this.accessToken = accessToken;
             this.entityMap = LogAnalyticsEntityMap.CreateDefault()
                 .Concat(entityMap.Safe()).DistinctBy(e => e.SourceProperty);
+
+            this.logger.LogInformation($"{{LogKey:l}} construct loganalytics repository (type={typeof(TEntity).PrettyName()})", LogKeys.DomainRepository);
         }
 
         public async Task<bool> ExistsAsync(object id)
