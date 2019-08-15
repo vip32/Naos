@@ -283,7 +283,7 @@
 
             if(!info.Exists && createIfNotExists)
             {
-                await info.Table.CreateAsync();
+                await info.Table.CreateAsync(); // WARN: CAS issue https://github.com/Azure/azure-cosmos-table-dotnet/issues/7
                 //Thread.Sleep(1500);
                 info.Exists = true;
             }
