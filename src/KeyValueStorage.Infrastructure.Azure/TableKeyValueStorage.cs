@@ -270,30 +270,30 @@
                 throw new ArgumentException($"table name {tableName} not valid", nameof(tableName));
             }
 
-            var cached = this.tableInfos.TryGetValue(tableName, out var tag);
+            var cached = this.tableInfos.TryGetValue(tableName, out var info);
             if(!cached)
             {
-                tag = new TableInfo
+                info = new TableInfo
                 {
                     Table = this.client.GetTableReference(tableName),
                 };
-                tag.Exists = await tag.Table.ExistsAsync();
-                this.tableInfos[tableName] = tag;
+                info.Exists = await info.Table.ExistsAsync();
+                this.tableInfos[tableName] = info;
             }
 
-            if(!tag.Exists && createIfNotExists)
+            if(!info.Exists && createIfNotExists)
             {
-                await tag.Table.CreateAsync();
+                await info.Table.CreateAsync();
                 //Thread.Sleep(1500);
-                tag.Exists = true;
+                info.Exists = true;
             }
 
-            if(!tag.Exists)
+            if(!info.Exists)
             {
                 return null;
             }
 
-            return tag.Table;
+            return info.Table;
         }
 
         private async Task<List<TableResult>> ExecuteBatchAsync(CloudTable table, TableBatchOperation operation)
