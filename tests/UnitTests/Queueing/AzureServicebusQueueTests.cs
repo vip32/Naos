@@ -113,7 +113,7 @@
 
         protected override IQueue<StubMessage> GetQueue(
             int retries = 1,
-            TimeSpan? processTimeout = null,
+            TimeSpan? processInterval = null,
             TimeSpan? retryDelay = null,
             int deadLetterMaxItems = 100)
         {
@@ -143,7 +143,7 @@
                         .RequiresSession(false)
                         .Retries(retries)
                         .RetryPolicy(retryPolicy)
-                        .ProcessTimeout(processTimeout ?? TimeSpan.FromMinutes(5))));
+                        .ProcessInterval(processInterval ?? TimeSpan.FromMinutes(5))));
         }
 
         protected override Task CleanupQueueAsync(IQueue<StubMessage> queue)

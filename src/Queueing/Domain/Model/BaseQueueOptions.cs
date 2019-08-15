@@ -9,7 +9,7 @@
 
         public int Retries { get; set; } = 3;
 
-        public TimeSpan ProcessTimeout { get; set; } = TimeSpan.FromSeconds(10);
+        public TimeSpan ProcessInterval { get; set; } = TimeSpan.FromSeconds(10);
 
         public ISerializer Serializer { get; set; }
     }

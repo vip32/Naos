@@ -249,8 +249,7 @@
                 this.logger.LogDebug($"no queue items, waiting (name={this.options.Name})");
 
                 while(this.queue.Count == 0
-                    && !cancellationToken.IsCancellationRequested
-                    && this.options.DequeueInterval.Milliseconds > 0)
+                    && !cancellationToken.IsCancellationRequested)
                 {
                     Task.Delay(this.options.DequeueInterval, cancellationToken).Wait();
                 }
@@ -308,7 +307,7 @@
 
                     if(linkedCancellationToken.IsCancellationRequested || item == null)
                     {
-                        await Task.Delay(this.options.ProcessTimeout, linkedCancellationToken.Token);
+                        await Task.Delay(this.options.ProcessInterval, linkedCancellationToken.Token);
                         continue;
                     }
 

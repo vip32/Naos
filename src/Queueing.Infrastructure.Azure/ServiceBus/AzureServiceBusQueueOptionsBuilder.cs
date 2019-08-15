@@ -130,9 +130,9 @@
             return this;
         }
 
-        public AzureServiceBusQueueOptionsBuilder ProcessTimeout(TimeSpan timeout)
+        public AzureServiceBusQueueOptionsBuilder ProcessInterval(TimeSpan interval)
         {
-            this.Target.ProcessTimeout = timeout;
+            this.Target.ProcessInterval = interval;
             return this;
         }
 

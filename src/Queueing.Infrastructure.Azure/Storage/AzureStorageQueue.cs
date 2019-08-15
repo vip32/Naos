@@ -85,7 +85,7 @@
             this.logger.LogDebug($"queue item renew (id={item.Id}, queue={this.options.Name})");
 
             var message = this.ToMessage(item);
-            await this.queue.UpdateMessageAsync(message, this.options.ProcessTimeout, MessageUpdateFields.Visibility).AnyContext();
+            await this.queue.UpdateMessageAsync(message, this.options.ProcessInterval, MessageUpdateFields.Visibility).AnyContext();
 
             //this.logger.LogJournal(LogEventPropertyKeys.TrackEnqueue, $"{{LogKey:l}} item lock renewed (id={message.Id}, queue={this.options.Name}, type={typeof(TData).PrettyName()})", args: new[] { LogEventKeys.Queueing });
             this.LastDequeuedDate = DateTime.UtcNow;
@@ -225,7 +225,7 @@
             await this.EnsureQueueAsync().AnyContext();
             this.logger.LogDebug($"queue item dequeue (queue={this.options.Name})");
 
-            var message = await this.queue.GetMessageAsync(this.options.ProcessTimeout, null, null).AnyContext();
+            var message = await this.queue.GetMessageAsync(this.options.ProcessInterval, null, null).AnyContext();
             if(message == null)
             {
                 while(message == null && !cancellationToken.IsCancellationRequested)
@@ -237,7 +237,7 @@
 
                     //try
                     //{
-                    message = await this.queue.GetMessageAsync(this.options.ProcessTimeout, null, null).AnyContext();
+                    message = await this.queue.GetMessageAsync(this.options.ProcessInterval, null, null).AnyContext();
                     //}
                     //catch (Exception ex)
                     //{
@@ -276,7 +276,7 @@
 
                     if(linkedCancellationToken.IsCancellationRequested || item == null)
                     {
-                        await Task.Delay(this.options.ProcessTimeout, linkedCancellationToken.Token);
+                        await Task.Delay(this.options.ProcessInterval, linkedCancellationToken.Token);
                         continue;
                     }
 

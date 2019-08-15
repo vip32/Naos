@@ -38,9 +38,9 @@
             return this;
         }
 
-        public AzureStorageQueueOptionsBuilder ProcessTimeout(TimeSpan timeout)
+        public AzureStorageQueueOptionsBuilder ProcessInterval(TimeSpan interval)
         {
-            this.Target.ProcessTimeout = timeout;
+            this.Target.ProcessInterval = interval;
             return this;
         }
 
@@ -50,9 +50,9 @@
             return this;
         }
 
-        public AzureStorageQueueOptionsBuilder DequeueInterval(TimeSpan dequeueInterval)
+        public AzureStorageQueueOptionsBuilder DequeueInterval(TimeSpan interval)
         {
-            this.Target.DequeueInterval = dequeueInterval;
+            this.Target.DequeueInterval = interval;
             return this;
         }
     }
