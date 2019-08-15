@@ -7,7 +7,7 @@
     using Naos.Core.Queueing.Domain;
     using Xunit;
 
-    public abstract class QueueBaseTests : IDisposable
+    public abstract class QueueBaseTests : BaseTest, IDisposable
     {
         public virtual void Dispose()
         {

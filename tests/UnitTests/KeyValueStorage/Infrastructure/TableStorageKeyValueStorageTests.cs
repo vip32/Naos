@@ -34,7 +34,8 @@
 
         protected override IKeyValueStorage GetStorage()
         {
-            var connectionString = Configuration["naos:tests:storage:connectionString"];
+            var connectionString = string.Empty;
+            //var connectionString = Configuration["naos:tests:storage:connectionString"];
 
             if(!connectionString.IsNullOrEmpty())
             {
