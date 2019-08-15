@@ -15,8 +15,8 @@
         private readonly CosmosClient client;
         private readonly string partitionKeyPath;
         private readonly string partitionKeyValue;
-        private readonly CosmosDatabase database;
-        private readonly CosmosContainer container;
+        private readonly Database database;
+        private readonly Container container;
 
         public CosmosDbSqlProviderV3(CosmosDbSqlProviderV3Options options)
         {
@@ -30,15 +30,15 @@
             this.partitionKeyPath = options.PartitionKeyPath.EmptyToNull() ?? "/Discriminator"; // needed? each type T is persisted in own collection
             this.partitionKeyValue = typeof(T).FullName;
 
-            this.database = /*await */this.client.Databases
+            this.database = /*await */this.client
                 .CreateDatabaseIfNotExistsAsync(options.Database.EmptyToNull() ?? "master", throughput: options.ThroughPut).Result;
-            this.container = /*await*/this.database.Containers
+            this.container = /*await*/this.database
                 .CreateContainerIfNotExistsAsync(
-                    new CosmosContainerSettings(
+                    new ContainerProperties(
                         options.Container.EmptyToNull() ?? typeof(T).PrettyName().Pluralize().ToLower(),
                         partitionKeyPath: this.partitionKeyPath)
                     {
-                        IndexingPolicy = new IndexingPolicy(new RangeIndex(DataType.String) { Precision = -1 })
+                        //IndexingPolicy = new IndexingPolicy(new RangeIndex(DataType.String) { Precision = -1 })
                     },
                     throughput: options.ThroughPut).Result;
         }
@@ -50,17 +50,17 @@
 
         public async Task<T> GetByIdAsync(string id, string partitionKey = null) // partitionkey
         {
-            var response = await this.container.Items.ReadItemAsync<T>(
-                partitionKey ?? this.partitionKeyValue,
-                id).AnyContext();
+            var response = await this.container.ReadItemAsync<T>(
+                id,
+                new PartitionKey(partitionKey ?? this.partitionKeyValue)).AnyContext();
             return response.Resource;
         }
 
         public async Task<T> UpsertAsync(T entity, string partitionKey = null)
         {
-            var response = await this.container.Items.UpsertItemAsync(
-                partitionKey ?? this.partitionKeyValue,
-                entity).AnyContext();
+            var response = await this.container.UpsertItemAsync(
+                entity,
+                new PartitionKey(partitionKey ?? this.partitionKeyValue)).AnyContext();
             return response.Resource;
         }
 
@@ -100,7 +100,7 @@
 
         public async Task<bool> DeleteByIdAsync(string id, string partitionKey = null)
         {
-            var response = await this.container.Items.DeleteItemAsync<T>(partitionKey ?? this.partitionKeyValue, id);
+            var response = await this.container.DeleteItemAsync<T>(id, new PartitionKey(partitionKey ?? this.partitionKeyValue)).AnyContext();
             return true; // TODO
         }
 
