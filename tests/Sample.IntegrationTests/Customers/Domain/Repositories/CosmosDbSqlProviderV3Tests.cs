@@ -208,7 +208,7 @@
             result.ShouldNotBeNull();
             result.ShouldNotBeEmpty();
             result.FirstOrDefault()?.FirstName.ShouldBe("John");
-            result.FirstOrDefault()?.FirstName.ShouldBe("Doe");
+            result.FirstOrDefault()?.LastName.ShouldBe("Doe");
         }
 
         [Fact]
