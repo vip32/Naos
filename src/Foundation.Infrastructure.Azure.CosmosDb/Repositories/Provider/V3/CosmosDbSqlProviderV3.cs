@@ -191,7 +191,7 @@
         {
             try
             {
-                // partitionKeyValue workaround (if not provided):
+                // partitionKeyValue workaround (if not provided): otherwhise document is not found
                 // var item = GetByIdAsync(id)
                 // get partition value from item by using this.partitionKeyPath (json selector?)
                 // use this partition value below (DeleteItemAsync)
