@@ -7,6 +7,7 @@
     using EnsureThat;
     using Humanizer;
     using Microsoft.Azure.Cosmos;
+    using Microsoft.Azure.Cosmos.Linq;
     using Naos.Foundation.Domain;
 
     public class CosmosDbSqlProviderV3<T> : ICosmosDbSqlProvider<T>, IDisposable
@@ -64,37 +65,62 @@
             return response.Resource;
         }
 
-        public /*async*/ Task<IEnumerable<T>> WhereAsync(
+        public async Task<IEnumerable<T>> WhereAsync(
             Expression<Func<T, bool>> expression,
             string partitionKey = null)
         {
-            // linq not supported yet https://github.com/Azure/azure-cosmos-dotnet-v3/issues/4
-            //var response = await this.container.Items.CreateItemQuery()
-            //return response.Resource;
-            throw new NotImplementedException();
+            var result = new List<T>();
+            var iterator = this.container.GetItemLinqQueryable<T>()
+                .WhereIf(expression).ToFeedIterator(); // https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.cosmos.container.getitemlinqqueryable?view=azure-dotnet
+
+            while (iterator.HasMoreResults)
+            {
+                foreach (var item in await iterator.ReadNextAsync())
+                {
+                    result.Add(item);
+                }
+            }
+
+            return result; // TODO: replace with IAsyncEnumerable (netstandard 2.1)
         }
 
-        public Task<IEnumerable<T>> WhereAsync(
+        public async Task<IEnumerable<T>> WhereAsync(
             Expression<Func<T, bool>> expression = null,
             IEnumerable<Expression<Func<T, bool>>> expressions = null,
             string partitionKey = null,
-            int count = 100,
+            int? skip = null,
+            int? take = null,
             Expression<Func<T, object>> orderExpression = null,
             bool orderDescending = false)
         {
-            // linq not supported yet https://github.com/Azure/azure-cosmos-dotnet-v3/issues/4
-            throw new NotImplementedException();
+            var result = new List<T>();
+            var iterator = this.container.GetItemLinqQueryable<T>()
+                .WhereIf(expression)
+                .WhereIf(expressions)
+                .SkipIf(skip)
+                .TakeIf(take)
+                .OrderByIf(orderExpression, orderDescending).ToFeedIterator(); // https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.cosmos.container.getitemlinqqueryable?view=azure-dotnet
+
+            while (iterator.HasMoreResults)
+            {
+                foreach (var item in await iterator.ReadNextAsync())
+                {
+                    result.Add(item);
+                }
+            }
+
+            return result; // TODO: replace with IAsyncEnumerable (netstandard 2.1)
         }
 
-        public Task<IEnumerable<T>> WhereAsync(
+        public Task<IEnumerable<T>> WhereAsync( // OBSOLETE
             Expression<Func<T, bool>> expression,
             Expression<Func<T, T>> selector,
             string partitionKey = null,
-            int count = 100,
+            int? skip = null,
+            int? take = null,
             Expression<Func<T, object>> orderExpression = null,
             bool orderDescending = false)
         {
-            // linq not supported yet https://github.com/Azure/azure-cosmos-dotnet-v3/issues/4
             throw new NotImplementedException();
         }
 

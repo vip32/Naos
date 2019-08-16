@@ -29,7 +29,7 @@
         private readonly bool isMasterCollection;
         private readonly bool isPartitioned;
         private readonly JsonSerializerSettings jsonSerializerSettings;
-        private AsyncLazy<DocumentCollection> documentCollection;
+        private readonly AsyncLazy<DocumentCollection> documentCollection;
 
         public CosmosDbSqlProviderV2( // TODO: use OptionsBuilder here
             ILogger<CosmosDbSqlProviderV2<T>> logger,
@@ -172,8 +172,8 @@
             var query = this.client.CreateDocumentQuery<T>(
                     UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
                     new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned, PartitionKey = new PartitionKey(partitionKey ?? this.partitionKeyValue) })
-                    .WhereExpression(expression)
-                    .WhereExpressionIf(e => e.Discriminator == typeof(T).FullName, this.isMasterCollection)
+                    .WhereIf(expression)
+                    .WhereIf(e => e.Discriminator == typeof(T).FullName, this.isMasterCollection)
                     .AsEnumerable();
             this.logger.LogInformation($"{{LogKey:l}} sql={query.ToString().Replace("{", string.Empty).Replace("}", string.Empty)}", LogKeys.DomainRepository);
             return await Task.FromResult(query);
@@ -183,7 +183,8 @@
             Expression<Func<T, bool>> expression = null,
             IEnumerable<Expression<Func<T, bool>>> expressions = null,
             string partitionKey = null,
-            int count = 100,
+            int? skip = null,
+            int? take = null,
             Expression<Func<T, object>> orderExpression = null,
             bool orderDescending = false)
         {
@@ -191,22 +192,23 @@
             // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
             var query = this.client.CreateDocumentQuery<T>(
                     UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
-                    new FeedOptions { MaxItemCount = count, EnableCrossPartitionQuery = this.isPartitioned, PartitionKey = new PartitionKey(partitionKey ?? this.partitionKeyValue) })
-                    .WhereExpression(expression)
-                    .WhereExpressions(expressions)
-                    .WhereExpressionIf(e => e.Discriminator == typeof(T).FullName, this.isMasterCollection)
-                    .TakeIf(count)
+                    new FeedOptions { MaxItemCount = take, EnableCrossPartitionQuery = this.isPartitioned, PartitionKey = new PartitionKey(partitionKey ?? this.partitionKeyValue) })
+                    .WhereIf(expression)
+                    .WhereIf(expressions)
+                    .WhereIf(e => e.Discriminator == typeof(T).FullName, this.isMasterCollection)
+                    .TakeIf(take)
                     .OrderByIf(orderExpression, orderDescending)
                     .AsEnumerable();
             this.logger.LogInformation($"{{LogKey:l}} sql={query.ToString().Replace("{", string.Empty).Replace("}", string.Empty)}", LogKeys.DomainRepository);
             return await Task.FromResult(query);
         }
 
-        public async Task<IEnumerable<T>> WhereAsync(
+        public async Task<IEnumerable<T>> WhereAsync( // OBSOLETE
             Expression<Func<T, bool>> expression,
             Expression<Func<T, T>> selector,
             string partitionKey = null,
-            int count = 100,
+            int? skip = null,
+            int? take = null,
             Expression<Func<T, object>> orderExpression = null,
             bool orderDescending = false)
         {
@@ -215,11 +217,11 @@
             var query =
                 this.client.CreateDocumentQuery<T>(
                     UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
-                    new FeedOptions { MaxItemCount = count, EnableCrossPartitionQuery = this.isPartitioned, PartitionKey = new PartitionKey(partitionKey ?? this.partitionKeyValue) })
-                    .WhereExpression(expression)
-                    .WhereExpressionIf(e => e.Discriminator == typeof(T).FullName, this.isMasterCollection)
+                    new FeedOptions { MaxItemCount = take, EnableCrossPartitionQuery = this.isPartitioned, PartitionKey = new PartitionKey(partitionKey ?? this.partitionKeyValue) })
+                    .WhereIf(expression)
+                    .WhereIf(e => e.Discriminator == typeof(T).FullName, this.isMasterCollection)
                     .Select(selector)
-                    .TakeIf(count)
+                    .TakeIf(take)
                     .OrderByIf(orderExpression, orderDescending)
                     .AsEnumerable();
             this.logger.LogInformation($"{{LogKey:l}} sql={query.ToString().Replace("{", string.Empty).Replace("}", string.Empty)}", LogKeys.DomainRepository);
@@ -434,7 +436,7 @@
         {
             var documentCollection = this.client.CreateDocumentCollectionQuery(
                 UriFactory.CreateDatabaseUri(this.databaseId).ToString())
-                .WhereExpression(c => c.Id == this.collectionId).AsEnumerable().FirstOrDefault();
+                .Where(c => c.Id == this.collectionId).AsEnumerable().FirstOrDefault();
 
             if(documentCollection == null)
             {
@@ -461,7 +463,7 @@
         private async Task<Database> GetOrCreateDatabaseAsync()
         {
             var result = this.client.CreateDatabaseQuery()
-                .WhereExpression(db => db.Id == this.databaseId).AsEnumerable().FirstOrDefault();
+                .Where(db => db.Id == this.databaseId).AsEnumerable().FirstOrDefault();
             if(result == null)
             {
                 result = await this.client.CreateDatabaseAsync(

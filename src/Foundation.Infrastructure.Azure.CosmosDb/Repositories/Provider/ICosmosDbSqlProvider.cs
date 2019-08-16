@@ -20,15 +20,17 @@
             Expression<Func<T, bool>> expression = null,
             IEnumerable<Expression<Func<T, bool>>> expressions = null,
             string partitionKey = null,
-            int count = 100,
+            int? skip = null,
+            int? take = null,
             Expression<Func<T, object>> orderExpression = null,
             bool orderDescending = false);
 
-        Task<IEnumerable<T>> WhereAsync(
+        Task<IEnumerable<T>> WhereAsync( // OBSOLETE
             Expression<Func<T, bool>> expression,
             Expression<Func<T, T>> selector,
             string partitionKey = null,
-            int count = 100,
+            int? skip = null,
+            int? take = null,
             Expression<Func<T, object>> orderExpression = null,
             bool orderDescending = false);
 
