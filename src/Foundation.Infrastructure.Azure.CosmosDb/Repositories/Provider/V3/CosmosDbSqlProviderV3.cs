@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
+    using System.Net;
     using System.Threading.Tasks;
     using EnsureThat;
     using Humanizer;
@@ -29,7 +30,7 @@
             // https://github.com/Azure/azure-cosmos-dotnet-v3/issues/68
             this.client = options.Client;
             this.partitionKeyPath = options.PartitionKeyPath.EmptyToNull() ?? "/Discriminator"; // needed? each type T is persisted in own collection
-            this.partitionKeyValue = typeof(T).FullName;
+            this.partitionKeyValue = typeof(T).FullName; // Partition key for the item. If not specified will be populated by extracting from {T}
 
             this.database = /*await */this.client
                 .CreateDatabaseIfNotExistsAsync(options.Database.EmptyToNull() ?? "master", throughput: options.ThroughPut).Result;
@@ -51,10 +52,22 @@
 
         public async Task<T> GetByIdAsync(string id, string partitionKey = null) // partitionkey
         {
-            var response = await this.container.ReadItemAsync<T>(
+            try
+            {
+                var response = await this.container.ReadItemAsync<T>(
                 id,
                 new PartitionKey(partitionKey ?? this.partitionKeyValue)).AnyContext();
-            return response.Resource;
+                return response.Resource;
+            }
+            catch (CosmosException ex)
+            {
+                if(ex.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return default;
+                }
+
+                throw;
+            }
         }
 
         public async Task<T> UpsertAsync(T entity, string partitionKey = null)
@@ -133,8 +146,21 @@
 
         public async Task<bool> DeleteByIdAsync(string id, string partitionKey = null)
         {
-            var response = await this.container.DeleteItemAsync<T>(id, new PartitionKey(partitionKey ?? this.partitionKeyValue)).AnyContext();
-            return true; // TODO
+            try
+            {
+                var response = await this.container.DeleteItemAsync<T>(id, new PartitionKey(partitionKey ?? this.partitionKeyValue)).AnyContext();
+                return true;
+                // TODO: evaulate response.StatusCode == HttpStatusCode.OK
+            }
+            catch (CosmosException ex)
+            {
+                if (ex.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return false;
+                }
+
+                throw;
+            }
         }
 
         public void Dispose()

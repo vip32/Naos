@@ -1,5 +1,6 @@
 ﻿namespace Naos.Foundation.Infrastructure
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
@@ -118,6 +119,11 @@
             }
 
             var isNew = entity.Id.IsDefault() || !await this.ExistsAsync(entity.Id).AnyContext();
+
+            if (entity.Id.IsDefault())
+            {
+                entity.Id = Guid.NewGuid().ToString(); // entity id is mandatory for the new v3 cosmos client https://github.com/Azure/azure-cosmos-dotnet-v3/issues/68
+            }
 
             if(this.options.PublishEvents && this.options.Mediator != null)
             {

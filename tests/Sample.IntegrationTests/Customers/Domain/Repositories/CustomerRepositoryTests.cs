@@ -1,5 +1,6 @@
 ﻿namespace Naos.Sample.IntegrationTests.Customers.Domain
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using Bogus;
@@ -21,6 +22,7 @@
         {
             this.sut = this.ServiceProvider.GetService<ICustomerRepository>();
             this.entityFaker = new Faker<Customer>() //https://github.com/bchavez/Bogus
+                //.RuleFor(u => u.Id, f => Guid.NewGuid().ToString())
                 .RuleFor(u => u.CustomerNumber, f => f.Random.Replace("??-#####"))
                 .RuleFor(u => u.Gender, f => f.PickRandom(new[] { "Male", "Female" }))
                 .RuleFor(u => u.FirstName, (f, u) => f.Name.FirstName())
