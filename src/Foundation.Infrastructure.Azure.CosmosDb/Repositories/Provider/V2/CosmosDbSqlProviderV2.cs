@@ -187,11 +187,11 @@
 
         public async Task<IEnumerable<T>> WhereAsync(
             IEnumerable<Expression<Func<T, bool>>> expressions = null,
-            string partitionKeyValue = null,
             int? skip = null,
             int? take = null,
             Expression<Func<T, object>> orderExpression = null,
-            bool orderDescending = false)
+            bool orderDescending = false,
+            string partitionKeyValue = null)
         {
             // cosmos only supports single orderby https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/16883608-allow-multi-order-by
             // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take

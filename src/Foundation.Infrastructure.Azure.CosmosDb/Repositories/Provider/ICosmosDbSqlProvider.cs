@@ -24,11 +24,11 @@
 
         Task<IEnumerable<T>> WhereAsync(
             IEnumerable<Expression<Func<T, bool>>> expressions = null,
-            string partitionKeyValue = null,
             int? skip = null,
             int? take = null,
             Expression<Func<T, object>> orderExpression = null,
-            bool orderDescending = false);
+            bool orderDescending = false,
+            string partitionKeyValue = null);
 
         Task<IEnumerable<T>> WhereAsync( // OBSOLETE
             Expression<Func<T, bool>> expression,

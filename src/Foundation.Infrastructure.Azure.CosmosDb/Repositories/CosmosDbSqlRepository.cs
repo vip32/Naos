@@ -36,6 +36,7 @@
             var order = (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order).FirstOrDefault(); // cosmos only supports single orderby
             var entities = await this.options.Provider
                 .WhereAsync(
+                    skip: options?.Skip ?? -1, // TODO: implement cosmosdb skip/take https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-sql-query#OffsetLimitClause
                     take: options?.Take ?? -1, // TODO: implement cosmosdb skip/take https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-sql-query#OffsetLimitClause
                     orderExpression: order?.Expression,
                     orderDescending: order?.Direction == OrderDirection.Descending).AnyContext();
@@ -48,10 +49,10 @@
             var entities = await this.options.Provider
                 .WhereAsync(
                     expression: specification?.ToExpression().Expand(), // expand fixes Invoke in expression
-                skip: options?.Skip ?? -1, // TODO: implement cosmosdb skip/take https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-sql-query#OffsetLimitClause
-                take: options?.Take ?? -1, // TODO: implement cosmosdb skip/take https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-sql-query#OffsetLimitClause
-                orderExpression: order?.Expression,
-                orderDescending: order?.Direction == OrderDirection.Descending).AnyContext();
+                    skip: options?.Skip ?? -1, // TODO: implement cosmosdb skip/take https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-sql-query#OffsetLimitClause
+                    take: options?.Take ?? -1, // TODO: implement cosmosdb skip/take https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-sql-query#OffsetLimitClause
+                    orderExpression: order?.Expression,
+                    orderDescending: order?.Direction == OrderDirection.Descending).AnyContext();
             return entities.ToList();
         }
 
@@ -61,6 +62,7 @@
             var entities = await this.options.Provider
                 .WhereAsync(
                     expressions: specifications.Safe().Select(s => s.ToExpression().Expand()), // expand fixes Invoke in expression
+                    skip: options?.Skip ?? -1, // TODO: implement cosmosdb skip/take https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-sql-query#OffsetLimitClause
                     take: options?.Take ?? -1, // TODO: implement cosmosdb skip/take https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-sql-query#OffsetLimitClause
                     orderExpression: order?.Expression,
                     orderDescending: order?.Direction == OrderDirection.Descending).AnyContext();
