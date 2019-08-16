@@ -38,13 +38,13 @@
             return this;
         }
 
-        public CosmosDbSqlProviderV3OptionsBuilder FilterScope(string partitionKeyPath)
+        public CosmosDbSqlProviderV3OptionsBuilder PartitionKey(string partitionKeyPath)
         {
-            this.Target.PartitionKeyPath = partitionKeyPath ?? "/Discriminator";
+            this.Target.PartitionKeyPath = partitionKeyPath;
             return this;
         }
 
-        public CosmosDbSqlProviderV3OptionsBuilder MessageScope(int throughPut)
+        public CosmosDbSqlProviderV3OptionsBuilder ThroughPut(int throughPut)
         {
             if(throughPut < 400)
             {

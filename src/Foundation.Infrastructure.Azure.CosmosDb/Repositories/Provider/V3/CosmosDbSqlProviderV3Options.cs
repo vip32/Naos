@@ -16,7 +16,7 @@
 
         public string Container { get; set; }
 
-        public string PartitionKeyPath { get; set; } = "/Discriminator";
+        public string PartitionKeyPath { get; set; }
 
         public int? ThroughPut { get; set; } = 400;
     }

@@ -16,7 +16,7 @@
     using Newtonsoft.Json;
 
     public class CosmosDbSqlProviderV2<T> : ICosmosDbSqlProvider<T>
-        where T : IHaveDiscriminator
+        where T : IHaveDiscriminator // obsolete because of cosmos client v3
     {
         private readonly ILogger<CosmosDbSqlProviderV2<T>> logger;
         private readonly IDocumentClient client;
@@ -106,7 +106,7 @@
             // https://github.com/Azure/azure-cosmosdb-dotnet/blob/f374cc601f4cf08d11c88f0c3fa7dcefaf7ecfe8/samples/code-samples/DocumentManagement/Program.cs#L211
         }
 
-        public async Task<T> GetByIdAsync(string id, string partitionKey = null) // partitionkey
+        public async Task<T> GetByIdAsync(string id, string partitionKeyValue = null) // partitionkey
         {
             if(string.IsNullOrEmpty(id))
             {
@@ -117,7 +117,7 @@
             {
                 return await this.client.ReadDocumentAsync<T>(
                     UriFactory.CreateDocumentUri(this.databaseId, this.collectionId, id),
-                    new RequestOptions { PartitionKey = new PartitionKey(partitionKey ?? this.partitionKeyValue) }).AnyContext();
+                    new RequestOptions { PartitionKey = new PartitionKey(partitionKeyValue ?? this.partitionKeyValue) }).AnyContext();
             }
             catch(DocumentClientException ex)
             {
@@ -130,16 +130,16 @@
             }
         }
 
-        public async Task<T> UpsertAsync(T entity, string partitionKey = null)
+        public async Task<T> UpsertAsync(T entity, string partitionKeyValue = null)
         {
             var doc = await this.client.UpsertDocumentAsync(
                 UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId),
                 entity,
-                new RequestOptions { PartitionKey = new PartitionKey(partitionKey ?? this.partitionKeyValue) }).AnyContext();
+                new RequestOptions()).AnyContext();
             return JsonConvert.DeserializeObject<T>(doc.Resource.ToString(), this.jsonSerializerSettings);
         }
 
-        public async Task<bool> DeleteByIdAsync(string id, string partitionKey = null)
+        public async Task<bool> DeleteByIdAsync(string id, string partitionKeyValue = null)
         {
             if(string.IsNullOrEmpty(id))
             {
@@ -150,7 +150,7 @@
             {
                 var result = await this.client.DeleteDocumentAsync(
                     UriFactory.CreateDocumentUri(this.databaseId, this.collectionId, id),
-                    new RequestOptions { PartitionKey = new PartitionKey(partitionKey ?? this.partitionKeyValue) }).AnyContext();
+                    new RequestOptions { PartitionKey = new PartitionKey(partitionKeyValue ?? this.partitionKeyValue) }).AnyContext();
 
                 return result.StatusCode == HttpStatusCode.NoContent;
             }
@@ -167,15 +167,15 @@
 
         public async Task<IEnumerable<T>> WhereAsync(
             Expression<Func<T, bool>> expression,
-            string partitionKey = null,
             int? skip = null,
             int? take = null,
             Expression<Func<T, object>> orderExpression = null,
-            bool orderDescending = false) // TODO: shouldn't this return IEnumerable<T>?
+            bool orderDescending = false,
+            string partitionKeyValue = null) // TODO: shouldn't this return IEnumerable<T>?
         {
             var query = this.client.CreateDocumentQuery<T>(
                     UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
-                    new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned, PartitionKey = new PartitionKey(partitionKey ?? this.partitionKeyValue) })
+                    new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned, PartitionKey = new PartitionKey(partitionKeyValue ?? this.partitionKeyValue) })
                     .WhereIf(expression)
                     .WhereIf(e => e.Discriminator == typeof(T).FullName, this.isMasterCollection)
                     .TakeIf(take)
@@ -187,7 +187,7 @@
 
         public async Task<IEnumerable<T>> WhereAsync(
             IEnumerable<Expression<Func<T, bool>>> expressions = null,
-            string partitionKey = null,
+            string partitionKeyValue = null,
             int? skip = null,
             int? take = null,
             Expression<Func<T, object>> orderExpression = null,
@@ -197,7 +197,7 @@
             // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
             var query = this.client.CreateDocumentQuery<T>(
                     UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
-                    new FeedOptions { MaxItemCount = take, EnableCrossPartitionQuery = this.isPartitioned, PartitionKey = new PartitionKey(partitionKey ?? this.partitionKeyValue) })
+                    new FeedOptions { MaxItemCount = take, EnableCrossPartitionQuery = this.isPartitioned, PartitionKey = new PartitionKey(partitionKeyValue ?? this.partitionKeyValue) })
                     .WhereIf(expressions)
                     .WhereIf(e => e.Discriminator == typeof(T).FullName, this.isMasterCollection)
                     .TakeIf(take)
@@ -210,18 +210,18 @@
         public async Task<IEnumerable<T>> WhereAsync( // OBSOLETE
             Expression<Func<T, bool>> expression,
             Expression<Func<T, T>> selector,
-            string partitionKey = null,
             int? skip = null,
             int? take = null,
             Expression<Func<T, object>> orderExpression = null,
-            bool orderDescending = false)
+            bool orderDescending = false,
+            string partitionKeyValue = null)
         {
             // cosmos only supports single orderby https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/16883608-allow-multi-order-by
             // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
             var query =
                 this.client.CreateDocumentQuery<T>(
                     UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
-                    new FeedOptions { MaxItemCount = take, EnableCrossPartitionQuery = this.isPartitioned, PartitionKey = new PartitionKey(partitionKey ?? this.partitionKeyValue) })
+                    new FeedOptions { MaxItemCount = take, EnableCrossPartitionQuery = this.isPartitioned, PartitionKey = new PartitionKey(partitionKeyValue ?? this.partitionKeyValue) })
                     .WhereIf(expression)
                     .WhereIf(e => e.Discriminator == typeof(T).FullName, this.isMasterCollection)
                     .Select(selector)
@@ -436,7 +436,7 @@
         //    }
         //}
 
-        private async Task<DocumentCollection> GetOrCreateCollectionAsync(string partitionKey, int collectionOfferThroughput = 400)
+        private async Task<DocumentCollection> GetOrCreateCollectionAsync(string partitionKeyPath, int collectionOfferThroughput = 400)
         {
             var documentCollection = this.client.CreateDocumentCollectionQuery(
                 UriFactory.CreateDatabaseUri(this.databaseId).ToString())
@@ -445,9 +445,9 @@
             if(documentCollection == null)
             {
                 documentCollection = new DocumentCollection { Id = this.collectionId };
-                if(!string.IsNullOrEmpty(partitionKey))
+                if(!string.IsNullOrEmpty(partitionKeyPath))
                 {
-                    documentCollection.PartitionKey.Paths.Add(string.Format("/{0}", partitionKey.Replace(".", "/").Trim('/')));
+                    documentCollection.PartitionKey.Paths.Add(string.Format("/{0}", partitionKeyPath.Replace(".", "/").Trim('/')));
                 }
 
                 var requestOptions = new RequestOptions

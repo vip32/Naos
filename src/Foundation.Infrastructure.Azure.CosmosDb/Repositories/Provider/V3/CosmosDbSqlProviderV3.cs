@@ -9,38 +9,39 @@
     using Humanizer;
     using Microsoft.Azure.Cosmos;
     using Microsoft.Azure.Cosmos.Linq;
-    using Naos.Foundation.Domain;
 
     public class CosmosDbSqlProviderV3<T> : ICosmosDbSqlProvider<T>, IDisposable
-        where T : IHaveDiscriminator // needed? each type T is persisted in own collection
+    //where T : IHaveDiscriminator // needed? each type T is persisted in own collection
     {
         private readonly CosmosClient client;
         private readonly string partitionKeyPath;
-        private readonly string partitionKeyValue;
         private readonly Database database;
+        private readonly string containerName;
         private readonly Container container;
 
         public CosmosDbSqlProviderV3(CosmosDbSqlProviderV3Options options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Client, nameof(options.Client));
+            EnsureArg.IsNotNullOrEmpty(options.PartitionKeyPath, nameof(options.PartitionKeyPath));
 
-            // https://azure.microsoft.com/en-us/blog/azure-cosmos-dotnet-sdk-version-3-0-now-in-public-preview/
             // https://github.com/Azure/azure-cosmos-dotnet-v3
-            // https://github.com/Azure/azure-cosmos-dotnet-v3/issues/68
+            // https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.cosmos
             this.client = options.Client;
-            this.partitionKeyPath = options.PartitionKeyPath.EmptyToNull() ?? "/Discriminator"; // needed? each type T is persisted in own collection
-            this.partitionKeyValue = typeof(T).FullName; // Partition key for the item. If not specified will be populated by extracting from {T}
+            this.partitionKeyPath = options.PartitionKeyPath;
 
+            // TODO: make below lazy
             this.database = /*await */this.client
                 .CreateDatabaseIfNotExistsAsync(options.Database.EmptyToNull() ?? "master", throughput: options.ThroughPut).Result;
+            this.containerName = options.Container.EmptyToNull() ?? typeof(T).PrettyName().Pluralize().ToLower();
             this.container = /*await*/this.database
                 .CreateContainerIfNotExistsAsync(
                     new ContainerProperties(
-                        options.Container.EmptyToNull() ?? typeof(T).PrettyName().Pluralize().ToLower(),
+                        this.containerName,
                         partitionKeyPath: this.partitionKeyPath)
+                        // TODO: set timetolive (ttl)
                     {
-                        //IndexingPolicy = new IndexingPolicy(new RangeIndex(DataType.String) { Precision = -1 })
+                        //IndexingPolicy = new Microsoft.Azure.Cosmos.IndexingPolicy(new RangeIndex(Microsoft.Azure.Cosmos.DataType.String) { Precision = -1 })
                     },
                     throughput: options.ThroughPut).Result;
         }
@@ -50,45 +51,82 @@
         {
         }
 
-        public async Task<T> GetByIdAsync(string id, string partitionKey = null) // partitionkey
+        public async Task<T> GetByIdAsync(string id, string partitionKeyValue = null)
         {
-            try
+            var sqlQuery = new QueryDefinition($"select * from {this.containerName} c where c.id = @id").WithParameter("@id", id);
+            var options = new QueryRequestOptions();
+            if (!partitionKeyValue.IsNullOrEmpty())
             {
-                var response = await this.container.ReadItemAsync<T>(
-                id,
-                new PartitionKey(partitionKey ?? this.partitionKeyValue)).AnyContext();
-                return response.Resource;
+                options.PartitionKey = new PartitionKey(partitionKeyValue);
             }
-            catch (CosmosException ex)
-            {
-                if(ex.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return default;
-                }
 
-                throw;
+            var iterator = this.container.GetItemQueryIterator<T>(
+                sqlQuery,
+                requestOptions: options);
+
+            while (iterator.HasMoreResults)
+            {
+                foreach (var item in await iterator.ReadNextAsync())
+                {
+                    {
+                        return item;
+                    }
+                }
             }
+
+            //try
+            //{
+            //    var response = await this.container.ReadItemAsync<T>(
+            //    id,
+            //    partitionKeyValue.IsNullOrEmpty() ? default : new PartitionKey(partitionKeyValue)).AnyContext();
+            //    return response.Resource;
+            //}
+            //catch (CosmosException ex)
+            //{
+            //    if (ex.StatusCode == HttpStatusCode.NotFound)
+            //    {
+            //        return default;
+            //    }
+
+            //    throw;
+            //}
+
+            return default;
         }
 
-        public async Task<T> UpsertAsync(T entity, string partitionKey = null)
+        public async Task<T> UpsertAsync(T entity, string partitionKeyValue = null)
         {
-            var response = await this.container.UpsertItemAsync(
-                entity,
-                new PartitionKey(partitionKey ?? this.partitionKeyValue)).AnyContext();
-            return response.Resource;
+            if (partitionKeyValue.IsNullOrEmpty())
+            {
+                // Partition key value will be populated by extracting from {T}
+                var response = await this.container.UpsertItemAsync(entity).AnyContext();
+                return response.Resource;
+            }
+            else
+            {
+                var response = await this.container.UpsertItemAsync(
+                    entity,
+                    new PartitionKey(partitionKeyValue)).AnyContext();
+                return response.Resource;
+            }
         }
 
         public async Task<IEnumerable<T>> WhereAsync(
             Expression<Func<T, bool>> expression,
-            string partitionKey = null,
             int? skip = null,
             int? take = null,
             Expression<Func<T, object>> orderExpression = null,
-            bool orderDescending = false)
+            bool orderDescending = false,
+            string partitionKeyValue = null)
         {
             var result = new List<T>();
-            var iterator = this.container.GetItemLinqQueryable<T>(
-                requestOptions: new QueryRequestOptions { PartitionKey = new PartitionKey(partitionKey ?? this.partitionKeyValue) })
+            var options = new QueryRequestOptions();
+            if (!partitionKeyValue.IsNullOrEmpty())
+            {
+                options.PartitionKey = new PartitionKey(partitionKeyValue);
+            }
+
+            var iterator = this.container.GetItemLinqQueryable<T>(requestOptions: options)
                 .WhereIf(expression)
                 .SkipIf(skip)
                 .TakeIf(take)
@@ -107,15 +145,20 @@
 
         public async Task<IEnumerable<T>> WhereAsync(
             IEnumerable<Expression<Func<T, bool>>> expressions = null,
-            string partitionKey = null,
+            string partitionKeyValue = null,
             int? skip = null,
             int? take = null,
             Expression<Func<T, object>> orderExpression = null,
             bool orderDescending = false)
         {
             var result = new List<T>();
-            var iterator = this.container.GetItemLinqQueryable<T>(
-                requestOptions: new QueryRequestOptions { PartitionKey = new PartitionKey(partitionKey ?? this.partitionKeyValue) })
+            var options = new QueryRequestOptions();
+            if (!partitionKeyValue.IsNullOrEmpty())
+            {
+                options.PartitionKey = new PartitionKey(partitionKeyValue);
+            }
+
+            var iterator = this.container.GetItemLinqQueryable<T>(requestOptions: options)
                 .WhereIf(expressions)
                 .SkipIf(skip)
                 .TakeIf(take)
@@ -135,20 +178,27 @@
         public Task<IEnumerable<T>> WhereAsync( // OBSOLETE
             Expression<Func<T, bool>> expression,
             Expression<Func<T, T>> selector,
-            string partitionKey = null,
             int? skip = null,
             int? take = null,
             Expression<Func<T, object>> orderExpression = null,
-            bool orderDescending = false)
+            bool orderDescending = false,
+            string partitionKeyValue = null)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<bool> DeleteByIdAsync(string id, string partitionKey = null)
+        public async Task<bool> DeleteByIdAsync(string id, string partitionKeyValue = null)
         {
             try
             {
-                var response = await this.container.DeleteItemAsync<T>(id, new PartitionKey(partitionKey ?? this.partitionKeyValue)).AnyContext();
+                // partitionKeyValue workaround (if not provided):
+                // var item = GetByIdAsync(id)
+                // get partition value from item by using this.partitionKeyPath (json selector?)
+                // use this partition value below (DeleteItemAsync)
+
+                var response = await this.container.DeleteItemAsync<T>(
+                    id,
+                    partitionKeyValue.IsNullOrEmpty() ? PartitionKey.Null : new PartitionKey(partitionKeyValue)).AnyContext();
                 return true;
                 // TODO: evaulate response.StatusCode == HttpStatusCode.OK
             }

@@ -12,19 +12,19 @@
     {
         Task<T> GetByIdAsync(string id, string partitionKey = null);
 
-        Task<T> UpsertAsync(T entity, string partitionKey = null);
+        Task<T> UpsertAsync(T entity, string partitionKeyValue = null);
 
         Task<IEnumerable<T>> WhereAsync(
             Expression<Func<T, bool>> expression,
-            string partitionKey = null,
             int? skip = null,
             int? take = null,
             Expression<Func<T, object>> orderExpression = null,
-            bool orderDescending = false);
+            bool orderDescending = false,
+            string partitionKeyValue = null);
 
         Task<IEnumerable<T>> WhereAsync(
             IEnumerable<Expression<Func<T, bool>>> expressions = null,
-            string partitionKey = null,
+            string partitionKeyValue = null,
             int? skip = null,
             int? take = null,
             Expression<Func<T, object>> orderExpression = null,
@@ -33,13 +33,13 @@
         Task<IEnumerable<T>> WhereAsync( // OBSOLETE
             Expression<Func<T, bool>> expression,
             Expression<Func<T, T>> selector,
-            string partitionKey = null,
             int? skip = null,
             int? take = null,
             Expression<Func<T, object>> orderExpression = null,
-            bool orderDescending = false);
+            bool orderDescending = false,
+            string partitionKeyValue = null);
 
-        Task<bool> DeleteByIdAsync(string id, string partitionKey = null);
+        Task<bool> DeleteByIdAsync(string id, string partitionKeyValue = null);
 
         //Task<T> UpsertAttachmentAsync(T entity, string attachmentId, string contentType, Stream stream);
 

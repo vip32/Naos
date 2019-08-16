@@ -1,6 +1,6 @@
 ﻿namespace Naos.Foundation.Domain
 {
-    public interface IHaveDiscriminator // TODO: obsolete when seperate cosmos collections are used (cosmosrepo V3)
+    public interface IHaveDiscriminator // TODO: obsolete because of cosmos client v3
     {
         /// <summary>
         /// Gets the type of the entity (discriminator).

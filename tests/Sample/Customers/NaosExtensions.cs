@@ -55,7 +55,8 @@
                 return new CosmosDbSqlProviderV3<Customer>(o => o
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                     .Account(cosmosDbConfiguration.ServiceEndpointUri, cosmosDbConfiguration.AuthKeyOrResourceToken)
-                    .Database(cosmosDbConfiguration.DatabaseId));
+                    .Database(cosmosDbConfiguration.DatabaseId)
+                    .PartitionKey("/Region"));
             });
 
             var queueStorageConfiguration = options.Context.Configuration?.GetSection($"{section}:queueStorage").Get<QueueStorageConfiguration>();
