@@ -67,11 +67,19 @@
 
         public async Task<IEnumerable<T>> WhereAsync(
             Expression<Func<T, bool>> expression,
-            string partitionKey = null)
+            string partitionKey = null,
+            int? skip = null,
+            int? take = null,
+            Expression<Func<T, object>> orderExpression = null,
+            bool orderDescending = false)
         {
             var result = new List<T>();
-            var iterator = this.container.GetItemLinqQueryable<T>()
-                .WhereIf(expression).ToFeedIterator(); // https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.cosmos.container.getitemlinqqueryable?view=azure-dotnet
+            var iterator = this.container.GetItemLinqQueryable<T>(
+                requestOptions: new QueryRequestOptions { PartitionKey = new PartitionKey(partitionKey ?? this.partitionKeyValue) })
+                .WhereIf(expression)
+                .SkipIf(skip)
+                .TakeIf(take)
+                .OrderByIf(orderExpression, orderDescending).ToFeedIterator(); // https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.cosmos.container.getitemlinqqueryable?view=azure-dotnet
 
             while (iterator.HasMoreResults)
             {
@@ -85,7 +93,6 @@
         }
 
         public async Task<IEnumerable<T>> WhereAsync(
-            Expression<Func<T, bool>> expression = null,
             IEnumerable<Expression<Func<T, bool>>> expressions = null,
             string partitionKey = null,
             int? skip = null,
@@ -94,8 +101,8 @@
             bool orderDescending = false)
         {
             var result = new List<T>();
-            var iterator = this.container.GetItemLinqQueryable<T>()
-                .WhereIf(expression)
+            var iterator = this.container.GetItemLinqQueryable<T>(
+                requestOptions: new QueryRequestOptions { PartitionKey = new PartitionKey(partitionKey ?? this.partitionKeyValue) })
                 .WhereIf(expressions)
                 .SkipIf(skip)
                 .TakeIf(take)

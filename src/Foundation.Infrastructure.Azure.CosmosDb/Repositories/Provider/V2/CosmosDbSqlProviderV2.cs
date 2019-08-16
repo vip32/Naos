@@ -167,20 +167,25 @@
 
         public async Task<IEnumerable<T>> WhereAsync(
             Expression<Func<T, bool>> expression,
-            string partitionKey = null) // TODO: shouldn't this return IEnumerable<T>?
+            string partitionKey = null,
+            int? skip = null,
+            int? take = null,
+            Expression<Func<T, object>> orderExpression = null,
+            bool orderDescending = false) // TODO: shouldn't this return IEnumerable<T>?
         {
             var query = this.client.CreateDocumentQuery<T>(
                     UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
                     new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned, PartitionKey = new PartitionKey(partitionKey ?? this.partitionKeyValue) })
                     .WhereIf(expression)
                     .WhereIf(e => e.Discriminator == typeof(T).FullName, this.isMasterCollection)
+                    .TakeIf(take)
+                    .OrderByIf(orderExpression, orderDescending)
                     .AsEnumerable();
             this.logger.LogInformation($"{{LogKey:l}} sql={query.ToString().Replace("{", string.Empty).Replace("}", string.Empty)}", LogKeys.DomainRepository);
             return await Task.FromResult(query);
         }
 
         public async Task<IEnumerable<T>> WhereAsync(
-            Expression<Func<T, bool>> expression = null,
             IEnumerable<Expression<Func<T, bool>>> expressions = null,
             string partitionKey = null,
             int? skip = null,
@@ -193,7 +198,6 @@
             var query = this.client.CreateDocumentQuery<T>(
                     UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
                     new FeedOptions { MaxItemCount = take, EnableCrossPartitionQuery = this.isPartitioned, PartitionKey = new PartitionKey(partitionKey ?? this.partitionKeyValue) })
-                    .WhereIf(expression)
                     .WhereIf(expressions)
                     .WhereIf(e => e.Discriminator == typeof(T).FullName, this.isMasterCollection)
                     .TakeIf(take)

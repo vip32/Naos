@@ -14,10 +14,15 @@
 
         Task<T> UpsertAsync(T entity, string partitionKey = null);
 
-        Task<IEnumerable<T>> WhereAsync(Expression<Func<T, bool>> expression, string partitionKey = null);
+        Task<IEnumerable<T>> WhereAsync(
+            Expression<Func<T, bool>> expression,
+            string partitionKey = null,
+            int? skip = null,
+            int? take = null,
+            Expression<Func<T, object>> orderExpression = null,
+            bool orderDescending = false);
 
         Task<IEnumerable<T>> WhereAsync(
-            Expression<Func<T, bool>> expression = null,
             IEnumerable<Expression<Func<T, bool>>> expressions = null,
             string partitionKey = null,
             int? skip = null,
