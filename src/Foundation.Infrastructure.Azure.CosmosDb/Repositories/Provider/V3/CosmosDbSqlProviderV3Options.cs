@@ -16,7 +16,7 @@
 
         public string Container { get; set; }
 
-        public string PartitionKeyPath { get; set; }
+        public string PartitionKey { get; set; }
 
         public int? ThroughPut { get; set; } = 400;
     }

@@ -14,21 +14,23 @@
     //where T : IHaveDiscriminator // needed? each type T is persisted in own collection
     {
         private readonly CosmosClient client;
-        private readonly string partitionKeyPath;
+        private readonly Expression<Func<T, object>> partitionKeyExpression;
+        private readonly string partitionKey;
         private readonly Database database;
         private readonly string containerName;
         private readonly Container container;
 
-        public CosmosDbSqlProviderV3(CosmosDbSqlProviderV3Options options)
+        public CosmosDbSqlProviderV3(CosmosDbSqlProviderV3Options options, Expression<Func<T, object>> partitionKeyExpression)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Client, nameof(options.Client));
-            EnsureArg.IsNotNullOrEmpty(options.PartitionKeyPath, nameof(options.PartitionKeyPath));
+            //EnsureArg.IsNotNullOrEmpty(options.PartitionKey, nameof(options.PartitionKey));
 
             // https://github.com/Azure/azure-cosmos-dotnet-v3
             // https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.cosmos
             this.client = options.Client;
-            this.partitionKeyPath = options.PartitionKeyPath;
+            this.partitionKeyExpression = partitionKeyExpression;
+            this.partitionKey = options.PartitionKey ?? $"/{partitionKeyExpression.ToExpressionString()}";
 
             // TODO: make below lazy
             this.database = /*await */this.client
@@ -38,7 +40,7 @@
                 .CreateContainerIfNotExistsAsync(
                     new ContainerProperties(
                         this.containerName,
-                        partitionKeyPath: this.partitionKeyPath)
+                        partitionKeyPath: this.partitionKey)
                         // TODO: set timetolive (ttl)
                     {
                         //IndexingPolicy = new Microsoft.Azure.Cosmos.IndexingPolicy(new RangeIndex(Microsoft.Azure.Cosmos.DataType.String) { Precision = -1 })
@@ -46,8 +48,8 @@
                     throughput: options.ThroughPut).Result;
         }
 
-        public CosmosDbSqlProviderV3(Builder<CosmosDbSqlProviderV3OptionsBuilder, CosmosDbSqlProviderV3Options> optionsBuilder)
-            : this(optionsBuilder(new CosmosDbSqlProviderV3OptionsBuilder()).Build())
+        public CosmosDbSqlProviderV3(Builder<CosmosDbSqlProviderV3OptionsBuilder, CosmosDbSqlProviderV3Options> optionsBuilder, Expression<Func<T, object>> partitionKeyExpression)
+            : this(optionsBuilder(new CosmosDbSqlProviderV3OptionsBuilder()).Build(), partitionKeyExpression)
         {
         }
 
@@ -193,7 +195,7 @@
             {
                 // partitionKeyValue workaround (if not provided): otherwhise document is not found
                 // var item = GetByIdAsync(id)
-                // get partition value from item by using this.partitionKeyPath (json selector?)
+                // get partition value from item by using this.partitionKeyPath (json selector?) partition value = this.partitionKeyExpression?.Compile()?(item)
                 // use this partition value below (DeleteItemAsync)
 
                 var response = await this.container.DeleteItemAsync<T>(

@@ -38,9 +38,9 @@
             return this;
         }
 
-        public CosmosDbSqlProviderV3OptionsBuilder PartitionKey(string partitionKeyPath)
+        public CosmosDbSqlProviderV3OptionsBuilder PartitionKey(string partitionKey)
         {
-            this.Target.PartitionKeyPath = partitionKeyPath;
+            this.Target.PartitionKey = partitionKey;
             return this;
         }
 
