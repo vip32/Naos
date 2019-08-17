@@ -22,6 +22,7 @@
 
         public CosmosDbSqlProviderV3(CosmosDbSqlProviderV3Options options, Expression<Func<T, object>> partitionKeyExpression)
         {
+                                                                                                 // TODO: ^^ move to options? is mandatory however
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Client, nameof(options.Client));
             //EnsureArg.IsNotNullOrEmpty(options.PartitionKey, nameof(options.PartitionKey));
