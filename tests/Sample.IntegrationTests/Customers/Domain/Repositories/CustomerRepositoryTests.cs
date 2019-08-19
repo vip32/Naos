@@ -248,5 +248,15 @@
             result.ShouldBe(ActionResult.Deleted);
             (await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).AnyContext()).ShouldBeNull();
         }
+
+        [Fact]
+        public async Task DeleteUnknownAsync_Test()
+        {
+            // arrange/act
+            var result = await this.sut.DeleteAsync(Guid.NewGuid().ToString()).AnyContext();
+
+            // assert
+            result.ShouldBe(ActionResult.None);
+        }
     }
 }
