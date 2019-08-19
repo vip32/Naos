@@ -12,5 +12,7 @@
         public IEntityMapper Mapper { get; set; }
 
         public bool PublishEvents { get; set; } = true;
+
+        public IEntityIdGenerator<TEntity> IdGenerator { get; set; }
     }
 }

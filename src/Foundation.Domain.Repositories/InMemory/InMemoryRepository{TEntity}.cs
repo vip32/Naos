@@ -26,7 +26,8 @@
 
             this.options = options;
             this.logger = options.CreateLogger<IGenericRepository<TEntity>>();
-            this.options.Context = options.Context ?? new InMemoryContext<TEntity>();
+            this.options.Context ??= new InMemoryContext<TEntity>();
+            this.options.IdGenerator ??= new InMemoryEntityIdGenerator<TEntity>(this.options.Context);
         }
 
         public InMemoryRepository(Builder<InMemoryRepositoryOptionsBuilder<TEntity>, InMemoryRepositoryOptions<TEntity>> optionsBuilder)
@@ -163,7 +164,7 @@
 
             if(isTransient)
             {
-                this.EnsureId(entity);
+                this.options.IdGenerator.SetNew(entity);
             }
 
             if(this.options.PublishEvents)
@@ -333,24 +334,6 @@
             finally
             {
                 this.@lock.ExitReadLock();
-            }
-        }
-
-        private void EnsureId(TEntity entity) // TODO: move this to seperate class (IEntityIdGenerator)
-        {
-            switch (entity)
-            {
-                case IEntity<int> i:
-                    i.Id = this.options.Context.Entities.Count + 1;
-                    break;
-                case IEntity<string> s:
-                    s.Id = Guid.NewGuid().ToString();
-                    break;
-                case IEntity<Guid> g:
-                    g.Id = Guid.NewGuid();
-                    break;
-                default:
-                    throw new NotSupportedException($"entity id type {entity.Id.GetType().Name} not supported");
             }
         }
     }

@@ -29,5 +29,11 @@
             this.Target.PublishEvents = publishEvents;
             return this;
         }
+
+        public InMemoryRepositoryOptionsBuilder<TEntity> IdGenerator(IEntityIdGenerator<TEntity> idGenerator)
+        {
+            this.Target.IdGenerator = idGenerator;
+            return this;
+        }
     }
 }
