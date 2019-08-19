@@ -56,7 +56,6 @@
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                     .Account(cosmosDbConfiguration.ServiceEndpointUri, cosmosDbConfiguration.AuthKeyOrResourceToken)
                     .Database(cosmosDbConfiguration.DatabaseId),
-                    /*.PartitionKey("/Region")*/
                     e => e.Region);
             });
 

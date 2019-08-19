@@ -185,20 +185,7 @@
             var entity = await this.FindOneAsync(id).AnyContext();
             if(entity != null)
             {
-                if(this.options.PublishEvents && this.options.Mediator != null)
-                {
-                    await this.options.Mediator.Publish(new EntityDeleteDomainEvent(entity)).AnyContext();
-                }
-
-                this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogKeys.DomainRepository);
-                await this.options.Provider.DeleteByIdAsync(id as string).AnyContext();
-
-                if(this.options.PublishEvents && this.options.Mediator != null)
-                {
-                    await this.options.Mediator.Publish(new EntityDeletedDomainEvent(entity)).AnyContext();
-                }
-
-                return ActionResult.Deleted;
+                return await this.DeleteAsync(entity).AnyContext();
             }
 
             return ActionResult.None;
@@ -211,7 +198,25 @@
                 return ActionResult.None;
             }
 
-            return await this.DeleteAsync(entity.Id).AnyContext();
+            if (this.options.PublishEvents && this.options.Mediator != null)
+            {
+                await this.options.Mediator.Publish(new EntityDeleteDomainEvent(entity)).AnyContext();
+            }
+
+            this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogKeys.DomainRepository);
+            var response = await this.options.Provider.DeleteByIdAsync(entity.Id as string).AnyContext();
+
+            if (response)
+            {
+                if (this.options.PublishEvents && this.options.Mediator != null)
+                {
+                    await this.options.Mediator.Publish(new EntityDeletedDomainEvent(entity)).AnyContext();
+                }
+
+                return ActionResult.Deleted;
+            }
+
+            return ActionResult.None;
         }
     }
 }

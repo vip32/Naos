@@ -235,7 +235,7 @@
         }
 
         [Fact]
-        public async Task DeleteAsync_Test()
+        public async Task DeleteAsync_ByEntity_Test()
         {
             // arrange
             var entities = await this.sut.FindAllAsync(
@@ -247,6 +247,22 @@
             // assert
             result.ShouldBe(ActionResult.Deleted);
             (await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).AnyContext()).ShouldBeNull();
+        }
+
+        [Fact]
+        public async Task DeleteAsync_ById_Test()
+        {
+            // arrange
+            var entities = await this.sut.FindAllAsync(
+                new FindOptions<Customer>(take: 1)).AnyContext();
+            var id = entities.FirstOrDefault()?.Id;
+
+            // act
+            var result = await this.sut.DeleteAsync(id).AnyContext();
+
+            // assert
+            result.ShouldBe(ActionResult.Deleted);
+            (await this.sut.FindOneAsync(id).AnyContext()).ShouldBeNull();
         }
 
         [Fact]

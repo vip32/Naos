@@ -20,13 +20,22 @@
         private readonly Func<T, bool> partitionKeyBoolExpression;
         private readonly Func<T, double> partitionKeyDoubleExpression;
         private readonly string partitionKey;
-        private readonly string partitionKeyValue;
         private CosmosClient client;
         private Database database;
         private Container container;
         private string containerName;
 
         public CosmosDbSqlProviderV3(Builder<CosmosDbSqlProviderV3OptionsBuilder, CosmosDbSqlProviderV3Options> optionsBuilder, Expression<Func<T, string>> partitionKeyExpression)
+            : this(optionsBuilder(new CosmosDbSqlProviderV3OptionsBuilder()).Build(), partitionKeyExpression)
+        {
+        }
+
+        public CosmosDbSqlProviderV3(Builder<CosmosDbSqlProviderV3OptionsBuilder, CosmosDbSqlProviderV3Options> optionsBuilder, Expression<Func<T, bool>> partitionKeyExpression)
+            : this(optionsBuilder(new CosmosDbSqlProviderV3OptionsBuilder()).Build(), partitionKeyExpression)
+        {
+        }
+
+        public CosmosDbSqlProviderV3(Builder<CosmosDbSqlProviderV3OptionsBuilder, CosmosDbSqlProviderV3Options> optionsBuilder, Expression<Func<T, double>> partitionKeyExpression)
             : this(optionsBuilder(new CosmosDbSqlProviderV3OptionsBuilder()).Build(), partitionKeyExpression)
         {
         }
@@ -88,12 +97,6 @@
                     this.partitionKeyDoubleExpression = partitionKeyDoubleExpression.Compile();
                     this.partitionKey = $"/{partitionKeyDoubleExpression.ToExpressionString().Replace(".", "/")}";
                 }
-                else
-                {
-                    // implicit mode /_partitionKey, based on documenttype
-                    this.partitionKey = "/_partitionKey";
-                    this.partitionKeyValue = typeof(T).Name;
-                }
             }
             else
             {
@@ -147,7 +150,7 @@
             this.Initialize(this.options);
             var options = this.EnsureOptions(partitionKeyValue);
 
-            if (partitionKeyValue == null)
+            if (!options.PartitionKey.HasValue)
             {
                 // Partition key value will be populated by extracting from {T}
                 var response = await this.container.UpsertItemAsync(entity).AnyContext();
@@ -157,7 +160,7 @@
             {
                 var response = await this.container.UpsertItemAsync(
                     entity,
-                    this.EnsureOptions(partitionKeyValue).PartitionKey.Value).AnyContext();
+                    options.PartitionKey.Value).AnyContext();
                 return response.Resource;
             }
         }
@@ -302,11 +305,6 @@
                             message: "unsupported partition key value type (string, bool, double)",
                             paramName: nameof(partitionKeyValue)),
                 };
-            }
-            else if(!this.partitionKeyValue.IsNullOrEmpty())
-            {
-                // implicit mode
-                options.PartitionKey = new PartitionKey(this.partitionKeyValue);
             }
 
             return options;
