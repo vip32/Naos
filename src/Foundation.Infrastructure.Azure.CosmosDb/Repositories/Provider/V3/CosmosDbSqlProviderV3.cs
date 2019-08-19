@@ -39,7 +39,7 @@
         public async Task<T> GetByIdAsync(string id, object partitionKeyValue = null)
         {
             this.Initialize(this.options);
-            var options = this.EnsureOptions(partitionKeyValue);
+            var options = this.EnsureRequestOptions(partitionKeyValue);
 
             var sqlQuery = new QueryDefinition($"select * from {this.containerName} c where c.id = @id").WithParameter("@id", id);
             var iterator = this.container.GetItemQueryIterator<T>(
@@ -79,7 +79,7 @@
         public async Task<T> UpsertAsync(T entity, object partitionKeyValue = null)
         {
             this.Initialize(this.options);
-            var options = this.EnsureOptions(partitionKeyValue);
+            var options = this.EnsureRequestOptions(partitionKeyValue);
 
             if (!options.PartitionKey.HasValue)
             {
@@ -105,7 +105,7 @@
             object partitionKeyValue = null)
         {
             this.Initialize(this.options);
-            var options = this.EnsureOptions(partitionKeyValue);
+            var options = this.EnsureRequestOptions(partitionKeyValue);
 
             var result = new List<T>();
             var iterator = this.container.GetItemLinqQueryable<T>(requestOptions: options)
@@ -134,7 +134,7 @@
             object partitionKeyValue = null)
         {
             this.Initialize(this.options);
-            var options = this.EnsureOptions(partitionKeyValue);
+            var options = this.EnsureRequestOptions(partitionKeyValue);
 
             var result = new List<T>();
             var iterator = this.container.GetItemLinqQueryable<T>(requestOptions: options)
@@ -169,7 +169,7 @@
         public async Task<bool> DeleteByIdAsync(string id, object partitionKeyValue = null)
         {
             this.Initialize(this.options);
-            var options = this.EnsureOptions(partitionKeyValue);
+            var options = this.EnsureRequestOptions(partitionKeyValue);
 
             var entity = await this.GetByIdAsync(id, partitionKeyValue).AnyContext();
             if(entity == null)
@@ -197,7 +197,7 @@
                 }
                 else
                 {
-                    partitionKey = this.EnsureOptions(partitionKeyValue).PartitionKey.Value;
+                    partitionKey = this.EnsureRequestOptions(partitionKeyValue).PartitionKey.Value;
                 }
 
                 var response = await this.container.DeleteItemAsync<T>(
@@ -222,7 +222,7 @@
             this.client?.Dispose();
         }
 
-        private QueryRequestOptions EnsureOptions(object partitionKeyValue)
+        private QueryRequestOptions EnsureRequestOptions(object partitionKeyValue)
         {
             var options = new QueryRequestOptions();
             if (partitionKeyValue != null)
