@@ -11,5 +11,7 @@
         public ICosmosDbSqlProvider<TEntity> Provider { get; set; }
 
         public bool PublishEvents { get; set; } = true;
+
+        public IEntityIdGenerator<TEntity> IdGenerator { get; set; } = new EntityGuidIdGenerator<TEntity>();
     }
 }

@@ -19,6 +19,7 @@
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Provider, nameof(options.Provider));
+            EnsureArg.IsNotNull(options.IdGenerator, nameof(options.IdGenerator));
 
             this.options = options;
             this.logger = options.CreateLogger<IGenericRepository<TEntity>>();
@@ -124,7 +125,7 @@
 
             if (entity.Id.IsDefault())
             {
-                entity.Id = Guid.NewGuid().ToString(); // entity id is mandatory for the new v3 cosmos client https://github.com/Azure/azure-cosmos-dotnet-v3/issues/68
+                entity.Id = this.options.IdGenerator.CreateNew(entity); // cosmos v3 needs an id, also for new documents
             }
 
             if(this.options.PublishEvents && this.options.Mediator != null)
