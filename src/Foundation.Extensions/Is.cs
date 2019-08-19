@@ -6,7 +6,7 @@
     {
         [DebuggerStepThrough]
         public static bool Is<T>(this object source)
-            where T : class
+            //where T : class
         {
             if(source == null)
             {

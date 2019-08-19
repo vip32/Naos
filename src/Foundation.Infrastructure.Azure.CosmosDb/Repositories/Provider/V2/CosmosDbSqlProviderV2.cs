@@ -106,7 +106,7 @@
             // https://github.com/Azure/azure-cosmosdb-dotnet/blob/f374cc601f4cf08d11c88f0c3fa7dcefaf7ecfe8/samples/code-samples/DocumentManagement/Program.cs#L211
         }
 
-        public async Task<T> GetByIdAsync(string id, string partitionKeyValue = null) // partitionkey
+        public async Task<T> GetByIdAsync(string id, object partitionKeyValue = null) // partitionkey
         {
             if(string.IsNullOrEmpty(id))
             {
@@ -130,7 +130,7 @@
             }
         }
 
-        public async Task<T> UpsertAsync(T entity, string partitionKeyValue = null)
+        public async Task<T> UpsertAsync(T entity, object partitionKeyValue = null)
         {
             var doc = await this.client.UpsertDocumentAsync(
                 UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId),
@@ -139,7 +139,7 @@
             return JsonConvert.DeserializeObject<T>(doc.Resource.ToString(), this.jsonSerializerSettings);
         }
 
-        public async Task<bool> DeleteByIdAsync(string id, string partitionKeyValue = null)
+        public async Task<bool> DeleteByIdAsync(string id, object partitionKeyValue = null)
         {
             if(string.IsNullOrEmpty(id))
             {
@@ -171,7 +171,7 @@
             int? take = null,
             Expression<Func<T, object>> orderExpression = null,
             bool orderDescending = false,
-            string partitionKeyValue = null) // TODO: shouldn't this return IEnumerable<T>?
+            object partitionKeyValue = null) // TODO: shouldn't this return IEnumerable<T>?
         {
             var query = this.client.CreateDocumentQuery<T>(
                     UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
@@ -191,7 +191,7 @@
             int? take = null,
             Expression<Func<T, object>> orderExpression = null,
             bool orderDescending = false,
-            string partitionKeyValue = null)
+            object partitionKeyValue = null)
         {
             // cosmos only supports single orderby https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/16883608-allow-multi-order-by
             // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take
@@ -214,7 +214,7 @@
             int? take = null,
             Expression<Func<T, object>> orderExpression = null,
             bool orderDescending = false,
-            string partitionKeyValue = null)
+            object partitionKeyValue = null)
         {
             // cosmos only supports single orderby https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/16883608-allow-multi-order-by
             // TODO: implement cosmosdb skip/take once available https://feedback.azure.com/forums/263030-azure-cosmos-db/suggestions/6350987--documentdb-allow-paging-skip-take

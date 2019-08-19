@@ -10,9 +10,9 @@
 
     public interface ICosmosDbSqlProvider<T>
     {
-        Task<T> GetByIdAsync(string id, string partitionKey = null);
+        Task<T> GetByIdAsync(string id, object partitionKey = null);
 
-        Task<T> UpsertAsync(T entity, string partitionKeyValue = null);
+        Task<T> UpsertAsync(T entity, object partitionKeyValue = null);
 
         Task<IEnumerable<T>> WhereAsync(
             Expression<Func<T, bool>> expression,
@@ -20,7 +20,7 @@
             int? take = null,
             Expression<Func<T, object>> orderExpression = null,
             bool orderDescending = false,
-            string partitionKeyValue = null);
+            object partitionKeyValue = null);
 
         Task<IEnumerable<T>> WhereAsync(
             IEnumerable<Expression<Func<T, bool>>> expressions = null,
@@ -28,7 +28,7 @@
             int? take = null,
             Expression<Func<T, object>> orderExpression = null,
             bool orderDescending = false,
-            string partitionKeyValue = null);
+            object partitionKeyValue = null);
 
         Task<IEnumerable<T>> WhereAsync( // OBSOLETE
             Expression<Func<T, bool>> expression,
@@ -37,9 +37,9 @@
             int? take = null,
             Expression<Func<T, object>> orderExpression = null,
             bool orderDescending = false,
-            string partitionKeyValue = null);
+            object partitionKeyValue = null);
 
-        Task<bool> DeleteByIdAsync(string id, string partitionKeyValue = null);
+        Task<bool> DeleteByIdAsync(string id, object partitionKeyValue = null);
 
         //Task<T> UpsertAttachmentAsync(T entity, string attachmentId, string contentType, Stream stream);
 
