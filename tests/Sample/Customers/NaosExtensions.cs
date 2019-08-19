@@ -52,11 +52,12 @@
 
             options.Context.Services.AddScoped<ICosmosDbSqlProvider<Customer>>(sp =>
             {
-                return new CosmosDbSqlProviderV3<Customer>(o => o
+                return new CosmosDbSqlProviderV3<Customer>(
+                    e => e.Region,
+                    o => o
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                     .Account(cosmosDbConfiguration.ServiceEndpointUri, cosmosDbConfiguration.AuthKeyOrResourceToken)
-                    .Database(cosmosDbConfiguration.DatabaseId),
-                    e => e.Region);
+                    .Database(cosmosDbConfiguration.DatabaseId));
             });
 
             var queueStorageConfiguration = options.Context.Configuration?.GetSection($"{section}:queueStorage").Get<QueueStorageConfiguration>();

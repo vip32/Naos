@@ -26,44 +26,44 @@
         private string containerName;
 
         public CosmosDbSqlProviderV3(
-            CosmosDbSqlProviderV3Options options,
-            Expression<Func<T, string>> partitionKeyExpression = null) // TODO: ^^ move to options? is mandatory however
+            Expression<Func<T, string>> partitionKeyExpression,
+            CosmosDbSqlProviderV3Options options) // TODO: ^^ move to options? is mandatory however
             : this(options, partitionKeyExpression, null, null)
         {
         }
 
         public CosmosDbSqlProviderV3(
-            CosmosDbSqlProviderV3Options options,
-            Expression<Func<T, bool>> partitionKeyExpression = null) // TODO: ^^ move to options? is mandatory however
+            Expression<Func<T, bool>> partitionKeyExpression,
+            CosmosDbSqlProviderV3Options options) // TODO: ^^ move to options? is mandatory however
             : this(options, null, partitionKeyExpression, null)
         {
         }
 
         public CosmosDbSqlProviderV3(
-            CosmosDbSqlProviderV3Options options,
-            Expression<Func<T, double>> partitionKeyExpression = null) // TODO: ^^ move to options? is mandatory however
+            Expression<Func<T, double>> partitionKeyExpression,
+            CosmosDbSqlProviderV3Options options) // TODO: ^^ move to options? is mandatory however
             : this(options, null, null, partitionKeyExpression)
         {
         }
 
         public CosmosDbSqlProviderV3(
-            Builder<CosmosDbSqlProviderV3OptionsBuilder, CosmosDbSqlProviderV3Options> optionsBuilder,
-            Expression<Func<T, string>> partitionKeyExpression)
-            : this(optionsBuilder(new CosmosDbSqlProviderV3OptionsBuilder()).Build(), partitionKeyExpression)
+            Expression<Func<T, string>> partitionKeyExpression,
+            Builder<CosmosDbSqlProviderV3OptionsBuilder, CosmosDbSqlProviderV3Options> optionsBuilder)
+            : this(partitionKeyExpression, optionsBuilder(new CosmosDbSqlProviderV3OptionsBuilder()).Build())
         {
         }
 
         public CosmosDbSqlProviderV3(
-            Builder<CosmosDbSqlProviderV3OptionsBuilder, CosmosDbSqlProviderV3Options> optionsBuilder,
-            Expression<Func<T, bool>> partitionKeyExpression)
-            : this(optionsBuilder(new CosmosDbSqlProviderV3OptionsBuilder()).Build(), partitionKeyExpression)
+            Expression<Func<T, bool>> partitionKeyExpression,
+            Builder<CosmosDbSqlProviderV3OptionsBuilder, CosmosDbSqlProviderV3Options> optionsBuilder)
+            : this(partitionKeyExpression, optionsBuilder(new CosmosDbSqlProviderV3OptionsBuilder()).Build())
         {
         }
 
         public CosmosDbSqlProviderV3(
-            Builder<CosmosDbSqlProviderV3OptionsBuilder, CosmosDbSqlProviderV3Options> optionsBuilder,
-            Expression<Func<T, double>> partitionKeyExpression)
-            : this(optionsBuilder(new CosmosDbSqlProviderV3OptionsBuilder()).Build(), partitionKeyExpression)
+            Expression<Func<T, double>> partitionKeyExpression,
+            Builder<CosmosDbSqlProviderV3OptionsBuilder, CosmosDbSqlProviderV3Options> optionsBuilder)
+            : this(partitionKeyExpression, optionsBuilder(new CosmosDbSqlProviderV3OptionsBuilder()).Build())
         {
         }
 
