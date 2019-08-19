@@ -15,94 +15,25 @@
     public class CosmosDbSqlProviderV3<T> : ICosmosDbSqlProvider<T>, IDisposable
     //where T : IHaveDiscriminator // needed? each type T is persisted in own collection
     {
-        private readonly CosmosDbSqlProviderV3Options options;
-        private readonly Func<T, string> partitionKeyStringExpression;
-        private readonly Func<T, bool> partitionKeyBoolExpression;
-        private readonly Func<T, double> partitionKeyDoubleExpression;
-        private readonly string partitionKey;
+        private readonly CosmosDbSqlProviderV3Options<T> options;
         private CosmosClient client;
         private Database database;
         private Container container;
         private string containerName;
 
         public CosmosDbSqlProviderV3(
-            Expression<Func<T, string>> partitionKeyExpression, // TODO: ^^ move to options? is mandatory however
-            CosmosDbSqlProviderV3Options options)
-            : this(options, partitionKeyExpression, null, null)
-        {
-        }
-
-        public CosmosDbSqlProviderV3(
-            Expression<Func<T, bool>> partitionKeyExpression, // TODO: ^^ move to options? is mandatory however
-            CosmosDbSqlProviderV3Options options)
-            : this(options, null, partitionKeyExpression, null)
-        {
-        }
-
-        public CosmosDbSqlProviderV3(
-            Expression<Func<T, double>> partitionKeyExpression, // TODO: ^^ move to options? is mandatory however
-            CosmosDbSqlProviderV3Options options)
-            : this(options, null, null, partitionKeyExpression)
-        {
-        }
-
-        public CosmosDbSqlProviderV3(
-            Expression<Func<T, string>> partitionKeyExpression,
-            Builder<CosmosDbSqlProviderV3OptionsBuilder, CosmosDbSqlProviderV3Options> optionsBuilder)
-            : this(partitionKeyExpression, optionsBuilder(new CosmosDbSqlProviderV3OptionsBuilder()).Build())
-        {
-        }
-
-        public CosmosDbSqlProviderV3(
-            Expression<Func<T, bool>> partitionKeyExpression,
-            Builder<CosmosDbSqlProviderV3OptionsBuilder, CosmosDbSqlProviderV3Options> optionsBuilder)
-            : this(partitionKeyExpression, optionsBuilder(new CosmosDbSqlProviderV3OptionsBuilder()).Build())
-        {
-        }
-
-        public CosmosDbSqlProviderV3(
-            Expression<Func<T, double>> partitionKeyExpression,
-            Builder<CosmosDbSqlProviderV3OptionsBuilder, CosmosDbSqlProviderV3Options> optionsBuilder)
-            : this(partitionKeyExpression, optionsBuilder(new CosmosDbSqlProviderV3OptionsBuilder()).Build())
-        {
-        }
-
-        internal CosmosDbSqlProviderV3(
-            CosmosDbSqlProviderV3Options options,
-            Expression<Func<T, string>> partitionKeyStringExpression = null,
-            Expression<Func<T, bool>> partitionKeyBoolExpression = null,
-            Expression<Func<T, double>> partitionKeyDoubleExpression = null) // TODO: ^^ move to options? is mandatory however
+            CosmosDbSqlProviderV3Options<T> options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Client, nameof(options.Client));
-            //EnsureArg.IsNotNullOrEmpty(options.PartitionKey, nameof(options.PartitionKey));
+            EnsureArg.IsNotNullOrEmpty(options.PartitionKey, nameof(options.PartitionKey));
 
             this.options = options;
+        }
 
-            if (options.PartitionKey.IsNullOrEmpty())
-            {
-                // partitionkey name based on provided expression
-                if (partitionKeyStringExpression != null)
-                {
-                    this.partitionKeyStringExpression = partitionKeyStringExpression.Compile();
-                    this.partitionKey = $"/{partitionKeyStringExpression.ToExpressionString().Replace(".", "/")}";
-                }
-                else if (partitionKeyBoolExpression != null)
-                {
-                    this.partitionKeyBoolExpression = partitionKeyBoolExpression.Compile();
-                    this.partitionKey = $"/{partitionKeyBoolExpression.ToExpressionString().Replace(".", "/")}";
-                }
-                else if (partitionKeyDoubleExpression != null)
-                {
-                    this.partitionKeyDoubleExpression = partitionKeyDoubleExpression.Compile();
-                    this.partitionKey = $"/{partitionKeyDoubleExpression.ToExpressionString().Replace(".", "/")}";
-                }
-            }
-            else
-            {
-                // provided partitionkey name (string)
-                this.partitionKey = options.PartitionKey;
-            }
+        public CosmosDbSqlProviderV3(Builder<CosmosDbSqlProviderV3OptionsBuilder<T>, CosmosDbSqlProviderV3Options<T>> optionsBuilder)
+            : this(optionsBuilder(new CosmosDbSqlProviderV3OptionsBuilder<T>()).Build())
+        {
         }
 
         public async Task<T> GetByIdAsync(string id, object partitionKeyValue = null)
@@ -251,17 +182,17 @@
                 var partitionKey = PartitionKey.Null;
                 if(partitionKeyValue == null)
                 {
-                    if(this.partitionKeyStringExpression != null)
+                    if(this.options.PartitionKeyStringExpression != null)
                     {
-                        partitionKey = new PartitionKey(this.partitionKeyStringExpression.Invoke(entity));
+                        partitionKey = new PartitionKey(this.options.PartitionKeyStringExpression.Invoke(entity));
                     }
-                    else if (this.partitionKeyBoolExpression != null)
+                    else if (this.options.PartitionKeyBoolExpression != null)
                     {
-                        partitionKey = new PartitionKey(this.partitionKeyBoolExpression.Invoke(entity));
+                        partitionKey = new PartitionKey(this.options.PartitionKeyBoolExpression.Invoke(entity));
                     }
-                    else if (this.partitionKeyDoubleExpression != null)
+                    else if (this.options.PartitionKeyDoubleExpression != null)
                     {
-                        partitionKey = new PartitionKey(this.partitionKeyDoubleExpression.Invoke(entity));
+                        partitionKey = new PartitionKey(this.options.PartitionKeyDoubleExpression.Invoke(entity));
                     }
                 }
                 else
@@ -310,7 +241,7 @@
             return options;
         }
 
-        private void Initialize(CosmosDbSqlProviderV3Options options)
+        private void Initialize(CosmosDbSqlProviderV3Options<T> options)
         {
             this.client = options.Client;
             this.database = /*await */this.client
@@ -320,7 +251,7 @@
                 .CreateContainerIfNotExistsAsync(
                     new ContainerProperties(
                         this.containerName,
-                        partitionKeyPath: this.partitionKey)
+                        partitionKeyPath: this.options.PartitionKey)
                     // TODO: set timetolive (ttl)
                     {
                         //IndexingPolicy = new Microsoft.Azure.Cosmos.IndexingPolicy(new RangeIndex(Microsoft.Azure.Cosmos.DataType.String) { Precision = -1 })
