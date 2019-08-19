@@ -243,20 +243,23 @@
 
         private void Initialize(CosmosDbSqlProviderV3Options<T> options)
         {
-            this.client = options.Client;
-            this.database = /*await */this.client
-                .CreateDatabaseIfNotExistsAsync(options.Database.EmptyToNull() ?? "master", throughput: options.ThroughPut).Result;
-            this.containerName = options.Container.EmptyToNull() ?? typeof(T).PrettyName().Pluralize().ToLower();
-            this.container = /*await*/this.database
-                .CreateContainerIfNotExistsAsync(
-                    new ContainerProperties(
-                        this.containerName,
-                        partitionKeyPath: this.options.PartitionKey)
+            if (this.container == null)
+            {
+                this.client = options.Client;
+                this.database = /*await */this.client
+                    .CreateDatabaseIfNotExistsAsync(options.Database.EmptyToNull() ?? "master", throughput: options.ThroughPut).Result;
+                this.containerName = options.Container.EmptyToNull() ?? typeof(T).PrettyName().Pluralize().ToLower();
+                this.container = /*await*/this.database
+                    .CreateContainerIfNotExistsAsync(
+                        new ContainerProperties(
+                            this.containerName,
+                            partitionKeyPath: this.options.PartitionKey)
                     // TODO: set timetolive (ttl)
                     {
                         //IndexingPolicy = new Microsoft.Azure.Cosmos.IndexingPolicy(new RangeIndex(Microsoft.Azure.Cosmos.DataType.String) { Precision = -1 })
                     },
-                    throughput: options.ThroughPut).Result;
+                        throughput: options.ThroughPut).Result;
+            }
         }
     }
 }
