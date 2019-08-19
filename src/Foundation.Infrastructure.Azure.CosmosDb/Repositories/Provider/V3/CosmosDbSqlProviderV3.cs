@@ -26,22 +26,22 @@
         private string containerName;
 
         public CosmosDbSqlProviderV3(
-            Expression<Func<T, string>> partitionKeyExpression,
-            CosmosDbSqlProviderV3Options options) // TODO: ^^ move to options? is mandatory however
+            Expression<Func<T, string>> partitionKeyExpression, // TODO: ^^ move to options? is mandatory however
+            CosmosDbSqlProviderV3Options options)
             : this(options, partitionKeyExpression, null, null)
         {
         }
 
         public CosmosDbSqlProviderV3(
-            Expression<Func<T, bool>> partitionKeyExpression,
-            CosmosDbSqlProviderV3Options options) // TODO: ^^ move to options? is mandatory however
+            Expression<Func<T, bool>> partitionKeyExpression, // TODO: ^^ move to options? is mandatory however
+            CosmosDbSqlProviderV3Options options)
             : this(options, null, partitionKeyExpression, null)
         {
         }
 
         public CosmosDbSqlProviderV3(
-            Expression<Func<T, double>> partitionKeyExpression,
-            CosmosDbSqlProviderV3Options options) // TODO: ^^ move to options? is mandatory however
+            Expression<Func<T, double>> partitionKeyExpression, // TODO: ^^ move to options? is mandatory however
+            CosmosDbSqlProviderV3Options options)
             : this(options, null, null, partitionKeyExpression)
         {
         }
