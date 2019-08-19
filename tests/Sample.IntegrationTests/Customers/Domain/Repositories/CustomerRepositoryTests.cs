@@ -191,7 +191,7 @@
         }
 
         [Fact]
-        public async Task FindOneAsync_Unknown_Test()
+        public async Task FindOneAsync_UnknownId_Test()
         {
             // arrange/act
             var result = await this.sut.FindOneAsync(Guid.NewGuid().ToString()).AnyContext();
@@ -266,7 +266,7 @@
         }
 
         [Fact]
-        public async Task DeleteAsync_Unknown_Test()
+        public async Task DeleteAsync_ByUnknownId_Test()
         {
             // arrange/act
             var result = await this.sut.DeleteAsync(Guid.NewGuid().ToString()).AnyContext();
