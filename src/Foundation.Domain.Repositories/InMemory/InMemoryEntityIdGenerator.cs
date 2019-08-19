@@ -19,14 +19,14 @@
 
             switch (entity)
             {
-                case IEntity<int> i:
-                    i.Id = this.context.Entities.Count + 1;
+                case IEntity<int> e:
+                    e.Id = this.context.Entities.Count + 1;
                     break;
-                case IEntity<string> s:
-                    s.Id = Guid.NewGuid().ToString();
+                case IEntity<string> e:
+                    e.Id = SequentialGuid.NewGuid().ToString();
                     break;
-                case IEntity<Guid> g:
-                    g.Id = Guid.NewGuid();
+                case IEntity<Guid> e:
+                    e.Id = SequentialGuid.NewGuid();
                     break;
                 default:
                     throw new NotSupportedException($"entity id type {entity.Id.GetType().Name} not supported");
