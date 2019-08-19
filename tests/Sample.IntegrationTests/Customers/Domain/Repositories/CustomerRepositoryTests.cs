@@ -191,6 +191,16 @@
         }
 
         [Fact]
+        public async Task FindOneUnknownAsync_Test()
+        {
+            // arrange/act
+            var result = await this.sut.FindOneAsync(Guid.NewGuid().ToString()).AnyContext();
+
+            // assert
+            result.ShouldBeNull();
+        }
+
+        [Fact]
         public async Task InsertAsync_Test()
         {
             // arrange/act
@@ -232,11 +242,11 @@
                 new FindOptions<Customer>(take: 1)).AnyContext();
 
             // act
-            await this.sut.DeleteAsync(entities.FirstOrDefault()).AnyContext();
-            var result = await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).AnyContext();
+            var result = await this.sut.DeleteAsync(entities.FirstOrDefault()).AnyContext();
 
             // assert
-            result.ShouldBeNull();
+            result.ShouldBe(ActionResult.Deleted);
+            (await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).AnyContext()).ShouldBeNull();
         }
     }
 }

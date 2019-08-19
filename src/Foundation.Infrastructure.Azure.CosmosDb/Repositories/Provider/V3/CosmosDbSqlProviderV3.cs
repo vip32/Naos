@@ -14,15 +14,16 @@
     //where T : IHaveDiscriminator // needed? each type T is persisted in own collection
     {
         private readonly CosmosClient client;
-        private readonly Expression<Func<T, object>> partitionKeyExpression;
+        private readonly Func<T, string> partitionKeyExpression;
         private readonly string partitionKey;
         private readonly Database database;
         private readonly string containerName;
         private readonly Container container;
 
-        public CosmosDbSqlProviderV3(CosmosDbSqlProviderV3Options options, Expression<Func<T, object>> partitionKeyExpression)
+        public CosmosDbSqlProviderV3(
+            CosmosDbSqlProviderV3Options options,
+            Expression<Func<T, string>> partitionKeyExpression = null) // TODO: ^^ move to options? is mandatory however
         {
-                                                                                                 // TODO: ^^ move to options? is mandatory however
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Client, nameof(options.Client));
             //EnsureArg.IsNotNullOrEmpty(options.PartitionKey, nameof(options.PartitionKey));
@@ -30,8 +31,8 @@
             // https://github.com/Azure/azure-cosmos-dotnet-v3
             // https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.cosmos
             this.client = options.Client;
-            this.partitionKeyExpression = partitionKeyExpression;
-            this.partitionKey = options.PartitionKey ?? $"/{partitionKeyExpression.ToExpressionString()}";
+            this.partitionKeyExpression = partitionKeyExpression?.Compile();
+            this.partitionKey = options.PartitionKey ?? $"/{partitionKeyExpression.ToExpressionString().Replace(".", "/")}";
 
             // TODO: make below lazy
             this.database = /*await */this.client
@@ -49,7 +50,7 @@
                     throughput: options.ThroughPut).Result;
         }
 
-        public CosmosDbSqlProviderV3(Builder<CosmosDbSqlProviderV3OptionsBuilder, CosmosDbSqlProviderV3Options> optionsBuilder, Expression<Func<T, object>> partitionKeyExpression)
+        public CosmosDbSqlProviderV3(Builder<CosmosDbSqlProviderV3OptionsBuilder, CosmosDbSqlProviderV3Options> optionsBuilder, Expression<Func<T, string>> partitionKeyExpression)
             : this(optionsBuilder(new CosmosDbSqlProviderV3OptionsBuilder()).Build(), partitionKeyExpression)
         {
         }
@@ -137,9 +138,9 @@
 
             while (iterator.HasMoreResults)
             {
-                foreach (var item in await iterator.ReadNextAsync())
+                foreach (var entity in await iterator.ReadNextAsync())
                 {
-                    result.Add(item);
+                    result.Add(entity);
                 }
             }
 
@@ -169,9 +170,9 @@
 
             while (iterator.HasMoreResults)
             {
-                foreach (var item in await iterator.ReadNextAsync())
+                foreach (var entity in await iterator.ReadNextAsync())
                 {
-                    result.Add(item);
+                    result.Add(entity);
                 }
             }
 
@@ -192,18 +193,21 @@
 
         public async Task<bool> DeleteByIdAsync(string id, string partitionKeyValue = null)
         {
+            var entity = await this.GetByIdAsync(id, partitionKeyValue).AnyContext();
+            if(entity == null)
+            {
+                return false;
+            }
+
             try
             {
-                // partitionKeyValue workaround (if not provided): otherwhise document is not found
-                // var item = GetByIdAsync(id)
-                // get partition value from item by using this.partitionKeyPath (json selector?) partition value = this.partitionKeyExpression?.Compile()?(item)
-                // use this partition value below (DeleteItemAsync)
-
                 var response = await this.container.DeleteItemAsync<T>(
                     id,
-                    partitionKeyValue.IsNullOrEmpty() ? PartitionKey.Null : new PartitionKey(partitionKeyValue)).AnyContext();
-                return true;
-                // TODO: evaulate response.StatusCode == HttpStatusCode.OK
+                    !partitionKeyValue.IsNullOrEmpty()
+                        ? new PartitionKey(partitionKeyValue)
+                        : new PartitionKey(this.partitionKeyExpression.Invoke(entity))).AnyContext();
+
+                return response.StatusCode == HttpStatusCode.NoContent;
             }
             catch (CosmosException ex)
             {

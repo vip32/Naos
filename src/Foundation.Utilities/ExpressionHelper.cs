@@ -41,6 +41,19 @@
             return null;
         }
 
+        public static string ToExpressionString<T>(this Expression<Func<T, string>> source)
+        {
+            if (source != null)
+            {
+                var result = source.ToString();
+                // strip the parameter from the expression
+                var name = result.SliceTill(" =>");
+                return result.Replace($"{name}.", string.Empty).SliceFrom("=> ");
+            }
+
+            return null;
+        }
+
         public static string ToExpressionString<T>(this Expression<Func<T, object>> source)
         {
             if(source != null)

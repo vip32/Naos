@@ -206,7 +206,7 @@
 
         public async Task<ActionResult> DeleteAsync(TEntity entity)
         {
-            if(entity?.Id.IsDefault() != false)
+            if(entity?.Id.IsDefault() == true)
             {
                 return ActionResult.None;
             }
