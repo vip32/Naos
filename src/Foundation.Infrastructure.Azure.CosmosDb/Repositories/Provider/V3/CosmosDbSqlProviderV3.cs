@@ -20,6 +20,7 @@
         private readonly Func<T, bool> partitionKeyBoolExpression;
         private readonly Func<T, double> partitionKeyDoubleExpression;
         private readonly string partitionKey;
+        private readonly string partitionKeyValue;
         private CosmosClient client;
         private Database database;
         private Container container;
@@ -27,6 +28,12 @@
 
         public CosmosDbSqlProviderV3(Builder<CosmosDbSqlProviderV3OptionsBuilder, CosmosDbSqlProviderV3Options> optionsBuilder, Expression<Func<T, string>> partitionKeyExpression)
             : this(optionsBuilder(new CosmosDbSqlProviderV3OptionsBuilder()).Build(), partitionKeyExpression)
+        {
+        }
+
+        public CosmosDbSqlProviderV3(
+            CosmosDbSqlProviderV3Options options) // TODO: ^^ move to options? is mandatory however
+            : this(options, null, null, null)
         {
         }
 
@@ -84,6 +91,8 @@
                 else
                 {
                     // implicit mode /_partitionKey, based on documenttype
+                    this.partitionKey = "/_partitionKey";
+                    this.partitionKeyValue = typeof(T).Name;
                 }
             }
             else
@@ -293,6 +302,11 @@
                             message: "unsupported partition key value type (string, bool, double)",
                             paramName: nameof(partitionKeyValue)),
                 };
+            }
+            else if(!this.partitionKeyValue.IsNullOrEmpty())
+            {
+                // implicit mode
+                options.PartitionKey = new PartitionKey(this.partitionKeyValue);
             }
 
             return options;
