@@ -266,7 +266,7 @@
         }
 
         [Fact]
-        public async Task DeleteAsync_ByUnknownId_Test()
+        public async Task DeleteAsync_UnknownId_Test()
         {
             // arrange/act
             var result = await this.sut.DeleteAsync(Guid.NewGuid().ToString()).AnyContext();
