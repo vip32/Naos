@@ -3,6 +3,6 @@
     public interface IEntityIdGenerator<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
-        string CreateNew(TEntity entity);
+        void SetNew(TEntity entity);
     }
 }

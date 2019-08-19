@@ -125,7 +125,7 @@
 
             if (entity.Id.IsDefault())
             {
-                entity.Id = this.options.IdGenerator.CreateNew(entity); // cosmos v3 needs an id, also for new documents
+                this.options.IdGenerator.SetNew(entity); // cosmos v3 needs an id, also for new documents
             }
 
             if(this.options.PublishEvents && this.options.Mediator != null)

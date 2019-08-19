@@ -336,24 +336,21 @@
             }
         }
 
-        private void EnsureId(TEntity entity) // TODO: move this to seperate class (IdentityGenerator)
+        private void EnsureId(TEntity entity) // TODO: move this to seperate class (IEntityIdGenerator)
         {
-            if(entity is IEntity<int>)
+            switch (entity)
             {
-                (entity as IEntity<int>).Id = this.options.Context.Entities.Count + 1;
-            }
-            else if(entity is IEntity<string>)
-            {
-                (entity as IEntity<string>).Id = IdGenerator.Instance.Next;
-            }
-            else if(entity is IEntity<Guid>)
-            {
-                (entity as IEntity<Guid>).Id = Guid.NewGuid();
-            }
-            else
-            {
-                throw new NotSupportedException($"entity id type {entity.Id.GetType().Name} not supported");
-                // TODO: or just set Id to null?
+                case IEntity<int> i:
+                    i.Id = this.options.Context.Entities.Count + 1;
+                    break;
+                case IEntity<string> s:
+                    s.Id = Guid.NewGuid().ToString();
+                    break;
+                case IEntity<Guid> g:
+                    g.Id = Guid.NewGuid();
+                    break;
+                default:
+                    throw new NotSupportedException($"entity id type {entity.Id.GetType().Name} not supported");
             }
         }
     }

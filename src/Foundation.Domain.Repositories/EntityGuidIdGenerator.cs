@@ -1,13 +1,16 @@
 ﻿namespace Naos.Foundation.Domain
 {
     using System;
+    using EnsureThat;
 
     public class EntityGuidIdGenerator<TEntity> : IEntityIdGenerator<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
-        public string CreateNew(TEntity entity)
+        public void SetNew(TEntity entity)
         {
-            return Guid.NewGuid().ToString();
+            EnsureArg.IsNotNull(entity);
+
+            entity.Id = Guid.NewGuid().ToString();
         }
     }
 }
