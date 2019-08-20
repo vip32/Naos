@@ -16,24 +16,26 @@
     public class InMemoryRepository<TEntity> : IGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
-        protected readonly InMemoryRepositoryOptions<TEntity> options;
-        protected ILogger<IGenericRepository<TEntity>> logger;
         private readonly ReaderWriterLockSlim @lock = new ReaderWriterLockSlim();
 
         public InMemoryRepository(InMemoryRepositoryOptions<TEntity> options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
 
-            this.options = options;
-            this.logger = options.CreateLogger<IGenericRepository<TEntity>>();
-            this.options.Context ??= new InMemoryContext<TEntity>();
-            this.options.IdGenerator ??= new InMemoryEntityIdGenerator<TEntity>(this.options.Context);
+            this.Options = options;
+            this.Logger = options.CreateLogger<IGenericRepository<TEntity>>();
+            this.Options.Context ??= new InMemoryContext<TEntity>();
+            this.Options.IdGenerator ??= new InMemoryEntityIdGenerator<TEntity>(this.Options.Context);
         }
 
         public InMemoryRepository(Builder<InMemoryRepositoryOptionsBuilder<TEntity>, InMemoryRepositoryOptions<TEntity>> optionsBuilder)
             : this(optionsBuilder(new InMemoryRepositoryOptionsBuilder<TEntity>()).Build())
         {
         }
+
+        protected InMemoryRepositoryOptions<TEntity> Options { get; }
+
+        protected ILogger<IGenericRepository<TEntity>> Logger { get; set; }
 
         /// <summary>
         /// Finds all asynchronous.
@@ -74,7 +76,7 @@
             IFindOptions<TEntity> options = null,
             CancellationToken cancellationToken = default)
         {
-            var result = this.options.Context.Entities.AsEnumerable();
+            var result = this.Options.Context.Entities.AsEnumerable();
 
             foreach(var specification in specifications.Safe())
             {
@@ -99,14 +101,14 @@
             this.@lock.EnterReadLock();
             try
             {
-                var result = this.options.Context.Entities.FirstOrDefault(x => x.Id.Equals(id));
+                var result = this.Options.Context.Entities.FirstOrDefault(x => x.Id.Equals(id));
 
-                if(this.options.Mapper != null && result != null)
+                if(this.Options.Mapper != null && result != null)
                 {
-                    return this.options.Mapper.Map<TEntity>(result);
+                    return this.Options.Mapper.Map<TEntity>(result);
                 }
 
-                return await Task.FromResult(result);
+                return await Task.FromResult(result).AnyContext();
             }
             finally
             {
@@ -125,7 +127,7 @@
                 return false;
             }
 
-            return await this.FindOneAsync(id) != null;
+            return await this.FindOneAsync(id).AnyContext() != null;
         }
 
         /// <summary>
@@ -164,18 +166,18 @@
 
             if(isTransient)
             {
-                this.options.IdGenerator.SetNew(entity);
+                this.Options.IdGenerator.SetNew(entity);
             }
 
-            if(this.options.PublishEvents)
+            if(this.Options.PublishEvents)
             {
                 if(isNew)
                 {
-                    await this.options.Mediator.Publish(new EntityInsertDomainEvent(entity)).AnyContext();
+                    await this.Options.Mediator.Publish(new EntityInsertDomainEvent(entity)).AnyContext();
                 }
                 else
                 {
-                    await this.options.Mediator.Publish(new EntityUpdateDomainEvent(entity)).AnyContext();
+                    await this.Options.Mediator.Publish(new EntityUpdateDomainEvent(entity)).AnyContext();
                 }
             }
 
@@ -191,33 +193,33 @@
                 stateEntity.State.SetUpdated();
             }
 
-            this.logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogKeys.DomainRepository);
+            this.Logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogKeys.DomainRepository);
             // TODO: map to destination
             //this.entities = this.entities.Where(e => !e.Id.Equals(entity.Id)).Concat(new[] { entity }).ToList();
             this.@lock.EnterWriteLock();
             try
             {
-                if(this.options.Context.Entities.Contains(entity))
+                if(this.Options.Context.Entities.Contains(entity))
                 {
-                    this.options.Context.Entities.Remove(entity);
+                    this.Options.Context.Entities.Remove(entity);
                 }
 
-                this.options.Context.Entities.Add(entity);
+                this.Options.Context.Entities.Add(entity);
             }
             finally
             {
                 this.@lock.ExitWriteLock();
             }
 
-            if(this.options.PublishEvents)
+            if(this.Options.PublishEvents)
             {
                 if(isNew)
                 {
-                    await this.options.Mediator.Publish(new EntityInsertedDomainEvent(entity)).AnyContext();
+                    await this.Options.Mediator.Publish(new EntityInsertedDomainEvent(entity)).AnyContext();
                 }
                 else
                 {
-                    await this.options.Mediator.Publish(new EntityUpdatedDomainEvent(entity)).AnyContext();
+                    await this.Options.Mediator.Publish(new EntityUpdatedDomainEvent(entity)).AnyContext();
                 }
             }
 
@@ -239,28 +241,28 @@
                 return ActionResult.None;
             }
 
-            var entity = this.options.Context.Entities.FirstOrDefault(x => x.Id.Equals(id));
+            var entity = this.Options.Context.Entities.FirstOrDefault(x => x.Id.Equals(id));
             if(entity != null)
             {
-                if(this.options.PublishEvents)
+                if(this.Options.PublishEvents)
                 {
-                    await this.options.Mediator.Publish(new EntityDeleteDomainEvent(entity)).AnyContext();
+                    await this.Options.Mediator.Publish(new EntityDeleteDomainEvent(entity)).AnyContext();
                 }
 
-                this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogKeys.DomainRepository);
+                this.Logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogKeys.DomainRepository);
                 this.@lock.EnterWriteLock();
                 try
                 {
-                    this.options.Context.Entities.Remove(entity);
+                    this.Options.Context.Entities.Remove(entity);
                 }
                 finally
                 {
                     this.@lock.ExitWriteLock();
                 }
 
-                if(this.options.PublishEvents)
+                if(this.Options.PublishEvents)
                 {
-                    await this.options.Mediator.Publish(new EntityDeletedDomainEvent(entity)).AnyContext();
+                    await this.Options.Mediator.Publish(new EntityDeletedDomainEvent(entity)).AnyContext();
                 }
 
                 return ActionResult.Deleted;
@@ -324,9 +326,9 @@
                     result = orderedResult;
                 }
 
-                if(this.options.Mapper != null && result != null)
+                if(this.Options.Mapper != null && result != null)
                 {
-                    return result.Select(r => this.options.Mapper.Map<TEntity>(r));
+                    return result.Select(r => this.Options.Mapper.Map<TEntity>(r));
                 }
 
                 return result;

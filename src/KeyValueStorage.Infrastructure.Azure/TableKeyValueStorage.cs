@@ -55,7 +55,7 @@
             TableContinuationToken token = null;
             do
             {
-                var tables = await this.client.ListTablesSegmentedAsync(token);
+                var tables = await this.client.ListTablesSegmentedAsync(token).AnyContext();
                 foreach(var table in tables.Results)
                 {
                     result.Add(table.Name);
@@ -70,10 +70,10 @@
 
         public async Task<bool> DeleteTableAsync(string tableName)
         {
-            var table = await this.EnsureTableAsync(tableName, false);
+            var table = await this.EnsureTableAsync(tableName, false).AnyContext();
             if(table != null)
             {
-                await table.DeleteAsync();
+                await table.DeleteAsync().AnyContext();
                 return this.tableInfos.TryRemove(tableName, out var tag);
             }
 
@@ -85,7 +85,7 @@
             EnsureArg.IsNotNullOrEmpty(tableName, nameof(tableName));
             EnsureArg.IsNotNull(key, nameof(key));
 
-            return await this.FindAsync(tableName, key);
+            return await this.FindAsync(tableName, key).AnyContext();
         }
 
         public async Task<IEnumerable<Value>> FindAllAsync(string tableName, IEnumerable<Criteria> criterias)
@@ -98,7 +98,7 @@
                 //throw new NotSupportedException();
             }
 
-            return await this.FindAsync(tableName, criterias: criterias);
+            return await this.FindAsync(tableName, criterias: criterias).AnyContext();
         }
 
         public async Task InsertAsync(string tableName, IEnumerable<Value> values)
@@ -119,7 +119,7 @@
 
             await this.BatchedOperationAsync(tableName, true,
                (op, te) => op.Insert(te),
-               rowsList);
+               rowsList).AnyContext();
         }
 
         public async Task UpsertAsync(string tableName, IEnumerable<Value> values)
@@ -140,21 +140,21 @@
 
             await this.BatchedOperationAsync(tableName, true,
                (op, te) => op.InsertOrReplace(te),
-               rowsList);
+               rowsList).AnyContext();
         }
 
         public async Task UpdateAsync(string tableName, IEnumerable<Value> values)
         {
             await this.BatchedOperationAsync(tableName, false,
                (op, te) => op.Replace(te),
-               values);
+               values).AnyContext();
         }
 
         public async Task MergeAsync(string tableName, IEnumerable<Value> values)
         {
             await this.BatchedOperationAsync(tableName, true,
                (op, te) => op.InsertOrMerge(te),
-               values);
+               values).AnyContext();
         }
 
         public async Task DeleteAsync(string tableName, IEnumerable<Key> keys)
@@ -166,7 +166,7 @@
 
             await this.BatchedOperationAsync(tableName, true,
                (op, te) => op.Delete(te),
-               keys);
+               keys).AnyContext();
         }
 
         public void Dispose()
@@ -183,13 +183,13 @@
             EnsureArg.IsNotNullOrEmpty(tableName, nameof(tableName));
             EnsureArg.IsNotNull(values, nameof(values));
 
-            var table = await this.EnsureTableAsync(tableName, createTable);
+            var table = await this.EnsureTableAsync(tableName, createTable).AnyContext();
             if(table == null)
             {
                 return;
             }
 
-            await Task.WhenAll(values.GroupBy(e => e.PartitionKey).Select(g => this.BatchedOperationAsync(table, g, action)));
+            await Task.WhenAll(values.GroupBy(e => e.PartitionKey).Select(g => this.BatchedOperationAsync(table, g, action))).AnyContext();
         }
 
         private async Task BatchedOperationAsync(
@@ -213,7 +213,7 @@
                         this.isCosmos ? new[] { "Id", "Timestamp" } : null));
                 }
 
-                var result = await this.ExecuteBatchAsync(table, batch);
+                var result = await this.ExecuteBatchAsync(table, batch).AnyContext();
                 for(var i = 0; i < result.Count && i < values.Count; i++)
                 {
                     var tableResult = result[i];
@@ -233,7 +233,7 @@
                 return;
             }
 
-            var table = await this.EnsureTableAsync(tableName, createTable);
+            var table = await this.EnsureTableAsync(tableName, createTable).AnyContext();
             if(table == null)
             {
                 return;
@@ -256,7 +256,7 @@
                             this.isCosmos ? new[] { "Id", "Timestamp" } : null));
                     }
 
-                    await this.ExecuteBatchAsync(table, batch);
+                    await this.ExecuteBatchAsync(table, batch).AnyContext();
                 }
             }
         }
@@ -277,13 +277,13 @@
                 {
                     Table = this.client.GetTableReference(tableName),
                 };
-                info.Exists = await info.Table.ExistsAsync();
+                info.Exists = await info.Table.ExistsAsync().AnyContext();
                 this.tableInfos[tableName] = info;
             }
 
             if(!info.Exists && createIfNotExists)
             {
-                await info.Table.CreateAsync(); // WARN: CAS issue https://github.com/Azure/azure-cosmos-table-dotnet/issues/7
+                await info.Table.CreateAsync().AnyContext(); // WARN: CAS issue https://github.com/Azure/azure-cosmos-table-dotnet/issues/7
                 //Thread.Sleep(1500);
                 info.Exists = true;
             }
@@ -300,7 +300,7 @@
         {
             try
             {
-                return (await table.ExecuteBatchAsync(operation)).ToList();
+                return (await table.ExecuteBatchAsync(operation).AnyContext()).ToList();
             }
             catch(StorageException ex)
             {
@@ -356,7 +356,7 @@
             int take = -1,
             IEnumerable<Criteria> criterias = null)
         {
-            var table = await this.EnsureTableAsync(tableName, false);
+            var table = await this.EnsureTableAsync(tableName, false).AnyContext();
             if(table == null)
             {
                 return new List<Value>();
@@ -402,7 +402,7 @@
             var entities = new List<DynamicTableEntity>();
             do
             {
-                var queryResults = await table.ExecuteQuerySegmentedAsync(query, token);
+                var queryResults = await table.ExecuteQuerySegmentedAsync(query, token).AnyContext();
                 entities.AddRange(queryResults.Results);
                 token = queryResults.ContinuationToken;
             }

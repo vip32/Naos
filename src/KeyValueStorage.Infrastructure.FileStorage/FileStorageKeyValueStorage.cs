@@ -73,14 +73,14 @@
             EnsureArg.IsNotNullOrEmpty(tableName, nameof(tableName));
             EnsureArg.IsNotNull(key, nameof(key));
 
-            return await this.FindAsync(tableName, key);
+            return await this.FindAsync(tableName, key).AnyContext();
         }
 
         public async Task<IEnumerable<Value>> FindAllAsync(string tableName, IEnumerable<Criteria> criterias)
         {
             EnsureArg.IsNotNullOrEmpty(tableName, nameof(tableName));
 
-            return await this.FindAsync(tableName, criterias: criterias);
+            return await this.FindAsync(tableName, criterias: criterias).AnyContext();
         }
 
         public async Task InsertAsync(string tableName, IEnumerable<Value> values)
@@ -90,7 +90,7 @@
             foreach(var value in values?.Where(v => v.Key != null))
             {
                 await this.options.FileStorage.SaveFileObjectAsync(
-                    Path.Combine(tableName, $"{value.Key.PartitionKey}--{value.Key.RowKey}"), value);
+                    Path.Combine(tableName, $"{value.Key.PartitionKey}--{value.Key.RowKey}"), value).AnyContext();
             }
         }
 
@@ -101,7 +101,7 @@
             foreach(var value in values?.Where(v => v.Key != null))
             {
                 await this.options.FileStorage.SaveFileObjectAsync(
-                    Path.Combine(tableName, $"{value.Key.PartitionKey}--{value.Key.RowKey}"), value);
+                    Path.Combine(tableName, $"{value.Key.PartitionKey}--{value.Key.RowKey}"), value).AnyContext();
             }
         }
 
@@ -112,7 +112,7 @@
             foreach(var value in values?.Where(v => v.Key != null))
             {
                 await this.options.FileStorage.SaveFileObjectAsync(
-                    Path.Combine(tableName, $"{value.Key.PartitionKey}--{value.Key.RowKey}"), value);
+                    Path.Combine(tableName, $"{value.Key.PartitionKey}--{value.Key.RowKey}"), value).AnyContext();
             }
         }
 
@@ -123,7 +123,7 @@
             foreach(var value in values?.Where(v => v.Key != null))
             {
                 await this.options.FileStorage.SaveFileObjectAsync(
-                    Path.Combine(tableName, $"{value.Key.PartitionKey}--{value.Key.RowKey}"), value);
+                    Path.Combine(tableName, $"{value.Key.PartitionKey}--{value.Key.RowKey}"), value).AnyContext();
             }
         }
 
@@ -134,7 +134,7 @@
             foreach(var key in keys)
             {
                 await this.options.FileStorage.DeleteFileAsync(
-                    Path.Combine(tableName, $"{key.PartitionKey}--{key.RowKey}"));
+                    Path.Combine(tableName, $"{key.PartitionKey}--{key.RowKey}")).AnyContext();
             }
         }
 
@@ -162,10 +162,10 @@
             }
 
             var result = new List<Value>();
-            var fileInformations = await this.options.FileStorage.GetFileInformationsAsync(searchPattern);
+            var fileInformations = await this.options.FileStorage.GetFileInformationsAsync(searchPattern).AnyContext();
             foreach(var fileInformation in fileInformations.Safe())
             {
-                var value = await this.options.FileStorage.GetFileObjectAsync<Value>(fileInformation.Path);
+                var value = await this.options.FileStorage.GetFileObjectAsync<Value>(fileInformation.Path).AnyContext();
                 if(value != null && this.Match(criterias, value)) // in memory criteria matching
                 {
                     if(key != null)

@@ -64,7 +64,7 @@
                 // needed for mediator, register console commands + handlers
                 options.Context.Services.Scan(scan => scan
                     .FromApplicationDependencies()
-                    .AddClasses(classes => classes.Where(c => c.Name.EndsWith("ConsoleCommand") || c.Name.EndsWith("ConsoleCommandEventHandler")))
+                    .AddClasses(classes => classes.Where(c => c.Name.EndsWith("ConsoleCommand", StringComparison.OrdinalIgnoreCase) || c.Name.EndsWith("ConsoleCommandEventHandler", StringComparison.OrdinalIgnoreCase)))
                     .AsImplementedInterfaces());
 
                 options.Context.Services.AddSingleton<Hosting.IHostedService>(sp =>

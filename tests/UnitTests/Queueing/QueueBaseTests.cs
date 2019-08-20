@@ -7,6 +7,7 @@
     using Naos.Core.Queueing.Domain;
     using Xunit;
 
+#pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task
     public abstract class QueueBaseTests : BaseTest, IDisposable
     {
         public virtual void Dispose()
@@ -700,4 +701,5 @@
     {
         public string Text { get; set; }
     }
+#pragma warning restore CA2007 // Consider calling ConfigureAwait on the awaited task
 }

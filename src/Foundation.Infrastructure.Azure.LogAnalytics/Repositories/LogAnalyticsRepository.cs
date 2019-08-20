@@ -60,7 +60,7 @@
             IFindOptions<TEntity> options = null,
             CancellationToken cancellationToken = default)
         {
-            return await this.FindAllAsync(Enumerable.Empty<Specification<TEntity>>(), null, CancellationToken.None);
+            return await this.FindAllAsync(Enumerable.Empty<Specification<TEntity>>(), null, CancellationToken.None).AnyContext();
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
@@ -69,7 +69,7 @@
                 new List<ISpecification<TEntity>>(new[]
                 {
                     specification
-                }), null, CancellationToken.None);
+                }), null, CancellationToken.None).AnyContext();
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
@@ -87,7 +87,7 @@
 
             // query docs: https://docs.microsoft.com/en-us/azure/log-analytics/query-language/get-started-queries
             //             https://docs.microsoft.com/en-us/azure/log-analytics/log-analytics-search-reference
-            return await this.FindAllAsync(query, cancellationToken);
+            return await this.FindAllAsync(query, cancellationToken).AnyContext();
         }
 
         protected IEnumerable<string> BuildQueryWhereParts(IEnumerable<ISpecification<TEntity>> specifications)
@@ -115,7 +115,9 @@
         protected async Task<IEnumerable<TEntity>> FindAllAsync(string query, CancellationToken cancellationToken)
         {
             var response = await this.httpClient.SendAsync(
+#pragma warning disable CA2000 // Dispose objects before losing scope
                             this.PrepareRequest(query),
+#pragma warning restore CA2000 // Dispose objects before losing scope
                             cancellationToken).AnyContext();
             response.EnsureSuccessStatusCode();
 

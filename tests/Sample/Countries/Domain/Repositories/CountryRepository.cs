@@ -2,6 +2,7 @@
 {
     using System.Linq;
     using System.Threading.Tasks;
+    using Naos.Foundation;
     using Naos.Foundation.Domain;
 
     public class CountryRepository : Repository<Country>, ICountryRepository
@@ -12,6 +13,6 @@
         }
 
         public async Task<Country> FindOneByName(string value)
-            => (await this.FindAllAsync(new HasNameSpecification(value))).FirstOrDefault();
+            => (await this.FindAllAsync(new HasNameSpecification(value)).AnyContext()).FirstOrDefault();
     }
 }

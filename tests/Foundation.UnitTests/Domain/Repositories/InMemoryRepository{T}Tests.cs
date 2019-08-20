@@ -254,7 +254,7 @@ namespace Naos.Foundation.UnitTests.Domain
             Assert.Equal("Id99", result.entity.Id);
             Assert.NotNull(findResult);
             Assert.Equal("FirstName99", findResult.FirstName);
-            await mediator.Received().Publish(Arg.Any<IDomainEvent>());
+            await mediator.Received().Publish(Arg.Any<IDomainEvent>()).AnyContext();
         }
 
         [Fact]
@@ -283,7 +283,7 @@ namespace Naos.Foundation.UnitTests.Domain
             Assert.NotNull(findResult);
             Assert.Equal(findResult.Id, result.entity.Id);
             Assert.Equal("FirstName88", findResult.FirstName);
-            await mediator.Received().Publish(Arg.Any<IDomainEvent>());
+            await mediator.Received().Publish(Arg.Any<IDomainEvent>()).AnyContext();
         }
 
         [Fact]
@@ -315,7 +315,7 @@ namespace Naos.Foundation.UnitTests.Domain
             Assert.NotNull(findResult);
             Assert.Equal(findResult.Id, result.entity.Id);
             Assert.Equal("FirstName77", findResult.FirstName);
-            await mediator.Received().Publish(Arg.Any<IDomainEvent>());
+            await mediator.Received().Publish(Arg.Any<IDomainEvent>()).AnyContext();
         }
 
         [Fact]
@@ -334,7 +334,7 @@ namespace Naos.Foundation.UnitTests.Domain
 
             // assert
             Assert.Null(entity);
-            await mediator.Received().Publish(Arg.Any<IDomainEvent>());
+            await mediator.Received().Publish(Arg.Any<IDomainEvent>()).AnyContext();
         }
 
         [Fact]
@@ -353,7 +353,7 @@ namespace Naos.Foundation.UnitTests.Domain
 
             // assert
             Assert.Null(entity);
-            await mediator.Received().Publish(Arg.Any<IDomainEvent>());
+            await mediator.Received().Publish(Arg.Any<IDomainEvent>()).AnyContext();
         }
 
         public class StubEntityString : TenantAggregateRoot<string>

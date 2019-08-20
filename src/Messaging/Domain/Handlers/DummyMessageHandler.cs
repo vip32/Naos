@@ -8,14 +8,14 @@ namespace Naos.Core.Messaging.Domain
 
     public class DummyMessageHandler : IMessageHandler<DummyMessage>
     {
-        protected readonly ILogger<DummyMessageHandler> logger;
-
         public DummyMessageHandler(ILogger<DummyMessageHandler> logger)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
 
-            this.logger = logger;
+            this.Logger = logger;
         }
+
+        protected ILogger<DummyMessageHandler> Logger { get; }
 
         /// <summary>
         /// Handles the specified message.
@@ -28,9 +28,9 @@ namespace Naos.Core.Messaging.Domain
                 [LogPropertyKeys.CorrelationId] = message.CorrelationId,
             };
 
-            using(this.logger.BeginScope(loggerState))
+            using(this.Logger.BeginScope(loggerState))
             {
-                this.logger.LogInformation("{LogKey:l} handle (name={MessageName}, id={MessageId}, origin={MessageOrigin}) " + message.Data, LogKeys.Messaging, message.GetType().PrettyName(), message.Id, message.Origin);
+                this.Logger.LogInformation("{LogKey:l} handle (name={MessageName}, id={MessageId}, origin={MessageOrigin}) " + message.Data, LogKeys.Messaging, message.GetType().PrettyName(), message.Id, message.Origin);
 
                 return Task.CompletedTask;
             }

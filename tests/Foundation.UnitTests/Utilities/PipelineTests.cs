@@ -16,7 +16,7 @@
                      .Step(p, input => input.Length)
                      .Step(p, input => input % 2 == 1));
 
-            var result = await sut.Execute("aaa bbb ccc bbb");
+            var result = await sut.Execute("aaa bbb ccc bbb").AnyContext();
             result.ShouldBe(true);
         }
 
@@ -27,7 +27,7 @@
                 input.Step(p, FindMostUsedWord)
                      .Step(p, input => input == "bbb"));
 
-            var result = await sut.Execute("aaa bbb ccc bbb");
+            var result = await sut.Execute("aaa bbb ccc bbb").AnyContext();
             result.ShouldBe(true);
         }
 
@@ -37,7 +37,7 @@
             var sut = new Pipeline<string, string>((input, p) =>
                 input.Step(p, FindMostUsedWord));
 
-            var result = await sut.Execute("aaa bbb ccc bbb");
+            var result = await sut.Execute("aaa bbb ccc bbb").AnyContext();
             result.ShouldBe("bbb");
         }
 

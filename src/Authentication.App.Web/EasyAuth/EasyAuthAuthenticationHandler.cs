@@ -43,7 +43,7 @@
                     return AuthenticateResult.Success(ticket);
                 }
 
-                var isEnabled = string.Equals(Environment.GetEnvironmentVariable("WEBSITE_AUTH_ENABLED", EnvironmentVariableTarget.Process), "True", StringComparison.InvariantCultureIgnoreCase);
+                var isEnabled = string.Equals(Environment.GetEnvironmentVariable("WEBSITE_AUTH_ENABLED", EnvironmentVariableTarget.Process), "True", StringComparison.OrdinalIgnoreCase);
                 if(!isEnabled)
                 {
                     return AuthenticateResult.NoResult();
@@ -75,7 +75,7 @@
                 var context = new ErrorContext(this.Context, this.Scheme, this.Options) { Exception = ex };
                 if(this.Events != null)
                 {
-                    await this.Events.Error(context);
+                    await this.Events.Error(context).AnyContext();
                     if(context.Result != null)
                     {
                         return context.Result;
@@ -97,7 +97,7 @@
         /// </returns>
         protected override async Task HandleChallengeAsync(AuthenticationProperties properties)
         {
-            var authResult = await this.HandleAuthenticateOnceSafeAsync();
+            var authResult = await this.HandleAuthenticateOnceSafeAsync().AnyContext();
 
             if(authResult.Succeeded)
             {
@@ -111,7 +111,7 @@
 
             if(this.Events != null)
             {
-                await this.Events.Challenge(eventContext);
+                await this.Events.Challenge(eventContext).AnyContext();
 
                 if(eventContext.Handled)
                 {

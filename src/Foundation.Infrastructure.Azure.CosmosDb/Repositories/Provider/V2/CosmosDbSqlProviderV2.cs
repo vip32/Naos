@@ -182,7 +182,7 @@
                     .OrderByIf(orderExpression, orderDescending)
                     .AsEnumerable();
             this.logger.LogInformation($"{{LogKey:l}} sql={query.ToString().Replace("{", string.Empty).Replace("}", string.Empty)}", LogKeys.DomainRepository);
-            return await Task.FromResult(query);
+            return await Task.FromResult(query).AnyContext();
         }
 
         public async Task<IEnumerable<T>> WhereAsync(
@@ -204,7 +204,7 @@
                     .OrderByIf(orderExpression, orderDescending)
                     .AsEnumerable();
             this.logger.LogInformation($"{{LogKey:l}} sql={query.ToString().Replace("{", string.Empty).Replace("}", string.Empty)}", LogKeys.DomainRepository);
-            return await Task.FromResult(query);
+            return await Task.FromResult(query).AnyContext();
         }
 
         public async Task<IEnumerable<T>> WhereAsync( // OBSOLETE
@@ -229,7 +229,7 @@
                     .OrderByIf(orderExpression, orderDescending)
                     .AsEnumerable();
             this.logger.LogInformation($"{{LogKey:l}} sql={query.ToString().Replace("{", string.Empty).Replace("}", string.Empty)}", LogKeys.DomainRepository);
-            return await Task.FromResult(query);
+            return await Task.FromResult(query).AnyContext();
         }
 
         //public async Task<IEnumerable<T>> GetAllAsync(int count = -1)

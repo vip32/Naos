@@ -2,6 +2,7 @@
 {
     using System.Linq;
     using System.Threading.Tasks;
+    using Naos.Foundation;
     using Naos.Foundation.Domain;
 
     public class CustomerRepository : Repository<Customer>, ICustomerRepository
@@ -12,6 +13,6 @@
         }
 
         public async Task<Customer> FindByNumber(string value)
-            => (await this.FindAllAsync(new HasNumberSpecification(value))).FirstOrDefault();
+            => (await this.FindAllAsync(new HasNumberSpecification(value)).AnyContext()).FirstOrDefault();
     }
 }

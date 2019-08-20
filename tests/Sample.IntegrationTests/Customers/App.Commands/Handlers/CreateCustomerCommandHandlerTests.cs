@@ -58,7 +58,7 @@
             var command = new CreateCustomerCommand(entity);
 
             // act/assert
-            await Assert.ThrowsAsync<FluentValidation.ValidationException>(() => this.mediator.Send(command));
+            await Assert.ThrowsAsync<FluentValidation.ValidationException>(() => this.mediator.Send(command)).AnyContext();
         }
 
         //[Fact]

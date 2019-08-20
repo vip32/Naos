@@ -81,7 +81,9 @@
             {
                 return source.SelectToken(path).Value<T>();
             }
-            catch(Exception)
+#pragma warning disable CA1031 // Do not catch general exception types
+            catch
+#pragma warning restore CA1031 // Do not catch general exception types
             {
                 // argumentnullexception, jsonexception
                 return default;
@@ -111,7 +113,9 @@
                 var results = source.SelectTokens(path);
                 return results.Safe().Select(r => r.Value<T>());
             }
-            catch(Exception)
+#pragma warning disable CA1031 // Do not catch general exception types
+            catch
+#pragma warning restore CA1031 // Do not catch general exception types
             {
                 // argumentnullexception, jsonexception
                 return default;
@@ -305,7 +309,9 @@
             {
                 target = source.SelectToken(path.SliceTillLast("."));
             }
-            catch(Exception)
+#pragma warning disable CA1031 // Do not catch general exception types
+            catch
+#pragma warning restore CA1031 // Do not catch general exception types
             {
                 return source;
             }

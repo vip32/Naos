@@ -6,6 +6,7 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Queueing;
     using Naos.Core.Queueing.Domain;
+    using Naos.Foundation;
     using NSubstitute;
     using Xunit;
 
@@ -126,7 +127,7 @@
 
         protected override async Task CleanupQueueAsync(IQueue<StubMessage> queue)
         {
-            await queue?.DeleteQueueAsync();
+            await (queue?.DeleteQueueAsync()).AnyContext();
         }
     }
 }

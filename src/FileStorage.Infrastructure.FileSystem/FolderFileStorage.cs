@@ -170,7 +170,7 @@
             var count = 0;
 
             var path = Path.Combine(this.Folder, searchPattern);
-            if(path[path.Length - 1] == Path.DirectorySeparatorChar || path.EndsWith(Path.DirectorySeparatorChar + "*"))
+            if(path[path.Length - 1] == Path.DirectorySeparatorChar || path.EndsWith(Path.DirectorySeparatorChar + "*", System.StringComparison.OrdinalIgnoreCase))
             {
                 var directory = Path.GetDirectoryName(path);
                 if(Directory.Exists(directory))

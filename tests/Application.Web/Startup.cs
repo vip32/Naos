@@ -192,7 +192,7 @@
                             message = e.Value.Exception?.Message,
                             data = e.Value.Data
                         })
-                    }, DefaultJsonSerializerSettings.Create()));
+                    }, DefaultJsonSerializerSettings.Create())).AnyContext();
                 }
             });
 

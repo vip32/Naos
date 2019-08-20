@@ -20,9 +20,9 @@
                 [LogPropertyKeys.CorrelationId] = message.CorrelationId,
             };
 
-            using(this.logger.BeginScope(loggerState))
+            using(this.Logger.BeginScope(loggerState))
             {
-                this.logger.LogInformation($"{{LogKey:l}} {message.Entity.Text} (name={{MessageName}}, id={{EventId}}, origin={{EventOrigin}})", LogKeys.Messaging, message.GetType().PrettyName(), message.Id, message.Origin);
+                this.Logger.LogInformation($"{{LogKey:l}} {message.Entity.Text} (name={{MessageName}}, id={{EventId}}, origin={{EventOrigin}})", LogKeys.Messaging, message.GetType().PrettyName(), message.Id, message.Origin);
 
                 return Task.CompletedTask;
             }

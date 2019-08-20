@@ -27,7 +27,7 @@
             // needed for mediator
             naosOptions.Context.Services.Scan(scan => scan
                 .FromApplicationDependencies()
-                .AddClasses(classes => classes.Where(c => c.Name.EndsWith("JobEventHandler")))
+                .AddClasses(classes => classes.Where(c => c.Name.EndsWith("JobEventHandler", StringComparison.OrdinalIgnoreCase)))
                 //.FromAssembliesOf(typeof(JobEventHandler<>))
                 //.AddClasses()
                 .AsImplementedInterfaces());

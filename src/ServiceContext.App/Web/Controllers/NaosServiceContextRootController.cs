@@ -41,7 +41,7 @@
         {
             foreach(var feature in this.features.Safe())
             {
-                if(!feature.EchoRoute.IsNullOrEmpty() && !feature.EchoRoute.StartsWith("http"))
+                if(!feature.EchoRoute.IsNullOrEmpty() && !feature.EchoRoute.StartsWith("http", System.StringComparison.OrdinalIgnoreCase))
                 {
                     feature.EchoRoute = this.Url.AbsolutePath(feature.EchoRoute);
                 }
@@ -56,7 +56,7 @@
                     ["requestId"] = this.HttpContext.GetRequestId(),
                     ["isLocal"] = this.HttpContext.Request.IsLocal(),
                     ["host"] = Dns.GetHostName(),
-                    ["ip"] = (await Dns.GetHostAddressesAsync(Dns.GetHostName())).Select(i => i.ToString()).Where(i => i.Contains("."))
+                    ["ip"] = (await Dns.GetHostAddressesAsync(Dns.GetHostName()).AnyContext()).Select(i => i.ToString()).Where(i => i.Contains("."))
                     //["userIdentity"] = serviceContext.UserIdentity,
                     //["username"] = serviceContext.Username
                 },

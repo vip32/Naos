@@ -54,9 +54,12 @@
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
 
-            if((ITracer)naosOptions.Context.Application.ApplicationServices.CreateScope().ServiceProvider.GetService(typeof(ITracer)) == null) // resolve scoped service
+            using (var scope = naosOptions.Context.Application.ApplicationServices.CreateScope())
             {
-                throw new InvalidOperationException("Unable to find the required services. You must call the AddTracing method in ConfigureServices in the application startup code.");
+                if (scope.ServiceProvider.GetService(typeof(ITracer)) == null) // resolve scoped service
+                {
+                    throw new InvalidOperationException("Unable to find the required services. You must call the AddTracing method in ConfigureServices in the application startup code.");
+                }
             }
 
             naosOptions.Context.Application.UseEndpointRouting(); // needed by middleware to get action/controller https://www.stevejgordon.co.uk/asp-net-core-first-look-at-global-routing-dispatcher

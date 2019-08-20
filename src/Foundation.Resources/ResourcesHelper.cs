@@ -7,28 +7,39 @@
     {
         public static Bitmap GetLogoAsBitmap()
         {
-            var stream = new BinaryReader(
-                System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Naos.Foundation.Resources.logo.png")).BaseStream;
-            return new Bitmap(Image.FromStream(stream));
+            using(var reader = new BinaryReader(
+                System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Naos.Foundation.Resources.logo.png")))
+            {
+                return new Bitmap(Image.FromStream(reader.BaseStream));
+            }
         }
 
         public static byte[] GetLogoAsBytes()
         {
-            return new BinaryReader(
-                System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Naos.Foundation.Resources.logo.png"))?.ReadAllBytes();
+            using(var reader = new BinaryReader(
+                System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Naos.Foundation.Resources.logo.png")))
+            {
+                return reader?.ReadAllBytes();
+            }
         }
 
         public static Bitmap GetIconAsBitmap()
         {
-            var stream = new BinaryReader(
-                System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Naos.Foundation.Resources.favicon.ico")).BaseStream;
-            return new Icon(stream).ToBitmap();
+            using var reader = new BinaryReader(
+                System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Naos.Foundation.Resources.favicon.ico"));
+            using(var icon = new Icon(reader.BaseStream))
+            {
+                return icon.ToBitmap();
+            }
         }
 
         public static byte[] GetIconAsBytes()
         {
-            return new BinaryReader(
-                System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Naos.Foundation.Resources.favicon.ico"))?.ReadAllBytes();
+            using(var reader = new BinaryReader(
+                System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Naos.Foundation.Resources.favicon.ico")))
+            {
+                return reader?.ReadAllBytes();
+            }
         }
 
         public static string GetLogoAsString()

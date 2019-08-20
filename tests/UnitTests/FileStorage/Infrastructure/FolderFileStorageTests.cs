@@ -62,12 +62,12 @@
         [Fact]
         public async Task CanSaveFilesWithSerializersAsync()
         {
-            await base.CanSaveFilesWithSerializerAsync(new Base64Serializer(), "base64");
-            await base.CanSaveFilesWithSerializerAsync(new BsonDataSerializer(), "bson");
-            await base.CanSaveFilesWithSerializerAsync(new HexSerializer(), "hex");
-            await base.CanSaveFilesWithSerializerAsync(new JsonNetSerializer(), "json");
-            await base.CanSaveFilesWithSerializerAsync(new MessagePackSerializer(), "mpack");
-            await base.CanSaveFilesWithSerializerAsync(new CsvSerializer(), "csv");
+            await base.CanSaveFilesWithSerializerAsync(new Base64Serializer(), "base64").AnyContext();
+            await base.CanSaveFilesWithSerializerAsync(new BsonDataSerializer(), "bson").AnyContext();
+            await base.CanSaveFilesWithSerializerAsync(new HexSerializer(), "hex").AnyContext();
+            await base.CanSaveFilesWithSerializerAsync(new JsonNetSerializer(), "json").AnyContext();
+            await base.CanSaveFilesWithSerializerAsync(new MessagePackSerializer(), "mpack").AnyContext();
+            await base.CanSaveFilesWithSerializerAsync(new CsvSerializer(), "csv").AnyContext();
         }
 
         [Fact]

@@ -121,7 +121,7 @@
                 return false;
             }
 
-            return await this.FindOneAsync(id) != null;
+            return await this.FindOneAsync(id).AnyContext() != null;
         }
 
         /// <summary>

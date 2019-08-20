@@ -110,7 +110,7 @@
 
         public async Task RunAsync() // TODO: a different token per job is better to cancel individual jobs (+ timeout)
         {
-            await this.RunAsync(DateTime.UtcNow);
+            await this.RunAsync(DateTime.UtcNow).AnyContext();
         }
 
         public async Task RunAsync(DateTime moment) // TODO: a different token per job is better to cancel individual jobs (+ timeout)
@@ -157,7 +157,7 @@
             {
                 try
                 {
-                    async Task Execute()
+                    async Task ExecuteAsync()
                     {
                         using(var timer = new Foundation.Timer())
                         using(this.logger.BeginScope(new Dictionary<string, object>
@@ -184,7 +184,7 @@
                         {
                             try
                             {
-                                await Execute();
+                                await ExecuteAsync().AnyContext();
                             }
                             finally
                             {
@@ -198,7 +198,7 @@
                     }
                     else
                     {
-                        await Execute();
+                        await ExecuteAsync().AnyContext();
                     }
                 }
                 catch(OperationCanceledException ex)

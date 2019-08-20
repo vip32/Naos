@@ -91,7 +91,9 @@
                 this.logger.LogTrace(LogKeys.Messaging, message.Id, messageName, LogTraceNames.Message);
 
                 var url = $"{this.serviceUtils.Endpoint}/api/v1/hubs/{this.HubName}";
+#pragma warning disable CA2000 // Dispose objects before losing scope
                 var request = new HttpRequestMessage(HttpMethod.Post, url);
+#pragma warning restore CA2000 // Dispose objects before losing scope
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", this.serviceUtils.GenerateAccessToken(url, "userId"));
                 request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(ContentType.JSON.ToValue()));
                 request.Content = new StringContent(JsonConvert.SerializeObject(
@@ -199,7 +201,7 @@
                             await this.options.Mediator.Publish(new MessageHandledDomainEvent(message, this.options.MessageScope)).AnyContext();
                         }
 
-                        await (Task)method.Invoke(handler, new object[] { jsonMessage as object });
+                        await ((Task)method.Invoke(handler, new object[] { jsonMessage as object })).AnyContext();
                     }
                     else
                     {

@@ -12,7 +12,6 @@
     public class CosmosDbSqlRepository<TEntity> : IGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot //, IDiscriminated
     {
-        protected readonly ILogger<IGenericRepository<TEntity>> logger;
         private readonly CosmosDbSqlRepositoryOptions<TEntity> options;
 
         public CosmosDbSqlRepository(CosmosDbSqlRepositoryOptions<TEntity> options)
@@ -22,15 +21,17 @@
             EnsureArg.IsNotNull(options.IdGenerator, nameof(options.IdGenerator));
 
             this.options = options;
-            this.logger = options.CreateLogger<IGenericRepository<TEntity>>();
+            this.Logger = options.CreateLogger<IGenericRepository<TEntity>>();
 
-            this.logger.LogInformation($"{{LogKey:l}} construct cosmos repository (type={typeof(TEntity).PrettyName()})", LogKeys.DomainRepository);
+            this.Logger.LogInformation($"{{LogKey:l}} construct cosmos repository (type={typeof(TEntity).PrettyName()})", LogKeys.DomainRepository);
         }
 
         public CosmosDbSqlRepository(Builder<CosmosDbSqlRepositoryOptionsBuilder<TEntity>, CosmosDbSqlRepositoryOptions<TEntity>> optionsBuilder)
             : this(optionsBuilder(new CosmosDbSqlRepositoryOptionsBuilder<TEntity>()).Build())
         {
         }
+
+        protected ILogger<IGenericRepository<TEntity>> Logger { get; }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
@@ -77,7 +78,7 @@
                 return default;
             }
 
-            return await this.options.Provider.GetByIdAsync(id as string);
+            return await this.options.Provider.GetByIdAsync(id as string).AnyContext();
         }
 
         public async Task<bool> ExistsAsync(object id)
@@ -87,7 +88,7 @@
                 return false;
             }
 
-            return await this.FindOneAsync(id) != null;
+            return await this.FindOneAsync(id).AnyContext() != null;
         }
 
         /// <summary>
@@ -152,7 +153,7 @@
                 stateEntity.State.SetUpdated();
             }
 
-            this.logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogKeys.DomainRepository);
+            this.Logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogKeys.DomainRepository);
             var result = await this.options.Provider.UpsertAsync(entity).AnyContext();
             //entity = result;
 
@@ -204,7 +205,7 @@
                 await this.options.Mediator.Publish(new EntityDeleteDomainEvent(entity)).AnyContext();
             }
 
-            this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogKeys.DomainRepository);
+            this.Logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogKeys.DomainRepository);
             var response = await this.options.Provider.DeleteByIdAsync(entity.Id as string).AnyContext();
 
             if (response)

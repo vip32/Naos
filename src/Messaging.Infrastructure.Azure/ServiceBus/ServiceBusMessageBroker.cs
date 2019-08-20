@@ -255,7 +255,7 @@
                                     await mediator.Publish(new MessageHandledDomainEvent(message, messageScope)).AnyContext();
                                 }
 
-                                await (Task)method.Invoke(handler, new object[] { message as object });
+                                await ((Task)method.Invoke(handler, new object[] { message as object })).AnyContext();
                             }
                             else
                             {

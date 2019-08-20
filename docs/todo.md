@@ -49,6 +49,7 @@ logevent contains timestamp, duration, overall correlationid, (track)id , servic
 NetCore 3.0 upgrade (preview)
 https://asp.net-hacker.rocks/2019/08/05/aspnetcore30-generic-hosting-environment.html
 https://www.talkingdotnet.com/asp-net-core-3-0-app-with-net-core-3-preview-2-and-visual-studio-2019/
+https://wildermuth.com/2019/08/19/My-First-Look-at-ASP-NET-Core-3-0
 
 gRPC based ServiceDiscovery https://github.com/damienbod/Secure_gRpc (registry + service)
 
@@ -120,6 +121,7 @@ ascii https://mattwarren.org/2019/04/25/ASCII-Art-in-.NET-Code/ + codes https://
 assembly builddate https://www.meziantou.net/2018/09/24/getting-the-date-of-build-of-a-net-assembly-at-runtime
 mediator pipeline for command validation http://www.kamilgrzybek.com/design/rest-api-data-validation/	
 c# script compile + run roslyn https://laurentkempe.com/2019/02/18/dynamically-compile-and-run-code-using-dotNET-Core-3.0
+clearscript https://github.com/microsoft/ClearScript               
 pattern cqs https://www.dotnetcurry.com/patterns-practices/1461/command-query-separation-cqs
 cqrs https://github.com/OpenCQRS/OpenCQRS
 eventstore https://github.com/NEventStore

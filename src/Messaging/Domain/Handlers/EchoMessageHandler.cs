@@ -9,14 +9,14 @@
 
     public class EchoMessageHandler : IMessageHandler<EchoMessage>
     {
-        protected readonly ILogger<EchoMessageHandler> logger;
-
         public EchoMessageHandler(ILogger<EchoMessageHandler> logger)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
 
-            this.logger = logger;
+            this.Logger = logger;
         }
+
+        protected ILogger<EchoMessageHandler> Logger { get; }
 
         /// <summary>
         /// Handles the specified message.
@@ -29,9 +29,9 @@
                 [LogPropertyKeys.CorrelationId] = message.CorrelationId,
             };
 
-            using(this.logger.BeginScope(loggerState))
+            using(this.Logger.BeginScope(loggerState))
             {
-                this.logger.LogInformation($"{{LogKey:l}} {message.Text} (name={{MessageName}}, id={{MessageId}}, origin={{MessageOrigin}}) ", LogKeys.Messaging, message.GetType().PrettyName(), message.Id, message.Origin);
+                this.Logger.LogInformation($"{{LogKey:l}} {message.Text} (name={{MessageName}}, id={{MessageId}}, origin={{MessageOrigin}}) ", LogKeys.Messaging, message.GetType().PrettyName(), message.Id, message.Origin);
                 Thread.Sleep(1500);
                 return Task.CompletedTask;
             }

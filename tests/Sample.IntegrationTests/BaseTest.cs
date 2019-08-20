@@ -16,8 +16,6 @@
 
     public abstract class BaseTest
     {
-        protected readonly IServiceCollection services = new ServiceCollection();
-
         protected BaseTest()
         {
             Environment.SetEnvironmentVariable(EnvironmentKeys.Environment, "Development");
@@ -27,8 +25,8 @@
             var entityFrameworkConfiguration = configuration.GetSection("naos:sample:userAccounts:entityFramework").Get<EntityFrameworkConfiguration>();
 
             // naos core registrations
-            this.services
-                .AddMediatR(AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.GetName().Name.StartsWith("Microsoft.")).ToArray())
+            this.Services
+                .AddMediatR(AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.GetName().Name.StartsWith("Microsoft.", StringComparison.OrdinalIgnoreCase)).ToArray())
                 .AddNaos(configuration, "Product", "Capability", new[] { "All" }, n => n
                     .AddServices(o => o
                         .AddSampleCountries()
@@ -49,18 +47,20 @@
                         .UseServiceBusBroker())
                     .AddCommands());
 
-            this.services.AddSingleton<ICommandBehavior, ValidateCommandBehavior>(); // new ValidateCommandBehavior(false)
-            this.services.AddSingleton<ICommandBehavior, JournalCommandBehavior>();
-            this.services.AddSingleton<ICommandBehavior>(new FileStoragePersistCommandBehavior(
+            this.Services.AddSingleton<ICommandBehavior, ValidateCommandBehavior>(); // new ValidateCommandBehavior(false)
+            this.Services.AddSingleton<ICommandBehavior, JournalCommandBehavior>();
+            this.Services.AddSingleton<ICommandBehavior>(new FileStoragePersistCommandBehavior(
                             new FolderFileStorage(o => o
                                 .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "commands")))));
             //this.services.AddSingleton<ICommandBehavior, ServiceContextEnrichCommandBehavior>();
             //this.services.AddSingleton<ICommandBehavior, IdempotentCommandBehavior>();
             //this.services.AddSingleton<ICommandBehavior, PersistCommandBehavior>();
 
-            this.ServiceProvider = this.services.BuildServiceProvider();
+            this.ServiceProvider = this.Services.BuildServiceProvider();
         }
 
         public ServiceProvider ServiceProvider { get; }
+
+        protected IServiceCollection Services { get; } = new ServiceCollection();
     }
 }

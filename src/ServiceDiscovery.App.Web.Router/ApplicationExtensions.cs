@@ -75,7 +75,7 @@
                     .Log(logger)
                     .CopyXForwardedHeaders() // copies the headers from the incoming requests
                     .AddXForwardedHeaders() // adds the current proxy proto/host/for/pathbase to the X-Forwarded headers
-                    .Send();
+                    .Send().AnyContext();
             });
 #pragma warning restore CS0618 // Type or member is obsolete
 

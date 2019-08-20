@@ -154,7 +154,7 @@
             protected override Expression VisitMemberAccess(MemberExpression expression)
             {
                 // Strip out any references to expressions captured by outer variables - LINQ to SQL can't handle these:
-                if(expression.Member.DeclaringType.Name.StartsWith("<>"))
+                if(expression.Member.DeclaringType.Name.StartsWith("<>", StringComparison.OrdinalIgnoreCase))
                 {
                     return this.TransformExpression(expression);
                 }
@@ -168,7 +168,7 @@
                 if(input == null
                     || !(input.Member is FieldInfo)
                     || !input.Member.ReflectedType.IsNestedPrivate
-                    || !input.Member.ReflectedType.Name.StartsWith("<>")) // captured outer variable
+                    || !input.Member.ReflectedType.Name.StartsWith("<>", StringComparison.OrdinalIgnoreCase)) // captured outer variable
                 {
                     return input;
                 }
@@ -182,7 +182,7 @@
                     }
 
                     var t = obj.GetType();
-                    if(!t.IsNestedPrivate || !t.Name.StartsWith("<>"))
+                    if(!t.IsNestedPrivate || !t.Name.StartsWith("<>", StringComparison.OrdinalIgnoreCase))
                     {
                         return input;
                     }

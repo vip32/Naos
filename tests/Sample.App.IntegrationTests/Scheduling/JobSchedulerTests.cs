@@ -53,7 +53,7 @@
             var t1 = this.sut.TriggerAsync("key1");
             var t2 = this.sut.TriggerAsync("key1");
 
-            await Task.WhenAll(new[] { t1, t2 });
+            await Task.WhenAll(new[] { t1, t2 }).AnyContext();
 
             count.ShouldBe(2); // action does not support overlap (due to async not supported?)
         }
@@ -68,12 +68,12 @@
                 {
                     count++;
                     System.Diagnostics.Trace.WriteLine("+++ hello from task " + a);
-                }));
+                }).AnyContext());
 
             var t1 = this.sut.TriggerAsync("key1");
             var t2 = this.sut.TriggerAsync("key1");
 
-            await Task.WhenAll(new[] { t1, t2 });
+            await Task.WhenAll(new[] { t1, t2 }).AnyContext();
 
             count.ShouldBe(1); // due to overlap (key1) the job runs once
         }
@@ -90,7 +90,7 @@
             var t1 = this.sut.TriggerAsync("key1");
             var t2 = this.sut.TriggerAsync("key2");
 
-            await Task.WhenAll(new[] { t1, t2 });
+            await Task.WhenAll(new[] { t1, t2 }).AnyContext();
 
             probe.Count.ShouldBe(2); // each job (key1/key2) runs once (2 * 1)
         }
@@ -106,7 +106,7 @@
             var t1 = this.sut.TriggerAsync("key1");
             var t2 = this.sut.TriggerAsync("key1");
 
-            await Task.WhenAll(new[] { t1, t2 });
+            await Task.WhenAll(new[] { t1, t2 }).AnyContext();
 
             probe.Count.ShouldBe(1); // due to overlap (key1) the job runs once
         }
@@ -124,7 +124,7 @@
             var t1 = this.sut.TriggerAsync("key1");
             var t2 = this.sut.TriggerAsync("key2");
 
-            await Task.WhenAll(new[] { t1, t2 });
+            await Task.WhenAll(new[] { t1, t2 }).AnyContext();
 
             probe.Count.ShouldBe(1); // jirst job trigger runs once, second job cancels directly
         }
@@ -133,22 +133,23 @@
         public async Task RegisterAndTriggerTypeWithCancellation_Test()
         {
             var probe = this.ServiceProvider.GetRequiredService<StubProbe>();
-            var cts = new CancellationTokenSource();
+            using (var cts = new CancellationTokenSource())
+            {
+                this.sut.Options.Register<StubJob>("key1", "* 12 * * * *");
+                this.sut.Options.Register<StubJob>("key2", "* 12 * * * *");
 
-            this.sut.Options.Register<StubJob>("key1", "* 12 * * * *");
-            this.sut.Options.Register<StubJob>("key2", "* 12 * * * *");
+                // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
+                cts.CancelAfter(TimeSpan.FromMilliseconds(250));
+                var t1 = this.sut.TriggerAsync("key1", cts.Token);
+                var t2 = this.sut.TriggerAsync("key2", cts.Token);
+                //var t3 = sut.TriggerAsync("key3", cts.Token);
 
-            // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
-            cts.CancelAfter(TimeSpan.FromMilliseconds(250));
-            var t1 = this.sut.TriggerAsync("key1", cts.Token);
-            var t2 = this.sut.TriggerAsync("key2", cts.Token);
-            //var t3 = sut.TriggerAsync("key3", cts.Token);
+                await Task.WhenAll(new[] { t1, t2 }).AnyContext();
 
-            await Task.WhenAll(new[] { t1, t2 });
-
-            probe.Count.ShouldBe(4); // every job loops twice
-            //t1.IsCanceled.ShouldBe(true);
-            //t2.IsCanceled.ShouldBe(true);
+                probe.Count.ShouldBe(4); // every job loops twice
+                                         //t1.IsCanceled.ShouldBe(true);
+                                         //t2.IsCanceled.ShouldBe(true);
+            }
         }
 
         [Fact]
@@ -163,7 +164,7 @@
             var t2 = this.sut.TriggerAsync("key1"); // skipped, due to overlap
             var t3 = this.sut.TriggerAsync("unk");
 
-            await Task.WhenAll(new[] { t1, t2, t3 });
+            await Task.WhenAll(new[] { t1, t2, t3 }).AnyContext();
 
             probe.Count.ShouldBe(5);
         }
@@ -181,7 +182,7 @@
             var t1 = this.sut.TriggerAsync("key1");
             var t2 = this.sut.TriggerAsync("key2");
 
-            await Task.WhenAll(new[] { t1, t2 });
+            await Task.WhenAll(new[] { t1, t2 }).AnyContext();
 
             probe.Count.ShouldBe(4); // probe.count gets increased per job
         }
@@ -215,7 +216,7 @@
 
                         Thread.Sleep(200);
                     }
-                }, cancellationToken);
+                }, cancellationToken).AnyContext();
             }
         }
 
@@ -235,7 +236,7 @@
                     this.probe.Count++;
                     probe.Count++;
                     System.Diagnostics.Trace.WriteLine($"+++ hello from custom job {DateTime.UtcNow.ToString("o")} " + arg1);
-                });
+                }).AnyContext();
             }
         }
 

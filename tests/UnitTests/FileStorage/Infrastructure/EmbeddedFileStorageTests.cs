@@ -23,7 +23,7 @@
 
             using(storage)
             {
-                var fileInfo = await storage.GetFileInformationAsync(@"Naos\Core\UnitTests/FileStorage\StubFile.txt");
+                var fileInfo = await storage.GetFileInformationAsync(@"Naos\Core\UnitTests/FileStorage\StubFile.txt").AnyContext();
                 Assert.NotNull(fileInfo);
                 Assert.True(fileInfo.ContentType == ContentType.TEXT);
             }
@@ -40,7 +40,7 @@
 
             using(storage)
             {
-                var fileInfo = await storage.GetFileInformationAsync(@"Naos\Core\UnitTests/FileStorage\StubFile.json");
+                var fileInfo = await storage.GetFileInformationAsync(@"Naos\Core\UnitTests/FileStorage\StubFile.json").AnyContext();
                 Assert.NotNull(fileInfo);
                 Assert.True(fileInfo.ContentType == ContentType.JSON);
             }
@@ -57,7 +57,7 @@
 
             using(storage)
             {
-                var fileInfo = await storage.GetFileInformationAsync(@"Naos\Core\UnitTests\FileStorage\DoesNotExist.txt");
+                var fileInfo = await storage.GetFileInformationAsync(@"Naos\Core\UnitTests\FileStorage\DoesNotExist.txt").AnyContext();
                 Assert.Null(fileInfo);
             }
         }
@@ -73,7 +73,7 @@
 
             using(storage)
             {
-                var fileInfos = await storage.GetFileInformationsAsync();
+                var fileInfos = await storage.GetFileInformationsAsync().AnyContext();
                 Assert.NotNull(fileInfos);
                 Assert.NotNull(fileInfos.Files);
                 Assert.True(fileInfos.Files.Any());
@@ -91,7 +91,7 @@
 
             using(storage)
             {
-                var fileInfos = await storage.GetFileInformationsAsync(searchPattern: "*StubFile.*");
+                var fileInfos = await storage.GetFileInformationsAsync(searchPattern: "*StubFile.*").AnyContext();
                 Assert.NotNull(fileInfos);
                 Assert.NotNull(fileInfos.Files);
                 Assert.True(fileInfos.Files.Any());
@@ -109,7 +109,7 @@
 
             using(storage)
             {
-                var stream = await storage.GetFileStreamAsync(@"Naos\Core\UnitTests/FileStorage\StubFile.txt");
+                var stream = await storage.GetFileStreamAsync(@"Naos\Core\UnitTests\FileStorage\StubFile.txt").AnyContext();
                 Assert.NotNull(stream);
                 Assert.True(stream.Length > 0);
             }
@@ -126,7 +126,7 @@
 
             using(storage)
             {
-                var stream = await storage.GetFileStreamAsync(@"Naos\Core\UnitTests\FileStorage\DoesNotExist.txt");
+                var stream = await storage.GetFileStreamAsync(@"Naos\Core\UnitTests\FileStorage\DoesNotExist.txt").AnyContext();
                 Assert.Null(stream);
             }
         }

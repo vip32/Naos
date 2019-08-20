@@ -34,7 +34,7 @@
 
         public async Task<IEnumerable<ServiceRegistration>> RegistrationsAsync()
         {
-            return (await this.registry.RegistrationsAsync()).Safe();
+            return (await this.registry.RegistrationsAsync().AnyContext()).Safe();
         }
 
         public async Task<IEnumerable<ServiceRegistration>> RegistrationsAsync(string name, string tag)

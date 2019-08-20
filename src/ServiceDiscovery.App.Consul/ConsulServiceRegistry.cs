@@ -32,7 +32,7 @@
             {
                 id = id.Replace(" ", string.Empty);
                 this.logger.LogInformation("{LogKey:l} consul registration delete (id={RegistrationId})", LogKeys.ServiceDiscovery, id);
-                await this.client.Agent.ServiceDeregister(id);
+                await this.client.Agent.ServiceDeregister(id).AnyContext();
             }
             catch
             {

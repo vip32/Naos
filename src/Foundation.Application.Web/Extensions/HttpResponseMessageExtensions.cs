@@ -153,7 +153,7 @@
 
         public static async Task<T> ReadAsJsonAsync<T>(this HttpContent content)
         {
-            var json = await content.ReadAsStringAsync();
+            var json = await content.ReadAsStringAsync().AnyContext();
             if(json.IsNullOrEmpty())
             {
                 return default;

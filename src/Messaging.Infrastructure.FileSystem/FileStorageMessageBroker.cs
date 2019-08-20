@@ -172,7 +172,7 @@
                             await this.options.Mediator.Publish(new MessageHandledDomainEvent(message, this.options.MessageScope)).AnyContext();
                         }
 
-                        await (Task)method.Invoke(handler, new object[] { jsonMessage as object });
+                        await ((Task)method.Invoke(handler, new object[] { jsonMessage as object })).AnyContext();
                     }
                     else
                     {

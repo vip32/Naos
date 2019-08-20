@@ -9,6 +9,7 @@
     using Humanizer;
     using Microsoft.Azure.Cosmos;
     using Microsoft.Azure.Cosmos.Linq;
+    using Microsoft.Extensions.Logging;
 
     // https://github.com/Azure/azure-cosmos-dotnet-v3
     // https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.cosmos
@@ -16,6 +17,7 @@
     //where T : IHaveDiscriminator // needed? each type T is persisted in own collection
     {
         private readonly CosmosDbSqlProviderV3Options<T> options;
+        private readonly ILogger<CosmosDbSqlProviderV3<T>> logger;
         private CosmosClient client;
         private Database database;
         private Container container;
@@ -29,6 +31,7 @@
             EnsureArg.IsNotNullOrEmpty(options.PartitionKey, nameof(options.PartitionKey));
 
             this.options = options;
+            this.logger = this.options.CreateLogger<CosmosDbSqlProviderV3<T>>();
         }
 
         public CosmosDbSqlProviderV3(Builder<CosmosDbSqlProviderV3OptionsBuilder<T>, CosmosDbSqlProviderV3Options<T>> optionsBuilder)
@@ -48,7 +51,7 @@
 
             while (iterator.HasMoreResults)
             {
-                foreach (var item in await iterator.ReadNextAsync())
+                foreach (var item in await iterator.ReadNextAsync().AnyContext())
                 {
                     {
                         return item;
@@ -116,7 +119,7 @@
 
             while (iterator.HasMoreResults)
             {
-                foreach (var entity in await iterator.ReadNextAsync())
+                foreach (var entity in await iterator.ReadNextAsync().AnyContext())
                 {
                     result.Add(entity);
                 }
@@ -145,7 +148,7 @@
 
             while (iterator.HasMoreResults)
             {
-                foreach (var entity in await iterator.ReadNextAsync())
+                foreach (var entity in await iterator.ReadNextAsync().AnyContext())
                 {
                     result.Add(entity);
                 }

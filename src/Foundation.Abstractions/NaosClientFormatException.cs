@@ -18,13 +18,13 @@
         {
         }
 
-        public NaosClientFormatException(SerializationInfo serializationInfo, StreamingContext context)
-            : base(serializationInfo, context)
+        public NaosClientFormatException(string message, Exception innerException)
+            : base(message, innerException)
         {
         }
 
-        public NaosClientFormatException(string message, Exception innerException)
-            : base(message, innerException)
+        protected NaosClientFormatException(SerializationInfo serializationInfo, StreamingContext context)
+            : base(serializationInfo, context)
         {
         }
     }

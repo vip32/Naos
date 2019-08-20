@@ -18,13 +18,13 @@
 
         public static void WriteBitmap(Bitmap image, int sMax = 39)
         {
-            var foregroundColor = System.Console.ForegroundColor;
-            var backgroundColor = System.Console.BackgroundColor;
+            var foregroundColor = Console.ForegroundColor;
+            var backgroundColor = Console.BackgroundColor;
 
             WriteBitmapInternal(image, sMax);
 
-            System.Console.ForegroundColor = foregroundColor;
-            System.Console.BackgroundColor = backgroundColor;
+            Console.ForegroundColor = foregroundColor;
+            Console.BackgroundColor = backgroundColor;
         }
 
         private static void WriteBitmapInternal(Bitmap image, int sMax = 39)
@@ -39,16 +39,19 @@
                 index |= (c.B > 64) ? 1 : 0;
                 return index;
             };
-            var bmpMin = new Bitmap(image, resSize);
-            for(var i = 0; i < resSize.Height; i++)
-            {
-                for(var j = 0; j < resSize.Width; j++)
-                {
-                    System.Console.ForegroundColor = (ConsoleColor)toConsoleColor(bmpMin.GetPixel(j, i));
-                    System.Console.Write("██");
-                }
 
-                System.Console.WriteLine();
+            using(var bmpMin = new Bitmap(image, resSize))
+            {
+                for(var i = 0; i < resSize.Height; i++)
+                {
+                    for(var j = 0; j < resSize.Width; j++)
+                    {
+                        Console.ForegroundColor = (ConsoleColor)toConsoleColor(bmpMin.GetPixel(j, i));
+                        Console.Write("██");
+                    }
+
+                    Console.WriteLine();
+                }
             }
         }
     }

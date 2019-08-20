@@ -92,11 +92,11 @@
         {
             this.logger.LogInformation("{LogKey:l} hosted service stopped", LogKeys.ServiceDiscovery);
 
-            this.cts.Cancel();
+            this.cts?.Cancel();
 
             if(this.registered)
             {
-                foreach(var registrationId in this.registrationIds)
+                foreach(var registrationId in this.registrationIds.Safe())
                 {
                     this.registryClient.DeRegisterAsync(registrationId);
                 }

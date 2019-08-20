@@ -72,7 +72,7 @@
                 {
                     this.logger.LogInformation($"{{LogKey:l}} [{requestId}] http headers={string.Join("|", context.Request.Headers.Select(h => $"{h.Key}={h.Value}"))}", LogKeys.InboundRequest);
                 }
-            });
+            }).AnyContext();
         }
 
         private async Task LogResponseAsync(HttpContext context, string correlationId, string requestId, TimeSpan duration)

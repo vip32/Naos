@@ -35,7 +35,7 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
             path = PathHelper.Normalize(path);
-            if(!await this.ExistsAsync(path))
+            if(!await this.ExistsAsync(path).AnyContext())
             {
                 return null;
             }
@@ -64,7 +64,7 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
             path = PathHelper.Normalize(path);
-            if(!await this.ExistsAsync(path))
+            if(!await this.ExistsAsync(path).AnyContext())
             {
                 return null;
             }
