@@ -118,6 +118,7 @@
                             .UseFile()
                             //.UseAzureBlobStorage()
                             .UseAzureLogAnalytics())
+                        .AddSystemHealthChecks()
                         .AddRequestStorage(r => r
                             .UseAzureBlobStorage())
                         .AddTracing())

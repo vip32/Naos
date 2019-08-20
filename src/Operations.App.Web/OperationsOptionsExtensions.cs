@@ -20,5 +20,18 @@
 
             return options;
         }
+
+        public static OperationsOptions AddSystemHealthChecks(
+            this OperationsOptions options)
+        {
+            EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.Context, nameof(options.Context));
+
+            options.Context.Services.AddHealthChecks()
+                .AddCheck<SystemMemoryHealthCheck>("system-memory")
+                .AddCheck<SystemCpuHealthCheck>("system-cpu");
+
+            return options;
+        }
     }
 }
