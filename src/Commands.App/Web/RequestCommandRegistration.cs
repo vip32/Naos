@@ -16,8 +16,20 @@
 
 #pragma warning disable SA1402 // File may only contain a single type
     public class RequestCommandRegistration<TCommandRequest, TResponse> : RequestCommandRegistration
-#pragma warning restore SA1402 // File may only contain a single type
         where TCommandRequest : CommandRequest<TResponse>
+        //where TResponse : CommandResponse<TResponse>
+    {
+        public override Type CommandType
+        {
+            get
+            {
+                return typeof(TCommandRequest);
+            }
+        }
+    }
+
+    public class RequestCommandRegistration<TCommandRequest> : RequestCommandRegistration
+        where TCommandRequest : CommandRequest<object>
         //where TResponse : CommandResponse<TResponse>
     {
         public override Type CommandType

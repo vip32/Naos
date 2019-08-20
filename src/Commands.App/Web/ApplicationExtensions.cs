@@ -1,11 +1,11 @@
 ﻿namespace Microsoft.AspNetCore.Builder
 {
+    using System.Linq;
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Options;
     using Naos.Core.Commands.App.Web;
     using Naos.Foundation;
-    using System.Linq;
 
     /// <summary>
     /// Extension methods for the request command middleware.

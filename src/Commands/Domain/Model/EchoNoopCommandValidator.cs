@@ -2,9 +2,9 @@
 {
     using FluentValidation;
 
-    public class EchoCommandValidator : AbstractValidator<EchoCommand>
+    public class EchoNoopCommandValidator : AbstractValidator<EchoNoopCommand>
     {
-        public EchoCommandValidator()
+        public EchoNoopCommandValidator()
         {
             this.RuleFor(c => c.Message).NotNull().NotEmpty();
         }
