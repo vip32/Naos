@@ -26,9 +26,9 @@
 
             var data = new Dictionary<string, object>
             {
-                { "Total", metrics.Total },
-                { "Used", metrics.Used },
-                { "Free", metrics.Free }
+                { "total", metrics.Total },
+                { "used", metrics.Used },
+                { "free", metrics.Free }
             };
 
             var result = new HealthCheckResult(status, null, null, data);

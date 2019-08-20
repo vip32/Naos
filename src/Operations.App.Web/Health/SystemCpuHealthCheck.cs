@@ -25,7 +25,7 @@
 
             var data = new Dictionary<string, object>
             {
-                { "Load", metrics.LoadPercentage }
+                { "load", metrics.LoadPercentage }
             };
 
             var result = new HealthCheckResult(status, null, null, data);
