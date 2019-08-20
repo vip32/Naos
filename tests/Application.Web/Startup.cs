@@ -4,21 +4,17 @@
     using System.IO;
     using System.Linq;
     using System.Threading;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Diagnostics.HealthChecks;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Internal;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Authorization;
     using Microsoft.AspNetCore.Mvc.Infrastructure;
     using Microsoft.AspNetCore.Mvc.Routing;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Naos.Core.App.Web;
-    using Naos.Core.Authentication.App.Web;
     using Naos.Core.Commands.Domain;
     using Naos.Core.Commands.Infrastructure.FileStorage;
     using Naos.Core.Configuration.App;
@@ -28,7 +24,6 @@
     using Naos.Core.Messaging.Domain;
     using Naos.Foundation;
     using Newtonsoft.Json;
-    using NSwag.AspNetCore;
     using NSwag.Generation.Processors;
 
     public class Startup
@@ -148,6 +143,14 @@
                     .AddServiceDiscoveryRouter(o => o
                         .UseFileSystemRegistry()));
 
+            // TODO: make pretty, like:
+            //services.AddCommandDispatcher(o =>
+            //    o.Get<EchoCommand, EchoCommandResponse>("echo/commands/message")
+            //    o.Post<CreateCustomerCommand, CreateCustomerCommandResponse>("customers")
+            //);
+            //services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<EchoCommand, EchoCommandResponse> { Route = "/route1"});
+            //services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<EchoCommand, EchoCommandResponse> { Route = "/route2" });
+
             // TODO: need to find a way to start the MessageBroker (done by resolving the IMessageBroker somewhere, HostedService? like scheduling)
         }
 
@@ -162,6 +165,7 @@
             app
                 .UseHttpsRedirection()
                 .UseNaos(s => s
+                    .UseRequestCommands()
                     .UseRequestCorrelation()
                     .UseServiceContext()
                     .UseServicePoweredBy()
