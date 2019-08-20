@@ -150,7 +150,7 @@
             //);
             services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<EchoCommand, EchoCommandResponse> { Route = "/route1" });
             services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<EchoCommand, EchoCommandResponse> { Route = "/route2" });
-            services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<EchoNoopCommand> { Route = "/route3" });
+            services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<PingCommand> { Route = "/route3" });
 
             // TODO: need to find a way to start the MessageBroker (done by resolving the IMessageBroker somewhere, HostedService? like scheduling)
         }

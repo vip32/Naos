@@ -2,11 +2,11 @@
 {
     using FluentValidation.Results;
 
-    public class EchoNoopCommand : CommandRequest<object>
+    public class PingCommand : CommandRequest<object> // has no response type
     {
         public string Message { get; set; }
 
         public override ValidationResult Validate() =>
-            new EchoNoopCommandValidator().Validate(this);
+            new PingCommandValidator().Validate(this);
     }
 }

@@ -12,11 +12,11 @@
     /// </summary>
     /// <typeparam name="TRequest">The type of the request.</typeparam>
     /// <seealso cref="App.BehaviorCommandHandler{TRequest, bool}" />
-    public class EchoNoopCommandHandler : BehaviorCommandHandler<EchoNoopCommand, object>
+    public class PingCommandHandler : BehaviorCommandHandler<PingCommand, object>
     {
         private readonly ILogger<EchoCommandHandler> logger;
 
-        public EchoNoopCommandHandler(
+        public PingCommandHandler(
             ILogger<EchoCommandHandler> logger,
             IEnumerable<ICommandBehavior> behaviors)
             : base(logger, behaviors)
@@ -26,7 +26,7 @@
             this.logger = logger;
         }
 
-        public override async Task<CommandResponse<object>> HandleRequest(EchoNoopCommand request, CancellationToken cancellationToken)
+        public override async Task<CommandResponse<object>> HandleRequest(PingCommand request, CancellationToken cancellationToken)
         {
             return await Task.Run(() =>
             {

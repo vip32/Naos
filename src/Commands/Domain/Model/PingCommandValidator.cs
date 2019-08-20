@@ -2,9 +2,9 @@
 {
     using FluentValidation;
 
-    public class EchoNoopCommandValidator : AbstractValidator<EchoNoopCommand>
+    public class PingCommandValidator : AbstractValidator<PingCommand>
     {
-        public EchoNoopCommandValidator()
+        public PingCommandValidator()
         {
             this.RuleFor(c => c.Message).NotNull().NotEmpty();
         }
