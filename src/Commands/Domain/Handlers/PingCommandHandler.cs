@@ -8,7 +8,7 @@
     using Naos.Foundation;
 
     /// <summary>
-    /// Echo handler for the <see cref="TRequest" /> command request, response result is always the input message.
+    /// Ping handler for the <see cref="TRequest" /> command request, response has no result.
     /// </summary>
     /// <typeparam name="TRequest">The type of the request.</typeparam>
     /// <seealso cref="App.BehaviorCommandHandler{TRequest, bool}" />
@@ -34,10 +34,7 @@
 
                 this.logger.LogInformation($"{{LogKey:l}} {request.GetType().Name} (handler={this.GetType().Name})", LogKeys.AppCommand);
 
-                return new CommandResponse<object>
-                {
-                    Result = null
-                };
+                return new CommandResponse<object>(); // no result
             }).AnyContext();
         }
     }
