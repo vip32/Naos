@@ -23,7 +23,6 @@
             {
                 FileName = "wmic",
                 Arguments = "OS get FreePhysicalMemory,TotalVisibleMemorySize /Value",
-                //Arguments = "CPU get LoadPercentage /Value",
                 RedirectStandardOutput = true
             };
 
