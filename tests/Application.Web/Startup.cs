@@ -145,8 +145,9 @@
 
             // TODO: make pretty, like:
             //services.AddRequestCommands(o =>
-            //    o.Get<EchoCommand, EchoCommandResponse>("echo/commands/message") // Query
-            //    o.Post<CreateCustomerCommand, CreateCustomerCommandResponse>("customers") // Command
+            //    o.Get<EchoCommand, EchoCommandResponse>("commands/echo") // Query
+            //    o.Get<PingCommand>("commands/ping") // Query
+            //    o.Post<CreateCustomerCommand, CreateCustomerCommandResponse>("commands/createcustomer") // Command
             //);
             services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<EchoCommand, EchoCommandResponse> { Route = "/route1" });
             services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<EchoCommand, EchoCommandResponse> { Route = "/route2" });
