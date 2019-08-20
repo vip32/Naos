@@ -38,8 +38,8 @@
         {
             await this.next(context).AnyContext();
 
-            // TODO: map request body json to command typed as defined in options (.Type)  .... jsondeserialize<Type>
-            //       send typed command (mediator)
+            // TODO: map request body json to command typed as defined in options (.CommandType)  .... jsondeserialize<Type>
+            //       send() typed command (mediator)
             //       command response.result > http response (json body)
         }
     }

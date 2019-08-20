@@ -4,8 +4,8 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Options;
     using Naos.Core.Commands.App.Web;
-    using Naos.Core.Commands.Domain;
     using Naos.Foundation;
+    using System.Linq;
 
     /// <summary>
     /// Extension methods for the request command middleware.
@@ -22,16 +22,16 @@
 
             var registrations = naosOptions.Context.Application.ApplicationServices.GetServices<RequestCommandRegistration>();
 
-            foreach (var registration in registrations.Safe())
+            foreach (var registration in registrations.Safe().Where(r => !r.Route.IsNullOrEmpty()))
             {
                 naosOptions.Context.Application.UseMiddleware<RequestCommandDispatcherMiddleware>(
                     Options.Create(new RequestCommandDispatcherMiddlewareOptions
                     {
                         Route = registration.Route,
-                        CommandType = registration.Type,
+                        CommandType = registration.CommandType,
                         RequestMethod = registration.RequestMethod
                     }));
-                naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: request command added (route={registration.Route}, type={registration.Type.PrettyName()})");
+                naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: request command added (route={registration.Route}, type={registration.CommandType.PrettyName()})");
             }
 
             return naosOptions;

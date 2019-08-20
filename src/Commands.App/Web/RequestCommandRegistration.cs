@@ -7,9 +7,11 @@
     {
         public string Route { get; set; }
 
-        public virtual Type Type { get; set; }
+        public virtual Type CommandType { get; set; }
 
         public string RequestMethod { get; set; } // get/delete/post/put/.....
+
+        public int ResponseStatusCodeOnSuccess { get; set; } // 201/202/200/204 + location header?
     }
 
 #pragma warning disable SA1402 // File may only contain a single type
@@ -18,7 +20,7 @@
         where TCommandRequest : CommandRequest<TResponse>
         //where TResponse : CommandResponse<TResponse>
     {
-        public override Type Type
+        public override Type CommandType
         {
             get
             {

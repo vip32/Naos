@@ -144,9 +144,9 @@
                         .UseFileSystemRegistry()));
 
             // TODO: make pretty, like:
-            //services.AddCommandDispatcher(o =>
-            //    o.Get<EchoCommand, EchoCommandResponse>("echo/commands/message")
-            //    o.Post<CreateCustomerCommand, CreateCustomerCommandResponse>("customers")
+            //services.AddRequestCommands(o =>
+            //    o.Get<EchoCommand, EchoCommandResponse>("echo/commands/message") // Query
+            //    o.Post<CreateCustomerCommand, CreateCustomerCommandResponse>("customers") // Command
             //);
             //services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<EchoCommand, EchoCommandResponse> { Route = "/route1"});
             //services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<EchoCommand, EchoCommandResponse> { Route = "/route2" });
