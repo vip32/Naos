@@ -73,10 +73,10 @@
                     }
                     else
                     {
-                        // get
-                        // TODO: translate commandType properties to many OpenApiParameters (OpenApiParameterKind.FormData/Query) >> Reflection!
+                        // get / delete?
                         foreach (var property in registration.CommandType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
                         {
+                            // translate commandType properties to many OpenApiParameters (OpenApiParameterKind.FormData/Query) >> Reflection!
                             if (property.PropertyType != typeof(string)
                                 && property.PropertyType != typeof(int)
                                 && property.PropertyType != typeof(decimal)
@@ -97,7 +97,7 @@
                                 //Description = "request model",
                                 Kind = OpenApiParameterKind.Query,
                                 Name = property.Name.Camelize(),
-                                Type = JsonObjectType.String,
+                                Type = JsonObjectType.String, // TODO: depend on prop type!
                                 //Schema = schema,
                                 //Example = registration.CommandType != null ? Factory.Create(registration.CommandType) : null //new Commands.Domain.EchoCommand() { Message = "test"},
                             });
