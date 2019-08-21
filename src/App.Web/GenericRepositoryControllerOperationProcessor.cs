@@ -1,7 +1,6 @@
 ﻿namespace Naos.Core.App.Web
 {
     using System.Linq;
-    using System.Threading.Tasks;
     using Naos.Foundation;
     using NSwag.Generation.Processors;
     using NSwag.Generation.Processors.Contexts;

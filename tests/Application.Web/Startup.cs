@@ -57,6 +57,7 @@
                 })
                 .AddSwaggerDocument(config =>
                 {
+                    config.DocumentProcessors.Add(new RequestCommandDocumentProcessor()); // TODO: needs to now all RequestCommandRegistration
                     config.OperationProcessors.Add(new GenericRepositoryControllerOperationProcessor());
                     config.OperationProcessors.Add(new ApiVersionProcessor());
                     config.PostProcess = document =>

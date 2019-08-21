@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="NSwag.Annotations" Version="13.0.5" />
+    <PackageReference Include="NSwag.Generation" Version="13.0.5" />
     <PackageReference Include="Scrutor" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
