@@ -71,6 +71,7 @@
 
         private SystemMemoryMetrics GetMemoryMetricsUnix()
         {
+            // alternative: read /proc/meminfo (open as a file) no process forking
             var output = string.Empty;
             var info = new ProcessStartInfo("free -m")
             {
@@ -98,6 +99,7 @@
 
         private SystemCpuMetrics GetCpuMetricsUnix()
         {
+            // alternative: read /proc/meminfo (open as a file) no process forking
             var output = string.Empty;
             var info = new ProcessStartInfo("free -m")
             {
