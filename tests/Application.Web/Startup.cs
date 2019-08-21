@@ -24,6 +24,7 @@
     using Naos.Core.Messaging.Domain;
     using Naos.Foundation;
     using Newtonsoft.Json;
+    using NJsonSchema.Generation;
     using NSwag.Generation.Processors;
 
     public class Startup
@@ -64,11 +65,10 @@
                     var factory = sp.GetRequiredService<IUrlHelperFactory>();
                     return factory?.GetUrlHelper(actionContext);
                 })
-                .AddOpenApiDocument(config =>
+                .AddSwaggerDocument(config => // TODO: replace with .AddOpenApiDocument, but currently has issues with example model generation in UI
                 {
-                    var commandRegistrations = services.BuildServiceProvider().GetServices<RequestCommandRegistration>();
                     config.SerializerSettings = DefaultJsonSerializerSettings.Create();
-                    config.DocumentProcessors.Add(new RequestCommandDocumentProcessor(commandRegistrations)); // TODO: needs to now all RequestCommandRegistration
+                    config.DocumentProcessors.Add(new RequestCommandDocumentProcessor(services.BuildServiceProvider().GetServices<RequestCommandRegistration>())); // TODO: needs to now all RequestCommandRegistration
                     config.OperationProcessors.Add(new GenericRepositoryControllerOperationProcessor());
                     config.OperationProcessors.Add(new ApiVersionProcessor());
                     config.PostProcess = document =>

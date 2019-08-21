@@ -5,6 +5,8 @@
     using System.Linq;
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Foundation;
+    using NJsonSchema;
+    using NJsonSchema.Generation;
     using NSwag;
     using NSwag.Generation.Processors;
     using NSwag.Generation.Processors.Contexts;
@@ -20,18 +22,23 @@
 
         public void Process(DocumentProcessorContext context)
         {
-            foreach (var registration in this.registrations.Safe())
+            //var settings = new JsonSchemaGeneratorSettings();
+            //var schema = new JsonSchema();
+            //var schemaResolver = new JsonSchemaResolver(schema, settings); // used to add and retrieve schemas from the 'definitions'
+            //var schemaGenerator = new JsonSchemaGenerator(settings);
+
+            foreach (var registration in this.registrations.Safe()
+                .Where(r => !r.Route.IsNullOrEmpty()))
             {
-                // TODO: foreach RequestCommandRegistration add the following swagger path
                 var item = new OpenApiPathItem
                 {
                     {
-                        registration.RequestMethod?.ToLower(),
+                        registration.RequestMethod?.ToLower() ?? "post",
                         new OpenApiOperation
                         {
+                            Description = "test operation long",
                             OperationId = Guid.NewGuid().ToString(),
                             Summary = "test operation",
-                            Description = "test operation long",
                             Tags = new[] { "Naos Commands" }.ToList(),
                             Produces = new[] { "application/json" }.ToList(),
                             //RequestBody = new OpenApiRequestBody{}
@@ -39,11 +46,32 @@
                     }
                 };
 
-                item.Values.FirstOrDefault()?.Parameters.Add(new OpenApiParameter
+                if (registration.CommandType != null)
                 {
-                    Kind = OpenApiParameterKind.Body,
-                    Name = "model",
-                    Type = NJsonSchema.JsonObjectType.Object,
+                    var schema = context.SchemaGenerator.Generate(registration.CommandType);
+                    // workaround: remove invalid first $ref in allof https://github.com/RicoSuter/NSwag/issues/2119
+                    var firstSchema = schema.AllOf.FirstOrDefault();
+                    if (firstSchema != null)
+                    {
+                        schema.AllOf.Remove(firstSchema);
+                    }
+
+                    item.Values.FirstOrDefault()?.Parameters.Add(new OpenApiParameter
+                    {
+                        //Description = "request model",
+                        Kind = OpenApiParameterKind.Body,
+                        Name = "model",
+                        Type = JsonObjectType.Object,
+                        Schema = schema,
+                        //Example = registration.CommandType != null ? Factory.Create(registration.CommandType) : null //new Commands.Domain.EchoCommand() { Message = "test"},
+                    });
+                }
+
+                item.Values.FirstOrDefault()?.Responses.Add("200", new OpenApiResponse
+                {
+                    //Description = "response model",
+                    Schema = registration.ResponseType != typeof(object) ? context.SchemaGenerator.Generate(registration.ResponseType) : null,
+                    //Examples = registration.ResponseType != null ? Factory.Create(registration.ResponseType) : null // header?
                 });
 
                 context.Document.Paths.Add(registration.Route, item);

@@ -9,9 +9,11 @@
 
         public virtual Type CommandType { get; set; }
 
-        public string RequestMethod { get; set; } // get/delete/post/put/.....
+        public virtual Type ResponseType { get; set; }
 
-        public int ResponseStatusCodeOnSuccess { get; set; } // 201/202/200/204 + location header?
+        public string RequestMethod { get; set; } = "post"; // get/delete/post/put/.....
+
+        public int ResponseStatusCodeOnSuccess { get; set; } = 200; // 201/202/200/204 + location header?
     }
 
 #pragma warning disable SA1402 // File may only contain a single type
@@ -26,6 +28,14 @@
                 return typeof(TCommandRequest);
             }
         }
+
+        public override Type ResponseType
+        {
+            get
+            {
+                return typeof(TResponse);
+            }
+        }
     }
 
     public class RequestCommandRegistration<TCommandRequest> : RequestCommandRegistration
@@ -37,6 +47,14 @@
             get
             {
                 return typeof(TCommandRequest);
+            }
+        }
+
+        public override Type ResponseType
+        {
+            get
+            {
+                return typeof(object);
             }
         }
     }
