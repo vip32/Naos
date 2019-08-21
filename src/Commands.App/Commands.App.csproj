@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Humanizer.Core" Version="2.6.2" />
     <PackageReference Include="NJsonSchema" Version="10.0.22" />
     <PackageReference Include="NSwag.Annotations" Version="13.0.5" />
     <PackageReference Include="NSwag.Generation" Version="13.0.5" />

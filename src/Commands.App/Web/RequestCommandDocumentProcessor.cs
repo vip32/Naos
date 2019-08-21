@@ -3,6 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
+    using Humanizer;
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Foundation;
     using NJsonSchema;
@@ -56,15 +58,51 @@
                         schema.AllOf.Remove(firstSchema);
                     }
 
-                    item.Values.FirstOrDefault()?.Parameters.Add(new OpenApiParameter
+                    if (!registration.RequestMethod.SafeEquals("get"))
                     {
-                        //Description = "request model",
-                        Kind = OpenApiParameterKind.Body,
-                        Name = "model",
-                        Type = JsonObjectType.Object,
-                        Schema = schema,
-                        //Example = registration.CommandType != null ? Factory.Create(registration.CommandType) : null //new Commands.Domain.EchoCommand() { Message = "test"},
-                    });
+                        // put/post/...
+                        item.Values.FirstOrDefault()?.Parameters.Add(new OpenApiParameter
+                        {
+                            //Description = "request model",
+                            Kind = OpenApiParameterKind.Body,
+                            Name = "model",
+                            Type = JsonObjectType.Object,
+                            Schema = schema,
+                            //Example = registration.CommandType != null ? Factory.Create(registration.CommandType) : null //new Commands.Domain.EchoCommand() { Message = "test"},
+                        });
+                    }
+                    else
+                    {
+                        // get
+                        // TODO: translate commandType properties to many OpenApiParameters (OpenApiParameterKind.FormData/Query) >> Reflection!
+                        foreach (var property in registration.CommandType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
+                        {
+                            if (property.PropertyType != typeof(string)
+                                && property.PropertyType != typeof(int)
+                                && property.PropertyType != typeof(decimal)
+                                && property.PropertyType != typeof(float)
+                                && property.PropertyType != typeof(bool)
+                                && property.PropertyType != typeof(long))
+                            {
+                                continue;
+                            }
+
+                            if (!property.CanWrite || !property.CanRead)
+                            {
+                                continue;
+                            }
+
+                            item.Values.FirstOrDefault()?.Parameters.Add(new OpenApiParameter
+                            {
+                                //Description = "request model",
+                                Kind = OpenApiParameterKind.Query,
+                                Name = property.Name.Camelize(),
+                                Type = JsonObjectType.String,
+                                //Schema = schema,
+                                //Example = registration.CommandType != null ? Factory.Create(registration.CommandType) : null //new Commands.Domain.EchoCommand() { Message = "test"},
+                            });
+                        }
+                    }
                 }
 
                 item.Values.FirstOrDefault()?.Responses.Add("200", new OpenApiResponse

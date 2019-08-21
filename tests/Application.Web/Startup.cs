@@ -48,7 +48,7 @@
             //    o.Post<CreateCustomerCommand, CreateCustomerCommandResponse>("/commands/createcustomer") // Command
             //);
             services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<EchoCommand, EchoCommandResponse> { Route = "/commands/echo" });
-            services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<PingCommand> { Route = "/commands/ping" });
+            services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<PingCommand> { Route = "/commands/ping", RequestMethod = "get" });
 
             services
                 .AddMiddlewareAnalysis()
