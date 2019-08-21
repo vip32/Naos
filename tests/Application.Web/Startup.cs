@@ -40,6 +40,15 @@
 
         public void ConfigureServices(IServiceCollection services)
         {
+            // TODO: make pretty, like:
+            //services.AddRequestCommands(o =>
+            //    o.Get<EchoCommand, EchoCommandResponse>("/commands/echo") // Query
+            //    o.Get<PingCommand>("/commands/ping") // Query
+            //    o.Post<CreateCustomerCommand, CreateCustomerCommandResponse>("/commands/createcustomer") // Command
+            //);
+            services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<EchoCommand, EchoCommandResponse> { Route = "/commands/echo" });
+            services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<PingCommand> { Route = "/commands/ping" });
+
             services
                 .AddMiddlewareAnalysis()
                 .AddHttpContextAccessor()
@@ -55,8 +64,9 @@
                     var factory = sp.GetRequiredService<IUrlHelperFactory>();
                     return factory?.GetUrlHelper(actionContext);
                 })
-                .AddSwaggerDocument(config =>
+                .AddOpenApiDocument(config =>
                 {
+                    config.SerializerSettings = DefaultJsonSerializerSettings.Create();
                     config.DocumentProcessors.Add(new RequestCommandDocumentProcessor()); // TODO: needs to now all RequestCommandRegistration
                     config.OperationProcessors.Add(new GenericRepositoryControllerOperationProcessor());
                     config.OperationProcessors.Add(new ApiVersionProcessor());
@@ -143,16 +153,6 @@
                         //.UseRouterClientRegistry())
                     .AddServiceDiscoveryRouter(o => o
                         .UseFileSystemRegistry()));
-
-            // TODO: make pretty, like:
-            //services.AddRequestCommands(o =>
-            //    o.Get<EchoCommand, EchoCommandResponse>("commands/echo") // Query
-            //    o.Get<PingCommand>("commands/ping") // Query
-            //    o.Post<CreateCustomerCommand, CreateCustomerCommandResponse>("commands/createcustomer") // Command
-            //);
-            services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<EchoCommand, EchoCommandResponse> { Route = "/route1" });
-            services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<EchoCommand, EchoCommandResponse> { Route = "/route2" });
-            services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<PingCommand> { Route = "/route3" });
 
             // TODO: need to find a way to start the MessageBroker (done by resolving the IMessageBroker somewhere, HostedService? like scheduling)
         }
