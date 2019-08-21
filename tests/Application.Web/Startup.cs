@@ -66,8 +66,9 @@
                 })
                 .AddOpenApiDocument(config =>
                 {
+                    var commandRegistrations = services.BuildServiceProvider().GetServices<RequestCommandRegistration>();
                     config.SerializerSettings = DefaultJsonSerializerSettings.Create();
-                    config.DocumentProcessors.Add(new RequestCommandDocumentProcessor()); // TODO: needs to now all RequestCommandRegistration
+                    config.DocumentProcessors.Add(new RequestCommandDocumentProcessor(commandRegistrations)); // TODO: needs to now all RequestCommandRegistration
                     config.OperationProcessors.Add(new GenericRepositoryControllerOperationProcessor());
                     config.OperationProcessors.Add(new ApiVersionProcessor());
                     config.PostProcess = document =>
