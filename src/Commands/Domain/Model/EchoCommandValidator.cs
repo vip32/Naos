@@ -6,7 +6,7 @@
     {
         public EchoCommandValidator()
         {
-            this.RuleFor(c => c.Message).NotNull().NotEmpty();
+            //this.RuleFor(c => c.Message).NotNull().NotEmpty();
         }
     }
 }

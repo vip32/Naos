@@ -120,13 +120,13 @@
                                 .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "commands"))))))
                     .AddOperations(o => o
                         .AddInteractiveConsole()
-                        .AddLogging(l => l
+                        .AddLogging(o => o
                             .UseConsole()
                             .UseFile()
                             //.UseAzureBlobStorage()
                             .UseAzureLogAnalytics())
                         .AddSystemHealthChecks()
-                        .AddRequestStorage(r => r
+                        .AddRequestStorage(o => o
                             .UseAzureBlobStorage())
                         .AddTracing())
                     //.AddQueries()

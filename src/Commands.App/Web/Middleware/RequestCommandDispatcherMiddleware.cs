@@ -9,6 +9,8 @@
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Naos.Foundation;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
 
     public class RequestCommandDispatcherMiddleware
     {
@@ -44,10 +46,21 @@
         {
             if (context.Request.Path.Equals(this.options.Registration.Route, StringComparison.OrdinalIgnoreCase)) // also match method
             {
-                // https://github.com/jbogard/MediatR/issues/385
+                var commandRequest = SerializationHelper.JsonDeserialize("{\"FirstName\": \"John\",\"LastName\": \"Doe\"}", this.options.Registration.CommandType);
+                var commandResponse = this.mediator.Send(commandRequest); // https://github.com/jbogard/MediatR/issues/385
 
                 context.Response.StatusCode = this.options.Registration.ResponseStatusCodeOnSuccess;
-                await context.Response.WriteAsync("command response here...").AnyContext();
+                if (commandResponse?.Result != null)
+                {
+                    var jObject = JObject.FromObject(commandResponse.Result);
+                    var result = jObject.SelectToken("result") ?? jObject.SelectToken("Result");
+
+                    if (!result.IsNullOrEmpty())
+                    {
+                        await context.Response.WriteAsync(
+                            SerializationHelper.JsonSerialize(result)).AnyContext();
+                    }
+                }
 
                 // =terminating middlware
             }
