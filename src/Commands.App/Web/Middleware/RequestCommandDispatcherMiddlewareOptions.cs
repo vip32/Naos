@@ -1,16 +1,12 @@
 ﻿namespace Naos.Core.Commands.App.Web
 {
-    using System;
+    using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
-    /// Options for command.
+    /// Options for request command middleware.
     /// </summary>
     public class RequestCommandDispatcherMiddlewareOptions
     {
-        public string Route { get; set; }
-
-        public Type CommandType { get; set; }
-
-        public string RequestMethod { get; set; }
+        public RequestCommandRegistration Registration { get; set; }
     }
 }

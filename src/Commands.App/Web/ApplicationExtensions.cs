@@ -25,11 +25,9 @@
             foreach (var registration in registrations.Safe().Where(r => !r.Route.IsNullOrEmpty()))
             {
                 naosOptions.Context.Application.UseMiddleware<RequestCommandDispatcherMiddleware>(
-                    Options.Create(new RequestCommandDispatcherMiddlewareOptions // or just pass the whole registration as is?
+                    Options.Create(new RequestCommandDispatcherMiddlewareOptions
                     {
-                        Route = registration.Route,
-                        CommandType = registration.CommandType,
-                        RequestMethod = registration.RequestMethod
+                        Registration = registration
                     }));
                 naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: request command added (route={registration.Route}, type={registration.CommandType.PrettyName()})");
             }
