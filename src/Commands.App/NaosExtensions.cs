@@ -46,7 +46,7 @@
             //    .AddSingleton<ICommandBehavior, IdempotentCommandBehavior>()
             //    .AddSingleton<ICommandBehavior, PersistCommandBehavior>();
 
-            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Commands" });
+            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Commands", EchoRoute = "api/echo/commands" });
 
             return naosOptions;
         }

@@ -8,7 +8,6 @@
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Foundation;
     using NJsonSchema;
-    using NJsonSchema.Generation;
     using NSwag;
     using NSwag.Generation.Processors;
     using NSwag.Generation.Processors.Contexts;
@@ -24,11 +23,6 @@
 
         public void Process(DocumentProcessorContext context)
         {
-            //var settings = new JsonSchemaGeneratorSettings();
-            //var schema = new JsonSchema();
-            //var schemaResolver = new JsonSchemaResolver(schema, settings); // used to add and retrieve schemas from the 'definitions'
-            //var schemaGenerator = new JsonSchemaGenerator(settings);
-
             foreach (var registration in this.registrations.Safe()
                 .Where(r => !r.Route.IsNullOrEmpty()))
             {
