@@ -8,6 +8,27 @@
 
     public static class SerializationHelper
     {
+        public static T JsonDeserialize<T>(string value, JsonSerializerSettings settings = null)
+           where T : class
+        {
+            if (value == null)
+            {
+                return null;
+            }
+
+            return JsonConvert.DeserializeObject<T>(value, settings ?? DefaultJsonSerializerSettings.Create());
+        }
+
+        public static object JsonDeserialize(string value, Type type, JsonSerializerSettings settings = null)
+        {
+            if (value == null)
+            {
+                return null;
+            }
+
+            return JsonConvert.DeserializeObject(value, type, settings ?? DefaultJsonSerializerSettings.Create());
+        }
+
         public static T JsonDeserialize<T>(MemoryStream stream)
             where T : class
         {
@@ -19,6 +40,19 @@
             using(var reader = new StreamReader(stream))
             {
                 return JsonSerializer.Create().Deserialize(reader, typeof(T)) as T;
+            }
+        }
+
+        public static object JsonDeserialize(MemoryStream stream, Type type)
+        {
+            if (stream == null)
+            {
+                return null;
+            }
+
+            using (var reader = new StreamReader(stream))
+            {
+                return JsonSerializer.Create().Deserialize(reader, type);
             }
         }
 
@@ -34,6 +68,20 @@
             using(var reader = new StreamReader(stream))
             {
                 return JsonSerializer.Create().Deserialize(reader, typeof(T)) as T;
+            }
+        }
+
+        public static object JsonDeserialize(byte[] value, Type type)
+        {
+            if (value == null)
+            {
+                return null;
+            }
+
+            using (var stream = new MemoryStream(value))
+            using (var reader = new StreamReader(stream))
+            {
+                return JsonSerializer.Create().Deserialize(reader, type);
             }
         }
 
@@ -57,17 +105,6 @@
             }
 
             return $"[{JsonConvert.SerializeObject(value, settings ?? DefaultJsonSerializerSettings.Create())}]";
-        }
-
-        public static T JsonDeserialize<T>(string value, JsonSerializerSettings settings = null)
-            where T : class
-        {
-            if(value == null)
-            {
-                return null;
-            }
-
-            return JsonConvert.DeserializeObject<T>(value, settings ?? DefaultJsonSerializerSettings.Create());
         }
 
         //public static string BsonBase64Serialize<T>(T value)
