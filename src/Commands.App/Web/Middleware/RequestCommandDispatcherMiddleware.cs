@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using EnsureThat;
+    using MediatR;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
@@ -12,6 +13,7 @@
     {
         private readonly RequestDelegate next;
         private readonly ILogger<RequestCommandDispatcherMiddleware> logger;
+        private readonly IMediator mediator;
         private readonly RequestCommandDispatcherMiddlewareOptions options;
 
         /// <summary>
@@ -24,13 +26,16 @@
         public RequestCommandDispatcherMiddleware(
             RequestDelegate next,
             ILogger<RequestCommandDispatcherMiddleware> logger,
+            IMediator mediator,
             IOptions<RequestCommandDispatcherMiddlewareOptions> options)
         {
             EnsureArg.IsNotNull(next, nameof(next));
             EnsureArg.IsNotNull(logger, nameof(logger));
+            EnsureArg.IsNotNull(mediator, nameof(mediator));
 
             this.next = next;
             this.logger = logger;
+            this.mediator = mediator;
             this.options = options.Value ?? new RequestCommandDispatcherMiddlewareOptions();
         }
 

@@ -25,7 +25,7 @@
             foreach (var registration in registrations.Safe().Where(r => !r.Route.IsNullOrEmpty()))
             {
                 naosOptions.Context.Application.UseMiddleware<RequestCommandDispatcherMiddleware>(
-                    Options.Create(new RequestCommandDispatcherMiddlewareOptions
+                    Options.Create(new RequestCommandDispatcherMiddlewareOptions // or just pass the whole registration as is?
                     {
                         Route = registration.Route,
                         CommandType = registration.CommandType,
