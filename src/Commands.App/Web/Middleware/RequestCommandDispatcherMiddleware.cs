@@ -44,6 +44,8 @@
         {
             if (context.Request.Path.Equals(this.options.Registration.Route, StringComparison.OrdinalIgnoreCase)) // also match method
             {
+                // https://github.com/jbogard/MediatR/issues/385
+
                 context.Response.StatusCode = this.options.Registration.ResponseStatusCodeOnSuccess;
                 await context.Response.WriteAsync("command response here...").AnyContext();
 
