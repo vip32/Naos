@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Linq.Expressions;
     using System.Net;
     using System.Threading.Tasks;
@@ -51,11 +52,12 @@
 
             while (iterator.HasMoreResults)
             {
-                foreach (var item in await iterator.ReadNextAsync().AnyContext())
+                var response = await iterator.ReadNextAsync().AnyContext();
+                this.LogRequestCharge(response.RequestCharge, response.ActivityId);
+
+                foreach (var result in response.Resource)
                 {
-                    {
-                        return item;
-                    }
+                    return result;
                 }
             }
 
@@ -64,6 +66,7 @@
             //    var response = await this.container.ReadItemAsync<T>(
             //    id,
             //    partitionKeyValue.IsNullOrEmpty() ? default : new PartitionKey(partitionKeyValue)).AnyContext();
+            //    this.LogRequestCharge(response.RequestCharge, response.ActivityId);
             //    return response.Resource;
             //}
             //catch (CosmosException ex)
@@ -88,6 +91,7 @@
             {
                 // Partition key value will be populated by extracting from {T}
                 var response = await this.container.UpsertItemAsync(entity).AnyContext();
+                this.LogRequestCharge(response.RequestCharge, response.ActivityId);
                 return response.Resource;
             }
             else
@@ -110,6 +114,7 @@
             this.Initialize(this.options);
             var options = this.EnsureRequestOptions(partitionKeyValue);
 
+            double requestCharge = 0;
             var result = new List<T>();
             var iterator = this.container.GetItemLinqQueryable<T>(requestOptions: options)
                 .WhereIf(expression)
@@ -119,12 +124,15 @@
 
             while (iterator.HasMoreResults)
             {
-                foreach (var entity in await iterator.ReadNextAsync().AnyContext())
+                var response = await iterator.ReadNextAsync().AnyContext();
+                requestCharge += response.RequestCharge;
+                foreach (var entity in response.Resource)
                 {
                     result.Add(entity);
                 }
             }
 
+            this.LogRequestCharge(requestCharge);
             return result; // TODO: replace with IAsyncEnumerable (netstandard 2.1)
         }
 
@@ -139,6 +147,7 @@
             this.Initialize(this.options);
             var options = this.EnsureRequestOptions(partitionKeyValue);
 
+            double requestCharge = 0;
             var result = new List<T>();
             var iterator = this.container.GetItemLinqQueryable<T>(requestOptions: options)
                 .WhereIf(expressions)
@@ -148,12 +157,15 @@
 
             while (iterator.HasMoreResults)
             {
-                foreach (var entity in await iterator.ReadNextAsync().AnyContext())
+                var response = await iterator.ReadNextAsync().AnyContext();
+                requestCharge += response.RequestCharge;
+                foreach (var entity in response.Resource)
                 {
                     result.Add(entity);
                 }
             }
 
+            this.LogRequestCharge(requestCharge);
             return result; // TODO: replace with IAsyncEnumerable (netstandard 2.1)
         }
 
@@ -206,6 +218,7 @@
                 var response = await this.container.DeleteItemAsync<T>(
                     id,
                     partitionKey).AnyContext();
+                this.LogRequestCharge(response.RequestCharge, response.ActivityId);
 
                 return response.StatusCode == HttpStatusCode.NoContent;
             }
@@ -264,5 +277,19 @@
                         throughput: options.ThroughPut).Result;
             }
         }
+
+        private void LogRequestCharge(double requestCharge, string activityId = null)
+        {
+            this.logger.LogDebug($"cosmos request charge: {requestCharge} (instance={this.database.Id}.{this.container.Id}, activityId={activityId})");
+        }
+
+        //private void LogRequestCharge(IEnumerable<double> requestCharges, IEnumerable<string> activityIds)
+        //{
+        //    this.logger.LogDebug($"cosmos request charge total: {requestCharges.Sum()} (instance={this.database.Id}.{this.container.Id}, activityId=multiple)");
+
+        //    //_logger.LogInformation($"cosmos request charge: {this.database.Id}.{this.container.Id};  Total RC: {requestCharges.Sum()}");
+        //    //_logger.LogInformation($"cosmos request charge: detail: ActiveIds: {activityIds.ToString(", ")}");
+        //    //_logger.LogInformation($"cosmos request charge: detail: requestCharges: {requestCharges.ToString(", ")}");
+        //}
     }
 }
