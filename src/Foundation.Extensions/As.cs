@@ -13,7 +13,6 @@
         /// <returns>Casted object.</returns>
         [DebuggerStepThrough]
         public static T As<T>(this object source)
-            //where T : class
         {
             if(source == null)
             {

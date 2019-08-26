@@ -2,10 +2,15 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Dynamic;
+    using System.Linq;
+    using System.Reflection;
+    using System.Text;
     using System.Threading.Tasks;
     using EnsureThat;
     using MediatR;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.WebUtilities;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Naos.Foundation;
@@ -44,15 +49,30 @@
 
         public async Task Invoke(HttpContext context)
         {
-            if (context.Request.Path.Equals(this.options.Registration.Route, StringComparison.OrdinalIgnoreCase)) // also match method
+            if (context.Request.Path.Equals(this.options.Registration.Route, StringComparison.OrdinalIgnoreCase)
+                && context.Request.Method.EqualsAny(this.options.Registration.RequestMethod.Split(';')))
             {
-                var commandName = this.options.Registration.CommandType.Name.SliceTill("Command");
-                this.logger.LogInformation($"{{LogKey:l}} received (name={commandName})", LogKeys.AppCommand);
-                var command = SerializationHelper.JsonDeserialize("{\"Message\": \"Hello John Doe\"}", this.options.Registration.CommandType);
-                var response = await this.mediator.Send(command).AnyContext(); // https://github.com/jbogard/MediatR/issues/385
+                this.logger.LogInformation($"{{LogKey:l}} received (name={this.options.Registration.CommandType.Name.SliceTill("Command").SliceTill("Query")})", LogKeys.AppCommand);
 
                 context.Response.ContentType = this.options.Registration.OpenApiProduces;
                 context.Response.StatusCode = this.options.Registration.ResponseStatusCodeOnSuccess;
+                object command = null;
+
+                if (context.Request.Method.SafeEquals("get") || context.Request.Method.SafeEquals("delete"))
+                {
+                    command = this.HandleQueryOperation(context);
+                }
+                else if (context.Request.Method.SafeEquals("post") || context.Request.Method.SafeEquals("put") || context.Request.Method.SafeEquals(string.Empty))
+                {
+                    command = this.HandleBodyOperation(context);
+                }
+                else
+                {
+                    // TODO: ignore for now, or throw? +log
+                }
+
+                var response = await this.mediator.Send(command).AnyContext(); // https://github.com/jbogard/MediatR/issues/385
+
                 if (response != null)
                 {
                     var jObject = JObject.FromObject(response);
@@ -75,6 +95,33 @@
             // TODO: map request body json to command typed as defined in options (.CommandType)  .... jsondeserialize<Type>
             //       send() typed command (mediator)
             //       command response.result > http response (json body)
+        }
+
+        private object HandleQueryOperation(HttpContext context)
+        {
+            var command = Factory.Create(this.options.Registration.CommandType);
+            if (!context.Request.QueryString.Value.IsNullOrEmpty())
+            {
+                foreach (var propertyInfo in this.options.Registration.CommandType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
+                {
+                    foreach (var item in QueryHelpers.ParseQuery(context.Request.QueryString.Value))
+                    {
+                        var type = Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType;
+
+                        if (item.Key.SafeEquals(propertyInfo.Name) && !item.Value.IsNullOrEmpty())
+                        {
+                            propertyInfo.SetValue(command, item.Value.ToString().To(type), null);
+                        }
+                    }
+                }
+            }
+
+            return command;
+        }
+
+        private object HandleBodyOperation(HttpContext context)
+        {
+            return SerializationHelper.JsonDeserialize(context.Request.Body, this.options.Registration.CommandType);
         }
     }
 }

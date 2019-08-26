@@ -29,7 +29,7 @@
             return JsonConvert.DeserializeObject(value, type, settings ?? DefaultJsonSerializerSettings.Create());
         }
 
-        public static T JsonDeserialize<T>(MemoryStream stream)
+        public static T JsonDeserialize<T>(Stream stream)
             where T : class
         {
             if(stream == null)
@@ -43,7 +43,7 @@
             }
         }
 
-        public static object JsonDeserialize(MemoryStream stream, Type type)
+        public static object JsonDeserialize(Stream stream, Type type)
         {
             if (stream == null)
             {

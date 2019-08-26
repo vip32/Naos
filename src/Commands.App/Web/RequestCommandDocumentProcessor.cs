@@ -36,18 +36,6 @@
 
             foreach (var method in registration.RequestMethod.Safe("post").Split(';').Distinct())
             {
-                //{
-                //    [method.ToLower()] = new OpenApiOperation
-                //    {
-                //        Description = registration.OpenApiDescription ?? (registration.CommandType ?? typeof(object)).Name,
-                //        Summary = registration.OpenApiSummary,
-                //        OperationId = HashAlgorithm.ComputeHash($"{method} {registration.Route}"),
-                //        Tags = new[] { "Naos Commands" }.ToList(),
-                //        Produces = registration.OpenApiProduces.Safe(ContentType.JSON.ToValue()).Split(';').Distinct().ToList(),
-                //        //RequestBody = new OpenApiRequestBody{}
-                //    }
-                //};
-
                 var operation = new OpenApiOperation
                 {
                     Description = registration.OpenApiDescription ?? (registration.CommandType ?? typeof(object)).Name,
@@ -83,12 +71,10 @@
             {
                 if (method.SafeEquals("get") || method.SafeEquals("delete"))
                 {
-                    // request querystring
                     AddQueryOperation(operation, registration);
                 }
                 else if (method.SafeEquals("post") || method.SafeEquals("put") || method.SafeEquals(string.Empty))
                 {
-                    // request body
                     AddBodyOperation(operation, registration, context);
                 }
                 else
@@ -102,7 +88,7 @@
         {
             foreach (var property in registration.CommandType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
             {
-                // translate commandType properties to many OpenApiParameters (OpenApiParameterKind.FormData/Query) >> Reflection!
+                // translate commandType properties to many OpenApiParameters
                 if (!property.CanWrite || !property.CanRead)
                 {
                     continue;
@@ -123,7 +109,7 @@
                 }
                 else if (property.PropertyType == typeof(object))
                 {
-                    type = JsonObjectType.Object;
+                    type = JsonObjectType.Object; // TODO: does not work for child objects
                 }
 
                 operation.Parameters.Add(new OpenApiParameter
@@ -131,9 +117,7 @@
                     //Description = "request model",
                     Kind = OpenApiParameterKind.Query,
                     Name = property.Name.Camelize(),
-                    Type = type, // TODO: depend on prop type!
-                                 //Schema = schema,
-                                 //Example = registration.CommandType != null ? Factory.Create(registration.CommandType) : null //new Commands.Domain.EchoCommand() { Message = "test"},
+                    Type = type,
                 });
             }
         }

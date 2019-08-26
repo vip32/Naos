@@ -13,18 +13,28 @@
             const string s = null;
             s.To<int>().ShouldBeOfType<int>().ShouldBe(0);
             "42".To<int>().ShouldBeOfType<int>().ShouldBe(42);
+            "42".To(typeof(int)).ShouldBeOfType<int>().ShouldBe(42);
             "ABC".To(defaultValue: 42).ShouldBeOfType<int>().ShouldBe(42);
             "28173829281734".To<long>().ShouldBeOfType<long>().ShouldBe(28173829281734);
+            "28173829281734".To(typeof(long)).ShouldBeOfType<long>().ShouldBe(28173829281734);
+            DateTime.Now.ToString("o").To<DateTime>().ShouldBeOfType<DateTime>().Year.ShouldBe(DateTime.Now.Year);
+            DateTime.Now.ToString("o").To(typeof(DateTime)).ShouldBeOfType<DateTime>().Year.ShouldBe(DateTime.Now.Year);
             "2.0".To<double>().ShouldBe(2.0);
+            "2.0".To(typeof(double)).ShouldBe(2.0);
             "0.2".To<double>().ShouldBe(0.2);
             2.0.To<int>().ShouldBe(2);
             "false".To<bool>().ShouldBeOfType<bool>().ShouldBe(false);
             "True".To<bool>().ShouldBeOfType<bool>().ShouldBe(true);
+            "True".To(typeof(bool)).ShouldBeOfType<bool>().ShouldBe(true);
             "ABC".To(defaultValue: true).ShouldBeOfType<bool>().ShouldBe(true);
             "2260afec-bbfd-42d4-a91a-dcb11e09b17f".To<Guid>().ShouldBeOfType<Guid>().ShouldBe(new Guid("2260afec-bbfd-42d4-a91a-dcb11e09b17f"));
+            "2260afec-bbfd-42d4-a91a-dcb11e09b17f".To(typeof(Guid)).ShouldBeOfType<Guid>().ShouldBe(new Guid("2260afec-bbfd-42d4-a91a-dcb11e09b17f"));
             s.To<Guid>().ShouldBeOfType<Guid>().ShouldBe(Guid.Empty);
+            s.To(typeof(Guid)).ShouldBeOfType<Guid>().ShouldBe(Guid.Empty);
             "Reptile".To<StubEnums>().ShouldBe(StubEnums.Reptile);
+            "Reptile".To(typeof(StubEnums)).ShouldBe(StubEnums.Reptile);
             16.To<StubEnums>().ShouldBe(StubEnums.Reptile);
+            //16.To(typeof(StubEnums)).ShouldBe(StubEnums.Reptile);
             //99.To<StubEnum>().ShouldBe(StubEnum.Unk);
             "Abc".To<StubEnums>(defaultValue: StubEnums.Dog).ShouldBe(StubEnums.None); // defaultvalue ignored with enums
             13.To<StubEnums>().ShouldBe(StubEnums.Dog | StubEnums.Fish | StubEnums.Bird); // dog 1 |fish 4 |bird 8 = 13

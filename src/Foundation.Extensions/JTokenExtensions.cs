@@ -72,11 +72,6 @@
                 return default;
             }
 
-            if(path.StartsWith("jsonpath:", StringComparison.OrdinalIgnoreCase))
-            {
-                path = path.Replace("jsonpath:", string.Empty, StringComparison.OrdinalIgnoreCase);
-            }
-
             try
             {
                 return source.SelectToken(path).Value<T>();
@@ -101,11 +96,6 @@
             if(path.IsNullOrEmpty())
             {
                 return default;
-            }
-
-            if(path.StartsWith("jsonpath:", StringComparison.OrdinalIgnoreCase))
-            {
-                path = path.Replace("jsonpath:", string.Empty, StringComparison.OrdinalIgnoreCase);
             }
 
             try
@@ -134,11 +124,6 @@
             if(source.IsNullOrEmpty() || path.IsNullOrEmpty())
             {
                 return;
-            }
-
-            if(path.StartsWith("jsonpath:", StringComparison.OrdinalIgnoreCase))
-            {
-                path = path.Replace("jsonpath:", string.Empty);
             }
 
             var values = source.SelectTokens(path).OfType<JValue>();
