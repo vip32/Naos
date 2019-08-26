@@ -22,6 +22,8 @@
 
         public int? ThroughPut { get; set; } = 400;
 
+        public bool LogRequestCharges { get; set; } = true;
+
         public Func<T, string> PartitionKeyStringExpression { get; internal set; }
 
         public Func<T, bool> PartitionKeyBoolExpression { get; internal set; }

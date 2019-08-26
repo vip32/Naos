@@ -77,5 +77,11 @@
             this.Target.ThroughPut = throughPut;
             return this;
         }
+
+        public CosmosDbSqlProviderV3OptionsBuilder<T> LogRequestCharges(bool value = true)
+        {
+            this.Target.LogRequestCharges = value;
+            return this;
+        }
     }
 }

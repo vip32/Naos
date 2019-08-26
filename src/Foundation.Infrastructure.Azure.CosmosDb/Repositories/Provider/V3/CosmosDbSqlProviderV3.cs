@@ -280,7 +280,10 @@
 
         private void LogRequestCharge(double requestCharge, string activityId = null)
         {
-            this.logger.LogDebug($"cosmos request charge: {requestCharge} (instance={this.database.Id}.{this.container.Id}, activityId={activityId})");
+            if (this.options.LogRequestCharges)
+            {
+                this.logger.LogDebug($"cosmos request charge: {requestCharge} (instance={this.database.Id}.{this.container.Id}, activityId={activityId})");
+            }
         }
 
         //private void LogRequestCharge(IEnumerable<double> requestCharges, IEnumerable<string> activityIds)
