@@ -72,7 +72,6 @@
                 }
 
                 var response = await this.mediator.Send(command).AnyContext(); // https://github.com/jbogard/MediatR/issues/385
-
                 if (response != null)
                 {
                     var jObject = JObject.FromObject(response);
@@ -91,10 +90,6 @@
             {
                 await this.next(context).AnyContext();
             }
-
-            // TODO: map request body json to command typed as defined in options (.CommandType)  .... jsondeserialize<Type>
-            //       send() typed command (mediator)
-            //       command response.result > http response (json body)
         }
 
         private object HandleQueryOperation(HttpContext context)
