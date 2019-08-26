@@ -46,19 +46,19 @@
         {
             if (context.Request.Path.Equals(this.options.Registration.Route, StringComparison.OrdinalIgnoreCase)) // also match method
             {
-                var commandRequest = SerializationHelper.JsonDeserialize("{\"FirstName\": \"John\",\"LastName\": \"Doe\"}", this.options.Registration.CommandType);
-                var commandResponse = this.mediator.Send(commandRequest); // https://github.com/jbogard/MediatR/issues/385
+                var command = SerializationHelper.JsonDeserialize("{\"FirstName\": \"John\",\"LastName\": \"Doe\"}", this.options.Registration.CommandType);
+                var response = this.mediator.Send(command); // https://github.com/jbogard/MediatR/issues/385
 
                 context.Response.StatusCode = this.options.Registration.ResponseStatusCodeOnSuccess;
-                if (commandResponse?.Result != null)
+                if (response?.Result != null)
                 {
-                    var jObject = JObject.FromObject(commandResponse.Result);
-                    var result = jObject.SelectToken("result") ?? jObject.SelectToken("Result");
+                    var jObject = JObject.FromObject(response.Result);
+                    var jToken = jObject.SelectToken("result") ?? jObject.SelectToken("Result");
 
-                    if (!result.IsNullOrEmpty())
+                    if (!jToken.IsNullOrEmpty())
                     {
                         await context.Response.WriteAsync(
-                            SerializationHelper.JsonSerialize(result)).AnyContext();
+                            SerializationHelper.JsonSerialize(jToken)).AnyContext();
                     }
                 }
 
