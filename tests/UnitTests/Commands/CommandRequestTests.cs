@@ -19,10 +19,9 @@
         {
             // arrange
             var mediator = Substitute.For<IMediator>();
-            var request = new StubCommandRequest
+            var request = new EchoCommand
             {
-                FirstName = "John",
-                LastName = "Doe"
+                Message = "John Doe"
             };
 
             // act
@@ -37,11 +36,11 @@
         {
             // arrange
             var mediator = Substitute.For<IMediator>();
-            var request = Factory<ICommandRequest<ICommandResponse>>.Create(typeof(StubCommandRequest));
-            request.ShouldNotBeNull();
+            var command = Factory.Create(typeof(EchoCommand));
+            command.ShouldNotBeNull();
 
             // act
-            var result = await mediator.Send(request).AnyContext();
+            var result = await mediator.Send(command).AnyContext();
 
             // assert
         }
@@ -51,37 +50,12 @@
         {
             // arrange
             var mediator = Substitute.For<IMediator>();
-            var request = Activator.CreateInstance(typeof(StubCommandRequest), null) as ICommandRequest<ICommandResponse>;
-            request.ShouldNotBeNull();
+            var command = SerializationHelper.JsonDeserialize("{\"Message\": \"John Doe\"}", typeof(EchoCommand));
 
             // act
-            var result = await mediator.Send(request).AnyContext();
+            var result = await mediator.Send(command).AnyContext();
 
             // assert
         }
-    }
-
-#pragma warning disable SA1402 // File may only contain a single type
-    public class StubCommandRequest : BaseCommandRequest<StubCommandResponse>
-    {
-        public string FirstName { get; set; }
-
-        public string LastName { get; set; }
-
-        public override ValidationResult Validate() => new Validator().Validate(this);
-
-        private class Validator : AbstractValidator<StubCommandRequest>
-        {
-            public Validator()
-            {
-                //this.RuleFor(order => order.FirstName).NotEmpty().WithMessage("FirstName cannot be empty");
-                //this.RuleFor(order => order.LastName).NotEmpty().WithMessage("LastName cannot be empty");
-            }
-        }
-    }
-
-    public class StubCommandResponse : BaseCommandResponse
-    {
-        public string Message { get; set; }
     }
 }

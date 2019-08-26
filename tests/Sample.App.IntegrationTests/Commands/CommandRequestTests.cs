@@ -55,120 +55,68 @@
         public async Task CanSend_Test()
         {
             // arrange
-            var request = new StubCommandRequest
+            var command = new EchoCommand
             {
-                FirstName = "John",
-                LastName = "Doe"
+                Message = "John Doe"
             };
 
             // act
-            var result = await this.mediator.Send(request).AnyContext();
+            var response = await this.mediator.Send(command).AnyContext();
 
             // assert
-            result.ShouldNotBeNull();
+            response.ShouldNotBeNull();
+            response.Result.ShouldNotBeNull();
+            response.Result.Message.ShouldNotBeNullOrEmpty();
         }
 
         [Fact]
         public async Task CanSend_Factory1_Test()
         {
             // arrange
-            var request = Factory.Create(typeof(StubCommandRequest));
-            request.ShouldNotBeNull();
-            //request.SetProperty("FirstName", "John");
-            //request.SetProperty("LastName", "Doe");
+            var command = Factory.Create(typeof(EchoCommand)) as EchoCommand;
+            command.Message = "John Doe";
 
             // act
-            var result = await this.mediator.Send(request).AnyContext();
+            var response = await this.mediator.Send(command).AnyContext() as CommandResponse<EchoCommandResponse>;
 
             // assert
-            result.ShouldNotBeNull();
+            response.ShouldNotBeNull();
+            response.Result.ShouldNotBeNull();
+            response.Result.Message.ShouldNotBeNullOrEmpty();
         }
 
         [Fact]
         public async Task CanSend_Factory2_Test()
         {
             // arrange
-            var request = Activator.CreateInstance(typeof(StubCommandRequest), null); // as ICommandRequest<StubCommandResponse>;
-            request.ShouldNotBeNull();
-            //request.SetProperty("FirstName", "John");
-            //request.SetProperty("LastName", "Doe");
+            var command = Activator.CreateInstance(typeof(EchoCommand), null) as EchoCommand;
+            command.Message = "John Doe";
 
             // act
-            var result = await this.mediator.Send(request).AnyContext();
+            var response = await this.mediator.Send(command).AnyContext();
 
             // assert
-            result.ShouldNotBeNull();
-        }
-
-        [Fact]
-        public async Task CanSend_Factory3_Test()
-        {
-            // arrange
-            var request = SerializationHelper.JsonDeserialize(
-                "{\"FirstName\": \"John\",\"LastName\": \"Doe\"}",
-                typeof(StubCommandRequest));
-            request.ShouldNotBeNull();
-
-            // act
-            var result = await this.mediator.Send(request).AnyContext();
-
-            // assert
-            result.ShouldNotBeNull();
+            response.ShouldNotBeNull();
+            response.Result.ShouldNotBeNull();
+            response.Result.Message.ShouldNotBeNullOrEmpty();
         }
 
         [Fact]
         public async Task CanSend_Factory4_Test()
         {
             // arrange
-            var request = SerializationHelper.JsonDeserialize(
-                "{\"Message\": \"Hello World!\"}",
+            var command = SerializationHelper.JsonDeserialize(
+                "{\"Message\": \"John Doe\"}",
                 typeof(EchoCommand));
-            request.ShouldNotBeNull();
+            command.ShouldNotBeNull();
 
             // act
-            var result = await this.mediator.Send(request).AnyContext();
+            var response = await this.mediator.Send(command).AnyContext() as CommandResponse<EchoCommandResponse>;
 
             // assert
-            result.ShouldNotBeNull();
+            response.ShouldNotBeNull();
+            response.Result.ShouldNotBeNull();
+            response.Result.Message.ShouldNotBeNullOrEmpty();
         }
     }
-
-#pragma warning disable SA1402 // File may only contain a single type
-    public class StubCommandRequest : BaseCommandRequest<StubCommandResponse>
-    {
-        public string FirstName { get; set; }
-
-        public string LastName { get; set; }
-
-        public override ValidationResult Validate() => new Validator().Validate(this);
-
-        private class Validator : AbstractValidator<StubCommandRequest>
-        {
-            public Validator()
-            {
-                //this.RuleFor(order => order.FirstName).NotEmpty().WithMessage("FirstName cannot be empty");
-                //this.RuleFor(order => order.LastName).NotEmpty().WithMessage("LastName cannot be empty");
-            }
-        }
-    }
-
-    public class StubCommandResponse : BaseCommandResponse
-    {
-        public string Message { get; set; }
-    }
-
-    public class StubCommandHandler : IRequestHandler<StubCommandRequest, StubCommandResponse>
-    {
-        public async Task<StubCommandResponse> Handle(StubCommandRequest request, CancellationToken cancellationToken)
-        {
-            return await Task.Run(() => new StubCommandResponse { Message = $"{request.FirstName} {request.LastName}" }).AnyContext();
-        }
-    }
-
-    //public abstract class BaseHandler<TRequest, TResponse> : IRequestHandler<ICommandRequest<ICommandResponse>, ICommandResponse>
-    //    where TRequest : ICommandRequest<TResponse>
-    //    where TResponse : ICommandResponse
-    //{
-    //    public abstract Task<ICommandResponse> Handle(ICommandRequest<ICommandResponse> request, CancellationToken cancellationToken);
-    //}
 }
