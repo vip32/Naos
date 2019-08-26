@@ -4,6 +4,7 @@
     using MediatR;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Operations.App.Web;
     using Naos.Core.Queueing.Domain;
     using Naos.Core.Queueing.Infrastructure.Azure;
     using Naos.Core.Tracing.Domain;
@@ -39,14 +40,15 @@
                                 new CosmosDbSqlRepository<Customer>(o => o
                                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                                     .Mediator(sp.GetRequiredService<IMediator>())
-                                    .Provider(new CosmosDbSqlProviderV2<Customer>(
-                                        logger: sp.GetRequiredService<ILogger<CosmosDbSqlProviderV2<Customer>>>(),
-                                        client: CosmosDbClientV2.Create(cosmosDbConfiguration.ServiceEndpointUri, cosmosDbConfiguration.AuthKeyOrResourceToken),
-                                        databaseId: cosmosDbConfiguration.DatabaseId,
-                                        collectionIdFactory: () => cosmosDbConfiguration.CollectionId,
-                                        partitionKeyPath: cosmosDbConfiguration.CollectionPartitionKey,
-                                        throughput: cosmosDbConfiguration.CollectionOfferThroughput,
-                                        isMasterCollection: cosmosDbConfiguration.IsMasterCollection)))))));
+                                    .Provider(sp.GetRequiredService<ICosmosDbSqlProvider<Customer>>())))))); // v3
+                                    //.Provider(new CosmosDbSqlProviderV2<Customer>( // v2
+                                    //    logger: sp.GetRequiredService<ILogger<CosmosDbSqlProviderV2<Customer>>>(),
+                                    //    client: CosmosDbClientV2.Create(cosmosDbConfiguration.ServiceEndpointUri, cosmosDbConfiguration.AuthKeyOrResourceToken),
+                                    //    databaseId: cosmosDbConfiguration.DatabaseId,
+                                    //    collectionIdFactory: () => cosmosDbConfiguration.CollectionId,
+                                    //    partitionKeyPath: cosmosDbConfiguration.CollectionPartitionKey,
+                                    //    throughput: cosmosDbConfiguration.CollectionOfferThroughput,
+                                    //    isMasterCollection: cosmosDbConfiguration.IsMasterCollection)))))));
             });
 
             options.Context.Services.AddScoped<ICosmosDbSqlProvider<Customer>>(sp =>
@@ -54,7 +56,8 @@
                 return new CosmosDbSqlProviderV3<Customer>(o => o
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                     .Account(cosmosDbConfiguration.ServiceEndpointUri, cosmosDbConfiguration.AuthKeyOrResourceToken)
-                    .Database(cosmosDbConfiguration.DatabaseId));
+                    .Database(cosmosDbConfiguration.DatabaseId)
+                    .PartitionKey(e => e.Region));
             });
 
             var queueStorageConfiguration = options.Context.Configuration?.GetSection($"{section}:queueStorage").Get<QueueStorageConfiguration>();

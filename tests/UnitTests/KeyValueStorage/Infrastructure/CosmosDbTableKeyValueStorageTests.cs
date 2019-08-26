@@ -36,6 +36,7 @@
         {
             var connectionString = string.Empty;
             //var connectionString = Configuration["naos:tests:cosmosDb:connectionString"];
+            // WARN: Microsoft.Azure.Cosmos.Table has CAS issues with current nuget https://github.com/Azure/azure-cosmos-table-dotnet/issues/7 + https://forums.asp.net/t/2157664.aspx?System+MethodAccessException+at+CloudTable+CreateIfNotExists
 
             if(!connectionString.IsNullOrEmpty())
             {

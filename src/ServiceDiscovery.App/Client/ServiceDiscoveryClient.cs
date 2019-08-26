@@ -41,7 +41,7 @@
                 // client-side
                 if(serviceName.IsNullOrEmpty() && serviceTag.IsNullOrEmpty())
                 {
-                    throw new ArgumentNullException("serviceName and serviceTag arguments cannot both be null or empty");
+                    throw new ArgumentNullException(message: "serviceName and serviceTag arguments cannot both be null or empty", null);
                 }
 
                 var registration = registryClient.RegistrationsAsync(serviceName, serviceTag).Result?.FirstOrDefault();

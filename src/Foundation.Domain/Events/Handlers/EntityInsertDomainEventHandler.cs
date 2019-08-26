@@ -55,7 +55,7 @@
                         entity.SetIdentifierHash();
                     }
                 }
-            });
+            }).AnyContext();
         }
     }
 }

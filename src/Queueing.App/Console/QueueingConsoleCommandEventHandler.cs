@@ -22,6 +22,7 @@
 
             if(queue == null)
             {
+                Console.WriteLine("\r\ncreate new inmemory queue", Color.LimeGreen);
                 queue = new InMemoryQueue<EchoQueueEventData>(o => o
                     .Mediator(this.mediator)
                     .LoggerFactory(loggerFactory));
@@ -34,11 +35,10 @@
             if(request.Command.Echo)
             {
                 await queue.ProcessItemsAsync(true).AnyContext();
-                Console.WriteLine("\r\nstart enqueue", Color.LimeGreen);
 
                 for(var i = 1; i <= 2; i++)
                 {
-                    await queue.EnqueueAsync(new EchoQueueEventData { Text = "+++ hello from queue item +++" }).AnyContext();
+                    await queue.EnqueueAsync(new EchoQueueEventData { Text = $"+++ hello from queue item {i} +++" }).AnyContext();
                     var metrics = queue.GetMetricsAsync().Result;
                     Console.WriteLine(metrics.Dump());
                 }

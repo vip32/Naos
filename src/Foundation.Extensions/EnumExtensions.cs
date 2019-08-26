@@ -112,11 +112,11 @@
                     return true;
                 }
             }
-#pragma warning disable RCS1075 // Avoid empty catch clause that catches System.Exception.
-            catch(Exception)
-#pragma warning restore RCS1075 // Avoid empty catch clause that catches System.Exception.
+#pragma warning disable CA1031 // Do not catch general exception types
+            catch
+#pragma warning restore CA1031 // Do not catch general exception types
             {
-                // return false;
+                // ignore, return false;
             }
 
             return false;

@@ -29,25 +29,25 @@
             var correlationId = request.GetCorrelationId();
             var requestId = request.GetRequestId();
 
-            await this.LogHttpRequest(request, correlationId, requestId);
+            await this.LogHttpRequest(request, correlationId, requestId).AnyContext();
 
             using(var timer = new Foundation.Timer())
             {
                 var response = await base.SendAsync(request, cancellationToken).AnyContext();
                 timer.Stop();
-                await this.LogHttpResponse(response, requestId, timer.Elapsed);
+                await this.LogHttpResponse(response, requestId, timer.Elapsed).AnyContext();
                 return response;
             }
         }
 
         protected async Task<string> GetRequestContent(HttpRequestMessage request)
         {
-            return await request.Content.ReadAsStringAsync();
+            return await request.Content.ReadAsStringAsync().AnyContext();
         }
 
         protected async Task<string> GetResponseContent(HttpResponseMessage response)
         {
-            return await response.Content.ReadAsStringAsync();
+            return await response.Content.ReadAsStringAsync().AnyContext();
         }
 
         protected async Task LogHttpRequest(HttpRequestMessage request, string correlationId, string requestId)

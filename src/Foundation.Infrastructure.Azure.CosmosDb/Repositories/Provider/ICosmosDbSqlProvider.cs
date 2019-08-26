@@ -10,29 +10,36 @@
 
     public interface ICosmosDbSqlProvider<T>
     {
-        Task<T> GetByIdAsync(string id, string partitionKey = null);
+        Task<T> GetByIdAsync(string id, object partitionKey = null);
 
-        Task<T> UpsertAsync(T entity, string partitionKey = null);
-
-        Task<IEnumerable<T>> WhereAsync(Expression<Func<T, bool>> expression, string partitionKey = null);
-
-        Task<IEnumerable<T>> WhereAsync(
-            Expression<Func<T, bool>> expression = null,
-            IEnumerable<Expression<Func<T, bool>>> expressions = null,
-            string partitionKey = null,
-            int count = 100,
-            Expression<Func<T, object>> orderExpression = null,
-            bool orderDescending = false);
+        Task<T> UpsertAsync(T entity, object partitionKeyValue = null);
 
         Task<IEnumerable<T>> WhereAsync(
             Expression<Func<T, bool>> expression,
-            Expression<Func<T, T>> selector,
-            string partitionKey = null,
-            int count = 100,
+            int? skip = null,
+            int? take = null,
             Expression<Func<T, object>> orderExpression = null,
-            bool orderDescending = false);
+            bool orderDescending = false,
+            object partitionKeyValue = null);
 
-        Task<bool> DeleteByIdAsync(string id, string partitionKey = null);
+        Task<IEnumerable<T>> WhereAsync(
+            IEnumerable<Expression<Func<T, bool>>> expressions = null,
+            int? skip = null,
+            int? take = null,
+            Expression<Func<T, object>> orderExpression = null,
+            bool orderDescending = false,
+            object partitionKeyValue = null);
+
+        Task<IEnumerable<T>> WhereAsync( // OBSOLETE
+            Expression<Func<T, bool>> expression,
+            Expression<Func<T, T>> selector,
+            int? skip = null,
+            int? take = null,
+            Expression<Func<T, object>> orderExpression = null,
+            bool orderDescending = false,
+            object partitionKeyValue = null);
+
+        Task<bool> DeleteByIdAsync(string id, object partitionKeyValue = null);
 
         //Task<T> UpsertAttachmentAsync(T entity, string attachmentId, string contentType, Stream stream);
 

@@ -21,7 +21,7 @@
         public override void Serialize(object value, Stream output)
         {
             // https://github.com/ServiceStack/ServiceStack.Text/blob/master/tests/ServiceStack.Text.Tests/CsvTests/ObjectSerializerTests.cs
-            ServiceStack.Text.CsvConfig.ItemSeperatorString = this.itemSeperator;
+            ServiceStack.Text.CsvConfig.ItemSeperatorString = this.ItemSeperator;
 
             if(this.headersMap != null)
             {

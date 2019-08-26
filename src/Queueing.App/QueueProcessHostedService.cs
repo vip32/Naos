@@ -36,15 +36,15 @@
 
             if(this.handler != null)
             {
-                await this.queue.ProcessItemsAsync(this.handler);
+                await this.queue.ProcessItemsAsync(this.handler).AnyContext();
             }
             else
             {
                 await this.queue.ProcessItemsAsync(async i =>
                 {
                     this.logger.LogInformation($"+++ process item +++ {i.Id}");
-                    await i.CompleteAsync();
-                });
+                    await i.CompleteAsync().AnyContext();
+                }).AnyContext();
             }
         }
 

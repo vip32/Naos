@@ -131,7 +131,7 @@
                         callExpression?.Method.Invoke(
                             job,
                             callExpression?.Arguments?.Select(p => this.MapParameter(p, t)).ToArray());
-                    });
+                    }).AnyContext();
                 }));
         }
 

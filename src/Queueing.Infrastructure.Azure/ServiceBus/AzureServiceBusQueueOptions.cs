@@ -101,7 +101,7 @@
         {
             var result = new QueueDescription(this.Name)
             {
-                LockDuration = this.ProcessTimeout,
+                LockDuration = this.ProcessInterval,
                 MaxDeliveryCount = this.Retries + 1
             };
 

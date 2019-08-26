@@ -9,6 +9,7 @@
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
+    using Naos.Foundation;
     using Naos.Foundation.Domain;
     using Naos.Foundation.Infrastructure;
     using NSubstitute;
@@ -26,7 +27,7 @@
                 var sut = this.CreateRepository(context);
 
                 // act
-                var findResults = await sut.FindAllAsync();
+                var findResults = await sut.FindAllAsync().AnyContext();
 
                 // assert
                 Assert.NotNull(findResults);
@@ -44,11 +45,11 @@
                 var sut = this.CreateRepository(context);
 
                 // act
-                var findResultsWithSpecification = await sut.FindAllAsync(new StubHasTenantSpecification("TestTenant"));
-                var findResultsWithSpecifications = await sut.FindAllAsync(new[] { new StubHasTenantSpecification("TestTenant") });
+                var findResultsWithSpecification = await sut.FindAllAsync(new StubHasTenantSpecification("TestTenant")).AnyContext();
+                var findResultsWithSpecifications = await sut.FindAllAsync(new[] { new StubHasTenantSpecification("TestTenant") }).AnyContext();
                 var findResultsWithTenantSpecfication = await sut.FindAllAsync(
                     new StubHasTenantSpecification("TestTenant"),
-                    new FindOptions<StubEntity>(take: 5));
+                    new FindOptions<StubEntity>(take: 5)).AnyContext();
 
                 // assert
                 Assert.NotNull(findResultsWithSpecification);
@@ -74,7 +75,7 @@
                 // act
                 var findResults = await sut.FindAllAsync(
                     new StubHasTenantSpecification("TestTenant")
-                    .And(new StubHasNameSpecification("FirstName1")));
+                    .And(new StubHasNameSpecification("FirstName1"))).AnyContext();
 
                 // assert
                 Assert.NotNull(findResults);
@@ -94,7 +95,7 @@
                 // act
                 var findResults = await sut.FindAllAsync(
                     new StubHasNameSpecification("FirstName1")
-                    .Or(new StubHasNameSpecification("FirstName2")));
+                    .Or(new StubHasNameSpecification("FirstName2"))).AnyContext();
 
                 // assert
                 Assert.NotNull(findResults);
@@ -117,11 +118,11 @@
                 var findResults = await sut.FindAllAsync(
                     new StubHasTenantSpecification("TestTenant")
                     .And(new StubHasNameSpecification("FirstName1")
-                        .Not()));
+                        .Not())).AnyContext();
 
                 // assert
                 Assert.NotNull(findResults);
-                Assert.True(findResults.Count() >= 1);
+                Assert.True(findResults.Any());
                 Assert.DoesNotContain(findResults, f => f.FirstName == "FirstName1");
             }
         }
@@ -136,8 +137,8 @@
                 var sut = this.CreateRepository(context);
 
                 // act
-                var findResult = await sut.FindOneAsync(new Guid("00000000-0000-0000-0000-000000000001"));
-                var findResultUnknownId = await sut.FindOneAsync(new Guid("00000000-0000-0000-0000-000000000050"));
+                var findResult = await sut.FindOneAsync(new Guid("00000000-0000-0000-0000-000000000001")).AnyContext();
+                var findResultUnknownId = await sut.FindOneAsync(new Guid("00000000-0000-0000-0000-000000000050")).AnyContext();
 
                 // assert
                 Assert.NotNull(findResult);
@@ -166,14 +167,14 @@
                 };
 
                 // act
-                var result = await sut.UpsertAsync(entity);
-                var findResult = await sut.FindOneAsync(entity.Id);
+                var result = await sut.UpsertAsync(entity).AnyContext();
+                var findResult = await sut.FindOneAsync(entity.Id).AnyContext();
 
                 // assert
                 Assert.NotNull(result.entity);
                 Assert.NotNull(findResult);
                 Assert.True(findResult.FirstName == "FirstName20");
-                await mediator.Received().Publish(Arg.Any<IDomainEvent>());
+                await mediator.Received().Publish(Arg.Any<IDomainEvent>()).AnyContext();
             }
         }
 
@@ -195,7 +196,7 @@
                 // assert
                 Assert.NotNull(findResults);
                 Assert.True(findResults.Count() == 18);
-                await mediator.Received().Publish(Arg.Any<IDomainEvent>());
+                await mediator.Received().Publish(Arg.Any<IDomainEvent>()).AnyContext();
             }
         }
 

@@ -40,10 +40,10 @@
                     }
 
                 //}
-            }, cancellationToken);
+            }, cancellationToken).AnyContext();
         }
 
-        public Task EchoAsync(string text, CancellationToken cancellationToken, bool breakable)
+        public Task EchoAsync(string text, bool breakable, CancellationToken cancellationToken)
         {
             Thread.Sleep(new TimeSpan(0, 0, 3));
 

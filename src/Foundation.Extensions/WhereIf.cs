@@ -7,32 +7,62 @@
 
     public static partial class Extensions
     {
-        public static IQueryable<TSource> WhereIf<TSource>(
-            this IQueryable<TSource> source, bool condition,
-            Expression<Func<TSource, bool>> predicate)
+        public static IQueryable<T> WhereIf<T>(
+            this IQueryable<T> source,
+            Expression<Func<T, bool>> predicate,
+            bool? condition = true)
         {
-            if(condition)
+            if(condition == true && predicate != null)
             {
                 return source.Where(predicate);
             }
-            else
-            {
-                return source;
-            }
+
+            return source;
         }
 
-        public static IEnumerable<TSource> WhereIf<TSource>(
-            this IEnumerable<TSource> source, bool condition,
-            Func<TSource, bool> predicate)
+        public static IQueryable<T> WhereIf<T>(
+            this IQueryable<T> source,
+            IEnumerable<Expression<Func<T, bool>>> predicates,
+            bool? condition = true)
         {
-            if(condition)
+            if (condition == true && predicates?.Any() == true)
+            {
+                foreach (var predicate in predicates)
+                {
+                    source = source.Where(predicate);
+                }
+            }
+
+            return source;
+        }
+
+        public static IEnumerable<T> WhereIf<T>(
+            this IEnumerable<T> source,
+            Func<T, bool> predicate,
+            bool? condition = true)
+        {
+            if(condition == true && predicate != null)
             {
                 return source.Where(predicate);
             }
-            else
+
+            return source;
+        }
+
+        public static IEnumerable<T> WhereIf<T>(
+            this IEnumerable<T> source,
+            IEnumerable<Func<T, bool>> predicates,
+            bool? condition = true)
+        {
+            if (condition == true && predicates?.Any() == true)
             {
-                return source;
+                foreach (var predicate in predicates)
+                {
+                    source = source.Where(predicate);
+                }
             }
+
+            return source;
         }
     }
 }

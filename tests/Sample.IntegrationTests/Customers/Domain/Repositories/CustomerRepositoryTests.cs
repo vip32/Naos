@@ -1,5 +1,6 @@
 ﻿namespace Naos.Sample.IntegrationTests.Customers.Domain
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using Bogus;
@@ -21,6 +22,7 @@
         {
             this.sut = this.ServiceProvider.GetService<ICustomerRepository>();
             this.entityFaker = new Faker<Customer>() //https://github.com/bchavez/Bogus
+                //.RuleFor(u => u.Id, f => Guid.NewGuid().ToString())
                 .RuleFor(u => u.CustomerNumber, f => f.Random.Replace("??-#####"))
                 .RuleFor(u => u.Gender, f => f.PickRandom(new[] { "Male", "Female" }))
                 .RuleFor(u => u.FirstName, (f, u) => f.Name.FirstName())
@@ -189,6 +191,16 @@
         }
 
         [Fact]
+        public async Task FindOneAsync_UnknownId_Test()
+        {
+            // arrange/act
+            var result = await this.sut.FindOneAsync(Guid.NewGuid().ToString()).AnyContext();
+
+            // assert
+            result.ShouldBeNull();
+        }
+
+        [Fact]
         public async Task InsertAsync_Test()
         {
             // arrange/act
@@ -223,18 +235,44 @@
         }
 
         [Fact]
-        public async Task DeleteAsync_Test()
+        public async Task DeleteAsync_ByEntity_Test()
         {
             // arrange
             var entities = await this.sut.FindAllAsync(
                 new FindOptions<Customer>(take: 1)).AnyContext();
 
             // act
-            await this.sut.DeleteAsync(entities.FirstOrDefault()).AnyContext();
-            var result = await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).AnyContext();
+            var result = await this.sut.DeleteAsync(entities.FirstOrDefault()).AnyContext();
 
             // assert
-            result.ShouldBeNull();
+            result.ShouldBe(ActionResult.Deleted);
+            (await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).AnyContext()).ShouldBeNull();
+        }
+
+        [Fact]
+        public async Task DeleteAsync_ById_Test()
+        {
+            // arrange
+            var entities = await this.sut.FindAllAsync(
+                new FindOptions<Customer>(take: 1)).AnyContext();
+            var id = entities.FirstOrDefault()?.Id;
+
+            // act
+            var result = await this.sut.DeleteAsync(id).AnyContext();
+
+            // assert
+            result.ShouldBe(ActionResult.Deleted);
+            (await this.sut.FindOneAsync(id).AnyContext()).ShouldBeNull();
+        }
+
+        [Fact]
+        public async Task DeleteAsync_UnknownId_Test()
+        {
+            // arrange/act
+            var result = await this.sut.DeleteAsync(Guid.NewGuid().ToString()).AnyContext();
+
+            // assert
+            result.ShouldBe(ActionResult.None);
         }
     }
 }

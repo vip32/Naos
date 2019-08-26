@@ -33,7 +33,7 @@
             naosOptions.Context.Services
                 .Scan(scan => scan
                     .FromApplicationDependencies()
-                    .AddClasses(classes => classes.Where(c => (c.Name.EndsWith("Command") || c.Name.EndsWith("CommandHandler")) && !c.Name.Contains("ConsoleCommand")))
+                    .AddClasses(classes => classes.Where(c => (c.Name.EndsWith("Command", StringComparison.OrdinalIgnoreCase) || c.Name.EndsWith("CommandHandler", StringComparison.OrdinalIgnoreCase)) && !c.Name.Contains("ConsoleCommand")))
                     .AsImplementedInterfaces());
 
             naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos services builder: commands added"); // TODO: list available commands/handlers
@@ -46,7 +46,7 @@
             //    .AddSingleton<ICommandBehavior, IdempotentCommandBehavior>()
             //    .AddSingleton<ICommandBehavior, PersistCommandBehavior>();
 
-            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Commands" });
+            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Commands", EchoRoute = "api/echo/commands" });
 
             return naosOptions;
         }

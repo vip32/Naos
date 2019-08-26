@@ -53,10 +53,12 @@
 
                     childScope.Span.WithTag("y", "yyy");
 
-                    var httpClient = new System.Net.Http.HttpClient();
-                    // add ActiveSpan to http headers
-                    // make httprequest (SendAsync)
-                    // server should create span based on httpheaders
+                    using (var httpClient = new System.Net.Http.HttpClient())
+                    {
+                        // add ActiveSpan to http headers
+                        // make httprequest (SendAsync)
+                        // server should create span based on httpheaders
+                    }
                 }
 
                 using(var failedScope = tracer.BuildSpan("failure").Activate(null))

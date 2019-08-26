@@ -81,7 +81,7 @@
                             m).AnyContext())
                         {
                             // complete message so it is not received again
-                            await client.CompleteAsync(m.SystemProperties.LockToken);
+                            await client.CompleteAsync(m.SystemProperties.LockToken).AnyContext();
                         }
                     },
                     new MessageHandlerOptions(args =>

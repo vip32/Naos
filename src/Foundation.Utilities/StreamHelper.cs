@@ -42,7 +42,9 @@
             }
 
             var stream = new MemoryStream();
-            var sw = new StreamWriter(stream);
+#pragma warning disable CA2000 // Dispose objects before losing scope
+            var sw = new StreamWriter(stream); // lcient should dispose
+#pragma warning restore CA2000 // Dispose objects before losing scope
             sw.Write(value);
             sw.Flush();
 

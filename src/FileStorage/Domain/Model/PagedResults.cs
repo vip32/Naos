@@ -8,8 +8,7 @@
 
     public class PagedResults : IHasNextPageFunc
     {
-        public static readonly IReadOnlyCollection<FileInformation> Empty = new ReadOnlyCollection<FileInformation>(new FileInformation[0]);
-        public static PagedResults EmptyResults = new PagedResults(Empty);
+        public static readonly IReadOnlyCollection<FileInformation> Empty = new ReadOnlyCollection<FileInformation>(Array.Empty<FileInformation>());
 
         public PagedResults(
             IReadOnlyCollection<FileInformation> files)
@@ -33,6 +32,8 @@
         {
             ((IHasNextPageFunc)this).NextPageFunc = nextPageFunc;
         }
+
+        public static PagedResults EmptyResults { get; set; } = new PagedResults(Empty);
 
         public IReadOnlyCollection<FileInformation> Files { get; private set; }
 

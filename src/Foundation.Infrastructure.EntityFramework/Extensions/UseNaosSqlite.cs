@@ -13,7 +13,7 @@
         {
             var entityFrameworkConfiguration = configuration.GetSection(section).Get<EntityFrameworkConfiguration>();
 
-            return source.UseSqlite(entityFrameworkConfiguration?.ConnectionString?.StartsWith("Data Source") == true
+            return source.UseSqlite(entityFrameworkConfiguration?.ConnectionString?.StartsWith("Data Source", System.StringComparison.OrdinalIgnoreCase) == true
                     ? entityFrameworkConfiguration.ConnectionString
                     : $"Data Source={name}.db")
                 .EnableSensitiveDataLogging();

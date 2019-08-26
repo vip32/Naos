@@ -90,7 +90,7 @@
                     });
                 }
 
-                await this.next(context);
+                await this.next(context).AnyContext();
             }
 
             contextFactory.Dispose();

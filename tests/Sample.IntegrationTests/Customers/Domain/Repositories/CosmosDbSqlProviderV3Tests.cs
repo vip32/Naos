@@ -1,6 +1,7 @@
 ﻿namespace Naos.Sample.IntegrationTests.Customers.Domain
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using Bogus;
     using Microsoft.Extensions.DependencyInjection;
@@ -198,6 +199,31 @@
         }
 
         [Fact]
+        public async Task WhereAsync_Test()
+        {
+            // arrange/act
+            var result = await this.sut.WhereAsync(e => e.FirstName == "John").AnyContext();
+
+            // assert
+            result.ShouldNotBeNull();
+            result.ShouldNotBeEmpty();
+            result.FirstOrDefault()?.FirstName.ShouldBe("John");
+            result.FirstOrDefault()?.LastName.ShouldBe("Doe");
+        }
+
+        [Fact]
+        public async Task SkiptakeAsync_Test()
+        {
+            // arrange/act
+            var result = await this.sut.WhereAsync(e => true == true, skip: 5, take: 2).AnyContext();
+
+            // assert
+            result.ShouldNotBeNull();
+            result.ShouldNotBeEmpty();
+            result.Count().ShouldBe(2);
+        }
+
+        [Fact]
         public async Task UpsertAsync_Test()
         {
             for(var i = 1; i < 10; i++)
@@ -219,6 +245,9 @@
 
             var entity = this.entityFaker.Generate();
             entity.Id = "c2557410-c941-424a-8562-f9e25444f2bc";
+            entity.FirstName = "John";
+            entity.LastName = "Doe";
+            entity.Gender = "male";
             await this.sut.UpsertAsync(entity).AnyContext();
         }
 

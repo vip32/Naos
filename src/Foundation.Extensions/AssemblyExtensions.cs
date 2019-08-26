@@ -20,13 +20,13 @@
             {
                 var value = attribute.InformationalVersion;
                 var prefix = BuildVersionMetadataPrefix1;
-                var index = value.IndexOf(BuildVersionMetadataPrefix1);
+                var index = value.IndexOf(BuildVersionMetadataPrefix1, StringComparison.OrdinalIgnoreCase);
 
                 // fallback for '.build' prefix
                 if(index == -1)
                 {
                     prefix = BuildVersionMetadataPrefix2;
-                    index = value.IndexOf(BuildVersionMetadataPrefix2);
+                    index = value.IndexOf(BuildVersionMetadataPrefix2, StringComparison.OrdinalIgnoreCase);
                 }
 
                 if(index > 0)

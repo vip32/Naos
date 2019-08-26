@@ -24,9 +24,11 @@
         /// <param name="output">The output.</param>
         public void Serialize(object value, Stream output)
         {
-            var writer = new JsonTextWriter(new StreamWriter(output));
-            this.serializer.Serialize(writer, value, value.GetType());
-            writer.Flush();
+            using(var writer = new JsonTextWriter(new StreamWriter(output)))
+            {
+                this.serializer.Serialize(writer, value, value.GetType());
+                writer.Flush();
+            }
         }
 
         /// <summary>

@@ -8,7 +8,7 @@
     /// </summary>
     /// <typeparam name="TId">The type of the identifier.</typeparam>
     [DebuggerDisplay("Type={GetType().Name}, Id={Id}")]
-    public abstract class Entity<TId> : IEntity<TId>, IStateEntity, IHaveDiscriminator, IIdentifiable
+    public abstract class Entity<TId> : IEntity<TId>, IStateEntity/*, IHaveDiscriminator*/, IIdentifiable
     {
         /// <summary>
         /// Gets or sets the entity identifier.
@@ -39,7 +39,7 @@
         /// The type of the entity.
         /// </value>
         //[JsonProperty(PropertyName = "_et")]
-        public string Discriminator => this.GetType().FullPrettyName();
+        //public string Discriminator => this.GetType().FullPrettyName();
 
         /// <summary>
         /// Gets the identifier hash for the entity.
@@ -55,7 +55,7 @@
         /// <value>
         /// The state.
         /// </value>
-        public State State { get; private set; } = new State();
+        public State State { get; private set; } = new State(); // private set is needed for EF model configuration
 
 #pragma warning disable S3875 // "operator==" should not be overloaded on reference types
         /// <summary>
@@ -152,6 +152,6 @@
         /// <returns>
         /// A <see cref="string" /> that represents this instance.
         /// </returns>
-        public override string ToString() => $"{this.Discriminator} [Id={this.Id}]";
+        public override string ToString() => $"{this.GetType().FullPrettyName()} [Id={this.Id}]";
     }
 }

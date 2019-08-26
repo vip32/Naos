@@ -26,6 +26,12 @@
             return source ?? string.Empty;
         }
 
+        [DebuggerStepThrough]
+        public static string Safe(this string source, string @default)
+        {
+            return source ?? @default ?? string.Empty;
+        }
+
         /// <summary>
         /// Converts an null list to an empty list. Also clears out possible 'null' items
         /// Avoids null ref exceptions.

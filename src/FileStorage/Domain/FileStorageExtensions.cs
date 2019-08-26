@@ -17,7 +17,9 @@
             var bytes = storage.Serializer.SerializeToBytes(data);
             return storage.SaveFileAsync(
                 path,
+#pragma warning disable CA2000 // Dispose objects before losing scope
                 new MemoryStream(bytes),
+#pragma warning restore CA2000 // Dispose objects before losing scope
                 cancellationToken);
         }
 
@@ -29,7 +31,9 @@
             var bytes = serializer.SerializeToBytes(data);
             return storage.SaveFileAsync(
                 path,
+#pragma warning disable CA2000 // Dispose objects before losing scope
                 new MemoryStream(bytes),
+#pragma warning restore CA2000 // Dispose objects before losing scope
                 cancellationToken);
         }
 
@@ -70,7 +74,9 @@
 
             return storage.SaveFileAsync(
                 path,
+#pragma warning disable CA2000 // Dispose objects before losing scope
                 new MemoryStream(Encoding.UTF8.GetBytes(contents ?? string.Empty)),
+#pragma warning restore CA2000 // Dispose objects before losing scope
                 cancellationToken);
         }
 
@@ -82,7 +88,10 @@
             {
                 if(stream != null)
                 {
-                    return await new StreamReader(stream).ReadToEndAsync().AnyContext();
+                    using(var reader = new StreamReader(stream))
+                    {
+                        return await reader.ReadToEndAsync().AnyContext();
+                    }
                 }
             }
 

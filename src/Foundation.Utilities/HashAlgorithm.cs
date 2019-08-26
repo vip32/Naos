@@ -57,11 +57,9 @@
             }
 
             using(var stream = StreamHelper.ToStream(value))
+            using(var algorithm = CreateHashAlgorithm(hashType))
             {
-                using(var algorithm = CreateHashAlgorithm(hashType))
-                {
-                    return BytesToString(algorithm.ComputeHash(stream));
-                }
+                return BytesToString(algorithm.ComputeHash(stream));
             }
         }
 
@@ -111,7 +109,9 @@
                 case HashType.Md5:
                     return MD5.Create();
                 case HashType.Sha1:
+#pragma warning disable CA5350 // Do Not Use Weak Cryptographic Algorithms
                     return SHA1.Create();
+#pragma warning restore CA5350 // Do Not Use Weak Cryptographic Algorithms
                 case HashType.Sha256:
                     return SHA256.Create();
                 case HashType.Sha384:

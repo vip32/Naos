@@ -4,21 +4,17 @@
     using System.IO;
     using System.Linq;
     using System.Threading;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Diagnostics.HealthChecks;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Internal;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Authorization;
     using Microsoft.AspNetCore.Mvc.Infrastructure;
     using Microsoft.AspNetCore.Mvc.Routing;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Naos.Core.App.Web;
-    using Naos.Core.Authentication.App.Web;
     using Naos.Core.Commands.Domain;
     using Naos.Core.Commands.Infrastructure.FileStorage;
     using Naos.Core.Configuration.App;
@@ -28,7 +24,7 @@
     using Naos.Core.Messaging.Domain;
     using Naos.Foundation;
     using Newtonsoft.Json;
-    using NSwag.AspNetCore;
+    using NJsonSchema.Generation;
     using NSwag.Generation.Processors;
 
     public class Startup
@@ -45,6 +41,15 @@
 
         public void ConfigureServices(IServiceCollection services)
         {
+            // TODO: make pretty, like:
+            //services.AddRequestCommands(o =>
+            //    o.Get<EchoCommand, EchoCommandResponse>("/commands/echo") // Query
+            //    o.Get<PingCommand>("/commands/ping") // Query
+            //    o.Post<CreateCustomerCommand, CreateCustomerCommandResponse>("/commands/createcustomer") // Command
+            //);
+            services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<EchoCommand, EchoCommandResponse> { Route = "/api/commands/echo", RequestMethod = "get;post" });
+            services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<PingCommand> { Route = "/api/commands/ping", RequestMethod = "get" });
+
             services
                 .AddMiddlewareAnalysis()
                 .AddHttpContextAccessor()
@@ -60,8 +65,10 @@
                     var factory = sp.GetRequiredService<IUrlHelperFactory>();
                     return factory?.GetUrlHelper(actionContext);
                 })
-                .AddSwaggerDocument(config =>
+                .AddSwaggerDocument(config => // TODO: replace with .AddOpenApiDocument, but currently has issues with example model generation in UI
                 {
+                    config.SerializerSettings = DefaultJsonSerializerSettings.Create();
+                    config.DocumentProcessors.Add(new RequestCommandDocumentProcessor(services.BuildServiceProvider().GetServices<RequestCommandRegistration>())); // TODO: needs to now all RequestCommandRegistration
                     config.OperationProcessors.Add(new GenericRepositoryControllerOperationProcessor());
                     config.OperationProcessors.Add(new ApiVersionProcessor());
                     config.PostProcess = document =>
@@ -113,12 +120,13 @@
                                 .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "commands"))))))
                     .AddOperations(o => o
                         .AddInteractiveConsole()
-                        .AddLogging(l => l
+                        .AddLogging(o => o
                             .UseConsole()
                             .UseFile()
                             //.UseAzureBlobStorage()
                             .UseAzureLogAnalytics())
-                        .AddRequestStorage(r => r
+                        .AddSystemHealthChecks()
+                        .AddRequestStorage(o => o
                             .UseAzureBlobStorage())
                         .AddTracing())
                     //.AddQueries()
@@ -168,6 +176,7 @@
                     .UseOperationsTracing()
                     .UseRequestFiltering()
                     .UseServiceExceptions()
+                    .UseRequestCommands()
                     .UseServiceDiscoveryRouter())
                 .UseOpenApi()
                 .UseSwaggerUi3();
@@ -192,7 +201,7 @@
                             message = e.Value.Exception?.Message,
                             data = e.Value.Data
                         })
-                    }, DefaultJsonSerializerSettings.Create()));
+                    }, DefaultJsonSerializerSettings.Create())).AnyContext();
                 }
             });
 

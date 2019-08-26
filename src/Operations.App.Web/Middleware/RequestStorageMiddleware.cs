@@ -35,7 +35,7 @@
             }
             else
             {
-                await this.LogRequestAsync(context);
+                await this.LogRequestAsync(context).AnyContext();
             }
         }
 
@@ -90,7 +90,7 @@
                         }
 
                         stream.Position = 0;
-                        await stream.CopyToAsync(body);
+                        await stream.CopyToAsync(body).AnyContext();
                     }
                 }
                 finally

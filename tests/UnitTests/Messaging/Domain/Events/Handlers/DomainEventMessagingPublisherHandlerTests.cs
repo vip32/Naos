@@ -23,7 +23,7 @@
                 messageBroker);
 
             // act
-            await sut.Handle(domainEvent, CancellationToken.None);
+            await sut.Handle(domainEvent, CancellationToken.None).AnyContext();
 
             // assert
             messageBroker.Received().Publish(Arg.Is<CustomerCreatedMessage>(m => m.FullName == "John Doe"));

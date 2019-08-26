@@ -7,6 +7,7 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Configuration.App;
     using Naos.Foundation;
+    using Newtonsoft.Json;
     using Console = Colorful.Console;
 
     [ExcludeFromCodeCoverage]
@@ -52,6 +53,9 @@
             };
             context.Messages.Add($"{LogKeys.Startup} naos services builder: naos services added");
             context.Services.AddSingleton(new NaosFeatureInformation { Name = "Naos", EchoRoute = "api/echo" });
+
+            // TODO: optional or provide own settings?
+            JsonConvert.DefaultSettings = DefaultJsonSerializerSettings.Create;
 
             optionsAction?.Invoke(new NaosServicesContextOptions(context));
 

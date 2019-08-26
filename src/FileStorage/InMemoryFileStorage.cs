@@ -190,7 +190,7 @@
             {
                 searchPattern = $"{searchPattern}*";
             }
-            else if(!searchPattern.EndsWith(Path.DirectorySeparatorChar + "*") && !Path.HasExtension(searchPattern))
+            else if(!searchPattern.EndsWith(Path.DirectorySeparatorChar + "*", StringComparison.OrdinalIgnoreCase) && !Path.HasExtension(searchPattern))
             {
                 searchPattern = Path.Combine(searchPattern, "*");
             }

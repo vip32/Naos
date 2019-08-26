@@ -25,9 +25,9 @@
             return this;
         }
 
-        public InMemoryQueueOptionsBuilder ProcessTimeout(TimeSpan timeout)
+        public InMemoryQueueOptionsBuilder ProcessInterval(TimeSpan timeout)
         {
-            this.Target.ProcessTimeout = timeout;
+            this.Target.ProcessInterval = timeout;
             return this;
         }
 
@@ -49,9 +49,9 @@
             return this;
         }
 
-        public InMemoryQueueOptionsBuilder DequeueInterval(TimeSpan dequeueInterval)
+        public InMemoryQueueOptionsBuilder DequeueInterval(TimeSpan interval)
         {
-            this.Target.DequeueInterval = dequeueInterval;
+            this.Target.DequeueInterval = interval;
             return this;
         }
     }

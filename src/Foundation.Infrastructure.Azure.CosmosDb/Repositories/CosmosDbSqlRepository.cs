@@ -1,5 +1,6 @@
 ﻿namespace Naos.Foundation.Infrastructure
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
@@ -11,16 +12,18 @@
     public class CosmosDbSqlRepository<TEntity> : IGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot //, IDiscriminated
     {
-        protected readonly ILogger<IGenericRepository<TEntity>> logger;
         private readonly CosmosDbSqlRepositoryOptions<TEntity> options;
 
         public CosmosDbSqlRepository(CosmosDbSqlRepositoryOptions<TEntity> options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Provider, nameof(options.Provider));
+            EnsureArg.IsNotNull(options.IdGenerator, nameof(options.IdGenerator));
 
             this.options = options;
-            this.logger = options.CreateLogger<IGenericRepository<TEntity>>();
+            this.Logger = options.CreateLogger<IGenericRepository<TEntity>>();
+
+            this.Logger.LogInformation($"{{LogKey:l}} construct cosmos repository (type={typeof(TEntity).PrettyName()})", LogKeys.DomainRepository);
         }
 
         public CosmosDbSqlRepository(Builder<CosmosDbSqlRepositoryOptionsBuilder<TEntity>, CosmosDbSqlRepositoryOptions<TEntity>> optionsBuilder)
@@ -28,12 +31,15 @@
         {
         }
 
+        protected ILogger<IGenericRepository<TEntity>> Logger { get; }
+
         public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
             var order = (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order).FirstOrDefault(); // cosmos only supports single orderby
             var entities = await this.options.Provider
                 .WhereAsync(
-                    count: options?.Take ?? -1, // TODO: implement cosmosdb skip/take https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-sql-query#OffsetLimitClause
+                    skip: options?.Skip ?? -1, // TODO: implement cosmosdb skip/take https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-sql-query#OffsetLimitClause
+                    take: options?.Take ?? -1, // TODO: implement cosmosdb skip/take https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-sql-query#OffsetLimitClause
                     orderExpression: order?.Expression,
                     orderDescending: order?.Direction == OrderDirection.Descending).AnyContext();
             return entities.ToList();
@@ -45,7 +51,8 @@
             var entities = await this.options.Provider
                 .WhereAsync(
                     expression: specification?.ToExpression().Expand(), // expand fixes Invoke in expression
-                    count: options?.Take ?? -1, // TODO: implement cosmosdb skip/take https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-sql-query#OffsetLimitClause
+                    skip: options?.Skip ?? -1, // TODO: implement cosmosdb skip/take https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-sql-query#OffsetLimitClause
+                    take: options?.Take ?? -1, // TODO: implement cosmosdb skip/take https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-sql-query#OffsetLimitClause
                     orderExpression: order?.Expression,
                     orderDescending: order?.Direction == OrderDirection.Descending).AnyContext();
             return entities.ToList();
@@ -57,7 +64,8 @@
             var entities = await this.options.Provider
                 .WhereAsync(
                     expressions: specifications.Safe().Select(s => s.ToExpression().Expand()), // expand fixes Invoke in expression
-                    count: options?.Take ?? -1, // TODO: implement cosmosdb skip/take https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-sql-query#OffsetLimitClause
+                    skip: options?.Skip ?? -1, // TODO: implement cosmosdb skip/take https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-sql-query#OffsetLimitClause
+                    take: options?.Take ?? -1, // TODO: implement cosmosdb skip/take https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-sql-query#OffsetLimitClause
                     orderExpression: order?.Expression,
                     orderDescending: order?.Direction == OrderDirection.Descending).AnyContext();
             return entities.ToList();
@@ -70,7 +78,7 @@
                 return default;
             }
 
-            return await this.options.Provider.GetByIdAsync(id as string);
+            return await this.options.Provider.GetByIdAsync(id as string).AnyContext();
         }
 
         public async Task<bool> ExistsAsync(object id)
@@ -80,7 +88,7 @@
                 return false;
             }
 
-            return await this.FindOneAsync(id) != null;
+            return await this.FindOneAsync(id).AnyContext() != null;
         }
 
         /// <summary>
@@ -116,6 +124,11 @@
 
             var isNew = entity.Id.IsDefault() || !await this.ExistsAsync(entity.Id).AnyContext();
 
+            if (entity.Id.IsDefault())
+            {
+                this.options.IdGenerator.SetNew(entity); // cosmos v3 needs an id, also for new documents
+            }
+
             if(this.options.PublishEvents && this.options.Mediator != null)
             {
                 if(isNew)
@@ -140,7 +153,7 @@
                 stateEntity.State.SetUpdated();
             }
 
-            this.logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogKeys.DomainRepository);
+            this.Logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogKeys.DomainRepository);
             var result = await this.options.Provider.UpsertAsync(entity).AnyContext();
             //entity = result;
 
@@ -174,15 +187,30 @@
             var entity = await this.FindOneAsync(id).AnyContext();
             if(entity != null)
             {
-                if(this.options.PublishEvents && this.options.Mediator != null)
-                {
-                    await this.options.Mediator.Publish(new EntityDeleteDomainEvent(entity)).AnyContext();
-                }
+                return await this.DeleteAsync(entity).AnyContext();
+            }
 
-                this.logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogKeys.DomainRepository);
-                await this.options.Provider.DeleteByIdAsync(id as string).AnyContext();
+            return ActionResult.None;
+        }
 
-                if(this.options.PublishEvents && this.options.Mediator != null)
+        public async Task<ActionResult> DeleteAsync(TEntity entity)
+        {
+            if(entity?.Id.IsDefault() == true)
+            {
+                return ActionResult.None;
+            }
+
+            if (this.options.PublishEvents && this.options.Mediator != null)
+            {
+                await this.options.Mediator.Publish(new EntityDeleteDomainEvent(entity)).AnyContext();
+            }
+
+            this.Logger.LogInformation($"{{LogKey:l}} delete entity: {entity.GetType().PrettyName()}, id: {entity.Id}", LogKeys.DomainRepository);
+            var response = await this.options.Provider.DeleteByIdAsync(entity.Id as string).AnyContext();
+
+            if (response)
+            {
+                if (this.options.PublishEvents && this.options.Mediator != null)
                 {
                     await this.options.Mediator.Publish(new EntityDeletedDomainEvent(entity)).AnyContext();
                 }
@@ -191,16 +219,6 @@
             }
 
             return ActionResult.None;
-        }
-
-        public async Task<ActionResult> DeleteAsync(TEntity entity)
-        {
-            if(entity?.Id.IsDefault() != false)
-            {
-                return ActionResult.None;
-            }
-
-            return await this.DeleteAsync(entity.Id).AnyContext();
         }
     }
 }

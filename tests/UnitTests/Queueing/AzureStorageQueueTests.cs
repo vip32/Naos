@@ -113,12 +113,13 @@
 
         protected override IQueue<StubMessage> GetQueue(
             int retries = 1,
-            TimeSpan? processTimeout = null,
+            TimeSpan? processInterval = null,
             TimeSpan? retryDelay = null,
             int deadLetterMaxItems = 100)
         {
             var name = $"test-{Guid.NewGuid().ToString("N").Substring(10)}";
             var connectionString = string.Empty;
+            //var connectionString = Configuration["naos:tests:storage:connectionString"];
             if(connectionString.IsNullOrEmpty())
             {
                 return null;
@@ -131,7 +132,7 @@
                         .Name(name)
                         .Retries(retries)
                         .RetryPolicy(retries <= 0 ? new NoRetry() : (IRetryPolicy)new ExponentialRetry(retryDelay.GetValueOrDefault(TimeSpan.FromMinutes(1)), retries))
-                        .ProcessTimeout(processTimeout.GetValueOrDefault(TimeSpan.FromMinutes(5)))
+                        .ProcessInterval(processInterval.GetValueOrDefault(TimeSpan.FromMinutes(5)))
                         .DequeueInterval(TimeSpan.FromMilliseconds(100))));
         }
 

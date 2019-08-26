@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.Commands.Domain
 {
     using System;
+    using System.Collections.Generic;
     using EnsureThat;
     using FluentValidation.Results;
     using MediatR;
@@ -58,7 +59,7 @@
 
         public DateTimeOffset Created { get; }
 
-        public DataDictionary Properties { get; set; } = new DataDictionary();
+        public IDictionary<string, object> Properties { get; set; } = new DataDictionary();
 
         //public void Update(string id, string correlationId)
         //{

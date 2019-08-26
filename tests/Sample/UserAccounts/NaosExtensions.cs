@@ -54,14 +54,13 @@
             });
 
             var entityFrameworkConfiguration = options.Context.Configuration?.GetSection(section).Get<EntityFrameworkConfiguration>();
-            options.Context.Services.AddDbContext<UserAccountsDbContext>(o =>
-            {
-                o.UseSqlServer(connectionString ?? entityFrameworkConfiguration.ConnectionString ?? $"Server=(localdb)\\mssqllocaldb;Database={nameof(UserAccountsDbContext)};Trusted_Connection=True;MultipleActiveResultSets=True;");
-                o.UseLoggerFactory(options.Context.Services.BuildServiceProvider().GetRequiredService<ILoggerFactory>());
-                o.ConfigureWarnings(w => w.Throw(RelationalEventId.QueryClientEvaluationWarning));
-                o.EnableSensitiveDataLogging();
-                o.EnableDetailedErrors();
-            });
+            options.Context.Services.AddDbContext<UserAccountsDbContext>(o => o
+                .UseSqlServer(connectionString.EmptyToNull() ?? entityFrameworkConfiguration.ConnectionString.EmptyToNull() ?? $"Server=(localdb)\\mssqllocaldb;Database={nameof(UserAccountsDbContext)};Trusted_Connection=True;MultipleActiveResultSets=True;", o => o
+                    .EnableRetryOnFailure())
+                .UseLoggerFactory(options.Context.Services.BuildServiceProvider().GetRequiredService<ILoggerFactory>())
+                .ConfigureWarnings(w => w.Throw(RelationalEventId.QueryClientEvaluationWarning))
+                .EnableSensitiveDataLogging()
+                .EnableDetailedErrors());
 
             options.Context.Services.AddStartupTask<ApplyPendingMigrationsTask<UserAccountsDbContext>>();
             options.Context.Services.AddStartupTask<EchoStartupTask>(new TimeSpan(0, 0, 3));

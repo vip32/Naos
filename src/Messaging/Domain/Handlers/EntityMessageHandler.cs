@@ -9,12 +9,12 @@
     public class EntityMessageHandler<T> : IMessageHandler<EntityMessage<T>>
         where T : class, IEntity
     {
-        protected readonly ILogger<EntityMessageHandler<T>> logger;
-
         public EntityMessageHandler(ILogger<EntityMessageHandler<T>> logger)
         {
-            this.logger = logger;
+            this.Logger = logger;
         }
+
+        protected ILogger<EntityMessageHandler<T>> Logger { get; }
 
         /// <summary>
         /// Handles the specified message.
@@ -27,9 +27,9 @@
                 [LogPropertyKeys.CorrelationId] = message.CorrelationId,
             };
 
-            using(this.logger.BeginScope(loggerState))
+            using(this.Logger.BeginScope(loggerState))
             {
-                this.logger.LogInformation("{LogKey:l} handle (name={MessageName}, id={MessageId}, origin={MessageOrigin}) " + message.Entity.GetType().Name, LogKeys.Messaging, message.GetType().PrettyName(), message.Id, message.Origin);
+                this.Logger.LogInformation("{LogKey:l} handle (name={MessageName}, id={MessageId}, origin={MessageOrigin}) " + message.Entity.GetType().Name, LogKeys.Messaging, message.GetType().PrettyName(), message.Id, message.Origin);
 
                 return Task.CompletedTask;
             }

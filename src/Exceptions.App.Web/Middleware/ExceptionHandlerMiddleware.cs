@@ -39,7 +39,7 @@
         {
             try
             {
-                await this.next(context);
+                await this.next(context).AnyContext();
             }
             catch(Exception ex)
             {

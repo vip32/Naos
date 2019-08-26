@@ -209,8 +209,9 @@
 
         public override string ToString()
         {
-            var roundedCreatedDateTime = Round(this.CreatedDateTime, TimeSpan.FromMilliseconds(1));
-            return string.Format("{0} ({1:yyyy-MM-dd HH:mm:ss.fff})", this.value, roundedCreatedDateTime);
+            //var roundedCreatedDateTime = Round(this.CreatedDateTime, TimeSpan.FromMilliseconds(1));
+            //return string.Format("{0} ({1:yyyy-MM-dd HH:mm:ss.fff})", this.value, roundedCreatedDateTime);
+            return this.value.ToString();
         }
 
         private static int CompareImplementation(Guid left, Guid right)

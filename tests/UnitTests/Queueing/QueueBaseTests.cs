@@ -7,7 +7,8 @@
     using Naos.Core.Queueing.Domain;
     using Xunit;
 
-    public abstract class QueueBaseTests : IDisposable
+#pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task
+    public abstract class QueueBaseTests : BaseTest, IDisposable
     {
         public virtual void Dispose()
         {
@@ -263,6 +264,7 @@
                     Text = "Hello"
                 });
                 Thread.Sleep(1000);
+                //await Task.Delay(1000);
 
                 var stats = await queue.GetMetricsAsync();
                 Assert.Equal(1, stats.Completed);
@@ -343,7 +345,7 @@
 
         public virtual async Task ItemsWillTimeoutAsync()
         {
-            var queue = this.GetQueue(retryDelay: TimeSpan.Zero, processTimeout: TimeSpan.FromMilliseconds(50));
+            var queue = this.GetQueue(retryDelay: TimeSpan.Zero, processInterval: TimeSpan.FromMilliseconds(50));
             if(queue == null)
             {
                 return;
@@ -460,7 +462,7 @@
 
         public virtual async Task CanDelayRetryAsync()
         {
-            var queue = this.GetQueue(processTimeout: TimeSpan.FromMilliseconds(500), retryDelay: TimeSpan.FromSeconds(1));
+            var queue = this.GetQueue(processInterval: TimeSpan.FromMilliseconds(500), retryDelay: TimeSpan.FromSeconds(1));
             if(queue == null)
             {
                 return;
@@ -508,7 +510,7 @@
 
             var queue = this.GetQueue(
                 retryDelay: TimeSpan.Zero,
-                processTimeout: timeout);
+                processInterval: timeout);
 
             if(queue == null)
             {
@@ -654,7 +656,7 @@
 
         protected virtual IQueue<StubMessage> GetQueue(
             int retries = 1,
-            TimeSpan? processTimeout = null,
+            TimeSpan? processInterval = null,
             TimeSpan? retryDelay = null,
             int deadLetterMaxItems = 100)
         {
@@ -699,4 +701,5 @@
     {
         public string Text { get; set; }
     }
+#pragma warning restore CA2007 // Consider calling ConfigureAwait on the awaited task
 }

@@ -52,7 +52,7 @@
                 this.logger.LogInformation($"{{LogKey:l}} [{context.GetRequestId()}] http filter context={{@FilterContext}}", LogKeys.InboundRequest, filterContext);
             }
 
-            await this.next(context);
+            await this.next(context).AnyContext();
 
             contextFactory.Dispose();
         }

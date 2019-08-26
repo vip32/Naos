@@ -55,71 +55,75 @@
                 Console.WriteLine($"found command: {command.GetType().GetAttributeValue<VerbAttribute, string>(a => a.Name) ?? "?NAME?"} ({command.GetType()})", Color.Gray);
             }
 
-            var parser = new Parser();
-            ReadLine.AutoCompletionHandler = new AutoCompletionHandler();
-            ReadLine.HistoryEnabled = true;
-            var path = Path.Combine(Path.GetTempPath(), "naos_console", "history.db");
-            if(File.Exists(path))
+            using(var parser = new Parser())
             {
-                ReadLine.AddHistory(File.ReadAllLines(path));
-            }
-
-            var originalColor = System.Console.ForegroundColor;
-            while(true)
-            {
-                Thread.Sleep(500);
-                System.Console.ForegroundColor = ConsoleColor.Cyan;
-                var inputLine = ReadLine.Read("naos> ").Trim();
-                System.Console.ForegroundColor = originalColor;
-
-                if(!inputLine.IsNullOrEmpty())
+                ReadLine.AutoCompletionHandler = new AutoCompletionHandler();
+                ReadLine.HistoryEnabled = true;
+                var path = Path.Combine(Path.GetTempPath(), "naos_console", "history.db");
+                if(File.Exists(path))
                 {
-                    foreach(var input in inputLine.Split('|'))
-                    {
-                        try
-                        {
-                            var result = parser.ParseArguments(
-                                ArgumentsHelper.Split(input.Trim()),
-                                this.commands.Select(c => c.GetType()).ToArray())
-                                    .WithNotParsed(_ =>
-                                    {
-                                        if(!input.Contains("--help"))
-                                        {
-                                            Console.WriteLine("invalid command", Color.Red);
-                                        }
-                                    });
+                    ReadLine.AddHistory(File.ReadAllLines(path));
+                }
 
-                            if(!result.TypeInfo.Current.GetAttributeValue<VerbAttribute, string>(a => a.Name).IsNullOrEmpty())
+                var originalColor = System.Console.ForegroundColor;
+                while(true)
+                {
+                    Thread.Sleep(500);
+                    System.Console.ForegroundColor = ConsoleColor.Cyan;
+                    var inputLine = ReadLine.Read("naos> ").Trim();
+                    System.Console.ForegroundColor = originalColor;
+
+                    if(!inputLine.IsNullOrEmpty())
+                    {
+                        foreach(var input in inputLine.Split('|'))
+                        {
+                            try
                             {
-                                // command found
-                                var command = (result as Parsed<object>)?.Value;
-                                if(command != null)
+                                var result = parser.ParseArguments(
+                                    ArgumentsHelper.Split(input.Trim()),
+                                    this.commands.Select(c => c.GetType()).ToArray())
+                                        .WithNotParsed(_ =>
+                                        {
+                                            if(!input.Contains("--help"))
+                                            {
+                                                Console.WriteLine("invalid command", Color.Red);
+                                            }
+                                        });
+
+                                if(!result.TypeInfo.Current.GetAttributeValue<VerbAttribute, string>(a => a.Name).IsNullOrEmpty())
                                 {
-                                    // send the command so it can be handled by a command handler
-                                    await command.As<IConsoleCommand>().SendAsync(this.mediator).AnyContext();
+                                    // command found
+                                    var command = (result as Parsed<object>)?.Value;
+                                    if(command != null)
+                                    {
+                                        // send the command so it can be handled by a command handler
+                                        await command.As<IConsoleCommand>().SendAsync(this.mediator).AnyContext();
+                                    }
+                                    else
+                                    {
+                                        // command cannot be parsed, invalid options. show help
+                                        Console.WriteLine(
+                                            new HelpText { AddDashesToOption = true, AutoHelp = false, AutoVersion = false }
+                                                .AddPreOptionsLine(result.TypeInfo.Current.GetAttributeValue<VerbAttribute, string>(a => a.HelpText) ?? string.Empty)
+                                                .AddPreOptionsLine($"Usage: {result.TypeInfo.Current.GetAttributeValue<VerbAttribute, string>(a => a.Name)} [OPTIONS]")
+                                                //.AddPostOptionsLine($"({result.TypeInfo.Current.PrettyName()})")
+                                                .AddVerbs(this.commands.Select(c => c.GetType()).ToArray())
+                                                .AddOptions(result),
+                                            Color.Gray);
+                                    }
                                 }
                                 else
                                 {
-                                    // command cannot be parsed, invalid options. show help
-                                    Console.WriteLine(
-                                        new HelpText { AddDashesToOption = true, AutoHelp = false, AutoVersion = false }
-                                            .AddPreOptionsLine(result.TypeInfo.Current.GetAttributeValue<VerbAttribute, string>(a => a.HelpText) ?? string.Empty)
-                                            .AddPreOptionsLine($"Usage: {result.TypeInfo.Current.GetAttributeValue<VerbAttribute, string>(a => a.Name)} [OPTIONS]")
-                                            //.AddPostOptionsLine($"({result.TypeInfo.Current.PrettyName()})")
-                                            .AddVerbs(this.commands.Select(c => c.GetType()).ToArray())
-                                            .AddOptions(result),
-                                        Color.Gray);
+                                    Console.WriteLine(); // no command found
                                 }
                             }
-                            else
+#pragma warning disable CA1031 // Do not catch general exception types
+                            catch(Exception ex)
+#pragma warning restore CA1031 // Do not catch general exception types
                             {
-                                Console.WriteLine(); // no command found
+                                Console.WriteLine($"[{ex.GetType().PrettyName()}] {ex.GetFullMessage()}", Color.Red);
+                                Console.WriteLine($"{ex.StackTrace}", Color.Red);
                             }
-                        }
-                        catch(Exception ex)
-                        {
-                            Console.WriteLine($"[{ex.GetType().PrettyName()}] {ex.GetFullMessage()}", Color.Red);
-                            Console.WriteLine($"{ex.StackTrace}", Color.Red);
                         }
                     }
                 }
@@ -135,19 +139,19 @@
             // index - The index of the terminal cursor within {text}
             public string[] GetSuggestions(string text, int index)
             {
-                if(text.StartsWith("echo "))
+                if(text.StartsWith("echo ", StringComparison.OrdinalIgnoreCase))
                 {
                     return new string[] { "-t", "-s" };
                 }
-                else if(text.StartsWith("messaging "))
+                else if(text.StartsWith("messaging ", StringComparison.OrdinalIgnoreCase))
                 {
                     return new string[] { "--echo" };
                 }
-                else if(text.StartsWith("queueing "))
+                else if(text.StartsWith("queueing ", StringComparison.OrdinalIgnoreCase))
                 {
                     return new string[] { "--echo" };
                 }
-                else if(text.StartsWith("jobscheduler "))
+                else if(text.StartsWith("jobscheduler ", StringComparison.OrdinalIgnoreCase))
                 {
                     return new string[] { "--enable", "--disable", "--trigger" };
                 }

@@ -11,7 +11,7 @@
     /// </summary>
     /// <typeparam name="T">The type with a parameterless constructor.</typeparam>
     public static class Factory<T>
-        where T : class, new()
+        where T : class
     {
         /// <summary>
         /// Create an instance by using compiled lambda expressions

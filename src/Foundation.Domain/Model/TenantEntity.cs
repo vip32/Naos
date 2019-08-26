@@ -13,6 +13,6 @@
         //[JsonProperty(PropertyName = "_tid")]
         public string TenantId { get; set; }
 
-        public override string ToString() => $"{this.Discriminator} [Id={this.Id}, Tentant={this.TenantId}]";
+        public override string ToString() => $"{this.GetType().FullPrettyName()} [Id={this.Id}, Tentant={this.TenantId}]";
     }
 }

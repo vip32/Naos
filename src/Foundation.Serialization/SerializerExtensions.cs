@@ -25,7 +25,10 @@
         /// <param name="input">The input.</param>
         public static T Deserialize<T>(this ISerializer source, byte[] input)
         {
-            return (T)source.Deserialize(new MemoryStream(input), typeof(T));
+            using(var stream = new MemoryStream(input))
+            {
+                return (T)source.Deserialize(stream, typeof(T));
+            }
         }
 
         /// <summary>
@@ -36,7 +39,10 @@
         /// <param name="type">The type.</param>
         public static object Deserialize(this ISerializer source, byte[] input, Type type)
         {
-            return source.Deserialize(new MemoryStream(input), type);
+            using(var stream = new MemoryStream(input))
+            {
+                return source.Deserialize(stream, type);
+            }
         }
 
         /// <summary>
@@ -61,7 +67,10 @@
                 bytes = Convert.FromBase64String(input);
             }
 
-            return (T)source.Deserialize(new MemoryStream(bytes), typeof(T));
+            using(var stream = new MemoryStream(bytes))
+            {
+                return (T)source.Deserialize(stream, typeof(T));
+            }
         }
 
         /// <summary>
@@ -86,7 +95,10 @@
                 bytes = Convert.FromBase64String(input);
             }
 
-            return source.Deserialize(new MemoryStream(bytes), type);
+            using(var stream = new MemoryStream(bytes))
+            {
+                return source.Deserialize(stream, type);
+            }
         }
 
         /// <summary>
@@ -124,10 +136,12 @@
                 return null;
             }
 
-            var stream = new MemoryStream();
-            source.Serialize(input, stream);
+            using(var stream = new MemoryStream())
+            {
+                source.Serialize(input, stream);
 
-            return stream.ToArray();
+                return stream.ToArray();
+            }
         }
     }
 }

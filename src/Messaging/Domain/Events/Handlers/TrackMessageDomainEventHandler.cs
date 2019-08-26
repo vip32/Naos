@@ -39,7 +39,7 @@
                 }
 
                 this.logger.LogJournal(LogKeys.Messaging, $"[{notification.Message?.Identifier}] publish (type={notification.Message?.GetType().PrettyName()}, id={notification.Message?.Id}, origin={notification.Message?.Origin})", LogPropertyKeys.TrackPublishMessage);
-            });
+            }).AnyContext();
         }
 
         public async Task Handle(MessageHandledDomainEvent notification, CancellationToken cancellationToken)
@@ -52,7 +52,7 @@
                 }
 
                 this.logger.LogJournal(LogKeys.Messaging, $"[{notification.Message?.Identifier}] handle (type={notification.Message?.GetType().PrettyName()}, id={notification.Message?.Id}, service={notification.MessageScope}, origin={notification.Message?.Origin})", LogPropertyKeys.TrackReceiveMessage);
-            });
+            }).AnyContext();
         }
     }
 }

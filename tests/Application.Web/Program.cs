@@ -4,13 +4,14 @@
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
     using Naos.Core.Configuration.App;
+    using Naos.Foundation;
     using Serilog;
 
     public static class Program
     {
         public static async Task Main(string[] args)
         {
-            await CreateWebHostBuilder(args).Build().RunAsync();
+            await CreateWebHostBuilder(args).Build().RunAsync().AnyContext();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>

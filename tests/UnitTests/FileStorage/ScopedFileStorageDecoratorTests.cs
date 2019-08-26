@@ -104,9 +104,11 @@
         {
             return new FileStorageScopedDecorator(
                 "scoped",
+#pragma warning disable CA2000 // Dispose objects before losing scope
                 new FolderFileStorage(o => o
                     .LoggerFactory(Substitute.For<ILoggerFactory>())
                     .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "tests_scoped"))));
+#pragma warning restore CA2000 // Dispose objects before losing scope
         }
     }
 }

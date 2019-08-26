@@ -18,17 +18,18 @@
 
     public class FileStorageBaseTests : BaseTest
     {
+#pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task
         public virtual async Task CanGetEmptyFileListOnMissingDirectoryAsync()
         {
             await this.ResetAsync();
 
             var storage = this.GetStorage();
-            if(storage == null)
+            if (storage == null)
             {
                 return;
             }
 
-            using(storage)
+            using (storage)
             {
                 Assert.Empty(await storage.GetFileInformationsAsync(Guid.NewGuid() + "\\*"));
             }
@@ -39,12 +40,12 @@
             await this.ResetAsync();
 
             var storage = this.GetStorage();
-            if(storage == null)
+            if (storage == null)
             {
                 return;
             }
 
-            using(storage)
+            using (storage)
             {
                 await storage.SaveFileContentsAsync(@"archived\archived.txt", "archived");
                 await storage.SaveFileContentsAsync(@"q\new.txt", "new");
@@ -67,12 +68,12 @@
             await this.ResetAsync();
 
             var storage = this.GetStorage();
-            if(storage == null)
+            if (storage == null)
             {
                 return;
             }
 
-            using(storage)
+            using (storage)
             {
                 var fileInfo = await storage.GetFileInformationAsync(Guid.NewGuid().ToString());
                 Assert.Null(fileInfo);
@@ -84,7 +85,7 @@
                 Assert.True(await storage.SaveFileContentsAsync(path, "test"));
                 fileInfo = await storage.GetFileInformationAsync(path);
                 Assert.NotNull(fileInfo);
-                Assert.True(fileInfo.Path.EndsWith("nested.txt"), "Incorrect file");
+                Assert.True(fileInfo.Path.EndsWith("nested.txt", StringComparison.OrdinalIgnoreCase), "Incorrect file");
                 Assert.True(fileInfo.Size > 0, "Incorrect file size");
                 Assert.Equal(DateTimeKind.Utc, fileInfo.Created.Kind);
                 // NOTE: File creation time might not be accurate: http://stackoverflow.com/questions/2109152/unbelievable-strange-file-creation-time-problem
@@ -97,7 +98,7 @@
                 Assert.True(await storage.SaveFileContentsAsync(path, "test"));
                 fileInfo = await storage.GetFileInformationAsync(path);
                 Assert.NotNull(fileInfo);
-                Assert.True(fileInfo.Path.EndsWith("test.txt"), "Incorrect file");
+                Assert.True(fileInfo.Path.EndsWith("test.txt", StringComparison.OrdinalIgnoreCase), "Incorrect file");
                 Assert.True(fileInfo.Size > 0, "Incorrect file size");
                 Assert.Equal(DateTimeKind.Utc, fileInfo.Created.Kind);
                 //Assert.True(fileInfo.Created > DateTime.MinValue, "File creation time should be newer than the start time.");
@@ -111,12 +112,12 @@
             await this.ResetAsync();
 
             var storage = this.GetStorage();
-            if(storage == null)
+            if (storage == null)
             {
                 return;
             }
 
-            using(storage)
+            using (storage)
             {
                 await Assert.ThrowsAnyAsync<ArgumentException>(() => storage.GetFileInformationAsync(null));
                 Assert.Null(await storage.GetFileInformationAsync(Guid.NewGuid().ToString()));
@@ -128,12 +129,12 @@
             await this.ResetAsync();
 
             var storage = this.GetStorage();
-            if(storage == null)
+            if (storage == null)
             {
                 return;
             }
 
-            using(storage)
+            using (storage)
             {
                 var path1 = $"test-{Guid.NewGuid().ToString("N").Substring(10)}.txt";
                 var path2 = $"test-{Guid.NewGuid().ToString("N").Substring(10)}.txt";
@@ -156,12 +157,12 @@
             await this.ResetAsync();
 
             var storage = this.GetStorage();
-            if(storage == null)
+            if (storage == null)
             {
                 return;
             }
 
-            using(storage)
+            using (storage)
             {
                 var path1 = $"test-{Guid.NewGuid().ToString("N").Substring(10)}.txt";
                 var path2 = $"test-{Guid.NewGuid().ToString("N").Substring(10)}.txt";
@@ -183,17 +184,17 @@
             await this.ResetAsync();
 
             var storage = this.GetStorage();
-            if(storage == null)
+            if (storage == null)
             {
                 return;
             }
 
-            using(storage)
+            using (storage)
             {
                 var path = $"test-{Guid.NewGuid().ToString("N").Substring(10)}.txt";
                 Assert.False(await storage.ExistsAsync(path));
 
-                using(var stream = StreamHelper.ToStream("test data"))
+                using (var stream = StreamHelper.ToStream("test data"))
                 {
                     var result = await storage.SaveFileAsync(path, stream); // write
                     Assert.True(result);
@@ -202,10 +203,10 @@
                 Assert.Single(await Core.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage));
                 Assert.True(await storage.ExistsAsync(path));
 
-                using(var stream = await storage.GetFileStreamAsync(path)) // read
+                using (var stream = await storage.GetFileStreamAsync(path)) // read
+                using (var reader = new StreamReader(stream))
                 {
-                    var result = await new StreamReader(stream).ReadToEndAsync();
-                    Assert.Equal("test data", result);
+                    Assert.Equal("test data", await reader.ReadToEndAsync().AnyContext());
                 }
             }
         }
@@ -215,12 +216,12 @@
             await this.ResetAsync();
 
             var storage = this.GetStorage();
-            if(storage == null)
+            if (storage == null)
             {
                 return;
             }
 
-            using(storage)
+            using (storage)
             {
                 var path = $"test-{Guid.NewGuid().ToString("N").Substring(10)}.csv";
                 Assert.False(await storage.ExistsAsync(path));
@@ -249,12 +250,12 @@
             await this.ResetAsync();
 
             var storage = this.GetStorage();
-            if(storage == null)
+            if (storage == null)
             {
                 return;
             }
 
-            using(storage)
+            using (storage)
             {
                 var path = $"test-{Guid.NewGuid().ToString("N").Substring(10)}.csv";
                 Assert.False(await storage.ExistsAsync(path));
@@ -291,12 +292,12 @@
             await this.ResetAsync();
 
             var storage = this.GetStorage();
-            if(storage == null)
+            if (storage == null)
             {
                 return;
             }
 
-            using(storage)
+            using (storage)
             {
                 var path = $"test-{Guid.NewGuid().ToString("N").Substring(10)}.csv";
                 Assert.False(await storage.ExistsAsync(path));
@@ -323,12 +324,12 @@
             await this.ResetAsync();
 
             var storage = this.GetStorage();
-            if(storage == null)
+            if (storage == null)
             {
                 return;
             }
 
-            using(storage)
+            using (storage)
             {
                 var path = $"entity-{Guid.NewGuid().ToString("N").Substring(10)}.{fileExtension}";
                 Assert.False(await storage.ExistsAsync(path));
@@ -357,12 +358,12 @@
             await this.ResetAsync();
 
             var storage = this.GetStorage();
-            if(storage == null)
+            if (storage == null)
             {
                 return;
             }
 
-            using(storage)
+            using (storage)
             {
                 await storage.SaveFileContentsAsync(@"x\hello.txt", "hello");
                 await storage.SaveFileContentsAsync(@"x\nested\world.csv", "nested world");
@@ -378,12 +379,12 @@
             await this.ResetAsync();
 
             var storage = this.GetStorage();
-            if(storage == null)
+            if (storage == null)
             {
                 return;
             }
 
-            using(storage)
+            using (storage)
             {
                 await storage.SaveFileContentsAsync(@"x\hello.txt", "hello");
                 await storage.SaveFileContentsAsync(@"x\nested\world.csv", "nested world");
@@ -403,12 +404,12 @@
             await this.ResetAsync();
 
             var storage = this.GetStorage();
-            if(storage == null)
+            if (storage == null)
             {
                 return;
             }
 
-            using(storage)
+            using (storage)
             {
                 await storage.SaveFileContentsAsync(@"x\hello.txt", "hello");
                 await storage.SaveFileContentsAsync(@"x\nested\world.csv", "nested world");
@@ -433,12 +434,12 @@
             await this.ResetAsync();
 
             var storage = this.GetStorage();
-            if(storage == null)
+            if (storage == null)
             {
                 return;
             }
 
-            using(storage)
+            using (storage)
             {
                 await storage.SaveFileContentsAsync(@"x\hello.txt", "hello");
                 await storage.SaveFileContentsAsync(@"x\nested\world.csv", "nested world");
@@ -463,12 +464,12 @@
             await this.ResetAsync();
 
             var storage = this.GetStorage();
-            if(storage == null)
+            if (storage == null)
             {
                 return;
             }
 
-            using(storage)
+            using (storage)
             {
                 await storage.SaveFileContentsAsync(@"x\hello.txt", "hello");
                 await storage.SaveFileContentsAsync(@"x\world.csv", "world");
@@ -497,17 +498,17 @@
             await this.ResetAsync();
 
             var storage = this.GetStorage();
-            if(storage == null)
+            if (storage == null)
             {
                 return;
             }
 
-            using(storage)
+            using (storage)
             {
                 const string path = "user.xml";
                 var element = XElement.Parse("<user>Doe</user>");
 
-                using(var memoryStream = new MemoryStream())
+                using (var memoryStream = new MemoryStream())
                 {
                     //logger.LogTrace("Saving xml to stream with position {Position}.", memoryStream.Position);
                     element.Save(memoryStream, SaveOptions.DisableFormatting);
@@ -518,7 +519,7 @@
                     //logger.LogTrace("Saved contents with position {Position}.", memoryStream.Position);
                 }
 
-                using(var stream = await storage.GetFileStreamAsync(path))
+                using (var stream = await storage.GetFileStreamAsync(path))
                 {
                     var actual = XElement.Load(stream);
                     Assert.Equal(element.ToString(SaveOptions.DisableFormatting), actual.ToString(SaveOptions.DisableFormatting));
@@ -531,18 +532,18 @@
             await this.ResetAsync();
 
             var storage = this.GetStorage();
-            if(storage == null)
+            if (storage == null)
             {
                 return;
             }
 
-            using(storage)
+            using (storage)
             {
                 var path = "doe.txt";
-                using(var memoryStream = new MemoryStream())
+                using (var memoryStream = new MemoryStream())
                 {
                     long offset;
-                    using(var writer = new StreamWriter(memoryStream, Encoding.UTF8, 1024, true))
+                    using (var writer = new StreamWriter(memoryStream, Encoding.UTF8, 1024, true))
                     {
                         writer.AutoFlush = true;
                         await writer.WriteAsync("John");
@@ -561,29 +562,31 @@
         public virtual void CanUseDataDirectory()
         {
             const string DATA_DIRECTORY_QUEUE_FOLDER = @"|DataDirectory|\Queue";
+#pragma warning disable CA2000 // Dispose objects before losing scope
             var storage = new FolderFileStorage(
                 new FolderFileStorageOptions
                 {
                     LoggerFactory = Substitute.For<ILoggerFactory>(),
                     Folder = DATA_DIRECTORY_QUEUE_FOLDER
                 });
+#pragma warning restore CA2000 // Dispose objects before losing scope
             Assert.NotNull(storage.Folder);
             Assert.NotEqual(DATA_DIRECTORY_QUEUE_FOLDER, storage.Folder);
-            Assert.True(storage.Folder.EndsWith("Queue" + Path.DirectorySeparatorChar), storage.Folder);
+            Assert.True(storage.Folder.EndsWith("Queue" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase), storage.Folder);
         }
 
         protected async Task ResetAsync()
         {
             var storage = this.GetStorage();
-            if(storage == null)
+            if (storage == null)
             {
                 return;
             }
 
-            using(storage)
+            using (storage)
             {
                 var files = (await Core.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage)).ToList();
-                if(files.Count > 0)
+                if (files.Count > 0)
                 {
                     await storage.DeleteFilesAsync(files);
                 }

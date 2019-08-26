@@ -12,20 +12,16 @@
         where TData : class
         where TOptions : BaseQueueOptions, new()
     {
-        protected readonly TOptions options;
-        protected readonly ILogger<TData> logger;
-        protected readonly ISerializer serializer;
-        protected readonly CancellationTokenSource disposedCancellationTokenSource;
         private bool isDisposed;
 
         protected BaseQueue(TOptions options)
         {
-            this.options = options ?? Factory<TOptions>.Create();
-            this.logger = options.CreateLogger<TData>();
-            this.serializer = options.Serializer ?? DefaultSerializer.Create;
+            this.Options = options ?? Factory<TOptions>.Create();
+            this.Logger = options.CreateLogger<TData>();
+            this.Serializer = options.Serializer ?? DefaultSerializer.Create;
             options.Name = options.Name ?? typeof(TData).PrettyName().Replace("<", "_").Replace(">", "_").ToLower().Pluralize();
             this.Name = options.Name;
-            this.disposedCancellationTokenSource = new CancellationTokenSource();
+            this.DisposedCancellationTokenSource = new CancellationTokenSource();
         }
 
         public string Name { get; protected set; }
@@ -33,6 +29,14 @@
         public DateTime? LastEnqueuedDate { get; protected set; }
 
         public DateTime? LastDequeuedDate { get; protected set; }
+
+        protected TOptions Options { get; }
+
+        protected ILogger<TData> Logger { get; }
+
+        protected ISerializer Serializer { get; }
+
+        protected CancellationTokenSource DisposedCancellationTokenSource { get; }
 
         public abstract Task<string> EnqueueAsync(TData data);
 
@@ -73,10 +77,10 @@
         {
             if(!this.isDisposed)
             {
-                this.logger.LogDebug($"dispose queue {this.Name}");
+                this.Logger.LogDebug($"dispose queue {this.Name}");
                 this.isDisposed = true;
-                this.disposedCancellationTokenSource?.Cancel();
-                this.disposedCancellationTokenSource?.Dispose();
+                this.DisposedCancellationTokenSource?.Cancel();
+                this.DisposedCancellationTokenSource?.Dispose();
             }
         }
 
@@ -84,7 +88,7 @@
 
         protected CancellationTokenSource CreateLinkedTokenSource(CancellationToken cancellationToken)
         {
-            return CancellationTokenSource.CreateLinkedTokenSource(this.disposedCancellationTokenSource.Token, cancellationToken);
+            return CancellationTokenSource.CreateLinkedTokenSource(this.DisposedCancellationTokenSource.Token, cancellationToken);
         }
 
         protected void EnsureMetaData(TData data)

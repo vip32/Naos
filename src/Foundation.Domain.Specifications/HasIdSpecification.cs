@@ -7,18 +7,18 @@
     public class HasIdSpecification<T> : Specification<T>
         where T : IEntity
     {
-        protected readonly object id;
-
         public HasIdSpecification(object id)
         {
             EnsureArg.IsNotNull(id);
 
-            this.id = id;
+            this.Id = id;
         }
+
+        protected object Id { get; }
 
         public override Expression<Func<T, bool>> ToExpression()
         {
-            return t => t.Id == this.id;
+            return t => t.Id == this.Id;
         }
 
         public static class Factory

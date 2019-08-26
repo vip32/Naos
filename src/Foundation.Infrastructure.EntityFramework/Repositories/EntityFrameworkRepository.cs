@@ -26,7 +26,10 @@
 
             try
             {
-                if(this.options.DbContext.Database.GetDbConnection().ConnectionString.Equals("DataSource=:memory:", StringComparison.OrdinalIgnoreCase))
+                var connectionString = this.options.DbContext.Database.GetDbConnection().ConnectionString;
+                this.logger.LogInformation($"{{LogKey:l}} construct ef repository (type={typeof(TEntity).PrettyName()}, server={connectionString.SliceFrom("Server=").SliceTill(";")})", LogKeys.DomainRepository);
+
+                if(connectionString.Equals("DataSource=:memory:", StringComparison.OrdinalIgnoreCase))
                 {
                     // needed for sqlite inmemory
                     this.options.DbContext.Database.OpenConnection();
@@ -118,7 +121,7 @@
                 return false;
             }
 
-            return await this.FindOneAsync(id) != null;
+            return await this.FindOneAsync(id).AnyContext() != null;
         }
 
         /// <summary>

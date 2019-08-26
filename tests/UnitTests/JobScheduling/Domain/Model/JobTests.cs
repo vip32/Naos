@@ -39,7 +39,7 @@
                 {
                     count++;
                     System.Diagnostics.Trace.WriteLine("hello from task " + a);
-                }));
+                }).AnyContext());
 
             // act
             await sut.ExecuteAsync(new[] { "a" }).AnyContext();
@@ -69,24 +69,26 @@
         {
             // arrange
             var probe = new StubProbe();
-            var cts = new CancellationTokenSource();
-            var sut = new StubJob(probe);
-            var thrown = false;
-
-            // act
-            try
+            using (var cts = new CancellationTokenSource())
             {
-                cts.CancelAfter(TimeSpan.FromMilliseconds(10));
-                await sut.ExecuteAsync(cts.Token, new[] { "a" }).AnyContext();
-            }
-            catch(OperationCanceledException)
-            {
-                thrown = true;
-            }
+                var sut = new StubJob(probe);
+                var thrown = false;
 
-            // assert
-            probe.Count.ShouldBe(1);
-            thrown.ShouldBe(true);
+                // act
+                try
+                {
+                    cts.CancelAfter(TimeSpan.FromMilliseconds(10));
+                    await sut.ExecuteAsync(cts.Token, new[] { "a" }).AnyContext();
+                }
+                catch (OperationCanceledException)
+                {
+                    thrown = true;
+                }
+
+                // assert
+                probe.Count.ShouldBe(1);
+                thrown.ShouldBe(true);
+            }
         }
 
         private class StubJob : Job
@@ -135,7 +137,7 @@
                     this.probe.Count++;
                     probe.Count++;
                     System.Diagnostics.Trace.WriteLine($"+++ hello from custom job {DateTime.UtcNow.ToString("o")} " + arg1);
-                });
+                }).AnyContext();
             }
         }
 

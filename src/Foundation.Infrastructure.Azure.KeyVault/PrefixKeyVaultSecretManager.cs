@@ -17,7 +17,7 @@
         {
             // Load a vault secret when its secret name starts with the
             // prefix. Other secrets won't be loaded.
-            return secret.Identifier.Name.StartsWith(this.prefix);
+            return secret.Identifier.Name.StartsWith(this.prefix, System.StringComparison.OrdinalIgnoreCase);
         }
 
         public string GetKey(SecretBundle secret)

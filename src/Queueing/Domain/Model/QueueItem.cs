@@ -5,7 +5,7 @@
     using System.Threading.Tasks;
     using Naos.Foundation.Domain;
 
-    [DebuggerDisplay("Id={Id}, Queue={Name}")]
+    [DebuggerDisplay("Id={Id}, IsCompleted={IsCompleted}")]
     public class QueueItem<TData> : IQueueItem<TData>
         where TData : class
     {

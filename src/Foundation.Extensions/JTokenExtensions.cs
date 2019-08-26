@@ -72,16 +72,13 @@
                 return default;
             }
 
-            if(path.StartsWith("jsonpath:", StringComparison.OrdinalIgnoreCase))
-            {
-                path = path.Replace("jsonpath:", string.Empty, StringComparison.OrdinalIgnoreCase);
-            }
-
             try
             {
                 return source.SelectToken(path).Value<T>();
             }
-            catch(Exception)
+#pragma warning disable CA1031 // Do not catch general exception types
+            catch
+#pragma warning restore CA1031 // Do not catch general exception types
             {
                 // argumentnullexception, jsonexception
                 return default;
@@ -101,17 +98,14 @@
                 return default;
             }
 
-            if(path.StartsWith("jsonpath:", StringComparison.OrdinalIgnoreCase))
-            {
-                path = path.Replace("jsonpath:", string.Empty, StringComparison.OrdinalIgnoreCase);
-            }
-
             try
             {
                 var results = source.SelectTokens(path);
                 return results.Safe().Select(r => r.Value<T>());
             }
-            catch(Exception)
+#pragma warning disable CA1031 // Do not catch general exception types
+            catch
+#pragma warning restore CA1031 // Do not catch general exception types
             {
                 // argumentnullexception, jsonexception
                 return default;
@@ -130,11 +124,6 @@
             if(source.IsNullOrEmpty() || path.IsNullOrEmpty())
             {
                 return;
-            }
-
-            if(path.StartsWith("jsonpath:", StringComparison.OrdinalIgnoreCase))
-            {
-                path = path.Replace("jsonpath:", string.Empty);
             }
 
             var values = source.SelectTokens(path).OfType<JValue>();
@@ -305,7 +294,9 @@
             {
                 target = source.SelectToken(path.SliceTillLast("."));
             }
-            catch(Exception)
+#pragma warning disable CA1031 // Do not catch general exception types
+            catch
+#pragma warning restore CA1031 // Do not catch general exception types
             {
                 return source;
             }

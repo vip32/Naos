@@ -339,7 +339,7 @@
                 var proxyPassword = proxyParts.Length > 0 ? proxyParts[1] : null;
 
                 var proxyType = options.ProxyType;
-                if(proxyType == ProxyTypes.None && proxyUri.Scheme != null && proxyUri.Scheme.StartsWith("http"))
+                if(proxyType == ProxyTypes.None && proxyUri.Scheme != null && proxyUri.Scheme.StartsWith("http", StringComparison.OrdinalIgnoreCase))
                 {
                     proxyType = ProxyTypes.Http;
                 }

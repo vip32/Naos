@@ -22,7 +22,7 @@
                 {
                     await Task.Yield();
                     counter++;
-                });
+                }).AnyContext();
                 counter.ShouldBe(1);
             });
 
@@ -36,7 +36,7 @@
                 },
                     100.Milliseconds(),
                     100.Milliseconds(),
-                    100.Milliseconds());
+                    100.Milliseconds()).AnyContext();
                 counter.ShouldBe(1);
             });
         }
@@ -54,7 +54,7 @@
                     {
                         throw new NullReferenceException();
                     }
-                });
+                }).AnyContext();
                 counter.ShouldBe(2);
             });
 
@@ -69,7 +69,7 @@
                         throw new NullReferenceException();
                     }
                 },
-                    100.Milliseconds());
+                    100.Milliseconds()).AnyContext();
                 counter.ShouldBe(2);
             });
         }
@@ -93,7 +93,7 @@
                 },
                     100.Milliseconds(),
                     100.Milliseconds(),
-                    100.Milliseconds());
+                    100.Milliseconds()).AnyContext();
 
                 counter.ShouldBe(3);
                 result.ShouldBe(42);
@@ -112,7 +112,7 @@
                     await Task.Yield();
                     counter++;
                     throw new NullReferenceException();
-                });
+                }).AnyContext();
             });
             retryEx.RetryCount.ShouldBe(1);
             retryEx.Message.ShouldBe("retry failed after #1 attempts");
@@ -130,7 +130,7 @@
                 },
                     100.Milliseconds(),
                     100.Milliseconds(),
-                    100.Milliseconds());
+                    100.Milliseconds()).AnyContext();
             });
             retryEx.RetryCount.ShouldBe(3);
             retryEx.Message.ShouldBe("retry failed after #3 attempts");
@@ -148,7 +148,7 @@
                 {
                     await Task.Yield();
                     counter++;
-                });
+                }).AnyContext();
                 counter.ShouldBe(1);
             });
 
@@ -162,7 +162,7 @@
                 },
                     100.Milliseconds(),
                     100.Milliseconds(),
-                    100.Milliseconds());
+                    100.Milliseconds()).AnyContext();
                 counter.ShouldBe(1);
             });
         }
@@ -186,7 +186,7 @@
                 },
                     100.Milliseconds(),
                     100.Milliseconds(),
-                    100.Milliseconds());
+                    100.Milliseconds()).AnyContext();
 
                 counter.ShouldBe(3);
                 result.ShouldBe(42);
@@ -204,7 +204,7 @@
                 {
                     counter++;
                     throw new NullReferenceException();
-                });
+                }).AnyContext();
             });
             retryEx.RetryCount.ShouldBe(1);
             retryEx.Message.ShouldBe("retry failed after #1 attempts");
@@ -222,7 +222,7 @@
                 },
                     100.Milliseconds(),
                     100.Milliseconds(),
-                    100.Milliseconds());
+                    100.Milliseconds()).AnyContext();
             });
             retryEx.RetryCount.ShouldBe(3);
             retryEx.Message.ShouldBe("retry failed after #3 attempts");
@@ -245,7 +245,7 @@
                 },
                     100.Milliseconds(),
                     100.Milliseconds(),
-                    100.Milliseconds());
+                    100.Milliseconds()).AnyContext();
             });
 
             retryEx.RetryCount.ShouldBe(3);
@@ -271,7 +271,7 @@
                 },
                     100.Milliseconds(),
                     100.Milliseconds(),
-                    100.Milliseconds());
+                    100.Milliseconds()).AnyContext();
             });
 
             retryEx.RetryCount.ShouldBe(3);
@@ -296,7 +296,7 @@
                 },
                     100.Milliseconds(),
                     100.Milliseconds(),
-                    100.Milliseconds());
+                    100.Milliseconds()).AnyContext();
             });
 
             counter.ShouldBe(1);
@@ -322,7 +322,7 @@
                 {
                     executionCounter++;
                     throw new ArgumentException();
-                }, exceptionPredicate);
+                }, exceptionPredicate).AnyContext();
             });
 
             retryEx.RetryCount.ShouldBe(1);
@@ -353,7 +353,7 @@
                 {
                     executionCounter++;
                     throw new ArgumentException();
-                }, exceptionPredicate);
+                }, exceptionPredicate).AnyContext();
             });
 
             executionCounter.ShouldBe(1);
@@ -363,7 +363,9 @@
         [Fact]
         public void WhenRetryTaskWith_delay_factory()
         {
+#pragma warning disable CA2000 // Dispose objects before losing scope
             var cts = new CancellationTokenSource();
+#pragma warning restore CA2000 // Dispose objects before losing scope
 
             var predicateCounter = 0;
 
@@ -391,10 +393,10 @@
             {
                 await Retry.On(async () =>
                 {
-                    await Task.Delay(1);
+                    await Task.Delay(1).AnyContext();
                     executionCounter++;
                     throw new ArgumentException();
-                }, exceptionPredicate, delayFactory, cts.Token);
+                }, exceptionPredicate, delayFactory, cts.Token).AnyContext();
             });
 
             retryEx.RetryCount.ShouldBe(3);
@@ -416,7 +418,7 @@
                     await Task.Yield();
                     counter++;
                     return 42;
-                });
+                }).AnyContext();
 
                 counter.ShouldBe(1);
                 result.ShouldBe(42);
@@ -433,7 +435,7 @@
                 },
                     100.Milliseconds(),
                     100.Milliseconds(),
-                    100.Milliseconds());
+                    100.Milliseconds()).AnyContext();
 
                 counter.ShouldBe(1);
                 result.ShouldBe(42);
@@ -455,7 +457,7 @@
                     }
 
                     return 42;
-                });
+                }).AnyContext();
 
                 counter.ShouldBe(2);
                 result.ShouldBe(42);
@@ -474,7 +476,7 @@
 
                     return 42;
                 },
-                    100.Milliseconds());
+                    100.Milliseconds()).AnyContext();
 
                 counter.ShouldBe(2);
                 result.ShouldBe(42);
@@ -499,7 +501,7 @@
                 },
                     100.Milliseconds(),
                     100.Milliseconds(),
-                    100.Milliseconds());
+                    100.Milliseconds()).AnyContext();
 
                 counter.ShouldBe(3);
                 result.ShouldBe(42);
@@ -520,7 +522,7 @@
                 },
                     100.Milliseconds(),
                     100.Milliseconds(),
-                    100.Milliseconds());
+                    100.Milliseconds()).AnyContext();
             });
             retryEx.RetryCount.ShouldBe(3);
             retryEx.Message.ShouldBe("retry failed after #3 attempts");
@@ -536,7 +538,7 @@
                 {
                     counter++;
                     throw new NullReferenceException();
-                });
+                }).AnyContext();
             });
             retryEx.RetryCount.ShouldBe(1);
             retryEx.Message.ShouldBe("retry failed after #1 attempts");
@@ -559,7 +561,7 @@
                 },
                     100.Milliseconds(),
                     100.Milliseconds(),
-                    100.Milliseconds());
+                    100.Milliseconds()).AnyContext();
 
                 counter.ShouldBe(1);
                 result.ShouldBe(42);
@@ -584,7 +586,7 @@
                 },
                     100.Milliseconds(),
                     100.Milliseconds(),
-                    100.Milliseconds());
+                    100.Milliseconds()).AnyContext();
 
                 counter.ShouldBe(3);
                 result.ShouldBe(42);
@@ -605,7 +607,7 @@
                 },
                     100.Milliseconds(),
                     100.Milliseconds(),
-                    100.Milliseconds());
+                    100.Milliseconds()).AnyContext();
             });
             retryEx.RetryCount.ShouldBe(3);
             retryEx.Message.ShouldBe("retry failed after #3 attempts");
@@ -631,7 +633,7 @@
                     }),
                     100.Milliseconds(),
                     100.Milliseconds(),
-                    100.Milliseconds());
+                    100.Milliseconds()).AnyContext();
             });
 
             retryEx.RetryCount.ShouldBe(3);
@@ -659,7 +661,7 @@
                     }),
                     100.Milliseconds(),
                     100.Milliseconds(),
-                    100.Milliseconds());
+                    100.Milliseconds()).AnyContext();
             });
 
             retryEx.RetryCount.ShouldBe(3);
@@ -686,7 +688,7 @@
                     }),
                     100.Milliseconds(),
                     100.Milliseconds(),
-                    100.Milliseconds());
+                    100.Milliseconds()).AnyContext();
             });
 
             counter.ShouldBe(1);
@@ -717,7 +719,7 @@
 
             var retryEx = Should.Throw<RetryException>(async () =>
             {
-                await Retry.On(task, exceptionPredicate);
+                await Retry.On(task, exceptionPredicate).AnyContext();
             });
 
             retryEx.RetryCount.ShouldBe(1);
@@ -752,7 +754,7 @@
 
             Should.Throw<ArgumentException>(async () =>
             {
-                await Retry.On(task, exceptionPredicate);
+                await Retry.On(task, exceptionPredicate).AnyContext();
             });
 
             executionCounter.ShouldBe(1);
@@ -762,7 +764,9 @@
         [Fact]
         public void WhenRetryResultTask_with_delay_factory()
         {
+#pragma warning disable CA2000 // Dispose objects before losing scope
             var cts = new CancellationTokenSource();
+#pragma warning restore CA2000 // Dispose objects before losing scope
 
             var predicateCounter = 0;
 
@@ -790,13 +794,13 @@
             {
                 await Retry.On(async () =>
                 {
-                    await Task.Delay(1);
+                    await Task.Delay(1).AnyContext();
                     executionCounter++;
                     throw new ArgumentException();
 #pragma warning disable CS0162 // Unreachable code detected
                     return 1;
 #pragma warning restore CS0162 // Unreachable code detected
-                }, exceptionPredicate, delayFactory, cts.Token);
+                }, exceptionPredicate, delayFactory, cts.Token).AnyContext();
             });
 
             retryEx.RetryCount.ShouldBe(3);

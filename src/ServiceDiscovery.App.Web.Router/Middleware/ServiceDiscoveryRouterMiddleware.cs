@@ -5,6 +5,7 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
+    using Naos.Foundation;
 
     public class ServiceDiscoveryRouterMiddleware
     {
@@ -27,7 +28,7 @@
 
         public async Task InvokeAsync(HttpContext context)
         {
-            await this.next(context);
+            await this.next(context).AnyContext();
             // router based on proxy kit https://github.com/damianh/ProxyKit/blob/master/src/Recipes/09_ConsulServiceDisco.cs
         }
     }

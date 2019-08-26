@@ -6,6 +6,7 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.Queueing;
     using Naos.Core.Queueing.Domain;
+    using Naos.Foundation;
     using NSubstitute;
     using Xunit;
 
@@ -111,7 +112,7 @@
 
         protected override IQueue<StubMessage> GetQueue(
             int retries = 1,
-            TimeSpan? processTimeout = null,
+            TimeSpan? processInterval = null,
             TimeSpan? retryDelay = null,
             int deadLetterMaxItems = 100)
         {
@@ -120,12 +121,13 @@
                         .LoggerFactory(Substitute.For<ILoggerFactory>())
                         .RetryDelay(retryDelay.GetValueOrDefault(TimeSpan.FromMinutes(1)))
                         .Retries(retries)
-                        .ProcessTimeout(processTimeout ?? TimeSpan.FromMinutes(5))));
+                        .ProcessInterval(processInterval ?? TimeSpan.FromMilliseconds(200))
+                        .DequeueInterval(TimeSpan.FromMilliseconds(200))));
         }
 
         protected override async Task CleanupQueueAsync(IQueue<StubMessage> queue)
         {
-            await queue?.DeleteQueueAsync();
+            await (queue?.DeleteQueueAsync()).AnyContext();
         }
     }
 }

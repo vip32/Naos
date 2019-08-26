@@ -5,6 +5,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Authorization.Policy;
     using Microsoft.AspNetCore.Http;
+    using Naos.Foundation;
 
     /// <summary>
     /// Will forces a redirect to the easyauth login url when the user is not authenticated
@@ -25,7 +26,7 @@
             HttpContext context,
             object resource)
         {
-            var result = await base.AuthorizeAsync(policy, authenticationResult, context, resource);
+            var result = await base.AuthorizeAsync(policy, authenticationResult, context, resource).AnyContext();
             if(!result.Succeeded)
             {
                 // If user is not authenticated, send them to the easyauth login

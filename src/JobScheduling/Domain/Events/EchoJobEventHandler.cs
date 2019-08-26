@@ -27,7 +27,7 @@
                await Run.DelayedAsync(
                    new System.TimeSpan(0, 0, 3),
                    async () =>
-                        await Task.Run(() => this.logger.LogInformation($"{{LogKey:l}} {request?.Data?.Text} (type={this.GetType().PrettyName()})", LogKeys.JobScheduling))).AnyContext();
+                        await Task.Run(() => this.logger.LogInformation($"{{LogKey:l}} {request?.Data?.Text} (type={this.GetType().PrettyName()})", LogKeys.JobScheduling)).AnyContext()).AnyContext();
             }
 
             return true;

@@ -76,13 +76,13 @@
         /// <param name="topicName">Name of the topic.</param>
         public async Task<ITopic> EnsureTopic(string topicName)
         {
-            var topics = await this.serviceBusNamespace.Topics.ListAsync();
+            var topics = await this.serviceBusNamespace.Topics.ListAsync().ConfigureAwait(false);
             var topic = topics.FirstOrDefault(t => t.Name == topicName);
 
             if(topic == null)
             {
                 this.logger.LogDebug($"create servicebus topic: {topicName}");
-                topic = await this.serviceBusNamespace.Topics.Define(topicName).CreateAsync();
+                topic = await this.serviceBusNamespace.Topics.Define(topicName).CreateAsync().ConfigureAwait(false);
             }
             else
             {
@@ -99,14 +99,14 @@
         /// <param name="subscriptionName">Name of the subscription.</param>
         public async Task<ISubscription> EnsureTopicSubscription(string topicName, string subscriptionName)
         {
-            var topic = await this.EnsureTopic(topicName);
-            var subscriptions = await topic.Subscriptions.ListAsync();
+            var topic = await this.EnsureTopic(topicName).ConfigureAwait(false);
+            var subscriptions = await topic.Subscriptions.ListAsync().ConfigureAwait(false);
             var subscription = subscriptions.FirstOrDefault(s => s.Name == subscriptionName);
 
             if(subscription == null)
             {
                 this.logger.LogDebug($"create servicebus topic/subscription: {topicName}/{subscriptionName}");
-                await topic.Subscriptions.Define(subscriptionName).CreateAsync();
+                await topic.Subscriptions.Define(subscriptionName).CreateAsync().ConfigureAwait(false);
             }
             else
             {

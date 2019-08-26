@@ -9,7 +9,7 @@
     /// Standard service exception.
     /// </summary>
     /// <seealso cref="ApplicationException" />
-    public class CommandException : ApplicationException
+    public class CommandException : Exception
 #pragma warning restore S3925 // "ISerializable" should be implemented correctly
     {
         /// <summary>

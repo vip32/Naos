@@ -78,7 +78,7 @@
     &nbsp;&nbsp;&nbsp;&nbsp;<a href='/api'>infos</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/health'>health</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/logevents/dashboard'>logs</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/logtraces/dashboard?q=TrackType=trace'>traces</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/logevents/dashboard?q=TrackType=journal'>journal</a></br>
 </body>
 </html>
-");
+").AnyContext();
                 }
                 else if(context.Request.Path.Equals("/css/naos.css", System.StringComparison.OrdinalIgnoreCase))
                 {
@@ -110,7 +110,7 @@ hr {
     margin: 1em 0;
     padding: 0;
 }
-");
+").AnyContext();
                 }
                 else if(context.Request.Path.Equals("/favicon.ico", System.StringComparison.OrdinalIgnoreCase))
                 {
@@ -124,22 +124,22 @@ hr {
                 }
                 else
                 {
-                    await this.next(context);
+                    await this.next(context).AnyContext();
                 }
             }
         }
 
-        private class EchoResponse
-        {
-            public ServiceDescriptor Service { get; set; }
+        //private class EchoResponse
+        //{
+        //    public ServiceDescriptor Service { get; set; }
 
-            public Dictionary<string, object> Request { get; set; }
+        //    public Dictionary<string, object> Request { get; set; }
 
-            public IDictionary<string, string> Runtime { get; set; }
+        //    public IDictionary<string, string> Runtime { get; set; }
 
-            public IEnumerable<NaosFeatureInformation> Features { get; set; }
+        //    public IEnumerable<NaosFeatureInformation> Features { get; set; }
 
-            public IDictionary<string, string> Actions { get; set; }
-        }
+        //    public IDictionary<string, string> Actions { get; set; }
+        //}
     }
 }

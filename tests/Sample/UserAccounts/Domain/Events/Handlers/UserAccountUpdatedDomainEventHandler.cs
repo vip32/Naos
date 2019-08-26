@@ -34,7 +34,7 @@
 
                     // TODO: do something, trigger message (integration)
                 }
-            });
+            }).AnyContext();
         }
     }
 }

@@ -6,12 +6,12 @@
     {
         public static IQueryable<T> TakeIf<T>(
             this IQueryable<T> source,
-            int count = 100,
-            bool condition = true)
+            int? count = null,
+            bool? condition = true)
         {
-            if(condition && count > 0)
+            if(condition == true && count.HasValue && count.Value > 0)
             {
-                return source.Take(count);
+                return source.Take(count.Value);
             }
 
             return source;

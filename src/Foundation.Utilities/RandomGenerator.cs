@@ -85,7 +85,11 @@
         public static string GeneratePassword(int length = 12, bool nonAlphanumeric = true)
         {
             var bytes = new byte[length];
-            new RNGCryptoServiceProvider().GetBytes(bytes); //  source of randomness is the crypto RNG
+            using(var generator = new RNGCryptoServiceProvider()) //  source of randomness is the crypto RNG
+            {
+                generator.GetBytes(bytes);
+            }
+
             var result = new StringBuilder();
 
             foreach(var @byte in bytes)

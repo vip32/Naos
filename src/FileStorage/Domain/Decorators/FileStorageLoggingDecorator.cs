@@ -40,7 +40,7 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
             this.logger.LogInformation($"{{LogKey:l}} get {this.name} file info: {path}", LogKeys.FileStorage);
-            return await this.GetFileInformationAsync(path);
+            return await this.GetFileInformationAsync(path).AnyContext();
         }
 
         public Task<bool> ExistsAsync(string path)
@@ -95,7 +95,7 @@
         public async Task<PagedResults> GetFileInformationsAsync(int pageSize = 100, string searchPattern = null, CancellationToken cancellationToken = default)
         {
             this.logger.LogInformation($"{{LogKey:l}} get {this.name} file infos: {searchPattern}", LogKeys.FileStorage);
-            return await this.GetFileInformationsAsync(pageSize, searchPattern, cancellationToken);
+            return await this.GetFileInformationsAsync(pageSize, searchPattern, cancellationToken).AnyContext();
         }
 
         public void Dispose()

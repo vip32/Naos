@@ -54,7 +54,7 @@
 -enabled={this.jobScheduler.Options.Enabled}
 -running={this.jobScheduler.IsRunning}";
 
-            await Task.Run(() => System.Console.WriteLine(text));
+            await Task.Run(() => System.Console.WriteLine(text)).AnyContext();
             return true;
         }
     }

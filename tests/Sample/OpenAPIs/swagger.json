@@ -1,0 +1,2384 @@
+{
+  "x-generator": "NSwag v13.0.4.0 (NJsonSchema v10.0.21.0 (Newtonsoft.Json v12.0.0.0))",
+  "swagger": "2.0",
+  "info": {
+    "title": "Naos",
+    "description": "Naos",
+    "termsOfService": "None",
+    "contact": {
+      "name": "Naos",
+      "url": "https://github.com/vip32/Naos.Core",
+      "email": ""
+    },
+    "version": "v1"
+  },
+  "host": "localhost:5001",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/api/echo": {
+      "get": {
+        "tags": [
+          "Naos Echo"
+        ],
+        "operationId": "NaosEcho_Get",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/echo/authentication": {
+      "get": {
+        "tags": [
+          "Naos Echo"
+        ],
+        "operationId": "NaosAuthenticationEcho_Get",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/jobregistrations": {
+      "get": {
+        "tags": [
+          "Naos JobScheduling"
+        ],
+        "operationId": "NaosJobRegistrations_GetAll",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/JobRegistration"
+              }
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      }
+    },
+    "/api/jobregistrations/{key}": {
+      "get": {
+        "tags": [
+          "Naos JobScheduling"
+        ],
+        "operationId": "NaosJobRegistrations_Get",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "x-nullable": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/JobRegistration"
+            }
+          },
+          "404": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ValidationProblemDetails"
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      }
+    },
+    "/api/echo/jobscheduling": {
+      "get": {
+        "tags": [
+          "Naos Echo"
+        ],
+        "operationId": "NaosJobSchedulingEcho_Get",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/JobRegistration"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/jobs/{key}": {
+      "put": {
+        "tags": [
+          "Naos JobScheduling"
+        ],
+        "operationId": "NaosJobs_Put",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "x-nullable": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": ""
+          },
+          "404": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ValidationProblemDetails"
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      }
+    },
+    "/api/echo/messaging": {
+      "get": {
+        "tags": [
+          "Naos Echo"
+        ],
+        "operationId": "NaosMessagingEcho_Get",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SubscriptionDetails"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/operations/logevents": {
+      "get": {
+        "tags": [
+          "Naos Operations"
+        ],
+        "operationId": "NaosOperationsLogEvents_Get",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/LogEvent"
+              }
+            }
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ValidationProblemDetails"
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      }
+    },
+    "/api/operations/logevents/dashboard": {
+      "get": {
+        "tags": [
+          "Naos Operations"
+        ],
+        "operationId": "NaosOperationsLogEvents_GetHtml",
+        "produces": [
+          "text/html"
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ValidationProblemDetails"
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      }
+    },
+    "/api/operations/logtraces": {
+      "get": {
+        "tags": [
+          "Naos Operations"
+        ],
+        "operationId": "NaosOperationsLogTraces_Get",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/LogTrace"
+              }
+            }
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ValidationProblemDetails"
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      }
+    },
+    "/api/operations/logtraces/dashboard": {
+      "get": {
+        "tags": [
+          "Naos Operations"
+        ],
+        "operationId": "NaosOperationsLogTraces_GetHtml",
+        "produces": [
+          "text/html"
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ValidationProblemDetails"
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      }
+    },
+    "/api/echo/queueing": {
+      "get": {
+        "tags": [
+          "Naos Echo"
+        ],
+        "operationId": "NaosQueueingEcho_Get",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/definitions/QueueMetrics"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/queueing/queues/{name}": {
+      "get": {
+        "tags": [
+          "Naos Queueing"
+        ],
+        "operationId": "NaosQueues_Get",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "x-nullable": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/definitions/QueueMetrics"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/echo/requestcorrelation": {
+      "get": {
+        "tags": [
+          "Naos Echo"
+        ],
+        "operationId": "NaosCorrelationEcho_Get",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/CorrelationContext"
+            }
+          }
+        }
+      }
+    },
+    "/api/echo/requestfiltering": {
+      "get": {
+        "tags": [
+          "Naos Echo"
+        ],
+        "operationId": "NaosRequestFilteringEcho_Get",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/FilterContext"
+            }
+          }
+        }
+      }
+    },
+    "/api/echo/servicecontext": {
+      "get": {
+        "tags": [
+          "Naos Echo"
+        ],
+        "operationId": "NaosServiceContextEcho_Get",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ServiceDescriptor"
+            }
+          }
+        }
+      }
+    },
+    "/api": {
+      "get": {
+        "tags": [
+          "Naos Info"
+        ],
+        "operationId": "NaosServiceContextRoot_Get",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ServiceDescriptor"
+            }
+          }
+        }
+      }
+    },
+    "/api/echo/servicediscovery": {
+      "get": {
+        "tags": [
+          "Naos Echo"
+        ],
+        "operationId": "NaosServiceDiscoveryEcho_Get",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ServiceRegistration"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/servicediscovery/router/registrations": {
+      "get": {
+        "tags": [
+          "Naos ServiceDiscovery"
+        ],
+        "operationId": "NaosServiceDiscoveryRegistrations_Get",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "name",
+            "in": "query",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "tag",
+            "in": "query",
+            "x-nullable": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ServiceRegistration"
+              }
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Naos ServiceDiscovery"
+        ],
+        "operationId": "NaosServiceDiscoveryRegistrations_Post",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "model",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ServiceRegistration"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": ""
+          },
+          "201": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ServiceRegistration"
+            }
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ValidationProblemDetails"
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Naos ServiceDiscovery"
+        ],
+        "operationId": "NaosServiceDiscoveryRegistrations_Post2",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "model",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ServiceRegistration"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": ""
+          },
+          "201": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ServiceRegistration"
+            }
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ValidationProblemDetails"
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      }
+    },
+    "/api/servicediscovery/router/registrations/{id}": {
+      "delete": {
+        "tags": [
+          "Naos ServiceDiscovery"
+        ],
+        "operationId": "NaosServiceDiscoveryRegistrations_Delete",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "x-nullable": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "404": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      }
+    },
+    "/api/echo/servicediscovery/router": {
+      "get": {
+        "tags": [
+          "Naos Echo"
+        ],
+        "operationId": "NaosServiceDiscoveryRouterEcho_Get",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ServiceRegistration"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/countries/names/{name}": {
+      "get": {
+        "tags": [
+          "Naos Entity Repository (Countries)"
+        ],
+        "summary": "TODO description",
+        "operationId": "Countries_GetByName",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "x-nullable": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Country"
+            }
+          },
+          "404": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ValidationProblemDetails"
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      }
+    },
+    "/api/countries/{id}": {
+      "put": {
+        "tags": [
+          "Naos Entity Repository (Countries)"
+        ],
+        "summary": "TODO description",
+        "operationId": "Countries_Put",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "x-nullable": true
+          },
+          {
+            "name": "model",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Country"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": ""
+          },
+          "404": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ValidationProblemDetails"
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Naos Entity Repository (Countries)"
+        ],
+        "summary": "TODO description",
+        "operationId": "Countries_Delete",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "x-nullable": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "404": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ValidationProblemDetails"
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Naos Entity Repository (Countries)"
+        ],
+        "summary": "TODO description",
+        "operationId": "Countries_FindOne",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "x-nullable": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Country"
+            }
+          },
+          "404": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ValidationProblemDetails"
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      }
+    },
+    "/api/countries": {
+      "post": {
+        "tags": [
+          "Naos Entity Repository (Countries)"
+        ],
+        "summary": "TODO description",
+        "operationId": "Countries_Post",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "model",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Country"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "201": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Country"
+            }
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ValidationProblemDetails"
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Naos Entity Repository (Countries)"
+        ],
+        "summary": "TODO description",
+        "operationId": "Countries_FindAll",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Country"
+              }
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      }
+    },
+    "/api/countries/echo": {
+      "get": {
+        "tags": [
+          "Naos Echo"
+        ],
+        "summary": "TODO description",
+        "operationId": "Countries_Echo",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/customers/{id}": {
+      "put": {
+        "tags": [
+          "Naos Entity Repository (Customers)"
+        ],
+        "summary": "TODO description",
+        "operationId": "Customers_Put",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "x-nullable": true
+          },
+          {
+            "name": "model",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Customer"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": ""
+          },
+          "404": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ValidationProblemDetails"
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Naos Entity Repository (Customers)"
+        ],
+        "summary": "TODO description",
+        "operationId": "Customers_Delete",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "x-nullable": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "404": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ValidationProblemDetails"
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Naos Entity Repository (Customers)"
+        ],
+        "summary": "TODO description",
+        "operationId": "Customers_FindOne",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "x-nullable": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Customer"
+            }
+          },
+          "404": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ValidationProblemDetails"
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      }
+    },
+    "/api/customers": {
+      "post": {
+        "tags": [
+          "Naos Entity Repository (Customers)"
+        ],
+        "summary": "TODO description",
+        "operationId": "Customers_Post",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "model",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Customer"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "201": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Customer"
+            }
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ValidationProblemDetails"
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Naos Entity Repository (Customers)"
+        ],
+        "summary": "TODO description",
+        "operationId": "Customers_FindAll",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Customer"
+              }
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      }
+    },
+    "/api/customers/echo": {
+      "get": {
+        "tags": [
+          "Naos Echo"
+        ],
+        "summary": "TODO description",
+        "operationId": "Customers_Echo",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/useraccounts/{id}": {
+      "put": {
+        "tags": [
+          "Naos Entity Repository (UserAccounts)"
+        ],
+        "summary": "TODO description",
+        "operationId": "UserAccounts_Put",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "x-nullable": true
+          },
+          {
+            "name": "model",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserAccount"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": ""
+          },
+          "404": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ValidationProblemDetails"
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Naos Entity Repository (UserAccounts)"
+        ],
+        "summary": "TODO description",
+        "operationId": "UserAccounts_Delete",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "x-nullable": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "404": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ValidationProblemDetails"
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Naos Entity Repository (UserAccounts)"
+        ],
+        "summary": "TODO description",
+        "operationId": "UserAccounts_FindOne",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "x-nullable": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UserAccount"
+            }
+          },
+          "404": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ValidationProblemDetails"
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      }
+    },
+    "/api/useraccounts": {
+      "post": {
+        "tags": [
+          "Naos Entity Repository (UserAccounts)"
+        ],
+        "summary": "TODO description",
+        "operationId": "UserAccounts_Post",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "model",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserAccount"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "201": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UserAccount"
+            }
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ValidationProblemDetails"
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Naos Entity Repository (UserAccounts)"
+        ],
+        "summary": "TODO description",
+        "operationId": "UserAccounts_FindAll",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/UserAccount"
+              }
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      }
+    },
+    "/api/useraccounts/echo": {
+      "get": {
+        "tags": [
+          "Naos Echo"
+        ],
+        "summary": "TODO description",
+        "operationId": "UserAccounts_Echo",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "JobRegistration": {
+      "type": "object",
+      "required": [
+        "isReentrant",
+        "enabled",
+        "timeout"
+      ],
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "identifier": {
+          "type": "string"
+        },
+        "cron": {
+          "type": "string"
+        },
+        "args": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "isReentrant": {
+          "type": "boolean"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "timeout": {
+          "type": "string",
+          "format": "time-span"
+        }
+      }
+    },
+    "ProblemDetails": {
+      "type": "object",
+      "description": "A machine-readable format for specifying errors in HTTP API responses based on https://tools.ietf.org/html/rfc7807.",
+      "additionalProperties": {},
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when\ndereferenced, it provide human-readable documentation for the problem type\n(e.g., using HTML [W3C.REC-html5-20141028]).  When this member is not present, its value is assumed to be\n\"about:blank\"."
+        },
+        "title": {
+          "type": "string",
+          "description": "A short, human-readable summary of the problem type.It SHOULD NOT change from occurrence to occurrence\nof the problem, except for purposes of localization(e.g., using proactive content negotiation;\nsee[RFC7231], Section 3.4)."
+        },
+        "status": {
+          "type": "integer",
+          "description": "The HTTP status code([RFC7231], Section 6) generated by the origin server for this occurrence of the problem.",
+          "format": "int32"
+        },
+        "detail": {
+          "type": "string",
+          "description": "A human-readable explanation specific to this occurrence of the problem."
+        },
+        "instance": {
+          "type": "string",
+          "description": "A URI reference that identifies the specific occurrence of the problem.It may or may not yield further information if dereferenced."
+        }
+      }
+    },
+    "ValidationProblemDetails": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ProblemDetails"
+        },
+        {
+          "type": "object",
+          "description": "A ProblemDetails for validation errors.",
+          "additionalProperties": {},
+          "properties": {
+            "errors": {
+              "type": "object",
+              "description": "Gets the validation errors associated with this instance of ValidationProblemDetails.",
+              "additionalProperties": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SubscriptionDetails": {
+      "type": "object",
+      "properties": {
+        "handlerType": {
+          "type": "string"
+        }
+      }
+    },
+    "LogEvent": {
+      "type": "object",
+      "required": [
+        "timestamp",
+        "ticks"
+      ],
+      "properties": {
+        "level": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        },
+        "environment": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "ticks": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "correlationId": {
+          "type": "string"
+        },
+        "serviceName": {
+          "type": "string"
+        },
+        "serviceProduct": {
+          "type": "string"
+        },
+        "serviceCapability": {
+          "type": "string"
+        },
+        "sourceContext": {
+          "type": "string"
+        },
+        "trackType": {
+          "type": "string"
+        },
+        "trackId": {
+          "type": "string"
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {}
+        }
+      }
+    },
+    "LogTrace": {
+      "type": "object",
+      "required": [
+        "timestamp",
+        "ticks",
+        "duration"
+      ],
+      "properties": {
+        "level": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        },
+        "environment": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "ticks": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "correlationId": {
+          "type": "string"
+        },
+        "serviceName": {
+          "type": "string"
+        },
+        "serviceProduct": {
+          "type": "string"
+        },
+        "serviceCapability": {
+          "type": "string"
+        },
+        "sourceContext": {
+          "type": "string"
+        },
+        "trackType": {
+          "type": "string"
+        },
+        "trackId": {
+          "type": "string"
+        },
+        "operationName": {
+          "type": "string"
+        },
+        "traceId": {
+          "type": "string"
+        },
+        "spanId": {
+          "type": "string"
+        },
+        "parentSpanId": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "statusDescription": {
+          "type": "string"
+        },
+        "startTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "duration": {
+          "type": "string",
+          "format": "time-span"
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "logs": {
+          "type": "object",
+          "additionalProperties": {}
+        }
+      }
+    },
+    "QueueMetrics": {
+      "type": "object",
+      "required": [
+        "queued",
+        "working",
+        "deadlettered",
+        "enqueued",
+        "dequeued",
+        "completed",
+        "abandoned",
+        "errors",
+        "timeouts"
+      ],
+      "properties": {
+        "queued": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "working": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "deadlettered": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "enqueued": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "dequeued": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "completed": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "abandoned": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "errors": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "timeouts": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "CorrelationContext": {
+      "type": "object",
+      "properties": {
+        "correlationId": {
+          "type": "string"
+        },
+        "correlationHeader": {
+          "type": "string"
+        },
+        "requestId": {
+          "type": "string"
+        },
+        "requestHeader": {
+          "type": "string"
+        }
+      }
+    },
+    "FilterContext": {
+      "type": "object",
+      "required": [
+        "enabled"
+      ],
+      "properties": {
+        "criterias": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Criteria"
+          }
+        },
+        "orders": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Order"
+          }
+        },
+        "skip": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "take": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Criteria": {
+      "type": "object",
+      "required": [
+        "operator"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "operator": {
+          "$ref": "#/definitions/CriteriaOperator"
+        },
+        "value": {}
+      }
+    },
+    "CriteriaOperator": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Equal",
+        "NotEqual",
+        "GreaterThan",
+        "GreaterThanOrEqual",
+        "LessThan",
+        "LessThanOrEqual",
+        "Contains",
+        "StartsWith",
+        "EndsWith"
+      ],
+      "enum": [
+        "Equal",
+        "NotEqual",
+        "GreaterThan",
+        "GreaterThanOrEqual",
+        "LessThan",
+        "LessThanOrEqual",
+        "Contains",
+        "StartsWith",
+        "EndsWith"
+      ]
+    },
+    "Order": {
+      "type": "object",
+      "required": [
+        "direction"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "direction": {
+          "$ref": "#/definitions/OrderDirection"
+        }
+      }
+    },
+    "OrderDirection": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Asc",
+        "Desc"
+      ],
+      "enum": [
+        "Asc",
+        "Desc"
+      ]
+    },
+    "ServiceDescriptor": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "product": {
+          "type": "string"
+        },
+        "capability": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ServiceRegistration": {
+      "type": "object",
+      "required": [
+        "enabled",
+        "port"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "check": {
+          "$ref": "#/definitions/ServiceRegistrationCheck"
+        }
+      }
+    },
+    "ServiceRegistrationCheck": {
+      "type": "object",
+      "required": [
+        "interval"
+      ],
+      "properties": {
+        "route": {
+          "type": "string"
+        },
+        "interval": {
+          "type": "string",
+          "format": "time-span"
+        },
+        "cronInterval": {
+          "type": "string"
+        }
+      }
+    },
+    "Country": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AggregateRootOfString"
+        },
+        {
+          "type": "object",
+          "required": [
+            "name",
+            "code"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "code": {
+              "type": "string",
+              "minLength": 1
+            },
+            "languageCodes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "tenantId": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AggregateRootOfString": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntityOfString"
+        },
+        {
+          "type": "object",
+          "x-abstract": true
+        }
+      ]
+    },
+    "EntityOfString": {
+      "type": "object",
+      "x-abstract": true,
+      "properties": {
+        "discriminator": {
+          "type": "string"
+        },
+        "identifierHash": {
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/definitions/State"
+        }
+      }
+    },
+    "State": {
+      "type": "object",
+      "required": [
+        "createdDate",
+        "updatedDate",
+        "isDeactivated"
+      ],
+      "properties": {
+        "createdBy": {
+          "type": "string"
+        },
+        "createdDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdDescription": {
+          "type": "string"
+        },
+        "updatedBy": {
+          "type": "string"
+        },
+        "updatedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedDescription": {
+          "type": "string"
+        },
+        "updatedReasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "expiredBy": {
+          "type": "string"
+        },
+        "expiredDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "expiredDescription": {
+          "type": "string"
+        },
+        "deactivated": {
+          "type": "boolean"
+        },
+        "deactivatedReasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "deactivatedBy": {
+          "type": "string"
+        },
+        "deactivatedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "deactivatedDescription": {
+          "type": "string"
+        },
+        "deleted": {
+          "type": "boolean"
+        },
+        "deletedBy": {
+          "type": "string"
+        },
+        "deletedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "deletedReason": {
+          "type": "string"
+        },
+        "deletedDescription": {
+          "type": "string"
+        },
+        "lastAccessedBy": {
+          "type": "string"
+        },
+        "lastAccessedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastAccessedDescription": {
+          "type": "string"
+        },
+        "lastActionDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "isDeactivated": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Customer": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AggregateRootOfString"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "customerNumber": {
+              "type": "string"
+            },
+            "firstName": {
+              "type": "string"
+            },
+            "lastName": {
+              "type": "string"
+            },
+            "gender": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "region": {
+              "type": "string"
+            },
+            "address": {
+              "$ref": "#/definitions/Address"
+            },
+            "tenantId": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "Address": {
+      "type": "object",
+      "properties": {
+        "street": {
+          "type": "string"
+        },
+        "houseNumber": {
+          "type": "string"
+        },
+        "zipCode": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        }
+      }
+    },
+    "UserAccount": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AggregateRootOfGuid"
+        },
+        {
+          "type": "object",
+          "required": [
+            "visitCount"
+          ],
+          "properties": {
+            "email": {
+              "type": "string"
+            },
+            "visitCount": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "lastVisitDate": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "registerDate": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "tenantId": {
+              "type": "string"
+            },
+            "adAccount": {
+              "$ref": "#/definitions/AdAccount"
+            }
+          }
+        }
+      ]
+    },
+    "AdAccount": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ValueObject"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "domain": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "ValueObject": {
+      "type": "object",
+      "x-abstract": true
+    },
+    "AggregateRootOfGuid": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntityOfGuid"
+        },
+        {
+          "type": "object",
+          "x-abstract": true
+        }
+      ]
+    },
+    "EntityOfGuid": {
+      "type": "object",
+      "x-abstract": true,
+      "properties": {
+        "discriminator": {
+          "type": "string"
+        },
+        "identifierHash": {
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/definitions/State"
+        }
+      }
+    }
+  }
+}

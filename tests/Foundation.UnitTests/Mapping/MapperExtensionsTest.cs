@@ -1,5 +1,6 @@
 ﻿namespace Naos.Foundation.UnitTests.Mapping
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Naos.Foundation;
@@ -58,7 +59,7 @@
             var mapper = new StubMapper();
 
             var target = mapper.Map(
-                new StubMapSource[0]);
+                Array.Empty<StubMapSource>());
 
             Assert.Empty(target);
         }

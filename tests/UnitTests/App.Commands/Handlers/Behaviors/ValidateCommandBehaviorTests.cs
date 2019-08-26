@@ -5,6 +5,7 @@
     using FluentValidation.Results;
     using Naos.Core.Commands.Domain;
     using Naos.Foundation;
+    using Shouldly;
     using Xunit;
 
     public class ValidateCommandBehaviorTests
@@ -13,7 +14,7 @@
         public async Task ValidCommand_Succeeds()
         {
             // arrange/act
-            var result = await new ValidateCommandBehavior().ExecuteAsync(new StubCommand("Name1"));
+            var result = await new ValidateCommandBehavior().ExecuteAsync(new StubCommand("Name1")).AnyContext();
 
             // assert
             Assert.NotNull(result);
@@ -28,7 +29,7 @@
                 new ValidateCommandBehavior().ExecuteAsync(new StubCommand(null))).AnyContext();
 
             // assert
-            Assert.Contains("has validation errors", ex.Message);
+            ex.Message.ShouldContain("has validation errors");
         }
 
         public class StubCommand : CommandRequest<bool>
