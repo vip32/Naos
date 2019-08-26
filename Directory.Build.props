@@ -33,7 +33,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-18618-05" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-19367-01" />
     <PackageReference Include="SecurityCodeScan" Version="3.2.0" PrivateAssets="all" />     <!--https://security-code-scan.github.io/-->
   </ItemGroup>
   <PropertyGroup>

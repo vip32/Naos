@@ -4,6 +4,6 @@
     {
         public string Message { get; set; }
 
-        public EchoCommand Source { get; set; }
+        //public EchoCommand Source { get; set; }
     }
 }

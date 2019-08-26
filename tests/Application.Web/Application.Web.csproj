@@ -24,9 +24,9 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Api.Analyzers" Version="2.2.6" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
-    <PackageReference Include="NSwag.AspNetCore" Version="13.0.5" />
-    <PackageReference Include="NSwag.Generation" Version="13.0.5" />
-    <PackageReference Include="NJsonSchema" Version="10.0.22" />
+    <PackageReference Include="NSwag.AspNetCore" Version="13.0.6" />
+    <PackageReference Include="NSwag.Generation" Version="13.0.6" />
+    <PackageReference Include="NJsonSchema" Version="10.0.23" />
     <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
   </ItemGroup>
 
