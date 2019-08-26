@@ -37,7 +37,7 @@
 
                 return new CommandResponse<EchoCommandResponse>
                 {
-                    Result = new EchoCommandResponse { Message = message }
+                    Result = new EchoCommandResponse { Message = message, Source = request }
                 };
             }).AnyContext();
         }
