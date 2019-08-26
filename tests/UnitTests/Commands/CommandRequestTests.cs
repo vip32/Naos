@@ -25,7 +25,7 @@
             };
 
             // act
-            var result = await mediator.Send(request).AnyContext();
+            var response = await mediator.Send(request).AnyContext();
 
             // assert
             //result.ShouldNotBeNull();
@@ -40,7 +40,7 @@
             command.ShouldNotBeNull();
 
             // act
-            var result = await mediator.Send(command).AnyContext();
+            var response = await mediator.Send(command).AnyContext();
 
             // assert
         }
@@ -53,7 +53,7 @@
             var command = SerializationHelper.JsonDeserialize("{\"Message\": \"John Doe\"}", typeof(EchoCommand));
 
             // act
-            var result = await mediator.Send(command).AnyContext();
+            var response = await mediator.Send(command).AnyContext();
 
             // assert
         }
