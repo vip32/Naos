@@ -46,13 +46,16 @@
         {
             if (context.Request.Path.Equals(this.options.Registration.Route, StringComparison.OrdinalIgnoreCase)) // also match method
             {
-                var command = SerializationHelper.JsonDeserialize("{\"FirstName\": \"John\",\"LastName\": \"Doe\"}", this.options.Registration.CommandType);
-                var response = this.mediator.Send(command); // https://github.com/jbogard/MediatR/issues/385
+                var commandName = this.options.Registration.CommandType.Name.SliceTill("Command");
+                this.logger.LogInformation($"{{LogKey:l}} received (name={commandName})", LogKeys.AppCommand);
+                var command = SerializationHelper.JsonDeserialize("{\"Message\": \"Hello John Doe\"}", this.options.Registration.CommandType);
+                var response = await this.mediator.Send(command).AnyContext(); // https://github.com/jbogard/MediatR/issues/385
 
+                context.Response.ContentType = this.options.Registration.OpenApiProduces;
                 context.Response.StatusCode = this.options.Registration.ResponseStatusCodeOnSuccess;
-                if (response?.Result != null)
+                if (response != null)
                 {
-                    var jObject = JObject.FromObject(response.Result);
+                    var jObject = JObject.FromObject(response);
                     var jToken = jObject.SelectToken("result") ?? jObject.SelectToken("Result");
 
                     if (!jToken.IsNullOrEmpty())

@@ -27,18 +27,18 @@
         int? Take { get; set; }
 
         /// <summary>
-        /// Gets or sets the order.
+        /// Gets or sets the ordering.
         /// </summary>
         /// <value>
-        /// The order.
+        /// The ordering.
         /// </value>
         OrderOption<T> Order { get; set; }
 
         /// <summary>
-        /// Gets or sets the orders.
+        /// Gets or sets the ordersings.
         /// </summary>
         /// <value>
-        /// The orders.
+        /// The ordersings.
         /// </value>
         IEnumerable<OrderOption<T>> Orders { get; set; }
 
@@ -51,10 +51,10 @@
         IEnumerable<Expression<Func<T, object>>> Includes { get; set; }
 
         /// <summary>
-        /// Determines whether this instance has orders.
+        /// Determines whether this instance has orderings.
         /// </summary>
         /// <returns>
-        ///   <c>true</c> if this instance has orders; otherwise, <c>false</c>.
+        ///   <c>true</c> if this instance has orderings; otherwise, <c>false</c>.
         /// </returns>
         bool HasOrders();
     }

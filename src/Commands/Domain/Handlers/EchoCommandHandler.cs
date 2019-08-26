@@ -31,12 +31,13 @@
             return await Task.Run(() =>
             {
                 request.Properties.AddOrUpdate(this.GetType().Name, true);
+                var message = $"+++ {request.Message ?? "echo"}";
 
-                this.logger.LogInformation($"{{LogKey:l}} {request.GetType().Name} (handler={this.GetType().Name})", LogKeys.AppCommand);
+                this.logger.LogInformation($"{{LogKey:l}} {message} (handler={this.GetType().Name})", LogKeys.AppCommand);
 
                 return new CommandResponse<EchoCommandResponse>
                 {
-                    Result = new EchoCommandResponse { Message = request.Message ?? "echo" }
+                    Result = new EchoCommandResponse { Message = message }
                 };
             }).AnyContext();
         }

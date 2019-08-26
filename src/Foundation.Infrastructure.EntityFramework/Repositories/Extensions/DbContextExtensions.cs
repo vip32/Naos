@@ -1,7 +1,9 @@
 ﻿namespace Naos.Foundation.Infrastructure
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
+    using System.Transactions;
     using EnsureThat;
     using Microsoft.EntityFrameworkCore;
     using Naos.Foundation.Domain;
@@ -57,6 +59,28 @@
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Executes the provided operation in a TransactionScope and using the retry strategy currently defined for the dbcontext.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="operation"></param>
+        /// <returns></returns>
+        public static async Task ExecuteScopedAsync(this DbContext source, Func<Task> operation)
+        {
+            EnsureArg.IsNotNull(source, nameof(source));
+            EnsureArg.IsNotNull(operation, nameof(operation));
+
+            var strategy = source.Database.CreateExecutionStrategy();
+            await strategy.ExecuteAsync(async () =>
+            {
+                using (var transaction = new TransactionScope())
+                {
+                    await operation().AnyContext();
+                    transaction.Complete();
+                }
+            }).AnyContext();
         }
     }
 }

@@ -47,7 +47,7 @@
             //    o.Get<PingCommand>("/commands/ping") // Query
             //    o.Post<CreateCustomerCommand, CreateCustomerCommandResponse>("/commands/createcustomer") // Command
             //);
-            services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<EchoCommand, EchoCommandResponse> { Route = "/api/commands/echo" });
+            services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<EchoCommand, EchoCommandResponse> { Route = "/api/commands/echo", RequestMethod = "get;post" });
             services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<PingCommand> { Route = "/api/commands/ping", RequestMethod = "get" });
 
             services
@@ -169,7 +169,6 @@
             app
                 .UseHttpsRedirection()
                 .UseNaos(s => s
-                    .UseRequestCommands()
                     .UseRequestCorrelation()
                     .UseServiceContext()
                     .UseServicePoweredBy()
@@ -177,6 +176,7 @@
                     .UseOperationsTracing()
                     .UseRequestFiltering()
                     .UseServiceExceptions()
+                    .UseRequestCommands()
                     .UseServiceDiscoveryRouter())
                 .UseOpenApi()
                 .UseSwaggerUi3();
