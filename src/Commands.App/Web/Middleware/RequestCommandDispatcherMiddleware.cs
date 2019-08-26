@@ -17,6 +17,24 @@
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
+    /// <summary>
+    ///
+    /// <para>
+    ///
+    ///                     CommandRequest
+    ///   H               .----------------.                                                           CommandHandler
+    ///   T               | -Id            |     RequestCommandDispatcher                             .--------------.
+    ///   T-------------> .----------------.     Middleware                 Mediator             .--> | Handle()     |
+    ///   P   (request)   | -CorrelationId |--->.------------.              .------------.      /     `--------------`
+    ///                   `----------------`    | Invoke()   |------------->| Send()     |-----`             |
+    ///    <------------------------------------|            |<-------------|            |<----.             V
+    ///       (response)                        `------------`              `------------`      \      CommandResponse
+    ///                                       (match method/route)                               \    .--------------.
+    ///                                                                                           `---| -Result      |
+    ///                                                                                               | -Cancelled   |
+    ///                                                                                               `--------------`
+    ///                                                                                                   (result)
+    /// </summary>
     public class RequestCommandDispatcherMiddleware
     {
         private readonly RequestDelegate next;
