@@ -14,7 +14,7 @@
         {
             this.configuration = configuration ?? new BasicStaticValidationServiceConfiguration();
             this.configuration.Claims ??= new Dictionary<string, string>();
-            if(!this.configuration.Claims.ContainsKey(ClaimTypes.Name))
+            if (!this.configuration.Claims.ContainsKey(ClaimTypes.Name))
             {
                 // add the static user
                 this.configuration.Claims.Add(ClaimTypes.Name, this.configuration.UserName ?? "unknown");
@@ -27,9 +27,9 @@
             var userAndPassword = Encoding.UTF8.GetString(headerValueBytes);
             var parts = userAndPassword.Split(':');
 
-            if(parts.Length == 2)
+            if (parts.Length == 2)
             {
-                if(parts[0] == this.configuration.UserName && parts[1] == this.configuration.Password)
+                if (parts[0] == this.configuration.UserName && parts[1] == this.configuration.Password)
                 {
                     return (true, this.configuration.Claims.Select(c => new Claim(c.Key, c.Value)));
                 }

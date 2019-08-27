@@ -20,7 +20,7 @@
             this.logger = loggerFactory.CreateLogger<QueueingConsoleCommandEventHandler>();
             this.mediator = mediator;
 
-            if(queue == null)
+            if (queue == null)
             {
                 Console.WriteLine("\r\ncreate new inmemory queue", Color.LimeGreen);
                 queue = new InMemoryQueue<EchoQueueEventData>(o => o
@@ -32,11 +32,11 @@
 
         public override async Task<bool> Handle(ConsoleCommandEvent<QueueingConsoleCommand> request, CancellationToken cancellationToken)
         {
-            if(request.Command.Echo)
+            if (request.Command.Echo)
             {
                 await queue.ProcessItemsAsync(true).AnyContext();
 
-                for(var i = 1; i <= 2; i++)
+                for (var i = 1; i <= 2; i++)
                 {
                     await queue.EnqueueAsync(new EchoQueueEventData { Text = $"+++ hello from queue item {i} +++" }).AnyContext();
                     var metrics = queue.GetMetricsAsync().Result;

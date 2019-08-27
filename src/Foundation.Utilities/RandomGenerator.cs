@@ -22,7 +22,7 @@
         /// <param name="alphanumeric">String should also contain alphanumeric characters (0..9).</param>
         public static string GenerateString(int length, bool alphanumeric = true, bool lowerCase = false)
         {
-            if(length < 0)
+            if (length < 0)
             {
                 length = 0;
             }
@@ -32,7 +32,7 @@
                 : lowerCase ? CharactersLower : CharactersUpper;
 
             var sb = new StringBuilder(length);
-            for(var i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
                 sb.Append(characters[Random.Next(0, characters.Length)]);
             }
@@ -54,7 +54,7 @@
         /// <param name="mixedCase">Mixed lowercase and uppercase characters.</param>
         public static string GenerateComplexString(int length, bool alphanumeric = true, bool lowerCase = false, bool nonAlphanumeric = false, bool mixedCase = false)
         {
-            if(length < 0)
+            if (length < 0)
             {
                 length = 0;
             }
@@ -64,17 +64,17 @@
                 ? characters + "0123456789"
                 : characters;
 
-            if(nonAlphanumeric)
+            if (nonAlphanumeric)
             {
                 chars += "!\"§$%&/()=?*#-.,";
             }
 
-            if(lowerCase)
+            if (lowerCase)
             {
                 chars = chars.ToLower();
             }
 
-            if(!lowerCase && mixedCase)
+            if (!lowerCase && mixedCase)
             {
                 chars += characters.ToLower();
             }
@@ -85,17 +85,17 @@
         public static string GeneratePassword(int length = 12, bool nonAlphanumeric = true)
         {
             var bytes = new byte[length];
-            using(var generator = new RNGCryptoServiceProvider()) //  source of randomness is the crypto RNG
+            using (var generator = new RNGCryptoServiceProvider()) //  source of randomness is the crypto RNG
             {
                 generator.GetBytes(bytes);
             }
 
             var result = new StringBuilder();
 
-            foreach(var @byte in bytes)
+            foreach (var @byte in bytes)
             {
                 // randomly select a character class
-                switch(Random.Next(4))
+                switch (Random.Next(4))
                 {
                     case 0:
                         result.Append(CharactersLower[@byte % CharactersLower.Length]);
@@ -107,7 +107,7 @@
                         result.Append(CharactersNumber[@byte % CharactersNumber.Length]);
                         break;
                     case 3:
-                        if(nonAlphanumeric)
+                        if (nonAlphanumeric)
                         {
                             result.Append(CharactersNonAlpha[@byte % CharactersNonAlpha.Length]);
                         }

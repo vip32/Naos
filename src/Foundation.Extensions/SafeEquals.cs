@@ -17,12 +17,12 @@
             string value,
             System.StringComparison comparisonType = System.StringComparison.OrdinalIgnoreCase)
         {
-            if(source == null && value == null)
+            if (source == null && value == null)
             {
                 return true;
             }
 
-            if(source == null && value != null)
+            if (source == null && value != null)
             {
                 return false;
             }

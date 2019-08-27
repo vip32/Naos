@@ -25,7 +25,7 @@
             EnsureArg.IsNotNull(source, nameof(source));
             EnsureArg.IsNotNull(action, nameof(action));
 
-            if(condition)
+            if (condition)
             {
                 source = action(source);
             }
@@ -50,7 +50,7 @@
             EnsureArg.IsNotNull(condition, nameof(condition));
             EnsureArg.IsNotNull(action, nameof(action));
 
-            if(condition(source))
+            if (condition(source))
             {
                 source = action(source);
             }
@@ -79,7 +79,7 @@
             EnsureArg.IsNotNull(ifAction, nameof(ifAction));
             EnsureArg.IsNotNull(elseAction, nameof(elseAction));
 
-            if(condition)
+            if (condition)
             {
                 source = ifAction(source);
             }
@@ -113,7 +113,7 @@
             EnsureArg.IsNotNull(ifAction, nameof(ifAction));
             EnsureArg.IsNotNull(elseAction, nameof(elseAction));
 
-            if(condition(source))
+            if (condition(source))
             {
                 source = ifAction(source);
             }

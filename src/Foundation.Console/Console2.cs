@@ -40,11 +40,11 @@
                 return index;
             };
 
-            using(var bmpMin = new Bitmap(image, resSize))
+            using (var bmpMin = new Bitmap(image, resSize))
             {
-                for(var i = 0; i < resSize.Height; i++)
+                for (var i = 0; i < resSize.Height; i++)
                 {
-                    for(var j = 0; j < resSize.Width; j++)
+                    for (var j = 0; j < resSize.Width; j++)
                     {
                         Console.ForegroundColor = (ConsoleColor)toConsoleColor(bmpMin.GetPixel(j, i));
                         Console.Write("██");

@@ -9,7 +9,7 @@
             int? count = null,
             bool? condition = true)
         {
-            if(condition == true && count.HasValue && count.Value > 0)
+            if (condition == true && count.HasValue && count.Value > 0)
             {
                 return source.Take(count.Value);
             }

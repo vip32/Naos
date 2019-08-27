@@ -24,7 +24,7 @@
         /// <returns>the querystring key/values.</returns>
         public static IDictionary<string, StringValues> GetQueryValues(this HttpRequestMessage source)
         {
-            if(source == null)
+            if (source == null)
             {
                 return null;
             }
@@ -40,18 +40,18 @@
         /// <returns>the value.</returns>
         public static string GetQueryValue(this HttpRequestMessage source, string name)
         {
-            if(source == null)
+            if (source == null)
             {
                 return default;
             }
 
-            if(string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name))
             {
                 return default;
             }
 
             var queryParts = QueryHelpers.ParseNullableQuery(source.RequestUri.Query);
-            if(queryParts == null || queryParts.Count == 0 || !queryParts.ContainsKey(name))
+            if (queryParts == null || queryParts.Count == 0 || !queryParts.ContainsKey(name))
             {
                 return default;
             }
@@ -69,18 +69,18 @@
         /// <returns>the value.</returns>
         public static StringValues GetQueryValues(this HttpRequestMessage source, string name)
         {
-            if(source == null)
+            if (source == null)
             {
                 return default;
             }
 
-            if(string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name))
             {
                 return default;
             }
 
             var queryParts = QueryHelpers.ParseNullableQuery(source.RequestUri.Query);
-            if(queryParts == null || queryParts.Count == 0 || !queryParts.ContainsKey(name))
+            if (queryParts == null || queryParts.Count == 0 || !queryParts.ContainsKey(name))
             {
                 return default;
             }
@@ -98,18 +98,18 @@
         /// <returns>the value.</returns>
         public static string GetQueryOrHeaderValue(this HttpRequestMessage source, string name)
         {
-            if(source == null)
+            if (source == null)
             {
                 return default;
             }
 
-            if(string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name))
             {
                 return default;
             }
 
             var result = source.GetQueryValue(name);
-            if(string.IsNullOrEmpty(result))
+            if (string.IsNullOrEmpty(result))
             {
                 result = source.GetHeaderValue($"X-{name}");
             }
@@ -125,7 +125,7 @@
         /// /// <returns>the value.</returns>
         public static string GetHeaderValue(this HttpRequestMessage source, string name)
         {
-            if(source == null || source.Headers == null || string.IsNullOrEmpty(name))
+            if (source == null || source.Headers == null || string.IsNullOrEmpty(name))
             {
                 return default;
             }
@@ -141,7 +141,7 @@
         /// /// <returns>the value.</returns>
         public static IEnumerable<string> GetHeaderValues(this HttpRequestMessage source, string name)
         {
-            if(source == null || source.Headers == null || string.IsNullOrEmpty(name))
+            if (source == null || source.Headers == null || string.IsNullOrEmpty(name))
             {
                 return default;
             }
@@ -153,12 +153,12 @@
             this HttpRequestMessage source,
             string prefix = null)
         {
-            if(source == null || source.Headers == null)
+            if (source == null || source.Headers == null)
             {
                 return null;
             }
 
-            if(string.IsNullOrEmpty(prefix))
+            if (string.IsNullOrEmpty(prefix))
             {
                 return source.Headers
                     .ToDictionary(h => h.Key, h => h.Value?.FirstOrDefault());
@@ -200,7 +200,7 @@
         /// <param name="source"></param>
         public static string GetCorrelationId(this HttpRequestMessage source)
         {
-            if(source == null)
+            if (source == null)
             {
                 return null;
             }
@@ -215,7 +215,7 @@
         /// <param name="source"></param>
         public static string GetRequestId(this HttpRequestMessage source)
         {
-            if(source == null)
+            if (source == null)
             {
                 return null;
             }
@@ -230,12 +230,12 @@
 
         public static HttpRequestMessage WithHeaders(this HttpRequestMessage source, IDictionary<string, object> items, bool allowEmptyValue = false)
         {
-            if(source == null)
+            if (source == null)
             {
                 return source;
             }
 
-            foreach(var value in items.Safe())
+            foreach (var value in items.Safe())
             {
                 source.WithHeader(value.Key, value.Value as string, allowEmptyValue);
             }
@@ -245,12 +245,12 @@
 
         public static HttpRequestMessage WithHeaders(this HttpRequestMessage source, IEnumerable<KeyValuePair<string, object>> items, bool allowEmptyValue = false)
         {
-            if(source == null)
+            if (source == null)
             {
                 return source;
             }
 
-            foreach(var value in items.Safe())
+            foreach (var value in items.Safe())
             {
                 source.WithHeader(value.Key, value.Value as string, allowEmptyValue);
             }
@@ -260,12 +260,12 @@
 
         public static HttpRequestMessage WithHeaders(this HttpRequestMessage source, IDictionary<string, string> items, bool allowEmptyValue = false)
         {
-            if(source == null)
+            if (source == null)
             {
                 return source;
             }
 
-            foreach(var value in items.Safe())
+            foreach (var value in items.Safe())
             {
                 source.WithHeader(value.Key, value.Value, allowEmptyValue);
             }
@@ -275,12 +275,12 @@
 
         public static HttpRequestMessage WithHeaders(this HttpRequestMessage source, IEnumerable<KeyValuePair<string, string>> items, bool allowEmptyValue = false)
         {
-            if(source == null)
+            if (source == null)
             {
                 return source;
             }
 
-            foreach(var value in items.Safe())
+            foreach (var value in items.Safe())
             {
                 source.WithHeader(value.Key, value.Value, allowEmptyValue);
             }
@@ -290,12 +290,12 @@
 
         public static HttpRequestMessage WithHeader(this HttpRequestMessage source, string key, string value, bool allowEmptyValue = false)
         {
-            if(source == null || key.IsNullOrEmpty() || (value.IsNullOrEmpty() && !allowEmptyValue))
+            if (source == null || key.IsNullOrEmpty() || (value.IsNullOrEmpty() && !allowEmptyValue))
             {
                 return source;
             }
 
-            if(source.Headers.Contains(key))
+            if (source.Headers.Contains(key))
             {
                 source.Headers.Remove(key);
             }
@@ -307,7 +307,7 @@
 
         public static HttpRequestMessage WithAuthHeader(this HttpRequestMessage source, string scheme, string parameter, bool allowEmptyValue = false)
         {
-            if(source == null || scheme.IsNullOrEmpty() || (parameter.IsNullOrEmpty() && !allowEmptyValue))
+            if (source == null || scheme.IsNullOrEmpty() || (parameter.IsNullOrEmpty() && !allowEmptyValue))
             {
                 return source;
             }
@@ -319,7 +319,7 @@
 
         public static HttpRequestMessage WithAccept(this HttpRequestMessage source, ContentType contentType = ContentType.JSON)
         {
-            if(source == null)
+            if (source == null)
             {
                 return source;
             }
@@ -331,12 +331,12 @@
 
         public static HttpRequestMessage WithJsonContent(this HttpRequestMessage source, object content, JsonSerializerSettings serializerSettings = null)
         {
-            if(source == null || content == null)
+            if (source == null || content == null)
             {
                 return source;
             }
 
-            if(content.IsOfType(typeof(string)))
+            if (content.IsOfType(typeof(string)))
             {
                 return source.WithContent(new StringContent(
                         content as string,
@@ -352,12 +352,12 @@
 
         public static HttpRequestMessage WithTextContent(this HttpRequestMessage source, string content, ContentType? contentType)
         {
-            if(source == null || content == null)
+            if (source == null || content == null)
             {
                 return source;
             }
 
-            if(contentType == null)
+            if (contentType == null)
             {
                 source.Content = new StringContent(content);
             }
@@ -374,7 +374,7 @@
 
         public static HttpRequestMessage WithContent(this HttpRequestMessage source, HttpContent httpContent, ContentType contentType = ContentType.JSON)
         {
-            if(source == null || httpContent == null)
+            if (source == null || httpContent == null)
             {
                 return source;
             }
@@ -386,7 +386,7 @@
 
         public static HttpContent WithContentType(this HttpContent source, ContentType contentType = ContentType.JSON)
         {
-            if(source == null)
+            if (source == null)
             {
                 return source;
             }
@@ -399,7 +399,7 @@
 
         public static HttpRequestMessage WithContentType(this HttpRequestMessage source, ContentType contentType = ContentType.JSON)
         {
-            if(source == null)
+            if (source == null)
             {
                 return source;
             }
@@ -407,7 +407,7 @@
             // allow the content-type header to be set, by default this is not allowed. however some api's need it.
             // https://stackoverflow.com/questions/10679214/how-do-you-set-the-content-type-header-for-an-httpclient-request
             var field = typeof(HttpRequestHeaders).GetField("invalidHeaders", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static) ?? typeof(HttpRequestHeaders).GetField("s_invalidHeaders", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
-            if(field != null)
+            if (field != null)
             {
                 var invalidFields = (HashSet<string>)field.GetValue(null);
                 invalidFields.Remove("Content-Type");
@@ -420,12 +420,12 @@
 
         public static HttpContent WithContentDisposition(this HttpContent source, string name, string fileName = null)
         {
-            if(source == null || name.IsNullOrEmpty())
+            if (source == null || name.IsNullOrEmpty())
             {
                 return source;
             }
 
-            if(fileName.IsNullOrEmpty())
+            if (fileName.IsNullOrEmpty())
             {
                 source.Headers.Add("Content-Disposition", $"form-data; name=\"{name}\"");
             }

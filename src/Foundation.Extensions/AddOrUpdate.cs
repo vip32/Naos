@@ -21,12 +21,12 @@
         {
             source ??= new Dictionary<TKey, TValue>();
 
-            if(key == default)
+            if (key == default)
             {
                 return source;
             }
 
-            if(source.ContainsKey(key))
+            if (source.ContainsKey(key))
             {
                 source.Remove(key);
             }
@@ -51,9 +51,9 @@
         {
             source ??= new Dictionary<TKey, TValue>();
 
-            foreach(var item in items.Safe())
+            foreach (var item in items.Safe())
             {
-                if(source.ContainsKey(item.Key))
+                if (source.ContainsKey(item.Key))
                 {
                     source.Remove(item.Key);
                 }

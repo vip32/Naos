@@ -31,12 +31,12 @@
             try
             {
                 var logger = app.ApplicationServices.GetService<ILoggerFactory>().CreateLogger("Naos");
-                foreach(var message in context.Messages.Safe())
+                foreach (var message in context.Messages.Safe())
                 {
                     logger?.LogDebug(message);
                 }
             }
-            catch(InvalidOperationException)
+            catch (InvalidOperationException)
             {
                 // do nothing, messages are not logged
             }

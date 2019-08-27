@@ -32,7 +32,7 @@
 
         public async Task Invoke(HttpContext context, ITracer tracer)
         {
-            if(!this.options.Enabled
+            if (!this.options.Enabled
                 || tracer == null
                 || context.Request.Path.Value.EqualsPatternAny(this.options.PathBlackListPatterns))
             {
@@ -46,7 +46,7 @@
                 context.GetRouteData()?.Values.TryGetValue("Action", out action);
                 context.GetRouteData()?.Values.TryGetValue("Controller", out controller);
 
-                using(var scope = tracer
+                using (var scope = tracer
                     .BuildSpan(
                         $"http {action ?? context.Request.Method} {(controller != null ? controller.ToString().Singularize() ?? controller : uri.AbsolutePath)}".ToLowerInvariant(),
                         LogKeys.InboundRequest,
@@ -68,7 +68,7 @@
                         scope.Span.WithTag("http.status_code", context.Response.StatusCode);
                         // TODO: response size?
 
-                        if(context.Response.StatusCode > 399)
+                        if (context.Response.StatusCode > 399)
                         {
                             scope.Span.SetStatus(SpanStatus.Failed, $"{context.Response.StatusCode} ({ReasonPhrases.GetReasonPhrase(context.Response.StatusCode)})");
                         }
@@ -77,7 +77,7 @@
                             scope.Span.SetStatus(SpanStatus.Succeeded, $"{context.Response.StatusCode} ({ReasonPhrases.GetReasonPhrase(context.Response.StatusCode)})");
                         }
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         tracer.Fail(exception: ex);
                         throw;

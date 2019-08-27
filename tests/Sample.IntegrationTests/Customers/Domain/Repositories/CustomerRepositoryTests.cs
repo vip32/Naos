@@ -22,7 +22,7 @@
         {
             this.sut = this.ServiceProvider.GetService<ICustomerRepository>();
             this.entityFaker = new Faker<Customer>() //https://github.com/bchavez/Bogus
-                //.RuleFor(u => u.Id, f => Guid.NewGuid().ToString())
+                                                     //.RuleFor(u => u.Id, f => Guid.NewGuid().ToString())
                 .RuleFor(u => u.CustomerNumber, f => f.Random.Replace("??-#####"))
                 .RuleFor(u => u.Gender, f => f.PickRandom(new[] { "Male", "Female" }))
                 .RuleFor(u => u.FirstName, (f, u) => f.Name.FirstName())
@@ -218,7 +218,7 @@
         [Fact]
         public async Task UpsertAsync_Test()
         {
-            for(var i = 1; i < 10; i++)
+            for (var i = 1; i < 10; i++)
             {
                 // arrange/act
                 var result = await this.sut.UpsertAsync(this.entityFaker.Generate()).AnyContext();

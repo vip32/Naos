@@ -12,24 +12,24 @@
             IEnumerable<string> values,
             StringComparison comp = StringComparison.OrdinalIgnoreCase)
         {
-            if(string.IsNullOrEmpty(source))
+            if (string.IsNullOrEmpty(source))
             {
                 return false;
             }
 
-            if(values.IsNullOrEmpty())
+            if (values.IsNullOrEmpty())
             {
                 return false;
             }
 
-            foreach(var value in values)
+            foreach (var value in values)
             {
-                if(value == null)
+                if (value == null)
                 {
                     continue;
                 }
 
-                if(source.Equals(value, comp))
+                if (source.Equals(value, comp))
                 {
                     return true;
                 }
@@ -43,14 +43,14 @@
             this int source,
             IEnumerable<int> values)
         {
-            if(values.IsNullOrEmpty())
+            if (values.IsNullOrEmpty())
             {
                 return false;
             }
 
-            foreach(var value in values)
+            foreach (var value in values)
             {
-                if(source == value)
+                if (source == value)
                 {
                     return true;
                 }
@@ -64,14 +64,14 @@
             this long source,
             IEnumerable<long> values)
         {
-            if(values.IsNullOrEmpty())
+            if (values.IsNullOrEmpty())
             {
                 return false;
             }
 
-            foreach(var value in values)
+            foreach (var value in values)
             {
-                if(source == value)
+                if (source == value)
                 {
                     return true;
                 }

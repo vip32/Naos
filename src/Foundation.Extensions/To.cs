@@ -104,7 +104,7 @@
 
             try
             {
-                if(source.GetType() == typeof(StringValues))
+                if (source.GetType() == typeof(StringValues))
                 {
                     return source.ToString().To(toType);
                 }

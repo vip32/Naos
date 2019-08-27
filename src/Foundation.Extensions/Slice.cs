@@ -15,12 +15,12 @@
         [DebuggerStepThrough]
         public static string Slice(this string source, int start, int end)
         {
-            if(source.IsNullOrEmpty())
+            if (source.IsNullOrEmpty())
             {
                 return source;
             }
 
-            if(end < 0)
+            if (end < 0)
             {
                 end = source.Length + end;
             }

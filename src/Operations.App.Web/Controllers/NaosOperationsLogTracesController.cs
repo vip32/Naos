@@ -106,18 +106,18 @@
                     this.filterContext.GetSpecifications<LogTrace>(),
                     this.filterContext.GetFindOptions<LogTrace>()).AnyContext();
 
-                foreach(var entity in entities) // .Where(l => !l.TrackType.EqualsAny(new[] { LogTrackTypes.Trace }))
+                foreach (var entity in entities) // .Where(l => !l.TrackType.EqualsAny(new[] { LogTrackTypes.Trace }))
                 {
                     var levelColor = "lime";
-                    if(entity.Status.SafeEquals(nameof(SpanStatus.Transient)))
+                    if (entity.Status.SafeEquals(nameof(SpanStatus.Transient)))
                     {
                         levelColor = "#75715E";
                     }
-                    else if(entity.Status.SafeEquals(nameof(SpanStatus.Cancelled)))
+                    else if (entity.Status.SafeEquals(nameof(SpanStatus.Cancelled)))
                     {
                         levelColor = "#FF8C00";
                     }
-                    else if(entity.Status.SafeEquals(nameof(SpanStatus.Failed)))
+                    else if (entity.Status.SafeEquals(nameof(SpanStatus.Failed)))
                     {
                         levelColor = "#FF0000";
                     }

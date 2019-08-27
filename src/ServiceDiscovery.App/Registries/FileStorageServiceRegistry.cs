@@ -37,7 +37,7 @@
             EnsureArg.IsNotNullOrEmpty(id, nameof(id));
 
             var path = Path.Combine(this.directory, $"registration_{id}.json.tmp");
-            if(File.Exists(path))
+            if (File.Exists(path))
             {
                 this.logger.LogInformation("{LogKey:l} filesystem registration delete (id={RegistrationId})", LogKeys.ServiceDiscovery, id);
 
@@ -60,7 +60,7 @@
                 LogKeys.ServiceDiscovery, registration.Name, registration.Id);
 
             this.logger.LogInformation($"RegisterAsync #0 {pathTemp}");
-            if(File.Exists(pathTemp))
+            if (File.Exists(pathTemp))
             {
                 this.logger.LogInformation($"RegisterAsync #1");
                 File.Delete(pathTemp);
@@ -68,7 +68,7 @@
 
             this.logger.LogInformation($"RegisterAsync #2 {path}");
 
-            if(File.Exists(path))
+            if (File.Exists(path))
             {
                 this.logger.LogInformation($"RegisterAsync #3");
                 File.Delete(path);
@@ -76,7 +76,7 @@
 
             this.logger.LogInformation($"RegisterAsync #4");
 
-            using(var streamWriter = File.CreateText(pathTemp))
+            using (var streamWriter = File.CreateText(pathTemp))
             {
                 this.logger.LogInformation($"RegisterAsync #5");
                 streamWriter.Write(SerializationHelper.JsonSerialize(registration));
@@ -91,7 +91,7 @@
 
         public async Task<IEnumerable<ServiceRegistration>> RegistrationsAsync()
         {
-            if(this.watcher == null)
+            if (this.watcher == null)
             {
                 this.EnsureDirectory(this.directory);
                 this.RefreshRegistrations(this.directory);
@@ -131,7 +131,7 @@
         private void EnsureDirectory(string fullPath)
         {
             this.logger.LogInformation($"EnsureDirectory #1 {Directory.Exists(fullPath)} {fullPath}");
-            if(!Directory.Exists(fullPath))
+            if (!Directory.Exists(fullPath))
             {
                 this.logger.LogInformation("EnsureDirectory #2");
                 var directory = Directory.CreateDirectory(fullPath);
@@ -140,7 +140,7 @@
             }
 
             this.logger.LogInformation("EnsureDirectory #4");
-            if(!Directory.Exists(fullPath))
+            if (!Directory.Exists(fullPath))
             {
                 this.logger.LogWarning($"{{LogKey:l}} filesystem folder could not be created (folder={fullPath})", LogKeys.ServiceDiscovery);
             }
@@ -151,7 +151,7 @@
         private string GetFileContents(string fullPath)
         {
             //System.Threading.Thread.Sleep(200); // this helps with locked files
-            using(var reader = new StreamReader(File.Open(fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)))
+            using (var reader = new StreamReader(File.Open(fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)))
             {
                 return reader.ReadToEnd();
             }
@@ -161,10 +161,10 @@
         {
             this.registrations.Clear();
 
-            foreach(var path in Directory.GetFiles(directory))
+            foreach (var path in Directory.GetFiles(directory))
             {
                 var registration = JsonConvert.DeserializeObject<ServiceRegistration>(this.GetFileContents(path));
-                if(registration != null)
+                if (registration != null)
                 {
                     this.logger.LogInformation($"{{LogKey:l}} filesystem registrations refresh (name={{RegistrationName}}, id={{RegistrationId}}, file={path.SliceFromLast(@"\")})",
                         LogKeys.ServiceDiscovery, registration.Name, registration.Id);

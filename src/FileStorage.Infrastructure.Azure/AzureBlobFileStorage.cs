@@ -42,9 +42,9 @@
             {
                 return await blockBlob.OpenReadAsync(null, null, null, cancellationToken).AnyContext();
             }
-            catch(StorageException ex)
+            catch (StorageException ex)
             {
-                if(ex.RequestInformation.HttpStatusCode == 404)
+                if (ex.RequestInformation.HttpStatusCode == 404)
                 {
                     return null;
                 }
@@ -64,7 +64,7 @@
                 await blob.FetchAttributesAsync().AnyContext();
                 return blob.ToFileInfo();
             }
-            catch(Exception)
+            catch (Exception)
             {
                 // TODO: log?
                 return null;
@@ -102,7 +102,7 @@
 
             this.Initialize();
             var oldBlob = this.container.GetBlockBlobReference(path);
-            if(!(await this.CopyFileAsync(path, newPath, cancellationToken).AnyContext()))
+            if (!(await this.CopyFileAsync(path, newPath, cancellationToken).AnyContext()))
             {
                 return false;
             }
@@ -120,7 +120,7 @@
             var newBlob = this.container.GetBlockBlobReference(targetPath);
 
             await newBlob.StartCopyAsync(oldBlob, null, null, null, null, cancellationToken).AnyContext();
-            while(newBlob.CopyState.Status == CopyStatus.Pending)
+            while (newBlob.CopyState.Status == CopyStatus.Pending)
             {
                 await Task.Delay(50, cancellationToken).AnyContext();
             }
@@ -143,7 +143,7 @@
             var files = await this.GetFileListAsync(searchPattern, cancellationToken: cancellationToken).AnyContext();
             var count = 0;
 
-            foreach(var file in files) // batch?
+            foreach (var file in files) // batch?
             {
                 await this.DeleteFileAsync(file.Path, cancellationToken).AnyContext();
                 count++;
@@ -155,7 +155,7 @@
         public async Task<PagedResults> GetFileInformationsAsync(int pageSize = 100, string searchPattern = null, CancellationToken cancellationToken = default)
         {
             this.Initialize();
-            if(pageSize <= 0)
+            if (pageSize <= 0)
             {
                 return PagedResults.EmptyResults;
             }
@@ -175,7 +175,7 @@
             int? skip = null,
             CancellationToken cancellationToken = default)
         {
-            if(limit.HasValue && limit.Value <= 0)
+            if (limit.HasValue && limit.Value <= 0)
             {
                 return new List<FileInformation>();
             }
@@ -184,7 +184,7 @@
             var prefix = searchPattern;
             Regex patternRegex = null;
             var wildcardPos = searchPattern?.IndexOf('*') ?? -1;
-            if(searchPattern != null && wildcardPos >= 0)
+            if (searchPattern != null && wildcardPos >= 0)
             {
                 patternRegex = new Regex("^" + Regex.Escape(searchPattern).Replace("\\*", ".*?") + "$");
                 var slashPos = searchPattern.LastIndexOf('/');
@@ -203,9 +203,9 @@
                 // TODO: Implement paging
                 blobs.AddRange(listingResult.Results.OfType<CloudBlockBlob>().Matches(patternRegex));
             }
-            while(continuationToken != null && blobs.Count < limit.GetValueOrDefault(int.MaxValue));
+            while (continuationToken != null && blobs.Count < limit.GetValueOrDefault(int.MaxValue));
 
-            if(limit.HasValue)
+            if (limit.HasValue)
             {
                 blobs = blobs.Take(limit.Value).ToList();
             }
@@ -217,14 +217,14 @@
         {
             var pagingLimit = pageSize;
             var skip = (page - 1) * pagingLimit;
-            if(pagingLimit < int.MaxValue)
+            if (pagingLimit < int.MaxValue)
             {
                 pagingLimit++;
             }
 
             var list = (await this.GetFileListAsync(searchPattern, pagingLimit, skip, cancellationToken).AnyContext()).ToList();
             var hasMore = false;
-            if(list.Count == pagingLimit)
+            if (list.Count == pagingLimit)
             {
                 hasMore = true;
                 list.RemoveAt(pagingLimit);
@@ -241,7 +241,7 @@
 
         private void Initialize()
         {
-            if(!this.initialized)
+            if (!this.initialized)
             {
                 this.container = CloudStorageAccount.Parse(this.options.ConnectionString)
                     .CreateCloudBlobClient()

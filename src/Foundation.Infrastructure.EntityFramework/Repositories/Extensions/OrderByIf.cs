@@ -13,13 +13,13 @@
             this IQueryable<T> source,
             IFindOptions<T> options)
         {
-            if(options?.Order == null && options?.Orders.IsNullOrEmpty() == true)
+            if (options?.Order == null && options?.Orders.IsNullOrEmpty() == true)
             {
                 return source as IOrderedQueryable<T>; // TODO: this returns null, find a way to return an IOrderedQueryable event if no orders are provided. possible?
             }
 
             IOrderedQueryable<T> result = null;
-            foreach(var order in (options?.Orders ?? new List<OrderOption<T>>()).Insert(options?.Order))
+            foreach (var order in (options?.Orders ?? new List<OrderOption<T>>()).Insert(options?.Order))
             {
                 result = result == null
                         ? order.Direction == OrderDirection.Ascending

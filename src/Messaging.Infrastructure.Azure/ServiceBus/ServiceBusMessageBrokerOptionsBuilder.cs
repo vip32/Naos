@@ -12,7 +12,7 @@
     {
         public ServiceBusMessageBrokerOptionsBuilder Tracer(ITracer tracer)
         {
-            this.Target.Tracer= tracer;
+            this.Target.Tracer = tracer;
             return this;
         }
 
@@ -50,7 +50,7 @@
         public ServiceBusMessageBrokerOptionsBuilder SubscriptionName(string subscriptionName)
         {
             this.Target.SubscriptionName = subscriptionName;
-            if(this.Target.MessageScope.IsNullOrEmpty())
+            if (this.Target.MessageScope.IsNullOrEmpty())
             {
                 this.Target.MessageScope = subscriptionName;
             }

@@ -34,7 +34,7 @@
 
         public Stream CreateReadStream()
         {
-            if(this.file?.Path.IsNullOrEmpty() == true)
+            if (this.file?.Path.IsNullOrEmpty() == true)
             {
                 return null;
             }

@@ -53,7 +53,7 @@
             EnsureArg.IsNotNull(data, nameof(data));
             this.EnsureMetaData(data);
 
-            using(this.Logger.BeginScope(new Dictionary<string, object>
+            using (this.Logger.BeginScope(new Dictionary<string, object>
             {
                 [LogPropertyKeys.CorrelationId] = data.As<IHaveCorrelationId>()?.CorrelationId,
             }))
@@ -93,9 +93,9 @@
 
             // TODO: ReceiveBatchAsync?
             Message message;
-            if(!timeout.HasValue || timeout.Value.Ticks == 0)
+            if (!timeout.HasValue || timeout.Value.Ticks == 0)
             {
-                if((await this.GetMetricsAsync().AnyContext()).Queued == 0)
+                if ((await this.GetMetricsAsync().AnyContext()).Queued == 0)
                 {
                     return default; // skip the wait if no messages (servicebus)
                 }
@@ -128,7 +128,7 @@
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
             this.Logger.LogDebug($"queue item complete (id={item.Id}, queue={this.Options.Name})");
 
-            if(item.IsAbandoned || item.IsCompleted)
+            if (item.IsAbandoned || item.IsCompleted)
             {
                 throw new InvalidOperationException($"queue item has already been completed or abandoned (id={item.Id})");
             }
@@ -147,7 +147,7 @@
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
             this.Logger.LogDebug($"queue item abandon (id={item.Id}, queue={this.Options.Name})");
 
-            if(item.IsAbandoned || item.IsCompleted)
+            if (item.IsAbandoned || item.IsCompleted)
             {
                 throw new InvalidOperationException($"queue item has already been completed or abandoned (id={item.Id})");
             }
@@ -189,29 +189,29 @@
             {
                 var item = this.HandleDequeue(msg);
 
-                using(this.Logger.BeginScope(new Dictionary<string, object>
+                using (this.Logger.BeginScope(new Dictionary<string, object>
                 {
                     [LogPropertyKeys.CorrelationId] = item.Data.As<IHaveCorrelationId>()?.CorrelationId,
                 }))
                 {
                     try
                     {
-                        using(var linkedCancellationToken = this.CreateLinkedTokenSource(cancellationToken))
+                        using (var linkedCancellationToken = this.CreateLinkedTokenSource(cancellationToken))
                         {
                             await handler(item, linkedCancellationToken.Token).AnyContext();
                         }
 
-                        if(autoComplete && !item.IsAbandoned && !item.IsCompleted)
+                        if (autoComplete && !item.IsAbandoned && !item.IsCompleted)
                         {
                             await item.CompleteAsync().AnyContext();
                         }
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         Interlocked.Increment(ref this.workerErrorCount);
                         this.Logger.LogError(ex, $"{{LogKey:l}} processing error: {ex.Message}", args: new[] { LogKeys.Queueing });
 
-                        if(!item.IsAbandoned && !item.IsCompleted)
+                        if (!item.IsAbandoned && !item.IsCompleted)
                         {
                             await item.AbandonAsync().AnyContext();
                         }
@@ -224,7 +224,7 @@
         {
             await this.EnsureQueueAsync(cancellationToken).AnyContext();
 
-            if(this.Options.Mediator == null)
+            if (this.Options.Mediator == null)
             {
                 throw new NaosException("queue processing error: no mediator instance provided");
             }
@@ -232,7 +232,7 @@
             await this.ProcessItemsAsync(
                 async (i, ct) =>
                 {
-                    using(this.Logger.BeginScope(new Dictionary<string, object>
+                    using (this.Logger.BeginScope(new Dictionary<string, object>
                     {
                         [LogPropertyKeys.CorrelationId] = i.Data.As<IHaveCorrelationId>()?.CorrelationId,
                     }))
@@ -245,7 +245,7 @@
 
         public override async Task DeleteQueueAsync()
         {
-            if(await this.managementClient.QueueExistsAsync(this.Options.Name).AnyContext())
+            if (await this.managementClient.QueueExistsAsync(this.Options.Name).AnyContext())
             {
                 await this.managementClient.DeleteQueueAsync(this.Options.Name).AnyContext();
             }
@@ -271,7 +271,7 @@
 
         protected override async Task EnsureQueueAsync(CancellationToken cancellationToken = default)
         {
-            if(this.QueueIsCreated)
+            if (this.QueueIsCreated)
             {
                 return;
             }
@@ -280,7 +280,7 @@
             {
                 await this.managementClient.CreateQueueAsync(this.Options.AsQueueDescription()).AnyContext();
             }
-            catch(MessagingEntityAlreadyExistsException)
+            catch (MessagingEntityAlreadyExistsException)
             {
                 // log?
             }
@@ -311,7 +311,7 @@
 
         private IQueueItem<TData> HandleDequeue(Message message)
         {
-            if(message == null)
+            if (message == null)
             {
                 return null;
             }
@@ -325,7 +325,7 @@
                 message.SystemProperties.EnqueuedTimeUtc,
                 message.SystemProperties.DeliveryCount);
 
-            using(this.Logger.BeginScope(new Dictionary<string, object>
+            using (this.Logger.BeginScope(new Dictionary<string, object>
             {
                 [LogPropertyKeys.CorrelationId] = item.Data.As<IHaveCorrelationId>()?.CorrelationId,
             }))

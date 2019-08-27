@@ -112,17 +112,17 @@
         [DebuggerStepThrough]
         public static bool IsExpectedException(this Exception ex, Func<Exception, bool> predicate)
         {
-            if(predicate(ex))
+            if (predicate(ex))
             {
                 return true;
             }
 
-            if(ex is AggregateException aggEx)
+            if (ex is AggregateException aggEx)
             {
                 var found = false;
                 aggEx.Flatten().Handle(x =>
                 {
-                    if(predicate(x))
+                    if (predicate(x))
                     {
                         found = true;
                     }

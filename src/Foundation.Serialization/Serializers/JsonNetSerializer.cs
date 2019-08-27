@@ -24,7 +24,7 @@
         /// <param name="output">The output.</param>
         public void Serialize(object value, Stream output)
         {
-            using(var writer = new JsonTextWriter(new StreamWriter(output)))
+            using (var writer = new JsonTextWriter(new StreamWriter(output)))
             {
                 this.serializer.Serialize(writer, value, value.GetType());
                 writer.Flush();
@@ -38,8 +38,8 @@
         /// <param name="type">The type.</param>
         public object Deserialize(Stream input, Type type)
         {
-            using(var sr = new StreamReader(input))
-            using(var reader = new JsonTextReader(sr))
+            using (var sr = new StreamReader(input))
+            using (var reader = new JsonTextReader(sr))
             {
                 return this.serializer.Deserialize(reader, type);
             }
@@ -52,8 +52,8 @@
         /// <param name="input">The input.</param>
         public T Deserialize<T>(Stream input)
         {
-            using(var sr = new StreamReader(input))
-            using(var reader = new JsonTextReader(sr))
+            using (var sr = new StreamReader(input))
+            using (var reader = new JsonTextReader(sr))
             {
                 var r = this.serializer.Deserialize<T>(reader);
                 return r;

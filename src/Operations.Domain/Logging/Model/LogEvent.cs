@@ -64,7 +64,7 @@
         public string GetAge()
         {
             var timestamp = this.Timestamp;
-            if(timestamp.IsDefault())
+            if (timestamp.IsDefault())
             {
                 return string.Empty;
             }

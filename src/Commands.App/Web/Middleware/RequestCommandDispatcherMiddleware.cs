@@ -113,7 +113,7 @@
         private object HandleQueryOperation(HttpContext context)
         {
             var properties = new Dictionary<string, object>();
-            foreach(var queryItem in QueryHelpers.ParseQuery(context.Request.QueryString.Value))
+            foreach (var queryItem in QueryHelpers.ParseQuery(context.Request.QueryString.Value))
             {
                 properties.Add(queryItem.Key, queryItem.Value);
             }

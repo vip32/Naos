@@ -19,7 +19,7 @@
         /// <param name="epoch">The epoch value.</param>
         public static DateTime? FromEpoch(long? epoch)
         {
-            if(!epoch.HasValue)
+            if (!epoch.HasValue)
             {
                 return null;
             }

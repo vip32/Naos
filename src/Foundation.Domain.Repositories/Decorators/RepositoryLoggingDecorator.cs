@@ -62,7 +62,7 @@
         {
             this.logger.LogInformation($"{{LogKey:l}} findall {typeof(TEntity).PrettyName()}", LogKeys.DomainRepository);
 
-            foreach(var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
+            foreach (var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
             {
                 this.logger.LogDebug($"{LogKeys.DomainRepository} order: {order.Expression.ToExpressionString()}");
             }
@@ -74,12 +74,12 @@
         {
             this.logger.LogInformation($"{{LogKey:l}} findall {typeof(TEntity).PrettyName()}", LogKeys.DomainRepository);
 
-            if(specification != null)
+            if (specification != null)
             {
                 this.logger.LogDebug($"{LogKeys.DomainRepository} specification: {specification.ToString()}");
             }
 
-            foreach(var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
+            foreach (var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
             {
                 this.logger.LogDebug($"{LogKeys.DomainRepository} order: {order.Expression.ToExpressionString()}");
             }
@@ -91,12 +91,12 @@
         {
             this.logger.LogInformation($"{{LogKey:l}} findall {typeof(TEntity).PrettyName()}", LogKeys.DomainRepository);
 
-            foreach(var specification in specifications.Safe())
+            foreach (var specification in specifications.Safe())
             {
                 this.logger.LogDebug($"{LogKeys.DomainRepository} specification: {specification.ToString()}");
             }
 
-            foreach(var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
+            foreach (var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
             {
                 this.logger.LogDebug($"{LogKeys.DomainRepository} order: {order.Expression.ToExpressionString()}");
             }

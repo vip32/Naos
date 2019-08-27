@@ -25,7 +25,7 @@
         /// <param name="input">The input.</param>
         public static T Deserialize<T>(this ISerializer source, byte[] input)
         {
-            using(var stream = new MemoryStream(input))
+            using (var stream = new MemoryStream(input))
             {
                 return (T)source.Deserialize(stream, typeof(T));
             }
@@ -39,7 +39,7 @@
         /// <param name="type">The type.</param>
         public static object Deserialize(this ISerializer source, byte[] input, Type type)
         {
-            using(var stream = new MemoryStream(input))
+            using (var stream = new MemoryStream(input))
             {
                 return source.Deserialize(stream, type);
             }
@@ -54,11 +54,11 @@
         public static T Deserialize<T>(this ISerializer source, string input)
         {
             byte[] bytes;
-            if(input == null)
+            if (input == null)
             {
                 bytes = Array.Empty<byte>();
             }
-            else if(source is ITextSerializer)
+            else if (source is ITextSerializer)
             {
                 bytes = Encoding.UTF8.GetBytes(input);
             }
@@ -67,7 +67,7 @@
                 bytes = Convert.FromBase64String(input);
             }
 
-            using(var stream = new MemoryStream(bytes))
+            using (var stream = new MemoryStream(bytes))
             {
                 return (T)source.Deserialize(stream, typeof(T));
             }
@@ -82,11 +82,11 @@
         public static object Deserialize(this ISerializer source, string input, Type type)
         {
             byte[] bytes;
-            if(input == null)
+            if (input == null)
             {
                 bytes = Array.Empty<byte>();
             }
-            else if(source is ITextSerializer)
+            else if (source is ITextSerializer)
             {
                 bytes = Encoding.UTF8.GetBytes(input);
             }
@@ -95,7 +95,7 @@
                 bytes = Convert.FromBase64String(input);
             }
 
-            using(var stream = new MemoryStream(bytes))
+            using (var stream = new MemoryStream(bytes))
             {
                 return source.Deserialize(stream, type);
             }
@@ -109,13 +109,13 @@
         /// <param name="input">The input.</param>
         public static string SerializeToString<T>(this ISerializer source, T input)
         {
-            if(input == null)
+            if (input == null)
             {
                 return null;
             }
 
             var bytes = source.SerializeToBytes(input);
-            if(source is ITextSerializer)
+            if (source is ITextSerializer)
             {
                 return Encoding.UTF8.GetString(bytes);
             }
@@ -131,12 +131,12 @@
         /// <param name="input">The input.</param>
         public static byte[] SerializeToBytes<T>(this ISerializer source, T input)
         {
-            if(input == null)
+            if (input == null)
             {
                 return null;
             }
 
-            using(var stream = new MemoryStream())
+            using (var stream = new MemoryStream())
             {
                 source.Serialize(input, stream);
 

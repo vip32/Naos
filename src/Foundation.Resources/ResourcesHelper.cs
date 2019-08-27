@@ -7,7 +7,7 @@
     {
         public static Bitmap GetLogoAsBitmap()
         {
-            using(var reader = new BinaryReader(
+            using (var reader = new BinaryReader(
                 System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Naos.Foundation.Resources.logo.png")))
             {
                 return new Bitmap(Image.FromStream(reader.BaseStream));
@@ -16,7 +16,7 @@
 
         public static byte[] GetLogoAsBytes()
         {
-            using(var reader = new BinaryReader(
+            using (var reader = new BinaryReader(
                 System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Naos.Foundation.Resources.logo.png")))
             {
                 return reader?.ReadAllBytes();
@@ -27,7 +27,7 @@
         {
             using var reader = new BinaryReader(
                 System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Naos.Foundation.Resources.favicon.ico"));
-            using(var icon = new Icon(reader.BaseStream))
+            using (var icon = new Icon(reader.BaseStream))
             {
                 return icon.ToBitmap();
             }
@@ -35,7 +35,7 @@
 
         public static byte[] GetIconAsBytes()
         {
-            using(var reader = new BinaryReader(
+            using (var reader = new BinaryReader(
                 System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Naos.Foundation.Resources.favicon.ico")))
             {
                 return reader?.ReadAllBytes();

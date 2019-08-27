@@ -40,7 +40,7 @@
 
             this.logger.LogInformation($"{{LogKey:l}} {request.GetType().Name} (handler={this.GetType().Name})", LogKeys.AppCommand);
 
-            if(!request.Customer.Region.EqualsAny(new[] { "East", "West" }))
+            if (!request.Customer.Region.EqualsAny(new[] { "East", "West" }))
             {
                 // cancels the command
                 return new CommandResponse<string>("cannot accept customers outside regular regions");

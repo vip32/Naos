@@ -113,7 +113,7 @@
         /// </returns>
         public static long? ToEpoch(this DateTime? source)
         {
-            if(!source.HasValue)
+            if (!source.HasValue)
             {
                 return null;
             }
@@ -134,7 +134,7 @@
         /// </returns>
         public static long? ToEpochMilliseconds(this DateTime? source)
         {
-            if(!source.HasValue)
+            if (!source.HasValue)
             {
                 return null;
             }
@@ -155,7 +155,7 @@
         /// </returns>
         public static long? ToEpoch(this DateTimeOffset? source)
         {
-            if(!source.HasValue)
+            if (!source.HasValue)
             {
                 return null;
             }
@@ -176,7 +176,7 @@
         /// </returns>
         public static long? ToEpochMilliseconds(this DateTimeOffset? source)
         {
-            if(!source.HasValue)
+            if (!source.HasValue)
             {
                 return null;
             }

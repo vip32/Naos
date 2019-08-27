@@ -34,10 +34,10 @@
             {
                 //using(var scope = this.tracer.BuildSpan(this.GetType().Name.ToLower()).Activate())
                 //{
-                    if(!text.IsNullOrEmpty())
-                    {
-                        this.logger.LogInformation($"{{LogKey:l}} {text}", LogKeys.JobScheduling);
-                    }
+                if (!text.IsNullOrEmpty())
+                {
+                    this.logger.LogInformation($"{{LogKey:l}} {text}", LogKeys.JobScheduling);
+                }
 
                 //}
             }, cancellationToken).AnyContext();
@@ -47,12 +47,12 @@
         {
             Thread.Sleep(new TimeSpan(0, 0, 3));
 
-            if(breakable && Random.Next(2) == 0)// throw randomly
+            if (breakable && Random.Next(2) == 0)// throw randomly
             {
                 throw new NaosException("error from job");
             }
 
-            if(!text.IsNullOrEmpty())
+            if (!text.IsNullOrEmpty())
             {
                 this.logger.LogInformation($"{{LogKey:l}} {text}", LogKeys.JobScheduling);
             }
@@ -62,15 +62,15 @@
 
         public async Task EchoLongAsync(string text, CancellationToken cancellationToken)
         {
-            for(var i = 1; i <= 5; i++)
+            for (var i = 1; i <= 5; i++)
             {
-                if(cancellationToken.IsCancellationRequested)
+                if (cancellationToken.IsCancellationRequested)
                 {
                     this.logger.LogInformation($"{{LogKey:l}} job cancelled", LogKeys.JobScheduling);
                     return; //Task.FromCanceled(cancellationToken);
                 }
 
-                if(!text.IsNullOrEmpty())
+                if (!text.IsNullOrEmpty())
                 {
                     this.logger.LogInformation(text);
                 }

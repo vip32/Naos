@@ -8,7 +8,7 @@
     {
         public static string[] Split(string line)
         {
-            if(line.IsNullOrEmpty())
+            if (line.IsNullOrEmpty())
             {
                 return Enumerable.Empty<string>().ToArray();
             }
@@ -25,20 +25,20 @@
                 currentQuote = char.MinValue;
             }
 
-            foreach(var c in line)
+            foreach (var c in line)
             {
-                if(currentQuote == char.MinValue)
+                if (currentQuote == char.MinValue)
                 {
-                    if(c == ' ')
+                    if (c == ' ')
                     {
                         Reset();
                     }
-                    else if(c == '\'')
+                    else if (c == '\'')
                     {
                         Reset();
                         currentQuote = '\'';
                     }
-                    else if(c == '"')
+                    else if (c == '"')
                     {
                         Reset();
                         currentQuote = '"';
@@ -50,7 +50,7 @@
                 }
                 else
                 {
-                    if(c == currentQuote)
+                    if (c == currentQuote)
                     {
                         Reset();
                     }

@@ -27,7 +27,7 @@
         {
             var rootSpan = spans.FirstOrDefault(s => s.ParentSpanId.IsNullOrEmpty());
 
-            if(rootSpan != null)
+            if (rootSpan != null)
             {
                 var result = new SpanViewModel()
                 {
@@ -40,9 +40,9 @@
                 };
 
                 var childSpans = spans.Where(s => s.ParentSpanId == rootSpan.SpanId);
-                if(childSpans.SafeAny())
+                if (childSpans.SafeAny())
                 {
-                    foreach(var span in childSpans)
+                    foreach (var span in childSpans)
                     {
                         var viewModel = new SpanViewModel()
                         {

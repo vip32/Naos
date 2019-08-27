@@ -6,14 +6,14 @@
     {
         public static double? ToNullableDouble(this string source, double? @default = null)
         {
-            if(source.IsNullOrEmpty())
+            if (source.IsNullOrEmpty())
             {
                 return @default;
             }
 
             var result = double.TryParse(source, out var parsedValue);
 
-            if(!result)
+            if (!result)
             {
                 return @default;
             }
@@ -23,14 +23,14 @@
 
         public static double ToDouble(this string source, double @default = 0)
         {
-            if(source.IsNullOrEmpty())
+            if (source.IsNullOrEmpty())
             {
                 return @default;
             }
 
             var result = double.TryParse(source, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out var parsedValue);
 
-            if(!result)
+            if (!result)
             {
                 return @default;
             }

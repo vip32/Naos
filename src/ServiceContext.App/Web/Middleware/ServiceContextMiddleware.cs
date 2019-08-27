@@ -44,7 +44,7 @@
         /// <param name="features"></param>
         public async Task Invoke(HttpContext context, ServiceDescriptor serviceDescriptor, IEnumerable<NaosFeatureInformation> features)
         {
-            using(this.logger.BeginScope(new Dictionary<string, object>
+            using (this.logger.BeginScope(new Dictionary<string, object>
             {
                 [LogPropertyKeys.ServiceProduct] = serviceDescriptor.Product,
                 [LogPropertyKeys.ServiceCapability] = serviceDescriptor.Capability,
@@ -57,7 +57,7 @@
 
                 //await this.next(context);
 
-                if(context.Request.Path == "/" || context.Request.Path.Equals("/index.html", System.StringComparison.OrdinalIgnoreCase))
+                if (context.Request.Path == "/" || context.Request.Path.Equals("/index.html", System.StringComparison.OrdinalIgnoreCase))
                 {
                     await context.Response.WriteAsync(@"
 <!DOCTYPE html>
@@ -80,7 +80,7 @@
 </html>
 ").AnyContext();
                 }
-                else if(context.Request.Path.Equals("/css/naos.css", System.StringComparison.OrdinalIgnoreCase))
+                else if (context.Request.Path.Equals("/css/naos.css", System.StringComparison.OrdinalIgnoreCase))
                 {
                     context.Response.ContentType = ContentType.CSS.ToValue();
                     await context.Response.WriteAsync(@"
@@ -112,13 +112,13 @@ hr {
 }
 ").AnyContext();
                 }
-                else if(context.Request.Path.Equals("/favicon.ico", System.StringComparison.OrdinalIgnoreCase))
+                else if (context.Request.Path.Equals("/favicon.ico", System.StringComparison.OrdinalIgnoreCase))
                 {
                     context.Response.ContentType = ContentType.ICO.ToValue();
                     var icon = ResourcesHelper.GetIconAsBytes();
                     context.Response.Body.Write(icon, 0, icon.Length);
                 }
-                else if(context.Request.Path == "/error")
+                else if (context.Request.Path == "/error")
                 {
                     throw new NaosException("forced exception");
                 }

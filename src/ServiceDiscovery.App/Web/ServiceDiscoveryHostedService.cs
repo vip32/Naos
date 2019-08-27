@@ -52,14 +52,14 @@
             this.cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             // https://github.com/cecilphillip/aspnet-servicediscovery-patterns/blob/master/self_registration/src/SchoolAPI/Infrastructure/ConsulHostedService.cs
 
-            if(this.serviceAddress.IsNullOrEmpty())
+            if (this.serviceAddress.IsNullOrEmpty())
             {
                 var features = this.server.Features;
                 var addressFeature = features?.Get<IServerAddressesFeature>();
                 this.serviceAddress = addressFeature?.Addresses?.FirstOrDefault(); // TODO: register all addresses (foreach)
             }
 
-            if(!this.serviceAddress.IsNullOrEmpty())
+            if (!this.serviceAddress.IsNullOrEmpty())
             {
                 // Register this service (use ServiceDescriptor for more infos)
                 var uri = new Uri(this.serviceAddress);
@@ -94,9 +94,9 @@
 
             this.cts?.Cancel();
 
-            if(this.registered)
+            if (this.registered)
             {
-                foreach(var registrationId in this.registrationIds.Safe())
+                foreach (var registrationId in this.registrationIds.Safe())
                 {
                     this.registryClient.DeRegisterAsync(registrationId);
                 }

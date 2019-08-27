@@ -32,7 +32,7 @@
             action(); // trigger jit before execution
 
             sw.Start();
-            for(var i = 1; i <= iterations; i++)
+            for (var i = 1; i <= iterations; i++)
             {
                 action();
             }

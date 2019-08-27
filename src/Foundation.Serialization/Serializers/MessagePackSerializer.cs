@@ -27,7 +27,7 @@
         /// <param name="output">The output.</param>
         public void Serialize(object value, Stream output)
         {
-            if(this.useCompression)
+            if (this.useCompression)
             {
                 MessagePack.LZ4MessagePackSerializer.NonGeneric.Serialize(value.GetType(), output, value, this.formatterResolver);
             }
@@ -44,7 +44,7 @@
         /// <param name="type">The type.</param>
         public object Deserialize(Stream input, Type type)
         {
-            if(this.useCompression)
+            if (this.useCompression)
             {
                 return MessagePack.LZ4MessagePackSerializer.NonGeneric.Deserialize(type, input, this.formatterResolver);
             }
@@ -61,7 +61,7 @@
         /// <param name="input">The input.</param>
         public T Deserialize<T>(Stream input)
         {
-            if(this.useCompression)
+            if (this.useCompression)
             {
                 return MessagePack.LZ4MessagePackSerializer.Deserialize<T>(input, this.formatterResolver);
             }

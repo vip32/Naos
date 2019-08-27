@@ -153,14 +153,14 @@
             this.SetUpdated(by);
             this.Deactivated = true;
 
-            if(!by.IsNullOrEmpty())
+            if (!by.IsNullOrEmpty())
             {
                 this.DeactivatedBy = by;
             }
 
-            if(!reason.IsNullOrEmpty())
+            if (!reason.IsNullOrEmpty())
             {
-                if(this.DeactivatedReasons.IsNullOrEmpty())
+                if (this.DeactivatedReasons.IsNullOrEmpty())
                 {
                     this.DeactivatedReasons = new List<string>();
                 }
@@ -180,12 +180,12 @@
         public virtual void SetCreated(string by = null, string description = null)
         {
             this.CreatedDate = DateTimeOffset.UtcNow;
-            if(!by.IsNullOrEmpty())
+            if (!by.IsNullOrEmpty())
             {
                 this.CreatedBy = by;
             }
 
-            if(!description.IsNullOrEmpty())
+            if (!description.IsNullOrEmpty())
             {
                 this.CreatedDescription = description;
             }
@@ -200,14 +200,14 @@
         {
             this.UpdatedDate = DateTimeOffset.UtcNow;
 
-            if(!by.IsNullOrEmpty())
+            if (!by.IsNullOrEmpty())
             {
                 this.UpdatedBy = by;
             }
 
-            if(!reason.IsNullOrEmpty())
+            if (!reason.IsNullOrEmpty())
             {
-                if(this.UpdatedReasons.IsNullOrEmpty())
+                if (this.UpdatedReasons.IsNullOrEmpty())
                 {
                     this.UpdatedReasons = new List<string>();
                 }
@@ -230,12 +230,12 @@
             this.DeletedDate = DateTimeOffset.UtcNow;
             this.UpdatedDate = this.DeletedDate.Value;
 
-            if(!by.IsNullOrEmpty())
+            if (!by.IsNullOrEmpty())
             {
                 this.DeletedBy = by;
             }
 
-            if(!reason.IsNullOrEmpty())
+            if (!reason.IsNullOrEmpty())
             {
                 this.DeletedReason = $"{by}: ({this.DeletedDate.Value.ToString(CultureInfo.InvariantCulture)}) {reason}".Trim();
             }

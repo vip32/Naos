@@ -101,7 +101,7 @@
 
         private IFindOptions<TEntity> EnsureOptions(IFindOptions<TEntity> options)
         {
-            if(options == null)
+            if (options == null)
             {
                 options = new FindOptions<TEntity>();
             }

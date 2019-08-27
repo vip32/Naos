@@ -43,13 +43,13 @@
 
         public async Task<bool> NextPageAsync()
         {
-            if(((IHasNextPageFunc)this).NextPageFunc == null)
+            if (((IHasNextPageFunc)this).NextPageFunc == null)
             {
                 return false;
             }
 
             var result = await ((IHasNextPageFunc)this).NextPageFunc().AnyContext();
-            if(result.Success)
+            if (result.Success)
             {
                 this.Files = result.Files;
                 this.HasMore = result.HasMore;

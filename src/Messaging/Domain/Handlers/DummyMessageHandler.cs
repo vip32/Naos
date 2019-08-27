@@ -28,7 +28,7 @@ namespace Naos.Core.Messaging.Domain
                 [LogPropertyKeys.CorrelationId] = message.CorrelationId,
             };
 
-            using(this.Logger.BeginScope(loggerState))
+            using (this.Logger.BeginScope(loggerState))
             {
                 this.Logger.LogInformation("{LogKey:l} handle (name={MessageName}, id={MessageId}, origin={MessageOrigin}) " + message.Data, LogKeys.Messaging, message.GetType().PrettyName(), message.Id, message.Origin);
 

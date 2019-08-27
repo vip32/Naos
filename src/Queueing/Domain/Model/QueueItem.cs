@@ -74,7 +74,7 @@
 
         public void Dispose()
         {
-            if(!this.IsAbandoned && !this.IsCompleted)
+            if (!this.IsAbandoned && !this.IsCompleted)
             {
                 this.AbandonAsync();
             }

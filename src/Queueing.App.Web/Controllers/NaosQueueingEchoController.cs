@@ -34,7 +34,7 @@
         {
             var result = new List<object>();
 
-            foreach(var queue in this.queues.Safe())
+            foreach (var queue in this.queues.Safe())
             {
                 var metrics = await queue.GetMetricsAsync().AnyContext();
                 result.Add(

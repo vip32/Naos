@@ -6,7 +6,7 @@
     {
         public static void Clear<T>(this ConcurrentQueue<T> queue)
         {
-            while(queue.TryDequeue(out var _))
+            while (queue.TryDequeue(out var _))
             {
             }
         }

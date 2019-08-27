@@ -44,7 +44,7 @@
 
         public async Task<ActionResult> DeleteAsync(object id)
         {
-            using(var scope = this.tracer.BuildSpan($"delete {this.name}", LogKeys.DomainRepository)
+            using (var scope = this.tracer.BuildSpan($"delete {this.name}", LogKeys.DomainRepository)
                 .WithTag(SpanTagKey.DbType, "sql").Activate(this.logger))
             {
                 return await this.decoratee.DeleteAsync(id).AnyContext();
@@ -53,7 +53,7 @@
 
         public async Task<ActionResult> DeleteAsync(TEntity entity)
         {
-            using(var scope = this.tracer.BuildSpan($"delete {this.name}", LogKeys.DomainRepository)
+            using (var scope = this.tracer.BuildSpan($"delete {this.name}", LogKeys.DomainRepository)
                 .WithTag(SpanTagKey.DbType, "sql").Activate(this.logger))
             {
                 return await this.decoratee.DeleteAsync(entity).AnyContext();
@@ -62,7 +62,7 @@
 
         public async Task<bool> ExistsAsync(object id)
         {
-            using(var scope = this.tracer.BuildSpan($"exists {this.name}", LogKeys.DomainRepository)
+            using (var scope = this.tracer.BuildSpan($"exists {this.name}", LogKeys.DomainRepository)
                 .WithTag(SpanTagKey.DbType, "sql").Activate(this.logger))
             {
                 return await this.decoratee.ExistsAsync(id).AnyContext();
@@ -71,7 +71,7 @@
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            using(var scope = this.tracer.BuildSpan($"findall {this.name}", LogKeys.DomainRepository)
+            using (var scope = this.tracer.BuildSpan($"findall {this.name}", LogKeys.DomainRepository)
                 .WithTag(SpanTagKey.DbType, "sql").Activate(this.logger))
             {
                 return await this.decoratee.FindAllAsync(options, cancellationToken).AnyContext();
@@ -80,7 +80,7 @@
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            using(var scope = this.tracer.BuildSpan($"findall {this.name}", LogKeys.DomainRepository)
+            using (var scope = this.tracer.BuildSpan($"findall {this.name}", LogKeys.DomainRepository)
                 .WithTag(SpanTagKey.DbType, "sql").Activate(this.logger))
             {
                 return await this.decoratee.FindAllAsync(specification, options, cancellationToken).AnyContext();
@@ -89,7 +89,7 @@
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            using(var scope = this.tracer.BuildSpan($"findall {this.name}", LogKeys.DomainRepository)
+            using (var scope = this.tracer.BuildSpan($"findall {this.name}", LogKeys.DomainRepository)
                 .WithTag(SpanTagKey.DbType, "sql").Activate(this.logger))
             {
                 return await this.decoratee.FindAllAsync(specifications, options, cancellationToken).AnyContext();
@@ -98,7 +98,7 @@
 
         public async Task<TEntity> FindOneAsync(object id)
         {
-            using(var scope = this.tracer.BuildSpan($"findone {this.name}", LogKeys.DomainRepository)
+            using (var scope = this.tracer.BuildSpan($"findone {this.name}", LogKeys.DomainRepository)
                 .WithTag(SpanTagKey.DbType, "sql").Activate(this.logger))
             {
                 return await this.decoratee.FindOneAsync(id).AnyContext();
@@ -107,7 +107,7 @@
 
         public async Task<TEntity> InsertAsync(TEntity entity)
         {
-            using(var scope = this.tracer.BuildSpan($"insert {this.name}", LogKeys.DomainRepository)
+            using (var scope = this.tracer.BuildSpan($"insert {this.name}", LogKeys.DomainRepository)
                 .WithTag(SpanTagKey.DbType, "sql").Activate(this.logger))
             {
                 return await this.decoratee.InsertAsync(entity).AnyContext();
@@ -116,7 +116,7 @@
 
         public async Task<TEntity> UpdateAsync(TEntity entity)
         {
-            using(var scope = this.tracer.BuildSpan($"update {this.name}", LogKeys.DomainRepository)
+            using (var scope = this.tracer.BuildSpan($"update {this.name}", LogKeys.DomainRepository)
                 .WithTag(SpanTagKey.DbType, "sql").Activate(this.logger))
             {
                 return await this.decoratee.UpdateAsync(entity).AnyContext();
@@ -125,7 +125,7 @@
 
         public async Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
         {
-            using(var scope = this.tracer.BuildSpan($"upsert {this.name}", LogKeys.DomainRepository)
+            using (var scope = this.tracer.BuildSpan($"upsert {this.name}", LogKeys.DomainRepository)
                 .WithTag(SpanTagKey.DbType, "sql").Activate(this.logger))
             {
                 return await this.decoratee.UpsertAsync(entity).AnyContext();

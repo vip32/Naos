@@ -52,9 +52,9 @@
 
                 return stream;
             }
-            catch(SftpPathNotFoundException ex)
+            catch (SftpPathNotFoundException ex)
             {
-                if(this.logger.IsEnabled(LogLevel.Warning))
+                if (this.logger.IsEnabled(LogLevel.Warning))
                 {
                     this.logger.LogTrace(ex, "Error trying to get file stream: {Path}", path);
                 }
@@ -80,9 +80,9 @@
                     Size = file.Length
                 });
             }
-            catch(SftpPathNotFoundException ex)
+            catch (SftpPathNotFoundException ex)
             {
-                if(this.logger.IsEnabled(LogLevel.Warning))
+                if (this.logger.IsEnabled(LogLevel.Warning))
                 {
                     this.logger.LogTrace(ex, "Error trying to getting file info: {Path}", path);
                 }
@@ -131,9 +131,9 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
             EnsureArg.IsNotNullOrEmpty(targetPath, nameof(targetPath));
 
-            using(var stream = await this.GetFileStreamAsync(path, cancellationToken).AnyContext())
+            using (var stream = await this.GetFileStreamAsync(path, cancellationToken).AnyContext())
             {
-                if(stream == null)
+                if (stream == null)
                 {
                     return false;
                 }
@@ -151,7 +151,7 @@
             {
                 this.client.DeleteFile(this.NormalizePath(path));
             }
-            catch(SftpPathNotFoundException ex)
+            catch (SftpPathNotFoundException ex)
             {
                 this.logger.LogDebug(ex, "Error trying to delete file: {Path}.", path);
                 return Task.FromResult(false);
@@ -165,7 +165,7 @@
             var files = await this.GetFileListAsync(searchPattern, cancellationToken: cancellationToken).AnyContext();
             var count = 0;
 
-            foreach(var file in files) // batch?
+            foreach (var file in files) // batch?
             {
                 this.logger.LogInformation($"{{LogKey:l}} delete file: {file.Path}", LogKeys.FileStorage);
                 await this.DeleteFileAsync(file.Path, cancellationToken).AnyContext();
@@ -177,7 +177,7 @@
 
         public async Task<PagedResults> GetFileInformationsAsync(int pageSize = 100, string searchPattern = null, CancellationToken cancellationToken = default)
         {
-            if(pageSize <= 0)
+            if (pageSize <= 0)
             {
                 return PagedResults.EmptyResults;
             }
@@ -191,7 +191,7 @@
 
         public void Dispose()
         {
-            if(this.client.IsConnected)
+            if (this.client.IsConnected)
             {
                 this.client.Disconnect();
             }
@@ -203,14 +203,14 @@
         {
             var pagingLimit = pageSize;
             var skip = (page - 1) * pagingLimit;
-            if(pagingLimit < int.MaxValue)
+            if (pagingLimit < int.MaxValue)
             {
                 pagingLimit = pagingLimit + 1;
             }
 
             var list = (await this.GetFileListAsync(searchPattern, pagingLimit, skip, cancellationToken).AnyContext()).ToList();
             var hasMore = false;
-            if(list.Count == pagingLimit)
+            if (list.Count == pagingLimit)
             {
                 hasMore = true;
                 list.RemoveAt(pagingLimit);
@@ -227,7 +227,7 @@
 
         private async Task<IEnumerable<FileInformation>> GetFileListAsync(string searchPattern = null, int? limit = null, int? skip = null, CancellationToken cancellationToken = default)
         {
-            if(limit.HasValue && limit.Value <= 0)
+            if (limit.HasValue && limit.Value <= 0)
             {
                 return new List<FileInformation>();
             }
@@ -236,7 +236,7 @@
             var criteria = this.GetRequestCriteria(this.NormalizePath(searchPattern));
 
             this.EnsureClientConnected();
-            if(!string.IsNullOrEmpty(criteria.Prefix) && !this.client.Exists(criteria.Prefix))
+            if (!string.IsNullOrEmpty(criteria.Prefix) && !this.client.Exists(criteria.Prefix))
             {
                 return list;
             }
@@ -244,12 +244,12 @@
             // NOTE: This could be very expensive the larger the directory structure you have as we aren't efficiently doing paging.
             await this.GetFileListRecursivelyAsync(criteria.Prefix, criteria.Pattern, list).AnyContext();
 
-            if(skip.HasValue)
+            if (skip.HasValue)
             {
                 list = list.Skip(skip.Value).ToList();
             }
 
-            if(limit.HasValue)
+            if (limit.HasValue)
             {
                 list = list.Take(limit.Value).ToList();
             }
@@ -260,11 +260,11 @@
         private async Task GetFileListRecursivelyAsync(string prefix, Regex pattern, List<FileInformation> list)
         {
             var files = await Task.Factory.FromAsync(this.client.BeginListDirectory(prefix, null, null), this.client.EndListDirectory).AnyContext();
-            foreach(var file in files)
+            foreach (var file in files)
             {
-                if(file.IsDirectory)
+                if (file.IsDirectory)
                 {
-                    if(file.Name == "." || file.Name == "..")
+                    if (file.Name == "." || file.Name == "..")
                     {
                         continue;
                     }
@@ -273,13 +273,13 @@
                     continue;
                 }
 
-                if(!file.IsRegularFile)
+                if (!file.IsRegularFile)
                 {
                     continue;
                 }
 
                 var path = file.FullName.TrimStart('/');
-                if(pattern != null && !pattern.IsMatch(path))
+                if (pattern != null && !pattern.IsMatch(path))
                 {
                     continue;
                 }
@@ -296,12 +296,12 @@
 
         private ConnectionInfo CreateConnectionInfo(SshNetFileStorageOptions options)
         {
-            if(string.IsNullOrEmpty(options.ConnectionString))
+            if (string.IsNullOrEmpty(options.ConnectionString))
             {
                 throw new ArgumentNullException(nameof(options.ConnectionString));
             }
 
-            if(!Uri.TryCreate(options.ConnectionString, UriKind.Absolute, out var uri) || string.IsNullOrEmpty(uri?.UserInfo))
+            if (!Uri.TryCreate(options.ConnectionString, UriKind.Absolute, out var uri) || string.IsNullOrEmpty(uri?.UserInfo))
             {
                 throw new ArgumentException("Unable to parse connection string uri", nameof(options.ConnectionString));
             }
@@ -312,24 +312,24 @@
             var port = uri.Port > 0 ? uri.Port : 22;
 
             var authenticationMethods = new List<AuthenticationMethod>();
-            if(!string.IsNullOrEmpty(password))
+            if (!string.IsNullOrEmpty(password))
             {
                 authenticationMethods.Add(new PasswordAuthenticationMethod(username, password));
             }
 
-            if(options.PrivateKey != null)
+            if (options.PrivateKey != null)
             {
                 authenticationMethods.Add(new PrivateKeyAuthenticationMethod(username, new PrivateKeyFile(options.PrivateKey, options.PrivateKeyPassPhrase)));
             }
 
-            if(authenticationMethods.Count == 0)
+            if (authenticationMethods.Count == 0)
             {
                 authenticationMethods.Add(new NoneAuthenticationMethod(username));
             }
 
-            if(!string.IsNullOrEmpty(options.Proxy))
+            if (!string.IsNullOrEmpty(options.Proxy))
             {
-                if(!Uri.TryCreate(options.Proxy, UriKind.Absolute, out var proxyUri) || string.IsNullOrEmpty(proxyUri?.UserInfo))
+                if (!Uri.TryCreate(options.Proxy, UriKind.Absolute, out var proxyUri) || string.IsNullOrEmpty(proxyUri?.UserInfo))
                 {
                     throw new ArgumentException("Unable to parse proxy uri", nameof(options.Proxy));
                 }
@@ -339,7 +339,7 @@
                 var proxyPassword = proxyParts.Length > 0 ? proxyParts[1] : null;
 
                 var proxyType = options.ProxyType;
-                if(proxyType == ProxyTypes.None && proxyUri.Scheme != null && proxyUri.Scheme.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                if (proxyType == ProxyTypes.None && proxyUri.Scheme != null && proxyUri.Scheme.StartsWith("http", StringComparison.OrdinalIgnoreCase))
                 {
                     proxyType = ProxyTypes.Http;
                 }
@@ -352,7 +352,7 @@
 
         private void EnsureClientConnected()
         {
-            if(!this.client.IsConnected)
+            if (!this.client.IsConnected)
             {
                 this.client.Connect();
             }
@@ -361,7 +361,7 @@
         private void EnsureDirectoryExists(string path)
         {
             var directory = this.NormalizePath(Path.GetDirectoryName(path));
-            if(string.IsNullOrEmpty(directory) || this.client.Exists(directory))
+            if (string.IsNullOrEmpty(directory) || this.client.Exists(directory))
             {
                 return;
             }
@@ -369,10 +369,10 @@
             this.logger.LogInformation($"{{LogKey:l}} create directory: {directory}", LogKeys.FileStorage);
             var folderSegments = directory.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
             var currentDirectory = string.Empty;
-            foreach(var segment in folderSegments)
+            foreach (var segment in folderSegments)
             {
                 currentDirectory = string.Concat(currentDirectory, "/", segment);
-                if(!this.client.Exists(currentDirectory))
+                if (!this.client.Exists(currentDirectory))
                 {
                     this.client.CreateDirectory(currentDirectory);
                 }
@@ -391,7 +391,7 @@
 
             var prefix = searchPattern;
             var wildcardPos = searchPattern?.IndexOf('*') ?? -1;
-            if(searchPattern != null && wildcardPos >= 0)
+            if (searchPattern != null && wildcardPos >= 0)
             {
                 patternRegex = new Regex("^" + Regex.Escape(searchPattern).Replace("\\*", ".*?") + "$");
                 var slashPos = searchPattern.LastIndexOf('/');

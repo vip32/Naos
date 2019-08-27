@@ -10,7 +10,7 @@
     {
         public static IFindOptions<T> Create<T>(FilterContext filterContext)
         {
-            if(filterContext == null)
+            if (filterContext == null)
             {
                 return new FindOptions<T>();
             }
@@ -21,7 +21,7 @@
         private static IEnumerable<OrderOption<T>> GetOrderOptions<T>(FilterContext filterContext)
         {
             var result = new List<OrderOption<T>>();
-            foreach(var order in filterContext.Orders.Safe().Where(o => !o.Name.IsNullOrEmpty()))
+            foreach (var order in filterContext.Orders.Safe().Where(o => !o.Name.IsNullOrEmpty()))
             {
                 try
                 {
@@ -29,7 +29,7 @@
                         ExpressionHelper.GetExpression<T>(order.Name),
                         order.Direction == OrderDirection.Asc ? Foundation.Domain.OrderDirection.Ascending : Foundation.Domain.OrderDirection.Descending));
                 }
-                catch(ArgumentException ex)
+                catch (ArgumentException ex)
                 {
                     throw new NaosClientFormatException(ex.Message, ex);
                 }

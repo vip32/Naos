@@ -56,7 +56,7 @@
             {
                 IPipelineStep<TStepOut> nextPipelineStep = null;
 
-                foreach(var input in pipelineStep.Buffer.GetConsumingEnumerable())
+                foreach (var input in pipelineStep.Buffer.GetConsumingEnumerable())
                 {
                     var isLastStep = stepIndex == this.pipelineSteps.Count - 1;
                     TStepOut output;
@@ -66,14 +66,14 @@
                         output = pipelineStep.StepAction(input.Value);
                     }
 #pragma warning disable CA1031 // Do not catch general exception types
-                    catch(Exception e)
+                    catch (Exception e)
 #pragma warning restore CA1031 // Do not catch general exception types
                     {
                         input.TaskCompletionSource.SetException(e);
                         continue;
                     }
 
-                    if(isLastStep)
+                    if (isLastStep)
                     {
                         input.TaskCompletionSource.SetResult((TPipeOut)(object)output);
                     }

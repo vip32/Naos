@@ -19,7 +19,7 @@
                 .Cast<T>()
                 .SingleOrDefault();
 
-            if(attribute == null)
+            if (attribute == null)
             {
                 return default(TE);
             }
@@ -33,7 +33,7 @@
                 where TAttribute : Attribute
         {
             var att = type.GetCustomAttributes(typeof(TAttribute), true).FirstOrDefault() as TAttribute;
-            if(att != null)
+            if (att != null)
             {
                 return valueSelector(att);
             }

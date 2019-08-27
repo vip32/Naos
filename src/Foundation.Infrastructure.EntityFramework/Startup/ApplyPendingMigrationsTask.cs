@@ -30,7 +30,7 @@
         public async Task StartAsync(CancellationToken cancellationToken = default)
         {
             // create a new scope to retrieve scoped services
-            using(var scope = this.serviceProvider.CreateScope())
+            using (var scope = this.serviceProvider.CreateScope())
             {
                 try
                 {
@@ -38,7 +38,7 @@
                         .GetRequiredService<TDbContext>()
                         .Database.MigrateAsync().AnyContext();
                 }
-                catch(SqlException ex)
+                catch (SqlException ex)
                 {
                     this.logger.LogError(ex, $"{{LogKey:l}} database migration failed: {ex.Message}", LogKeys.StartupTask);
                 }

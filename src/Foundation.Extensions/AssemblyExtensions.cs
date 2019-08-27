@@ -16,23 +16,23 @@
             const string BuildVersionMetadataPrefix2 = ".build"; // TODO: make this an array of allowable prefixes
 
             var attribute = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
-            if(attribute?.InformationalVersion != null)
+            if (attribute?.InformationalVersion != null)
             {
                 var value = attribute.InformationalVersion;
                 var prefix = BuildVersionMetadataPrefix1;
                 var index = value.IndexOf(BuildVersionMetadataPrefix1, StringComparison.OrdinalIgnoreCase);
 
                 // fallback for '.build' prefix
-                if(index == -1)
+                if (index == -1)
                 {
                     prefix = BuildVersionMetadataPrefix2;
                     index = value.IndexOf(BuildVersionMetadataPrefix2, StringComparison.OrdinalIgnoreCase);
                 }
 
-                if(index > 0)
+                if (index > 0)
                 {
                     value = value.Substring(index + prefix.Length);
-                    if(DateTime.TryParseExact(value, "yyyyMMddHHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None, out var result))
+                    if (DateTime.TryParseExact(value, "yyyyMMddHHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None, out var result))
                     {
                         return result;
                     }

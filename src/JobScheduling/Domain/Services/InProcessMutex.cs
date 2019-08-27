@@ -27,9 +27,9 @@
 
         public void ReleaseLock(string key)
         {
-            lock(this.@lock)
+            lock (this.@lock)
             {
-                if(this.items.TryGetValue(key, out var item))
+                if (this.items.TryGetValue(key, out var item))
                 {
                     item.Locked = false;
                     item.ExpireDate = null;
@@ -40,13 +40,13 @@
 
         public bool TryAcquireLock(string key, int timeoutMinutes = 1440)
         {
-            lock(this.@lock)
+            lock (this.@lock)
             {
-                if(this.items.TryGetValue(key, out var item))
+                if (this.items.TryGetValue(key, out var item))
                 {
-                    if(item.Locked)
+                    if (item.Locked)
                     {
-                        if(this.moment >= item.ExpireDate)
+                        if (this.moment >= item.ExpireDate)
                         {
                             return this.CreateLock(key, timeoutMinutes);
                         }
@@ -69,7 +69,7 @@
 
         private bool CreateLock(string key, int timeoutMinutes)
         {
-            if(this.items.TryGetValue(key, out var item))
+            if (this.items.TryGetValue(key, out var item))
             {
                 item.Locked = true;
                 item.ExpireDate = this.moment.AddMinutes(timeoutMinutes);

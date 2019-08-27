@@ -57,7 +57,7 @@
                 .AddScoped(sp =>
                 {
                     var actionContext = sp.GetRequiredService<IActionContextAccessor>()?.ActionContext;
-                    if(actionContext == null)
+                    if (actionContext == null)
                     {
                         throw new ArgumentException("UrlHelper needs an ActionContext, which is usually available in MVC components (Controller/PageModel/ViewComponent)");
                     }
@@ -149,9 +149,9 @@
                             .Subscribe<EchoMessage, EchoMessageHandler>()))
                     .AddServiceDiscovery(o => o
                         .UseFileSystemClientRegistry())
-                        // TODO: create a cloud based registry (storage)
-                        //.UseConsulClientRegistry())
-                        //.UseRouterClientRegistry())
+                    // TODO: create a cloud based registry (storage)
+                    //.UseConsulClientRegistry())
+                    //.UseRouterClientRegistry())
                     .AddServiceDiscoveryRouter(o => o
                         .UseFileSystemRegistry()));
 
@@ -161,7 +161,7 @@
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment environment)
         {
-            if(environment.IsProduction())
+            if (environment.IsProduction())
             {
                 app.UseHsts();
             }

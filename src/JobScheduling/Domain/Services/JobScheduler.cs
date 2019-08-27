@@ -49,7 +49,7 @@
             this.logger.LogInformation($"{{LogKey:l}} registration (key={{JobKey}}, id={registration.Identifier}, cron={registration.Cron}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")}, enabled={registration.Enabled})", LogKeys.JobScheduling, registration.Key);
 
             var item = this.Options.Registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(registration.Key));
-            if(item.Key != null)
+            if (item.Key != null)
             {
                 this.Options.Registrations.Remove(item.Key);
             }
@@ -65,7 +65,7 @@
 
         public IJobScheduler UnRegister(JobRegistration registration)
         {
-            if(registration != null)
+            if (registration != null)
             {
                 this.Options.Registrations.Remove(registration);
             }
@@ -82,9 +82,9 @@
         public async Task TriggerAsync(string key, string[] args = null)
         {
             var item = this.Options.Registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(key));
-            if(item.Key != null)
+            if (item.Key != null)
             {
-                using(var cts = new CancellationTokenSource(item.Key.Timeout))
+                using (var cts = new CancellationTokenSource(item.Key.Timeout))
                 {
                     await this.TriggerAsync(key, cts.Token, args).AnyContext();
                 }
@@ -98,7 +98,7 @@
         public async Task TriggerAsync(string key, CancellationToken cancellationToken, string[] args = null)
         {
             var item = this.Options.Registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(key));
-            if(item.Key != null)
+            if (item.Key != null)
             {
                 await this.ExecuteJobAsync(item.Key, item.Value, cancellationToken, args ?? item.Key?.Args).AnyContext();
             }
@@ -117,7 +117,7 @@
         {
             EnsureArg.IsTrue(moment.Kind == DateTimeKind.Utc);
 
-            if(!this.Options.Enabled)
+            if (!this.Options.Enabled)
             {
                 //this.logger.LogDebug($"job scheduler run not started (enabled={this.Settings.Enabled})");
                 return;
@@ -139,7 +139,7 @@
                 }, cts.Token);
             }).ToList();
 
-            if(dueJobs.IsNullOrEmpty())
+            if (dueJobs.IsNullOrEmpty())
             {
                 this.logger.LogDebug($"{{LogKey:l}} run has no due jobs, not starting (activeCount=#{this.activeCount}, moment={moment.ToString("o")})", LogKeys.JobScheduling);
             }
@@ -153,21 +153,21 @@
 
         private async Task ExecuteJobAsync(JobRegistration registration, IJob job, CancellationToken cancellationToken, string[] args = null)
         {
-            if(registration?.Key.IsNullOrEmpty() == false && job != null)
+            if (registration?.Key.IsNullOrEmpty() == false && job != null)
             {
                 try
                 {
                     async Task ExecuteAsync()
                     {
-                        using(var timer = new Foundation.Timer())
-                        using(this.logger.BeginScope(new Dictionary<string, object>
+                        using (var timer = new Foundation.Timer())
+                        using (this.logger.BeginScope(new Dictionary<string, object>
                         {
                             [LogPropertyKeys.CorrelationId] = IdGenerator.Instance.Next
                         }))
                         {
                             // TODO: publish domain event (job started)
                             this.logger.LogJournal(LogKeys.JobScheduling, $"job started (key={{JobKey}}, id={registration.Identifier}, type={job.GetType().PrettyName()}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")})", LogPropertyKeys.TrackStartJob, args: new[] { registration.Key });
-                            using(var scope = this.tracer?.BuildSpan(registration.Key, LogKeys.JobScheduling, SpanKind.Producer).Activate(this.logger))
+                            using (var scope = this.tracer?.BuildSpan(registration.Key, LogKeys.JobScheduling, SpanKind.Producer).Activate(this.logger))
                             {
                                 await job.ExecuteAsync(cancellationToken, args).AnyContext();
                             }
@@ -178,9 +178,9 @@
                         }
                     }
 
-                    if(!registration.IsReentrant)
+                    if (!registration.IsReentrant)
                     {
-                        if(this.mutex.TryAcquireLock(registration.Key))
+                        if (this.mutex.TryAcquireLock(registration.Key))
                         {
                             try
                             {
@@ -201,13 +201,13 @@
                         await ExecuteAsync().AnyContext();
                     }
                 }
-                catch(OperationCanceledException ex)
+                catch (OperationCanceledException ex)
                 {
                     // TODO: publish domain event (job failed)
                     this.logger.LogWarning(ex, $"{{LogKey:l}} canceled (key={{JobKey}}), type={job.GetType().PrettyName()})", LogKeys.JobScheduling, registration.Key);
                     //this.errorHandler?.Invoke(ex);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     // TODO: publish domain event (job failed)
                     this.logger.LogError(ex.InnerException ?? ex, $"{{LogKey:l}} failed (key={{JobKey}}), type={job.GetType().PrettyName()})", LogKeys.JobScheduling, registration.Key);

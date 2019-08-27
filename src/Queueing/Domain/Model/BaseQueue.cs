@@ -42,7 +42,7 @@
 
         public virtual async Task<IQueueItem<TData>> DequeueAsync(CancellationToken cancellationToken)
         {
-            using(var linkedCancellationToken = this.CreateLinkedTokenSource(cancellationToken))
+            using (var linkedCancellationToken = this.CreateLinkedTokenSource(cancellationToken))
             {
                 await this.EnsureQueueAsync(linkedCancellationToken.Token).AnyContext();
 
@@ -53,7 +53,7 @@
 
         public virtual async Task<IQueueItem<TData>> DequeueAsync(TimeSpan? timeout = null)
         {
-            using(var cancellationTokenSource = timeout.ToCancellationTokenSource(TimeSpan.FromSeconds(30)))
+            using (var cancellationTokenSource = timeout.ToCancellationTokenSource(TimeSpan.FromSeconds(30)))
             {
                 return await this.DequeueAsync(cancellationTokenSource.Token).AnyContext();
             }
@@ -75,7 +75,7 @@
 
         public virtual void Dispose()
         {
-            if(!this.isDisposed)
+            if (!this.isDisposed)
             {
                 this.Logger.LogDebug($"dispose queue {this.Name}");
                 this.isDisposed = true;
@@ -93,7 +93,7 @@
 
         protected void EnsureMetaData(TData data)
         {
-            if(data is IHaveCorrelationId d && d.CorrelationId.IsNullOrEmpty())
+            if (data is IHaveCorrelationId d && d.CorrelationId.IsNullOrEmpty())
             {
                 d.CorrelationId = IdGenerator.Instance.Next;
             }

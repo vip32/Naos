@@ -32,12 +32,12 @@
                         .AddSampleCountries()
                         .AddSampleCustomers()
                         .AddSampleUserAccounts($"Server=(localdb)\\mssqllocaldb;Database={nameof(UserAccountsDbContext)};Trusted_Connection=True;MultipleActiveResultSets=True;"))
-                        //.AddSampleUserAccounts(dbContext: new UserAccountsContext(
-                        //    new DbContextOptionsBuilder()
-                        //        .UseSqlServer(entityFrameworkConfiguration.ConnectionString)
-                        //        .ConfigureWarnings(w => w.Throw(RelationalEventId.QueryClientEvaluationWarning))
-                        //        .EnableDetailedErrors().Options))) // "Server=(localdb)\\mssqllocaldb;Database=naos;Trusted_Connection=True;MultipleActiveResultSets=True;"
-                            //dbContext: new UserAccountsContext(new DbContextOptionsBuilder().UseNaosSqlServer(configuration, "naos:sample:userAccounts:entityFramework").Options)))
+                    //.AddSampleUserAccounts(dbContext: new UserAccountsContext(
+                    //    new DbContextOptionsBuilder()
+                    //        .UseSqlServer(entityFrameworkConfiguration.ConnectionString)
+                    //        .ConfigureWarnings(w => w.Throw(RelationalEventId.QueryClientEvaluationWarning))
+                    //        .EnableDetailedErrors().Options))) // "Server=(localdb)\\mssqllocaldb;Database=naos;Trusted_Connection=True;MultipleActiveResultSets=True;"
+                    //dbContext: new UserAccountsContext(new DbContextOptionsBuilder().UseNaosSqlServer(configuration, "naos:sample:userAccounts:entityFramework").Options)))
                     .AddOperations(o => o
                         .AddLogging(correlationId: $"TEST{IdGenerator.Instance.Next}")
                         .AddTracing())

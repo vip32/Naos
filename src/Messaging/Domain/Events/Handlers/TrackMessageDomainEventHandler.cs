@@ -33,7 +33,7 @@
         {
             await Task.Run(() =>
             {
-                if(notification == null)
+                if (notification == null)
                 {
                     return;
                 }
@@ -46,7 +46,7 @@
         {
             await Task.Run(() =>
             {
-                if(notification == null)
+                if (notification == null)
                 {
                     return;
                 }

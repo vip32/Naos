@@ -41,9 +41,9 @@
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
-            using(var stream = await storage.GetFileStreamAsync(path, cancellationToken).AnyContext())
+            using (var stream = await storage.GetFileStreamAsync(path, cancellationToken).AnyContext())
             {
-                if(stream != null)
+                if (stream != null)
                 {
                     return storage.Serializer.Deserialize<T>(stream);
                 }
@@ -57,9 +57,9 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
             EnsureArg.IsNotNull(serializer, nameof(serializer));
 
-            using(var stream = await storage.GetFileStreamAsync(path, cancellationToken).AnyContext())
+            using (var stream = await storage.GetFileStreamAsync(path, cancellationToken).AnyContext())
             {
-                if(stream != null)
+                if (stream != null)
                 {
                     return serializer.Deserialize<T>(stream);
                 }
@@ -84,11 +84,11 @@
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
-            using(var stream = await storage.GetFileStreamAsync(path, cancellationToken).AnyContext())
+            using (var stream = await storage.GetFileStreamAsync(path, cancellationToken).AnyContext())
             {
-                if(stream != null)
+                if (stream != null)
                 {
-                    using(var reader = new StreamReader(stream))
+                    using (var reader = new StreamReader(stream))
                     {
                         return await reader.ReadToEndAsync().AnyContext();
                     }
@@ -102,18 +102,18 @@
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
-            using(var stream = await storage.GetFileStreamAsync(path, cancellationToken).AnyContext())
+            using (var stream = await storage.GetFileStreamAsync(path, cancellationToken).AnyContext())
             {
-                if(stream == null)
+                if (stream == null)
                 {
                     return null;
                 }
 
                 var buffer = new byte[16 * 1024];
-                using(var ms = new MemoryStream())
+                using (var ms = new MemoryStream())
                 {
                     int read;
-                    while((read = await stream.ReadAsync(buffer, 0, buffer.Length).AnyContext()) > 0)
+                    while ((read = await stream.ReadAsync(buffer, 0, buffer.Length).AnyContext()) > 0)
                     {
                         await ms.WriteAsync(buffer, 0, read).AnyContext();
                     }
@@ -129,23 +129,23 @@
             var result = await storage.GetFileInformationsAsync(100, searchPattern, cancellationToken).AnyContext();
             do
             {
-                foreach(var file in result.Files.Safe())
+                foreach (var file in result.Files.Safe())
                 {
                     files.Add(file);
-                    if(limit.HasValue && limit.Value == files.Count)
+                    if (limit.HasValue && limit.Value == files.Count)
                     {
                         return files;
                     }
                 }
             }
-            while(result.HasMore && await result.NextPageAsync().AnyContext());
+            while (result.HasMore && await result.NextPageAsync().AnyContext());
 
             return files;
         }
 
         public static async Task DeleteFilesAsync(this IFileStorage storage, IEnumerable<FileInformation> files)
         {
-            foreach(var file in files.Safe())
+            foreach (var file in files.Safe())
             {
                 await storage.DeleteFileAsync(file.Path).AnyContext();
             }

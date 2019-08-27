@@ -16,9 +16,9 @@
 
         public void Apply(ControllerModel controller)
         {
-            foreach(var selector in controller.Selectors.Safe())
+            foreach (var selector in controller.Selectors.Safe())
             {
-                if(selector.AttributeRouteModel != null)
+                if (selector.AttributeRouteModel != null)
                 {
                     selector.AttributeRouteModel = AttributeRouteModel.CombineAttributeRouteModel(this.routePrefix, selector.AttributeRouteModel);
                 }

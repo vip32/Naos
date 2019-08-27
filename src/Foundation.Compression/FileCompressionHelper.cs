@@ -17,9 +17,9 @@
 
             destinationPath ??= sourcePath.SliceTillLast(".") + ".gz";
 
-            using(var source = File.OpenRead(sourcePath))
+            using (var source = File.OpenRead(sourcePath))
             {
-                using(var destination = File.Create(destinationPath))
+                using (var destination = File.Create(destinationPath))
                 {
                     source.Compress(destination);
                 }
@@ -38,9 +38,9 @@
 
             destinationPath ??= sourcePath.SliceTill(".");
 
-            using(var source = File.OpenRead(sourcePath))
+            using (var source = File.OpenRead(sourcePath))
             {
-                using(var destination = File.Create(destinationPath))
+                using (var destination = File.Create(destinationPath))
                 {
                     source.Decompress(destination);
                 }

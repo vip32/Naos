@@ -19,7 +19,7 @@
 
             var buffer = new byte[2048];
 
-            using(var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
                 stream.Read(buffer, 0, 2048);
             }

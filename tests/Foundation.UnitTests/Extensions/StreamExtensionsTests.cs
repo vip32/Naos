@@ -13,7 +13,7 @@
         {
             var @default = Encoding.ASCII;
 
-            using(var mem = new MemoryStream())
+            using (var mem = new MemoryStream())
             {
                 mem.Position = 0;
                 mem.DetectEncoding(@default).ShouldBe(Encoding.ASCII);
@@ -26,8 +26,8 @@
         {
             var @default = Encoding.ASCII;
 
-            using(var mem = new MemoryStream())
-            using(var writer = new StreamWriter(mem, Encoding.UTF8))
+            using (var mem = new MemoryStream())
+            using (var writer = new StreamWriter(mem, Encoding.UTF8))
             {
                 writer.Write("Hello");
                 writer.Flush();
@@ -43,8 +43,8 @@
         {
             var @default = Encoding.ASCII;
 
-            using(var mem = new MemoryStream())
-            using(var writer = new StreamWriter(mem, Encoding.Unicode))
+            using (var mem = new MemoryStream())
+            using (var writer = new StreamWriter(mem, Encoding.Unicode))
             {
                 writer.Write("Hello");
                 writer.Flush();
@@ -60,8 +60,8 @@
         {
             var @default = Encoding.ASCII;
 
-            using(var mem = new MemoryStream())
-            using(var writer = new StreamWriter(mem, Encoding.UTF32))
+            using (var mem = new MemoryStream())
+            using (var writer = new StreamWriter(mem, Encoding.UTF32))
             {
                 writer.Write("Hello");
                 writer.Flush();

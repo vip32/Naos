@@ -12,12 +12,12 @@
             this IEnumerable<T> source,
             Func<T, bool> predicate = null)
         {
-            if(source.IsNullOrEmpty())
+            if (source.IsNullOrEmpty())
             {
                 return false;
             }
 
-            if(predicate != null)
+            if (predicate != null)
             {
                 return source.Any(predicate);
             }

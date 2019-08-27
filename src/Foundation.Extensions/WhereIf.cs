@@ -12,7 +12,7 @@
             Expression<Func<T, bool>> predicate,
             bool? condition = true)
         {
-            if(condition == true && predicate != null)
+            if (condition == true && predicate != null)
             {
                 return source.Where(predicate);
             }
@@ -41,7 +41,7 @@
             Func<T, bool> predicate,
             bool? condition = true)
         {
-            if(condition == true && predicate != null)
+            if (condition == true && predicate != null)
             {
                 return source.Where(predicate);
             }

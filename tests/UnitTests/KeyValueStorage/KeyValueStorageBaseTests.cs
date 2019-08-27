@@ -26,7 +26,7 @@
         public virtual async Task InsertAndFindOne_ByKeys_Test()
         {
             var sut = this.GetStorage();
-            if(sut == null)
+            if (sut == null)
             {
                 return;
             }
@@ -68,7 +68,7 @@
         public virtual async Task InsertAndFindOne_ByKeys_Typed_Test()
         {
             var sut = this.GetStorage();
-            if(sut == null)
+            if (sut == null)
             {
                 return;
             }
@@ -94,7 +94,7 @@
         public virtual async Task InsertAndFindAll_ByCriteria_Typed_Test()
         {
             var sut = this.GetStorage();
-            if(sut == null)
+            if (sut == null)
             {
                 return;
             }
@@ -117,7 +117,7 @@
 
             entities.ShouldNotBeNull();
             entities.Count().ShouldBe(2);
-            foreach(var entity in entities)
+            foreach (var entity in entities)
             {
                 entity.LastName.ShouldBe(lastName);
             }
@@ -128,7 +128,7 @@
         public virtual async Task CreateAndDeleteTable_Test()
         {
             var sut = this.GetStorage();
-            if(sut == null)
+            if (sut == null)
             {
                 return;
             }

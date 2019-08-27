@@ -33,7 +33,7 @@
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
             EnsureArg.IsNotNull(options, nameof(options));
 
-            if(naosOptions.Context.Application.ApplicationServices.GetService(typeof(Naos.Foundation.ServiceDescriptor)) == null)
+            if (naosOptions.Context.Application.ApplicationServices.GetService(typeof(Naos.Foundation.ServiceDescriptor)) == null)
             {
                 throw new InvalidOperationException("Unable to find the required services. You must call the AddServiceContext method in ConfigureServices in the application startup code.");
             }

@@ -36,7 +36,7 @@
 
         public void Dispose()
         {
-            if(this.finishOnDispose && this.Span != null)
+            if (this.finishOnDispose && this.Span != null)
             {
                 this.Span.End();
                 this.scopeManager.Deactivate(this); // publishes domainevent

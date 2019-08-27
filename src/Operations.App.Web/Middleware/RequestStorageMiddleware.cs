@@ -27,7 +27,7 @@
 
         public async Task Invoke(HttpContext context)
         {
-            if(!this.options.Enabled
+            if (!this.options.Enabled
                 || this.options.Storage == null
                 || context.Request.Path.Value.EqualsPatternAny(this.options.PathBlackListPatterns))
             {
@@ -46,7 +46,7 @@
             var path = $"{correlationId}_{requestId}".TrimEnd('_');
             var contentLength = context.Request.ContentLength ?? 0;
 
-            if(context.Request.Body != null && contentLength > 0)
+            if (context.Request.Body != null && contentLength > 0)
             {
                 context.Request.EnableBuffering(); // allow multiple reads
                 context.Request.Body.Position = 0;
@@ -54,7 +54,7 @@
                 {
                     await this.options.Storage.SaveFileAsync($"{path}_request.txt", context.Request.Body).AnyContext();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     // don't throw exceptions when logging
                     this.logger.LogWarning(ex, ex.Message);
@@ -63,17 +63,17 @@
                 context.Request.Body.Position = 0;
             }
 
-            if(context.Response.Body != null)
+            if (context.Response.Body != null)
             {
                 var body = context.Response.Body;
                 try
                 {
-                    using(var stream = new MemoryStream())
+                    using (var stream = new MemoryStream())
                     {
                         context.Response.Body = stream;
                         await this.next(context).AnyContext();
 
-                        if(stream.Length > 0)
+                        if (stream.Length > 0)
                         {
                             context.Response.ContentLength = stream.Length; // for later use
                             stream.Position = 0;
@@ -82,7 +82,7 @@
                             {
                                 await this.options.Storage.SaveFileAsync($"{path}_response.txt", stream).AnyContext();
                             }
-                            catch(Exception ex)
+                            catch (Exception ex)
                             {
                                 // don't throw exceptions when logging
                                 this.logger.LogWarning(ex, ex.Message);

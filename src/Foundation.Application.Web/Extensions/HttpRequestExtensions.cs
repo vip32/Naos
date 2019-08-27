@@ -9,7 +9,7 @@
     {
         public static Uri Uri(this HttpRequest source, bool hostOnly = false)
         {
-            if(source == null)
+            if (source == null)
             {
                 return null;
             }
@@ -17,7 +17,7 @@
             var builder = new StringBuilder();
             builder.Append(source.Scheme).Append("://");
 
-            if(source.Host.HasValue)
+            if (source.Host.HasValue)
             {
                 builder.Append(source.Host.Value);
             }
@@ -27,17 +27,17 @@
                 builder.Append("UNKNOWN-HOST");
             }
 
-            if(source.PathBase.HasValue && !hostOnly)
+            if (source.PathBase.HasValue && !hostOnly)
             {
                 builder.Append(source.PathBase.Value);
             }
 
-            if(source.Path.HasValue && !hostOnly)
+            if (source.Path.HasValue && !hostOnly)
             {
                 builder.Append(source.Path.Value);
             }
 
-            if(source.QueryString.HasValue && !hostOnly)
+            if (source.QueryString.HasValue && !hostOnly)
             {
                 builder.Append(source.QueryString);
             }
@@ -49,7 +49,7 @@
         {
             // https://stackoverflow.com/a/41242493/7860424
             var connection = source.HttpContext.Connection;
-            if(IsIpAddressSet(connection.RemoteIpAddress))
+            if (IsIpAddressSet(connection.RemoteIpAddress))
             {
                 return IsIpAddressSet(connection.LocalIpAddress)
                     //if local is same as remote, then we are local

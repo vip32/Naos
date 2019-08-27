@@ -28,13 +28,13 @@
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
         public virtual async Task<ActionResult<Country>> GetByName(string name)
         {
-            if(name.IsNullOrEmpty())
+            if (name.IsNullOrEmpty())
             {
                 throw new BadRequestException("Model id cannot be empty");
             }
 
             var model = await this.Repository.FindOneByName(name).AnyContext();
-            if(model == null)
+            if (model == null)
             {
                 return this.NotFound(); // TODO: throw notfoundexception?
             }

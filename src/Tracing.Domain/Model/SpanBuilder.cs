@@ -39,7 +39,7 @@
                 .SetStatus(SpanStatus.Transient)
                 .SetSpanId(this.spanId)
                 .Start();
-            }
+        }
 
         public IScope Activate(ILogger logger, bool finishOnDispose = true)
         {

@@ -14,7 +14,7 @@
     {
         public static IHttpClientBuilder AddNaosMessageHandlers(this IHttpClientBuilder builder, Action<IHttpClientBuilder> setupAction = null)
         {
-            if(setupAction != null)
+            if (setupAction != null)
             {
                 setupAction.Invoke(builder);
                 return builder;
@@ -31,7 +31,7 @@
 
         public static IHttpClientBuilder AddNaosPolicyHandlers(this IHttpClientBuilder builder, Action<IHttpClientBuilder> setupAction = null)
         {
-            if(setupAction != null)
+            if (setupAction != null)
             {
                 setupAction.Invoke(builder);
                 return builder;

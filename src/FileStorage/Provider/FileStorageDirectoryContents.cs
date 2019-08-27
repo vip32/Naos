@@ -27,7 +27,7 @@
 
         public IEnumerator<IFileInfo> GetEnumerator()
         {
-            foreach(var file in this.pagedResults?.Files.Safe().DistinctBy(f => f.Path))
+            foreach (var file in this.pagedResults?.Files.Safe().DistinctBy(f => f.Path))
             {
                 yield return new FileStorageFileInfo(this.fileStorage, file.Path);
             }
@@ -35,7 +35,7 @@
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            foreach(var file in this.pagedResults?.Files.Safe().DistinctBy(f => f.Path))
+            foreach (var file in this.pagedResults?.Files.Safe().DistinctBy(f => f.Path))
             {
                 yield return new FileStorageFileInfo(this.fileStorage, file.Path);
             }

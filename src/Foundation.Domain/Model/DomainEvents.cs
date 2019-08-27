@@ -33,7 +33,7 @@
         {
             EnsureArg.IsNotNull(mediator, nameof(mediator));
 
-            foreach(var @event in this.GetAll())
+            foreach (var @event in this.GetAll())
             {
                 await mediator.Publish(@event).AnyContext();
             }

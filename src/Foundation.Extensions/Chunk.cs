@@ -13,12 +13,12 @@
         /// <param name="size">Size of the batch chunk.</param>
         public static IEnumerable<IEnumerable<T>> Chunk<T>(this IEnumerable<T> source, int size)
         {
-            if(source.IsNullOrEmpty())
+            if (source.IsNullOrEmpty())
             {
                 yield return null;
             }
 
-            while(source.Any())
+            while (source.Any())
             {
                 yield return source.Take(size);
                 source = source.Skip(size);

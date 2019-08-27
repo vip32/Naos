@@ -49,7 +49,7 @@
                 var isFoundName = context.Request.Headers.TryGetValue(ServiceDiscoveryRouterHeaders.ServiceName, out var serviceName);
                 var isFoundTag = context.Request.Headers.TryGetValue(ServiceDiscoveryRouterHeaders.ServiceTag, out var serviceTag);
 
-                if(!isFoundName && !isFoundTag)
+                if (!isFoundName && !isFoundTag)
                 {
                     context.Response.StatusCode = 400;
                     throw new NaosException($"Router cannot find a service registration based on the provided information (serviceName={serviceName}, serviceTag={serviceTag})");
@@ -59,7 +59,7 @@
                 var registrations = await registryClient.RegistrationsAsync(serviceName, serviceTag).AnyContext();
                 var registration = registrations.FirstOrDefault(); // todo: do some kind random/roundrobin
 
-                if(registration == null)
+                if (registration == null)
                 {
                     context.Response.StatusCode = 502;
                     throw new NaosException($"Router cannot find a service registration based on the provided information (serviceName={serviceName}, serviceTag={serviceTag})");

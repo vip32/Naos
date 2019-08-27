@@ -27,7 +27,7 @@
         {
             var result = new CorrelationContext(correlationId, correlationHeader, requestId, requestHeader);
 
-            if(this.accessor != null)
+            if (this.accessor != null)
             {
                 this.accessor.Context = result;
             }
@@ -38,7 +38,7 @@
         /// <inheritdoc />
         public void Dispose()
         {
-            if(this.accessor != null)
+            if (this.accessor != null)
             {
                 this.accessor.Context = null;
             }

@@ -9,12 +9,12 @@
     {
         public void Apply(ControllerModel controller)
         {
-            if(controller.ControllerType.IsGenericType)
+            if (controller.ControllerType.IsGenericType)
             {
                 var controllerType = controller.ControllerType.GenericTypeArguments[0];
                 var attibute = controllerType.GetCustomAttribute<GeneratedControllerAttribute>();
 
-                if(attibute?.Route != null)
+                if (attibute?.Route != null)
                 {
                     controller.Selectors.Add(new SelectorModel
                     {

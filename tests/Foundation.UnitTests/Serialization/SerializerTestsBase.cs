@@ -9,7 +9,7 @@
         public virtual void CanRoundTripBytes_Test()
         {
             var serializer = this.GetSerializer();
-            if(serializer == null)
+            if (serializer == null)
             {
                 return;
             }
@@ -40,7 +40,7 @@
         public virtual void CanRoundTripString_Test()
         {
             var serializer = this.GetSerializer();
-            if(serializer == null)
+            if (serializer == null)
             {
                 return;
             }

@@ -10,19 +10,19 @@
     {
         public static IEnumerable<Specification<T>> Create<T>(FilterContext filterContext)
         {
-            if(filterContext == null)
+            if (filterContext == null)
             {
                 return Enumerable.Empty<Specification<T>>();
             }
 
             var result = new List<Specification<T>>();
-            foreach(var criteria in filterContext.Criterias.Safe())
+            foreach (var criteria in filterContext.Criterias.Safe())
             {
                 try
                 {
                     result.Add(new Specification<T>(criteria.ToExpression<T>()) { Name = criteria.Name });
                 }
-                catch(ArgumentException ex)
+                catch (ArgumentException ex)
                 {
                     throw new NaosClientFormatException(ex.Message, ex);
                 }

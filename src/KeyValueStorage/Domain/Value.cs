@@ -58,7 +58,7 @@
 
             set
             {
-                if(this.Key == null)
+                if (this.Key == null)
                 {
                     this.Key = new Key();
                 }
@@ -76,7 +76,7 @@
 
             set
             {
-                if(this.Key == null)
+                if (this.Key == null)
                 {
                     this.Key = new Key();
                 }
@@ -109,7 +109,7 @@
         {
             get
             {
-                if(!this.keyToValue.TryGetValue(key, out var value))
+                if (!this.keyToValue.TryGetValue(key, out var value))
                 {
                     return null;
                 }
@@ -129,7 +129,7 @@
         /// <param name="rows"></param>
         public static bool AreDistinct(IEnumerable<Value> rows)
         {
-            if(rows == null)
+            if (rows == null)
             {
                 return true;
             }
@@ -147,17 +147,17 @@
         {
             Value masterRow = null;
 
-            foreach(var row in rows)
+            foreach (var row in rows)
             {
-                if(masterRow == null)
+                if (masterRow == null)
                 {
                     masterRow = row;
                 }
                 else
                 {
-                    foreach(var cell in row)
+                    foreach (var cell in row)
                     {
-                        if(!masterRow.ContainsKey(cell.Key))
+                        if (!masterRow.ContainsKey(cell.Key))
                         {
                             masterRow[cell.Key] = cell.Value;
                         }
@@ -174,17 +174,17 @@
         /// <param name="other"></param>
         public bool Equals(Value other)
         {
-            if(ReferenceEquals(other, null))
+            if (ReferenceEquals(other, null))
             {
                 return false;
             }
 
-            if(ReferenceEquals(other, this))
+            if (ReferenceEquals(other, this))
             {
                 return true;
             }
 
-            if(this.GetType() != other.GetType())
+            if (this.GetType() != other.GetType())
             {
                 return false;
             }
@@ -241,7 +241,7 @@
 
         public void Add(string key, object value)
         {
-            if(value == null)
+            if (value == null)
             {
                 this.Remove(key);
             }
@@ -274,7 +274,7 @@
         public Value Clone(string rowKey = null, string partitionKey = null)
         {
             var clone = new Value(partitionKey ?? this.PartitionKey, rowKey ?? this.RowKey);
-            foreach(var pair in this.keyToValue)
+            foreach (var pair in this.keyToValue)
             {
                 clone.keyToValue[pair.Key] = pair.Value;
             }

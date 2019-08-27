@@ -22,12 +22,12 @@
 
         public override async Task<bool> Handle(JobEvent<EchoJobEventData> request, CancellationToken cancellationToken)
         {
-            using(var scope = this.tracer.BuildSpan(this.GetType().Name.ToLower()).Activate(this.logger))
+            using (var scope = this.tracer.BuildSpan(this.GetType().Name.ToLower()).Activate(this.logger))
             {
-               await Run.DelayedAsync(
-                   new System.TimeSpan(0, 0, 3),
-                   async () =>
-                        await Task.Run(() => this.logger.LogInformation($"{{LogKey:l}} {request?.Data?.Text} (type={this.GetType().PrettyName()})", LogKeys.JobScheduling)).AnyContext()).AnyContext();
+                await Run.DelayedAsync(
+                    new System.TimeSpan(0, 0, 3),
+                    async () =>
+                         await Task.Run(() => this.logger.LogInformation($"{{LogKey:l}} {request?.Data?.Text} (type={this.GetType().PrettyName()})", LogKeys.JobScheduling)).AnyContext()).AnyContext();
             }
 
             return true;

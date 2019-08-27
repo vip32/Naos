@@ -44,10 +44,10 @@
         /// <param name="cancellationToken">The cancellation token.</param>
         public override async Task<CommandResponse<TResponse>> Handle(TRequest request, CancellationToken cancellationToken)
         {
-            foreach(var behavior in this.behaviors.Safe())
+            foreach (var behavior in this.behaviors.Safe())
             {
                 var behaviorResult = await behavior.ExecuteAsync(request).AnyContext();
-                if(behaviorResult.Cancelled) // abort if this behavior did not succeed
+                if (behaviorResult.Cancelled) // abort if this behavior did not succeed
                 {
                     // TODO: log reason
                     return new CommandResponse<TResponse>(behaviorResult.CancelledReason);
@@ -58,7 +58,7 @@
             this.Logger.LogJournal(LogKeys.AppCommand, $"handle (name={commandName}, id={request.Id})", LogPropertyKeys.TrackHandleCommand);
             this.Logger.LogTrace(LogKeys.AppCommand, request.Id, commandName, LogTraceNames.Command);
 
-            using(var timer = new Foundation.Timer())
+            using (var timer = new Foundation.Timer())
             {
                 var result = await this.HandleRequest(request, cancellationToken).AnyContext();
 

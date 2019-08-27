@@ -21,29 +21,29 @@
 
         public override async Task<bool> Handle(ConsoleCommandEvent<JobSchedulerConsoleCommand> request, CancellationToken cancellationToken)
         {
-            if(request.Command.Enable)
+            if (request.Command.Enable)
             {
                 Console.WriteLine("\r\nenable", Color.LimeGreen);
                 this.logger.LogInformation($"{LogKeys.JobScheduling:l} enabling");
                 this.jobScheduler.Options.SetEnabled();
             }
 
-            if(request.Command.Disable)
+            if (request.Command.Disable)
             {
                 Console.WriteLine("\r\ndisable", Color.LimeGreen);
                 this.logger.LogInformation($"{LogKeys.JobScheduling:l} disabling");
                 this.jobScheduler.Options.SetEnabled(false);
             }
 
-            if(request.Command.List)
+            if (request.Command.List)
             {
-                foreach(var key in this.jobScheduler.Options.Registrations.Keys.Safe())
+                foreach (var key in this.jobScheduler.Options.Registrations.Keys.Safe())
                 {
                     Console.WriteLine($"[{key.Identifier}] {key.Key} ({key.Cron})");
                 }
             }
 
-            if(!request.Command.Trigger.IsNullOrEmpty())
+            if (!request.Command.Trigger.IsNullOrEmpty())
             {
                 Console.WriteLine($"\r\nstart job {request.Command.Trigger}", Color.LimeGreen);
 

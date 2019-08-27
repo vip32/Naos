@@ -12,12 +12,12 @@
         /// <param name="instance">The instance.</param>
         public static string ComputeHash(object instance)
         {
-            if(instance == null)
+            if (instance == null)
             {
                 return null;
             }
 
-            using(var md5 = new MD5CryptoServiceProvider())
+            using (var md5 = new MD5CryptoServiceProvider())
             {
                 return BitConverter.ToString(
                     md5.ComputeHash(
@@ -28,14 +28,14 @@
 
         public static string ComputeMd5Hash(string value, bool noDashes = true)
         {
-            if(value == null)
+            if (value == null)
             {
                 return null;
             }
 
-            using(var md5 = new MD5CryptoServiceProvider())
+            using (var md5 = new MD5CryptoServiceProvider())
             {
-                if(noDashes)
+                if (noDashes)
                 {
                     return BitConverter.ToString(
                         md5.ComputeHash(
@@ -51,13 +51,13 @@
 
         public static string ComputeHash(string value, HashType hashType = HashType.Sha256)
         {
-            if(value.IsNullOrEmpty())
+            if (value.IsNullOrEmpty())
             {
                 return null;
             }
 
-            using(var stream = StreamHelper.ToStream(value))
-            using(var algorithm = CreateHashAlgorithm(hashType))
+            using (var stream = StreamHelper.ToStream(value))
+            using (var algorithm = CreateHashAlgorithm(hashType))
             {
                 return BytesToString(algorithm.ComputeHash(stream));
             }
@@ -65,12 +65,12 @@
 
         public static string ComputeHash(byte[] value, HashType hashType = HashType.Sha256)
         {
-            if(value == null)
+            if (value == null)
             {
                 return null;
             }
 
-            using(var algorithm = CreateHashAlgorithm(hashType))
+            using (var algorithm = CreateHashAlgorithm(hashType))
             {
                 return BytesToString(algorithm.ComputeHash(value));
             }
@@ -78,12 +78,12 @@
 
         public static byte[] ComputeHashBytes(byte[] value, HashType hashType = HashType.Sha256)
         {
-            if(value == null)
+            if (value == null)
             {
                 return null;
             }
 
-            using(var algorithm = CreateHashAlgorithm(hashType))
+            using (var algorithm = CreateHashAlgorithm(hashType))
             {
                 return algorithm.ComputeHash(value);
             }
@@ -91,12 +91,12 @@
 
         public static Guid ComputeGuid(string value)
         {
-            if(value == null)
+            if (value == null)
             {
                 return Guid.Empty;
             }
 
-            using(var md5 = MD5.Create())
+            using (var md5 = MD5.Create())
             {
                 return new Guid(md5.ComputeHash(Encoding.Default.GetBytes(value)));
             }
@@ -104,7 +104,7 @@
 
         private static System.Security.Cryptography.HashAlgorithm CreateHashAlgorithm(HashType hashType)
         {
-            switch(hashType)
+            switch (hashType)
             {
                 case HashType.Md5:
                     return MD5.Create();
@@ -126,7 +126,7 @@
         private static string BytesToString(byte[] bytes)
         {
             var result = string.Empty;
-            for(var i = 0; i < bytes.Length; i++)
+            for (var i = 0; i < bytes.Length; i++)
             {
                 result += string.Format("{0:X2}", bytes[i]);
             }

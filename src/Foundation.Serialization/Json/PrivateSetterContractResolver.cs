@@ -9,7 +9,7 @@
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
             var property = base.CreateProperty(member, memberSerialization);
-            if(property.Writable)
+            if (property.Writable)
             {
                 return property;
             }

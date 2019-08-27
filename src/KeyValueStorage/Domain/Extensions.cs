@@ -182,19 +182,19 @@
         private static void MapKey<T>(Value value, T entity)
             where T : class, new()
         {
-            if(value.PartitionKey != null)
+            if (value.PartitionKey != null)
             {
                 var partitionKeyProperty = typeof(T).GetProperty("PartitionKey", BindingFlags.Public | BindingFlags.Instance);
-                if(partitionKeyProperty?.CanWrite == true)
+                if (partitionKeyProperty?.CanWrite == true)
                 {
                     partitionKeyProperty.SetValue(entity, value.PartitionKey, null);
                 }
             }
 
-            if(value.RowKey != null)
+            if (value.RowKey != null)
             {
                 var rowKeyProperty = typeof(T).GetProperty("RowKey", BindingFlags.Public | BindingFlags.Instance);
-                if(rowKeyProperty?.CanWrite == true)
+                if (rowKeyProperty?.CanWrite == true)
                 {
                     rowKeyProperty.SetValue(entity, value.RowKey, null);
                 }

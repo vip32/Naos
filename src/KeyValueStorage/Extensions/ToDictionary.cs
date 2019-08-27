@@ -10,7 +10,7 @@
             this object source,
             BindingFlags bindingAttr = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance)
         {
-            if(source == null)
+            if (source == null)
             {
                 return default;
             }

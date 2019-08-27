@@ -35,22 +35,22 @@
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
         public virtual async Task<ActionResult<TEntity>> Put(string id, TEntity model)
         {
-            if(id.IsNullOrEmpty())
+            if (id.IsNullOrEmpty())
             {
                 throw new BadRequestException("Model id cannot be empty");
             }
 
-            if(!id.Equals(model.Id))
+            if (!id.Equals(model.Id))
             {
                 throw new BadRequestException("Model id must match route");
             }
 
-            if(!this.ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
                 throw new BadRequestException(this.ModelState);
             }
 
-            if(!await this.Repository.ExistsAsync(id).AnyContext())
+            if (!await this.Repository.ExistsAsync(id).AnyContext())
             {
                 return this.NotFound(); // TODO: throw notfoundexception?
             }
@@ -69,12 +69,12 @@
         public virtual async Task<ActionResult<TEntity>> Post(TEntity model)
         {
             // TODO: better happy path flow https://www.strathweb.com/2018/07/centralized-exception-handling-and-request-validation-in-asp-net-core/
-            if(!this.ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
                 throw new BadRequestException(this.ModelState);
             }
 
-            if(await this.Repository.ExistsAsync(model.Id).AnyContext())
+            if (await this.Repository.ExistsAsync(model.Id).AnyContext())
             {
                 throw new BadRequestException($"Model with id {model.Id} already exists");
             }
@@ -94,12 +94,12 @@
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
         public virtual async Task<IActionResult> Delete(string id)
         {
-            if(id.IsNullOrEmpty())
+            if (id.IsNullOrEmpty())
             {
                 throw new BadRequestException("Model id cannot be empty");
             }
 
-            if(!await this.Repository.ExistsAsync(id).AnyContext())
+            if (!await this.Repository.ExistsAsync(id).AnyContext())
             {
                 return this.NotFound(); // TODO: throw notfoundexception?
             }

@@ -46,7 +46,7 @@
             EnsureArg.IsNotNull(data, nameof(data));
             this.EnsureMetaData(data);
 
-            using(this.Logger.BeginScope(new Dictionary<string, object>
+            using (this.Logger.BeginScope(new Dictionary<string, object>
             {
                 [LogPropertyKeys.CorrelationId] = data.As<IHaveCorrelationId>()?.CorrelationId,
             }))
@@ -75,7 +75,7 @@
             var addItem = item as QueueItem<TData>;
             this.dequeued.AddOrUpdate(item.Id, addItem, (key, value) =>
             {
-                if(item != null)
+                if (item != null)
                 {
                     value.RenewedDate = addItem.RenewedDate;
                 }
@@ -94,14 +94,14 @@
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
             this.Logger.LogDebug($"queue item complete (id={item.Id}, queue={this.Options.Name})");
 
-            if(item.IsAbandoned || item.IsCompleted)
+            if (item.IsAbandoned || item.IsCompleted)
             {
                 throw new InvalidOperationException($"queue item has already been completed or abandoned (id={item.Id})");
             }
 
 #pragma warning disable IDE0067 // Dispose objects before losing scope
 #pragma warning disable CA2000 // Dispose objects before losing scope
-            if(!this.dequeued.TryRemove(item.Id, out var dequeuedItem) || dequeuedItem == null)
+            if (!this.dequeued.TryRemove(item.Id, out var dequeuedItem) || dequeuedItem == null)
 #pragma warning restore CA2000 // Dispose objects before losing scope
 #pragma warning restore IDE0067 // Dispose objects before losing scope
             {
@@ -122,23 +122,23 @@
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
             this.Logger.LogDebug($"queue item abandon (id={item.Id}, queue={this.Options.Name})");
 
-            if(item.IsAbandoned || item.IsCompleted)
+            if (item.IsAbandoned || item.IsCompleted)
             {
                 throw new InvalidOperationException($"queue item has already been completed or abandoned (id={item.Id})");
             }
 
 #pragma warning disable CA2000 // Dispose objects before losing scope
 #pragma warning disable IDE0068 // Use recommended dispose pattern
-            if(!this.dequeued.TryRemove(item.Id, out var dequeuedItem) || dequeuedItem == null)
+            if (!this.dequeued.TryRemove(item.Id, out var dequeuedItem) || dequeuedItem == null)
 #pragma warning restore IDE0068 // Use recommended dispose pattern
 #pragma warning restore CA2000 // Dispose objects before losing scope
             {
                 throw new Exception($"unable to remove item from the dequeued list, not found (id={item.Id})");
             }
 
-            if(dequeuedItem.Attempts < this.Options.Retries + 1)
+            if (dequeuedItem.Attempts < this.Options.Retries + 1)
             {
-                if(this.Options.RetryDelay > TimeSpan.Zero)
+                if (this.Options.RetryDelay > TimeSpan.Zero)
                 {
                     this.Logger.LogDebug($"add item to wait list, for future retry (id={item.Id})");
                     var unawaited = Run.DelayedAsync(
@@ -198,17 +198,17 @@
         {
             await this.EnsureQueueAsync(cancellationToken).AnyContext();
 
-            if(this.Options.Mediator == null)
+            if (this.Options.Mediator == null)
             {
                 throw new NaosException("queue processing error: no mediator instance provided");
             }
 
-            if(!this.isProcessing)
+            if (!this.isProcessing)
             {
                 this.ProcessItems(
                     async (i, ct) =>
                     {
-                        using(this.Logger.BeginScope(new Dictionary<string, object>
+                        using (this.Logger.BeginScope(new Dictionary<string, object>
                         {
                             [LogPropertyKeys.CorrelationId] = i.Data.As<IHaveCorrelationId>()?.CorrelationId,
                         }))
@@ -252,25 +252,25 @@
             await this.EnsureQueueAsync().AnyContext();
             this.Logger.LogDebug($"queue item dequeue (queue={this.Options.Name}, count={this.queue.Count})");
 
-            if(this.queue.Count == 0)
+            if (this.queue.Count == 0)
             {
                 this.Logger.LogDebug($"no queue items, waiting (name={this.Options.Name})");
 
-                while(this.queue.Count == 0
+                while (this.queue.Count == 0
                     && !cancellationToken.IsCancellationRequested)
                 {
                     Task.Delay(this.Options.DequeueInterval).Wait();
                 }
             }
 
-            if(this.queue.Count == 0)
+            if (this.queue.Count == 0)
             {
                 return null;
             }
 
 #pragma warning disable CA2000 // Dispose objects before losing scope
 #pragma warning disable IDE0067 // Dispose objects before losing scope
-            if(!this.queue.TryDequeue(out var dequeuedItem) || dequeuedItem == null)
+            if (!this.queue.TryDequeue(out var dequeuedItem) || dequeuedItem == null)
 #pragma warning restore IDE0067 // Dispose objects before losing scope
 #pragma warning restore CA2000 // Dispose objects before losing scope
             {
@@ -283,7 +283,7 @@
             Interlocked.Increment(ref this.dequeuedCount);
             var item = new QueueItem<TData>(dequeuedItem.Id, dequeuedItem.Data.Clone(), this, dequeuedItem.EnqueuedDate, dequeuedItem.Attempts); // clone item
 
-            using(this.Logger.BeginScope(new Dictionary<string, object>
+            using (this.Logger.BeginScope(new Dictionary<string, object>
             {
                 [LogPropertyKeys.CorrelationId] = item.Data.As<IHaveCorrelationId>()?.CorrelationId,
             }))
@@ -309,25 +309,25 @@
             Task.Run(async () =>
             {
                 this.Logger.LogInformation($"{{LogKey:l}} processing started (queue={this.Options.Name}, type={this.GetType().PrettyName()})", args: new[] { LogKeys.Queueing });
-                while(!linkedCancellationToken.IsCancellationRequested)
+                while (!linkedCancellationToken.IsCancellationRequested)
                 {
                     IQueueItem<TData> item = null;
                     try
                     {
                         item = await this.DequeueWithIntervalAsync(linkedCancellationToken.Token).AnyContext();
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         this.Logger.LogError(ex, $"{{LogKey:l}} processing error: {ex.Message}", args: new[] { LogKeys.Queueing });
                     }
 
-                    if(linkedCancellationToken.IsCancellationRequested || item == null)
+                    if (linkedCancellationToken.IsCancellationRequested || item == null)
                     {
                         await Task.Delay(this.Options.ProcessInterval, linkedCancellationToken.Token).AnyContext();
                         continue;
                     }
 
-                    using(this.Logger.BeginScope(new Dictionary<string, object>
+                    using (this.Logger.BeginScope(new Dictionary<string, object>
                     {
                         [LogPropertyKeys.CorrelationId] = item.Data.As<IHaveCorrelationId>()?.CorrelationId,
                     }))
@@ -335,17 +335,17 @@
                         try
                         {
                             await handler(item, linkedCancellationToken.Token).AnyContext();
-                            if(autoComplete && !item.IsAbandoned && !item.IsCompleted)
+                            if (autoComplete && !item.IsAbandoned && !item.IsCompleted)
                             {
                                 await item.CompleteAsync().AnyContext();
                             }
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
                             Interlocked.Increment(ref this.workerErrorCount);
                             this.Logger.LogError(ex, $"{{LogKey:l}} processing error: {ex.Message}", args: new[] { LogKeys.Queueing });
 
-                            if(!item.IsAbandoned && !item.IsCompleted)
+                            if (!item.IsAbandoned && !item.IsCompleted)
                             {
                                 await item.AbandonAsync().AnyContext();
                             }

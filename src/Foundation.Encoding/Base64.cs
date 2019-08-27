@@ -43,7 +43,7 @@
             s = s.Replace('_', '/'); // 63rd char of encoding
 
             // Pad with trailing '='s
-            switch(s.Length % 4)
+            switch (s.Length % 4)
             {
                 case 0: break; // No pad chars in this case
                 case 2:

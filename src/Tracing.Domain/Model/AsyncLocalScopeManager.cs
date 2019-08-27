@@ -22,7 +22,7 @@
 
         public IScope Activate(ISpan span, ILogger logger, bool finishOnDispose = true)
         {
-            if(this.mediator != null && span != null)
+            if (this.mediator != null && span != null)
             {
                 this.mediator.Publish(new SpanStartedDomainEvent(span)); // no await here
             }
@@ -32,7 +32,7 @@
 
         public void Deactivate(IScope scope)
         {
-            if(this.mediator != null && scope?.Span != null)
+            if (this.mediator != null && scope?.Span != null)
             {
                 this.mediator.Publish(new SpanEndedDomainEvent(scope.Span));
             }

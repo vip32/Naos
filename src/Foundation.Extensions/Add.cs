@@ -14,12 +14,12 @@
         [DebuggerStepThrough]
         public static void Add<T>(this IList<T> source, IEnumerable<T> items)
         {
-            if(source == null)
+            if (source == null)
             {
                 return;
             }
 
-            foreach(var item in items.Safe())
+            foreach (var item in items.Safe())
             {
                 source.Add(item);
             }

@@ -73,7 +73,7 @@
 
         public async Task<TEntity> FindOneAsync(object id) // partitionkey
         {
-            if(id.IsDefault())
+            if (id.IsDefault())
             {
                 return default;
             }
@@ -83,7 +83,7 @@
 
         public async Task<bool> ExistsAsync(object id)
         {
-            if(id.IsDefault())
+            if (id.IsDefault())
             {
                 return false;
             }
@@ -117,7 +117,7 @@
         /// <param name="entity">The entity to insert or update.</param>
         public async Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
         {
-            if(entity == null)
+            if (entity == null)
             {
                 return (default, ActionResult.None);
             }
@@ -129,9 +129,9 @@
                 this.options.IdGenerator.SetNew(entity); // cosmos v3 needs an id, also for new documents
             }
 
-            if(this.options.PublishEvents && this.options.Mediator != null)
+            if (this.options.PublishEvents && this.options.Mediator != null)
             {
-                if(isNew)
+                if (isNew)
                 {
                     await this.options.Mediator.Publish(new EntityInsertDomainEvent(entity)).AnyContext();
                 }
@@ -141,14 +141,14 @@
                 }
             }
 
-            if(isNew)
+            if (isNew)
             {
-                if(entity is IStateEntity stateEntity)
+                if (entity is IStateEntity stateEntity)
                 {
                     stateEntity.State.SetCreated();
                 }
             }
-            else if(entity is IStateEntity stateEntity)
+            else if (entity is IStateEntity stateEntity)
             {
                 stateEntity.State.SetUpdated();
             }
@@ -157,9 +157,9 @@
             var result = await this.options.Provider.UpsertAsync(entity).AnyContext();
             //entity = result;
 
-            if(this.options.PublishEvents && this.options.Mediator != null)
+            if (this.options.PublishEvents && this.options.Mediator != null)
             {
-                if(isNew)
+                if (isNew)
                 {
                     //await this.mediator.Publish(new EntityInsertedDomainEvent<IEntity>(result)).AnyContext();
                     await this.options.Mediator.Publish(new EntityInsertedDomainEvent(result)).AnyContext();
@@ -179,13 +179,13 @@
 
         public async Task<ActionResult> DeleteAsync(object id)
         {
-            if(id.IsDefault())
+            if (id.IsDefault())
             {
                 return ActionResult.None;
             }
 
             var entity = await this.FindOneAsync(id).AnyContext();
-            if(entity != null)
+            if (entity != null)
             {
                 return await this.DeleteAsync(entity).AnyContext();
             }
@@ -195,7 +195,7 @@
 
         public async Task<ActionResult> DeleteAsync(TEntity entity)
         {
-            if(entity?.Id.IsDefault() == true)
+            if (entity?.Id.IsDefault() == true)
             {
                 return ActionResult.None;
             }
