@@ -26,7 +26,7 @@
             foreach (var registrations in this.registrations.Safe()
                 .Where(r => !r.Route.IsNullOrEmpty()).GroupBy(r => r.Route))
             {
-                AddPathItem(context.Document.Paths, registrations, context);
+                AddPathItem(context.Document.Paths, registrations.DistinctBy(r => r.RequestMethod), context);
             }
         }
 
