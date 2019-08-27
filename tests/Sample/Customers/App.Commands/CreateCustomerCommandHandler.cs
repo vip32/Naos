@@ -4,7 +4,6 @@
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
-    using MediatR;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Commands.Domain;
     using Naos.Foundation;
@@ -13,22 +12,18 @@
     public class CreateCustomerCommandHandler : BehaviorCommandHandler<CreateCustomerCommand, object>
     {
         private readonly ILogger<CreateCustomerCommandHandler> logger;
-        private readonly IMediator mediator;
         private readonly ICustomerRepository repository;
 
         public CreateCustomerCommandHandler(
             ILogger<CreateCustomerCommandHandler> logger,
-            IMediator mediator,
             IEnumerable<ICommandBehavior> behaviors,
             ICustomerRepository repository)
             : base(logger, behaviors)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(repository, nameof(repository));
-            EnsureArg.IsNotNull(mediator, nameof(mediator));
 
             this.logger = logger;
-            this.mediator = mediator;
             this.repository = repository;
         }
 

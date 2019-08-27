@@ -3,6 +3,7 @@
     using System;
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
+    using Naos.Core.Commands.App;
     using Naos.Core.Commands.Domain;
     using Naos.Core.Configuration.App;
     using Naos.Foundation;

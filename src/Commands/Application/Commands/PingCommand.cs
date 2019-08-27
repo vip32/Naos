@@ -1,6 +1,6 @@
-﻿namespace Naos.Core.Commands.Domain
+﻿namespace Naos.Core.Commands.App
 {
-    using System;
+    using Naos.Core.Commands.Domain;
 
     public class PingCommand : CommandRequest<object> // object means no response type
     {

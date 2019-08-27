@@ -6,10 +6,12 @@
 
     public class CreateCustomerCommand : CommandRequest<object>
     {
+        public CreateCustomerCommand()
+        {
+        }
+
         public CreateCustomerCommand(Customer entity)
         {
-            EnsureThat.EnsureArg.IsNotNull(entity, nameof(entity));
-
             this.Customer = entity;
         }
 

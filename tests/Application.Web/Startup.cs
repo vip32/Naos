@@ -1,6 +1,7 @@
 ﻿namespace Naos.Application.Web
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Threading;
@@ -24,6 +25,7 @@
     using Naos.Core.Messaging.Domain;
     using Naos.Foundation;
     using Naos.Sample.Customers.App;
+    using Naos.Sample.Customers.Domain;
     using Newtonsoft.Json;
     using NSwag.Generation.Processors;
 
@@ -113,7 +115,8 @@
                             new FolderFileStorage(o => o
                                 .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "commands")))))
                         .AddRequestDispatcher(o => o
-                            .Post<CreateCustomerCommand>("/api/commands/customers/create", 201)))
+                            .Post<CreateCustomerCommand>("/api/commands/customers/create", 201)
+                            .Get<GetActiveCustomersQuery, GetActiveCustomersQueryResponse>("/api/commands/customers/active", 200)))
                     .AddOperations(o => o
                         .AddInteractiveConsole()
                         .AddLogging(o => o
