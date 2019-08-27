@@ -6,6 +6,7 @@
     using System.Reflection;
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Primitives;
 
 #pragma warning disable SA1402 // File may only contain a single class
     /// <summary>

@@ -112,24 +112,13 @@
 
         private object HandleQueryOperation(HttpContext context)
         {
-            var command = Factory.Create(this.options.Registration.CommandType);
-            if (!context.Request.QueryString.Value.IsNullOrEmpty())
+            var properties = new Dictionary<string, object>();
+            foreach(var queryItem in QueryHelpers.ParseQuery(context.Request.QueryString.Value))
             {
-                foreach (var propertyInfo in this.options.Registration.CommandType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
-                {
-                    foreach (var item in QueryHelpers.ParseQuery(context.Request.QueryString.Value))
-                    {
-                        var type = Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType;
-
-                        if (item.Key.SafeEquals(propertyInfo.Name) && !item.Value.IsNullOrEmpty())
-                        {
-                            propertyInfo.SetValue(command, item.Value.ToString().To(type), null);
-                        }
-                    }
-                }
+                properties.Add(queryItem.Key, queryItem.Value);
             }
 
-            return command;
+            return Factory.Create(this.options.Registration.CommandType, properties);
         }
 
         private object HandleBodyOperation(HttpContext context)
