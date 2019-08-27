@@ -52,8 +52,8 @@
                 var hasResponseModel = registration.ResponseType?.Name.SafeEquals("object") == false;
                 operation.Responses.Add(registration.OnSuccessStatusCode.ToString(), new OpenApiResponse
                 {
-                    Description = registration.OpenApiResponseDescription ?? (hasResponseModel ? registration.ResponseType : null)?.Name,
-                    Schema = hasResponseModel ? context.SchemaGenerator.Generate(registration.ResponseType) : null,
+                    Description = registration.OpenApiResponseDescription ?? (hasResponseModel ? registration.ResponseType : null)?.FullPrettyName(),
+                    Schema = hasResponseModel ? context.SchemaGenerator.Generate(registration.ResponseType, context.SchemaResolver) : null,
                     //Examples = hasResponseModel ? Factory.Create(registration.ResponseType) : null // header?
                 });
 
@@ -129,7 +129,7 @@
             {
                 //Description = "request model",
                 Kind = OpenApiParameterKind.Body,
-                Name = (registration.CommandType ?? typeof(object)).Name, //"model",
+                Name = (registration.CommandType ?? typeof(object)).PrettyName(), //"model",
                 Type = JsonObjectType.Object,
                 Schema = CreateSchema(registration, context),
                 //Example = registration.CommandType != null ? Factory.Create(registration.CommandType) : null //new Commands.Domain.EchoCommand() { Message = "test"},
