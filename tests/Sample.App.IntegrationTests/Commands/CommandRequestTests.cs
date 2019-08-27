@@ -3,14 +3,11 @@
     using System;
     using System.IO;
     using System.Linq;
-    using System.Threading;
     using System.Threading.Tasks;
     using FluentValidation;
-    using FluentValidation.Results;
     using MediatR;
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Core.Commands.Domain;
-    using Naos.Core.Commands.Domain.Model;
     using Naos.Core.Commands.Infrastructure.FileStorage;
     using Naos.Core.Configuration.App;
     using Naos.Core.FileStorage.Infrastructure;

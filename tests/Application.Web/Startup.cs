@@ -23,8 +23,8 @@
     using Naos.Core.JobScheduling.Domain;
     using Naos.Core.Messaging.Domain;
     using Naos.Foundation;
+    using Naos.Sample.Customers.App;
     using Newtonsoft.Json;
-    using NJsonSchema.Generation;
     using NSwag.Generation.Processors;
 
     public class Startup
@@ -41,14 +41,8 @@
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // TODO: make pretty, like:
-            //services.AddRequestCommands(o =>
-            //    o.Get<EchoCommand, EchoCommandResponse>("/commands/echo") // Query
-            //    o.Get<PingCommand>("/commands/ping") // Query
-            //    o.Post<CreateCustomerCommand, CreateCustomerCommandResponse>("/commands/createcustomer") // Command
-            //);
-            services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<EchoCommand, EchoCommandResponse> { Route = "/api/commands/echo", RequestMethod = "get;post" });
-            services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<PingCommand> { Route = "/api/commands/ping", RequestMethod = "get" });
+            //services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<EchoCommand, EchoCommandResponse> { Route = "/api/commands/echo", RequestMethod = "get;post" });
+            //services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<PingCommand> { Route = "/api/commands/ping", RequestMethod = "get" });
 
             services
                 .AddMiddlewareAnalysis()
@@ -117,7 +111,9 @@
                         .AddBehavior<JournalCommandBehavior>()
                         .AddBehavior(new FileStoragePersistCommandBehavior(
                             new FolderFileStorage(o => o
-                                .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "commands"))))))
+                                .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "commands")))))
+                        .AddRequestDispatcher(o => o
+                            .Post<CreateCustomerCommand>("/api/commands/customers/create", 201)))
                     .AddOperations(o => o
                         .AddInteractiveConsole()
                         .AddLogging(o => o

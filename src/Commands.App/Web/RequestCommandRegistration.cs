@@ -14,7 +14,7 @@
 
         public string RequestMethod { get; set; } = "post"; // get/delete/post/put/.....
 
-        public int ResponseStatusCodeOnSuccess { get; set; } = 200; // 201/202/200/204 + location header?
+        public int OnSuccessStatusCode { get; set; } = 200; // 201/202/200/204 + location header?
 
         public string OpenApiDescription { get; set; }
 
@@ -23,6 +23,10 @@
         public string OpenApiSummary { get; set; }
 
         public string OpenApiProduces { get; set; } = ContentType.JSON.ToValue();
+
+        public string OpenApiGroupPrefix { get; set; } = "Naos Commands";
+
+        public string OpenApiGroupName { get; set; }
     }
 
 #pragma warning disable SA1402 // File may only contain a single type

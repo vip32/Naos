@@ -10,7 +10,7 @@
     using Naos.Foundation;
     using Naos.Sample.Customers.Domain;
 
-    public class CreateCustomerCommandHandler : BehaviorCommandHandler<CreateCustomerCommand, string>
+    public class CreateCustomerCommandHandler : BehaviorCommandHandler<CreateCustomerCommand, object>
     {
         private readonly ILogger<CreateCustomerCommandHandler> logger;
         private readonly IMediator mediator;
@@ -32,7 +32,7 @@
             this.repository = repository;
         }
 
-        public override async Task<CommandResponse<string>> HandleRequest(CreateCustomerCommand request, CancellationToken cancellationToken)
+        public override async Task<CommandResponse<object>> HandleRequest(CreateCustomerCommand request, CancellationToken cancellationToken)
         {
             //this.Logger.LogJournal(LogEventPropertyKeys.TrackHandleCommand, $"{{LogKey:l}} handle {request.GetType().Name.SubstringTill("Command")}", args: LogEventKeys.AppCommand);
 
@@ -43,7 +43,7 @@
             if (!request.Customer.Region.EqualsAny(new[] { "East", "West" }))
             {
                 // cancels the command
-                return new CommandResponse<string>("cannot accept customers outside regular regions");
+                return new CommandResponse<object>("cannot accept customers outside regular regions");
             }
 
             request.Customer.SetCustomerNumber();
@@ -53,9 +53,9 @@
 
             // TODO: publish CreatedCustomer message (messaging)
 
-            return new CommandResponse<string>
+            return new CommandResponse<object>
             {
-                Result = request.Customer.Id
+                //Result = request.Customer.Id
             };
         }
     }

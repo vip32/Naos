@@ -4,7 +4,7 @@
     using Naos.Core.Commands.Domain;
     using Naos.Sample.Customers.Domain;
 
-    public class CreateCustomerCommand : CommandRequest<string>
+    public class CreateCustomerCommand : CommandRequest<object>
     {
         public CreateCustomerCommand(Customer entity)
         {

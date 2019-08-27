@@ -73,7 +73,7 @@
                 this.logger.LogInformation($"{{LogKey:l}} received (name={this.options.Registration.CommandType.Name.SliceTill("Command").SliceTill("Query")})", LogKeys.AppCommand);
 
                 context.Response.ContentType = this.options.Registration.OpenApiProduces;
-                context.Response.StatusCode = this.options.Registration.ResponseStatusCodeOnSuccess;
+                context.Response.StatusCode = this.options.Registration.OnSuccessStatusCode;
                 object command = null;
 
                 if (context.Request.Method.SafeEquals("get") || context.Request.Method.SafeEquals("delete"))

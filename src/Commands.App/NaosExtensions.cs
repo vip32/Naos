@@ -80,5 +80,27 @@
 
             return options;
         }
+
+        public static CommandsOptions AddRequestDispatcher(
+            this CommandsOptions options,
+            Action<RequestDispatcherOptions> optionsAction = null,
+            bool addDefaultRequestCommands = true)
+        {
+            EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.Context, nameof(options.Context));
+
+            if (addDefaultRequestCommands)
+            {
+                options.Context.Services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<EchoCommand, EchoCommandResponse> { Route = "/api/commands/echo", RequestMethod = "get" });
+                options.Context.Services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<EchoCommand, EchoCommandResponse> { Route = "/api/commands/echo", RequestMethod = "post" });
+                options.Context.Services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<PingCommand> { Route = "/api/commands/ping", RequestMethod = "get" });
+            }
+
+            optionsAction?.Invoke(new RequestDispatcherOptions(options.Context));
+
+            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: command request dispatcher added"); // TODO: list available command + routes
+
+            return options;
+        }
     }
 }
