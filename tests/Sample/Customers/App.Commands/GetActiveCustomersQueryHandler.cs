@@ -9,7 +9,7 @@
     using Naos.Foundation;
     using Naos.Sample.Customers.Domain;
 
-    public class GetActiveCustomersQueryHandler : BehaviorCommandHandler<GetActiveCustomersQuery, GetActiveCustomersQueryResponse>
+    public class GetActiveCustomersQueryHandler : BehaviorCommandHandler<GetActiveCustomersQuery, IEnumerable<Customer>>
     {
         private readonly ILogger<GetActiveCustomersQueryHandler> logger;
         private readonly ICustomerRepository repository;
@@ -27,16 +27,13 @@
             this.repository = repository;
         }
 
-        public override async Task<CommandResponse<GetActiveCustomersQueryResponse>> HandleRequest(GetActiveCustomersQuery request, CancellationToken cancellationToken)
+        public override async Task<CommandResponse<IEnumerable<Customer>>> HandleRequest(GetActiveCustomersQuery request, CancellationToken cancellationToken)
         {
             return await Task.Run(() =>
             {
-                return new CommandResponse<GetActiveCustomersQueryResponse>
+                return new CommandResponse<IEnumerable<Customer>>
                 {
-                    Result = new GetActiveCustomersQueryResponse
-                    {
-                        Data = new List<Customer> { new Customer { FirstName = "John",  LastName = "Doe" } }
-                    }
+                    Result = new List<Customer> { new Customer { FirstName = "John", LastName = "Doe" } }
                 };
             }).AnyContext();
         }

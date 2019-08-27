@@ -116,7 +116,7 @@
                                 .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "commands")))))
                         .AddRequestDispatcher(o => o
                             .Post<CreateCustomerCommand>("/api/commands/customers/create", 201)
-                            .Get<GetActiveCustomersQuery, GetActiveCustomersQueryResponse>("/api/commands/customers/active", 200)))
+                            .Get<GetActiveCustomersQuery, IEnumerable<Customer>>("/api/commands/customers/active", 200)))
                     .AddOperations(o => o
                         .AddInteractiveConsole()
                         .AddLogging(o => o
