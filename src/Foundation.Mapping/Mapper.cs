@@ -27,7 +27,7 @@
         /// <param name="target">The target object to map to.</param>
         public void Map(TSource source, TTarget target)
         {
-            if(source != null && target != null)
+            if (source != null && target != null)
             {
                 this.action(source, target);
             }

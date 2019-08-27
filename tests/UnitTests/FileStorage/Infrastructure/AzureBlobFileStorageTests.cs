@@ -121,12 +121,12 @@
         protected override IFileStorage GetStorage()
         {
             var connectionString = string.Empty; //Configuration["naos:tests:storage:connectionString"];
-            if(connectionString.IsNullOrEmpty())
+            if (connectionString.IsNullOrEmpty())
             {
                 return null;
             }
 
-            if(!connectionString.IsNullOrEmpty())
+            if (!connectionString.IsNullOrEmpty())
             {
                 return new AzureBlobFileStorage(o => o
                     .LoggerFactory(Substitute.For<ILoggerFactory>())

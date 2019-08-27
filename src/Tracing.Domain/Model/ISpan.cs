@@ -24,7 +24,7 @@
 
         DateTimeOffset? StartTime { get; }
 
-        DateTimeOffset? EndTime { get;  }
+        DateTimeOffset? EndTime { get; }
 
         DataDictionary Tags { get; }
 

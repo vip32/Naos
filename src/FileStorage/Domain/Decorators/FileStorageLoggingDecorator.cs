@@ -105,7 +105,7 @@
 
         private static byte[] ReadBytes(Stream stream)
         {
-            using(var ms = new MemoryStream())
+            using (var ms = new MemoryStream())
             {
                 stream.CopyTo(ms);
                 //stream.Position = 0;

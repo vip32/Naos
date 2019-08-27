@@ -22,19 +22,19 @@
 
         public override Task<bool> Handle(ConsoleCommandEvent<OpenBrowserConsoleCommand> request, CancellationToken cancellationToken)
         {
-            if(this.server != null)
+            if (this.server != null)
             {
                 var url = this.server?.Features?.Get<IServerAddressesFeature>()?.Addresses?.First();
 
-                if(request.Command.Logs)
+                if (request.Command.Logs)
                 {
                     url += "/api/operations/logevents/dashboard";
                 }
-                else if(request.Command.Traces)
+                else if (request.Command.Traces)
                 {
                     url += "/api/operations/logtraces/dashboard?q=TrackType=trace";
                 }
-                else if(request.Command.Journal)
+                else if (request.Command.Journal)
                 {
                     url += "/api/operations/logevents/dashboard?q=TrackType=journal";
                 }

@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
@@ -31,9 +30,9 @@
 
         public Task Handle(SpanEndedDomainEvent notification, CancellationToken cancellationToken)
         {
-            if(notification?.Span != null)
+            if (notification?.Span != null)
             {
-                using(this.logger.BeginScope(new Dictionary<string, object>()
+                using (this.logger.BeginScope(new Dictionary<string, object>()
                 {
                     // map Span to LogTrace properties
                     [LogPropertyKeys.TrackType] = LogTrackTypes.Trace,
@@ -52,9 +51,9 @@
                     {
                         this.logger.Log(LogLevel.Information, $"{{LogKey:l}} {notification.Span.OperationName:l}", notification.Span.LogKey);
                     }
-                    catch(AggregateException ex) // IndexOutOfRangeException
+                    catch (AggregateException ex) // IndexOutOfRangeException
                     {
-                        if(ex.InnerException is IndexOutOfRangeException)
+                        if (ex.InnerException is IndexOutOfRangeException)
                         {
                             this.logger.Log(LogLevel.Warning, $"{{LogKey:l}} {notification.Span.OperationName:l}");
                         }

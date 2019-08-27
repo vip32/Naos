@@ -50,7 +50,7 @@
                 await Retry.On<NullReferenceException>(async () =>
                 {
                     await Task.Yield();
-                    if(counter++ == 0)
+                    if (counter++ == 0)
                     {
                         throw new NullReferenceException();
                     }
@@ -64,7 +64,7 @@
                 await Retry.On<NullReferenceException>(async () =>
                 {
                     await Task.Yield();
-                    if(counter++ == 0)
+                    if (counter++ == 0)
                     {
                         throw new NullReferenceException();
                     }
@@ -84,7 +84,7 @@
                 await Retry.On<NullReferenceException>(async () =>
                 {
                     await Task.Yield();
-                    if(counter++ < 2)
+                    if (counter++ < 2)
                     {
                         throw new NullReferenceException();
                     }
@@ -177,7 +177,7 @@
                 await Retry.OnAny<ArgumentNullException, NullReferenceException>(async () =>
                 {
                     await Task.Yield();
-                    if(counter++ < 2)
+                    if (counter++ < 2)
                     {
                         throw new NullReferenceException();
                     }
@@ -378,7 +378,7 @@
 
             Func<int, TimeSpan> delayFactory = failureCount =>
             {
-                if(failureCount == 4)
+                if (failureCount == 4)
                 {
                     cts.Cancel();
                     return 0.Seconds();
@@ -451,7 +451,7 @@
                 var result = await Retry.On<NullReferenceException, int>(async () =>
                 {
                     await Task.Yield();
-                    if(counter++ == 0)
+                    if (counter++ == 0)
                     {
                         throw new NullReferenceException();
                     }
@@ -469,7 +469,7 @@
                 var result = await Retry.On<NullReferenceException, int>(async () =>
                 {
                     await Task.Yield();
-                    if(counter++ == 0)
+                    if (counter++ == 0)
                     {
                         throw new NullReferenceException();
                     }
@@ -492,7 +492,7 @@
                 var result = await Retry.On<NullReferenceException, int>(async () =>
                 {
                     await Task.Yield();
-                    if(counter++ < 2)
+                    if (counter++ < 2)
                     {
                         throw new NullReferenceException();
                     }
@@ -577,7 +577,7 @@
                 var result = await Retry.OnAny<ArgumentNullException, NullReferenceException, int>(async () =>
                 {
                     await Task.Yield();
-                    if(counter++ < 2)
+                    if (counter++ < 2)
                     {
                         throw new NullReferenceException();
                     }
@@ -779,7 +779,7 @@
 
             Func<int, TimeSpan> delayFactory = failureCount =>
             {
-                if(failureCount == 4)
+                if (failureCount == 4)
                 {
                     cts.Cancel();
                     return 0.Seconds();

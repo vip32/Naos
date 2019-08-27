@@ -1,15 +1,12 @@
 ﻿namespace Naos.Core.Operations.App.Web
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
     using Humanizer;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Operations.Domain;
     using Naos.Core.RequestFiltering.App;
     using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
@@ -106,18 +103,18 @@
                     this.filterContext.GetSpecifications<LogTrace>(),
                     this.filterContext.GetFindOptions<LogTrace>()).AnyContext();
 
-                foreach(var entity in entities) // .Where(l => !l.TrackType.EqualsAny(new[] { LogTrackTypes.Trace }))
+                foreach (var entity in entities) // .Where(l => !l.TrackType.EqualsAny(new[] { LogTrackTypes.Trace }))
                 {
                     var levelColor = "lime";
-                    if(entity.Status.SafeEquals(nameof(SpanStatus.Transient)))
+                    if (entity.Status.SafeEquals(nameof(SpanStatus.Transient)))
                     {
                         levelColor = "#75715E";
                     }
-                    else if(entity.Status.SafeEquals(nameof(SpanStatus.Cancelled)))
+                    else if (entity.Status.SafeEquals(nameof(SpanStatus.Cancelled)))
                     {
                         levelColor = "#FF8C00";
                     }
-                    else if(entity.Status.SafeEquals(nameof(SpanStatus.Failed)))
+                    else if (entity.Status.SafeEquals(nameof(SpanStatus.Failed)))
                     {
                         levelColor = "#FF0000";
                     }

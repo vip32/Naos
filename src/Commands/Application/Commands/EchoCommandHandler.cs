@@ -1,10 +1,11 @@
-﻿namespace Naos.Core.Commands.Domain
+﻿namespace Naos.Core.Commands.App
 {
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Commands.Domain;
     using Naos.Foundation;
 
     /// <summary>

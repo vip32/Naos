@@ -23,7 +23,7 @@
 
             var arr = Base36Characters.ToCharArray();
             var result = new Stack<char>();
-            while(input != 0)
+            while (input != 0)
             {
                 result.Push(arr[input % 36]);
                 input /= 36;
@@ -44,7 +44,7 @@
             var reversed = input.ToLower().Reverse();
             long result = 0;
             var pos = 0;
-            foreach(var c in reversed)
+            foreach (var c in reversed)
             {
                 result += Base36Characters.IndexOf(c) * (long)Math.Pow(36, pos);
                 pos++;

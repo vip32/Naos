@@ -40,7 +40,7 @@
         {
             EnsureArg.IsNotNull(message, nameof(message));
 
-            if(message.CorrelationId.IsNullOrEmpty())
+            if (message.CorrelationId.IsNullOrEmpty())
             {
                 message.CorrelationId = IdGenerator.Instance.Next;
             }
@@ -50,15 +50,15 @@
                 [LogPropertyKeys.CorrelationId] = message.CorrelationId,
             };
 
-            using(this.logger.BeginScope(loggerState))
+            using (this.logger.BeginScope(loggerState))
             {
-                if(message.Id.IsNullOrEmpty())
+                if (message.Id.IsNullOrEmpty())
                 {
                     message.Id = IdGenerator.Instance.Next;
                     this.logger.LogDebug($"{{LogKey:l}} set message (id={message.Id})", LogKeys.Messaging);
                 }
 
-                if(message.Origin.IsNullOrEmpty())
+                if (message.Origin.IsNullOrEmpty())
                 {
                     message.Origin = this.options.MessageScope;
                     this.logger.LogDebug($"{{LogKey:l}} set message (origin={message.Origin})", LogKeys.Messaging);
@@ -70,12 +70,12 @@
 
                 var messageName = /*message.Name*/ message.GetType().PrettyName(false);
                 var path = Path.Combine(this.GetDirectory(messageName, this.options.FilterScope), $"message_{message.Id}_{this.options.MessageScope}.json.tmp");
-                if(this.options.Storage.SaveFileObjectAsync(path, message).Result)
+                if (this.options.Storage.SaveFileObjectAsync(path, message).Result)
                 {
                     this.options.Storage.RenameFileAsync(path, path.SliceTillLast("."));
                 }
 
-                if(this.options.Mediator != null)
+                if (this.options.Mediator != null)
                 {
                     // TODO: async publish!
                     /*await */
@@ -90,9 +90,9 @@
         {
             var messageName = typeof(TMessage).PrettyName(false);
 
-            if(!this.options.Map.Exists<TMessage>())
+            if (!this.options.Map.Exists<TMessage>())
             {
-                if(!this.watchers.ContainsKey(messageName))
+                if (!this.watchers.ContainsKey(messageName))
                 {
                     var path = this.GetDirectory(messageName, this.options.FilterScope);
                     this.logger.LogJournal(LogKeys.Messaging, "subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, watch={Directory})", LogPropertyKeys.TrackSubscribeMessage, args: new[] { typeof(TMessage).PrettyName(), this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name, path });
@@ -138,19 +138,19 @@
             var messageName = path.SliceTillLast(@"\").SliceFromLast(@"\");
             var messageBody = this.GetFileContents(path);
 
-            if(this.options.Map.Exists(messageName))
+            if (this.options.Map.Exists(messageName))
             {
-                foreach(var subscription in this.options.Map.GetAll(messageName))
+                foreach (var subscription in this.options.Map.GetAll(messageName))
                 {
                     var messageType = this.options.Map.GetByName(messageName);
-                    if(messageType == null)
+                    if (messageType == null)
                     {
                         continue;
                     }
 
                     var jsonMessage = JsonConvert.DeserializeObject(messageBody, messageType);
                     var message = jsonMessage as Message;
-                    if(message?.Origin.IsNullOrEmpty() == true)
+                    if (message?.Origin.IsNullOrEmpty() == true)
                     {
                         //message.CorrelationId = jsonMessage.AsJToken().GetStringPropertyByToken("CorrelationId");
                         message.Origin = path.SliceFromLast("_").SliceTillLast("."); // read metadata from filename
@@ -164,10 +164,10 @@
                     var concreteType = typeof(IMessageHandler<>).MakeGenericType(messageType);
 
                     var method = concreteType.GetMethod("Handle");
-                    if(handler != null && method != null)
+                    if (handler != null && method != null)
                     {
                         // TODO: async publish!
-                        if(this.options.Mediator != null)
+                        if (this.options.Mediator != null)
                         {
                             await this.options.Mediator.Publish(new MessageHandledDomainEvent(message, this.options.MessageScope)).AnyContext();
                         }
@@ -198,7 +198,7 @@
 
         private void EnsureDirectory(string fullPath)
         {
-            if(!Directory.Exists(fullPath))
+            if (!Directory.Exists(fullPath))
             {
                 Directory.CreateDirectory(fullPath);
             }

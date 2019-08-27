@@ -2,10 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Dynamic;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text;
     using System.Threading.Tasks;
     using EnsureThat;
     using MediatR;
@@ -14,14 +10,30 @@
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Naos.Foundation;
-    using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
+    /// <summary>
+    ///
+    /// <para>
+    ///
+    ///                     CommandRequest
+    ///   H               .----------------.                                                           CommandHandler
+    ///   T               | -Id            |     RequestCommandDispatcher                             .--------------.
+    ///   T-------------> .----------------.     Middleware                 Mediator             .--> | Handle()     |
+    ///   P   (request)   | -CorrelationId |--->.------------.              .------------.      /     `--------------`
+    ///                   `----------------`    | Invoke()   |------------->| Send()     |-----`             |
+    ///    <------------------------------------|            |<-------------|            |<----.             V
+    ///       (response)                        `------------`              `------------`      \      CommandResponse
+    ///                                       (match method/route)                               \    .--------------.
+    ///                                                                                           `---| -Result      |
+    ///                                                                                               | -Cancelled   |
+    ///                                                                                               `--------------`
+    ///                                                                                                   (result)
+    /// </summary>
     public class RequestCommandDispatcherMiddleware
     {
         private readonly RequestDelegate next;
         private readonly ILogger<RequestCommandDispatcherMiddleware> logger;
-        private readonly IMediator mediator;
         private readonly RequestCommandDispatcherMiddlewareOptions options;
 
         /// <summary>
@@ -34,28 +46,27 @@
         public RequestCommandDispatcherMiddleware(
             RequestDelegate next,
             ILogger<RequestCommandDispatcherMiddleware> logger,
-            IMediator mediator,
             IOptions<RequestCommandDispatcherMiddlewareOptions> options)
         {
             EnsureArg.IsNotNull(next, nameof(next));
             EnsureArg.IsNotNull(logger, nameof(logger));
-            EnsureArg.IsNotNull(mediator, nameof(mediator));
 
             this.next = next;
             this.logger = logger;
-            this.mediator = mediator;
             this.options = options.Value ?? new RequestCommandDispatcherMiddlewareOptions();
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context, IMediator mediator)
         {
-            if (context.Request.Path.Equals(this.options.Registration.Route, StringComparison.OrdinalIgnoreCase)
-                && context.Request.Method.EqualsAny(this.options.Registration.RequestMethod.Split(';')))
-            {
-                this.logger.LogInformation($"{{LogKey:l}} received (name={this.options.Registration.CommandType.Name.SliceTill("Command").SliceTill("Query")})", LogKeys.AppCommand);
+            EnsureArg.IsNotNull(mediator, nameof(mediator));
 
-                context.Response.ContentType = this.options.Registration.OpenApiProduces;
-                context.Response.StatusCode = this.options.Registration.ResponseStatusCodeOnSuccess;
+            if (context.Request.Path.Equals(this.options.Route, StringComparison.OrdinalIgnoreCase)
+                && context.Request.Method.EqualsAny(this.options.RequestMethod.Split(';')))
+            {
+                this.logger.LogInformation($"{{LogKey:l}} received (name={this.options.CommandType.Name.SliceTill("Command").SliceTill("Query")})", LogKeys.AppCommand);
+
+                context.Response.ContentType = this.options.OpenApiProduces;
+                context.Response.StatusCode = this.options.OnSuccessStatusCode;
                 object command = null;
 
                 if (context.Request.Method.SafeEquals("get") || context.Request.Method.SafeEquals("delete"))
@@ -71,7 +82,7 @@
                     // TODO: ignore for now, or throw? +log
                 }
 
-                var response = await this.mediator.Send(command).AnyContext(); // https://github.com/jbogard/MediatR/issues/385
+                var response = await mediator.Send(command).AnyContext(); // https://github.com/jbogard/MediatR/issues/385
                 if (response != null)
                 {
                     var jObject = JObject.FromObject(response);
@@ -94,29 +105,18 @@
 
         private object HandleQueryOperation(HttpContext context)
         {
-            var command = Factory.Create(this.options.Registration.CommandType);
-            if (!context.Request.QueryString.Value.IsNullOrEmpty())
+            var properties = new Dictionary<string, object>();
+            foreach (var queryItem in QueryHelpers.ParseQuery(context.Request.QueryString.Value))
             {
-                foreach (var propertyInfo in this.options.Registration.CommandType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
-                {
-                    foreach (var item in QueryHelpers.ParseQuery(context.Request.QueryString.Value))
-                    {
-                        var type = Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType;
-
-                        if (item.Key.SafeEquals(propertyInfo.Name) && !item.Value.IsNullOrEmpty())
-                        {
-                            propertyInfo.SetValue(command, item.Value.ToString().To(type), null);
-                        }
-                    }
-                }
+                properties.Add(queryItem.Key, queryItem.Value);
             }
 
-            return command;
+            return Factory.Create(this.options.CommandType, properties);
         }
 
         private object HandleBodyOperation(HttpContext context)
         {
-            return SerializationHelper.JsonDeserialize(context.Request.Body, this.options.Registration.CommandType);
+            return SerializationHelper.JsonDeserialize(context.Request.Body, this.options.CommandType);
         }
     }
 }

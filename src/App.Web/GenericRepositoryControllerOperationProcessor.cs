@@ -21,12 +21,12 @@
         public bool Process(OperationProcessorContext context)
         {
             // update tags where equal 'Naos Entity Repository' to 'Naos Entity Repository (Entity type name)'
-            foreach(var description in context.Document.Operations.Safe().ToList())
+            foreach (var description in context.Document.Operations.Safe().ToList())
             {
-                if(description.Operation != null)
+                if (description.Operation != null)
                 {
                     var index = description.Operation.Tags?.IndexOf("Naos Entity Repository");
-                    if(index.HasValue && index.Value >= 0)
+                    if (index.HasValue && index.Value >= 0)
                     {
                         description.Operation.Tags.RemoveAt(index.Value);
                         description.Operation.Tags.Add($"Naos Entity Repository ({description.Operation.OperationId.SliceTill("_")})");
@@ -35,7 +35,7 @@
                     }
 
                     index = description.Operation.Tags?.IndexOf("Naos Echo");
-                    if(index.HasValue && index.Value >= 0)
+                    if (index.HasValue && index.Value >= 0)
                     {
                         var operationDescription = context.OperationDescription;
                         operationDescription.Path = operationDescription.Path.ToLower();

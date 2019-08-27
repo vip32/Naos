@@ -76,9 +76,9 @@
 
             var i = Prefix.Length - 1;
             var j = 0;
-            while(i >= 0)
+            while (i >= 0)
             {
-                if(j < machine.Length)
+                if (j < machine.Length)
                 {
                     Prefix[i] = machine[j];
                     j++;

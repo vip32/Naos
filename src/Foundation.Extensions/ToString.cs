@@ -16,7 +16,7 @@
         [DebuggerStepThrough]
         public static string ToString<T>(this IEnumerable<T> source, string separator)
         {
-            if(source.IsNullOrEmpty())
+            if (source.IsNullOrEmpty())
             {
                 return string.Empty;
             }

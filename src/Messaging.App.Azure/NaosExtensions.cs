@@ -36,7 +36,7 @@
             configuration.EntityPath = topicName ?? $"{Environment.GetEnvironmentVariable(EnvironmentKeys.Environment) ?? "Production"}-Naos.Messaging";
             options.Context.Services.AddSingleton<IServiceBusProvider>(sp =>
             {
-                if(configuration?.Enabled == true)
+                if (configuration?.Enabled == true)
                 {
                     return new ServiceBusProvider(
                         sp.GetRequiredService<ILogger<ServiceBusProvider>>(),
@@ -61,7 +61,7 @@
                      .GetAwaiter()
                      .GetResult();
                 }
-                catch(MessagingEntityNotFoundException)
+                catch (MessagingEntityNotFoundException)
                 {
                     // do nothing, default rule not found
                 }
@@ -70,7 +70,7 @@
                     async (m, t) =>
                     {
                         //this.logger.LogInformation("message received (id={MessageId}, name={MessageName})", message.MessageId, message.Label);
-                        if(await ServiceBusMessageBroker.ProcessMessage(
+                        if (await ServiceBusMessageBroker.ProcessMessage(
                             logger,
                             (ITracer)sp.CreateScope().ServiceProvider.GetService(typeof(ITracer)),
                             sp.GetRequiredService<ISubscriptionMap>(),
@@ -110,7 +110,7 @@
                     .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
                     .Subscriptions(sp.GetRequiredService<ISubscriptionMap>()) // singleton
                     .SubscriptionName(subscriptionName) //AppDomain.CurrentDomain.FriendlyName, // PRODUCT.CAPABILITY
-                    //.MessageScope(options.Context.Descriptor.Name)
+                                                        //.MessageScope(options.Context.Descriptor.Name)
                     .FilterScope(Environment.GetEnvironmentVariable(EnvironmentKeys.IsLocal).ToBool()
                             ? Environment.MachineName.Humanize().Dehumanize().ToLower()
                             : string.Empty));

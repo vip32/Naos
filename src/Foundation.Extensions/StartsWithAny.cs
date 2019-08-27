@@ -10,24 +10,24 @@
             IEnumerable<string> items,
             StringComparison comp = StringComparison.OrdinalIgnoreCase)
         {
-            if(string.IsNullOrEmpty(source))
+            if (string.IsNullOrEmpty(source))
             {
                 return false;
             }
 
-            if(items.IsNullOrEmpty())
+            if (items.IsNullOrEmpty())
             {
                 return false;
             }
 
-            foreach(var item in items)
+            foreach (var item in items)
             {
-                if(item == null)
+                if (item == null)
                 {
                     continue;
                 }
 
-                if(source.StartsWith(item, comp))
+                if (source.StartsWith(item, comp))
                 {
                     return true;
                 }

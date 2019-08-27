@@ -39,7 +39,7 @@
                 .ToList();
 
             // set all other aggregates to unchanged
-            foreach(var entry in source.ChangeTracker.Entries()
+            foreach (var entry in source.ChangeTracker.Entries()
                 .Where(x => x.Entity.GetType() is IAggregateRoot
                     && !typeof(TEntity).IsAssignableFrom(x.Entity.GetType())))
             {
@@ -50,9 +50,9 @@
             var result = await source.SaveChangesAsync().AnyContext();
 
             // set all other aggregates to original state
-            foreach(var state in other)
+            foreach (var state in other)
             {
-                foreach(var entry in state)
+                foreach (var entry in state)
                 {
                     entry.State = state.Key;
                 }

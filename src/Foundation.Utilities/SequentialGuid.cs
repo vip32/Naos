@@ -159,12 +159,12 @@
 
         public int CompareTo(object obj)
         {
-            if(obj is SequentialGuid)
+            if (obj is SequentialGuid)
             {
                 return this.CompareTo((SequentialGuid)obj);
             }
 
-            if(obj is Guid)
+            if (obj is Guid)
             {
                 return this.CompareTo((Guid)obj);
             }
@@ -184,7 +184,7 @@
 
         public override bool Equals(object obj)
         {
-            if(obj is SequentialGuid || obj is Guid)
+            if (obj is SequentialGuid || obj is Guid)
             {
                 return this.CompareTo(obj) == 0;
             }
@@ -225,7 +225,7 @@
         // Internal for testing
         private static Guid GetGuidValue(DateTime value)
         {
-            if(value < SequencePeriodStart || value >= SequencePeriodeEnd)
+            if (value < SequencePeriodStart || value >= SequencePeriodeEnd)
             {
                 return Guid.NewGuid(); // Outside the range, use regular Guid
             }
@@ -243,9 +243,9 @@
 
         private static Guid GetGuid(long sequence)
         {
-            lock(SynchronizationObject)
+            lock (SynchronizationObject)
             {
-                if(sequence <= lastSequence)
+                if (sequence <= lastSequence)
                 {
                     sequence = lastSequence + 1; // prevent double sequence on same server
                 }

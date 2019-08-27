@@ -20,13 +20,13 @@
             this.Serializer = this.options.Serializer ?? DefaultSerializer.Create;
 
             var folder = PathHelper.ExpandPath(this.options.Folder);
-            if(!Path.IsPathRooted(folder))
+            if (!Path.IsPathRooted(folder))
             {
                 folder = Path.GetFullPath(folder);
             }
 
             var lastCharacter = folder[folder.Length - 1];
-            if(!lastCharacter.Equals(Path.DirectorySeparatorChar) && !lastCharacter.Equals(Path.AltDirectorySeparatorChar))
+            if (!lastCharacter.Equals(Path.DirectorySeparatorChar) && !lastCharacter.Equals(Path.AltDirectorySeparatorChar))
             {
                 folder += Path.DirectorySeparatorChar;
             }
@@ -58,7 +58,7 @@
 
             path = PathHelper.Normalize(path);
             var info = new FileInfo(Path.Combine(this.Folder, path));
-            if(!info.Exists)
+            if (!info.Exists)
             {
                 return Task.FromResult<FileInformation>(null);
             }
@@ -87,7 +87,7 @@
             EnsureArg.IsNotNull(stream, nameof(stream));
 
             path = Path.Combine(this.Folder, PathHelper.Normalize(path));
-            using(var fileStream = this.CreateFileStream(path))
+            using (var fileStream = this.CreateFileStream(path))
             {
                 var offset = stream.Position;
                 stream.Position = 0;
@@ -105,10 +105,10 @@
 
             path = PathHelper.Normalize(path);
             newPath = PathHelper.Normalize(newPath);
-            lock(this.@lock)
+            lock (this.@lock)
             {
                 var directory = Path.GetDirectoryName(newPath);
-                if(directory != null)
+                if (directory != null)
                 {
                     Directory.CreateDirectory(Path.Combine(this.Folder, directory));
                 }
@@ -119,7 +119,7 @@
                 {
                     File.Move(oldFullPath, newFullPath);
                 }
-                catch(IOException)
+                catch (IOException)
                 {
                     File.Delete(newFullPath);
                     File.Move(oldFullPath, newFullPath);
@@ -135,10 +135,10 @@
             EnsureArg.IsNotNullOrEmpty(targetPath, nameof(targetPath));
 
             path = PathHelper.Normalize(path);
-            lock(this.@lock)
+            lock (this.@lock)
             {
                 var directory = Path.GetDirectoryName(targetPath);
-                if(directory != null)
+                if (directory != null)
                 {
                     Directory.CreateDirectory(Path.Combine(this.Folder, directory));
                 }
@@ -160,7 +160,7 @@
 
         public Task<int> DeleteFilesAsync(string searchPattern = null, CancellationToken cancellationToken = default)
         {
-            if(searchPattern == null || string.IsNullOrEmpty(searchPattern) || searchPattern == "*")
+            if (searchPattern == null || string.IsNullOrEmpty(searchPattern) || searchPattern == "*")
             {
                 Directory.Delete(this.Folder, true);
                 return Task.FromResult(0);
@@ -170,24 +170,24 @@
             var count = 0;
 
             var path = Path.Combine(this.Folder, searchPattern);
-            if(path[path.Length - 1] == Path.DirectorySeparatorChar || path.EndsWith(Path.DirectorySeparatorChar + "*", System.StringComparison.OrdinalIgnoreCase))
+            if (path[path.Length - 1] == Path.DirectorySeparatorChar || path.EndsWith(Path.DirectorySeparatorChar + "*", System.StringComparison.OrdinalIgnoreCase))
             {
                 var directory = Path.GetDirectoryName(path);
-                if(Directory.Exists(directory))
+                if (Directory.Exists(directory))
                 {
                     count += Directory.EnumerateFiles(directory, "*,*", SearchOption.AllDirectories).Count();
                     Directory.Delete(directory, true);
                     return Task.FromResult(count);
                 }
             }
-            else if(Directory.Exists(path))
+            else if (Directory.Exists(path))
             {
                 count += Directory.EnumerateFiles(path, "*,*", SearchOption.AllDirectories).Count();
                 Directory.Delete(path, true);
                 return Task.FromResult(count);
             }
 
-            foreach(var file in Directory.EnumerateFiles(this.Folder, searchPattern, SearchOption.AllDirectories))
+            foreach (var file in Directory.EnumerateFiles(this.Folder, searchPattern, SearchOption.AllDirectories))
             {
                 File.Delete(file);
                 count++;
@@ -198,12 +198,12 @@
 
         public async Task<PagedResults> GetFileInformationsAsync(int pageSize = 100, string searchPattern = null, CancellationToken cancellationToken = default)
         {
-            if(pageSize <= 0)
+            if (pageSize <= 0)
             {
                 return PagedResults.EmptyResults;
             }
 
-            if(searchPattern == null || string.IsNullOrEmpty(searchPattern))
+            if (searchPattern == null || string.IsNullOrEmpty(searchPattern))
             {
                 searchPattern = "*";
             }
@@ -211,7 +211,7 @@
             searchPattern = PathHelper.Normalize(searchPattern);
 
             var list = new List<FileInformation>();
-            if(!Directory.Exists(Path.GetDirectoryName(Path.Combine(this.Folder, searchPattern))))
+            if (!Directory.Exists(Path.GetDirectoryName(Path.Combine(this.Folder, searchPattern))))
             {
                 return PagedResults.EmptyResults;
             }
@@ -231,13 +231,13 @@
             {
                 return File.Create(filePath);
             }
-            catch(DirectoryNotFoundException)
+            catch (DirectoryNotFoundException)
             {
                 // created below
             }
 
             var directory = Path.GetDirectoryName(filePath);
-            if(directory != null)
+            if (directory != null)
             {
                 Directory.CreateDirectory(directory);
             }
@@ -250,15 +250,15 @@
             var list = new List<FileInformation>();
             var pagingLimit = pageSize;
             var skip = (page - 1) * pagingLimit;
-            if(pagingLimit < int.MaxValue)
+            if (pagingLimit < int.MaxValue)
             {
                 pagingLimit = pagingLimit + 1;
             }
 
-            foreach(var path in Directory.EnumerateFiles(this.Folder, searchPattern, SearchOption.AllDirectories).Skip(skip).Take(pagingLimit))
+            foreach (var path in Directory.EnumerateFiles(this.Folder, searchPattern, SearchOption.AllDirectories).Skip(skip).Take(pagingLimit))
             {
                 var info = new FileInfo(path);
-                if(!info.Exists)
+                if (!info.Exists)
                 {
                     continue;
                 }
@@ -273,7 +273,7 @@
             }
 
             var hasMore = false;
-            if(list.Count == pagingLimit)
+            if (list.Count == pagingLimit)
             {
                 hasMore = true;
                 list.RemoveAt(pagingLimit);

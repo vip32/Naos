@@ -34,17 +34,17 @@
 
         public async Task<ActionResult> DeleteAsync(object id)
         {
-            if(id.IsDefault())
+            if (id.IsDefault())
             {
                 return ActionResult.None;
             }
 
             var entity = await this.FindOneAsync(id).AnyContext();
-            if(entity != null)
+            if (entity != null)
             {
                 entity.State.SetDeleted();
                 var result = (await this.UpsertAsync(entity).AnyContext()).action;
-                if(result == ActionResult.Updated)
+                if (result == ActionResult.Updated)
                 {
                     return ActionResult.Deleted;
                 }
@@ -55,7 +55,7 @@
 
         public async Task<ActionResult> DeleteAsync(TEntity entity)
         {
-            if(entity?.Id.IsDefault() != false)
+            if (entity?.Id.IsDefault() != false)
             {
                 return ActionResult.None;
             }

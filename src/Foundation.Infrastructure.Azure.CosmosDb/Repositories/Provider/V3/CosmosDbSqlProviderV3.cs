@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Linq.Expressions;
     using System.Net;
     using System.Threading.Tasks;
@@ -187,7 +186,7 @@
             var options = this.EnsureRequestOptions(partitionKeyValue);
 
             var entity = await this.GetByIdAsync(id, partitionKeyValue).AnyContext();
-            if(entity == null)
+            if (entity == null)
             {
                 return false;
             }
@@ -195,9 +194,9 @@
             try
             {
                 var partitionKey = PartitionKey.Null;
-                if(partitionKeyValue == null)
+                if (partitionKeyValue == null)
                 {
-                    if(this.options.PartitionKeyStringExpression != null)
+                    if (this.options.PartitionKeyStringExpression != null)
                     {
                         partitionKey = new PartitionKey(this.options.PartitionKeyStringExpression.Invoke(entity));
                     }
@@ -270,10 +269,10 @@
                         new ContainerProperties(
                             this.containerName,
                             partitionKeyPath: this.options.PartitionKey)
-                    // TODO: set timetolive (ttl)
-                    {
-                        //IndexingPolicy = new Microsoft.Azure.Cosmos.IndexingPolicy(new RangeIndex(Microsoft.Azure.Cosmos.DataType.String) { Precision = -1 })
-                    },
+                        // TODO: set timetolive (ttl)
+                        {
+                            //IndexingPolicy = new Microsoft.Azure.Cosmos.IndexingPolicy(new RangeIndex(Microsoft.Azure.Cosmos.DataType.String) { Precision = -1 })
+                        },
                         throughput: options.ThroughPut).Result;
             }
         }

@@ -18,24 +18,24 @@
             string[] items,
             StringComparison comp = StringComparison.OrdinalIgnoreCase)
         {
-            if(string.IsNullOrEmpty(source))
+            if (string.IsNullOrEmpty(source))
             {
                 return false;
             }
 
-            if(items == null)
+            if (items == null)
             {
                 return false;
             }
 
-            foreach(var item in items)
+            foreach (var item in items)
             {
-                if(item == null)
+                if (item == null)
                 {
                     continue;
                 }
 
-                if(source.Contains(item, comp))
+                if (source.Contains(item, comp))
                 {
                     return true;
                 }

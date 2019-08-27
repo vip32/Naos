@@ -20,7 +20,7 @@
             ISpan span = null;
             var capturedSpans = new List<ISpan>();
 
-            using(var parentScope = tracer.BuildSpan("spanA").Activate(null))
+            using (var parentScope = tracer.BuildSpan("spanA").Activate(null))
             {
                 capturedSpans.Add(parentScope.Span);
                 parentScope.Span.AddLog(SpanLogKey.Message, "test123");
@@ -38,7 +38,7 @@
                 parentScope.Span.WithTag("x", "xxx");
                 span = parentScope.Span;
 
-                using(var childScope = tracer.BuildSpan("spanB", kind: SpanKind.Server)
+                using (var childScope = tracer.BuildSpan("spanB", kind: SpanKind.Server)
                     .WithTag("a", "aaa").Activate(null))
                 {
                     capturedSpans.Add(childScope.Span);
@@ -61,7 +61,7 @@
                     }
                 }
 
-                using(var failedScope = tracer.BuildSpan("failure").Activate(null))
+                using (var failedScope = tracer.BuildSpan("failure").Activate(null))
                 {
                     capturedSpans.Add(failedScope.Span);
                     var failedSpan = tracer.CurrentSpan;
@@ -69,7 +69,7 @@
                     {
                         throw new Exception("oops");
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         //tracer.End(status: SpanStatus.Failed, statusDescription: ex.Message);
                         tracer.Fail(exception: ex);
@@ -79,7 +79,7 @@
                     failedSpan.Logs.Count().ShouldBeGreaterThan(0); // contain error logs
                 }
 
-                using(var childScope = tracer.BuildSpan("message").Activate(null))
+                using (var childScope = tracer.BuildSpan("message").Activate(null))
                 {
                     capturedSpans.Add(childScope.Span);
                     // this happens in message handler (subscriber)

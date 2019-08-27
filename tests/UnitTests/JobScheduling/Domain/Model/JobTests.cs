@@ -107,7 +107,7 @@
                     this.probe.Count++;
                     System.Diagnostics.Trace.WriteLine("+++ hello from job " + args);
 
-                    for(var i = 0; i < 5; i++) // fake some long running process, can be cancelled with token
+                    for (var i = 0; i < 5; i++) // fake some long running process, can be cancelled with token
                     {
                         cancellationToken.ThrowIfCancellationRequested();
                         //if (cancellationToken.IsCancellationRequested)

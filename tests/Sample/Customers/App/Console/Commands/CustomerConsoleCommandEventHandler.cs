@@ -19,7 +19,7 @@
 
         public override async Task<bool> Handle(ConsoleCommandEvent<CustomerConsoleCommand> request, CancellationToken cancellationToken)
         {
-            if(request.Command.Create)
+            if (request.Command.Create)
             {
                 var command = new CreateCustomerCommand(
                     new Domain.Customer

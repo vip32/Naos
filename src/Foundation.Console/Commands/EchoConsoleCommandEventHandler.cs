@@ -19,7 +19,7 @@
         public override Task<bool> Handle(ConsoleCommandEvent<EchoConsoleCommand> request, CancellationToken cancellationToken)
         {
             var text = request.Command.Text ?? "+++ hello from echo console command";
-            if(request.Command.Timestamp)
+            if (request.Command.Timestamp)
             {
                 text += $" {DateTime.UtcNow.ToEpoch()}";
             }

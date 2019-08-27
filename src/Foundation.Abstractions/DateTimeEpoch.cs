@@ -62,7 +62,7 @@
         /// </returns>
         public static bool operator ==(DateTimeEpoch left, DateTimeEpoch right)
         {
-            if(ReferenceEquals(left, null))
+            if (ReferenceEquals(left, null))
             {
                 return ReferenceEquals(right, null);
             }
@@ -154,12 +154,12 @@
         {
             var other = obj as DateTimeEpoch;
 
-            if(other != null && this.Epoch > other.Epoch)
+            if (other != null && this.Epoch > other.Epoch)
             {
                 return 1;
             }
 
-            if(other != null && this.Epoch < other.Epoch)
+            if (other != null && this.Epoch < other.Epoch)
             {
                 return -1;
             }
@@ -176,7 +176,7 @@
         /// </returns>
         public override bool Equals(object obj)
         {
-            if(ReferenceEquals(this, obj))
+            if (ReferenceEquals(this, obj))
             {
                 return true;
             }

@@ -50,7 +50,7 @@
         {
             var result = this.Options.Context.Entities.Safe().Select(e => this.Options.Mapper.Map<TDestination>(e)); // work on destination objects
 
-            foreach(var specification in specifications.Safe())
+            foreach (var specification in specifications.Safe())
             {
                 result = result.Where(this.EnsurePredicate(specification)); // translate specification to destination predicate
             }
@@ -65,7 +65,7 @@
         /// <exception cref="ArgumentOutOfRangeException">id.</exception>
         public override async Task<TEntity> FindOneAsync(object id)
         {
-            if(id.IsDefault())
+            if (id.IsDefault())
             {
                 return default;
             }
@@ -74,7 +74,7 @@
                 .SingleOrDefault(e => this.idSelector(e).Equals(id)); // TODO: use HasIdSpecification + MapExpression (makes idSelector obsolete)
             // return (await this.FindAllAsync(new HasIdSpecification<TEntity>(id))).FirstOrDefault();
 
-            if(this.Options.Mapper != null && result != null)
+            if (this.Options.Mapper != null && result != null)
             {
                 return await Task.FromResult(this.Options.Mapper.Map<TEntity>(result)).AnyContext();
             }
@@ -101,18 +101,18 @@
         {
             var result = entities;
 
-            if(options?.Skip.HasValue == true && options.Skip.Value > 0)
+            if (options?.Skip.HasValue == true && options.Skip.Value > 0)
             {
                 result = result.Skip(options.Skip.Value);
             }
 
-            if(options?.Take.HasValue == true && options.Take.Value > 0)
+            if (options?.Take.HasValue == true && options.Take.Value > 0)
             {
                 result = result.Take(options.Take.Value);
             }
 
             IOrderedEnumerable<TDestination> orderedResult = null;
-            foreach(var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
+            foreach (var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
             {
                 orderedResult = orderedResult == null
                     ? order.Direction == OrderDirection.Ascending
@@ -123,12 +123,12 @@
                         : orderedResult.ThenByDescending(this.Options.Mapper.MapExpression<Expression<Func<TDestination, object>>>(order.Expression).Compile());
             }
 
-            if(orderedResult != null)
+            if (orderedResult != null)
             {
                 result = orderedResult;
             }
 
-            if(this.Options.Mapper != null && result != null)
+            if (this.Options.Mapper != null && result != null)
             {
                 return result.Select(d => this.Options.Mapper.Map<TEntity>(d));
             }

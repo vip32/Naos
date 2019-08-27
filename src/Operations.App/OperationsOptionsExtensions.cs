@@ -57,7 +57,7 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            if(options.Context.IsConsoleEnabled() && enabled)
+            if (options.Context.IsConsoleEnabled() && enabled)
             {
                 Console2.WriteTextLogo();
 
@@ -90,15 +90,15 @@
             {
                 return new Tracer(
                     new AsyncLocalScopeManager((IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator))));
-                    //sp.GetRequiredService<ICorrelationContextAccessor>().Context.CorrelationId
-                });
+                //sp.GetRequiredService<ICorrelationContextAccessor>().Context.CorrelationId
+            });
 
             return options;
         }
 
         private static ILoggerFactory CreateLoggerFactory(LoggingOptions loggingOptions)
         {
-            if(factory == null) // extra singleton because sometimes this is called multiple times. serilog does not like that
+            if (factory == null) // extra singleton because sometimes this is called multiple times. serilog does not like that
             {
                 Log.Logger = loggingOptions.LoggerConfiguration.CreateLogger();
 
@@ -131,7 +131,7 @@
                 .Enrich.WithProperty(LogPropertyKeys.ServiceCapability, loggingOptions.Context.Descriptor.Capability)
                 .Enrich.FromLogContext();
 
-            if(!internalCorrelationId.IsNullOrEmpty())
+            if (!internalCorrelationId.IsNullOrEmpty())
             {
                 loggingOptions.LoggerConfiguration.Enrich.WithProperty(LogPropertyKeys.CorrelationId, internalCorrelationId);
             }

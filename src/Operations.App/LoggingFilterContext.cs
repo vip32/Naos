@@ -13,19 +13,19 @@
         public static void Prepare(FilterContext context)
         {
             // environment (default: current environment)
-            if(!context.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Environment))))
+            if (!context.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Environment))))
             {
                 context.Criterias = context.Criterias.Insert(new Criteria(nameof(LogEvent.Environment), CriteriaOperator.Equal, Environment.GetEnvironmentVariable(EnvironmentKeys.Environment) ?? "Production"));
             }
 
             // message
-            if(!context.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Message))))
+            if (!context.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Message))))
             {
                 context.Criterias = context.Criterias.Insert(new Criteria(nameof(LogEvent.Message), CriteriaOperator.NotEqual, string.Empty));
             }
 
             // level (default: >= Debug)
-            if(!context.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Level))))
+            if (!context.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Level))))
             {
                 context.Criterias = context.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Trace)));
                 //context.Criterias = context.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Debug)));
@@ -35,24 +35,24 @@
                 var criteria = context.Criterias.FirstOrDefault(c => c.Name.SafeEquals(nameof(LogEvent.Level)));
                 context.Criterias = context.Criterias.Where(c => c != criteria); // filter
 
-                if(criteria.Value != null)
+                if (criteria.Value != null)
                 {
-                    if(criteria.Value.ToString().SafeEquals(nameof(LogLevel.Debug)))
+                    if (criteria.Value.ToString().SafeEquals(nameof(LogLevel.Debug)))
                     {
                         context.Criterias = context.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Trace)));
                     }
-                    else if(criteria.Value.ToString().SafeEquals(nameof(LogLevel.Information)))
+                    else if (criteria.Value.ToString().SafeEquals(nameof(LogLevel.Information)))
                     {
                         context.Criterias = context.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Trace)));
                         context.Criterias = context.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Debug)));
                     }
-                    else if(criteria.Value.ToString().SafeEquals(nameof(LogLevel.Warning)))
+                    else if (criteria.Value.ToString().SafeEquals(nameof(LogLevel.Warning)))
                     {
                         context.Criterias = context.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Trace)));
                         context.Criterias = context.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Debug)));
                         context.Criterias = context.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Information)));
                     }
-                    else if(criteria.Value.ToString().SafeEquals(nameof(LogLevel.Error))
+                    else if (criteria.Value.ToString().SafeEquals(nameof(LogLevel.Error))
                         || criteria.Value.ToString().SafeEquals(nameof(LogLevel.Critical)))
                     {
                         context.Criterias = context.Criterias.Insert(new Criteria(nameof(LogEvent.Level), CriteriaOperator.NotEqual, nameof(LogLevel.Trace)));
@@ -64,9 +64,9 @@
             }
 
             // time range (default: last 7 days)
-            if(!context.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Ticks))))
+            if (!context.Criterias.SafeAny(c => c.Name.SafeEquals(nameof(LogEvent.Ticks))))
             {
-                if(!context.Criterias.SafeAny(c => c.Name.SafeEquals("Epoch")))
+                if (!context.Criterias.SafeAny(c => c.Name.SafeEquals("Epoch")))
                 {
                     // add default range based on ticks
                     context.Criterias = context.Criterias.Insert(new Criteria(nameof(LogEvent.Ticks), CriteriaOperator.LessThanOrEqual, DateTime.UtcNow.Ticks));
@@ -76,7 +76,7 @@
                 {
                     var criterias = new List<Criteria>();
                     // convert provided epoch criterias to tick criterias
-                    foreach(var criteria in context.Criterias.Where(c => c.Name.SafeEquals("Epoch")))
+                    foreach (var criteria in context.Criterias.Where(c => c.Name.SafeEquals("Epoch")))
                     {
                         criterias.Add(new Criteria(nameof(LogEvent.Ticks), criteria.Operator, Extensions.FromEpoch(criteria.Value.To<long>()).Ticks));
                     }

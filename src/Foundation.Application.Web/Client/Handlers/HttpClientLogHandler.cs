@@ -31,7 +31,7 @@
 
             await this.LogHttpRequest(request, correlationId, requestId).AnyContext();
 
-            using(var timer = new Foundation.Timer())
+            using (var timer = new Foundation.Timer())
             {
                 var response = await base.SendAsync(request, cancellationToken).AnyContext();
                 timer.Stop();
@@ -53,12 +53,12 @@
         protected async Task LogHttpRequest(HttpRequestMessage request, string correlationId, string requestId)
         {
             var content = string.Empty;
-            if(request?.Content != null)
+            if (request?.Content != null)
             {
                 content = await this.GetRequestContent(request).AnyContext();
             }
 
-            if(!request.Headers.IsNullOrEmpty())
+            if (!request.Headers.IsNullOrEmpty())
             {
                 this.WriteLog(LogKeys.OutboundRequest, $"[{requestId}] http headers={string.Join("|", request.Headers.Select(h => $"{h.Key}={string.Join("|", h.Value)}"))}");
             }
@@ -70,22 +70,22 @@
         protected async Task LogHttpResponse(HttpResponseMessage response, string requestId, TimeSpan duration)
         {
             var level = LogLevel.Information;
-            if((int)response.StatusCode > 499)
+            if ((int)response.StatusCode > 499)
             {
                 level = LogLevel.Error;
             }
-            else if((int)response.StatusCode > 399)
+            else if ((int)response.StatusCode > 399)
             {
                 level = LogLevel.Warning;
             }
 
             var content = string.Empty;
-            if(response?.Content != null)
+            if (response?.Content != null)
             {
                 content = await this.GetResponseContent(response).AnyContext();
             }
 
-            if(!response.Headers.IsNullOrEmpty())
+            if (!response.Headers.IsNullOrEmpty())
             {
                 this.WriteLog(LogKeys.OutboundResponse, $"[{requestId}] http headers={string.Join("|", response.Headers.Select(h => $"{h.Key}={string.Join("|", h.Value)}"))}", level: level);
             }
@@ -104,13 +104,13 @@
             IDictionary<string, object> properties = null,
             params object[] args)
         {
-            if(this.logger == null)
+            if (this.logger == null)
             {
                 Debug.WriteLine(message);
             }
             else
             {
-                if(type.IsNullOrEmpty())
+                if (type.IsNullOrEmpty())
                 {
                     this.logger.Log(level, exception, $"{logKey:l} {message:l}", args);
                 }

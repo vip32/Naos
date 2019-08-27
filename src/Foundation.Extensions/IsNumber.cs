@@ -27,7 +27,7 @@
 
         public static bool IsNumber(this object source)
         {
-            if(source == null)
+            if (source == null)
             {
                 return false;
             }

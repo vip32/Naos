@@ -44,7 +44,7 @@
                     .AddTransient<IStartupTask>(sp =>
                     {
                         var task = ActivatorUtilities.GetServiceOrCreateInstance<TStartupTask>(sp);
-                        if(task != null)
+                        if (task != null)
                         {
                             task.Delay = delay;
                         }
@@ -54,13 +54,13 @@
 
         private static IServiceCollection AddStartupTaskServerDecorator(this IServiceCollection services)
         {
-            if(isDecorated)
+            if (isDecorated)
             {
                 return services; // already decorated the IServer (idempotent)
             }
 
             var serviceDescriptor = GetIServerDescriptor(services);
-            if(serviceDescriptor == null)
+            if (serviceDescriptor == null)
             {
                 return services; // just return as there is no iservice (integration tests)
                 //throw new Exception("Could not find any registered services for type IServer. IStartupTask requires using an IServer");
@@ -91,12 +91,12 @@
 
         private static object GetInstance(this IServiceProvider provider, ServiceDescriptor descriptor)
         {
-            if(descriptor.ImplementationInstance != null)
+            if (descriptor.ImplementationInstance != null)
             {
                 return descriptor.ImplementationInstance;
             }
 
-            if(descriptor.ImplementationType != null)
+            if (descriptor.ImplementationType != null)
             {
                 return provider.GetServiceOrCreateInstance(descriptor.ImplementationType);
             }

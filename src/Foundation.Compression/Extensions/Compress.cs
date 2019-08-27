@@ -14,7 +14,7 @@
         {
             EnsureArg.IsNotNull(destination, nameof(destination));
 
-            if(source == null)
+            if (source == null)
             {
                 return;
             }

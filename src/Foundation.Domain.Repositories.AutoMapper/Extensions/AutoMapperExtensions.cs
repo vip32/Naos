@@ -39,7 +39,7 @@
         {
             profile.ForAllMaps((map, expr) =>
             {
-                if(filter(map))
+                if (filter(map))
                 {
                     IgnoreUnmappedProperties(map, expr);
                 }
@@ -58,14 +58,14 @@
 
         private static void IgnoreUnmappedProperties(TypeMap map, IMappingExpression expr)
         {
-            foreach(var propName in map.GetUnmappedPropertyNames())
+            foreach (var propName in map.GetUnmappedPropertyNames())
             {
-                if(map.SourceType.GetProperty(propName) != null)
+                if (map.SourceType.GetProperty(propName) != null)
                 {
                     expr.ForSourceMember(propName, opt => opt.DoNotValidate());
                 }
 
-                if(map.DestinationType.GetProperty(propName) != null)
+                if (map.DestinationType.GetProperty(propName) != null)
                 {
                     expr.ForMember(propName, opt => opt.Ignore());
                 }

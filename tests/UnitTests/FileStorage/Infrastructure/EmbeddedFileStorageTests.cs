@@ -16,12 +16,12 @@
         public async Task CanGetFileInfoAsync()
         {
             var storage = this.GetStorage();
-            if(storage == null)
+            if (storage == null)
             {
                 return;
             }
 
-            using(storage)
+            using (storage)
             {
                 var fileInfo = await storage.GetFileInformationAsync(@"Naos\Core\UnitTests/FileStorage\StubFile.txt").AnyContext();
                 Assert.NotNull(fileInfo);
@@ -33,12 +33,12 @@
         public async Task CanGetJsonFileInfoAsync()
         {
             var storage = this.GetStorage();
-            if(storage == null)
+            if (storage == null)
             {
                 return;
             }
 
-            using(storage)
+            using (storage)
             {
                 var fileInfo = await storage.GetFileInformationAsync(@"Naos\Core\UnitTests/FileStorage\StubFile.json").AnyContext();
                 Assert.NotNull(fileInfo);
@@ -50,12 +50,12 @@
         public async Task CaHandleNonExistingFileInfoAsync()
         {
             var storage = this.GetStorage();
-            if(storage == null)
+            if (storage == null)
             {
                 return;
             }
 
-            using(storage)
+            using (storage)
             {
                 var fileInfo = await storage.GetFileInformationAsync(@"Naos\Core\UnitTests\FileStorage\DoesNotExist.txt").AnyContext();
                 Assert.Null(fileInfo);
@@ -66,12 +66,12 @@
         public async Task CanGetFileInfosAsync()
         {
             var storage = this.GetStorage();
-            if(storage == null)
+            if (storage == null)
             {
                 return;
             }
 
-            using(storage)
+            using (storage)
             {
                 var fileInfos = await storage.GetFileInformationsAsync().AnyContext();
                 Assert.NotNull(fileInfos);
@@ -84,12 +84,12 @@
         public async Task CanGetFileInfosByPatternAsync()
         {
             var storage = this.GetStorage();
-            if(storage == null)
+            if (storage == null)
             {
                 return;
             }
 
-            using(storage)
+            using (storage)
             {
                 var fileInfos = await storage.GetFileInformationsAsync(searchPattern: "*StubFile.*").AnyContext();
                 Assert.NotNull(fileInfos);
@@ -102,12 +102,12 @@
         public async Task CanGetFileStreamAsync()
         {
             var storage = this.GetStorage();
-            if(storage == null)
+            if (storage == null)
             {
                 return;
             }
 
-            using(storage)
+            using (storage)
             {
                 var stream = await storage.GetFileStreamAsync(@"Naos\Core\UnitTests\FileStorage\StubFile.txt").AnyContext();
                 Assert.NotNull(stream);
@@ -119,12 +119,12 @@
         public async Task CanHandleNonExistingFileStreamAsync()
         {
             var storage = this.GetStorage();
-            if(storage == null)
+            if (storage == null)
             {
                 return;
             }
 
-            using(storage)
+            using (storage)
             {
                 var stream = await storage.GetFileStreamAsync(@"Naos\Core\UnitTests\FileStorage\DoesNotExist.txt").AnyContext();
                 Assert.Null(stream);

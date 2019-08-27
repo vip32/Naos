@@ -21,18 +21,18 @@
         /// <returns>the value.</returns>
         public static string GetHeader(this HttpResponseMessage source, string name)
         {
-            if(source == null)
+            if (source == null)
             {
                 return null;
             }
 
-            if(string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name))
             {
                 return null;
             }
 
             var result = source.GetHeaderInternal(name);
-            if(string.IsNullOrEmpty(result))
+            if (string.IsNullOrEmpty(result))
             {
                 result = source.GetHeaderInternal($"X-{name}");
             }
@@ -69,12 +69,12 @@
             this HttpResponseMessage source,
             string prefix = null)
         {
-            if(source == null || source.Headers == null)
+            if (source == null || source.Headers == null)
             {
                 return null;
             }
 
-            if(string.IsNullOrEmpty(prefix))
+            if (string.IsNullOrEmpty(prefix))
             {
                 return source.Headers
                     .ToDictionary(h => h.Key, h => h.Value?.FirstOrDefault());
@@ -94,12 +94,12 @@
 
         public static HttpResponseMessage WithHeader(this HttpResponseMessage source, string key, string value, bool allowEmptyValue = false)
         {
-            if(source == null || key.IsNullOrEmpty() || (value.IsNullOrEmpty() && !allowEmptyValue))
+            if (source == null || key.IsNullOrEmpty() || (value.IsNullOrEmpty() && !allowEmptyValue))
             {
                 return source;
             }
 
-            if(source.Headers.Contains(key))
+            if (source.Headers.Contains(key))
             {
                 source.Headers.Remove(key);
             }
@@ -111,7 +111,7 @@
 
         public static HttpResponseMessage WithLocationHeader(this HttpResponseMessage source, string url, bool allowEmptyValue = false)
         {
-            if(source == null || url.IsNullOrEmpty() || (url.IsNullOrEmpty() && !allowEmptyValue))
+            if (source == null || url.IsNullOrEmpty() || (url.IsNullOrEmpty() && !allowEmptyValue))
             {
                 return source;
             }
@@ -123,7 +123,7 @@
 
         public static async Task<string> ReadAsStringAsync(this HttpResponseMessage source, string defaultValue = "")
         {
-            if(source == null || source.Content == null)
+            if (source == null || source.Content == null)
             {
                 return defaultValue;
             }
@@ -133,7 +133,7 @@
 
         public static async Task<Stream> ReadAsStreamAsync(this HttpResponseMessage source)
         {
-            if(source == null || source.Content == null)
+            if (source == null || source.Content == null)
             {
                 return null;
             }
@@ -143,7 +143,7 @@
 
         public static async Task<T> ReadAsAsync<T>(this HttpResponseMessage source)
         {
-            if(source == null || source.Content == null)
+            if (source == null || source.Content == null)
             {
                 return default;
             }
@@ -154,7 +154,7 @@
         public static async Task<T> ReadAsJsonAsync<T>(this HttpContent content)
         {
             var json = await content.ReadAsStringAsync().AnyContext();
-            if(json.IsNullOrEmpty())
+            if (json.IsNullOrEmpty())
             {
                 return default;
             }
@@ -170,12 +170,12 @@
         /// /// <returns>the value.</returns>
         private static string GetHeaderInternal(this HttpResponseMessage source, string name)
         {
-            if(source == null || source.Headers == null)
+            if (source == null || source.Headers == null)
             {
                 return null;
             }
 
-            if(string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name))
             {
                 return null;
             }

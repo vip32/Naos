@@ -142,20 +142,20 @@
             var hasDelays = delays.SafeAny();
             var retryCount = hasDelays ? delays.Length : DefaultRetryCount;
 
-            for(var i = 0; i <= retryCount; i++)
+            for (var i = 0; i <= retryCount; i++)
             {
                 try
                 {
                     await func().ConfigureAwait(false);
                     return;
                 }
-                catch(Exception e) when (i == retryCount)
+                catch (Exception e) when (i == retryCount)
                 {
                     throw new RetryException(retryCount, e);
                 }
-                catch(Exception e) when (exceptionPredicate(e))
+                catch (Exception e) when (exceptionPredicate(e))
                 {
-                    if(hasDelays)
+                    if (hasDelays)
                     {
                         await Task.Delay(delays[i]).ConfigureAwait(false);
                     }
@@ -179,7 +179,7 @@
             CancellationToken cToken)
         {
             var failureCount = 0;
-            while(true)
+            while (true)
             {
                 try
                 {
@@ -187,13 +187,13 @@
                     await func().ConfigureAwait(false);
                     return;
                 }
-                catch(Exception e) when (exceptionPredicate(e))
+                catch (Exception e) when (exceptionPredicate(e))
                 {
                     try
                     {
                         await Task.Delay(delayFactory(failureCount), cToken).ConfigureAwait(false);
                     }
-                    catch(TaskCanceledException)
+                    catch (TaskCanceledException)
                     {
                         throw new RetryException(failureCount - 1, e);
                     }
@@ -339,19 +339,19 @@
             var hasDelays = delays.SafeAny();
             var retryCount = hasDelays ? delays.Length : DefaultRetryCount;
 
-            for(var i = 0; i <= retryCount; i++)
+            for (var i = 0; i <= retryCount; i++)
             {
                 try
                 {
                     return await func().ConfigureAwait(false);
                 }
-                catch(Exception e) when (i == retryCount)
+                catch (Exception e) when (i == retryCount)
                 {
                     throw new RetryException(retryCount, e);
                 }
-                catch(Exception e) when (exceptionPredicate(e))
+                catch (Exception e) when (exceptionPredicate(e))
                 {
-                    if(hasDelays)
+                    if (hasDelays)
                     {
                         await Task.Delay(delays[i]).ConfigureAwait(false);
                     }
@@ -377,20 +377,20 @@
             CancellationToken cToken)
         {
             var failureCount = 0;
-            while(true)
+            while (true)
             {
                 try
                 {
                     failureCount++;
                     return await func().ConfigureAwait(false);
                 }
-                catch(Exception e) when (exceptionPredicate(e))
+                catch (Exception e) when (exceptionPredicate(e))
                 {
                     try
                     {
                         await Task.Delay(delayFactory(failureCount), cToken).ConfigureAwait(false);
                     }
-                    catch(TaskCanceledException)
+                    catch (TaskCanceledException)
                     {
                         throw new RetryException(failureCount - 1, e);
                     }

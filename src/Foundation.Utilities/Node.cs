@@ -22,7 +22,7 @@
         {
             get
             {
-                if(this.IsRoot)
+                if (this.IsRoot)
                 {
                     return Enumerable.Empty<Node<T>>();
                 }
@@ -83,7 +83,7 @@
         {
             get
             {
-                if(this.IsRoot)
+                if (this.IsRoot)
                 {
                     return this.ToEnumarable();
                 }
@@ -155,7 +155,7 @@
 
         public static bool operator ==(Node<T> value1, Node<T> value2)
         {
-            if((object)value1 == null && (object)value2 == null)
+            if ((object)value1 == null && (object)value2 == null)
             {
                 return true;
             }
@@ -171,13 +171,13 @@
         public static IEnumerable<Node<T>> CreateTree<TId>(IEnumerable<T> values, Func<T, TId> idSelector, Func<T, TId?> parentIdSelector)
             where TId : struct
         {
-            if(!values.SafeAny())
+            if (!values.SafeAny())
             {
                 return Enumerable.Empty<Node<T>>();
             }
 
-            if(values.FirstOrDefault(v => IsSameId(idSelector(v), parentIdSelector(v))) != null)
-            {
+            if (values.FirstOrDefault(v => IsSameId(idSelector(v), parentIdSelector(v))) != null)
+            {
                 throw new ArgumentException("at least one value has the same id and parentid");
             }
 
@@ -188,21 +188,21 @@
             where TId : struct
         {
             var result = rootNodes.ToList();
-            if(result.Duplicates(n => n).Any())
+            if (result.Duplicates(n => n).Any())
             {
                 throw new ArgumentException($"one or more values contains duplicate keys");
             }
 
-            foreach(var rootNode in result)
+            foreach (var rootNode in result)
             {
                 var parentId = parentIdSelector(rootNode.Value);
                 var parent = result.FirstOrDefault(n => IsSameId(idSelector(n.Value), parentId));
 
-                if(parent != null)
+                if (parent != null)
                 {
                     parent.Add(rootNode);
                 }
-                else if(parentId != null)
+                else if (parentId != null)
                 {
                     throw new ArgumentException($"a value has the parent id [{parentId.Value}] but no other nodes has this id");
                 }
@@ -220,33 +220,33 @@
 
         public void Add(Node<T> childNode, int index = -1)
         {
-            if(index < -1)
+            if (index < -1)
             {
                 throw new ArgumentException("the index can not be lower then -1");
             }
 
-            if(index > this.Children.Count() - 1)
+            if (index > this.Children.Count() - 1)
             {
                 throw new ArgumentException($"the index ({index}) can not be higher then index of the last iten. Use the AddChild() method without an index to add at the end");
             }
 
-            if(!childNode.IsRoot)
+            if (!childNode.IsRoot)
             {
                 throw new ArgumentException($"the child node cannot be added because it is not a root node");
             }
 
-            if(this.Root == childNode)
+            if (this.Root == childNode)
             {
                 throw new ArgumentException($"the child node is the rootnode of the parent");
             }
 
-            if(childNode.SelfAndDescendants.Any(n => this == n))
+            if (childNode.SelfAndDescendants.Any(n => this == n))
             {
                 throw new ArgumentException($"the child node cannot be added to itself or its descendants");
             }
 
             childNode.Parent = this;
-            if(index == -1)
+            if (index == -1)
             {
                 this.children.Add(childNode);
             }
@@ -301,7 +301,7 @@
 
         public void AddParent(Node<T> parentNode)
         {
-            if(!this.IsRoot)
+            if (!this.IsRoot)
             {
                 throw new ArgumentException($"the node [{this.Value}] already has a parent");
             }
@@ -336,7 +336,7 @@
 
         public void Disconnect()
         {
-            if(this.IsRoot)
+            if (this.IsRoot)
             {
                 throw new InvalidOperationException("a root node can not get disconnected from a parent");
             }
@@ -397,7 +397,7 @@
 
         private IEnumerable<Node<T>> GetNodesAtLevelInternal(int level)
         {
-            if(level == this.Level)
+            if (level == this.Level)
             {
                 return this.ToEnumarable();
             }

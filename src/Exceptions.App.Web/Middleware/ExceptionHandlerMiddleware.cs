@@ -41,7 +41,7 @@
             {
                 await this.next(context).AnyContext();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //this.logger.LogError(
                 //    ex != null ? new EventId(ex.HResult) : new EventId(-1),
@@ -52,14 +52,14 @@
                             ? $"{context.GetCorrelationId()} ({context.GetRequestId()})"
                             : context.TraceIdentifier;
 
-                if(context.Response.HasStarted)
+                if (context.Response.HasStarted)
                 {
                     this.logger.LogWarning("The response has already started, the http naos exception middleware will not be executed");
                     throw;
                 }
 
                 var responseHandler = this.responseHandlers?.FirstOrDefault(h => h.CanHandle(ex));
-                if(responseHandler != null)
+                if (responseHandler != null)
                 {
                     // specific handler for exception
                     responseHandler.Handle(context, ex, instance, context.GetRequestId(), this.options.HideDetails, this.options.JsonResponse);

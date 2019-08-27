@@ -21,7 +21,7 @@
         public override bool Equals(object obj)
         {
             // Source: https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/implement-value-objects
-            if(obj == null || obj.GetType() != this.GetType())
+            if (obj == null || obj.GetType() != this.GetType())
             {
                 return false;
             }
@@ -30,14 +30,14 @@
             var thisValues = this.GetAtomicValues().GetEnumerator();
             var otherValues = other.GetAtomicValues().GetEnumerator();
 
-            while(thisValues.MoveNext() && otherValues.MoveNext())
+            while (thisValues.MoveNext() && otherValues.MoveNext())
             {
-                if(thisValues.Current is null ^ otherValues.Current is null)
+                if (thisValues.Current is null ^ otherValues.Current is null)
                 {
                     return false;
                 }
 
-                if(thisValues.Current?.Equals(otherValues.Current) == false)
+                if (thisValues.Current?.Equals(otherValues.Current) == false)
                 {
                     return false;
                 }
@@ -61,7 +61,7 @@
 
         protected static bool EqualOperator(ValueObject left, ValueObject right)
         {
-            if(left is null ^ right is null)
+            if (left is null ^ right is null)
             {
                 return false;
             }

@@ -6,7 +6,7 @@
     {
         public static string FromStream(Stream stream)
         {
-            if(stream == null)
+            if (stream == null)
             {
                 return null;
             }
@@ -36,7 +36,7 @@
 
         public static Stream ToStream(string value)
         {
-            if(value == null)
+            if (value == null)
             {
                 return null;
             }
@@ -54,16 +54,16 @@
 
         public static byte[] ToBytes(Stream stream)
         {
-            if(stream == null)
+            if (stream == null)
             {
                 return null;
             }
 
             var buffer = new byte[16 * 1024];
-            using(var ms = new MemoryStream())
+            using (var ms = new MemoryStream())
             {
                 int read;
-                while((read = stream.Read(buffer, 0, buffer.Length)) > 0)
+                while ((read = stream.Read(buffer, 0, buffer.Length)) > 0)
                 {
                     ms.Write(buffer, 0, read);
                 }

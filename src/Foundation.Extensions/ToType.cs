@@ -9,7 +9,7 @@
         public static T ToType<T>(this object value)
         {
             var targetType = typeof(T);
-            if(value == null)
+            if (value == null)
             {
                 try
                 {
@@ -24,16 +24,16 @@
             var converter = TypeDescriptor.GetConverter(targetType);
             var valueType = value.GetType();
 
-            if(targetType.IsAssignableFrom(valueType))
+            if (targetType.IsAssignableFrom(valueType))
             {
                 return (T)value;
             }
 
             var targetTypeInfo = targetType.GetTypeInfo();
-            if(targetTypeInfo.IsEnum && (value is string || valueType.GetTypeInfo().IsEnum))
+            if (targetTypeInfo.IsEnum && (value is string || valueType.GetTypeInfo().IsEnum))
             {
                 // attempt to match enum by name.
-                if(EnumExtensions.TryEnumIsDefined(targetType, value.ToString()))
+                if (EnumExtensions.TryEnumIsDefined(targetType, value.ToString()))
                 {
                     var parsedValue = Enum.Parse(targetType, value.ToString(), false);
                     return (T)parsedValue;
@@ -42,18 +42,18 @@
                 throw new ArgumentException($"The Enum value of '{value}' is not defined as a valid value for '{targetType.FullName}'.");
             }
 
-            if(targetTypeInfo.IsEnum && valueType.IsNumeric())
+            if (targetTypeInfo.IsEnum && valueType.IsNumeric())
             {
                 return (T)Enum.ToObject(targetType, value);
             }
 
-            if(converter.CanConvertFrom(valueType))
+            if (converter.CanConvertFrom(valueType))
             {
                 var convertedValue = converter.ConvertFrom(value);
                 return (T)convertedValue;
             }
 
-            if(!(value is IConvertible))
+            if (!(value is IConvertible))
             {
                 throw new ArgumentException($"An incompatible value specified. Target Type: {targetType.FullName} Value Type: {value.GetType().FullName}", nameof(value));
             }
@@ -63,7 +63,7 @@
                 var convertedValue = Convert.ChangeType(value, targetType);
                 return (T)convertedValue;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new ArgumentException($"An incompatible value specified. Target Type: {targetType.FullName} Value Type: {value.GetType().FullName}", nameof(value), e);
             }

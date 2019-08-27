@@ -25,7 +25,7 @@
         /// <param name="output">The output.</param>
         public void Serialize(object value, Stream output)
         {
-            using(var writer = new BsonDataWriter(output))
+            using (var writer = new BsonDataWriter(output))
             {
                 this.serializer.Serialize(writer, value);
                 writer.Flush();
@@ -40,7 +40,7 @@
         /// <param name="type">The type.</param>
         public object Deserialize(Stream input, Type type)
         {
-            using(var reader = new BsonDataReader(input))
+            using (var reader = new BsonDataReader(input))
             {
                 return this.serializer.Deserialize(reader, type);
             }
@@ -53,7 +53,7 @@
         /// <param name="input">The input.</param>
         public T Deserialize<T>(Stream input)
         {
-            using(var reader = new BsonDataReader(input))
+            using (var reader = new BsonDataReader(input))
             {
                 var serializer = new JsonSerializer();
                 return serializer.Deserialize<T>(reader);

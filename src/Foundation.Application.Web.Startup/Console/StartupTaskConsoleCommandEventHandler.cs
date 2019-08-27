@@ -22,9 +22,9 @@
         {
             // TODO: provide possibility to start a specific task (task.StartAsync())
 
-            if(request.Command.List)
+            if (request.Command.List)
             {
-                foreach(var task in this.tasks.Safe())
+                foreach (var task in this.tasks.Safe())
                 {
                     Console.WriteLine($"- {task.GetType().PrettyName()}", Color.Gray);
                 }

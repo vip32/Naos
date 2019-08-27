@@ -40,7 +40,7 @@
         {
             EnsureArg.IsNotNull(registration, nameof(registration));
 
-            using(var content = new JsonContent(registration))
+            using (var content = new JsonContent(registration))
             {
                 await this.httpClient.PostAsync("api/servicediscovery/router/registrations", content).AnyContext();
             }

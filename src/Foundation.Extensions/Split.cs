@@ -10,15 +10,15 @@
             var remainders = new List<int>();
             var result = new List<long>();
 
-            while(value > 0)
+            while (value > 0)
             {
                 remainders.Add((int)value % 2);
                 value /= 2;
             }
 
-            for(var i = 0; i < remainders.Count; i++)
+            for (var i = 0; i < remainders.Count; i++)
             {
-                if(remainders[i] == 1)
+                if (remainders[i] == 1)
                 {
                     result.Add((long)Math.Pow(2, i));
                 }

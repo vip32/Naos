@@ -8,12 +8,12 @@
         [DebuggerStepThrough]
         public static string SliceTill(this string source, string till, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         {
-            if(source.IsNullOrEmpty())
+            if (source.IsNullOrEmpty())
             {
                 return source;
             }
 
-            if(till.IsNullOrEmpty())
+            if (till.IsNullOrEmpty())
             {
                 return source;
             }
@@ -24,12 +24,12 @@
         [DebuggerStepThrough]
         public static string SliceTillLast(this string source, string till, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         {
-            if(source.IsNullOrEmpty())
+            if (source.IsNullOrEmpty())
             {
                 return source;
             }
 
-            if(till.IsNullOrEmpty())
+            if (till.IsNullOrEmpty())
             {
                 return source;
             }
@@ -39,17 +39,17 @@
 
         private static string SliceTillInternal(this string source, int tillIndex)
         {
-            if(source.IsNullOrEmpty())
+            if (source.IsNullOrEmpty())
             {
                 return source;
             }
 
-            if(tillIndex == 0)
+            if (tillIndex == 0)
             {
                 return string.Empty;
             }
 
-            if(tillIndex > 0)
+            if (tillIndex > 0)
             {
                 return source.Substring(0, tillIndex);
             }

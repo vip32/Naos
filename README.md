@@ -255,12 +255,68 @@ application's modularity.
 - Startup
 - KeyVault (+local cache)
 
-# AppCommands
+# Commands
 
-- Command
+- Command/Query
 - Command handlers
 - Behaviours
   - (Decorators)
+
+Startup.cs configuration:
+- ConfigureServices(...)
+```
+.AddNaos(this.Configuration, "Product", "Capability", new[] { "All" }, n => n
+    ...
+    .AddCommands(o => o
+        .AddBehavior<ValidateCommandBehavior>()
+        .AddBehavior<JournalCommandBehavior>()
+        .AddBehavior(new FileStoragePersistCommandBehavior(
+            new FolderFileStorage(o => o.Folder(...)))))
+```
+- Configure(...)
+```
+.UseNaos(s => s
+    ...
+    .UseRequestCommands()
+    ...);
+```
+##### Sending Commands
+Use the mediator (IMediator) and send the command. A registered handler will handle the command and provide a response.
+```
+var response = await mediator.Send(command).AnyContext();
+```
+
+##### Request Command Dispatcher
+Provides HTTP access to specific commands, these commands need to be registered. The commands are available on endpoints as specified in the AddCommands configuration.
+All configured commands are also available in the swagger documentation (with request/response schemas).
+```
+
+                   CommandRequest
+ H               .----------------.                                                           CommandHandler
+ T               | -Id            |     RequestCommandDispatcher                             .--------------.
+ T-------------> .----------------.     Middleware                 Mediator             .--> | Handle()     |
+ P   (request)   | -CorrelationId |--->.------------.              .------------.      /     `--------------`
+                 `----------------`    | Invoke()   |------------->| Send()     |-----`             |
+  <------------------------------------|            |<-------------|            |<----.             V
+     (response)                        `------------`              `------------`      \      CommandResponse
+                                     (match method/route)                               \    .--------------.
+                                                                                         `---| -Result      |
+                                                                                             | -Cancelled   |
+                                                                                             `--------------`
+                                                                                                 (result)
+```
+Startup.cs configuration:
+- ConfigureServices(...)
+```
+.AddNaos(this.Configuration, "Product", "Capability", new[] { "All" }, n => n
+    ...
+    .AddCommands(o => o
+        ...
+        .AddRequestDispatcher(o => o
+            .Post<CreateCustomerCommand>("/api/commands/customers/create", 201)
+            .Get<GetActiveCustomersQuery, IEnumerable<Customer>>("/api/commands/customers/active", 200)))
+```
+
 
 # Messaging
 

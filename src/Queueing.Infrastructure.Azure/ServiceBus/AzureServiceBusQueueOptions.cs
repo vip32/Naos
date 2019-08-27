@@ -105,67 +105,67 @@
                 MaxDeliveryCount = this.Retries + 1
             };
 
-            if(this.AutoDeleteOnIdle.HasValue)
+            if (this.AutoDeleteOnIdle.HasValue)
             {
                 result.AutoDeleteOnIdle = this.AutoDeleteOnIdle.Value;
             }
 
-            if(this.DefaultMessageTimeToLive.HasValue)
+            if (this.DefaultMessageTimeToLive.HasValue)
             {
                 result.DefaultMessageTimeToLive = this.DefaultMessageTimeToLive.Value;
             }
 
-            if(this.DuplicateDetectionHistoryTimeWindow.HasValue)
+            if (this.DuplicateDetectionHistoryTimeWindow.HasValue)
             {
                 result.DuplicateDetectionHistoryTimeWindow = this.DuplicateDetectionHistoryTimeWindow.Value;
             }
 
-            if(this.EnableBatchedOperations.HasValue)
+            if (this.EnableBatchedOperations.HasValue)
             {
                 result.EnableBatchedOperations = this.EnableBatchedOperations.Value;
             }
 
-            if(this.EnableDeadLetteringOnMessageExpiration.HasValue)
+            if (this.EnableDeadLetteringOnMessageExpiration.HasValue)
             {
                 result.EnableDeadLetteringOnMessageExpiration = this.EnableDeadLetteringOnMessageExpiration.Value;
             }
 
-            if(this.EnablePartitioning.HasValue)
+            if (this.EnablePartitioning.HasValue)
             {
                 result.EnablePartitioning = this.EnablePartitioning.Value;
             }
 
-            if(!string.IsNullOrEmpty(this.ForwardDeadLetteredMessagesTo))
+            if (!string.IsNullOrEmpty(this.ForwardDeadLetteredMessagesTo))
             {
                 result.ForwardDeadLetteredMessagesTo = this.ForwardDeadLetteredMessagesTo;
             }
 
-            if(!string.IsNullOrEmpty(this.ForwardTo))
+            if (!string.IsNullOrEmpty(this.ForwardTo))
             {
                 result.ForwardTo = this.ForwardTo;
             }
 
-            if(this.MaxSizeInMegabytes.HasValue)
+            if (this.MaxSizeInMegabytes.HasValue)
             {
                 result.MaxSizeInMB = this.MaxSizeInMegabytes.Value;
             }
 
-            if(this.RequiresDuplicateDetection.HasValue)
+            if (this.RequiresDuplicateDetection.HasValue)
             {
                 result.RequiresDuplicateDetection = this.RequiresDuplicateDetection.Value;
             }
 
-            if(this.RequiresSession.HasValue)
+            if (this.RequiresSession.HasValue)
             {
                 result.RequiresSession = this.RequiresSession.Value;
             }
 
-            if(this.Status.HasValue)
+            if (this.Status.HasValue)
             {
                 result.Status = this.Status.Value;
             }
 
-            if(!string.IsNullOrEmpty(this.UserMetadata))
+            if (!string.IsNullOrEmpty(this.UserMetadata))
             {
                 result.UserMetadata = this.UserMetadata;
             }

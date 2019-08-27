@@ -29,9 +29,9 @@
 
         public Task Handle(SpanEndedDomainEvent notification, CancellationToken cancellationToken)
         {
-            if(notification?.Span != null)
+            if (notification?.Span != null)
             {
-                if(notification.Span.Status == SpanStatus.Failed)
+                if (notification.Span.Status == SpanStatus.Failed)
                 {
                     this.logger.LogError($"{{LogKey:l}} span ended: {notification.Span.OperationName} (id={notification.Span.SpanId}, parent={notification.Span.ParentSpanId}, kind={notification.Span.Kind}) {notification.Span.StatusDescription}", LogKeys.Tracing);
                 }
@@ -46,7 +46,7 @@
 
         public Task Handle(SpanStartedDomainEvent notification, CancellationToken cancellationToken)
         {
-            if(notification?.Span != null)
+            if (notification?.Span != null)
             {
                 this.logger.LogInformation($"{{LogKey:l}} span started: {notification.Span.OperationName} (id={notification.Span.SpanId}, parent={notification.Span.ParentSpanId}, kind={notification.Span.Kind}, tags={string.Join("|", notification.Span.Tags.Select(t => $"{t.Key}={t.Value}"))})", LogKeys.Tracing);
             }

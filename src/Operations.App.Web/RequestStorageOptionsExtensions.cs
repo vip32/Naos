@@ -23,7 +23,7 @@
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
             var configuration = options.Context.Configuration?.GetSection(section).Get<LogFileConfiguration>();
-            if(configuration?.Enabled == true)
+            if (configuration?.Enabled == true)
             {
                 options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: request storage added (type={typeof(FolderFileStorage).Name})");
                 options.Context.Services.AddSingleton(sp =>
@@ -47,7 +47,7 @@
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
             var configuration = options.Context.Configuration?.GetSection(section).Get<BlobStorageConfiguration>();
-            if(configuration?.Enabled == true)
+            if (configuration?.Enabled == true)
             {
                 options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: request storage added (type={typeof(AzureBlobFileStorage).Name})");
                 var connectionString = options.Context.Configuration[$"{section}:connectionString"];

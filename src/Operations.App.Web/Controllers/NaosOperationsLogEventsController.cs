@@ -1,6 +1,5 @@
 ﻿namespace Naos.Core.Operations.App.Web
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net;
@@ -105,19 +104,19 @@
                     this.filterContext.GetSpecifications<LogEvent>(),
                     this.filterContext.GetFindOptions<LogEvent>()).AnyContext();
 
-                foreach(var entity in entities
+                foreach (var entity in entities
                     .Where(l => !l.TrackType.EqualsAny(new[] { LogTrackTypes.Trace })))
                 {
                     var levelColor = "lime";
-                    if(entity.Level.SafeEquals(nameof(LogLevel.Trace)) || entity.Level.SafeEquals(nameof(LogLevel.Debug)) || entity.Level.SafeEquals("Verbose"))
+                    if (entity.Level.SafeEquals(nameof(LogLevel.Trace)) || entity.Level.SafeEquals(nameof(LogLevel.Debug)) || entity.Level.SafeEquals("Verbose"))
                     {
                         levelColor = "#75715E";
                     }
-                    else if(entity.Level.SafeEquals(nameof(LogLevel.Warning)))
+                    else if (entity.Level.SafeEquals(nameof(LogLevel.Warning)))
                     {
                         levelColor = "#FF8C00";
                     }
-                    else if(entity.Level.SafeEquals(nameof(LogLevel.Critical)) || entity.Level.SafeEquals(nameof(LogLevel.Error)) || entity.Level.SafeEquals("Fatal"))
+                    else if (entity.Level.SafeEquals(nameof(LogLevel.Critical)) || entity.Level.SafeEquals(nameof(LogLevel.Error)) || entity.Level.SafeEquals("Fatal"))
                     {
                         levelColor = "#FF0000";
                     }

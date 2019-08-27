@@ -1,6 +1,7 @@
 ﻿namespace Naos.Application.Web
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Threading;
@@ -23,8 +24,9 @@
     using Naos.Core.JobScheduling.Domain;
     using Naos.Core.Messaging.Domain;
     using Naos.Foundation;
+    using Naos.Sample.Customers.App;
+    using Naos.Sample.Customers.Domain;
     using Newtonsoft.Json;
-    using NJsonSchema.Generation;
     using NSwag.Generation.Processors;
 
     public class Startup
@@ -41,14 +43,8 @@
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // TODO: make pretty, like:
-            //services.AddRequestCommands(o =>
-            //    o.Get<EchoCommand, EchoCommandResponse>("/commands/echo") // Query
-            //    o.Get<PingCommand>("/commands/ping") // Query
-            //    o.Post<CreateCustomerCommand, CreateCustomerCommandResponse>("/commands/createcustomer") // Command
-            //);
-            services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<EchoCommand, EchoCommandResponse> { Route = "/api/commands/echo", RequestMethod = "get;post" });
-            services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<PingCommand> { Route = "/api/commands/ping", RequestMethod = "get" });
+            //services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<EchoCommand, EchoCommandResponse> { Route = "/api/commands/echo", RequestMethod = "get;post" });
+            //services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<PingCommand> { Route = "/api/commands/ping", RequestMethod = "get" });
 
             services
                 .AddMiddlewareAnalysis()
@@ -57,7 +53,7 @@
                 .AddScoped(sp =>
                 {
                     var actionContext = sp.GetRequiredService<IActionContextAccessor>()?.ActionContext;
-                    if(actionContext == null)
+                    if (actionContext == null)
                     {
                         throw new ArgumentException("UrlHelper needs an ActionContext, which is usually available in MVC components (Controller/PageModel/ViewComponent)");
                     }
@@ -117,7 +113,10 @@
                         .AddBehavior<JournalCommandBehavior>()
                         .AddBehavior(new FileStoragePersistCommandBehavior(
                             new FolderFileStorage(o => o
-                                .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "commands"))))))
+                                .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "commands")))))
+                        .AddRequestDispatcher(o => o
+                            .Post<CreateCustomerCommand>("/api/commands/customers/create", 201)
+                            .Get<GetActiveCustomersQuery, IEnumerable<Customer>>("/api/commands/customers/active", 200)))
                     .AddOperations(o => o
                         .AddInteractiveConsole()
                         .AddLogging(o => o
@@ -149,9 +148,9 @@
                             .Subscribe<EchoMessage, EchoMessageHandler>()))
                     .AddServiceDiscovery(o => o
                         .UseFileSystemClientRegistry())
-                        // TODO: create a cloud based registry (storage)
-                        //.UseConsulClientRegistry())
-                        //.UseRouterClientRegistry())
+                    // TODO: create a cloud based registry (storage)
+                    //.UseConsulClientRegistry())
+                    //.UseRouterClientRegistry())
                     .AddServiceDiscoveryRouter(o => o
                         .UseFileSystemRegistry()));
 
@@ -161,7 +160,7 @@
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment environment)
         {
-            if(environment.IsProduction())
+            if (environment.IsProduction())
             {
                 app.UseHsts();
             }

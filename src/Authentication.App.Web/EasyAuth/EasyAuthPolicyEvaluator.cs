@@ -27,10 +27,10 @@
             object resource)
         {
             var result = await base.AuthorizeAsync(policy, authenticationResult, context, resource).AnyContext();
-            if(!result.Succeeded)
+            if (!result.Succeeded)
             {
                 // If user is not authenticated, send them to the easyauth login
-                if(!context.User.Identity.IsAuthenticated)
+                if (!context.User.Identity.IsAuthenticated)
                 {
                     context.Response.StatusCode = 302;
                     context.Response.Redirect($"/.auth/login/{this.provider}?post_login_redirect_url=/");

@@ -18,7 +18,7 @@
 
             return Task.Run(() =>
             {
-                if(delay.Ticks <= 0)
+                if (delay.Ticks <= 0)
                 {
                     return action();
                 }
@@ -59,14 +59,14 @@
             var attempts = 1;
             var startTime = DateTime.UtcNow;
             var currentBackoffTime = DefaultBackoffIntervals[0];
-            if(retryInterval != null)
+            if (retryInterval != null)
             {
                 currentBackoffTime = (int)retryInterval.Value.TotalMilliseconds;
             }
 
             do
             {
-                if(attempts > 1 && logger != null && logger.IsEnabled(LogLevel.Information))
+                if (attempts > 1 && logger != null && logger.IsEnabled(LogLevel.Information))
                 {
                     logger.LogInformation($"retry {attempts}/{maxAttempts} attempt after {DateTime.UtcNow.Subtract(startTime).Humanize(3)}...");
                 }
@@ -75,14 +75,14 @@
                 {
                     return await action().AnyContext();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
-                    if(attempts >= maxAttempts)
+                    if (attempts >= maxAttempts)
                     {
                         throw;
                     }
 
-                    if(logger != null && logger.IsEnabled(LogLevel.Error))
+                    if (logger != null && logger.IsEnabled(LogLevel.Error))
                     {
                         logger.LogError(ex, $"retry error: {ex.GetFullMessage()}");
                     }
@@ -90,14 +90,14 @@
                     await Task.Delay(currentBackoffTime, cancellationToken).AnyContext();
                 }
 
-                if(retryInterval == null)
+                if (retryInterval == null)
                 {
                     currentBackoffTime = DefaultBackoffIntervals[Math.Min(attempts, DefaultBackoffIntervals.Length - 1)];
                 }
 
                 attempts++;
             }
-            while(attempts <= maxAttempts && !cancellationToken.IsCancellationRequested);
+            while (attempts <= maxAttempts && !cancellationToken.IsCancellationRequested);
 
             throw new TaskCanceledException(); // Should not get here
         }

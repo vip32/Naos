@@ -14,7 +14,7 @@
         [DebuggerStepThrough]
         public static T As<T>(this object source)
         {
-            if(source == null)
+            if (source == null)
             {
                 return default;
             }
@@ -23,7 +23,7 @@
             {
                 return (T)source;
             }
-            catch(InvalidCastException)
+            catch (InvalidCastException)
             {
                 return default;
             }

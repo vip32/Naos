@@ -54,7 +54,7 @@
             var messageName = typeof(TMessage).PrettyName();
             var ruleName = this.GetRuleName(messageName);
 
-            if(!this.options.Subscriptions.Exists<TMessage>())
+            if (!this.options.Subscriptions.Exists<TMessage>())
             {
                 this.logger.LogJournal(LogKeys.Messaging, "subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, entityPath={EntityPath})", LogPropertyKeys.TrackSubscribeMessage, args: new[] { messageName, this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name, this.options.Provider.EntityPath });
 
@@ -67,7 +67,7 @@
                         Name = ruleName
                     }).GetAwaiter().GetResult();
                 }
-                catch(ServiceBusException)
+                catch (ServiceBusException)
                 {
                     this.logger.LogDebug($"{{LogKey:l}} servicebus found subscription rule: {ruleName}", LogKeys.Messaging);
                 }
@@ -85,33 +85,33 @@
         public void Publish(Domain.Message message) // TODO: provide (parent) SPAN here? as ITracer is scope and this broker is singleton
         {
             EnsureArg.IsNotNull(message, nameof(message));
-            if(message.CorrelationId.IsNullOrEmpty())
+            if (message.CorrelationId.IsNullOrEmpty())
             {
                 message.CorrelationId = IdGenerator.Instance.Next;
             }
 
             var messageName = message.GetType().PrettyName();
-            using(var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Producer).Activate(this.logger))
+            using (var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Producer).Activate(this.logger))
             {
-                using(this.logger.BeginScope(new Dictionary<string, object>
+                using (this.logger.BeginScope(new Dictionary<string, object>
                 {
                     [LogPropertyKeys.CorrelationId] = message.CorrelationId
                 }))
                 {
-                    if(message.Id.IsNullOrEmpty())
+                    if (message.Id.IsNullOrEmpty())
                     {
                         message.Id = IdGenerator.Instance.Next;
                         this.logger.LogDebug($"{{LogKey:l}} set message (id={message.Id})", LogKeys.Messaging);
                     }
 
-                    if(message.Origin.IsNullOrEmpty())
+                    if (message.Origin.IsNullOrEmpty())
                     {
                         message.Origin = this.options.MessageScope;
                         this.logger.LogDebug($"{{LogKey:l}} set message (origin={message.Origin})", LogKeys.Messaging);
                     }
 
                     // TODO: async publish!
-                    if(this.options.Mediator != null)
+                    if (this.options.Mediator != null)
                     {
                         /*await */
                         this.options.Mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.AnyContext();*/
@@ -129,7 +129,7 @@
                     };
                     serviceBusMessage.UserProperties.AddOrUpdate("Origin", this.options.MessageScope);
                     // propagate the span infos
-                    if(scope?.Span != null)
+                    if (scope?.Span != null)
                     {
                         serviceBusMessage.UserProperties.AddOrUpdate("TraceId", scope.Span.TraceId);
                         serviceBusMessage.UserProperties.AddOrUpdate("SpanId", scope.Span.SpanId);
@@ -165,7 +165,7 @@
                  .GetAwaiter()
                  .GetResult();
             }
-            catch(MessagingEntityNotFoundException)
+            catch (MessagingEntityNotFoundException)
             {
                 this.logger.LogDebug($"{{LogKey:l}} servicebus subscription rule not found: {ruleName}", LogKeys.Messaging);
             }
@@ -177,7 +177,7 @@
         {
             var ruleName = messageName;
 
-            if(!this.options.FilterScope.IsNullOrEmpty())
+            if (!this.options.FilterScope.IsNullOrEmpty())
             {
                 ruleName += $"-{this.options.FilterScope}";
             }
@@ -205,12 +205,12 @@
             var processed = false;
             var messageName = serviceBusMessage.Label;
 
-            if(subscriptions.Exists(messageName))
+            if (subscriptions.Exists(messageName))
             {
-                foreach(var subscription in subscriptions.GetAll(messageName))
+                foreach (var subscription in subscriptions.GetAll(messageName))
                 {
                     var messageType = subscriptions.GetByName(messageName);
-                    if(messageType == null)
+                    if (messageType == null)
                     {
                         continue;
                     }
@@ -220,9 +220,9 @@
                     var spanId = serviceBusMessage.UserProperties.ContainsKey("SpanId") ? serviceBusMessage.UserProperties["SpanId"] as string : string.Empty;
                     var parentSpan = new Span(traceId, spanId);
 
-                    using(var scope = tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Consumer, parentSpan).Activate(logger))
+                    using (var scope = tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Consumer, parentSpan).Activate(logger))
                     {
-                        using(logger.BeginScope(new Dictionary<string, object>
+                        using (logger.BeginScope(new Dictionary<string, object>
                         {
                             [LogPropertyKeys.CorrelationId] = serviceBusMessage.CorrelationId,
                             //[LogPropertyKeys.TrackId] = scope.Span.SpanId
@@ -233,7 +233,7 @@
                             //var message = jsonMessage as Domain.Message;
                             var message = serializer.Deserialize(serviceBusMessage.Body, messageType) as Domain.Message;
                             // TODO: message can be null, skip
-                            if(message.Origin.IsNullOrEmpty())
+                            if (message.Origin.IsNullOrEmpty())
                             {
                                 //message.CorrelationId = jsonMessage.AsJToken().GetStringPropertyByToken("CorrelationId");
                                 message.Origin = serviceBusMessage.UserProperties.ContainsKey("Origin") ? serviceBusMessage.UserProperties["Origin"] as string : string.Empty;
@@ -248,9 +248,9 @@
                             var concreteType = typeof(IMessageHandler<>).MakeGenericType(messageType);
 
                             var method = concreteType.GetMethod("Handle");
-                            if(handler != null && method != null)
+                            if (handler != null && method != null)
                             {
-                                if(mediator != null)
+                                if (mediator != null)
                                 {
                                     await mediator.Publish(new MessageHandledDomainEvent(message, messageScope)).AnyContext();
                                 }

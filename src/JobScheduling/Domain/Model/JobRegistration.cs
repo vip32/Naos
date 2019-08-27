@@ -20,9 +20,9 @@
             this.Enabled = enabled;
             this.Identifier = RandomGenerator.GenerateString(5, false);
 
-            if(!this.Cron.IsNullOrEmpty())
+            if (!this.Cron.IsNullOrEmpty())
             {
-                if(this.Cron.Count(char.IsWhiteSpace) == 4) // mi ho da mo yy
+                if (this.Cron.Count(char.IsWhiteSpace) == 4) // mi ho da mo yy
                 {
                     this.cronExpression = CronExpression.Parse(this.Cron, CronFormat.Standard);
                 }
@@ -51,7 +51,7 @@
         {
             EnsureArg.IsTrue(fromUtc.Kind == DateTimeKind.Utc);
 
-            if(this.cronExpression == null)
+            if (this.cronExpression == null)
             {
                 return false;
             }
@@ -59,7 +59,7 @@
             span ??= TimeSpan.FromMinutes(1);
             var occurrence = this.cronExpression.GetNextOccurrence(fromUtc, true);
 
-            if(!occurrence.HasValue)
+            if (!occurrence.HasValue)
             {
                 return false;
             }
@@ -73,7 +73,7 @@
             EnsureArg.IsTrue(toUtc.Kind == DateTimeKind.Utc);
             EnsureArg.IsTrue(fromUtc < toUtc);
 
-            if(this.cronExpression == null)
+            if (this.cronExpression == null)
             {
                 return false;
             }

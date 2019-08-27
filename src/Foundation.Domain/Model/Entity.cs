@@ -69,12 +69,12 @@
         public static bool operator ==(Entity<TId> a, Entity<TId> b)
 #pragma warning restore S3875 // "operator==" should not be overloaded on reference types
         {
-            if(ReferenceEquals(a, null) && ReferenceEquals(b, null))
+            if (ReferenceEquals(a, null) && ReferenceEquals(b, null))
             {
                 return true;
             }
 
-            if(ReferenceEquals(a, null) || ReferenceEquals(b, null))
+            if (ReferenceEquals(a, null) || ReferenceEquals(b, null))
             {
                 return false;
             }
@@ -103,17 +103,17 @@
         {
             var other = obj as Entity<TId>;
 
-            if(ReferenceEquals(other, null))
+            if (ReferenceEquals(other, null))
             {
                 return false;
             }
 
-            if(ReferenceEquals(this, other))
+            if (ReferenceEquals(this, other))
             {
                 return true;
             }
 
-            if(this.GetType() != other.GetType())
+            if (this.GetType() != other.GetType())
             {
                 return false;
             }

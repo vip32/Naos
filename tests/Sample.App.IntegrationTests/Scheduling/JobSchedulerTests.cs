@@ -203,10 +203,10 @@
                     var max = args.Contains("once", StringComparison.OrdinalIgnoreCase) ? 1 : 5;
                     var cancel = args.Contains("cancel", StringComparison.OrdinalIgnoreCase);
 
-                    for(var i = 0; i < max; i++) // fake some long running process, can be cancelled with token
+                    for (var i = 0; i < max; i++) // fake some long running process, can be cancelled with token
                     {
                         cancellationToken.ThrowIfCancellationRequested();
-                        if(cancel)
+                        if (cancel)
                         {
                             throw new OperationCanceledException("oops");
                         }

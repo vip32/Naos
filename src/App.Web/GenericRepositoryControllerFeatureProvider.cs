@@ -36,14 +36,14 @@
         {
             // https://www.strathweb.com/2018/04/generic-and-dynamically-generated-controllers-in-asp-net-core-mvc/
 
-            foreach(var information in this.informations.Safe())
+            foreach (var information in this.informations.Safe())
             {
-                if(information.EntityType == null)
+                if (information.EntityType == null)
                 {
                     continue;
                 }
 
-                if(information.RepositoryType != null)
+                if (information.RepositoryType != null)
                 {
                     Type[] args = { information.EntityType, information.RepositoryType };
                     feature.Controllers.Add(typeof(NaosGenericRepositoryControllerBase<,>).MakeGenericType(args).GetTypeInfo());

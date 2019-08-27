@@ -57,7 +57,7 @@
         // TODO: use 2.2 conventions https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
         public virtual async Task<ActionResult<TEntity>> FindOne(string id)
         {
-            if(id.IsNullOrEmpty())
+            if (id.IsNullOrEmpty())
             {
                 throw new BadRequestException("Model id cannot be empty");
             }
@@ -68,7 +68,7 @@
             //}
 
             var model = await this.Repository.FindOneAsync(id).AnyContext();
-            if(model == null)
+            if (model == null)
             {
                 return this.NotFound(); // TODO: throw notfoundexception?
             }

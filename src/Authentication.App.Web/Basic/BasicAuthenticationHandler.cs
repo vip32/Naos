@@ -35,7 +35,7 @@
             {
                 this.Logger.LogInformation("{LogKey:l} basic handle", LogKeys.Authentication);
 
-                if(this.Request.Host.Host.SafeEquals("localhost") && this.Options.IgnoreLocal)
+                if (this.Request.Host.Host.SafeEquals("localhost") && this.Options.IgnoreLocal)
                 {
                     // ignore for localhost
                     var identity = new ClaimsIdentity(
@@ -51,19 +51,19 @@
                 }
 
                 string value;
-                if(this.Request.Query.TryGetValue("basic", out var queryValue))
+                if (this.Request.Query.TryGetValue("basic", out var queryValue))
                 {
                     // also allow the auth header to be sent in the querystring (for easy dashboard usage)
                     value = queryValue.ToString();
                 }
                 else
                 {
-                    if(!this.Request.Headers.ContainsKey(AuthenticationKeys.AuthorizationHeaderName))
+                    if (!this.Request.Headers.ContainsKey(AuthenticationKeys.AuthorizationHeaderName))
                     {
                         return AuthenticateResult.NoResult(); //Authorization header not in request
                     }
 
-                    if(!AuthenticationHeaderValue.TryParse(this.Request.Headers[AuthenticationKeys.AuthorizationHeaderName], out var headerValue))
+                    if (!AuthenticationHeaderValue.TryParse(this.Request.Headers[AuthenticationKeys.AuthorizationHeaderName], out var headerValue))
                     {
                         return AuthenticateResult.NoResult(); //Invalid Authorization header
                     }
@@ -72,13 +72,13 @@
                         value = headerValue.Parameter;
                     }
 
-                    if(!AuthenticationKeys.BasicScheme.Equals(headerValue.Scheme, StringComparison.OrdinalIgnoreCase))
+                    if (!AuthenticationKeys.BasicScheme.Equals(headerValue.Scheme, StringComparison.OrdinalIgnoreCase))
                     {
                         return AuthenticateResult.NoResult(); //Not a basic authentication header
                     }
                 }
 
-                if(value.IsNullOrEmpty())
+                if (value.IsNullOrEmpty())
                 {
                     return AuthenticateResult.NoResult(); //No apikey authentication value in header or query
                 }
@@ -93,7 +93,7 @@
 #pragma warning disable SA1008 // Opening parenthesis must be spaced correctly
                 var (authenticated, claims) = this.service.Validate(value);
 #pragma warning restore SA1008 // Opening parenthesis must be spaced correctly
-                if(authenticated)
+                if (authenticated)
                 {
                     var identity = new ClaimsIdentity(
                         this.Options.Claims.Safe().Select(c => new Claim(c.Key, c.Value)).Concat(claims.Safe())
@@ -108,14 +108,14 @@
                 this.Logger.LogWarning("{LogKey:l} basic not authenticated", LogKeys.Authentication);
                 return AuthenticateResult.NoResult();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 this.Logger.LogError(ex, $"{{LogKey:l}} {ex.Message}", LogKeys.Authentication);
                 var context = new ErrorContext(this.Context, this.Scheme, this.Options) { Exception = ex };
-                if(this.Events != null)
+                if (this.Events != null)
                 {
                     await this.Events.Error(context).AnyContext();
-                    if(context.Result != null)
+                    if (context.Result != null)
                     {
                         return context.Result;
                     }
@@ -138,7 +138,7 @@
         {
             var authResult = await this.HandleAuthenticateOnceSafeAsync().AnyContext();
 
-            if(authResult.Succeeded)
+            if (authResult.Succeeded)
             {
                 return;
             }
@@ -148,11 +148,11 @@
                 Exception = authResult.Failure
             };
 
-            if(this.Events != null)
+            if (this.Events != null)
             {
                 await this.Events.Challenge(eventContext).AnyContext();
 
-                if(eventContext.Handled)
+                if (eventContext.Handled)
                 {
                     return;
                 }

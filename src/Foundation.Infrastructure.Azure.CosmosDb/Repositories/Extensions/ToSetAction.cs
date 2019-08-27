@@ -12,7 +12,7 @@
         /// <param name="source">The source expression.</param>
         public static Action<T, string> ToSetAction<T>(this Expression<Func<T, string>> source)
         {
-            if(source == null)
+            if (source == null)
             {
                 return null;
             }
@@ -31,7 +31,7 @@
         /// <param name="source">The source expression.</param>
         public static Action<T, int> ToSetAction<T>(this Expression<Func<T, int>> source)
         {
-            if(source == null)
+            if (source == null)
             {
                 return null;
             }
@@ -50,7 +50,7 @@
         /// <param name="source">The source expression.</param>
         public static Action<T, DateTime?> ToSetAction<T>(this Expression<Func<T, DateTime?>> source)
         {
-            if(source == null)
+            if (source == null)
             {
                 return null;
             }

@@ -28,7 +28,7 @@
             {
                 this.Logger.LogInformation("{LogKey:l} easyauth handle", LogKeys.Authentication);
 
-                if(this.Request.Host.Host.SafeEquals("localhost") && this.Options.IgnoreLocal)
+                if (this.Request.Host.Host.SafeEquals("localhost") && this.Options.IgnoreLocal)
                 {
                     // ignore for localhost
                     var identity = new ClaimsIdentity(
@@ -44,14 +44,14 @@
                 }
 
                 var isEnabled = string.Equals(Environment.GetEnvironmentVariable("WEBSITE_AUTH_ENABLED", EnvironmentVariableTarget.Process), "True", StringComparison.OrdinalIgnoreCase);
-                if(!isEnabled)
+                if (!isEnabled)
                 {
                     return AuthenticateResult.NoResult();
                 }
 
                 var provider = this.Context.Request.Headers["X-MS-CLIENT-PRINCIPAL-IDP"].FirstOrDefault();
                 var principalEncoded = this.Context.Request.Headers["X-MS-CLIENT-PRINCIPAL"].FirstOrDefault();
-                if(principalEncoded.IsNullOrEmpty())
+                if (principalEncoded.IsNullOrEmpty())
                 {
                     return AuthenticateResult.NoResult();
                 }
@@ -69,14 +69,14 @@
 
                 return AuthenticateResult.Success(new AuthenticationTicket(principal, provider));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 this.Logger.LogError(ex, $"{{LogKey:l}} {ex.Message}", LogKeys.Authentication);
                 var context = new ErrorContext(this.Context, this.Scheme, this.Options) { Exception = ex };
-                if(this.Events != null)
+                if (this.Events != null)
                 {
                     await this.Events.Error(context).AnyContext();
-                    if(context.Result != null)
+                    if (context.Result != null)
                     {
                         return context.Result;
                     }
@@ -99,7 +99,7 @@
         {
             var authResult = await this.HandleAuthenticateOnceSafeAsync().AnyContext();
 
-            if(authResult.Succeeded)
+            if (authResult.Succeeded)
             {
                 return;
             }
@@ -109,11 +109,11 @@
                 Exception = authResult.Failure
             };
 
-            if(this.Events != null)
+            if (this.Events != null)
             {
                 await this.Events.Challenge(eventContext).AnyContext();
 
-                if(eventContext.Handled)
+                if (eventContext.Handled)
                 {
                     return;
                 }

@@ -35,7 +35,7 @@
         public static string ToCode(this Guid source)
         {
             long result = 1;
-            foreach(var b in source.ToByteArray())
+            foreach (var b in source.ToByteArray())
             {
                 result *= b + 1;
             }
@@ -58,18 +58,18 @@
         [DebuggerStepThrough]
         public static Guid? ToGuid(this string source)
         {
-            if(source.IsNullOrEmpty())
+            if (source.IsNullOrEmpty())
             {
                 return null;
             }
 
-            if(source.IsBase64())
+            if (source.IsBase64())
             {
                 return new Guid(Convert.FromBase64String(source));
             }
 
             var result = Guid.TryParse(source, out var parsedResult);
-            if(result)
+            if (result)
             {
                 return parsedResult;
             }

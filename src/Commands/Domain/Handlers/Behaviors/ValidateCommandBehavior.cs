@@ -29,11 +29,11 @@
             EnsureArg.IsNotNull(request);
 
             var result = request.Validate();
-            if(!result.IsValid)
+            if (!result.IsValid)
             {
                 // instead of cancel, throw an exception
                 // TODO: log validation errors
-                if(this.throwOnNotIsValid)
+                if (this.throwOnNotIsValid)
                 {
                     throw new ValidationException($"{request.GetType().Name} has validation errors: " + result.Errors.Safe().Select(e => $"{e.PropertyName}={e}").ToString(", "), result.Errors);
                 }

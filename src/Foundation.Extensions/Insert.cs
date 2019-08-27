@@ -17,12 +17,12 @@
             T item,
             int index = 0)
         {
-            if(item == null)
+            if (item == null)
             {
                 return source;
             }
 
-            if(source == null)
+            if (source == null)
             {
                 return new List<T>
                 {
@@ -31,7 +31,7 @@
             }
 
             var result = new List<T>(source);
-            if(index >= 0)
+            if (index >= 0)
             {
                 result.Insert(index, item);
             }
@@ -55,7 +55,7 @@
             IEnumerable<T> items,
             int index = 0)
         {
-            foreach(var item in items.Safe().Reverse())
+            foreach (var item in items.Safe().Reverse())
             {
                 source = source.Insert(item, index);
             }

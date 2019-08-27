@@ -69,7 +69,7 @@
 
         public CosmosDbSqlProviderV3OptionsBuilder<T> ThroughPut(int throughPut)
         {
-            if(throughPut < 400)
+            if (throughPut < 400)
             {
                 throughPut = 400;
             }

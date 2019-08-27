@@ -23,7 +23,7 @@
             // https://github.com/ServiceStack/ServiceStack.Text/blob/master/tests/ServiceStack.Text.Tests/CsvTests/ObjectSerializerTests.cs
             ServiceStack.Text.CsvConfig.ItemSeperatorString = this.ItemSeperator;
 
-            if(this.headersMap != null)
+            if (this.headersMap != null)
             {
                 ServiceStack.Text.CsvConfig<THeader>.CustomHeadersMap = this.headersMap;
             }

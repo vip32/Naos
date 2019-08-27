@@ -1,6 +1,5 @@
 ﻿namespace Naos.Foundation.UnitTests.Extensions
 {
-    using System;
     using Naos.Foundation;
     using Xunit;
 

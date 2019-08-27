@@ -1,6 +1,5 @@
 ﻿namespace Naos.Core.App.Web
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -23,36 +22,37 @@
 
         public void Process(DocumentProcessorContext context)
         {
-            foreach (var registration in this.registrations.Safe()
-                .Where(r => !r.Route.IsNullOrEmpty()))
+            foreach (var registrations in this.registrations.Safe()
+                .Where(r => !r.Route.IsNullOrEmpty()).GroupBy(r => r.Route))
             {
-                AddPathItem(context.Document.Paths, registration, context);
+                AddPathItem(context.Document.Paths, registrations.DistinctBy(r => r.RequestMethod), context);
             }
         }
 
-        private static void AddPathItem(IDictionary<string, OpenApiPathItem> paths, RequestCommandRegistration registration, DocumentProcessorContext context)
+        private static void AddPathItem(IDictionary<string, OpenApiPathItem> items, IEnumerable<RequestCommandRegistration> registrations, DocumentProcessorContext context)
         {
             var item = new OpenApiPathItem();
 
-            foreach (var method in registration.RequestMethod.Safe("post").Split(';').Distinct())
+            foreach (var registration in registrations)
             {
+                var method = registration.RequestMethod.ToLower();
                 var operation = new OpenApiOperation
                 {
                     Description = registration.OpenApiDescription ?? (registration.CommandType ?? typeof(object)).Name,
                     Summary = registration.OpenApiSummary,
                     OperationId = HashAlgorithm.ComputeHash($"{method} {registration.Route}"),
-                    Tags = new[] { "Naos Commands" }.ToList(),
+                    Tags = new[] { !registration.OpenApiGroupName.IsNullOrEmpty() ? $"{registration.OpenApiGroupPrefix} ({registration.OpenApiGroupName})" : registration.OpenApiGroupPrefix }.ToList(),
                     Produces = registration.OpenApiProduces.Safe(ContentType.JSON.ToValue()).Split(';').Distinct().ToList(),
                     //RequestBody = new OpenApiRequestBody{}
                 };
 
-                item.Add(method.ToLower(), operation);
+                item.Add(method, operation);
 
                 var hasResponseModel = registration.ResponseType?.Name.SafeEquals("object") == false;
-                operation.Responses.Add(registration.ResponseStatusCodeOnSuccess.ToString(), new OpenApiResponse
+                operation.Responses.Add(registration.OnSuccessStatusCode.ToString(), new OpenApiResponse
                 {
-                    Description = registration.OpenApiResponseDescription ?? (hasResponseModel ? registration.ResponseType : null)?.Name,
-                    Schema = hasResponseModel ? context.SchemaGenerator.Generate(registration.ResponseType) : null,
+                    Description = registration.OpenApiResponseDescription ?? (hasResponseModel ? registration.ResponseType : null)?.FullPrettyName(),
+                    Schema = hasResponseModel ? context.SchemaGenerator.Generate(registration.ResponseType, context.SchemaResolver) : null,
                     //Examples = hasResponseModel ? Factory.Create(registration.ResponseType) : null // header?
                 });
 
@@ -61,7 +61,7 @@
 
             if (item.Any())
             {
-                paths?.Add(registration.Route, item);
+                items?.Add(registrations.First().Route, item);
             }
         }
 
@@ -128,7 +128,7 @@
             {
                 //Description = "request model",
                 Kind = OpenApiParameterKind.Body,
-                Name = (registration.CommandType ?? typeof(object)).Name, //"model",
+                Name = (registration.CommandType ?? typeof(object)).PrettyName(), //"model",
                 Type = JsonObjectType.Object,
                 Schema = CreateSchema(registration, context),
                 //Example = registration.CommandType != null ? Factory.Create(registration.CommandType) : null //new Commands.Domain.EchoCommand() { Message = "test"},
@@ -137,15 +137,24 @@
 
         private static JsonSchema CreateSchema(RequestCommandRegistration registration, DocumentProcessorContext context)
         {
-            var result = context.SchemaGenerator.Generate(registration.CommandType);
-            var schema = result.AllOf.FirstOrDefault();
-            if (schema != null)
-            {
-                // workaround: remove invalid first $ref in allof https://github.com/RicoSuter/NSwag/issues/2119
-                result.AllOf.Remove(schema);
-            }
+            return context.SchemaGenerator.Generate(registration.CommandType, context.SchemaResolver);
 
-            return result;
+            //var schema = result.AllOf.FirstOrDefault();
+            //if (schema != null)
+            //{
+            //    // workaround: remove invalid first $ref in allof https://github.com/RicoSuter/NSwag/issues/2119
+            //    result.AllOf.Remove(schema);
+            //}
+
+            // remove some more $refs
+            //foreach(var definition in result.Definitions.Safe())
+            //{
+            //    var s = definition.Value.AllOf.FirstOrDefault();
+            //    if(s != null)
+            //    {
+            //        definition.Value.AllOf.Remove(s);
+            //    }
+            //}
         }
     }
 }

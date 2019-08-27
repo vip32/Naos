@@ -29,7 +29,7 @@
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            if(!cancellationToken.IsCancellationRequested)
+            if (!cancellationToken.IsCancellationRequested)
             {
                 var moment = DateTime.UtcNow;
                 this.schedulerTimer = new System.Threading.Timer(
@@ -50,12 +50,12 @@
             this.schedulerTimer?.Change(Timeout.Infinite, 0);
 
             // suspend stopping schedular untill all tasks are done
-            if(this.scheduler.IsRunning)
+            if (this.scheduler.IsRunning)
             {
                 this.logger.LogWarning("{LogKey:l} hosted service will be stopped but is waiting on running jobs", LogKeys.JobScheduling);
             }
 
-            while(this.scheduler.IsRunning && !cancellationToken.IsCancellationRequested)
+            while (this.scheduler.IsRunning && !cancellationToken.IsCancellationRequested)
             {
                 await Task.Delay(50).AnyContext(); // TODO: try to cancel the running jobs
             }
@@ -69,7 +69,7 @@
 
         private async void RunSchedulerAsync(object state)
         {
-            if(this.enabled)
+            if (this.enabled)
             {
                 await this.scheduler.RunAsync().AnyContext();
             }

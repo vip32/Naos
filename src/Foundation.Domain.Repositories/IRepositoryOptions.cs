@@ -5,11 +5,11 @@
     /// </summary>
     //public interface IRepositoryOptions
     //{
-        //IEntityMapper Mapper { get; set; }
+    //IEntityMapper Mapper { get; set; }
 
-        //bool PublishEvents { get; set; }
+    //bool PublishEvents { get; set; }
 
-        // VALIDATIONS?
-        // DEFAULT SPECIFICATIONS/filters?
+    // VALIDATIONS?
+    // DEFAULT SPECIFICATIONS/filters?
     //}
 }

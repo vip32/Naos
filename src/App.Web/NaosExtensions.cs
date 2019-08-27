@@ -17,7 +17,7 @@
             optionsAction?.Invoke(options);
 
             // add the generic repo controllers for all registrations
-            if(!options.ControllerRegistrations.IsNullOrEmpty())
+            if (!options.ControllerRegistrations.IsNullOrEmpty())
             {
                 mvcBuilder
                     .AddMvcOptions(o =>

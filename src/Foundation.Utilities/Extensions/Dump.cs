@@ -23,7 +23,7 @@
             JsonSerializerSettings settings = null)
              where T : class
         {
-            if(EqualityComparer<T>.Default.Equals(source, default))
+            if (EqualityComparer<T>.Default.Equals(source, default))
             {
                 return string.Empty;
             }

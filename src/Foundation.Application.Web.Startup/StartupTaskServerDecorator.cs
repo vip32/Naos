@@ -40,9 +40,9 @@
         /// <inheritdoc />
         public async Task StartAsync<TContext>(IHttpApplication<TContext> application, CancellationToken cancellationToken)
         {
-            foreach(var task in this.tasks)
+            foreach (var task in this.tasks)
             {
-                if(task.Delay.HasValue && task.Delay.Value > TimeSpan.Zero)
+                if (task.Delay.HasValue && task.Delay.Value > TimeSpan.Zero)
                 {
                     _ = Run.DelayedAsync(task.Delay.Value, async () =>
                       {
@@ -68,7 +68,7 @@
         {
             await this.decoratee.StopAsync(cancellationToken).AnyContext();
 
-            foreach(var task in this.tasks)
+            foreach (var task in this.tasks)
             {
                 this.logger.LogInformation($"{{LogKey:l}} stop task (name={task.GetType().PrettyName()})", LogKeys.StartupTask);
                 await task.ShutdownAsync(cancellationToken).AnyContext();

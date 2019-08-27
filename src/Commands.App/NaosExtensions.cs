@@ -3,6 +3,7 @@
     using System;
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
+    using Naos.Core.Commands.App;
     using Naos.Core.Commands.Domain;
     using Naos.Core.Configuration.App;
     using Naos.Foundation;
@@ -77,6 +78,28 @@
             options.Context.Services.AddSingleton<ICommandBehavior>(behavior);
 
             options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: commands behavior added (type={typeof(TBehavior).Name})"); // TODO: list available commands/handlers
+
+            return options;
+        }
+
+        public static CommandsOptions AddRequestDispatcher(
+            this CommandsOptions options,
+            Action<RequestDispatcherOptions> optionsAction = null,
+            bool addDefaultRequestCommands = true)
+        {
+            EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.Context, nameof(options.Context));
+
+            if (addDefaultRequestCommands)
+            {
+                options.Context.Services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<EchoCommand, EchoCommandResponse> { Route = "/api/commands/echo", RequestMethod = "get" });
+                options.Context.Services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<EchoCommand, EchoCommandResponse> { Route = "/api/commands/echo", RequestMethod = "post" });
+                options.Context.Services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<PingCommand> { Route = "/api/commands/ping", RequestMethod = "get" });
+            }
+
+            optionsAction?.Invoke(new RequestDispatcherOptions(options.Context));
+
+            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: command request dispatcher added"); // TODO: list available command + routes
 
             return options;
         }

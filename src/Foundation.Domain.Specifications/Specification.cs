@@ -39,7 +39,7 @@
 
         public bool IsSatisfiedBy(T entity)
         {
-            if(entity == default)
+            if (entity == default)
             {
                 return false;
             }
@@ -50,12 +50,12 @@
 
         public ISpecification<T> And(ISpecification<T> specification)
         {
-            if(this == All)
+            if (this == All)
             {
                 return specification;
             }
 
-            if(specification == All)
+            if (specification == All)
             {
                 return this;
             }
@@ -65,7 +65,7 @@
 
         public ISpecification<T> Or(ISpecification<T> specification)
         {
-            if(this == All || specification == All)
+            if (this == All || specification == All)
             {
                 return All;
             }
@@ -85,7 +85,7 @@
 
         public string ToString(bool noBrackets)
         {
-            if(noBrackets)
+            if (noBrackets)
             {
                 return this.expression.ToExpressionString().Trim('(').Trim(')');
             }

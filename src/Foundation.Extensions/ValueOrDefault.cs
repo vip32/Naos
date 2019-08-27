@@ -14,7 +14,7 @@
         /// <param name="property">The property to get.</param>
         public static TValue ValueOrDefault<T1, TValue>(this T1 source, Func<T1, TValue> property)
         {
-            if(typeof(T1).IsValueType)
+            if (typeof(T1).IsValueType)
             {
                 return Equals(source, default(T1)) ? default(TValue) : property(source);
             }
@@ -32,7 +32,7 @@
         /// <param name="defaultValue">The defaule value.</param>
         public static TValue ValueOrDefault<T1, TValue>(this T1 source, Func<T1, TValue> property, TValue defaultValue = default(TValue))
         {
-            if(typeof(T1).IsValueType)
+            if (typeof(T1).IsValueType)
             {
                 return Equals(source, default(T1)) ? defaultValue : property(source);
             }
@@ -55,7 +55,7 @@
             TKey key,
             TValue defaultValue = default(TValue))
         {
-            if(source.IsNullOrEmpty())
+            if (source.IsNullOrEmpty())
             {
                 return default(TValue);
             }

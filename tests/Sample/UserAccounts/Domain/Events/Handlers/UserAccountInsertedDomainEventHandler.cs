@@ -28,7 +28,7 @@
         {
             await Task.Run(() =>
             {
-                if(this.CanHandle(notification))
+                if (this.CanHandle(notification))
                 {
                     this.logger.LogInformation($"{{LogKey:l}} handle {notification.GetType().Name.SliceTill("DomainEvent")} (entity={notification.Entity.GetType().PrettyName()}, handler={this.GetType().PrettyName()})", LogKeys.DomainEvent);
 

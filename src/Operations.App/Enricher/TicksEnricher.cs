@@ -9,7 +9,7 @@
     {
         public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
         {
-            if(logEvent == null)
+            if (logEvent == null)
             {
                 return;
             }

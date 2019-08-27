@@ -164,7 +164,7 @@
             result.State.CreatedDescription.ShouldNotBeNull(); // EntityInsertDomainEventHandler
             result.State.CreatedBy.ShouldNotBeNull(); // EntityInsertDomainEventHandler
 
-            using(var scope = this.ServiceProvider.CreateScope())
+            using (var scope = this.ServiceProvider.CreateScope())
             {
                 var sut2 = scope.ServiceProvider.GetService<ICountryRepository>();
                 var entity = await sut2.FindOneAsync("fr").AnyContext();

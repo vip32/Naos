@@ -36,7 +36,7 @@
 
             context.Messages.Add($"{LogKeys.Startup} naos services builder: typed service client added (type={typeof(TClient).Name})");
 
-            if(setupAction != null)
+            if (setupAction != null)
             {
                 var builder = context.Services
                     .AddHttpClient<TClient>();
@@ -61,7 +61,7 @@
 
             context.Messages.Add($"{LogKeys.Startup} naos services builder: named service client added (name={name})");
 
-            if(setupAction != null)
+            if (setupAction != null)
             {
                 var builder = context.Services
                     .AddHttpClient(name);

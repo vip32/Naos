@@ -9,17 +9,17 @@
     {
         public static byte[] ReadAllBytes(this Stream source)
         {
-            if(source == null)
+            if (source == null)
             {
                 return default;
             }
 
-            if(source is MemoryStream)
+            if (source is MemoryStream)
             {
                 return ((MemoryStream)source).ToArray();
             }
 
-            using(var memoryStream = new MemoryStream())
+            using (var memoryStream = new MemoryStream())
             {
                 source.CopyTo(memoryStream);
                 return memoryStream.ToArray();
@@ -39,7 +39,7 @@
             var pos = source.Position;
             try
             {
-                using(var reader = new StreamReader(source, @default, true, 1, true))
+                using (var reader = new StreamReader(source, @default, true, 1, true))
                 {
                     var next = reader.Peek();
                     return reader.CurrentEncoding;
@@ -47,7 +47,7 @@
             }
             finally
             {
-                if(source.CanSeek)
+                if (source.CanSeek)
                 {
                     // reset position
                     source.Position = pos;

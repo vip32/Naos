@@ -56,12 +56,12 @@
 
         public ITopicClient TopicClientFactory()
         {
-            if(this.topicClient == null)
+            if (this.topicClient == null)
             {
                 this.topicClient = new TopicClient(this.ConnectionStringBuilder, RetryPolicy.Default);
             }
 
-            if(this.topicClient.IsClosedOrClosing)
+            if (this.topicClient.IsClosedOrClosing)
             {
                 this.logger.LogInformation("create new servicebus topic client instance");
                 this.topicClient = new TopicClient(this.ConnectionStringBuilder, RetryPolicy.Default);
@@ -79,7 +79,7 @@
             var topics = await this.serviceBusNamespace.Topics.ListAsync().ConfigureAwait(false);
             var topic = topics.FirstOrDefault(t => t.Name == topicName);
 
-            if(topic == null)
+            if (topic == null)
             {
                 this.logger.LogDebug($"create servicebus topic: {topicName}");
                 topic = await this.serviceBusNamespace.Topics.Define(topicName).CreateAsync().ConfigureAwait(false);
@@ -103,7 +103,7 @@
             var subscriptions = await topic.Subscriptions.ListAsync().ConfigureAwait(false);
             var subscription = subscriptions.FirstOrDefault(s => s.Name == subscriptionName);
 
-            if(subscription == null)
+            if (subscription == null)
             {
                 this.logger.LogDebug($"create servicebus topic/subscription: {topicName}/{subscriptionName}");
                 await topic.Subscriptions.Define(subscriptionName).CreateAsync().ConfigureAwait(false);

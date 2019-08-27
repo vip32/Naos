@@ -10,7 +10,7 @@
         /// <param name="cancelledReason">The optional cancelled reason.</param>
         public CommandResponse(string cancelledReason = null)
         {
-            if(!cancelledReason.IsNullOrEmpty())
+            if (!cancelledReason.IsNullOrEmpty())
             {
                 this.Cancelled = true;
                 this.CancelledReason = cancelledReason;

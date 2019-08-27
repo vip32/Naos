@@ -87,7 +87,7 @@
         {
             EnsureArg.IsNotNullOrEmpty(tableName, nameof(tableName));
 
-            foreach(var value in values?.Where(v => v.Key != null))
+            foreach (var value in values?.Where(v => v.Key != null))
             {
                 await this.options.FileStorage.SaveFileObjectAsync(
                     Path.Combine(tableName, $"{value.Key.PartitionKey}--{value.Key.RowKey}"), value).AnyContext();
@@ -98,7 +98,7 @@
         {
             EnsureArg.IsNotNullOrEmpty(tableName, nameof(tableName));
 
-            foreach(var value in values?.Where(v => v.Key != null))
+            foreach (var value in values?.Where(v => v.Key != null))
             {
                 await this.options.FileStorage.SaveFileObjectAsync(
                     Path.Combine(tableName, $"{value.Key.PartitionKey}--{value.Key.RowKey}"), value).AnyContext();
@@ -109,7 +109,7 @@
         {
             EnsureArg.IsNotNullOrEmpty(tableName, nameof(tableName));
 
-            foreach(var value in values?.Where(v => v.Key != null))
+            foreach (var value in values?.Where(v => v.Key != null))
             {
                 await this.options.FileStorage.SaveFileObjectAsync(
                     Path.Combine(tableName, $"{value.Key.PartitionKey}--{value.Key.RowKey}"), value).AnyContext();
@@ -120,7 +120,7 @@
         {
             EnsureArg.IsNotNullOrEmpty(tableName, nameof(tableName));
 
-            foreach(var value in values?.Where(v => v.Key != null))
+            foreach (var value in values?.Where(v => v.Key != null))
             {
                 await this.options.FileStorage.SaveFileObjectAsync(
                     Path.Combine(tableName, $"{value.Key.PartitionKey}--{value.Key.RowKey}"), value).AnyContext();
@@ -131,7 +131,7 @@
         {
             EnsureArg.IsNotNullOrEmpty(tableName, nameof(tableName));
 
-            foreach(var key in keys)
+            foreach (var key in keys)
             {
                 await this.options.FileStorage.DeleteFileAsync(
                     Path.Combine(tableName, $"{key.PartitionKey}--{key.RowKey}")).AnyContext();
@@ -151,24 +151,24 @@
         {
             var searchPattern = Path.Combine(tableName.Safe(), "*");
 
-            if(key?.PartitionKey != null)
+            if (key?.PartitionKey != null)
             {
                 searchPattern = Path.Combine(tableName.Safe(), key?.PartitionKey.Safe(), "*");
             }
 
-            if(key?.PartitionKey != null && key?.RowKey != null)
+            if (key?.PartitionKey != null && key?.RowKey != null)
             {
                 searchPattern = Path.Combine(tableName.Safe(), $"{key?.PartitionKey}--{key?.RowKey}*");
             }
 
             var result = new List<Value>();
             var fileInformations = await this.options.FileStorage.GetFileInformationsAsync(searchPattern).AnyContext();
-            foreach(var fileInformation in fileInformations.Safe())
+            foreach (var fileInformation in fileInformations.Safe())
             {
                 var value = await this.options.FileStorage.GetFileObjectAsync<Value>(fileInformation.Path).AnyContext();
-                if(value != null && this.Match(criterias, value)) // in memory criteria matching
+                if (value != null && this.Match(criterias, value)) // in memory criteria matching
                 {
-                    if(key != null)
+                    if (key != null)
                     {
                         value.PartitionKey = key.PartitionKey;
                         value.RowKey = key.RowKey;
@@ -184,15 +184,15 @@
         private bool Match(IEnumerable<Criteria> criterias, Value value)
         {
             var result = true;
-            foreach(var criteria in criterias.Safe())
+            foreach (var criteria in criterias.Safe())
             {
-                if(criteria.Value is string s && value[criteria.Name] is string sv)
+                if (criteria.Value is string s && value[criteria.Name] is string sv)
                 {
-                    if(criteria.Operator == CriteriaOperator.Equal)
+                    if (criteria.Operator == CriteriaOperator.Equal)
                     {
                         result = sv == s;
                     }
-                    else if(criteria.Operator == CriteriaOperator.NotEqual)
+                    else if (criteria.Operator == CriteriaOperator.NotEqual)
                     {
                         result = sv != s;
                     }
@@ -214,100 +214,100 @@
                     //    result = sv <= s;
                     //}
                 }
-                else if(criteria.Value is int i && value[criteria.Name] is int iv)
+                else if (criteria.Value is int i && value[criteria.Name] is int iv)
                 {
-                    if(criteria.Operator == CriteriaOperator.Equal)
+                    if (criteria.Operator == CriteriaOperator.Equal)
                     {
                         result = iv == i;
                     }
-                    else if(criteria.Operator == CriteriaOperator.NotEqual)
+                    else if (criteria.Operator == CriteriaOperator.NotEqual)
                     {
                         result = iv != i;
                     }
-                    else if(criteria.Operator == CriteriaOperator.GreaterThan)
+                    else if (criteria.Operator == CriteriaOperator.GreaterThan)
                     {
                         result = iv > i;
                     }
-                    else if(criteria.Operator == CriteriaOperator.GreaterThanOrEqual)
+                    else if (criteria.Operator == CriteriaOperator.GreaterThanOrEqual)
                     {
                         result = iv >= i;
                     }
-                    else if(criteria.Operator == CriteriaOperator.LessThan)
+                    else if (criteria.Operator == CriteriaOperator.LessThan)
                     {
                         result = iv < i;
                     }
-                    else if(criteria.Operator == CriteriaOperator.LessThanOrEqual)
+                    else if (criteria.Operator == CriteriaOperator.LessThanOrEqual)
                     {
                         result = iv <= i;
                     }
                 }
-                else if(criteria.Value is double d && value[criteria.Name] is double dv)
+                else if (criteria.Value is double d && value[criteria.Name] is double dv)
                 {
-                    if(criteria.Operator == CriteriaOperator.Equal)
+                    if (criteria.Operator == CriteriaOperator.Equal)
                     {
                         result = dv == d;
                     }
-                    else if(criteria.Operator == CriteriaOperator.NotEqual)
+                    else if (criteria.Operator == CriteriaOperator.NotEqual)
                     {
                         result = dv != d;
                     }
-                    else if(criteria.Operator == CriteriaOperator.GreaterThan)
+                    else if (criteria.Operator == CriteriaOperator.GreaterThan)
                     {
                         result = dv > d;
                     }
-                    else if(criteria.Operator == CriteriaOperator.GreaterThanOrEqual)
+                    else if (criteria.Operator == CriteriaOperator.GreaterThanOrEqual)
                     {
                         result = dv >= d;
                     }
-                    else if(criteria.Operator == CriteriaOperator.LessThan)
+                    else if (criteria.Operator == CriteriaOperator.LessThan)
                     {
                         result = dv < d;
                     }
-                    else if(criteria.Operator == CriteriaOperator.LessThanOrEqual)
+                    else if (criteria.Operator == CriteriaOperator.LessThanOrEqual)
                     {
                         result = dv <= d;
                     }
                 }
-                else if(criteria.Value is long l && value[criteria.Name] is long lv)
+                else if (criteria.Value is long l && value[criteria.Name] is long lv)
                 {
-                    if(criteria.Operator == CriteriaOperator.Equal)
+                    if (criteria.Operator == CriteriaOperator.Equal)
                     {
                         result = lv == l;
                     }
-                    else if(criteria.Operator == CriteriaOperator.NotEqual)
+                    else if (criteria.Operator == CriteriaOperator.NotEqual)
                     {
                         result = lv != l;
                     }
-                    else if(criteria.Operator == CriteriaOperator.GreaterThan)
+                    else if (criteria.Operator == CriteriaOperator.GreaterThan)
                     {
                         result = lv > l;
                     }
-                    else if(criteria.Operator == CriteriaOperator.GreaterThanOrEqual)
+                    else if (criteria.Operator == CriteriaOperator.GreaterThanOrEqual)
                     {
                         result = lv >= l;
                     }
-                    else if(criteria.Operator == CriteriaOperator.LessThan)
+                    else if (criteria.Operator == CriteriaOperator.LessThan)
                     {
                         result = lv < l;
                     }
-                    else if(criteria.Operator == CriteriaOperator.LessThanOrEqual)
+                    else if (criteria.Operator == CriteriaOperator.LessThanOrEqual)
                     {
                         result = lv <= l;
                     }
                 }
-                else if(criteria.Value is bool b && value[criteria.Name.Decapitalize()] is bool bv)
+                else if (criteria.Value is bool b && value[criteria.Name.Decapitalize()] is bool bv)
                 {
-                    if(criteria.Operator == CriteriaOperator.Equal)
+                    if (criteria.Operator == CriteriaOperator.Equal)
                     {
                         result = bv == b;
                     }
-                    else if(criteria.Operator == CriteriaOperator.NotEqual)
+                    else if (criteria.Operator == CriteriaOperator.NotEqual)
                     {
                         result = bv != b;
                     }
                 }
 
-                if(!result)
+                if (!result)
                 {
                     return false;
                 }

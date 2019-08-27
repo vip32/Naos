@@ -45,7 +45,7 @@
 
         public void Dispose()
         {
-            if(this.stopwatch.IsRunning)
+            if (this.stopwatch.IsRunning)
             {
                 this.stopwatch.Stop();
             }

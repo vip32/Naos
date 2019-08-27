@@ -25,9 +25,9 @@
 
         public void Handle(HttpContext context, Exception exception, string instance, string requestId, bool hideDetails = false, bool jsonResponse = true)
         {
-            if(exception is BadRequestException badRequestException)
+            if (exception is BadRequestException badRequestException)
             {
-                if(jsonResponse)
+                if (jsonResponse)
                 {
                     var details = new ValidationProblemDetails
                     {

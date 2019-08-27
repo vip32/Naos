@@ -66,7 +66,7 @@
         public async Task<ActionResult> DeleteAsync(TEntity entity)
         {
             // publish all domain events before transaction ends
-            foreach(var @event in entity?.DomainEvents.GetAll())
+            foreach (var @event in entity?.DomainEvents.GetAll())
             {
                 this.logger.LogInformation($"{{LogKey:l}} publish (type={@event.GetType().Name.Replace("DomainEvent", string.Empty)})", LogKeys.DomainEvent);
                 await this.mediator.Publish(@event).AnyContext();
@@ -105,7 +105,7 @@
         public async Task<TEntity> InsertAsync(TEntity entity)
         {
             // publish all domain events before transaction ends
-            foreach(var @event in entity?.DomainEvents.GetAll())
+            foreach (var @event in entity?.DomainEvents.GetAll())
             {
                 this.logger.LogInformation($"{{LogKey:l}} publish (type={@event.GetType().Name.Replace("DomainEvent", string.Empty)})", LogKeys.DomainEvent);
                 await this.mediator.Publish(@event).AnyContext();
@@ -118,7 +118,7 @@
         public async Task<TEntity> UpdateAsync(TEntity entity)
         {
             // publish all domain events before transaction ends
-            foreach(var @event in entity?.DomainEvents.GetAll())
+            foreach (var @event in entity?.DomainEvents.GetAll())
             {
                 this.logger.LogInformation($"{{LogKey:l}} publish (type={@event.GetType().Name.Replace("DomainEvent", string.Empty)})", LogKeys.DomainEvent);
                 await this.mediator.Publish(@event).AnyContext();
@@ -131,7 +131,7 @@
         public async Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
         {
             // publish all domain events before transaction ends
-            foreach(var @event in entity?.DomainEvents.GetAll())
+            foreach (var @event in entity?.DomainEvents.GetAll())
             {
                 this.logger.LogInformation($"{{LogKey:l}} publish (type={@event.GetType().Name.Replace("DomainEvent", string.Empty)})", LogKeys.DomainEvent);
                 await this.mediator.Publish(@event).AnyContext();

@@ -17,11 +17,11 @@
             IDictionary<string, object> properties = null,
             params object[] args)
         {
-            if(!message.IsNullOrEmpty())
+            if (!message.IsNullOrEmpty())
             {
                 type ??= LogPropertyKeys.TrackMisc;
                 duration ??= TimeSpan.Zero;
-                using(source.BeginScope(new Dictionary<string, object>(properties.Safe())
+                using (source.BeginScope(new Dictionary<string, object>(properties.Safe())
                 {
                     [LogPropertyKeys.TrackType] = LogTrackTypes.Journal,
                     [LogPropertyKeys.TrackDuration] = duration.Value.Milliseconds,
@@ -34,9 +34,9 @@
                     {
                         source.Log(level, $"{{LogKey:l}} {message:l}", args.Insert(logKey).ToArray());
                     }
-                    catch(AggregateException ex) // IndexOutOfRangeException
+                    catch (AggregateException ex) // IndexOutOfRangeException
                     {
-                        if(ex.InnerException is IndexOutOfRangeException)
+                        if (ex.InnerException is IndexOutOfRangeException)
                         {
                             source.Log(LogLevel.Warning, $"{{LogKey:l}} {message:l}");
                         }

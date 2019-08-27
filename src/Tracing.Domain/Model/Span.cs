@@ -58,7 +58,7 @@
 
         public ISpan Start(DateTimeOffset? date = null)
         {
-            if(date.HasValue)
+            if (date.HasValue)
             {
                 this.StartTime = date;
             }
@@ -73,13 +73,13 @@
         public ISpan End(SpanStatus status = SpanStatus.Succeeded, string statusDescription = null, DateTimeOffset? date = null)
         {
             // only set default status if none has been set already
-            if(this.Status == SpanStatus.Transient || this.Status == null)
+            if (this.Status == SpanStatus.Transient || this.Status == null)
             {
                 this.Status = status;
                 this.StatusDescription = statusDescription;
             }
 
-            if(date.HasValue)
+            if (date.HasValue)
             {
                 this.EndTime = date;
             }
@@ -93,7 +93,7 @@
 
         public ISpan WithOperationName(string operationName)
         {
-            if(operationName.IsNullOrEmpty())
+            if (operationName.IsNullOrEmpty())
             {
                 return this;
             }
@@ -104,7 +104,7 @@
 
         public ISpan WithLogKey(string logKey)
         {
-            if(logKey.IsNullOrEmpty())
+            if (logKey.IsNullOrEmpty())
             {
                 return this;
             }
@@ -115,7 +115,7 @@
 
         public ISpan SetSpanId(string spanId)
         {
-            if(!spanId.IsNullOrEmpty())
+            if (!spanId.IsNullOrEmpty())
             {
                 this.SpanId = spanId;
             }
@@ -131,7 +131,7 @@
 
         public ISpan WithTags(DataDictionary tags)
         {
-            foreach(var tag in tags.Safe())
+            foreach (var tag in tags.Safe())
             {
                 this.Tags.AddOrUpdate(tag.Key, tag.Value);
             }

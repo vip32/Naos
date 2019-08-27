@@ -100,10 +100,10 @@
                 //"LogLevel_s != 'Debug'"
             };
 
-            foreach(var specification in specifications.Safe())
+            foreach (var specification in specifications.Safe())
             {
                 var map = this.entityMap.FirstOrDefault(e => e.SourceProperty.SafeEquals(specification.Name));
-                if(map != default)
+                if (map != default)
                 {
                     result.Add($"{map.TargetPropertyFull} {specification.ToString(true).SliceFrom(" ")}");
                 }
@@ -143,37 +143,37 @@
         private IEnumerable<TEntity> MapResponse(LogAnalyticsResponse response) // TODO: move to seperate mapper
         {
             // Response Mapping ====================================
-            if(response?.Tables.IsNullOrEmpty() == false)
+            if (response?.Tables.IsNullOrEmpty() == false)
             {
                 var accessors = TypeAccessor.Create(typeof(TEntity));
                 var table = response.Tables[0];
                 var keys = table.Columns.Safe().Select(c => c
                     .ColumnName.Safe().Replace("LogProperties_", string.Empty).SliceTillLast("_")).ToList();
 
-                if(!table.Rows.IsNullOrEmpty())
+                if (!table.Rows.IsNullOrEmpty())
                 {
-                    foreach(var values in table.Rows)
+                    foreach (var values in table.Rows)
                     {
                         var result = Factory<TEntity>.Create();
                         var properties = new DataDictionary();
-                        foreach(var key in keys.Ignore(new[] { "TenantId", "SourceSystem", "TimeGenerated", "ConnectionId" }))
+                        foreach (var key in keys.Ignore(new[] { "TenantId", "SourceSystem", "TimeGenerated", "ConnectionId" }))
                         {
                             var value = values[keys.IndexOf(key)];
-                            if(value != null && !string.IsNullOrEmpty(value.ToString()))
+                            if (value != null && !string.IsNullOrEmpty(value.ToString()))
                             {
                                 properties.AddOrUpdate(key, value);
                             }
                         }
 
                         // dynamicly map all specified properties defined in entityMaps
-                        foreach(var item in this.entityMap)
+                        foreach (var item in this.entityMap)
                         {
                             try
                             {
                                 accessors[result, item.SourceProperty] = properties.TryGetValue(item.TargetProperty);
                                 //properties.Remove(item.TargetProperty); // TODO: remove only if no further mappings based on TargetProperty
                             }
-                            catch(System.ArgumentOutOfRangeException)
+                            catch (System.ArgumentOutOfRangeException)
                             {
                                 // target property not found, fastmember cannot set it
                             }

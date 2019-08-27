@@ -21,12 +21,12 @@
 
         public static T TryGetValue<T>(this Dictionary<string, T> source, string key, T @default = default)
         {
-            if(source.IsNullOrEmpty() || key.IsNullOrEmpty())
+            if (source.IsNullOrEmpty() || key.IsNullOrEmpty())
             {
                 return @default;
             }
 
-            if(source.TryGetValue(key, out var result))
+            if (source.TryGetValue(key, out var result))
             {
                 return result;
             }

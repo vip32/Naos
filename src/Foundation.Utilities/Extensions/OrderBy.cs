@@ -12,12 +12,12 @@
     {
         public static IOrderedEnumerable<TSource> OrderBy<TSource>(this IEnumerable<TSource> source, string name, bool ascending = true)
         {
-            if(source == null || name.IsNullOrEmpty())
+            if (source == null || name.IsNullOrEmpty())
             {
                 return null;
             }
 
-            if(ascending)
+            if (ascending)
             {
                 return source.OrderBy(ExpressionHelper.GetFunc<TSource>(name));
             }
@@ -29,12 +29,12 @@
 
         public static IOrderedQueryable<TSource> OrderBy<TSource>(this IQueryable<TSource> source, string name, bool ascending = true)
         {
-            if(source == null || name.IsNullOrEmpty())
+            if (source == null || name.IsNullOrEmpty())
             {
                 return null;
             }
 
-            if(ascending)
+            if (ascending)
             {
                 return source.OrderBy(ExpressionHelper.GetExpression<TSource>(name));
             }

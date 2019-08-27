@@ -12,13 +12,13 @@
         [DebuggerStepThrough]
         public static string Capitalize(this string source)
         {
-            if(source.IsNullOrEmpty())
+            if (source.IsNullOrEmpty())
             {
                 return source;
             }
 
             var result = new StringBuilder();
-            for(var i = 0; i < source.Length; i++)
+            for (var i = 0; i < source.Length; i++)
             {
                 result.Append(i == 0 ? char.ToUpper(source[i]) : source[i]);
             }
@@ -33,13 +33,13 @@
         [DebuggerStepThrough]
         public static string Decapitalize(this string source)
         {
-            if(source.IsNullOrEmpty())
+            if (source.IsNullOrEmpty())
             {
                 return source;
             }
 
             var result = new StringBuilder();
-            for(var i = 0; i < source.Length; i++)
+            for (var i = 0; i < source.Length; i++)
             {
                 result.Append(i == 0 ? char.ToLower(source[i]) : source[i]);
             }

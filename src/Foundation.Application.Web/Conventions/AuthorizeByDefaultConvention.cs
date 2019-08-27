@@ -9,7 +9,7 @@
     {
         public void Apply(ActionModel action)
         {
-            if(this.ShouldApplyConvention(action))
+            if (this.ShouldApplyConvention(action))
             {
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
 
@@ -19,7 +19,7 @@
 
         private bool ShouldApplyConvention(ActionModel action)
         {
-            if(action == null)
+            if (action == null)
             {
                 return default;
             }

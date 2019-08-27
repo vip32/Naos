@@ -10,9 +10,9 @@
             this IQueryable<T> source,
             Expression<Func<T, TKey>> expression, bool descending = false)
         {
-            if(expression != null)
+            if (expression != null)
             {
-                if(descending)
+                if (descending)
                 {
                     return source.OrderByDescending(expression);
                 }

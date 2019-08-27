@@ -30,7 +30,7 @@
         /// <param name="destination">The destination object to map to.</param>
         public void Map(TSource source, TDestination destination)
         {
-            if(source != null && destination != null)
+            if (source != null && destination != null)
             {
                 this.mapper.Map(source, destination);
             }

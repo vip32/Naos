@@ -11,7 +11,7 @@
 
         public static IDictionary<string, object> ToDictionary(this NameValueCollection source)
         {
-            if(source == null)
+            if (source == null)
             {
                 return new Dictionary<string, object>();
             }
@@ -21,7 +21,7 @@
 
         public static IDictionary<string, string[]> ToMultiValueDictionary(this NameValueCollection source)
         {
-            if(source == null)
+            if (source == null)
             {
                 return new Dictionary<string, string[]>();
             }

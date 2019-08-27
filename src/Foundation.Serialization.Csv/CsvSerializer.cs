@@ -27,7 +27,7 @@
             // https://github.com/ServiceStack/ServiceStack.Text/blob/master/tests/ServiceStack.Text.Tests/CsvTests/ObjectSerializerTests.cs
             ServiceStack.Text.CsvConfig.ItemSeperatorString = this.ItemSeperator;
 
-            if(this.CultureInfo != null)
+            if (this.CultureInfo != null)
             {
                 ServiceStack.Text.CsvConfig.RealNumberCultureInfo = this.CultureInfo;
                 //ServiceStack.Text.CsvConfig<DateTime>
@@ -38,7 +38,7 @@
                 ServiceStack.Text.JsConfig<DateTime>.SerializeFn = dt => new DateTime(dt.Ticks, DateTimeKind.Utc).ToString($"{this.CultureInfo.DateTimeFormat.ShortDatePattern} {this.CultureInfo.DateTimeFormat.LongTimePattern}");
                 ServiceStack.Text.JsConfig<DateTime>.DeSerializeFn = time =>
                 {
-                    if(DateTime.TryParse(time, this.CultureInfo, DateTimeStyles.None, out var result))
+                    if (DateTime.TryParse(time, this.CultureInfo, DateTimeStyles.None, out var result))
                     {
                         return result;
                     }
@@ -49,7 +49,7 @@
                 };
             }
 
-            if(!this.DateTimeFormat.IsNullOrEmpty())
+            if (!this.DateTimeFormat.IsNullOrEmpty())
             {
                 ServiceStack.Text.JsConfig<DateTime>.SerializeFn = dt => new DateTime(dt.Ticks, DateTimeKind.Utc).ToString(this.DateTimeFormat);
             }

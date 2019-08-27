@@ -4,35 +4,30 @@
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
-    using MediatR;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Commands.Domain;
     using Naos.Foundation;
     using Naos.Sample.Customers.Domain;
 
-    public class CreateCustomerCommandHandler : BehaviorCommandHandler<CreateCustomerCommand, string>
+    public class CreateCustomerCommandHandler : BehaviorCommandHandler<CreateCustomerCommand, object>
     {
         private readonly ILogger<CreateCustomerCommandHandler> logger;
-        private readonly IMediator mediator;
         private readonly ICustomerRepository repository;
 
         public CreateCustomerCommandHandler(
             ILogger<CreateCustomerCommandHandler> logger,
-            IMediator mediator,
             IEnumerable<ICommandBehavior> behaviors,
             ICustomerRepository repository)
             : base(logger, behaviors)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(repository, nameof(repository));
-            EnsureArg.IsNotNull(mediator, nameof(mediator));
 
             this.logger = logger;
-            this.mediator = mediator;
             this.repository = repository;
         }
 
-        public override async Task<CommandResponse<string>> HandleRequest(CreateCustomerCommand request, CancellationToken cancellationToken)
+        public override async Task<CommandResponse<object>> HandleRequest(CreateCustomerCommand request, CancellationToken cancellationToken)
         {
             //this.Logger.LogJournal(LogEventPropertyKeys.TrackHandleCommand, $"{{LogKey:l}} handle {request.GetType().Name.SubstringTill("Command")}", args: LogEventKeys.AppCommand);
 
@@ -40,10 +35,10 @@
 
             this.logger.LogInformation($"{{LogKey:l}} {request.GetType().Name} (handler={this.GetType().Name})", LogKeys.AppCommand);
 
-            if(!request.Customer.Region.EqualsAny(new[] { "East", "West" }))
+            if (!request.Customer.Region.EqualsAny(new[] { "East", "West" }))
             {
                 // cancels the command
-                return new CommandResponse<string>("cannot accept customers outside regular regions");
+                return new CommandResponse<object>("cannot accept customers outside regular regions");
             }
 
             request.Customer.SetCustomerNumber();
@@ -53,9 +48,9 @@
 
             // TODO: publish CreatedCustomer message (messaging)
 
-            return new CommandResponse<string>
+            return new CommandResponse<object>
             {
-                Result = request.Customer.Id
+                //Result = request.Customer.Id
             };
         }
     }
