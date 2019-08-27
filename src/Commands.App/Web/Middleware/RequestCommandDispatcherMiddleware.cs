@@ -2,10 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Dynamic;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text;
     using System.Threading.Tasks;
     using EnsureThat;
     using MediatR;
@@ -14,7 +10,6 @@
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Naos.Foundation;
-    using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
     /// <summary>

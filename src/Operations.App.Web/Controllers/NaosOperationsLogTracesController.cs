@@ -1,15 +1,12 @@
 ﻿namespace Naos.Core.Operations.App.Web
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
     using Humanizer;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Operations.Domain;
     using Naos.Core.RequestFiltering.App;
     using Naos.Core.Tracing.Domain;
     using Naos.Foundation;

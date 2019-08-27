@@ -1,12 +1,8 @@
 ﻿namespace Naos.Core.UnitTests.Commands
 {
-    using System;
     using System.Threading.Tasks;
-    using FluentValidation;
-    using FluentValidation.Results;
     using MediatR;
-    using Naos.Core.Commands.Domain;
-    using Naos.Core.Commands.Domain.Model;
+    using Naos.Core.Commands.App;
     using Naos.Foundation;
     using NSubstitute;
     using Shouldly;

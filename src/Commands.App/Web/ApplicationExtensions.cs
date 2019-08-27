@@ -1,6 +1,5 @@
 ﻿namespace Microsoft.AspNetCore.Builder
 {
-    using System.Collections.Generic;
     using System.Linq;
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection;

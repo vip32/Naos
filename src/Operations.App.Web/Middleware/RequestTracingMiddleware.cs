@@ -1,7 +1,6 @@
 ﻿namespace Naos.Core.Operations.App.Web
 {
     using System;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Humanizer;
     using Microsoft.AspNetCore.Http;
