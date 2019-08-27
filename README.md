@@ -280,13 +280,13 @@ Startup.cs configuration:
     .UseRequestCommands()
     ...);
 ```
-##### Sending Commands
+#### Sending Commands
 Use the mediator (IMediator) and send the command. A registered handler will handle the command and provide a response.
 ```
 var response = await mediator.Send(command).AnyContext();
 ```
 
-##### Request Command Dispatcher
+#### Request Command Dispatcher
 Provides HTTP access to specific commands, these commands need to be registered. The commands are available on endpoints as specified in the AddCommands configuration.
 All configured commands are also available in the swagger documentation (with request/response schemas).
 ```
