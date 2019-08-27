@@ -1,6 +1,7 @@
 ﻿namespace Naos.Foundation.UnitTests.Extensions
 {
     using System;
+    using Microsoft.Extensions.Primitives;
     using Naos.Foundation;
     using Shouldly;
     using Xunit;
@@ -36,6 +37,10 @@
             16.To<StubEnums>().ShouldBe(StubEnums.Reptile);
             //16.To(typeof(StubEnums)).ShouldBe(StubEnums.Reptile);
             //99.To<StubEnum>().ShouldBe(StubEnum.Unk);
+            new StringValues("abc").To(typeof(string)).ShouldBeOfType<string>().ShouldBe("abc");
+            new StringValues("abc").To<string>().ShouldBeOfType<string>().ShouldBe("abc");
+            new StringValues("42").To(typeof(int)).ShouldBeOfType<int>().ShouldBe(42);
+            new StringValues("42").To<int>().ShouldBeOfType<int>().ShouldBe(42);
             "Abc".To<StubEnums>(defaultValue: StubEnums.Dog).ShouldBe(StubEnums.None); // defaultvalue ignored with enums
             13.To<StubEnums>().ShouldBe(StubEnums.Dog | StubEnums.Fish | StubEnums.Bird); // dog 1 |fish 4 |bird 8 = 13
             Assert.Throws<FormatException>(() => "test".To<bool>(true));

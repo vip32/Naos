@@ -5,6 +5,7 @@
     using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
+    using Microsoft.Extensions.Primitives;
 
     public static partial class Extensions
     {
@@ -19,7 +20,6 @@
         /// </returns>
         [DebuggerStepThrough]
         public static T To<T>(this object source, bool throws = false, T defaultValue = default, CultureInfo cultureInfo = null)
-            where T : struct
         {
             if (source == null)
             {
@@ -30,6 +30,11 @@
 
             try
             {
+                if (source.GetType() == typeof(StringValues))
+                {
+                    return source.ToString().To<T>();
+                }
+
                 if (toType == typeof(Guid))
                 {
                     return (T)TypeDescriptor.GetConverter(toType).ConvertFrom(Convert.ToString(source, cultureInfo ?? CultureInfo.InvariantCulture));
@@ -40,10 +45,16 @@
                     return (T)Convert.ChangeType(source, toType, cultureInfo ?? CultureInfo.InvariantCulture);
                 }
 
-                if (toType.IsEnum && source is string)
+                if (toType.IsEnum && (source is string || source is int || source is decimal || source is double || source is float))
                 {
-                    Enum.TryParse(source.ToString(), true, out T enumResult);
-                    return enumResult;
+                    try
+                    {
+                        return (T)Enum.Parse(toType, source.ToString());
+                    }
+                    catch (ArgumentException)
+                    {
+                        return default;
+                    }
                 }
 
                 return (T)source;
@@ -93,6 +104,11 @@
 
             try
             {
+                if(source.GetType() == typeof(StringValues))
+                {
+                    return source.ToString().To(toType);
+                }
+
                 if (toType == typeof(Guid))
                 {
                     return TypeDescriptor.GetConverter(toType).ConvertFrom(Convert.ToString(source, cultureInfo ?? CultureInfo.InvariantCulture));
@@ -103,9 +119,16 @@
                     return Convert.ChangeType(source, toType, cultureInfo ?? CultureInfo.InvariantCulture);
                 }
 
-                if (toType.IsEnum && source is string)
+                if (toType.IsEnum && (source is string || source is int || source is decimal || source is double || source is float))
                 {
-                    return Enum.Parse(toType, source.ToString());
+                    try
+                    {
+                        return Enum.Parse(toType, source.ToString());
+                    }
+                    catch (ArgumentException)
+                    {
+                        return default;
+                    }
                 }
 
                 return source;
@@ -132,7 +155,6 @@
 
         [DebuggerStepThrough]
         public static bool TryTo<T>(this object source, out T result, CultureInfo cultureInfo = null)
-            where T : struct
         {
             if (source == null)
             {
@@ -156,15 +178,9 @@
                     return true;
                 }
 
-                if (toType.IsEnum && source is string)
+                if (toType.IsEnum && (source is string || source is int || source is decimal || source is double || source is float))
                 {
-                    Enum.TryParse(source.ToString(), true, out result);
-                    return true;
-                }
-
-                if (toType.IsEnum && source is int)
-                {
-                    result = ToEnum<T>((int)source);
+                    result = (T)Enum.Parse(toType, source.ToString());
                     return true;
                 }
 
