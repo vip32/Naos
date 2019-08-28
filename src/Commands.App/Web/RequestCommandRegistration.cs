@@ -20,7 +20,7 @@
 
             set
             {
-                this.route = $"/{value.Safe().TrimStart('/').Replace('\\', '/')}"; // enforce starting slash
+                this.route = $"/{value.Safe().TrimStart('/').Replace('\\', '/')}"; // ensure starting slash
             }
         }
 
