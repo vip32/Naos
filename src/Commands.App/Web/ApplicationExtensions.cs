@@ -30,17 +30,18 @@
                 naosOptions.Context.Application.UseMiddleware<RequestCommandDispatcherMiddleware>(
                     Options.Create(new RequestCommandDispatcherMiddlewareOptions
                     {
-                        CommandType = registration.CommandType,
-                        OnSuccessStatusCode = registration.OnSuccessStatusCode,
-                        OpenApiDescription = registration.OpenApiDescription,
-                        OpenApiGroupName = registration.OpenApiGroupName,
-                        OpenApiGroupPrefix = registration.OpenApiGroupPrefix,
-                        OpenApiProduces = registration.OpenApiProduces,
-                        OpenApiResponseDescription = registration.OpenApiResponseDescription,
-                        OpenApiSummary = registration.OpenApiSummary,
-                        RequestMethod = registration.RequestMethod,
-                        ResponseType = registration.ResponseType,
-                        Route = registration.Route
+                        Registration = registration
+                        //CommandType = registration.CommandType,
+                        //OnSuccessStatusCode = registration.OnSuccessStatusCode,
+                        //OpenApiDescription = registration.OpenApiDescription,
+                        //OpenApiGroupName = registration.OpenApiGroupName,
+                        //OpenApiGroupPrefix = registration.OpenApiGroupPrefix,
+                        //OpenApiProduces = registration.OpenApiProduces,
+                        //OpenApiResponseDescription = registration.OpenApiResponseDescription,
+                        //OpenApiSummary = registration.OpenApiSummary,
+                        //RequestMethod = registration.RequestMethod,
+                        //ResponseType = registration.ResponseType,
+                        //Route = registration.Route
                     }));
                 naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: request command added (route={registration.Route}, type={registration.CommandType.PrettyName()})");
             }

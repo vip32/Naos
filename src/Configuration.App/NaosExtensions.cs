@@ -76,14 +76,14 @@
             return context;
         }
 
-        public static NaosServicesContextOptions AddServices(
+        public static NaosServicesContextOptions AddModules(
             this NaosServicesContextOptions naosOptions,
-            Action<ServiceOptions> optionsAction = null)
+            Action<ModuleOptions> optionsAction = null)
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
             EnsureArg.IsNotNull(naosOptions.Context, nameof(naosOptions.Context));
 
-            optionsAction?.Invoke(new ServiceOptions(naosOptions.Context));
+            optionsAction?.Invoke(new ModuleOptions(naosOptions.Context));
 
             return naosOptions;
         }

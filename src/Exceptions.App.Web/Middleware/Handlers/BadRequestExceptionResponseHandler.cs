@@ -42,7 +42,7 @@
 
                     this.logger?.LogWarning($"{LogKeys.InboundResponse} [{requestId}] http request  {details.Title} [{badRequestException.GetType().PrettyName()}] {badRequestException.Message}");
 
-                    context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    context.Response.BadRequest(details.Title);
                     context.Response.WriteJson(details, contentType: ContentType.JSONPROBLEM);
                 }
             }

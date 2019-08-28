@@ -28,10 +28,10 @@
             this.Services
                 .AddMediatR(AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.GetName().Name.StartsWith("Microsoft.", StringComparison.OrdinalIgnoreCase)).ToArray())
                 .AddNaos(configuration, "Product", "Capability", new[] { "All" }, n => n
-                    .AddServices(o => o
-                        .AddSampleCountries()
-                        .AddSampleCustomers()
-                        .AddSampleUserAccounts($"Server=(localdb)\\mssqllocaldb;Database={nameof(UserAccountsDbContext)};Trusted_Connection=True;MultipleActiveResultSets=True;"))
+                    .AddModules(o => o
+                        .AddCountriesModule()
+                        .AddCustomersModule()
+                        .AddUserAccountsModule($"Server=(localdb)\\mssqllocaldb;Database={nameof(UserAccountsDbContext)};Trusted_Connection=True;MultipleActiveResultSets=True;"))
                     //.AddSampleUserAccounts(dbContext: new UserAccountsContext(
                     //    new DbContextOptionsBuilder()
                     //        .UseSqlServer(entityFrameworkConfiguration.ConnectionString)

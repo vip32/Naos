@@ -53,19 +53,19 @@
         }
 
         [JsonIgnore] // so it will not appear in the swagger
-        public string Id { get; set; }
+        public string Id { get; internal set; }
 
         [JsonIgnore] // so it will not appear in the swagger
-        public string Identifier { get; set; } // obsolete? just a short identifier
+        public string Identifier { get; internal set; } // obsolete? just a short identifier
 
         [JsonIgnore] // so it will not appear in the swagger
-        public string CorrelationId { get; set; }
+        public string CorrelationId { get; internal set; }
 
         [JsonIgnore] // so it will not appear in the swagger
         public DateTimeOffset Created { get; }
 
         [JsonIgnore] // so it will not appear in the swagger, needed?
-        public IDictionary<string, object> Properties { get; set; } = new DataDictionary();
+        public IDictionary<string, object> Properties { get; internal set; } = new DataDictionary();
 
         //public void Update(string id, string correlationId)
         //{

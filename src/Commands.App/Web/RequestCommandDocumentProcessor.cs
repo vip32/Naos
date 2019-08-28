@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net;
     using System.Reflection;
     using Humanizer;
     using Microsoft.Extensions.DependencyInjection;
@@ -49,11 +50,19 @@
                 item.Add(method, operation);
 
                 var hasResponseModel = registration.ResponseType?.Name.SafeEquals("object") == false;
-                operation.Responses.Add(registration.OnSuccessStatusCode.ToString(), new OpenApiResponse
+                operation.Responses.Add(((int)registration.OnSuccessStatusCode).ToString(), new OpenApiResponse
                 {
                     Description = registration.OpenApiResponseDescription ?? (hasResponseModel ? registration.ResponseType : null)?.FullPrettyName(),
                     Schema = hasResponseModel ? context.SchemaGenerator.Generate(registration.ResponseType, context.SchemaResolver) : null,
                     //Examples = hasResponseModel ? Factory.Create(registration.ResponseType) : null // header?
+                });
+                operation.Responses.Add(((int)HttpStatusCode.BadRequest).ToString(), new OpenApiResponse
+                {
+                    Description = string.Empty,
+                });
+                operation.Responses.Add(((int)HttpStatusCode.InternalServerError).ToString(), new OpenApiResponse
+                {
+                    Description = string.Empty
                 });
 
                 AddOperationParameters(operation, method, registration, context);

@@ -18,10 +18,10 @@
     /// <summary>
     /// Naos service extensions.
     /// </summary>
-    public static partial class NaosExtensions
+    public static partial class CompositionRoot
     {
-        public static ServiceOptions AddSampleUserAccounts(
-            this ServiceOptions options,
+        public static ModuleOptions AddUserAccountsModule(
+            this ModuleOptions options,
             string connectionString = null,
             string section = "naos:sample:userAccounts:entityFramework",
             UserAccountsDbContext dbContext = null)

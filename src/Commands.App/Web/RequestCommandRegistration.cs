@@ -1,6 +1,9 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
+    using System.Net;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Http;
     using Naos.Core.Commands.Domain;
     using Naos.Foundation;
 
@@ -14,7 +17,7 @@
 
         public string RequestMethod { get; set; } = "post"; // get/delete/post/put/.....
 
-        public int OnSuccessStatusCode { get; set; } = 200; // 201/202/200/204 + location header?
+        public HttpStatusCode OnSuccessStatusCode { get; set; } = HttpStatusCode.OK; // 201/202/200/204 + location header?
 
         public string OpenApiDescription { get; set; }
 
@@ -27,18 +30,22 @@
         public string OpenApiGroupPrefix { get; set; } = "Naos Commands";
 
         public string OpenApiGroupName { get; set; }
+
+        public bool HasResponse => this.GetType().PrettyName().Contains(","); // is a second generic TResponse defined?
+
+        public Func<object, HttpContext, Task> OnSuccess { get; set; }
     }
 
 #pragma warning disable SA1402 // File may only contain a single type
-    public class RequestCommandRegistration<TCommandRequest, TResponse> : RequestCommandRegistration
-        where TCommandRequest : CommandRequest<TResponse>
+    public class RequestCommandRegistration<TCommand, TResponse> : RequestCommandRegistration
+        where TCommand : CommandRequest<TResponse>
         //where TResponse : CommandResponse<TResponse>
     {
         public override Type CommandType
         {
             get
             {
-                return typeof(TCommandRequest);
+                return typeof(TCommand);
             }
         }
 
@@ -49,17 +56,19 @@
                 return typeof(TResponse);
             }
         }
+
+        public new Func<TCommand, HttpContext, Task> OnSuccess { get; set; }
     }
 
-    public class RequestCommandRegistration<TCommandRequest> : RequestCommandRegistration
-        where TCommandRequest : CommandRequest<object>
+    public class RequestCommandRegistration<TCommand> : RequestCommandRegistration
+        where TCommand : CommandRequest<object>
         //where TResponse : CommandResponse<TResponse>
     {
         public override Type CommandType
         {
             get
             {
-                return typeof(TCommandRequest);
+                return typeof(TCommand);
             }
         }
 
@@ -70,5 +79,7 @@
                 return typeof(object);
             }
         }
+
+        public new Func<TCommand, HttpContext, Task> OnSuccess { get; set; }
     }
 }

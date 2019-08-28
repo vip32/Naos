@@ -12,10 +12,10 @@
     using Naos.Sample.Countries.Infrastructure;
 
     [ExcludeFromCodeCoverage]
-    public static partial class NaosExtensions
+    public static partial class CompositionRoot
     {
-        public static ServiceOptions AddSampleCountries(
-            this ServiceOptions options)
+        public static ModuleOptions AddCountriesModule(
+            this ModuleOptions options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));

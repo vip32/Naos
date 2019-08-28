@@ -59,6 +59,16 @@
                    || (source.Type == JTokenType.Null);
         }
 
+        public static JToken EmptyToNull(this JToken source)
+        {
+            if (source.IsNullOrEmpty())
+            {
+                return null;
+            }
+
+            return source;
+        }
+
         /// <summary>
         /// Gets the value by path. If the path does not exist it will return null;.
         /// </summary>

@@ -35,12 +35,6 @@
 
             this.logger.LogInformation($"{{LogKey:l}} {request.GetType().Name} (handler={this.GetType().Name})", LogKeys.AppCommand);
 
-            if (!request.Customer.Region.EqualsAny(new[] { "East", "West" }))
-            {
-                // cancels the command
-                return new CommandResponse<object>("cannot accept customers outside regular regions");
-            }
-
             request.Customer.SetCustomerNumber();
             request.Customer = await this.repository.InsertAsync(request.Customer).AnyContext();
 

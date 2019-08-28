@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Net;
     using System.Threading;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -24,6 +25,7 @@
     using Naos.Core.JobScheduling.Domain;
     using Naos.Core.Messaging.Domain;
     using Naos.Foundation;
+    using Naos.Foundation.Application;
     using Naos.Sample.Customers.App;
     using Naos.Sample.Customers.Domain;
     using Newtonsoft.Json;
@@ -98,10 +100,10 @@
             // naos application services
             services
                 .AddNaos(this.Configuration, "Product", "Capability", new[] { "All" }, n => n
-                    .AddServices(s => s
-                        .AddSampleCountries()
-                        .AddSampleCustomers()
-                        .AddSampleUserAccounts())
+                    .AddModules(m => m
+                        .AddCountriesModule()
+                        .AddCustomersModule()
+                        .AddUserAccountsModule())
                     .AddServiceContext()
                     //.AddAuthenticationApiKeyStatic()
                     //.AddEasyAuthentication(/*o => o.Provider = EasyAuthProviders.AzureActiveDirectory*/)
@@ -115,8 +117,8 @@
                             new FolderFileStorage(o => o
                                 .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "commands")))))
                         .AddRequestDispatcher(o => o
-                            .Post<CreateCustomerCommand>("/api/commands/customers/create", 201)
-                            .Get<GetActiveCustomersQuery, IEnumerable<Customer>>("/api/commands/customers/active", 200)))
+                            .Post<CreateCustomerCommand>("/api/commands/customers/create", HttpStatusCode.Created, onSuccess: (cmd, ctx) => ctx.Response.Location($"api/customers/{cmd.Customer.Id}"))
+                            .Get<GetActiveCustomersQuery, IEnumerable<Customer>>("/api/commands/customers/active")))
                     .AddOperations(o => o
                         .AddInteractiveConsole()
                         .AddLogging(o => o

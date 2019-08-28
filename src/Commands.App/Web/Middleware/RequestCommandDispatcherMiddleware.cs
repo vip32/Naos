@@ -2,13 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using EnsureThat;
     using MediatR;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.WebUtilities;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
+    using Naos.Core.Commands.Domain;
     using Naos.Foundation;
     using Newtonsoft.Json.Linq;
 
@@ -60,39 +63,35 @@
         {
             EnsureArg.IsNotNull(mediator, nameof(mediator));
 
-            if (context.Request.Path.Equals(this.options.Route, StringComparison.OrdinalIgnoreCase)
-                && context.Request.Method.EqualsAny(this.options.RequestMethod.Split(';')))
+            if (context.Request.Path.Equals(this.options.Registration.Route, StringComparison.OrdinalIgnoreCase)
+                && context.Request.Method.EqualsAny(this.options.Registration.RequestMethod.Split(';')))
             {
-                this.logger.LogInformation($"{{LogKey:l}} received (name={this.options.CommandType.Name.SliceTill("Command").SliceTill("Query")})", LogKeys.AppCommand);
+                this.logger.LogInformation($"{{LogKey:l}} received (name={this.options.Registration.CommandType.Name.SliceTill("Command").SliceTill("Query")})", LogKeys.AppCommand);
 
-                context.Response.ContentType = this.options.OpenApiProduces;
-                context.Response.StatusCode = this.options.OnSuccessStatusCode;
+                context.Response.ContentType = this.options.Registration.OpenApiProduces;
+                context.Response.StatusCode = (int)this.options.Registration.OnSuccessStatusCode;
                 object command = null;
 
                 if (context.Request.Method.SafeEquals("get") || context.Request.Method.SafeEquals("delete"))
                 {
-                    command = this.HandleQueryOperation(context);
+                    command = this.ParseQueryOperation(context);
                 }
                 else if (context.Request.Method.SafeEquals("post") || context.Request.Method.SafeEquals("put") || context.Request.Method.SafeEquals(string.Empty))
                 {
-                    command = this.HandleBodyOperation(context);
+                    command = this.ParseBodyOperation(context);
                 }
                 else
                 {
                     // TODO: ignore for now, or throw? +log
                 }
 
-                var response = await mediator.Send(command).AnyContext(); // https://github.com/jbogard/MediatR/issues/385
-                if (response != null)
+                if (this.options.Registration.HasResponse)
                 {
-                    var jObject = JObject.FromObject(response);
-                    var jToken = jObject.SelectToken("result") ?? jObject.SelectToken("Result");
-
-                    if (!jToken.IsNullOrEmpty())
-                    {
-                        await context.Response.WriteAsync(
-                            SerializationHelper.JsonSerialize(jToken)).AnyContext();
-                    }
+                    await this.HandleCommandWithResponse(command, (dynamic)this.options.Registration, context, mediator);
+                }
+                else
+                {
+                    await this.HandleCommandWithoutResponse(command, (dynamic)this.options.Registration, context, mediator);
                 }
 
                 // =terminating middlware
@@ -103,7 +102,77 @@
             }
         }
 
-        private object HandleQueryOperation(HttpContext context)
+        private async Task HandleCommandWithResponse<TCommand, TResponse>(
+            object command,
+            RequestCommandRegistration<TCommand, TResponse> registration,
+            HttpContext context,
+            IMediator mediator)
+            where TCommand : CommandRequest<TResponse>
+        {
+            // registration will be resolved to the actual type with proper generic types. var i = typeof(RequestCommandRegistration<TCommand, TResponse>);
+            if (command != null)
+            {
+                var response = await mediator.Send(command).AnyContext(); // https://github.com/jbogard/MediatR/issues/385
+                if (response != null)
+                {
+                    var jObject = JObject.FromObject(response);
+
+                    if (!jObject.GetValueByPath<bool>("cancelled"))
+                    {
+                        var resultToken = jObject.SelectToken("result") ?? jObject.SelectToken("Result");
+                        registration?.OnSuccess?.Invoke(command as TCommand, context);
+
+                        if (!resultToken.IsNullOrEmpty())
+                        {
+                            context.Response.WriteJson(resultToken);
+                        }
+                    }
+                    else
+                    {
+                        var cancelledReason = jObject.GetValueByPath<string>("cancelledReason");
+                        await context.Response.BadRequest(cancelledReason.SliceTill(":")).AnyContext();
+                    }
+                }
+            }
+        }
+
+        private async Task HandleCommandWithoutResponse<TCommand>(
+            object command,
+            RequestCommandRegistration<TCommand> registration,
+            HttpContext context,
+            IMediator mediator)
+            where TCommand : CommandRequest<object>
+        {
+            // registration will be resolved to the actual type with proper generic types. var i = typeof(RequestCommandRegistration<TCommand, TResponse>);
+            if (command != null)
+            {
+                var response = await mediator.Send(command).AnyContext(); // https://github.com/jbogard/MediatR/issues/385
+                if (response != null)
+                {
+                    var jObject = JObject.FromObject(response);
+
+                    if (!jObject.GetValueByPath<bool>("cancelled"))
+                    {
+                        registration?.OnSuccess?.Invoke(command as TCommand, context);
+                    }
+                    else
+                    {
+                        var cancelledReason = jObject.GetValueByPath<string>("cancelledReason");
+                        await context.Response.BadRequest(cancelledReason.SliceTill(":")).AnyContext();
+                    }
+                }
+            }
+        }
+
+        //private void OnSuccessHandler<TCommand, TResponse>(RequestCommandRegistration<TCommand, TResponse> registration, object command, HttpContext context)
+        //    where TCommand : CommandRequest<TResponse>
+        //{
+        //    // registration will be resolved to the actual type with proper generic types
+        //    registration.OnSuccess?.Invoke(command as TCommand, context);
+        //    //var t = typeof(RequestCommandRegistration<TCommand, TResponse>);
+        //}
+
+        private object ParseQueryOperation(HttpContext context)
         {
             var properties = new Dictionary<string, object>();
             foreach (var queryItem in QueryHelpers.ParseQuery(context.Request.QueryString.Value))
@@ -111,12 +180,12 @@
                 properties.Add(queryItem.Key, queryItem.Value);
             }
 
-            return Factory.Create(this.options.CommandType, properties);
+            return Factory.Create(this.options.Registration.CommandType, properties);
         }
 
-        private object HandleBodyOperation(HttpContext context)
+        private object ParseBodyOperation(HttpContext context)
         {
-            return SerializationHelper.JsonDeserialize(context.Request.Body, this.options.CommandType);
+            return SerializationHelper.JsonDeserialize(context.Request.Body, this.options.Registration.CommandType);
         }
     }
 }
