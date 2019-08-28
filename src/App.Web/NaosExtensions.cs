@@ -5,6 +5,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Foundation;
     using Naos.Foundation.Application;
+    using NSwag.Generation.Processors;
 
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions
@@ -29,6 +30,8 @@
                         .FeatureProviders.Add(
                             new GenericRepositoryControllerFeatureProvider(
                                 options.ControllerRegistrations)));
+
+                mvcBuilder.Services.AddSingleton<IOperationProcessor>(new GenericRepositoryControllerOperationProcessor()); // needed for swagger generation (for each controller registration)
             }
 
             mvcBuilder.AddControllersAsServices(); // needed to resolve controllers through di https://andrewlock.net/controller-activation-and-dependency-injection-in-asp-net-core-mvc/

@@ -12,11 +12,11 @@
     using NSwag.Generation.Processors;
     using NSwag.Generation.Processors.Contexts;
 
-    public class RequestCommandDocumentProcessor : IDocumentProcessor
+    public class RequestCommandRegistrationDocumentProcessor : IDocumentProcessor
     {
         private readonly IEnumerable<RequestCommandRegistration> registrations;
 
-        public RequestCommandDocumentProcessor(IEnumerable<RequestCommandRegistration> registrations)
+        public RequestCommandRegistrationDocumentProcessor(IEnumerable<RequestCommandRegistration> registrations)
         {
             this.registrations = registrations;
         }
@@ -68,7 +68,7 @@
                 AddOperationParameters(operation, method, registration, context);
             }
 
-            if (item.Any())
+            if (item.Any() && !items.ContainsKey(registrations.First().Route))
             {
                 items?.Add(registrations.First().Route, item);
             }

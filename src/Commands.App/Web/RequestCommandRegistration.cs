@@ -1,12 +1,14 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
+    using System.Diagnostics;
     using System.Net;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
     using Naos.Core.Commands.Domain;
     using Naos.Foundation;
 
+    [DebuggerDisplay("Route={Route}, Method={RequestMethod}")]
     public class RequestCommandRegistration
     {
         private string route;

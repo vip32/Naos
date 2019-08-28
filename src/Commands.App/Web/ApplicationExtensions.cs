@@ -20,12 +20,8 @@
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
 
-#pragma warning disable IDE0067 // Dispose objects before losing scope
-#pragma warning disable CA2000 // Dispose objects before losing scope
-            //var registrations = naosOptions.Context.Application.ApplicationServices.CreateScope().ServiceProvider.GetServices<RequestCommandRegistration>();
-            var registrations = naosOptions.Context.Application.ApplicationServices.GetServices<RequestCommandRegistration>();
-
-            foreach (var registration in registrations.Safe().Where(r => !r.Route.IsNullOrEmpty()))
+            foreach (var registration in naosOptions.Context.Application.ApplicationServices.GetServices<RequestCommandRegistration>().Safe()
+                .Where(r => !r.Route.IsNullOrEmpty()))
             {
                 naosOptions.Context.Application.UseMiddleware<RequestCommandDispatcherMiddleware>(
                     Options.Create(new RequestCommandDispatcherMiddlewareOptions
@@ -43,7 +39,7 @@
                         //ResponseType = registration.ResponseType,
                         //Route = registration.Route
                     }));
-                naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: request command added (route={registration.Route}, type={registration.CommandType.PrettyName()})");
+                naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: request command added (route={registration.Route}, method={registration.RequestMethod}, type={registration.CommandType.PrettyName()})");
             }
 
             return naosOptions;
