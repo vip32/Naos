@@ -81,7 +81,7 @@
                             Url = "https://github.com/vip32/Naos.Core"
                         };
                     };
-                    if (true) // includeSecurity
+                    if (true) // option.includeSecurityHeader
                     {
                         c.AddSecurity("Bearer", new NSwag.OpenApiSecurityScheme
                         {
