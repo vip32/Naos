@@ -41,8 +41,4 @@
     <ProjectReference Include="..\Sample\Sample.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-
-  </ItemGroup>
-
 </Project>
