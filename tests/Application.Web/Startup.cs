@@ -62,6 +62,47 @@
                     return factory?.GetUrlHelper(actionContext);
                 })
                 .AddMediatr()
+                .AddSwaggerDocument((c, sp) => // TODO: replace with .AddOpenApiDocument, but currently has issues with example model generation in UI
+                {
+                    c.SerializerSettings = DefaultJsonSerializerSettings.Create();
+                    // find all processors which are registerd by naos features (Command RequestDispatcher/ControllerRegistrations)
+                    foreach (var documentProcessor in sp.GetServices<IDocumentProcessor>())
+                    {
+                        c.DocumentProcessors.Add(documentProcessor);
+                    }
+
+                    foreach (var operationProcessor in sp.GetServices<IOperationProcessor>())
+                    {
+                        c.OperationProcessors.Add(operationProcessor);
+                    }
+
+                    //c.DocumentProcessors.Add(new RequestCommandRegistrationDocumentProcessor(sp.GetServices<RequestCommandRegistration>()));
+                    //c.OperationProcessors.Add(new GenericRepositoryControllerOperationProcessor());
+                    c.OperationProcessors.Add(new ApiVersionProcessor());
+                    c.PostProcess = document =>
+                    {
+                        document.Info.Version = "v1";
+                        document.Info.Title = "Naos"; // Product.Capability-Version
+                        document.Info.Description = "Naos";
+                        document.Info.TermsOfService = "None";
+                        document.Info.Contact = new NSwag.OpenApiContact
+                        {
+                            Name = "Naos",
+                            Email = string.Empty,
+                            Url = "https://github.com/vip32/Naos.Core"
+                        };
+                    };
+                    if (true) // option.includeSecurityHeader
+                    {
+                        c.AddSecurity("Bearer", new NSwag.OpenApiSecurityScheme
+                        {
+                            Description = "Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                            Name = "Authorization",
+                            In = NSwag.OpenApiSecurityApiKeyLocation.Header,
+                            Type = NSwag.OpenApiSecuritySchemeType.ApiKey // Oauth2/OIDC?
+                        });
+                    }
+                })
                 .AddMvc(o =>
                     {
                         //o.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build())); // https://tahirnaushad.com/2017/08/28/asp-net-core-2-0-mvc-filters/ or use controller attribute (Authorize)
@@ -133,48 +174,6 @@
                     //.UseRouterClientRegistry())
                     .AddServiceDiscoveryRouter(o => o
                         .UseFileSystemRegistry()));
-
-            services.AddSwaggerDocument((c, sp) => // TODO: replace with .AddOpenApiDocument, but currently has issues with example model generation in UI
-            {
-                c.SerializerSettings = DefaultJsonSerializerSettings.Create();
-                // find all processors which are registerd by naos features (Command RequestDispatcher/ControllerRegistrations)
-                foreach (var documentProcessor in sp.GetServices<IDocumentProcessor>())
-                {
-                    c.DocumentProcessors.Add(documentProcessor);
-                }
-
-                foreach (var operationProcessor in sp.GetServices<IOperationProcessor>())
-                {
-                    c.OperationProcessors.Add(operationProcessor);
-                }
-
-                //c.DocumentProcessors.Add(new RequestCommandRegistrationDocumentProcessor(sp.GetServices<RequestCommandRegistration>()));
-                //c.OperationProcessors.Add(new GenericRepositoryControllerOperationProcessor());
-                c.OperationProcessors.Add(new ApiVersionProcessor());
-                c.PostProcess = document =>
-                {
-                    document.Info.Version = "v1";
-                    document.Info.Title = "Naos"; // Product.Capability-Version
-                    document.Info.Description = "Naos";
-                    document.Info.TermsOfService = "None";
-                    document.Info.Contact = new NSwag.OpenApiContact
-                    {
-                        Name = "Naos",
-                        Email = string.Empty,
-                        Url = "https://github.com/vip32/Naos.Core"
-                    };
-                };
-                if (true) // option.includeSecurityHeader
-                {
-                    c.AddSecurity("Bearer", new NSwag.OpenApiSecurityScheme
-                    {
-                        Description = "Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                        Name = "Authorization",
-                        In = NSwag.OpenApiSecurityApiKeyLocation.Header,
-                        Type = NSwag.OpenApiSecuritySchemeType.ApiKey // Oauth2/OIDC?
-                    });
-                }
-            });
 
             // TODO: need to find a way to start the MessageBroker (done by resolving the IMessageBroker somewhere, HostedService? like scheduling)
         }
