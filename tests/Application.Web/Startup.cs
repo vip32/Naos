@@ -65,7 +65,7 @@
                 .AddSwaggerDocument((c, sp) => // TODO: replace with .AddOpenApiDocument, but currently has issues with example model generation in UI
                 {
                     c.SerializerSettings = DefaultJsonSerializerSettings.Create();
-                    // find all processors which are registerd by naos features (Command RequestDispatcher/ControllerRegistrations)
+                    // find all processors which are registerd by various naos features (Command RequestDispatcher/ControllerRegistrations)
                     foreach (var documentProcessor in sp.GetServices<IDocumentProcessor>())
                     {
                         c.DocumentProcessors.Add(documentProcessor);
