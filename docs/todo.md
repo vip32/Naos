@@ -142,6 +142,7 @@ angular with netcore 2.2 https://www.codeproject.com/Articles/1274513/Angular-7-
 host multiple mvc apps https://damienbod.com/2018/12/01/using-mvc-asp-net-core-apps-in-a-host-asp-net-core-app/
 file repo https://github.com/selmaohneh/Repository/tree/master/Repository.FileRepository
 mongo repo https://github.com/grandnode/grandnode/blob/develop/Grand.Data/MongoDBRepository.cs
+           https://github.com/convey-stack/Convey.Persistence.MongoDB/tree/master/src/Convey.Persistence.MongoDB
 properties https://github.com/schotime/NPoco/blob/master/src/NPoco/PocoExpando.cs
 roslyn compiler https://github.com/grandnode/grandnode/blob/develop/Grand.Core/Roslyn/RoslynCompiler.cs
 spec mapping with visitor https://fabiomarreco.github.io/blog/2018/specificationpattern-with-entityframework/

@@ -9,7 +9,20 @@
 
     public class RequestCommandRegistration
     {
-        public string Route { get; set; }
+        private string route;
+
+        public string Route
+        {
+            get
+            {
+                return this.route;
+            }
+
+            set
+            {
+                this.route = $"/{value.Safe().TrimStart('/').Replace('\\', '/')}"; // enforce starting slash
+            }
+        }
 
         public virtual Type CommandType { get; set; }
 

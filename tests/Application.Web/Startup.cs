@@ -25,7 +25,6 @@
     using Naos.Core.JobScheduling.Domain;
     using Naos.Core.Messaging.Domain;
     using Naos.Foundation;
-    using Naos.Foundation.Application;
     using Naos.Sample.Customers.App;
     using Naos.Sample.Customers.Domain;
     using Newtonsoft.Json;
@@ -63,13 +62,13 @@
                     var factory = sp.GetRequiredService<IUrlHelperFactory>();
                     return factory?.GetUrlHelper(actionContext);
                 })
-                .AddSwaggerDocument(config => // TODO: replace with .AddOpenApiDocument, but currently has issues with example model generation in UI
+                .AddSwaggerDocument(c => // TODO: replace with .AddOpenApiDocument, but currently has issues with example model generation in UI
                 {
-                    config.SerializerSettings = DefaultJsonSerializerSettings.Create();
-                    config.DocumentProcessors.Add(new RequestCommandDocumentProcessor(services.BuildServiceProvider().GetServices<RequestCommandRegistration>())); // TODO: needs to now all RequestCommandRegistration
-                    config.OperationProcessors.Add(new GenericRepositoryControllerOperationProcessor());
-                    config.OperationProcessors.Add(new ApiVersionProcessor());
-                    config.PostProcess = document =>
+                    c.SerializerSettings = DefaultJsonSerializerSettings.Create();
+                    c.DocumentProcessors.Add(new RequestCommandDocumentProcessor(services.BuildServiceProvider().GetServices<RequestCommandRegistration>())); // TODO: needs to now all RequestCommandRegistration
+                    c.OperationProcessors.Add(new GenericRepositoryControllerOperationProcessor());
+                    c.OperationProcessors.Add(new ApiVersionProcessor());
+                    c.PostProcess = document =>
                     {
                         document.Info.Version = "v1";
                         document.Info.Title = "Naos"; // Product.Capability-Version
@@ -82,6 +81,16 @@
                             Url = "https://github.com/vip32/Naos.Core"
                         };
                     };
+                    if (true) // includeSecurity
+                    {
+                        c.AddSecurity("Bearer", new NSwag.OpenApiSecurityScheme
+                        {
+                            Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                            Name = "Authorization",
+                            In = NSwag.OpenApiSecurityApiKeyLocation.Header,
+                            Type = NSwag.OpenApiSecuritySchemeType.ApiKey
+                        });
+                    }
                 })
                 .AddMediatr()
                 .AddMvc(o =>
@@ -117,8 +126,8 @@
                             new FolderFileStorage(o => o
                                 .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "commands")))))
                         .AddRequestDispatcher(o => o
-                            .Post<CreateCustomerCommand>("/api/commands/customers/create", HttpStatusCode.Created, onSuccess: (cmd, ctx) => ctx.Response.Location($"api/customers/{cmd.Customer.Id}"))
-                            .Get<GetActiveCustomersQuery, IEnumerable<Customer>>("/api/commands/customers/active")))
+                            .Post<CreateCustomerCommand>("api/commands/customers/create", HttpStatusCode.Created, onSuccess: (cmd, ctx) => ctx.Response.Location($"api/customers/{cmd.Customer.Id}"))
+                            .Get<GetActiveCustomersQuery, IEnumerable<Customer>>("api/commands/customers/active")))
                     .AddOperations(o => o
                         .AddInteractiveConsole()
                         .AddLogging(o => o
