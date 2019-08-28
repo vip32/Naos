@@ -4,11 +4,11 @@
 
     public class ServiceDiscoveryOptions
     {
-        public ServiceDiscoveryOptions(INaosServicesContext context)
+        public ServiceDiscoveryOptions(INaosBuilderContext context)
         {
             this.Context = context;
         }
 
-        public INaosServicesContext Context { get; }
+        public INaosBuilderContext Context { get; }
     }
 }

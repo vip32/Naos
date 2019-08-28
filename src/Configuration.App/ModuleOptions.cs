@@ -2,11 +2,11 @@
 {
     public class ModuleOptions
     {
-        public ModuleOptions(INaosServicesContext context)
+        public ModuleOptions(INaosBuilderContext context)
         {
             this.Context = context;
         }
 
-        public INaosServicesContext Context { get; }
+        public INaosBuilderContext Context { get; }
     }
 }

@@ -4,11 +4,11 @@
 
     public class MessagingOptions
     {
-        public MessagingOptions(INaosServicesContext context)
+        public MessagingOptions(INaosBuilderContext context)
         {
             this.Context = context;
         }
 
-        public INaosServicesContext Context { get; }
+        public INaosBuilderContext Context { get; }
     }
 }

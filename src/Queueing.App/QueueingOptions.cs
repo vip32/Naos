@@ -4,11 +4,11 @@
 
     public class QueueingOptions
     {
-        public QueueingOptions(INaosServicesContext context)
+        public QueueingOptions(INaosBuilderContext context)
         {
             this.Context = context;
         }
 
-        public INaosServicesContext Context { get; }
+        public INaosBuilderContext Context { get; }
     }
 }

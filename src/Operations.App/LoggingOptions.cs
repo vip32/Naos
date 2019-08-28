@@ -6,14 +6,14 @@
     public class LoggingOptions
     {
         public LoggingOptions(
-            INaosServicesContext context,
+            INaosBuilderContext context,
             LoggerConfiguration loggerConfiguration)
         {
             this.Context = context;
             this.LoggerConfiguration = loggerConfiguration;
         }
 
-        public INaosServicesContext Context { get; }
+        public INaosBuilderContext Context { get; }
 
         public LoggerConfiguration LoggerConfiguration { get; }
     }

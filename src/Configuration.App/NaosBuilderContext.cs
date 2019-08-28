@@ -5,7 +5,7 @@
     using Microsoft.Extensions.Configuration;
     using Naos.Foundation;
 
-    public class NaosServicesContext : INaosServicesContext
+    public class NaosBuilderContext : INaosBuilderContext
     {
         public IServiceCollection Services { get; set; }
 
@@ -19,7 +19,7 @@
 
         public bool IsConsoleEnabled() => this.Configuration["console"] == "true";
 
-        public INaosServicesContext AddTag(string tag)
+        public INaosBuilderContext AddTag(string tag)
         {
             this.Descriptor ??= new Naos.Foundation.ServiceDescriptor();
             this.Descriptor.Tags = this.Descriptor.Tags.Insert(tag).ToArray();

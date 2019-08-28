@@ -13,7 +13,7 @@
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions
     {
-        public static INaosServicesContext AddAzureLogAnalyticsTracing(this INaosServicesContext context, string logName)
+        public static INaosBuilderContext AddAzureLogAnalyticsTracing(this INaosBuilderContext context, string logName)
         {
             EnsureArg.IsNotNull(context, nameof(context));
             EnsureArg.IsNotNull(context.Services, nameof(context.Services));

@@ -4,11 +4,11 @@
 
     public class RequestStorageOptions
     {
-        public RequestStorageOptions(INaosServicesContext context)
+        public RequestStorageOptions(INaosBuilderContext context)
         {
             this.Context = context;
         }
 
-        public INaosServicesContext Context { get; }
+        public INaosBuilderContext Context { get; }
     }
 }

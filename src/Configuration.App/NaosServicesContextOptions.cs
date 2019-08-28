@@ -2,11 +2,11 @@
 {
     public class NaosServicesContextOptions
     {
-        public NaosServicesContextOptions(INaosServicesContext context)
+        public NaosServicesContextOptions(INaosBuilderContext context)
         {
             this.Context = context;
         }
 
-        public INaosServicesContext Context { get; }
+        public INaosBuilderContext Context { get; }
     }
 }

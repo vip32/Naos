@@ -27,7 +27,7 @@
         /// <param name="optionsAction"></param>
         /// <param name="environment"></param>
         /// <param name="section"></param>
-        public static INaosServicesContext AddNaos(
+        public static INaosBuilderContext AddNaos(
             this IServiceCollection services,
             IConfiguration configuration,
             string product = null,
@@ -41,7 +41,7 @@
             EnsureArg.IsNotNull(services, nameof(services));
 
             var naosConfiguration = configuration?.GetSection(section).Get<NaosConfiguration>();
-            var context = new NaosServicesContext
+            var context = new NaosBuilderContext
             {
                 Services = services,
                 Configuration = configuration,

@@ -29,7 +29,7 @@
             return naosOptions;
         }
 
-        public static INaosServicesContext AddServiceClient<TClient>(this INaosServicesContext context, Action<IHttpClientBuilder> setupAction = null)
+        public static INaosBuilderContext AddServiceClient<TClient>(this INaosBuilderContext context, Action<IHttpClientBuilder> setupAction = null)
             where TClient : ServiceDiscoveryClient
         {
             EnsureArg.IsNotNull(context, nameof(context));
@@ -54,7 +54,7 @@
             return context;
         }
 
-        public static INaosServicesContext AddServiceClient(this INaosServicesContext context, string name, Action<IHttpClientBuilder> setupAction = null)
+        public static INaosBuilderContext AddServiceClient(this INaosBuilderContext context, string name, Action<IHttpClientBuilder> setupAction = null)
         {
             EnsureArg.IsNotNull(context, nameof(context));
             EnsureArg.IsNotNullOrEmpty(name, nameof(name));

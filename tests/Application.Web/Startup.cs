@@ -82,8 +82,8 @@
                     c.PostProcess = document =>
                     {
                         document.Info.Version = "v1";
-                        document.Info.Title = "Naos"; // Product.Capability-Version
-                        document.Info.Description = "Naos";
+                        document.Info.Title = sp.GetService<Foundation.ServiceDescriptor>()?.ToString().EmptyToNull() ?? "Naos"; // Product.Capability-Version
+                        document.Info.Description = sp.GetService<Foundation.ServiceDescriptor>().Tags.ToString(", ").EmptyToNull() ?? "Naos";
                         document.Info.TermsOfService = "None";
                         document.Info.Contact = new NSwag.OpenApiContact
                         {
@@ -94,7 +94,7 @@
                     };
                     if (true) // option.includeSecurityHeader
                     {
-                        c.AddSecurity("Bearer", new NSwag.OpenApiSecurityScheme
+                        c.AddSecurity("Bearer", new NSwag.OpenApiSecurityScheme // TODO: dependent on configured authentication
                         {
                             Description = "Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
                             Name = "Authorization",

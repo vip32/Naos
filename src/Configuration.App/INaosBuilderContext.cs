@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using Microsoft.Extensions.Configuration;
 
-    public interface INaosServicesContext
+    public interface INaosBuilderContext
     {
         IConfiguration Configuration { get; set; }
 
@@ -17,6 +17,6 @@
 
         bool IsConsoleEnabled();
 
-        INaosServicesContext AddTag(string tag);
+        INaosBuilderContext AddTag(string tag);
     }
 }
