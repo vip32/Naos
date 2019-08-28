@@ -85,10 +85,10 @@
                     {
                         c.AddSecurity("Bearer", new NSwag.OpenApiSecurityScheme
                         {
-                            Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                            Description = "Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
                             Name = "Authorization",
                             In = NSwag.OpenApiSecurityApiKeyLocation.Header,
-                            Type = NSwag.OpenApiSecuritySchemeType.ApiKey
+                            Type = NSwag.OpenApiSecuritySchemeType.ApiKey // Oauth2/OIDC?
                         });
                     }
                 })
