@@ -81,9 +81,10 @@
                     c.OperationProcessors.Add(new ApiVersionProcessor());
                     c.PostProcess = document =>
                     {
-                        document.Info.Version = "v1";
-                        document.Info.Title = sp.GetService<Foundation.ServiceDescriptor>()?.ToString().EmptyToNull() ?? "Naos"; // Product.Capability-Version
-                        document.Info.Description = sp.GetService<Foundation.ServiceDescriptor>()?.Tags.ToString(", ").EmptyToNull() ?? "Naos";
+                        var descriptor = sp.GetService<Foundation.ServiceDescriptor>();
+                        document.Info.Version = descriptor?.Version.EmptyToNull() ?? "v1";
+                        document.Info.Title = descriptor?.Name.EmptyToNull() ?? "Naos";
+                        document.Info.Description = descriptor?.Tags.ToString(", ").EmptyToNull() ?? "Naos";
                         document.Info.TermsOfService = "None";
                         document.Info.Contact = new NSwag.OpenApiContact
                         {
