@@ -37,8 +37,8 @@
             var order = (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order).FirstOrDefault(); // cosmos only supports single orderby
             var entities = await this.options.Provider
                 .WhereAsync(
-                    skip: options?.Skip ?? -1, // TODO: implement cosmosdb skip/take https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-sql-query#OffsetLimitClause
-                    take: options?.Take ?? -1, // TODO: implement cosmosdb skip/take https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-sql-query#OffsetLimitClause
+                    skip: options?.Skip ?? -1,
+                    take: options?.Take ?? -1,
                     orderExpression: order?.Expression,
                     orderDescending: order?.Direction == OrderDirection.Descending).AnyContext();
             return entities.ToList();
@@ -50,8 +50,8 @@
             var entities = await this.options.Provider
                 .WhereAsync(
                     expression: specification?.ToExpression().Expand(), // expand fixes Invoke in expression
-                    skip: options?.Skip ?? -1, // TODO: implement cosmosdb skip/take https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-sql-query#OffsetLimitClause
-                    take: options?.Take ?? -1, // TODO: implement cosmosdb skip/take https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-sql-query#OffsetLimitClause
+                    skip: options?.Skip ?? -1,
+                    take: options?.Take ?? -1,
                     orderExpression: order?.Expression,
                     orderDescending: order?.Direction == OrderDirection.Descending).AnyContext();
             return entities.ToList();
@@ -63,14 +63,14 @@
             var entities = await this.options.Provider
                 .WhereAsync(
                     expressions: specifications.Safe().Select(s => s.ToExpression().Expand()), // expand fixes Invoke in expression
-                    skip: options?.Skip ?? -1, // TODO: implement cosmosdb skip/take https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-sql-query#OffsetLimitClause
-                    take: options?.Take ?? -1, // TODO: implement cosmosdb skip/take https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-sql-query#OffsetLimitClause
+                    skip: options?.Skip ?? -1,
+                    take: options?.Take ?? -1,
                     orderExpression: order?.Expression,
                     orderDescending: order?.Direction == OrderDirection.Descending).AnyContext();
             return entities.ToList();
         }
 
-        public async Task<TEntity> FindOneAsync(object id) // partitionkey
+        public async Task<TEntity> FindOneAsync(object id)
         {
             if (id.IsDefault())
             {
@@ -154,7 +154,6 @@
 
             this.Logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogKeys.DomainRepository);
             var result = await this.options.Provider.UpsertAsync(entity).AnyContext();
-            //entity = result;
 
             if (this.options.PublishEvents && this.options.Mediator != null)
             {
@@ -170,10 +169,7 @@
                 }
             }
 
-            //this.logger.LogInformation($"{{LogKey:l}} upserted entity: {result.GetType().PrettyName()}, id: {result.Id}, isNew: {isNew}", LogEventKeys.DomainRepository);
-#pragma warning disable SA1008 // Opening parenthesis must be spaced correctly
             return isNew ? (result, ActionResult.Inserted) : (result, ActionResult.Updated);
-#pragma warning restore SA1008 // Opening parenthesis must be spaced correctly
         }
 
         public async Task<ActionResult> DeleteAsync(object id)

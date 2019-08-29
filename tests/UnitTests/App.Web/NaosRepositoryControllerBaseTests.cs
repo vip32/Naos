@@ -9,7 +9,7 @@
     using Shouldly;
     using Xunit;
 
-    public class NaosRepositoryControllerBaseTests : BaseTest
+    public class NaosRepositoryControllerBaseTests : BaseTests
     {
         [Fact]
         public void CanConstructGeneric_WithEntityRepository()

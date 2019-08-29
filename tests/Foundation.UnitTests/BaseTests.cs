@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.UnitTests
+﻿namespace Naos.Foundation.UnitTests
 {
     using System;
     using System.Diagnostics;
@@ -7,11 +7,11 @@
     using Naos.Foundation;
     using Xunit.Abstractions;
 
-    public abstract class BaseTest
+    public abstract class BaseTests
     {
         private static IConfigurationRoot configuration;
 
-        static BaseTest()
+        static BaseTests()
         {
             Environment.SetEnvironmentVariable(EnvironmentKeys.Environment, "Development");
             Environment.SetEnvironmentVariable(EnvironmentKeys.IsLocal, "True");

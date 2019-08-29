@@ -16,7 +16,7 @@
     using NSubstitute;
     using Xunit;
 
-    public class FileStorageBaseTests : BaseTest
+    public class FileStorageBaseTests : BaseTests
     {
 #pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task
         public virtual async Task CanGetEmptyFileListOnMissingDirectoryAsync()

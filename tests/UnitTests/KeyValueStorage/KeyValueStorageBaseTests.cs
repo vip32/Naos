@@ -9,7 +9,7 @@
     using Naos.Foundation;
     using Shouldly;
 
-    public class KeyValueStorageBaseTests : BaseTest
+    public class KeyValueStorageBaseTests : BaseTests
     {
         private readonly IEnumerable<StubEntity> entities;
 

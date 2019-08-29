@@ -85,16 +85,6 @@
         protected new Func<TDestination, bool> EnsurePredicate(ISpecification<TEntity> specification)
         {
             return this.Options.Mapper.MapSpecification<TEntity, TDestination>(specification);
-
-            //foreach(var specificationMapper in this.specificationMappers.Safe())
-            //{
-            //    if(specificationMapper.CanHandle(specification))
-            //    {
-            //        return specificationMapper.Map(specification);
-            //    }
-            //}
-
-            //throw new NaosException($"no applicable specification mapper found for {specification.GetType().PrettyName()}");
         }
 
         protected IEnumerable<TEntity> FindAll(IEnumerable<TDestination> entities, IFindOptions<TEntity> options = null)

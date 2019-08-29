@@ -5,7 +5,7 @@
     using Xunit;
     using Xunit.Abstractions;
 
-    public class IdGeneratorTests : BaseTest
+    public class IdGeneratorTests : BaseTests
     {
         private readonly ITestOutputHelper output;
 

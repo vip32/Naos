@@ -9,7 +9,7 @@
     using Shouldly;
     using Xunit;
 
-    public class TracingTests : BaseTest
+    public class TracingTests : BaseTests
     {
         [Fact]
         public void TracerTests()

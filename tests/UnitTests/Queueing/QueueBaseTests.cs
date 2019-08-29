@@ -8,7 +8,7 @@
     using Xunit;
 
 #pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task
-    public abstract class QueueBaseTests : BaseTest, IDisposable
+    public abstract class QueueBaseTests : BaseTests, IDisposable
     {
         public virtual void Dispose()
         {
