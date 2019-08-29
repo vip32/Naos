@@ -36,7 +36,6 @@
             var doc = JToken.Parse(this.json);
 
             Assert.Equal("Hero", doc.GetValueByPath<string>("myCats[0].name"));
-            Assert.Equal("Hero", doc.GetValueByPath<string>("jsonpath:myCats[0].name"));
             Assert.Null(doc.GetValueByPath<string>("myCats[0].unknown"));
             Assert.Equal(5, doc.GetValueByPath<int>("myCats[0].age"));
             Assert.Null(doc.GetValueByPath<int?>("myCats[0].noage"));
@@ -109,7 +108,6 @@
             doc.AddOrUpdateByPath<int?>("myCats[1].age", null);
 
             Assert.Equal("NewHero", doc.GetValueByPath<string>("myCats[0].name"));
-            Assert.Equal("NewHero", doc.GetValueByPath<string>("jsonpath:myCats[0].name"));
             Assert.Equal(10, doc.GetValueByPath<int>("myCats[0].age"));
             Assert.Equal("test1", doc.GetValueByPath<string>("myCats[0].newprop"));
             Assert.Equal("testroot", doc.GetValueByPath<string>("newrootprop"));

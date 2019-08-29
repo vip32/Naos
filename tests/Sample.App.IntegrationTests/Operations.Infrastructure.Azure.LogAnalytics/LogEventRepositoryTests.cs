@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.App.IntegrationTests.Messaging.Infrastructure.Azure
+﻿namespace Naos.Sample.App.IntegrationTests.Operations.Infrastructure.Azure.LogAnalytics
 {
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
@@ -33,15 +33,6 @@
 
         [Fact]
         public async Task FindAllAsync_Test()
-        {
-            var result = await this.sut.FindAllAsync().AnyContext();
-
-            result.ShouldNotBeNull();
-            result.ShouldNotBeEmpty();
-        }
-
-        [Fact]
-        public async Task FindAllAsync2_Test()
         {
             var result = await this.sut.FindAllAsync().AnyContext();
 

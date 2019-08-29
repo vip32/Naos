@@ -114,10 +114,9 @@
 
         protected async Task<IEnumerable<TEntity>> FindAllAsync(string query, CancellationToken cancellationToken)
         {
-            var response = await this.httpClient.SendAsync(
 #pragma warning disable CA2000 // Dispose objects before losing scope
+            var response = await this.httpClient.SendAsync(
                             this.PrepareRequest(query),
-#pragma warning restore CA2000 // Dispose objects before losing scope
                             cancellationToken).AnyContext();
             response.EnsureSuccessStatusCode();
 

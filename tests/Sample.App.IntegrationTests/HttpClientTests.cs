@@ -57,7 +57,7 @@
 
             sut.ShouldNotBeNull();
             response.StatusCode.ShouldBe(System.Net.HttpStatusCode.OK);
-            response.GetCorrelationIdHeader().ShouldBeEmpty(); // only available in api context
+            response.GetCorrelationIdHeader().ShouldBeNullOrEmpty(); // only available in api context
             response.GetRequestIdHeader().ShouldNotBeEmpty();
         }
     }
