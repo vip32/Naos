@@ -175,8 +175,8 @@
             var probe = this.ServiceProvider.GetRequiredService<StubProbe>();
 
             this.sut.Options
-                .Register<StubCustomJob>("key1", "* 12 * * * *", (j) => j.MyExecuteAsync("arg1", probe, CancellationToken.None))
-                .Register<StubCustomJob>("key2", "* 12 * * * *", (j) => j.MyExecuteAsync("arg2", probe, CancellationToken.None));
+                .Register<StubCustomJob>("key1", "* 12 * * * *", (j) => j.MyExecuteAsync("arg1", CancellationToken.None))
+                .Register<StubCustomJob>("key2", "* 12 * * * *", (j) => j.MyExecuteAsync("arg2", CancellationToken.None));
 
             // at trigger time the StubScheduledTask (with probe in ctor) is resolved from container and executed
             var t1 = this.sut.TriggerAsync("key1");
@@ -184,7 +184,7 @@
 
             await Task.WhenAll(new[] { t1, t2 }).AnyContext();
 
-            probe.Count.ShouldBe(4); // probe.count gets increased per job
+            probe.Count.ShouldBe(2); // probe.count gets increased per job
         }
 
         private class StubJob : Job
@@ -229,14 +229,11 @@
                 this.probe = probe;
             }
 
-            public async Task MyExecuteAsync(string arg1, StubProbe probe, CancellationToken cancellationToken)
+            public Task MyExecuteAsync(string arg1, CancellationToken cancellationToken)
             {
-                await Task.Run(() =>
-                {
-                    this.probe.Count++;
-                    probe.Count++;
-                    System.Diagnostics.Trace.WriteLine($"+++ hello from custom job {DateTime.UtcNow.ToString("o")} " + arg1);
-                }).AnyContext();
+                this.probe.Count++;
+                System.Diagnostics.Trace.WriteLine($"+++ hello from custom job {DateTime.UtcNow.ToString("o")} " + arg1);
+                return Task.CompletedTask;
             }
         }
 
