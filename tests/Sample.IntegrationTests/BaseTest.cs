@@ -47,7 +47,7 @@
                         .UseServiceBusBroker())
                     .AddCommands());
 
-            this.Services.AddSingleton<ICommandBehavior, ValidateCommandBehavior>(); // new ValidateCommandBehavior(false)
+            this.Services.AddSingleton<ICommandBehavior>(new ValidateCommandBehavior(false));
             this.Services.AddSingleton<ICommandBehavior, JournalCommandBehavior>();
             this.Services.AddSingleton<ICommandBehavior>(new FileStoragePersistCommandBehavior(
                             new FolderFileStorage(o => o
