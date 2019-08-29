@@ -95,9 +95,7 @@
             var result = new List<string>
             {
                 // default where parts
-                //"LogMessage_s != ''",
-                //"LogLevel_s != 'Verbose'",
-                //"LogLevel_s != 'Debug'"
+                "LogMessage_s != ''"
             };
 
             foreach (var specification in specifications.Safe())
@@ -109,7 +107,7 @@
                 }
             }
 
-            return result;
+            return result.Distinct();
         }
 
         protected async Task<IEnumerable<TEntity>> FindAllAsync(string query, CancellationToken cancellationToken)
