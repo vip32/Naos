@@ -12,14 +12,13 @@
 
     public class MessageBrokerTests : BaseTest
     {
-        private readonly IServiceCollection services = new ServiceCollection();
         private readonly IMessageBroker sut;
 
         public MessageBrokerTests()
         {
             var configuration = NaosConfigurationFactory.Create();
 
-            this.services
+            this.Services
                 .AddMediatR(AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.GetName().Name.StartsWith("Microsoft.", StringComparison.OrdinalIgnoreCase)).ToArray())
                 .AddNaos(configuration, "Product", "Capability", new[] { "All" }, n => n
                     .AddOperations(o => o
@@ -29,11 +28,9 @@
                         //.AddSignalRBroker()
                         .UseServiceBusBroker()));
 
-            this.ServiceProvider = this.services.BuildServiceProvider();
+            this.ServiceProvider = this.Services.BuildServiceProvider();
             this.sut = this.ServiceProvider.GetService<IMessageBroker>();
         }
-
-        public ServiceProvider ServiceProvider { get; private set; }
 
         [Fact]
         public void CanInstantiate_Test()

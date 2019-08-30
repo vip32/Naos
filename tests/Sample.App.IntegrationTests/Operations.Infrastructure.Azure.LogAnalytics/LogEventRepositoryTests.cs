@@ -10,14 +10,13 @@
 
     public class LogEventRepositoryTests : BaseTest
     {
-        private readonly IServiceCollection services = new ServiceCollection();
         private readonly ILogEventRepository sut;
 
         public LogEventRepositoryTests()
         {
             var configuration = NaosConfigurationFactory.Create();
 
-            this.services
+            this.Services
                 .AddNaos(configuration, "Product", "Capability", new[] { "All" }, n => n
                     .AddOperations(o => o
                         .AddLogging(
@@ -25,11 +24,9 @@
                             correlationId: $"TEST{IdGenerator.Instance.Next}"))
                     .AddJobScheduling());
 
-            this.ServiceProvider = this.services.BuildServiceProvider();
+            this.ServiceProvider = this.Services.BuildServiceProvider();
             this.sut = this.ServiceProvider.GetService<ILogEventRepository>();
         }
-
-        public ServiceProvider ServiceProvider { get; private set; }
 
         [Fact]
         public async Task FindAllAsync_Test()

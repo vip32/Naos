@@ -12,26 +12,23 @@
 
     public class JobSchedulerTests : BaseTest
     {
-        private readonly IServiceCollection services = new ServiceCollection();
         private readonly IJobScheduler sut;
 
         public JobSchedulerTests()
         {
             var configuration = NaosConfigurationFactory.Create();
 
-            this.services
+            this.Services
                 .AddNaos(configuration, "Product", "Capability", new[] { "All" }, n => n
                     .AddOperations(o => o
                         .AddLogging(correlationId: $"TEST{IdGenerator.Instance.Next}"))
                     .AddJobScheduling());
 
-            this.services.AddScoped<StubProbe>();
+            this.Services.AddScoped<StubProbe>();
 
-            this.ServiceProvider = this.services.BuildServiceProvider();
+            this.ServiceProvider = this.Services.BuildServiceProvider();
             this.sut = this.ServiceProvider.GetRequiredService<IJobScheduler>();
         }
-
-        public ServiceProvider ServiceProvider { get; private set; }
 
         [Fact]
         public void CanInstantiate_Test()

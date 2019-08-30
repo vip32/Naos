@@ -14,31 +14,27 @@
 
     public class HttpClientTests : BaseTest
     {
-        private readonly IServiceCollection services = new ServiceCollection();
-
         public HttpClientTests()
         {
             var configuration = NaosConfigurationFactory.Create();
 
-            this.services.AddTransient<HttpClientCorrelationHandler>();
-            this.services.AddTransient<HttpClientLogHandler>();
+            this.Services.AddTransient<HttpClientCorrelationHandler>();
+            this.Services.AddTransient<HttpClientLogHandler>();
 
-            this.services
+            this.Services
                 .AddHttpClient("default")
                     .AddHttpMessageHandler<HttpClientCorrelationHandler>();
             //.AddHttpMessageHandler<HttpClientLogHandler>();
-            this.services.Replace(Microsoft.Extensions.DependencyInjection.ServiceDescriptor.Singleton<IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
+            this.Services.Replace(Microsoft.Extensions.DependencyInjection.ServiceDescriptor.Singleton<IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
 
-            this.services
+            this.Services
                 .AddNaos(configuration, "Product", "Capability", new[] { "All" }, n => n
                     .AddRequestCorrelation()
                     .AddOperations(o => o
                         .AddLogging(correlationId: $"TEST{IdGenerator.Instance.Next}")));
 
-            this.ServiceProvider = this.services.BuildServiceProvider();
+            this.ServiceProvider = this.Services.BuildServiceProvider();
         }
-
-        public ServiceProvider ServiceProvider { get; private set; }
 
         [Fact]
         public void CanInstantiate_Test()

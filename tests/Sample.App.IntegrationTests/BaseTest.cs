@@ -3,6 +3,7 @@
     using System;
     using System.Diagnostics;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
     using Naos.Core.Configuration.App;
     using Naos.Foundation;
     using Xunit.Abstractions;
@@ -24,6 +25,10 @@
                 return configuration ?? (configuration = NaosConfigurationFactory.Create());
             }
         }
+
+        protected ServiceProvider ServiceProvider { get; set; }
+
+        protected IServiceCollection Services { get; } = new ServiceCollection();
 
         protected long Benchmark(Action action, int iterations = 1, ITestOutputHelper output = null)
         {

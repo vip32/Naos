@@ -1,6 +1,7 @@
 ﻿namespace Naos.Sample.IntegrationTests
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using MediatR;
@@ -13,16 +14,18 @@
     using Naos.Foundation;
     using Naos.Foundation.Infrastructure;
     using Naos.Sample.UserAccounts.Infrastructure.EntityFramework;
+    using Xunit.Abstractions;
 
     public abstract class BaseTest
     {
+        private static IConfigurationRoot configuration;
+
         protected BaseTest()
         {
             Environment.SetEnvironmentVariable(EnvironmentKeys.Environment, "Development");
             Environment.SetEnvironmentVariable(EnvironmentKeys.IsLocal, "True");
 
-            var configuration = NaosConfigurationFactory.Create();
-            var entityFrameworkConfiguration = configuration.GetSection("naos:sample:userAccounts:entityFramework").Get<EntityFrameworkConfiguration>();
+            var entityFrameworkConfiguration = Configuration.GetSection("naos:sample:userAccounts:entityFramework").Get<EntityFrameworkConfiguration>();
 
             // naos core registrations
             this.Services
@@ -59,8 +62,34 @@
             this.ServiceProvider = this.Services.BuildServiceProvider();
         }
 
-        public ServiceProvider ServiceProvider { get; }
+        protected static IConfiguration Configuration
+        {
+            get
+            {
+                return configuration ?? (configuration = NaosConfigurationFactory.Create());
+            }
+        }
+
+        protected ServiceProvider ServiceProvider { get; }
 
         protected IServiceCollection Services { get; } = new ServiceCollection();
+
+        protected long Benchmark(Action action, int iterations = 1, ITestOutputHelper output = null)
+        {
+            GC.Collect();
+            var sw = new Stopwatch();
+            action(); // trigger jit before execution
+
+            sw.Start();
+            for (var i = 1; i <= iterations; i++)
+            {
+                action();
+            }
+
+            sw.Stop();
+            output?.WriteLine($"Execution with #{iterations} iterations took: {sw.Elapsed.TotalMilliseconds}ms\r\n  - Gen-0: {GC.CollectionCount(0)}, Gen-1: {GC.CollectionCount(1)}, Gen-2: {GC.CollectionCount(2)}", sw.ElapsedMilliseconds);
+
+            return sw.ElapsedMilliseconds;
+        }
     }
 }

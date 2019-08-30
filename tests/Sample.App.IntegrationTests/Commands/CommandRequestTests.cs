@@ -17,14 +17,13 @@
 
     public class CommandRequestTests : BaseTest
     {
-        private readonly IServiceCollection services = new ServiceCollection();
         private readonly IMediator mediator;
 
         public CommandRequestTests()
         {
             var configuration = NaosConfigurationFactory.Create();
 
-            this.services
+            this.Services
                 .AddMediatR(AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.GetName().Name.StartsWith("Microsoft.", StringComparison.OrdinalIgnoreCase)).ToArray())
                 .AddNaos(configuration, "Product", "Capability", new[] { "All" }, n => n
                     .AddOperations(o => o
@@ -36,11 +35,9 @@
                             new FolderFileStorage(f => f
                                 .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "commands")))))));
 
-            this.ServiceProvider = this.services.BuildServiceProvider();
+            this.ServiceProvider = this.Services.BuildServiceProvider();
             this.mediator = this.ServiceProvider.GetService<IMediator>();
         }
-
-        public ServiceProvider ServiceProvider { get; private set; }
 
         [Fact]
         public void CanInstantiate_Test()
