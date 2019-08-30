@@ -81,8 +81,10 @@ Operations
 Logevents filtering (correlationId, since, till) API > LAna query
 
 Commands
-CommandHandler should support Decorators (besides the Behaviors) > https://app.pluralsight.com/player?course=cqrs-in-practice&author=vladimir-khorikov&name=22d61509-b7ab-4268-96f1-258bc8a95b99&clip=6&mode=live
-create retrydecorator for commandhandler
+- CommandHandler should support Decorators (besides the Behaviors) > https://app.pluralsight.com/player?course=cqrs-in-practice&author=vladimir-khorikov&name=22d61509-b7ab-4268-96f1-258bc8a95b99&clip=6&mode=live
+- create retrydecorator for commandhandler
+- http request commands [DONE]
+- http request commands + queueing (behavior), only works for commands without a response (=async)
 
 Repositories
 Decorator setup with scrutor Decorators (services.Decorate) https://github.com/khellang/Scrutor
