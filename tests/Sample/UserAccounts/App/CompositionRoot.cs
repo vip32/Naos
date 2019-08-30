@@ -64,6 +64,7 @@
 
             options.Context.Services.AddStartupTask<ApplyPendingMigrationsTask<UserAccountsDbContext>>();
             options.Context.Services.AddStartupTask<EchoStartupTask>(new TimeSpan(0, 0, 3));
+            options.Context.Services.AddStartupTask<RequestCommandsQueueStartupTask>(new TimeSpan(0, 0, 3));
 
             options.Context.Services.AddHealthChecks()
                 .AddSqlServer(entityFrameworkConfiguration.ConnectionString, name: "UserAccounts-sqlserver");

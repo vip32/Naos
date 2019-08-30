@@ -53,7 +53,7 @@
             {
                 await this.EnsureQueueAsync().AnyContext();
 
-                var item = new QueueItem<TData>(IdGenerator.Instance.Next, data.Clone(), this, DateTime.UtcNow, 0);
+                var item = new QueueItem<TData>(IdGenerator.Instance.Next, data/*.Clone()*/, this, DateTime.UtcNow, 0);
                 this.Logger.LogDebug($"queue item enqueue (id={item.Id}, queue={this.Options.Name})");
                 this.queue.Enqueue(item);
 
@@ -271,8 +271,6 @@
 #pragma warning disable CA2000 // Dispose objects before losing scope
 #pragma warning disable IDE0067 // Dispose objects before losing scope
             if (!this.queue.TryDequeue(out var dequeuedItem) || dequeuedItem == null)
-#pragma warning restore IDE0067 // Dispose objects before losing scope
-#pragma warning restore CA2000 // Dispose objects before losing scope
             {
                 return null;
             }
@@ -281,7 +279,7 @@
             dequeuedItem.DequeuedDate = DateTime.UtcNow;
 
             Interlocked.Increment(ref this.dequeuedCount);
-            var item = new QueueItem<TData>(dequeuedItem.Id, dequeuedItem.Data.Clone(), this, dequeuedItem.EnqueuedDate, dequeuedItem.Attempts); // clone item
+            var item = new QueueItem<TData>(dequeuedItem.Id, dequeuedItem.Data/*.Clone()*/, this, dequeuedItem.EnqueuedDate, dequeuedItem.Attempts); // clone item
 
             using (this.Logger.BeginScope(new Dictionary<string, object>
             {

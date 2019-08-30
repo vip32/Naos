@@ -6,6 +6,7 @@
     using System.Reflection;
     using Humanizer;
     using Microsoft.Extensions.DependencyInjection;
+    using Naos.Core.Commands.App.Web;
     using Naos.Foundation;
     using NJsonSchema;
     using NSwag;

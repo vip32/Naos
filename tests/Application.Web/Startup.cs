@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Net;
     using System.Threading;
+    using MediatR;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Diagnostics.HealthChecks;
     using Microsoft.AspNetCore.Hosting;
@@ -24,6 +25,9 @@
     using Naos.Core.JobScheduling.App;
     using Naos.Core.JobScheduling.Domain;
     using Naos.Core.Messaging.Domain;
+    using Naos.Core.Queueing;
+    using Naos.Core.Queueing.App.Web;
+    using Naos.Core.Queueing.Domain;
     using Naos.Foundation;
     using Naos.Sample.Customers.App;
     using Newtonsoft.Json;
@@ -43,8 +47,13 @@
 
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<EchoCommand, EchoCommandResponse> { Route = "/api/commands/echo", RequestMethod = "get;post" });
-            //services.AddSingleton<RequestCommandRegistration>(sp => new RequestCommandRegistration<PingCommand> { Route = "/api/commands/ping", RequestMethod = "get" });
+            services.AddSingleton<IQueue<CommandRequestWrapper>>(sp =>
+                new InMemoryQueue<CommandRequestWrapper>(o => o
+                        .Mediator(sp.GetRequiredService<IMediator>())
+                        .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
+                        .RetryDelay(TimeSpan.FromMinutes(1))
+                        .ProcessInterval(TimeSpan.FromMilliseconds(200))
+                        .DequeueInterval(TimeSpan.FromMilliseconds(200))));
 
             services
                 .AddMiddlewareAnalysis()
@@ -138,7 +147,8 @@
                                 .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "commands")))))
                         .AddRequestDispatcher(o => o
                             .Post<CreateCustomerCommand>("api/commands/customers/create", HttpStatusCode.Created, onSuccess: (cmd, ctx) => ctx.Response.Location($"api/customers/{cmd.Customer.Id}"))
-                            .Get<GetActiveCustomersQuery, IEnumerable<Sample.Customers.Domain.Customer>>("api/commands/customers/active")))
+                            .Get<GetActiveCustomersQuery, IEnumerable<Sample.Customers.Domain.Customer>>("api/commands/customers/active")
+                            .Get<PingCommand>("api/commands/queue/ping", HttpStatusCode.Accepted, extensions: new[] { typeof(QueueDispatcherRequestCommandExtension) })))
                     .AddOperations(o => o
                         .AddInteractiveConsole()
                         .AddLogging(o => o

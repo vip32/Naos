@@ -1,6 +1,7 @@
-﻿namespace Microsoft.Extensions.DependencyInjection
+﻿namespace Naos.Core.Commands.App.Web
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Net;
     using System.Threading.Tasks;
@@ -47,6 +48,12 @@
         public string OpenApiGroupName { get; set; }
 
         public bool HasResponse => this.GetType().PrettyName().Contains(","); // is a second generic TResponse defined?
+
+        public IEnumerable<Type> ExtensionTypesBefore { get; set; } = new[] { typeof(LoggingRequestCommandExtension) };
+
+        public IEnumerable<Type> ExtensionTypes { get; set; }
+
+        public IEnumerable<Type> ExtensionTypesAfter { get; set; } = new[] { typeof(MediatorDispatcherRequestCommandExtension) };
 
         public Func<object, HttpContext, Task> OnSuccess { get; set; }
     }

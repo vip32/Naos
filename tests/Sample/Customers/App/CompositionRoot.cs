@@ -60,15 +60,17 @@
             });
 
             var queueStorageConfiguration = options.Context.Configuration?.GetSection($"{section}:queueStorage").Get<QueueStorageConfiguration>();
-            options.Context.Services.AddSingleton<IQueue>(sp =>
+            options.Context.Services.AddSingleton<IQueue<Customer>>(sp =>
             {
-                var q1 = new AzureStorageQueue<Customer>(
+                var queue = new AzureStorageQueue<Customer>(
                     new AzureStorageQueueOptionsBuilder()
                         .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                         .ConnectionString(queueStorageConfiguration.ConnectionString).Build());
-                _ = q1.EnqueueAsync(new Customer()).Result;
-                _ = q1.EnqueueAsync(new Customer()).Result;
-                return q1;
+
+                // for testing enqueue some items
+                _ = queue.EnqueueAsync(new Customer()).Result;
+                _ = queue.EnqueueAsync(new Customer()).Result;
+                return queue;
             });
 
             options.Context.Services

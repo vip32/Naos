@@ -2,10 +2,13 @@
 {
     using System.Collections.Generic;
     using System.Net;
+    using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Queueing.Domain;
+    using Naos.Foundation;
     using NSwag.Annotations;
 
     [Route("api/queueing/queues")]
@@ -25,13 +28,50 @@
             this.queues = queues;
         }
 
+        //[HttpGet]
+        //[Route("name")]
+        //[ProducesResponseType((int)HttpStatusCode.OK)]
+        //[OpenApiTag("Naos Queueing")]
+        //public async Task<ActionResult<QueueMetrics>> Get(string name)
+        //{
+        //    QueueMetrics result = null;
+        //    var instances = this.HttpContext.RequestServices.GetServices(typeof(IQueue<>)); // not possible :( "Cannot create arrays of open type"
+
+        //    foreach (var instance in instances.Safe())
+        //    {
+        //        var queue = instance as IQueue;
+        //        if (queue.Name.SafeEquals(name))
+        //        {
+        //            result = await queue.GetMetricsAsync().AnyContext();
+        //        }
+        //    }
+
+        //    if (result != null)
+        //    {
+        //        return this.Ok(result);
+        //    }
+        //    else
+        //    {
+        //        return this.NotFound();
+        //    }
+        //}
+
         [HttpGet]
-        [Route("{name}")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [OpenApiTag("Naos Queueing")]
-        public ActionResult<Dictionary<string, QueueMetrics>> Get(string name)
+        public async Task<ActionResult<Dictionary<string, QueueMetrics>>> Get()
         {
-            return this.Ok();
+            var result = new Dictionary<string, QueueMetrics>();
+            var instances = this.HttpContext.RequestServices.GetServices(typeof(IQueue<>)); // not possible :( "Cannot create arrays of open type"
+
+            foreach (var instance in instances.Safe())
+            {
+                var queue = instance as IQueue;
+                var metrics = await queue.GetMetricsAsync().AnyContext();
+                result.Add(queue.Name, metrics);
+            }
+
+            return this.Ok(result);
         }
     }
 }

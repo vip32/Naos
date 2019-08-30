@@ -115,6 +115,7 @@ https://github.com/maldworth/CacheManager.FileCaching/tree/develop
 
 ================================================================================
 
+mvc route translation https://www.strathweb.com/2019/08/dynamic-controller-routing-in-asp-net-core-3-0/
 azure deployment (ARM) https://markheath.net/post/arm-vs-azure-cli
 (CLI) https://gist.github.com/pascalnaber/75412a97a0d0b059314d193c3ab37c4c
 

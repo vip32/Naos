@@ -5,7 +5,7 @@
     /// <summary>
     /// Options for request command middleware.
     /// </summary>
-    public class RequestCommandDispatcherMiddlewareOptions
+    public class RequestCommandMiddlewareOptions
     {
         public RequestCommandRegistration Registration { get; set; }
 

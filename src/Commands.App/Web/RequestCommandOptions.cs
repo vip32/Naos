@@ -1,8 +1,8 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
-    public class RequestDispatcherOptions
+    public class RequestCommandOptions
     {
-        public RequestDispatcherOptions(INaosBuilderContext context)
+        public RequestCommandOptions(INaosBuilderContext context)
         {
             this.Context = context;
         }

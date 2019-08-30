@@ -23,21 +23,10 @@
             foreach (var registration in naosOptions.Context.Application.ApplicationServices.GetServices<RequestCommandRegistration>().Safe()
                 .Where(r => !r.Route.IsNullOrEmpty()))
             {
-                naosOptions.Context.Application.UseMiddleware<RequestCommandDispatcherMiddleware>(
-                    Options.Create(new RequestCommandDispatcherMiddlewareOptions
+                naosOptions.Context.Application.UseMiddleware<RequestCommandMiddleware>(
+                    Options.Create(new RequestCommandMiddlewareOptions
                     {
                         Registration = registration
-                        //CommandType = registration.CommandType,
-                        //OnSuccessStatusCode = registration.OnSuccessStatusCode,
-                        //OpenApiDescription = registration.OpenApiDescription,
-                        //OpenApiGroupName = registration.OpenApiGroupName,
-                        //OpenApiGroupPrefix = registration.OpenApiGroupPrefix,
-                        //OpenApiProduces = registration.OpenApiProduces,
-                        //OpenApiResponseDescription = registration.OpenApiResponseDescription,
-                        //OpenApiSummary = registration.OpenApiSummary,
-                        //RequestMethod = registration.RequestMethod,
-                        //ResponseType = registration.ResponseType,
-                        //Route = registration.Route
                     }));
                 naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: request command added (route={registration.Route}, method={registration.RequestMethod}, type={registration.CommandType.PrettyName()})");
             }

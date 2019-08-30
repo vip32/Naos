@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Naos.Core.Queueing.App.Web.Commands</AssemblyName>
+    <RootNamespace>Naos.Core.Queueing.App.Web</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Commands.App\Commands.App.csproj" />
+    <ProjectReference Include="..\Foundation.Application.Web.Startup\Application.Web.Startup.csproj" />
+    <ProjectReference Include="..\Queueing\Queueing.csproj" />
+  </ItemGroup>
+
+</Project>
