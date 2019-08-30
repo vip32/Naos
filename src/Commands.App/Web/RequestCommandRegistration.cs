@@ -5,7 +5,7 @@
     using System.Net;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
-    using Naos.Core.Commands.Domain;
+    using Naos.Core.Commands.App;
     using Naos.Foundation;
 
     [DebuggerDisplay("Route={Route}, Method={RequestMethod}")]

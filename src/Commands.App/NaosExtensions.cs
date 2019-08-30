@@ -5,7 +5,6 @@
     using EnsureThat;
     using Naos.Core.App.Web;
     using Naos.Core.Commands.App;
-    using Naos.Core.Commands.Domain;
     using Naos.Core.Configuration.App;
     using Naos.Foundation;
     using NSwag.Generation.Processors;

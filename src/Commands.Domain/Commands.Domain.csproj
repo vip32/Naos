@@ -7,14 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Domain\Model\refactorings.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="Domain\Model\refactorings.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="FluentValidation" Version="8.4.0" />
     <PackageReference Include="MediatR" Version="7.0.0" />
   </ItemGroup>

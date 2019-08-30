@@ -8,7 +8,6 @@
     using MediatR;
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Core.Commands.App;
-    using Naos.Core.Commands.Domain;
     using Naos.Core.Commands.Infrastructure.FileStorage;
     using Naos.Core.Configuration.App;
     using Naos.Core.FileStorage.Infrastructure;

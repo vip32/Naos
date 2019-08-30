@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Commands.Domain
+﻿namespace Naos.Core.Commands.App
 {
     using System.Collections.Generic;
     using System.Threading;

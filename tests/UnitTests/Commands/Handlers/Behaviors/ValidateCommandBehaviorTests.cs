@@ -1,9 +1,9 @@
-﻿namespace Naos.Core.UnitTests.Commands.App.Handlers.Behaviors
+﻿namespace Naos.Core.UnitTests.Commands
 {
     using System.Threading.Tasks;
     using FluentValidation;
     using FluentValidation.Results;
-    using Naos.Core.Commands.Domain;
+    using Naos.Core.Commands.App;
     using Naos.Foundation;
     using Shouldly;
     using Xunit;

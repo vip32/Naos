@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Commands.Domain
+﻿namespace Naos.Core.Commands.App
 {
     using System.Threading.Tasks;
     using EnsureThat;

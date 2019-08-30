@@ -7,7 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Commands\Commands.csproj" />
+    <ProjectReference Include="..\Commands.App\Commands.App.csproj" />
+    <ProjectReference Include="..\Commands.Domain\Commands.Domain.csproj" />
     <ProjectReference Include="..\FileStorage\FileStorage.csproj" />
   </ItemGroup>
 

@@ -6,7 +6,7 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.AspNetCore.Http;
-    using Naos.Core.Commands.Domain;
+    using Naos.Core.Commands.App;
 
     [ExcludeFromCodeCoverage]
     public static class RequestDispatcherOptionsExtensions

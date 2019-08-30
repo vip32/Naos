@@ -8,17 +8,16 @@
     "sideBarSectionHeader.background": "#161616",
     "editorLineNumber.foreground": "#116b04",
     "foreground": "#1ac400",
-    "panel.border": "#116b04",
     "panelTitle.activeForeground": "#1ac400",
     "panelTitle.activeBorder": "#1ac400",
     "tab.activeForeground": "#1ac400",
     "tab.inactiveForeground": "#7f7f7f",
     "tab.inactiveBackground": "#161616",
-    "editorGroup.border": "#116b04",
     "editorActiveLineNumber.foreground": "#1ac400",
     "titleBar.activeBackground": "#215732",
     "titleBar.inactiveBackground": "#21573299",
     "titleBar.activeForeground": "#e7e7e7",
     "titleBar.inactiveForeground": "#e7e7e799"
-  }
+  },
+  "peacock.color": "#215732"
 }

@@ -7,7 +7,6 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
-    using Naos.Foundation.Application;
 
     public class FluentValidationExceptionResponseHandler : IExceptionResponseHandler
     {

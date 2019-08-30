@@ -5,7 +5,7 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Commands.Domain;
+    using Naos.Core.Commands.App;
     using Naos.Foundation;
     using Naos.Sample.Customers.Domain;
 

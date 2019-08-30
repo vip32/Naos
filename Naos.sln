@@ -131,7 +131,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobScheduling.App", "src\Jo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Meta", "_Meta", "{78C0A4A4-AF37-4D06-8AD8-4259E464221C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commands", "src\Commands\Commands.csproj", "{BC0B3B29-2902-4599-863D-D433C78BA14E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commands.Domain", "src\Commands.Domain\Commands.Domain.csproj", "{BC0B3B29-2902-4599-863D-D433C78BA14E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Operations.App.Web", "src\Operations.App.Web\Operations.App.Web.csproj", "{AD29FE16-E3F5-4DCB-9785-42C7FA0CFCBE}"
 EndProject

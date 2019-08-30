@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Model\refactorings.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Model\refactorings.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Humanizer.Core" Version="2.6.2" />
     <PackageReference Include="NJsonSchema" Version="10.0.23" />
     <PackageReference Include="NSwag.Annotations" Version="13.0.6" />
@@ -21,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Commands\Commands.csproj" />
+    <ProjectReference Include="..\Commands.Domain\Commands.Domain.csproj" />
     <ProjectReference Include="..\Configuration.App.Web\Configuration.App.Web.csproj" />
     <ProjectReference Include="..\Configuration.App\Configuration.App.csproj" />
     <ProjectReference Include="..\Foundation.Application.Web\Application.Web.csproj" />

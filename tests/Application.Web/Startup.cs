@@ -17,7 +17,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Naos.Core.App.Web;
-    using Naos.Core.Commands.Domain;
+    using Naos.Core.Commands.App;
     using Naos.Core.Commands.Infrastructure.FileStorage;
     using Naos.Core.Configuration.App;
     using Naos.Core.FileStorage.Infrastructure;

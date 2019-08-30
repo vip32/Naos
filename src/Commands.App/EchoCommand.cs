@@ -2,7 +2,6 @@
 {
     using System;
     using FluentValidation.Results;
-    using Naos.Core.Commands.Domain;
 
     public class EchoCommand : CommandRequest<EchoCommandResponse>
     {
