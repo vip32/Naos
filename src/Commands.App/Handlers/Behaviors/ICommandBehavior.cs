@@ -9,6 +9,6 @@
         /// </summary>
         /// <typeparam name="TResponse"></typeparam>
         /// <param name="request">The command request applied to this behavior.</param>
-        Task<CommandBehaviorResult> ExecuteAsync<TResponse>(CommandRequest<TResponse> request);
+        Task<CommandBehaviorResult> ExecuteAsync<TResponse>(Command<TResponse> request);
     }
 }

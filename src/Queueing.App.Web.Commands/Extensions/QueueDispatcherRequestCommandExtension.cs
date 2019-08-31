@@ -9,13 +9,13 @@
     using Naos.Core.Queueing.Domain;
     using Naos.Foundation;
 
-    public class QueueDispatcherRequestCommandExtension : RequestCommandExtension
+    public class QueueDispatcherRequestCommandExtension : CommandRequestBaseExtension
     {
-        private readonly ILogger<LoggingRequestCommandExtension> logger;
+        private readonly ILogger<LoggingCommandRequestExtension> logger;
         private readonly IQueue<CommandRequestWrapper> queue;
 
         public QueueDispatcherRequestCommandExtension(
-            ILogger<LoggingRequestCommandExtension> logger,
+            ILogger<LoggingCommandRequestExtension> logger,
             IQueue<CommandRequestWrapper> queue)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
@@ -27,7 +27,7 @@
 
         public override async Task InvokeAsync<TCommand, TResponse>(
             TCommand command,
-            RequestCommandRegistration<TCommand, TResponse> registration,
+            CommandRequestRegistration<TCommand, TResponse> registration,
             HttpContext context)
         {
             this.logger.LogInformation($"{{LogKey:l}} request command dispatch (name={registration.CommandType?.Name.SliceTill("Command").SliceTill("Query")}, id={command.Id}, type=queue)", LogKeys.AppCommand);

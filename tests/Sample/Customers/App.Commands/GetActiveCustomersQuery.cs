@@ -4,7 +4,7 @@
     using Naos.Core.Commands.App;
     using Naos.Sample.Customers.Domain;
 
-    public class GetActiveCustomersQuery : CommandRequest<IEnumerable<Customer>>
+    public class GetActiveCustomersQuery : Command<IEnumerable<Customer>>
     {
     }
 }

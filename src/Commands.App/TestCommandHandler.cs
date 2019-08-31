@@ -12,7 +12,7 @@
     /// <typeparam name="TRequest">The type of the request.</typeparam>
     /// <seealso cref="App.BehaviorCommandHandler{TRequest, bool}" />
     public class TestCommandHandler<TRequest> : BehaviorCommandHandler<TRequest, bool>
-        where TRequest : CommandRequest<bool>
+        where TRequest : Command<bool>
     {
         public TestCommandHandler(
             ILogger<TestCommandHandler<TRequest>> logger,

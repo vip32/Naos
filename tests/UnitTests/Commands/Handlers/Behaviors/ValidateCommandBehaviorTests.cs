@@ -32,7 +32,7 @@
             ex.Message.ShouldContain("has validation errors");
         }
 
-        public class StubCommand : CommandRequest<bool>
+        public class StubCommand : Command<bool>
         {
             public StubCommand(string name)
             {

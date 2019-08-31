@@ -11,7 +11,7 @@
 
     /// <summary>
     ///
-    ///                     CommandRequest
+    ///                     Command
     ///                   .----------------.                                     CommandHandler
     ///                   | -Id            |                                    .--------------.
     ///    -------------> .----------------.            Mediator           /--> | Handle()     |
@@ -27,22 +27,22 @@
     /// </summary>
     /// <typeparam name="TResponse">The type of the response.</typeparam>
     /// <seealso cref="MediatR.IRequest{CommandResponse{TResponse}}" />
-    public abstract class CommandRequest<TResponse> : IRequest<CommandResponse<TResponse>>
+    public abstract class Command<TResponse> : IRequest<CommandResponse<TResponse>>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommandRequest{TResponse}"/> class.
+        /// Initializes a new instance of the <see cref="Command{TResponse}"/> class.
         /// </summary>
-        protected CommandRequest()
+        protected Command()
             : this(IdGenerator.Instance.Next, IdGenerator.Instance.Next)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommandRequest{TResponse}"/> class.
+        /// Initializes a new instance of the <see cref="Command{TResponse}"/> class.
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <param name="correlationId">The correlation identifier.</param>
-        protected CommandRequest(string id, string correlationId = null)
+        protected Command(string id, string correlationId = null)
         {
             EnsureArg.IsNotNullOrEmpty(id);
 

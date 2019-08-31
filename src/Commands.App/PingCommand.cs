@@ -1,6 +1,6 @@
 ﻿namespace Naos.Core.Commands.App
 {
-    public class PingCommand : CommandRequest<object> // object means no response type
+    public class PingCommand : Command<object> // object means no response type
     {
         //public string StringProp { get; set; }
 

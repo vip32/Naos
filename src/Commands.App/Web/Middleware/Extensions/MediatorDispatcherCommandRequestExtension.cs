@@ -8,13 +8,13 @@
     using Naos.Foundation;
     using Newtonsoft.Json.Linq;
 
-    public class MediatorDispatcherRequestCommandExtension : RequestCommandExtension
+    public class MediatorDispatcherCommandRequestExtension : CommandRequestBaseExtension
     {
-        private readonly ILogger<LoggingRequestCommandExtension> logger;
+        private readonly ILogger<LoggingCommandRequestExtension> logger;
         private readonly IMediator mediator;
 
-        public MediatorDispatcherRequestCommandExtension(
-            ILogger<LoggingRequestCommandExtension> logger,
+        public MediatorDispatcherCommandRequestExtension(
+            ILogger<LoggingCommandRequestExtension> logger,
             IMediator mediator)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
@@ -26,10 +26,10 @@
 
         public override async Task InvokeAsync<TCommand, TResponse>(
             TCommand command,
-            RequestCommandRegistration<TCommand, TResponse> registration,
+            CommandRequestRegistration<TCommand, TResponse> registration,
             HttpContext context)
         {
-            this.logger.LogInformation($"{{LogKey:l}} request command dispatch (name={registration.CommandType?.Name.SliceTill("Command").SliceTill("Query")}, id={command.Id}), type=mediator)", LogKeys.AppCommand);
+            this.logger.LogInformation($"{{LogKey:l}} request command dispatch (name={registration.CommandType.PrettyName()}, id={command.Id}), type=mediator)", LogKeys.AppCommand);
 
             var response = await this.mediator.Send(command).AnyContext(); // https://github.com/jbogard/MediatR/issues/385
             if (response != null)
@@ -61,7 +61,7 @@
             RequestCommandRegistration<TCommand> registration,
             HttpContext context)
         {
-            this.logger.LogInformation($"{{LogKey:l}} request command dispatch (name={registration.CommandType?.Name.SliceTill("Command").SliceTill("Query")}, id={command.Id}), type=mediator)", LogKeys.AppCommand);
+            this.logger.LogInformation($"{{LogKey:l}} request command dispatch (name={registration.CommandType.PrettyName()}, id={command.Id}), type=mediator)", LogKeys.AppCommand);
 
             var response = await this.mediator.Send(command).AnyContext(); // https://github.com/jbogard/MediatR/issues/385
             if (response != null)

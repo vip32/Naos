@@ -11,17 +11,17 @@
     using Naos.Core.Commands.App.Web;
 
     [ExcludeFromCodeCoverage]
-    public static class RequestCommandOptionsExtensions
+    public static class CommandRequestOptionsExtensions
     {
-        public static RequestCommandOptions Get<TCommandRequest, TResponse>(
-            this RequestCommandOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.OK, Func<TCommandRequest, HttpContext, Task> onSuccess = null)
-            where TCommandRequest : CommandRequest<TResponse>
+        public static CommandRequestOptions Get<TCommandRequest, TResponse>(
+            this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.OK, Func<TCommandRequest, HttpContext, Task> onSuccess = null)
+            where TCommandRequest : Command<TResponse>
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            options.Context.Services.AddSingleton<RequestCommandRegistration>(
-                sp => new RequestCommandRegistration<TCommandRequest, TResponse>
+            options.Context.Services.AddSingleton<CommandRequestRegistration>(
+                sp => new CommandRequestRegistration<TCommandRequest, TResponse>
                 {
                     Route = route,
                     RequestMethod = "get",
@@ -32,14 +32,14 @@
             return options;
         }
 
-        public static RequestCommandOptions Get<TCommandRequest>(
-            this RequestCommandOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.OK, Func<TCommandRequest, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null)
-            where TCommandRequest : CommandRequest<object>
+        public static CommandRequestOptions Get<TCommandRequest>(
+            this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.OK, Func<TCommandRequest, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null)
+            where TCommandRequest : Command<object>
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            options.Context.Services.AddSingleton<RequestCommandRegistration>(
+            options.Context.Services.AddSingleton<CommandRequestRegistration>(
                 sp => new RequestCommandRegistration<TCommandRequest>
                 {
                     Route = route,
@@ -52,15 +52,15 @@
             return options;
         }
 
-        public static RequestCommandOptions Post<TCommandRequest, TResponse>(
-            this RequestCommandOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.Accepted, Func<TCommandRequest, HttpContext, Task> onSuccess = null)
-            where TCommandRequest : CommandRequest<TResponse>
+        public static CommandRequestOptions Post<TCommandRequest, TResponse>(
+            this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.Accepted, Func<TCommandRequest, HttpContext, Task> onSuccess = null)
+            where TCommandRequest : Command<TResponse>
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            options.Context.Services.AddSingleton<RequestCommandRegistration>(
-                sp => new RequestCommandRegistration<TCommandRequest, TResponse>
+            options.Context.Services.AddSingleton<CommandRequestRegistration>(
+                sp => new CommandRequestRegistration<TCommandRequest, TResponse>
                 {
                     Route = route,
                     RequestMethod = "post",
@@ -71,14 +71,14 @@
             return options;
         }
 
-        public static RequestCommandOptions Post<TCommandRequest>(
-            this RequestCommandOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.Accepted, Func<TCommandRequest, HttpContext, Task> onSuccess = null)
-            where TCommandRequest : CommandRequest<object>
+        public static CommandRequestOptions Post<TCommandRequest>(
+            this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.Accepted, Func<TCommandRequest, HttpContext, Task> onSuccess = null)
+            where TCommandRequest : Command<object>
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            options.Context.Services.AddSingleton<RequestCommandRegistration>(
+            options.Context.Services.AddSingleton<CommandRequestRegistration>(
                 sp => new RequestCommandRegistration<TCommandRequest>
                 {
                     Route = route,
@@ -90,15 +90,15 @@
             return options;
         }
 
-        public static RequestCommandOptions Put<TCommandRequest, TResponse>(
-            this RequestCommandOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.Accepted, Func<TCommandRequest, HttpContext, Task> onSuccess = null)
-            where TCommandRequest : CommandRequest<TResponse>
+        public static CommandRequestOptions Put<TCommandRequest, TResponse>(
+            this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.Accepted, Func<TCommandRequest, HttpContext, Task> onSuccess = null)
+            where TCommandRequest : Command<TResponse>
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            options.Context.Services.AddSingleton<RequestCommandRegistration>(
-                sp => new RequestCommandRegistration<TCommandRequest, TResponse>
+            options.Context.Services.AddSingleton<CommandRequestRegistration>(
+                sp => new CommandRequestRegistration<TCommandRequest, TResponse>
                 {
                     Route = route,
                     RequestMethod = "put",
@@ -109,14 +109,14 @@
             return options;
         }
 
-        public static RequestCommandOptions Put<TCommandRequest>(
-            this RequestCommandOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.Accepted, Func<TCommandRequest, HttpContext, Task> onSuccess = null)
-            where TCommandRequest : CommandRequest<object>
+        public static CommandRequestOptions Put<TCommandRequest>(
+            this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.Accepted, Func<TCommandRequest, HttpContext, Task> onSuccess = null)
+            where TCommandRequest : Command<object>
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            options.Context.Services.AddSingleton<RequestCommandRegistration>(
+            options.Context.Services.AddSingleton<CommandRequestRegistration>(
                 sp => new RequestCommandRegistration<TCommandRequest>
                 {
                     Route = route,
@@ -128,14 +128,14 @@
             return options;
         }
 
-        public static RequestCommandOptions Delete<TCommandRequest>(
-            this RequestCommandOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.NoContent, Func<TCommandRequest, HttpContext, Task> onSuccess = null)
-            where TCommandRequest : CommandRequest<object>
+        public static CommandRequestOptions Delete<TCommandRequest>(
+            this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.NoContent, Func<TCommandRequest, HttpContext, Task> onSuccess = null)
+            where TCommandRequest : Command<object>
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            options.Context.Services.AddSingleton<RequestCommandRegistration>(
+            options.Context.Services.AddSingleton<CommandRequestRegistration>(
                 sp => new RequestCommandRegistration<TCommandRequest>
                 {
                     Route = route,

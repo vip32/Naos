@@ -27,6 +27,11 @@
 
         public static string PrettyName(this Type source, bool useAngleBrackets = true)
         {
+            if(source == null)
+            {
+                return string.Empty;
+            }
+
             if (source.IsGenericType)
             {
                 var genericOpen = useAngleBrackets ? "<" : "[";
@@ -41,6 +46,11 @@
 
         public static string FullPrettyName(this Type source, bool useAngleBrackets = true)
         {
+            if (source == null)
+            {
+                return string.Empty;
+            }
+
             if (source.IsGenericType)
             {
                 var genericOpen = useAngleBrackets ? "<" : "[";

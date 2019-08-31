@@ -13,11 +13,11 @@
     public class NaosCommandsEchoController : ControllerBase
     {
         private readonly ILogger<NaosCommandsEchoController> logger;
-        private readonly IEnumerable<RequestCommandRegistration> registrations;
+        private readonly IEnumerable<CommandRequestRegistration> registrations;
 
         public NaosCommandsEchoController(
             ILogger<NaosCommandsEchoController> logger,
-            IEnumerable<RequestCommandRegistration> registrations)
+            IEnumerable<CommandRequestRegistration> registrations)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
 
@@ -28,7 +28,7 @@
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [OpenApiTag("Naos Echo")]
-        public ActionResult<IEnumerable<RequestCommandRegistration>> Get()
+        public ActionResult<IEnumerable<CommandRequestRegistration>> Get()
         {
             return this.Ok(this.registrations);
         }

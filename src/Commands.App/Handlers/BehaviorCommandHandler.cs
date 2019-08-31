@@ -10,13 +10,13 @@
     /// <summary>
     /// A base implementation for handling application commands and ensuring all behaviors are executed with proper responses (not cancelled).
     /// </summary>
-    /// <typeparam name="TRequest">The type of the request.</typeparam>
+    /// <typeparam name="TCommand">The type of the request.</typeparam>
     /// <typeparam name="TResponse">Return value of the wrapped command handler.</typeparam>
     /// <seealso cref="App.BaseCommandHandler{TRequest, TResponse}" />
-    /// <seealso cref="MediatR.IRequestHandler{CommandRequest{TResponse}, CommandResponse{TResponse}}" />
-    public abstract class BehaviorCommandHandler<TRequest, TResponse>
-        : BaseCommandHandler<TRequest, TResponse>
-        where TRequest : CommandRequest<TResponse>
+    /// <seealso cref="MediatR.IRequestHandler{Command{TResponse}, CommandResponse{TResponse}}" />
+    public abstract class BehaviorCommandHandler<TCommand, TResponse>
+        : BaseCommandHandler<TCommand, TResponse>
+        where TCommand : Command<TResponse>
     {
         private readonly IEnumerable<ICommandBehavior> behaviors;
 
@@ -42,7 +42,7 @@
         /// </summary>
         /// <param name="request">The request.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        public override async Task<CommandResponse<TResponse>> Handle(TRequest request, CancellationToken cancellationToken)
+        public override async Task<CommandResponse<TResponse>> Handle(TCommand request, CancellationToken cancellationToken)
         {
             foreach (var behavior in this.behaviors.Safe())
             {
@@ -54,7 +54,7 @@
                 }
             }
 
-            var commandName = typeof(TRequest).Name.SliceTill("Command");
+            var commandName = typeof(TCommand).Name.SliceTill("Command");
             this.Logger.LogJournal(LogKeys.AppCommand, $"handle (name={commandName}, id={request.Id})", LogPropertyKeys.TrackHandleCommand);
             this.Logger.LogTrace(LogKeys.AppCommand, request.Id, commandName, LogTraceNames.Command);
 

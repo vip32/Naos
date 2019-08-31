@@ -32,30 +32,30 @@
     ///                                                                                               `--------------`
     ///                                                                                                   (result)
     /// </summary>
-    public class RequestCommandMiddleware
+    public class CommandRequestMiddleware
     {
         private readonly RequestDelegate next;
-        private readonly ILogger<RequestCommandMiddleware> logger;
-        private readonly RequestCommandMiddlewareOptions options;
+        private readonly ILogger<CommandRequestMiddleware> logger;
+        private readonly CommandRequestMiddlewareOptions options;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RequestCommandMiddleware"/> class.
+        /// Initializes a new instance of the <see cref="CommandRequestMiddleware"/> class.
         /// Creates a new instance of the CorrelationIdMiddleware.
         /// </summary>
         /// <param name="next">The next middleware in the pipeline.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="options">The configuration options.</param>
-        public RequestCommandMiddleware(
+        public CommandRequestMiddleware(
             RequestDelegate next,
-            ILogger<RequestCommandMiddleware> logger,
-            IOptions<RequestCommandMiddlewareOptions> options) // singleton dependencies go here as ctor args
+            ILogger<CommandRequestMiddleware> logger,
+            IOptions<CommandRequestMiddlewareOptions> options) // singleton dependencies go here as ctor args
         {
             EnsureArg.IsNotNull(next, nameof(next));
             EnsureArg.IsNotNull(logger, nameof(logger));
 
             this.next = next;
             this.logger = logger;
-            this.options = options.Value ?? new RequestCommandMiddlewareOptions();
+            this.options = options.Value ?? new CommandRequestMiddlewareOptions();
         }
 
         public async Task Invoke(HttpContext context) // scoped dependencies go here as method args
@@ -101,14 +101,15 @@
 
         private async Task HandleCommandWithResponse<TCommand, TResponse>(
             object command,
-            RequestCommandRegistration<TCommand, TResponse> registration,
+            CommandRequestRegistration<TCommand, TResponse> registration,
             HttpContext context)
-            where TCommand : CommandRequest<TResponse>
+            where TCommand : Command<TResponse>
         {
             // registration will be resolved to the actual type with proper generic types. var i = typeof(RequestCommandRegistration<TCommand, TResponse>);
             if (command != null)
             {
                 var extensions = this.EnsureExtensions(context);
+                this.logger.LogDebug($"{{LogKey:l}} command request extension chain: {extensions.Select(e => e.GetType().PrettyName()).ToString("|")} (name={registration.CommandType?.Name.SliceTill("Command").SliceTill("Query")})", LogKeys.AppCommand);
                 if (extensions.Count > 0) // invoke all chained extensions
                 {
                     await extensions[0].InvokeAsync(command as TCommand, registration, context).AnyContext();
@@ -124,17 +125,21 @@
             object command,
             RequestCommandRegistration<TCommand> registration,
             HttpContext context)
-            where TCommand : CommandRequest<object>
+            where TCommand : Command<object>
         {
             // registration will be resolved to the actual type with proper generic types. var i = typeof(RequestCommandRegistration<TCommand, TResponse>);
-            var extensions = this.EnsureExtensions(context);
-            if (extensions.Count > 0) // invoke all chained extensions
+            if (command != null)
             {
-                await extensions[0].InvokeAsync(command as TCommand, registration, context).AnyContext();
-            }
-            else
-            {
-                throw new Exception("Command request not executed, no dispatcher middleware extensions configured");
+                var extensions = this.EnsureExtensions(context);
+                this.logger.LogDebug($"{{LogKey:l}} command request extension chain: {extensions.Select(e => e.GetType().PrettyName()).ToString("|")} (name={registration.CommandType?.Name.SliceTill("Command").SliceTill("Query")})", LogKeys.AppCommand);
+                if (extensions.Count > 0) // invoke all chained extensions
+                {
+                    await extensions[0].InvokeAsync(command as TCommand, registration, context).AnyContext();
+                }
+                else
+                {
+                    throw new Exception("Command request not executed, no dispatcher middleware extensions configured");
+                }
             }
         }
 
@@ -154,20 +159,20 @@
             return SerializationHelper.JsonDeserialize(context.Request.Body, this.options.Registration.CommandType);
         }
 
-        private List<IRequestCommandExtension> EnsureExtensions(HttpContext context)
+        private List<ICommandRequestExtension> EnsureExtensions(HttpContext context)
         {
-            var extensions = new List<IRequestCommandExtension>();
+            var extensions = new List<ICommandRequestExtension>();
             var extensionTypes = this.options.Registration.ExtensionTypesBefore.Safe()
                 .Concat(this.options.Registration.ExtensionTypes.Safe())
                 .Concat(this.options.Registration.ExtensionTypesAfter.Safe());
             foreach (var extensionType in extensionTypes.Safe()) // make each extension type concrete
             {
                 // WARN: extension should be registered/retrieved as scoped!
-                extensions.Add(context.RequestServices.GetService(extensionType) as IRequestCommandExtension);
+                extensions.Add(context.RequestServices.GetService(extensionType) as ICommandRequestExtension);
             }
 
             // always add the default mediator (send+result) extensions at the end
-            extensions.Add(context.RequestServices.GetService(typeof(MediatorDispatcherRequestCommandExtension)) as IRequestCommandExtension);
+            extensions.Add(context.RequestServices.GetService(typeof(MediatorDispatcherCommandRequestExtension)) as ICommandRequestExtension);
 
             foreach (var extension in extensions.Safe()) // build up the extension chain
             {

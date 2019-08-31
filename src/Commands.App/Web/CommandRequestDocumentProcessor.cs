@@ -5,7 +5,6 @@
     using System.Net;
     using System.Reflection;
     using Humanizer;
-    using Microsoft.Extensions.DependencyInjection;
     using Naos.Core.Commands.App.Web;
     using Naos.Foundation;
     using NJsonSchema;
@@ -13,11 +12,11 @@
     using NSwag.Generation.Processors;
     using NSwag.Generation.Processors.Contexts;
 
-    public class RequestCommandRegistrationDocumentProcessor : IDocumentProcessor
+    public class CommandRequestDocumentProcessor : IDocumentProcessor
     {
-        private readonly IEnumerable<RequestCommandRegistration> registrations;
+        private readonly IEnumerable<CommandRequestRegistration> registrations;
 
-        public RequestCommandRegistrationDocumentProcessor(IEnumerable<RequestCommandRegistration> registrations)
+        public CommandRequestDocumentProcessor(IEnumerable<CommandRequestRegistration> registrations)
         {
             this.registrations = registrations;
         }
@@ -31,7 +30,7 @@
             }
         }
 
-        private static void AddPathItem(IDictionary<string, OpenApiPathItem> items, IEnumerable<RequestCommandRegistration> registrations, DocumentProcessorContext context)
+        private static void AddPathItem(IDictionary<string, OpenApiPathItem> items, IEnumerable<CommandRequestRegistration> registrations, DocumentProcessorContext context)
         {
             var item = new OpenApiPathItem();
 
@@ -75,7 +74,7 @@
             }
         }
 
-        private static void AddOperationParameters(OpenApiOperation operation, string method, RequestCommandRegistration registration, DocumentProcessorContext context)
+        private static void AddOperationParameters(OpenApiOperation operation, string method, CommandRequestRegistration registration, DocumentProcessorContext context)
         {
             if (registration.CommandType != null)
             {
@@ -94,7 +93,7 @@
             }
         }
 
-        private static void AddQueryOperation(OpenApiOperation operation, RequestCommandRegistration registration)
+        private static void AddQueryOperation(OpenApiOperation operation, CommandRequestRegistration registration)
         {
             foreach (var property in registration.CommandType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
             {
@@ -132,7 +131,7 @@
             }
         }
 
-        private static void AddBodyOperation(OpenApiOperation operation, RequestCommandRegistration registration, DocumentProcessorContext context)
+        private static void AddBodyOperation(OpenApiOperation operation, CommandRequestRegistration registration, DocumentProcessorContext context)
         {
             operation.Parameters.Add(new OpenApiParameter
             {
@@ -145,7 +144,7 @@
             });
         }
 
-        private static JsonSchema CreateSchema(RequestCommandRegistration registration, DocumentProcessorContext context)
+        private static JsonSchema CreateSchema(CommandRequestRegistration registration, DocumentProcessorContext context)
         {
             return context.SchemaGenerator.Generate(registration.CommandType, context.SchemaResolver);
 

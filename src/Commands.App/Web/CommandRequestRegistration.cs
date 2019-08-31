@@ -10,7 +10,7 @@
     using Naos.Foundation;
 
     [DebuggerDisplay("Route={Route}, Method={RequestMethod}")]
-    public class RequestCommandRegistration
+    public class CommandRequestRegistration
     {
         private string route;
 
@@ -49,18 +49,18 @@
 
         public bool HasResponse => this.GetType().PrettyName().Contains(","); // is a second generic TResponse defined?
 
-        public IEnumerable<Type> ExtensionTypesBefore { get; set; } = new[] { typeof(LoggingRequestCommandExtension) };
+        public IEnumerable<Type> ExtensionTypesBefore { get; set; } = new[] { typeof(LoggingCommandRequestExtension) };
 
         public IEnumerable<Type> ExtensionTypes { get; set; }
 
-        public IEnumerable<Type> ExtensionTypesAfter { get; set; } = new[] { typeof(MediatorDispatcherRequestCommandExtension) };
+        public IEnumerable<Type> ExtensionTypesAfter { get; set; } = new[] { typeof(MediatorDispatcherCommandRequestExtension) };
 
         public Func<object, HttpContext, Task> OnSuccess { get; set; }
     }
 
 #pragma warning disable SA1402 // File may only contain a single type
-    public class RequestCommandRegistration<TCommand, TResponse> : RequestCommandRegistration
-        where TCommand : CommandRequest<TResponse>
+    public class CommandRequestRegistration<TCommand, TResponse> : CommandRequestRegistration
+        where TCommand : Command<TResponse>
         //where TResponse : CommandResponse<TResponse>
     {
         public override Type CommandType
@@ -82,8 +82,8 @@
         public new Func<TCommand, HttpContext, Task> OnSuccess { get; set; }
     }
 
-    public class RequestCommandRegistration<TCommand> : RequestCommandRegistration
-        where TCommand : CommandRequest<object>
+    public class RequestCommandRegistration<TCommand> : CommandRequestRegistration
+        where TCommand : Command<object>
         //where TResponse : CommandResponse<TResponse>
     {
         public override Type CommandType

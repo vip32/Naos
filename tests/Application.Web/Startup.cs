@@ -207,7 +207,7 @@
                     .UseOperationsTracing()
                     .UseRequestFiltering()
                     .UseServiceExceptions()
-                    .UseRequestCommands()
+                    .UseCommandRequests()
                     .UseServiceDiscoveryRouter())
                 .UseOpenApi()
                 .UseSwaggerUi3();

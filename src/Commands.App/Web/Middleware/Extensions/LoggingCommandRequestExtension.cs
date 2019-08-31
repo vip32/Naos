@@ -6,11 +6,11 @@
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
 
-    public class LoggingRequestCommandExtension : RequestCommandExtension
+    public class LoggingCommandRequestExtension : CommandRequestBaseExtension
     {
-        private readonly ILogger<LoggingRequestCommandExtension> logger;
+        private readonly ILogger<LoggingCommandRequestExtension> logger;
 
-        public LoggingRequestCommandExtension(ILogger<LoggingRequestCommandExtension> logger)
+        public LoggingCommandRequestExtension(ILogger<LoggingCommandRequestExtension> logger)
         {
             EnsureArg.IsNotNull(logger);
 
@@ -19,10 +19,10 @@
 
         public override async Task InvokeAsync<TCommand, TResponse>(
             TCommand command,
-            RequestCommandRegistration<TCommand, TResponse> registration,
+            CommandRequestRegistration<TCommand, TResponse> registration,
             HttpContext context)
         {
-            this.logger.LogInformation($"{{LogKey:l}} request command received (name={registration.CommandType?.Name.SliceTill("Command").SliceTill("Query")}, id={command.Id})", LogKeys.AppCommand);
+            this.logger.LogInformation($"{{LogKey:l}} command request received (name={registration.CommandType.PrettyName()}, id={command.Id})", LogKeys.AppCommand);
 
             // contiue with next extension
             await base.InvokeAsync(command, registration, context).AnyContext();
@@ -33,7 +33,7 @@
             RequestCommandRegistration<TCommand> registration,
             HttpContext context)
         {
-            this.logger.LogInformation($"{{LogKey:l}} request command received (name={registration.CommandType?.Name.SliceTill("Command").SliceTill("Query")}, id={command.Id})", LogKeys.AppCommand);
+            this.logger.LogInformation($"{{LogKey:l}} command request received (name={registration.CommandType.PrettyName()}, id={command.Id})", LogKeys.AppCommand);
 
             // contiue with next extension
             await base.InvokeAsync(command, registration, context).AnyContext();

@@ -3,7 +3,7 @@
     using System;
     using FluentValidation.Results;
 
-    public class EchoCommand : CommandRequest<EchoCommandResponse>
+    public class EchoCommand : Command<EchoCommandResponse>
     {
         public string Message { get; set; }
 
