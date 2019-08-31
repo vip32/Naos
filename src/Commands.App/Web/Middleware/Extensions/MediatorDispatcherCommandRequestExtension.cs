@@ -53,6 +53,7 @@
                 }
             }
 
+            await context.Response.Header("x-commandid", command.Id).AnyContext();
             // the extension chain is terminated here
         }
 
@@ -79,6 +80,7 @@
                 }
             }
 
+            await context.Response.Header("x-commandid", command.Id).AnyContext();
             // the extension chain is terminated here
         }
     }

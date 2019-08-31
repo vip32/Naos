@@ -1,7 +1,6 @@
 ﻿namespace Naos.Foundation.UnitTests.Extensions
 {
     using Naos.Foundation;
-    using Shouldly;
     using Xunit;
 
     public partial class IsTests

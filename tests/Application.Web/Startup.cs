@@ -47,8 +47,8 @@
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IQueue<CommandRequestWrapper>>(sp =>
-                new InMemoryQueue<CommandRequestWrapper>(o => o
+            services.AddSingleton<IQueue<CommandWrapper>>(sp =>
+                new InMemoryQueue<CommandWrapper>(o => o
                         .Mediator(sp.GetRequiredService<IMediator>())
                         .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                         .RetryDelay(TimeSpan.FromMinutes(1))
@@ -148,7 +148,7 @@
                         .AddRequests(o => o
                             .Post<CreateCustomerCommand>("api/commands/customers/create", HttpStatusCode.Created, onSuccess: (cmd, ctx) => ctx.Response.Location($"api/customers/{cmd.Customer.Id}"))
                             .Get<GetActiveCustomersQuery, IEnumerable<Sample.Customers.Domain.Customer>>("api/commands/customers/active")
-                            .Get<PingCommand>("api/commands/queue/ping", HttpStatusCode.Accepted, extensions: new[] { typeof(QueueDispatcherRequestCommandExtension) })))
+                            .Get<PingCommand>("api/commands/queue/ping", HttpStatusCode.Accepted, extensions: new[] { typeof(QueueDispatcherCommandRequestExtension) })))
                     .AddOperations(o => o
                         .AddInteractiveConsole()
                         .AddLogging(o => o

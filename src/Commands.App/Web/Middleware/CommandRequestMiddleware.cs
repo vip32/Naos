@@ -5,14 +5,12 @@
     using System.Linq;
     using System.Threading.Tasks;
     using EnsureThat;
-    using MediatR;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.WebUtilities;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Naos.Core.Commands.App;
     using Naos.Foundation;
-    using Newtonsoft.Json.Linq;
 
     /// <summary>
     ///

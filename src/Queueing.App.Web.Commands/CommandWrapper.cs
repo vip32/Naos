@@ -2,18 +2,18 @@
 {
     using Naos.Core.Commands.App;
 
-    public class CommandRequestWrapper
+    public class CommandWrapper
     {
         public object Command { get; set; }
 
-        public CommandRequestWrapper SetCommand<TCommand, TResponse>(TCommand command)
+        public CommandWrapper SetCommand<TCommand, TResponse>(TCommand command)
             where TCommand : Command<TResponse>
         {
             this.Command = command;
             return this;
         }
 
-        public CommandRequestWrapper SetCommand<TCommand>(TCommand command)
+        public CommandWrapper SetCommand<TCommand>(TCommand command)
             where TCommand : Command<object>
         {
             this.Command = command;
