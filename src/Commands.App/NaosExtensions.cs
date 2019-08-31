@@ -84,7 +84,7 @@
             return options;
         }
 
-        public static CommandsOptions AddRequestDispatcher(
+        public static CommandsOptions AddRequests(
             this CommandsOptions options,
             Action<CommandRequestOptions> optionsAction = null,
             bool addDefaultRequestCommands = true)

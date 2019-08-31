@@ -145,7 +145,7 @@
                         .AddBehavior(new FileStoragePersistCommandBehavior(
                             new FolderFileStorage(o => o
                                 .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "commands")))))
-                        .AddRequestDispatcher(o => o
+                        .AddRequests(o => o
                             .Post<CreateCustomerCommand>("api/commands/customers/create", HttpStatusCode.Created, onSuccess: (cmd, ctx) => ctx.Response.Location($"api/customers/{cmd.Customer.Id}"))
                             .Get<GetActiveCustomersQuery, IEnumerable<Sample.Customers.Domain.Customer>>("api/commands/customers/active")
                             .Get<PingCommand>("api/commands/queue/ping", HttpStatusCode.Accepted, extensions: new[] { typeof(QueueDispatcherRequestCommandExtension) })))
