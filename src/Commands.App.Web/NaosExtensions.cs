@@ -37,6 +37,7 @@
             optionsAction?.Invoke(new CommandRequestOptions(options.Context));
             options.Context.Services.AddSingleton<IDocumentProcessor, CommandRequestDocumentProcessor>();
             options.Context.Services.AddStartupTask<CommandRequestQueueProcessor>(new TimeSpan(0, 0, 3));
+            // TODO: make configurable/optional
             options.Context.Services.AddSingleton(sp => new CommandRequestStorage(
                 new FileStorageLoggingDecorator(
                     sp.GetRequiredService<ILoggerFactory>(),

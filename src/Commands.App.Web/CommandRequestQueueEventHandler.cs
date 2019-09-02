@@ -7,7 +7,6 @@
     using MediatR;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.FileStorage.Domain;
     using Naos.Core.Queueing.Domain;
     using Naos.Foundation;
     using Newtonsoft.Json.Linq;
@@ -84,31 +83,6 @@
             }
 
             return true;
-        }
-    }
-
-#pragma warning disable SA1402 // File may only contain a single type
-    public class CommandRequestStorage
-    {
-        private readonly IFileStorage fileStorage;
-        private readonly JsonNetSerializer serializer;
-
-        public CommandRequestStorage(IFileStorage fileStorage)
-        {
-            EnsureArg.IsNotNull(fileStorage, nameof(fileStorage));
-
-            this.fileStorage = fileStorage;
-            this.serializer = new JsonNetSerializer();
-        }
-
-        public async Task<bool> SaveAsync(CommandRequestWrapper commandRequest)
-        {
-            return await this.fileStorage.SaveFileObjectAsync($"{commandRequest.Id}.json", commandRequest, this.serializer).AnyContext();
-        }
-
-        public async Task<CommandRequestWrapper> GetAsync(string id)
-        {
-            return await this.fileStorage.GetFileObjectAsync<CommandRequestWrapper>($"{id}.json", this.serializer).AnyContext();
         }
     }
 }
