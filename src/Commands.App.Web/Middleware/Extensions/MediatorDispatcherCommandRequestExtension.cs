@@ -36,7 +36,6 @@
             if (response != null)
             {
                 var jResponse = JObject.FromObject(response);
-
                 if (!jResponse.GetValueByPath<bool>("cancelled"))
                 {
                     var resultToken = jResponse.SelectToken("result") ?? jResponse.SelectToken("Result");

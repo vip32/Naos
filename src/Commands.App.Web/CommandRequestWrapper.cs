@@ -6,6 +6,8 @@
     {
         public string Id { get; set; }
 
+        public string CorrelationId { get; set; }
+
         public string Status { get; set; } = CommandRequestStates.Accepted;
 
         public string StatusDescription { get; set; } // Finished datetime/ Failure message
@@ -33,6 +35,7 @@
             {
                 this.Id = command.Id;
                 this.Created = DateTime.UtcNow;
+                this.CorrelationId = command.CorrelationId;
                 this.Command = command;
             }
 
