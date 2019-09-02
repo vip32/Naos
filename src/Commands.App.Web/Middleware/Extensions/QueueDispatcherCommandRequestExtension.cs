@@ -8,6 +8,20 @@
     using Naos.Core.Queueing.Domain;
     using Naos.Foundation;
 
+    /// <summary>
+    ///
+    ///   HTTP request >
+    ///       CommandRequestMiddleware (invoke)
+    ///            > ....Extensions
+    ///            -----------------------------------------------------------
+    ///            > QueueDispatcherCommandRequestExtension
+    ///                  > Queue
+    ///                      ^ CommandRequestQueueProcessor (listen)
+    ///                            > Send QueueEvent<CommandWrapper>
+    ///                                 > CommandRequestQueueEventHandler
+    ///                                      > Send Command < CommandHandler
+    ///
+    /// </summary>
     public class QueueDispatcherCommandRequestExtension : CommandRequestBaseExtension
     {
         private readonly ILogger<LoggingCommandRequestExtension> logger;
@@ -31,7 +45,8 @@
         {
             this.logger.LogInformation($"{{LogKey:l}} command request dispatch (name={registration.CommandType.PrettyName()}, id={command.Id}, type=queue)", LogKeys.AppCommand);
 
-            var wrapper = new CommandWrapper().SetCommand<TCommand, TResponse>(command);
+            //var wrapper = new CommandWrapper().SetCommand<TCommand, TResponse>(command);
+            var wrapper = new CommandWrapper().SetCommand(command);
             await this.queue.EnqueueAsync(wrapper).AnyContext();
 
             var metrics = await this.queue.GetMetricsAsync().AnyContext();
@@ -48,7 +63,9 @@
         {
             this.logger.LogInformation($"{{LogKey:l}} command request dispatch (name={registration.CommandType.PrettyName()}, id={command.Id}, type=queue)", LogKeys.AppCommand);
 
-            var wrapper = new CommandWrapper().SetCommand<TCommand>(command);
+            // TODO: start queue TRACER
+            //var wrapper = new CommandWrapper().SetCommand<TCommand>(command);
+            var wrapper = new CommandWrapper().SetCommand(command);
             await this.queue.EnqueueAsync(wrapper).AnyContext();
 
             var metrics = await this.queue.GetMetricsAsync().AnyContext();

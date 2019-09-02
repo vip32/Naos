@@ -5,7 +5,7 @@
     using Naos.Foundation;
     using Naos.Foundation.Domain;
 
-    public class CountryRepository : Repository<Country>, ICountryRepository
+    public class CountryRepository : GenericRepository<Country>, ICountryRepository
     {
         public CountryRepository(IGenericRepository<Country> decoratee)
             : base(decoratee)

@@ -25,12 +25,10 @@
     ///                                                                          `--------------`
     ///
     /// </summary>
-    /// <typeparam name="TResponse">The type of the response.</typeparam>
-    /// <seealso cref="MediatR.IRequest{CommandResponse{TResponse}}" />
-    public abstract class Command<TResponse> : IRequest<CommandResponse<TResponse>>
+    public abstract class Command
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Command{TResponse}"/> class.
+        /// Initializes a new instance of the <see cref="Command"/> class.
         /// </summary>
         protected Command()
             : this(IdGenerator.Instance.Next, IdGenerator.Instance.Next)
@@ -38,7 +36,7 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Command{TResponse}"/> class.
+        /// Initializes a new instance of the <see cref="Command"/> class.
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <param name="correlationId">The correlation identifier.</param>
@@ -79,6 +77,38 @@
         //        this.CorrelationId = correlationId;
         //    }
         //}
+    }
+
+    /// <summary>
+    ///
+    ///                     Command
+    ///                   .----------------.                                     CommandHandler
+    ///                   | -Id            |                                    .--------------.
+    ///    -------------> .----------------.            Mediator           /--> | Handle()     |
+    ///       (request)   | -CorrelationId |-----\    .------------.      /     `--------------`
+    ///                   `----------------`      \-->| Send()     |-----/             |
+    ///                                               `------------`                   V
+    ///                                                                           CommandResponse
+    ///                                                                          .--------------.
+    ///    <---------------------------------------------------------------------| -Result      |
+    ///                                            (response)                    | -Cancelled   |
+    ///                                                                          `--------------`
+    ///
+    /// </summary>
+    /// <typeparam name="TResponse">The type of the response.</typeparam>
+    /// <seealso cref="MediatR.IRequest{CommandResponse{TResponse}}" />
+#pragma warning disable SA1402 // File may only contain a single type
+    public abstract class Command<TResponse> : Command, IRequest<CommandResponse<TResponse>>
+    {
+        protected Command()
+            : this(IdGenerator.Instance.Next, IdGenerator.Instance.Next)
+        {
+        }
+
+        protected Command(string id, string correlationId = null)
+            : base(id, correlationId)
+        {
+        }
 
         /// <summary>
         /// Validates this instance.

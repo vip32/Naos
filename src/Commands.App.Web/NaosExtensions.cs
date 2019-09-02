@@ -31,6 +31,8 @@
 
             optionsAction?.Invoke(new CommandRequestOptions(options.Context));
             options.Context.Services.AddSingleton<IDocumentProcessor, CommandRequestDocumentProcessor>();
+            options.Context.Services.AddStartupTask<CommandRequestQueueProcessor>(new TimeSpan(0, 0, 3));
+            //options.Context.Services.AddScoped(sp => new CommandRequestQueueEventHandler());
 
             // needed for request dispatcher extensions, so the can be used on the registrations
             options.Context.Services

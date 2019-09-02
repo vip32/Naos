@@ -2,7 +2,7 @@
 {
     using Naos.Foundation.Domain;
 
-    public class UserAccountRepository : Repository<UserAccount>, IUserAccountRepository
+    public class UserAccountRepository : GenericRepository<UserAccount>, IUserAccountRepository
     {
         public UserAccountRepository(IGenericRepository<UserAccount> decoratee)
             : base(decoratee)

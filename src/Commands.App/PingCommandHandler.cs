@@ -32,7 +32,7 @@
             {
                 request.Properties.AddOrUpdate(this.GetType().Name, true);
 
-                this.logger.LogInformation($"{{LogKey:l}} {request.GetType().Name} (handler={this.GetType().Name})", LogKeys.AppCommand);
+                this.logger.LogInformation($"{{LogKey:l}} +++ echo {request.GetType().Name}", LogKeys.AppCommand);
 
                 return new CommandResponse<object>(); // no result
             }).AnyContext();

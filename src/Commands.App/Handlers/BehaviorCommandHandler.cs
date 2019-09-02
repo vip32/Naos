@@ -4,6 +4,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
+    using Humanizer;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
 
@@ -54,16 +55,18 @@
                 }
             }
 
-            var commandName = typeof(TCommand).Name.SliceTill("Command");
-            this.Logger.LogJournal(LogKeys.AppCommand, $"handle (name={commandName}, id={request.Id})", LogPropertyKeys.TrackHandleCommand);
-            this.Logger.LogTrace(LogKeys.AppCommand, request.Id, commandName, LogTraceNames.Command);
+            var commandName = typeof(TCommand).PrettyName();
+            this.Logger.LogJournal(LogKeys.AppCommand, $"command handle (name={commandName}, handler={this.GetType().PrettyName()}, id={request.Id})", LogPropertyKeys.TrackHandleCommand);
+            //this.Logger.LogTrace(LogKeys.AppCommand, request.Id, commandName, LogTraceNames.Command);
 
             using (var timer = new Foundation.Timer())
             {
                 var result = await this.HandleRequest(request, cancellationToken).AnyContext();
 
                 timer.Stop();
-                this.Logger.LogTrace(LogKeys.AppCommand, request.Id, commandName, LogTraceNames.Command, timer.Elapsed);
+                //this.Logger.LogTrace(LogKeys.AppCommand, request.Id, commandName, LogTraceNames.Command, timer.Elapsed);
+                this.Logger.LogInformation($"{{LogKey:l}} command handled (name={commandName}, handler={this.GetType().PrettyName()}, id={request.Id}) -> took {timer.Elapsed.Humanize()}", LogKeys.AppCommand);
+
                 return result;
             }
         }

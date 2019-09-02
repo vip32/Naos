@@ -149,7 +149,9 @@
                         .AddRequests(o => o
                             .Post<CreateCustomerCommand>("api/commands/customers/create", HttpStatusCode.Created, onSuccess: (cmd, ctx) => ctx.Response.Location($"api/customers/{cmd.Customer.Id}"))
                             .Get<GetActiveCustomersQuery, IEnumerable<Sample.Customers.Domain.Customer>>("api/commands/customers/active")
-                            .Get<PingCommand>("api/commands/queue/ping", HttpStatusCode.Accepted, extensions: new[] { typeof(QueueDispatcherCommandRequestExtension) })))
+                            // queued commands
+                            .Get<PingCommand>("api/commands/queue/ping", HttpStatusCode.Accepted, extensions: new[] { typeof(QueueDispatcherCommandRequestExtension) })
+                            .Get<GetActiveCustomersQuery, IEnumerable<Sample.Customers.Domain.Customer>>("api/commands/queue/customers/active", HttpStatusCode.Accepted, extensions: new[] { typeof(QueueDispatcherCommandRequestExtension) })))
                     .AddOperations(o => o
                         .AddInteractiveConsole()
                         .AddLogging(o => o

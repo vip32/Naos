@@ -31,14 +31,15 @@
         {
             this.logger.LogInformation($"{{LogKey:l}} request command dispatch (name={registration.CommandType.PrettyName()}, id={command.Id}), type=mediator)", LogKeys.AppCommand);
 
+            // TODO: start command TRACER
             var response = await this.mediator.Send(command).AnyContext(); // https://github.com/jbogard/MediatR/issues/385
             if (response != null)
             {
-                var jObject = JObject.FromObject(response);
+                var jResponse = JObject.FromObject(response);
 
-                if (!jObject.GetValueByPath<bool>("cancelled"))
+                if (!jResponse.GetValueByPath<bool>("cancelled"))
                 {
-                    var resultToken = jObject.SelectToken("result") ?? jObject.SelectToken("Result");
+                    var resultToken = jResponse.SelectToken("result") ?? jResponse.SelectToken("Result");
                     registration?.OnSuccess?.Invoke(command, context);
 
                     if (!resultToken.IsNullOrEmpty())
@@ -48,7 +49,7 @@
                 }
                 else
                 {
-                    var cancelledReason = jObject.GetValueByPath<string>("cancelledReason");
+                    var cancelledReason = jResponse.GetValueByPath<string>("cancelledReason");
                     await context.Response.BadRequest(cancelledReason.SliceTill(":")).AnyContext();
                 }
             }
@@ -67,15 +68,14 @@
             var response = await this.mediator.Send(command).AnyContext(); // https://github.com/jbogard/MediatR/issues/385
             if (response != null)
             {
-                var jObject = JObject.FromObject(response);
-
-                if (!jObject.GetValueByPath<bool>("cancelled"))
+                var jResponse = JObject.FromObject(response);
+                if (!jResponse.GetValueByPath<bool>("cancelled"))
                 {
                     registration?.OnSuccess?.Invoke(command, context);
                 }
                 else
                 {
-                    var cancelledReason = jObject.GetValueByPath<string>("cancelledReason");
+                    var cancelledReason = jResponse.GetValueByPath<string>("cancelledReason");
                     await context.Response.BadRequest(cancelledReason.SliceTill(":")).AnyContext();
                 }
             }

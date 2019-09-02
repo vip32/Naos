@@ -2,6 +2,7 @@
 {
     using System;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Configuration.AzureAppConfiguration;
     using Naos.Foundation;
     using Naos.Foundation.Infrastructure;
 
@@ -49,10 +50,27 @@
             builder.AddIf(!configuration["naos:secrets:userSecretsId"].IsNullOrEmpty(), b =>
                 b.AddUserSecrets(configuration["naos:secrets:userSecretsId"])); // https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets
 
-            //TODO: also add azure app configuration (needs connstring) https://docs.microsoft.com/en-us/azure/azure-app-configuration/quickstart-aspnet-core-app
+            configuration = builder.Build();
+            builder.AddIf(configuration["naos:secrets:azureAppConfiguration:enabled"].ToBool(), b =>
+            {
+                if (configuration["naos:secrets:azureAppConfiguration:connectionString"].IsNullOrEmpty())
+                {
+                    throw new Exception("Naos AzureAppConfiguration configuration provider cannot be used when the connectionstrong is not provided by any of the configuration providers (json/env/args). Please make these configuration settings available or set secrets:azureAppConfiguration:enabled to 'false'.");
+                }
+
+                b.AddAzureAppConfiguration(options =>
+                {
+                    options.Connect(configuration["naos:secrets:azureAppConfiguration:connectionString"])
+                           .UseFeatureFlags();
+                });
+
+                // howto use: https://microsoft.github.io/AzureTipsAndTricks/blog/tip222.html
+
+                return b;
+            });
 
             configuration = builder.Build();
-            builder.AddIf(configuration["naos:secrets:vault:enabled"].ToBool(true), b =>
+            builder.AddIf(configuration["naos:secrets:vault:enabled"].ToBool(), b =>
             {
                 if (configuration["naos:secrets:vault:name"].IsNullOrEmpty()
                     || configuration["naos:secrets:vault:clientId"].IsNullOrEmpty()

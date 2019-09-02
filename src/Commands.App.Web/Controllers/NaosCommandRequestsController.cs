@@ -5,7 +5,6 @@
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Queueing.App.Web;
     using Naos.Core.Queueing.Domain;
     using Naos.Foundation;
     using NSwag.Annotations;
@@ -46,7 +45,7 @@
         }
 
         [HttpGet]
-        [Route("id")]
+        [Route("{id}")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [OpenApiTag("Naos Queuing")]

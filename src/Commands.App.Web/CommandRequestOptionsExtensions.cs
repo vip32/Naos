@@ -14,7 +14,7 @@
     public static class CommandRequestOptionsExtensions
     {
         public static CommandRequestOptions Get<TCommandRequest, TResponse>(
-            this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.OK, Func<TCommandRequest, HttpContext, Task> onSuccess = null)
+            this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.OK, Func<TCommandRequest, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null)
             where TCommandRequest : Command<TResponse>
         {
             EnsureArg.IsNotNull(options, nameof(options));
@@ -26,7 +26,8 @@
                     Route = route,
                     RequestMethod = "get",
                     OnSuccessStatusCode = onSuccessStatusCode,
-                    OnSuccess = onSuccess
+                    OnSuccess = onSuccess,
+                    ExtensionTypes = extensions
                 });
 
             return options;

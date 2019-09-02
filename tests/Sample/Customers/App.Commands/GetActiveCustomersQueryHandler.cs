@@ -17,7 +17,7 @@
         public GetActiveCustomersQueryHandler(
             ILogger<GetActiveCustomersQueryHandler> logger,
             IEnumerable<ICommandBehavior> behaviors,
-            ICustomerRepository repository)
+            ICustomerRepository repository) // = scoped
             : base(logger, behaviors)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
