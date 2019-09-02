@@ -73,9 +73,9 @@
                         this.logger.LogCritical(ex, ex.Message);
                     }
 
-                    // OPTIONAL: store request.Item.Data somewhere (repo/filestorage), then for async commands the request.Item.Data.Response can be retrieved by a client
                     if (this.storage != null)
                     {
+                        // optionaly store the command/response so it can later be retrieved by the client (because the command was queued with no direct response)
                         this.logger.LogInformation($"SAVE {request.Item.Data.Id}");
                         await this.storage.SaveAsync(request.Item.Data).AnyContext();
                     }
