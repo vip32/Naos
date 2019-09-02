@@ -27,7 +27,7 @@
     <PackageReference Include="NSwag.AspNetCore" Version="13.0.6" />
     <PackageReference Include="NSwag.Generation" Version="13.0.6" />
     <PackageReference Include="NJsonSchema" Version="10.0.23" />
-    <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
+    <PackageReference Include="Serilog.AspNetCore" Version="3.0.0" />
   </ItemGroup>
 
   <ItemGroup>
