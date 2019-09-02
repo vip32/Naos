@@ -27,7 +27,6 @@
     using Naos.Core.JobScheduling.Domain;
     using Naos.Core.Messaging.Domain;
     using Naos.Core.Queueing;
-    using Naos.Core.Queueing.App.Web;
     using Naos.Core.Queueing.Domain;
     using Naos.Foundation;
     using Naos.Sample.Customers.App;
@@ -150,8 +149,8 @@
                             .Post<CreateCustomerCommand>("api/commands/customers/create", HttpStatusCode.Created, onSuccess: (cmd, ctx) => ctx.Response.Location($"api/customers/{cmd.Customer.Id}"))
                             .Get<GetActiveCustomersQuery, IEnumerable<Sample.Customers.Domain.Customer>>("api/commands/customers/active")
                             // queued commands
-                            .Get<PingCommand>("api/commands/queue/ping", HttpStatusCode.Accepted, extensions: new[] { typeof(QueueDispatcherCommandRequestExtension) })
-                            .Get<GetActiveCustomersQuery, IEnumerable<Sample.Customers.Domain.Customer>>("api/commands/queue/customers/active", HttpStatusCode.Accepted, extensions: new[] { typeof(QueueDispatcherCommandRequestExtension) })))
+                            .GetQueued<PingCommand>("api/commands/queue/ping")
+                            .GetQueued<GetActiveCustomersQuery, IEnumerable<Sample.Customers.Domain.Customer>>("api/commands/queue/customers/active")))
                     .AddOperations(o => o
                         .AddInteractiveConsole()
                         .AddLogging(o => o

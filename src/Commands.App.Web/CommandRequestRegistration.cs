@@ -49,6 +49,8 @@
 
         public bool HasResponse => this.GetType().PrettyName().Contains(","); // is a second generic TResponse defined?
 
+        public bool IsQueued => false;
+
         public IEnumerable<Type> ExtensionTypesBefore { get; set; } = new[] { typeof(LoggingCommandRequestExtension) };
 
         public IEnumerable<Type> ExtensionTypes { get; set; }
