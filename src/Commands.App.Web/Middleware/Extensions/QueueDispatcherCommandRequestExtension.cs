@@ -26,16 +26,19 @@
     {
         private readonly ILogger<LoggingCommandRequestExtension> logger;
         private readonly IQueue<CommandRequestWrapper> queue;
+        private readonly CommandRequestStorage storage;
 
         public QueueDispatcherCommandRequestExtension(
             ILogger<LoggingCommandRequestExtension> logger,
-            IQueue<CommandRequestWrapper> queue)
+            IQueue<CommandRequestWrapper> queue,
+            CommandRequestStorage storage = null)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(queue, nameof(queue));
 
             this.logger = logger;
             this.queue = queue;
+            this.storage = storage;
         }
 
         public override async Task InvokeAsync<TCommand, TResponse>(
@@ -54,6 +57,8 @@
 
             await context.Response.Location($"api/commands/{command.Id}/response").AnyContext();
             await context.Response.Header("x-commandid", command.Id).AnyContext();
+            await this.StoreCommand(wrapper).AnyContext();
+
             // the extension chain is terminated here
         }
 
@@ -74,8 +79,18 @@
 
             await context.Response.Location($"api/commands/{command.Id}/response").AnyContext();
             await context.Response.Header("x-commandid", command.Id).AnyContext();
+            await this.StoreCommand(wrapper).AnyContext();
 
             // the extension chain is terminated here
+        }
+
+        private async Task StoreCommand(CommandRequestWrapper wrapper)
+        {
+            if (this.storage != null)
+            {
+                // optionaly store the command/response so it can later be retrieved by the client (because the command was queued with no direct response)
+                await this.storage.SaveAsync(wrapper).AnyContext();
+            }
         }
     }
 }

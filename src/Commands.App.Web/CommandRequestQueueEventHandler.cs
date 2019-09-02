@@ -52,6 +52,7 @@
                         try
                         {
                             request.Item.Data.Started = DateTimeOffset.UtcNow;
+                            await this.StoreCommand(request).AnyContext();
                             var response = await mediator.Send(request.Item.Data.Command).AnyContext(); // handler will be scoped too
                             request.Item.Data.Completed = DateTimeOffset.UtcNow;
                             request.Item.Data.Status = CommandRequestStates.Finished;
@@ -79,17 +80,21 @@
                             this.logger.LogCritical(ex, ex.Message);
                         }
 
-                        if (this.storage != null)
-                        {
-                            // optionaly store the command/response so it can later be retrieved by the client (because the command was queued with no direct response)
-                            this.logger.LogInformation($"SAVE {request.Item.Data.Id}");
-                            await this.storage.SaveAsync(request.Item.Data).AnyContext();
-                        }
+                        await this.StoreCommand(request).AnyContext();
                     }
                 }
             }
 
             return true;
+        }
+
+        private async Task StoreCommand(QueueEvent<CommandRequestWrapper> request)
+        {
+            if (this.storage != null)
+            {
+                // optionaly store the command/response so it can later be retrieved by the client (because the command was queued with no direct response)
+                await this.storage.SaveAsync(request.Item.Data).AnyContext();
+            }
         }
     }
 }
