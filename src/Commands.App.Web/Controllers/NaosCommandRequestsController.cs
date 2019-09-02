@@ -31,7 +31,7 @@
         }
 
         [HttpGet]
-        [Route("metrics/queue")]
+        [Route("queue/metrics")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [OpenApiTag("Naos Commands")]
