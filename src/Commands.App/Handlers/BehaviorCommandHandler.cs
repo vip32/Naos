@@ -28,7 +28,7 @@
         /// <param name="behaviors">The behaviors.</param>
         protected BehaviorCommandHandler(
             ILogger logger,
-            IEnumerable<ICommandBehavior> behaviors)
+            IEnumerable<ICommandBehavior> behaviors = null)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
 

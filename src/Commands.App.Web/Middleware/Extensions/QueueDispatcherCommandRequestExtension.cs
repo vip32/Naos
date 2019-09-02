@@ -22,7 +22,7 @@
     ///                                      > Send Command < CommandHandler
     ///
     /// </summary>
-    public class QueueDispatcherCommandRequestExtension : CommandRequestBaseExtension
+    public class QueueDispatcherCommandRequestExtension : CommandRequestExtension
     {
         private readonly ILogger<LoggingCommandRequestExtension> logger;
         private readonly IQueue<CommandWrapper> queue;

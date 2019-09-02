@@ -6,7 +6,7 @@
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
 
-    public class LoggingCommandRequestExtension : CommandRequestBaseExtension
+    public class LoggingCommandRequestExtension : CommandRequestExtension
     {
         private readonly ILogger<LoggingCommandRequestExtension> logger;
 

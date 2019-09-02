@@ -11,6 +11,6 @@
         Task InvokeAsync<TCommand>(TCommand command, RequestCommandRegistration<TCommand> registration, HttpContext context)
             where TCommand : Command<object>;
 
-        CommandRequestBaseExtension SetNext(ICommandRequestExtension extension);
+        CommandRequestExtension SetNext(ICommandRequestExtension extension);
     }
 }

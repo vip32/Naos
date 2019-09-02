@@ -8,7 +8,7 @@
     using Naos.Foundation;
     using Newtonsoft.Json.Linq;
 
-    public class MediatorDispatcherCommandRequestExtension : CommandRequestBaseExtension
+    public class MediatorDispatcherCommandRequestExtension : CommandRequestExtension
     {
         private readonly ILogger<LoggingCommandRequestExtension> logger;
         private readonly IMediator mediator;

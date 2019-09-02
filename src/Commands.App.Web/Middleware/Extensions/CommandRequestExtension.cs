@@ -4,11 +4,11 @@
     using Microsoft.AspNetCore.Http;
     using Naos.Foundation;
 
-    public abstract class CommandRequestBaseExtension : ICommandRequestExtension
+    public abstract class CommandRequestExtension : ICommandRequestExtension
     {
         private ICommandRequestExtension next;
 
-        public CommandRequestBaseExtension SetNext(ICommandRequestExtension extension)
+        public CommandRequestExtension SetNext(ICommandRequestExtension extension)
         {
             this.next = extension;
 
