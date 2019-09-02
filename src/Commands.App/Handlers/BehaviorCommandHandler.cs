@@ -13,10 +13,10 @@
     /// </summary>
     /// <typeparam name="TCommand">The type of the request.</typeparam>
     /// <typeparam name="TResponse">Return value of the wrapped command handler.</typeparam>
-    /// <seealso cref="App.BaseCommandHandler{TRequest, TResponse}" />
+    /// <seealso cref="App.CommandHandler{TRequest, TResponse}" />
     /// <seealso cref="MediatR.IRequestHandler{Command{TResponse}, CommandResponse{TResponse}}" />
     public abstract class BehaviorCommandHandler<TCommand, TResponse>
-        : BaseCommandHandler<TCommand, TResponse>
+        : CommandHandler<TCommand, TResponse>
         where TCommand : Command<TResponse>
     {
         private readonly IEnumerable<ICommandBehavior> behaviors;
