@@ -12,11 +12,11 @@
     public class CommandRequestQueueProcessor : IStartupTask
     {
         private readonly ILogger<CommandRequestQueueProcessor> logger;
-        private readonly IQueue<CommandWrapper> queue;
+        private readonly IQueue<CommandRequestWrapper> queue;
 
         public CommandRequestQueueProcessor(
             ILoggerFactory loggerFactory,
-            IQueue<CommandWrapper> queue = null)
+            IQueue<CommandRequestWrapper> queue = null)
         {
             EnsureArg.IsNotNull(loggerFactory, nameof(loggerFactory));
 

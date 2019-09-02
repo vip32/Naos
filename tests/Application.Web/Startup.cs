@@ -47,8 +47,8 @@
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IQueue<CommandWrapper>>(sp =>
-                new InMemoryQueue<CommandWrapper>(o => o
+            services.AddSingleton<IQueue<CommandRequestWrapper>>(sp =>
+                new InMemoryQueue<CommandRequestWrapper>(o => o
                         .Mediator(sp.GetRequiredService<IMediator>())
                         .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                         .RetryDelay(TimeSpan.FromMinutes(1))

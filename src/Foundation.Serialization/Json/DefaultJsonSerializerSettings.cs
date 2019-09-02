@@ -15,10 +15,16 @@
                 NullValueHandling = NullValueHandling.Ignore,
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),
                 TypeNameHandling = TypeNameHandling.None,
+                //DateParseHandling = DateParseHandling.DateTimeOffset,
+                //DateFormatHandling = DateFormatHandling.IsoDateFormat,
+                //DateTimeZoneHandling = DateTimeZoneHandling.Utc,
                 Converters = new List<JsonConverter>
                 {
                     new StringEnumConverter(),
-                    new IsoDateTimeConverter()
+                    new IsoDateTimeConverter
+                    {
+                        DateTimeFormat = "yyyy-MM-ddTHH:mm:ss.fffffffZ" // utc, no timezone offset (+0:00)
+                    }
                 }
             };
         }

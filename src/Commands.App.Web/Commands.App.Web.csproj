@@ -26,6 +26,8 @@
     <ProjectReference Include="..\Commands.Domain\Commands.Domain.csproj" />
     <ProjectReference Include="..\Configuration.App.Web\Configuration.App.Web.csproj" />
     <ProjectReference Include="..\Configuration.App\Configuration.App.csproj" />
+    <ProjectReference Include="..\FileStorage.Infrastructure.FileSystem\FileStorage.Infrastructure.FileSystem.csproj" />
+    <ProjectReference Include="..\FileStorage\FileStorage.csproj" />
     <ProjectReference Include="..\Foundation.Application.Web\Application.Web.csproj" />
     <ProjectReference Include="..\Foundation.ContentTypes\ContentTypes.csproj" />
     <ProjectReference Include="..\Foundation.Application.Web.Startup\Application.Web.Startup.csproj" />

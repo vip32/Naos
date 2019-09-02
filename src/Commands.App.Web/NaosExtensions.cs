@@ -2,9 +2,14 @@
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.IO;
     using EnsureThat;
+    using Microsoft.Extensions.Logging;
     using Naos.Core.Commands.App;
     using Naos.Core.Commands.App.Web;
+    using Naos.Core.FileStorage;
+    using Naos.Core.FileStorage.Domain;
+    using Naos.Core.FileStorage.Infrastructure;
     using Naos.Foundation;
     using NSwag.Generation.Processors;
 
@@ -32,9 +37,12 @@
             optionsAction?.Invoke(new CommandRequestOptions(options.Context));
             options.Context.Services.AddSingleton<IDocumentProcessor, CommandRequestDocumentProcessor>();
             options.Context.Services.AddStartupTask<CommandRequestQueueProcessor>(new TimeSpan(0, 0, 3));
-            //options.Context.Services.AddScoped(sp => new CommandRequestQueueEventHandler());
+            options.Context.Services.AddSingleton(sp => new CommandRequestStorage(
+                new FileStorageLoggingDecorator(
+                    sp.GetRequiredService<ILoggerFactory>(),
+                    new FolderFileStorage(o => o.Folder(Path.Combine(Path.GetTempPath(), "naos_commands/requests")))))); // optional
 
-            // needed for request dispatcher extensions, so the can be used on the registrations
+            // needed for request dispatcher extensions, so they can be used on the registrations
             options.Context.Services
                 .Scan(scan => scan // https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/
                     .FromExecutingAssembly()

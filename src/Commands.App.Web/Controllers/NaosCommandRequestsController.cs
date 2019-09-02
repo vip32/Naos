@@ -1,5 +1,6 @@
 ﻿namespace Naos.Core.Commands.App.Web.Controllers
 {
+    using System.IO;
     using System.Net;
     using System.Threading.Tasks;
     using EnsureThat;
@@ -9,27 +10,31 @@
     using Naos.Foundation;
     using NSwag.Annotations;
 
-    [Route("api/queueing/commands")]
+    [Route("api/commands")]
     [ApiController]
     public class NaosCommandRequestsController : ControllerBase // or use normal middleware?  https://stackoverflow.com/questions/47617994/how-to-use-a-controller-in-another-assembly-in-asp-net-core-mvc-2-0?rq=1
     {
         private readonly ILogger<NaosCommandRequestsController> logger;
-        private readonly IQueue<CommandWrapper> queue;
+        private readonly IQueue<CommandRequestWrapper> queue;
+        private readonly CommandRequestStorage commandRequestStorage;
 
         public NaosCommandRequestsController(
             ILogger<NaosCommandRequestsController> logger,
-            IQueue<CommandWrapper> queue = null)
+            IQueue<CommandRequestWrapper> queue = null,
+            CommandRequestStorage commandRequestStorage = null)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
 
             this.logger = logger;
             this.queue = queue;
+            this.commandRequestStorage = commandRequestStorage;
         }
 
         [HttpGet]
+        [Route("metrics/queue")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [OpenApiTag("Naos Queuing")]
+        [OpenApiTag("Naos Commands")]
         public async Task<ActionResult<QueueMetrics>> Get()
         {
             if (this.queue != null)
@@ -48,15 +53,45 @@
         [Route("{id}")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [OpenApiTag("Naos Queuing")]
+        [OpenApiTag("Naos Commands")]
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        public async Task<ActionResult<CommandWrapper>> Get(string id)
+        public async Task<ActionResult<CommandRequestWrapper>> Get(string id)
         {
-            if (this.queue != null)
+            if (this.commandRequestStorage != null)
             {
-                // TODO: get a command and response
+                try
+                {
+                    return this.Ok(await this.commandRequestStorage.GetAsync(id).AnyContext());
+                }
+                catch (FileNotFoundException)
+                {
+                    return this.NotFound();
+                }
+            }
+            else
+            {
+                return this.NotFound();
+            }
+        }
 
-                return this.Ok(new CommandWrapper());
+        [HttpGet]
+        [Route("{id}/response")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [OpenApiTag("Naos Commands")]
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+        public async Task<ActionResult<CommandRequestWrapper>> GetResponse(string id)
+        {
+            if (this.commandRequestStorage != null)
+            {
+                try
+                {
+                    return this.Ok((await this.commandRequestStorage.GetAsync(id).AnyContext()).Response);
+                }
+                catch (FileNotFoundException)
+                {
+                    return this.NotFound();
+                }
             }
             else
             {
