@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Naos.Core.Commands.App.Web</AssemblyName>
+    <RootNamespace>Naos.Core.Commands.App.Web</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Humanizer.Core" Version="2.6.2" />
+    <PackageReference Include="NJsonSchema" Version="10.0.23" />
+    <PackageReference Include="NSwag.Annotations" Version="13.0.6" />
+    <PackageReference Include="NSwag.Generation" Version="13.0.6" />
+    <PackageReference Include="Scrutor" Version="3.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
+    <!--<PackageReference Include="Microsoft.Extensions.Options" Version="2.2.0" />-->
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Api.Analyzers" Version="2.2.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="MediatR" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Commands.App\Commands.App.csproj" />
+    <ProjectReference Include="..\Commands.Domain\Commands.Domain.csproj" />
+    <ProjectReference Include="..\Configuration.App.Web\Configuration.App.Web.csproj" />
+    <ProjectReference Include="..\Configuration.App\Configuration.App.csproj" />
+    <ProjectReference Include="..\Foundation.Application.Web\Application.Web.csproj" />
+    <ProjectReference Include="..\Foundation.ContentTypes\ContentTypes.csproj" />
+    <ProjectReference Include="..\Foundation.Application.Web.Startup\Application.Web.Startup.csproj" />
+    <ProjectReference Include="..\Queueing\Queueing.csproj" />
+  </ItemGroup>
+
+</Project>

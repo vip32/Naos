@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Queueing.App.Web
+﻿namespace Naos.Core.Commands.App.Web
 {
     using Naos.Core.Commands.App;
 

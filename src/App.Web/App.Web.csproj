@@ -17,18 +17,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Commands.App\Commands.App.csproj" />
+    <ProjectReference Include="..\Commands.App.Web\Commands.App.Web.csproj" />
+    <ProjectReference Include="..\Correlation.App\RequestCorrelation.App.csproj" />
+    <ProjectReference Include="..\Filtering.App\RequestFiltering.App.csproj" />
     <ProjectReference Include="..\Foundation.Application.Web\Application.Web.csproj" />
     <ProjectReference Include="..\Foundation.Domain.Repositories\Domain.Repositories.csproj" />
     <ProjectReference Include="..\Foundation.Domain.Specifications\Domain.Specifications.csproj" />
     <ProjectReference Include="..\Foundation.Domain\Domain.csproj" />
     <ProjectReference Include="..\Foundation.Extensions\Extensions.csproj" />
-    <ProjectReference Include="..\Correlation.App\RequestCorrelation.App.csproj" />
-    <ProjectReference Include="..\Filtering.App\RequestFiltering.App.csproj" />
     <ProjectReference Include="..\Authentication.App.Web\Authentication.App.Web.csproj" />
     <ProjectReference Include="..\JobScheduling.App.Web\JobScheduling.App.Web.csproj" />
     <ProjectReference Include="..\Operations.App.Web\Operations.App.Web.csproj" />
-    <ProjectReference Include="..\Queueing.App.Web.Commands\Queueing.App.Web.Commands.csproj" />
     <ProjectReference Include="..\Queueing.App.Web\Queueing.App.Web.csproj" />
     <ProjectReference Include="..\ServiceDiscovery.App.Web.Router\ServiceDiscovery.App.Web.Router.csproj" />
     <ProjectReference Include="..\Configuration.App.Web\Configuration.App.Web.csproj" />

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Queueing.App.Web.Controllers
+﻿namespace Naos.Core.Commands.App.Web.Controllers
 {
     using System.Net;
     using System.Threading.Tasks;

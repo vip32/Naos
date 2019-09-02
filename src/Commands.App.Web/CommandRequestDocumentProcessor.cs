@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.App.Web
+﻿namespace Naos.Core.Commands.App.Web
 {
     using System.Collections.Generic;
     using System.Linq;
