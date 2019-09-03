@@ -53,6 +53,8 @@
         [Route("{id}")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.Accepted)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [OpenApiTag("Naos Commands")]
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<ActionResult<CommandRequestWrapper>> Get(string id)
@@ -78,9 +80,11 @@
         [Route("{id}/response")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.Accepted)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [OpenApiTag("Naos Commands")]
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        public async Task<ActionResult<CommandRequestWrapper>> GetResponse(string id)
+        public async Task<ActionResult<object>> GetResponse(string id)
         {
             if (this.commandRequestStorage != null)
             {

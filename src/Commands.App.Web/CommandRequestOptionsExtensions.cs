@@ -15,18 +15,19 @@
     public static class CommandRequestOptionsExtensions
     {
         public static CommandRequestOptions GetQueued<TCommandRequest, TResponse>(
-            this CommandRequestOptions options, string route, Func<TCommandRequest, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null)
+            this CommandRequestOptions options, string route, string groupName = null, Func<TCommandRequest, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null)
             where TCommandRequest : Command<TResponse>
         {
             return options.Get<TCommandRequest, TResponse>(
                 route,
                 HttpStatusCode.Accepted,
+                groupName,
                 onSuccess,
                 extensions: new[] { typeof(QueueDispatcherCommandRequestExtension) }.Insert(extensions));
         }
 
         public static CommandRequestOptions Get<TCommandRequest, TResponse>(
-        this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.OK, Func<TCommandRequest, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null)
+        this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.OK, string groupName = null, Func<TCommandRequest, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null)
         where TCommandRequest : Command<TResponse>
         {
             EnsureArg.IsNotNull(options, nameof(options));
@@ -36,6 +37,7 @@
                 sp => new CommandRequestRegistration<TCommandRequest, TResponse>
                 {
                     Route = route,
+                    OpenApiGroupName = groupName,
                     RequestMethod = "get",
                     OnSuccessStatusCode = onSuccessStatusCode,
                     OnSuccess = onSuccess,
@@ -46,18 +48,19 @@
         }
 
         public static CommandRequestOptions GetQueued<TCommandRequest>(
-            this CommandRequestOptions options, string route, Func<TCommandRequest, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null)
+            this CommandRequestOptions options, string route, string groupName = null, Func<TCommandRequest, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null)
             where TCommandRequest : Command<object>
         {
             return options.Get<TCommandRequest>(
                 route,
                 HttpStatusCode.Accepted,
+                groupName,
                 onSuccess,
                 extensions: new[] { typeof(QueueDispatcherCommandRequestExtension) }.Insert(extensions));
         }
 
         public static CommandRequestOptions Get<TCommandRequest>(
-            this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.OK, Func<TCommandRequest, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null)
+            this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.OK, string groupName = null, Func<TCommandRequest, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null)
             where TCommandRequest : Command<object>
         {
             EnsureArg.IsNotNull(options, nameof(options));
@@ -67,6 +70,7 @@
                 sp => new RequestCommandRegistration<TCommandRequest>
                 {
                     Route = route,
+                    OpenApiGroupName = groupName,
                     RequestMethod = "get",
                     OnSuccessStatusCode = onSuccessStatusCode,
                     OnSuccess = onSuccess,
@@ -77,18 +81,19 @@
         }
 
         public static CommandRequestOptions PostQueued<TCommandRequest, TResponse>(
-            this CommandRequestOptions options, string route, Func<TCommandRequest, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null)
+            this CommandRequestOptions options, string route, Func<TCommandRequest, HttpContext, Task> onSuccess = null, string groupName = null, IEnumerable<Type> extensions = null)
             where TCommandRequest : Command<TResponse>
         {
             return options.Post<TCommandRequest, TResponse>(
                 route,
                 HttpStatusCode.Accepted,
+                groupName,
                 onSuccess,
                 extensions: new[] { typeof(QueueDispatcherCommandRequestExtension) }.Insert(extensions));
         }
 
         public static CommandRequestOptions Post<TCommandRequest, TResponse>(
-            this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.Accepted, Func<TCommandRequest, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null)
+            this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.Accepted, string groupName = null, Func<TCommandRequest, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null)
             where TCommandRequest : Command<TResponse>
         {
             EnsureArg.IsNotNull(options, nameof(options));
@@ -98,6 +103,7 @@
                 sp => new CommandRequestRegistration<TCommandRequest, TResponse>
                 {
                     Route = route,
+                    OpenApiGroupName = groupName,
                     RequestMethod = "post",
                     OnSuccessStatusCode = onSuccessStatusCode,
                     OnSuccess = onSuccess,
@@ -108,18 +114,19 @@
         }
 
         public static CommandRequestOptions PostQueued<TCommandRequest>(
-            this CommandRequestOptions options, string route, Func<TCommandRequest, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null)
+            this CommandRequestOptions options, string route, Func<TCommandRequest, HttpContext, Task> onSuccess = null, string groupName = null, IEnumerable<Type> extensions = null)
             where TCommandRequest : Command<object>
         {
             return options.Post<TCommandRequest>(
                 route,
                 HttpStatusCode.Accepted,
+                groupName,
                 onSuccess,
                 extensions: new[] { typeof(QueueDispatcherCommandRequestExtension) }.Insert(extensions));
         }
 
         public static CommandRequestOptions Post<TCommandRequest>(
-            this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.Accepted, Func<TCommandRequest, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null)
+            this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.Accepted, string groupName = null, Func<TCommandRequest, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null)
             where TCommandRequest : Command<object>
         {
             EnsureArg.IsNotNull(options, nameof(options));
@@ -129,6 +136,7 @@
                 sp => new RequestCommandRegistration<TCommandRequest>
                 {
                     Route = route,
+                    OpenApiGroupName = groupName,
                     RequestMethod = "post",
                     OnSuccessStatusCode = onSuccessStatusCode,
                     OnSuccess = onSuccess,
@@ -139,18 +147,19 @@
         }
 
         public static CommandRequestOptions PutQueued<TCommandRequest, TResponse>(
-            this CommandRequestOptions options, string route, Func<TCommandRequest, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null)
+            this CommandRequestOptions options, string route, Func<TCommandRequest, HttpContext, Task> onSuccess = null, string groupName = null, IEnumerable<Type> extensions = null)
             where TCommandRequest : Command<TResponse>
         {
             return options.Put<TCommandRequest, TResponse>(
                 route,
                 HttpStatusCode.Accepted,
+                groupName,
                 onSuccess,
                 extensions: new[] { typeof(QueueDispatcherCommandRequestExtension) }.Insert(extensions));
         }
 
         public static CommandRequestOptions Put<TCommandRequest, TResponse>(
-            this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.Accepted, Func<TCommandRequest, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null)
+            this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.Accepted, string groupName = null, Func<TCommandRequest, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null)
             where TCommandRequest : Command<TResponse>
         {
             EnsureArg.IsNotNull(options, nameof(options));
@@ -160,6 +169,7 @@
                 sp => new CommandRequestRegistration<TCommandRequest, TResponse>
                 {
                     Route = route,
+                    OpenApiGroupName = groupName,
                     RequestMethod = "put",
                     OnSuccessStatusCode = onSuccessStatusCode,
                     OnSuccess = onSuccess,
@@ -170,18 +180,19 @@
         }
 
         public static CommandRequestOptions PutQueued<TCommandRequest>(
-            this CommandRequestOptions options, string route, Func<TCommandRequest, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null)
+            this CommandRequestOptions options, string route, Func<TCommandRequest, HttpContext, Task> onSuccess = null, string groupName = null, IEnumerable<Type> extensions = null)
             where TCommandRequest : Command<object>
         {
             return options.Put<TCommandRequest>(
                 route,
                 HttpStatusCode.Accepted,
+                groupName,
                 onSuccess,
                 extensions: new[] { typeof(QueueDispatcherCommandRequestExtension) }.Insert(extensions));
         }
 
         public static CommandRequestOptions Put<TCommandRequest>(
-            this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.Accepted, Func<TCommandRequest, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null)
+            this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.Accepted, string groupName = null, Func<TCommandRequest, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null)
             where TCommandRequest : Command<object>
         {
             EnsureArg.IsNotNull(options, nameof(options));
@@ -191,6 +202,7 @@
                 sp => new RequestCommandRegistration<TCommandRequest>
                 {
                     Route = route,
+                    OpenApiGroupName = groupName,
                     RequestMethod = "put",
                     OnSuccessStatusCode = onSuccessStatusCode,
                     OnSuccess = onSuccess,
@@ -201,18 +213,19 @@
         }
 
         public static CommandRequestOptions DeleteQueued<TCommandRequest>(
-            this CommandRequestOptions options, string route, Func<TCommandRequest, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null)
+            this CommandRequestOptions options, string route, Func<TCommandRequest, HttpContext, Task> onSuccess = null, string groupName = null, IEnumerable<Type> extensions = null)
             where TCommandRequest : Command<object>
         {
             return options.Delete<TCommandRequest>(
                 route,
                 HttpStatusCode.Accepted,
+                groupName,
                 onSuccess,
                 extensions: new[] { typeof(QueueDispatcherCommandRequestExtension) }.Insert(extensions));
         }
 
         public static CommandRequestOptions Delete<TCommandRequest>(
-            this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.NoContent, Func<TCommandRequest, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null)
+            this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.NoContent, string groupName = null, Func<TCommandRequest, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null)
             where TCommandRequest : Command<object>
         {
             EnsureArg.IsNotNull(options, nameof(options));
@@ -222,6 +235,7 @@
                 sp => new RequestCommandRegistration<TCommandRequest>
                 {
                     Route = route,
+                    OpenApiGroupName = groupName,
                     RequestMethod = "delete",
                     OnSuccessStatusCode = onSuccessStatusCode,
                     OnSuccess = onSuccess,
