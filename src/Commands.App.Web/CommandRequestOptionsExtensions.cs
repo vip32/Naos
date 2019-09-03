@@ -19,6 +19,9 @@
     using Naos.Core.Queueing.Domain;
     using Naos.Core.Queueing.Infrastructure.Azure;
     using Naos.Foundation;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using Newtonsoft.Json.Serialization;
 
     [ExcludeFromCodeCoverage]
     public static class CommandRequestOptionsExtensions
@@ -357,7 +360,7 @@
                     sp.GetRequiredService<ILoggerFactory>(),
                     new AzureBlobFileStorage(o => o
                         .ConnectionString(connectionString.EmptyToNull() ?? options.Context.Configuration["naos:commands:azureBlobStorage:connectionString"])
-                        .ContainerName($"{containerName}_{HashAlgorithm.ComputeMd5Hash(options.Context.Descriptor.Name)}")))));
+                        .ContainerName($"{containerName}-{HashAlgorithm.ComputeMd5Hash(options.Context.Descriptor.Name)}")))));
 
             return options;
         }
@@ -404,7 +407,8 @@
                         .Mediator(sp.GetRequiredService<IMediator>())
                         .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                         .ConnectionString(connectionString.EmptyToNull() ?? options.Context.Configuration["naos:commands:azureStorageQueue:connectionString"])
-                        .Name($"{name}_{HashAlgorithm.ComputeMd5Hash(options.Context.Descriptor.Name)}")));
+                        .Serializer(new JsonNetSerializer(TypedJsonSerializerSettings.Create())) // needs type information in json to deserialize correctly (which is needed for mediator.send)
+                        .QueueName($"{name}-{HashAlgorithm.ComputeMd5Hash(options.Context.Descriptor.Name)}")));
 
             return options;
         }

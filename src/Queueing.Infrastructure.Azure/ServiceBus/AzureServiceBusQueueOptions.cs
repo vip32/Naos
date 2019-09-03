@@ -99,7 +99,7 @@
 
         public QueueDescription AsQueueDescription()
         {
-            var result = new QueueDescription(this.Name)
+            var result = new QueueDescription(this.QueueName)
             {
                 LockDuration = this.ProcessInterval,
                 MaxDeliveryCount = this.Retries + 1

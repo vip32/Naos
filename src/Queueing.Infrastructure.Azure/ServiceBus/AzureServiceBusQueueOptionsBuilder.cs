@@ -30,7 +30,7 @@
 
         public AzureServiceBusQueueOptionsBuilder Name(string name)
         {
-            this.Target.Name = name ?? throw new ArgumentNullException(nameof(name));
+            this.Target.QueueName = name ?? throw new ArgumentNullException(nameof(name));
             return this;
         }
 

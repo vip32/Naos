@@ -136,11 +136,11 @@
                         .AddRequests(o => o
                             .Post<CreateCustomerCommand>("api/commands/customers/create", HttpStatusCode.Created, "Customers", onSuccess: (cmd, ctx) => ctx.Response.Location($"api/customers/{cmd.Customer.Id}"))
                             .Get<GetActiveCustomersQuery, IEnumerable<Sample.Customers.Domain.Customer>>("api/commands/customers/active", groupName: "Customers")
-                            .UseInMemoryQueue()
-                            //.UseAzureStorageQueue()
-                            .UseInMemoryStorage()
+                            //.UseInMemoryQueue()
+                            .UseAzureStorageQueue()
+                            //.UseInMemoryStorage()
                             //.UseFolderStorage()
-                            //.UseAzureBlobStorage()
+                            .UseAzureBlobStorage()
                             .GetQueued<PingCommand>("api/commands/queue/ping")
                             .GetQueued<GetActiveCustomersQuery, IEnumerable<Sample.Customers.Domain.Customer>>("api/commands/queue/customers/active", groupName: "Customers")))
                     .AddOperations(o => o

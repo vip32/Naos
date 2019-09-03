@@ -19,8 +19,8 @@
             this.Options = options ?? Factory<TOptions>.Create();
             this.Logger = options.CreateLogger<TData>();
             this.Serializer = options.Serializer ?? DefaultSerializer.Create;
-            options.Name = options.Name ?? typeof(TData).PrettyName().Replace("<", "_").Replace(">", "_").ToLower().Pluralize();
-            this.Name = options.Name;
+            options.QueueName ??= typeof(TData).PrettyName().Replace("<", "_").Replace(">", "_").ToLower().Pluralize();
+            this.Name = options.QueueName;
             this.DisposedCancellationTokenSource = new CancellationTokenSource();
         }
 
