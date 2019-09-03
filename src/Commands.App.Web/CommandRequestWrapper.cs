@@ -8,7 +8,7 @@
 
         public string CorrelationId { get; set; }
 
-        public string Status { get; set; } = CommandRequestStates.Accepted;
+        public CommandRequestStatus Status { get; set; }
 
         public string StatusDescription { get; set; } // Finished datetime/ Failure message
 

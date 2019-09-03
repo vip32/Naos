@@ -49,7 +49,7 @@
 
         public bool HasResponse => this.GetType().PrettyName().Contains(","); // is a second generic TResponse defined?
 
-        //public bool IsQueued { get; set; }
+        public bool IsQueued { get; set; }
 
         public IEnumerable<Type> ExtensionTypesBefore { get; set; } = new[] { typeof(LoggingCommandRequestExtension) };
 
@@ -85,7 +85,7 @@
         public new Func<TCommand, HttpContext, Task> OnSuccess { get; set; }
     }
 
-    public class RequestCommandRegistration<TCommand> : CommandRequestRegistration
+    public class CommandRequestRegistration<TCommand> : CommandRequestRegistration
         where TCommand : Command<object>
         //where TResponse : CommandResponse<TResponse>
     {

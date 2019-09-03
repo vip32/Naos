@@ -8,16 +8,16 @@
 
     public class FileStoragePersistCommandBehavior : ICommandBehavior
     {
-        private readonly IFileStorage fileStorage;
+        private readonly IFileStorage storage;
         private readonly ISerializer serializer;
         private readonly string pathTemplate;
 
-        public FileStoragePersistCommandBehavior(IFileStorage filestorage, ISerializer serializer = null, string pathTemplate = "{id}-{type}.json")
+        public FileStoragePersistCommandBehavior(IFileStorage storage, ISerializer serializer = null, string pathTemplate = "{id}-{type}.json")
         {
-            EnsureArg.IsNotNull(filestorage, nameof(filestorage));
+            EnsureArg.IsNotNull(storage, nameof(storage));
 
-            this.fileStorage = filestorage;
-            this.serializer = serializer ?? new JsonNetSerializer();
+            this.storage = storage;
+            this.serializer = serializer ?? new JsonNetSerializer(DefaultJsonSerializerSettings.Create());
             this.pathTemplate = pathTemplate ?? "{id}-{type}";
         }
 
@@ -34,7 +34,7 @@
                 .Replace("{id}", request.Id)
                 .Replace("{type}", request.GetType().PrettyName(false));
 
-            await this.fileStorage.SaveFileObjectAsync(path, request, this.serializer).AnyContext();
+            await this.storage.SaveFileObjectAsync(path, request, this.serializer).AnyContext();
 
             return await Task.FromResult(new CommandBehaviorResult()).AnyContext();
         }

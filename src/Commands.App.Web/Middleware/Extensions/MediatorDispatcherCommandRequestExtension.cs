@@ -53,13 +53,13 @@
                 }
             }
 
-            await context.Response.Header("x-commandid", command.Id).AnyContext();
+            await context.Response.Header(CommandRequestHeaders.CommandId, command.Id).AnyContext();
             // the extension chain is terminated here
         }
 
         public override async Task InvokeAsync<TCommand>(
             TCommand command,
-            RequestCommandRegistration<TCommand> registration,
+            CommandRequestRegistration<TCommand> registration,
             HttpContext context)
         {
             this.logger.LogInformation($"{{LogKey:l}} request command dispatch (name={registration.CommandType.PrettyName()}, id={command.Id}), type=mediator)", LogKeys.AppCommand);
@@ -79,7 +79,7 @@
                 }
             }
 
-            await context.Response.Header("x-commandid", command.Id).AnyContext();
+            await context.Response.Header(CommandRequestHeaders.CommandId, command.Id).AnyContext();
             // the extension chain is terminated here
         }
     }

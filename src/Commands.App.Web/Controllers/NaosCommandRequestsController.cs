@@ -16,18 +16,18 @@
     {
         private readonly ILogger<NaosCommandRequestsController> logger;
         private readonly IQueue<CommandRequestWrapper> queue;
-        private readonly CommandRequestStorage commandRequestStorage;
+        private readonly CommandRequestStore storage;
 
         public NaosCommandRequestsController(
             ILogger<NaosCommandRequestsController> logger,
             IQueue<CommandRequestWrapper> queue = null,
-            CommandRequestStorage commandRequestStorage = null)
+            CommandRequestStore storage = null)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
 
             this.logger = logger;
             this.queue = queue;
-            this.commandRequestStorage = commandRequestStorage;
+            this.storage = storage;
         }
 
         [HttpGet]
@@ -54,16 +54,39 @@
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [OpenApiTag("Naos Commands")]
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<ActionResult<CommandRequestWrapper>> Get(string id)
         {
-            if (this.commandRequestStorage != null)
+            if (this.storage != null)
             {
                 try
                 {
-                    return this.Ok(await this.commandRequestStorage.GetAsync(id).AnyContext());
+                    var command = await this.storage.GetAsync(id).AnyContext();
+                    if (command == null)
+                    {
+                        return this.NotFound();
+                    }
+                    else if (command.Status == CommandRequestStatus.Accepted)
+                    {
+                        return this.Accepted(command);
+                    }
+                    else if (command.Status == CommandRequestStatus.Failed)
+                    {
+                        this.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                        return new ObjectResult(command);
+                    }
+                    else if (command.Status == CommandRequestStatus.Cancelled)
+                    {
+                        this.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        return new ObjectResult(command);
+                    }
+                    else
+                    {
+                        return this.Ok(command);
+                    }
                 }
                 catch (FileNotFoundException)
                 {
@@ -81,16 +104,39 @@
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [OpenApiTag("Naos Commands")]
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<ActionResult<object>> GetResponse(string id)
         {
-            if (this.commandRequestStorage != null)
+            if (this.storage != null)
             {
                 try
                 {
-                    return this.Ok((await this.commandRequestStorage.GetAsync(id).AnyContext()).Response);
+                    var command = await this.storage.GetAsync(id).AnyContext();
+                    if (command == null)
+                    {
+                        return this.NotFound();
+                    }
+                    else if (command.Status == CommandRequestStatus.Accepted)
+                    {
+                        return this.Accepted(command.Response);
+                    }
+                    else if (command.Status == CommandRequestStatus.Failed)
+                    {
+                        this.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                        return new ObjectResult(command.Response);
+                    }
+                    else if (command.Status == CommandRequestStatus.Cancelled)
+                    {
+                        this.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        return new ObjectResult(command.Response);
+                    }
+                    else
+                    {
+                        return this.Ok(command.Response);
+                    }
                 }
                 catch (FileNotFoundException)
                 {

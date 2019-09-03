@@ -121,7 +121,7 @@
 
         private async Task HandleCommandWithoutResponse<TCommand>(
             object command,
-            RequestCommandRegistration<TCommand> registration,
+            CommandRequestRegistration<TCommand> registration,
             HttpContext context)
             where TCommand : Command<object>
         {

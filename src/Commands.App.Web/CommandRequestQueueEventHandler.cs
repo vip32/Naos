@@ -16,12 +16,12 @@
     {
         private readonly ILogger<CommandRequestQueueEventHandler> logger;
         private readonly IServiceScopeFactory serviceScopeFactory;
-        private readonly CommandRequestStorage storage;
+        private readonly CommandRequestStore storage;
 
         public CommandRequestQueueEventHandler(
             ILogger<CommandRequestQueueEventHandler> logger,
             IServiceScopeFactory serviceScopeFactory,
-            CommandRequestStorage storage = null)
+            CommandRequestStore storage = null)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(serviceScopeFactory, nameof(serviceScopeFactory));
@@ -55,7 +55,7 @@
                             await this.StoreCommand(request).AnyContext();
                             var response = await mediator.Send(request.Item.Data.Command).AnyContext(); // handler will be scoped too
                             request.Item.Data.Completed = DateTimeOffset.UtcNow;
-                            request.Item.Data.Status = CommandRequestStates.Finished;
+                            request.Item.Data.Status = CommandRequestStatus.Finished;
 
                             if (response != null)
                             {
@@ -67,14 +67,14 @@
                                 }
                                 else
                                 {
-                                    request.Item.Data.Status = CommandRequestStates.Cancelled;
+                                    request.Item.Data.Status = CommandRequestStatus.Cancelled;
                                     request.Item.Data.StatusDescription = jResponse.GetValueByPath<string>("cancelledReason");
                                 }
                             }
                         }
                         catch (Exception ex)
                         {
-                            request.Item.Data.Status = CommandRequestStates.Failed;
+                            request.Item.Data.Status = CommandRequestStatus.Failed;
                             request.Item.Data.StatusDescription = ex.GetFullMessage();
 
                             this.logger.LogCritical(ex, ex.Message);

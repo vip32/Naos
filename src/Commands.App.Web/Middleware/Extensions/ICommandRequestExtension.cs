@@ -8,7 +8,7 @@
         Task InvokeAsync<TCommand, TResponse>(TCommand command, CommandRequestRegistration<TCommand, TResponse> registration, HttpContext context)
             where TCommand : Command<TResponse>;
 
-        Task InvokeAsync<TCommand>(TCommand command, RequestCommandRegistration<TCommand> registration, HttpContext context)
+        Task InvokeAsync<TCommand>(TCommand command, CommandRequestRegistration<TCommand> registration, HttpContext context)
             where TCommand : Command<object>;
 
         CommandRequestExtension SetNext(ICommandRequestExtension extension);

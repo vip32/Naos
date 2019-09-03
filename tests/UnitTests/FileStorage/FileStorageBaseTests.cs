@@ -527,37 +527,37 @@
             }
         }
 
-        public virtual async Task WillRespectStreamOffsetAsync()
-        {
-            await this.ResetAsync();
+        //public virtual async Task WillRespectStreamOffsetAsync()
+        //{
+        //    await this.ResetAsync();
 
-            var storage = this.GetStorage();
-            if (storage == null)
-            {
-                return;
-            }
+        //    var storage = this.GetStorage();
+        //    if (storage == null)
+        //    {
+        //        return;
+        //    }
 
-            using (storage)
-            {
-                var path = "doe.txt";
-                using (var memoryStream = new MemoryStream())
-                {
-                    long offset;
-                    using (var writer = new StreamWriter(memoryStream, Encoding.UTF8, 1024, true))
-                    {
-                        writer.AutoFlush = true;
-                        await writer.WriteAsync("John");
-                        offset = memoryStream.Position;
-                        await writer.WriteAsync("Doe");
-                    }
+        //    using (storage)
+        //    {
+        //        var path = "doe.txt";
+        //        using (var memoryStream = new MemoryStream())
+        //        {
+        //            long offset;
+        //            using (var writer = new StreamWriter(memoryStream, Encoding.UTF8, 1024, true))
+        //            {
+        //                writer.AutoFlush = true;
+        //                await writer.WriteAsync("John");
+        //                offset = memoryStream.Position;
+        //                await writer.WriteAsync("Doe");
+        //            }
 
-                    memoryStream.Seek(offset, SeekOrigin.Begin);
-                    await storage.SaveFileAsync(path, memoryStream);
-                }
+        //            memoryStream.Seek(offset, SeekOrigin.Begin);
+        //            await storage.SaveFileAsync(path, memoryStream);
+        //        }
 
-                Assert.Equal("Doe", await storage.GetFileContentsAsync(path));
-            }
-        }
+        //        Assert.Equal("Doe", await storage.GetFileContentsAsync(path));
+        //    }
+        //}
 
         public virtual void CanUseDataDirectory()
         {

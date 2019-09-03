@@ -4,7 +4,6 @@
     using EnsureThat;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Commands.App.Web;
     using Naos.Core.Queueing.Domain;
     using Naos.Foundation;
 
@@ -26,12 +25,12 @@
     {
         private readonly ILogger<LoggingCommandRequestExtension> logger;
         private readonly IQueue<CommandRequestWrapper> queue;
-        private readonly CommandRequestStorage storage;
+        private readonly CommandRequestStore storage;
 
         public QueueDispatcherCommandRequestExtension(
             ILogger<LoggingCommandRequestExtension> logger,
             IQueue<CommandRequestWrapper> queue,
-            CommandRequestStorage storage = null)
+            CommandRequestStore storage = null)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(queue, nameof(queue));
@@ -56,7 +55,7 @@
             this.logger.LogInformation($"{{LogKey:l}} request command queue (enqueued=#{metrics.Enqueued}, queued=#{metrics.Queued})", LogKeys.AppCommand);
 
             await context.Response.Location($"api/commands/{command.Id}/response").AnyContext();
-            await context.Response.Header("x-commandid", command.Id).AnyContext();
+            await context.Response.Header(CommandRequestHeaders.CommandId, command.Id).AnyContext();
             await this.StoreCommand(wrapper).AnyContext();
 
             // the extension chain is terminated here
@@ -64,7 +63,7 @@
 
         public override async Task InvokeAsync<TCommand>(
             TCommand command,
-            RequestCommandRegistration<TCommand> registration,
+            CommandRequestRegistration<TCommand> registration,
             HttpContext context)
         {
             this.logger.LogInformation($"{{LogKey:l}} command request dispatch (name={registration.CommandType.PrettyName()}, id={command.Id}, type=queue)", LogKeys.AppCommand);
@@ -78,7 +77,7 @@
             this.logger.LogInformation($"{{LogKey:l}} request command queue (enqueued=#{metrics.Enqueued}, queued=#{metrics.Queued})", LogKeys.AppCommand);
 
             await context.Response.Location($"api/commands/{command.Id}/response").AnyContext();
-            await context.Response.Header("x-commandid", command.Id).AnyContext();
+            await context.Response.Header(CommandRequestHeaders.CommandId, command.Id).AnyContext();
             await this.StoreCommand(wrapper).AnyContext();
 
             // the extension chain is terminated here

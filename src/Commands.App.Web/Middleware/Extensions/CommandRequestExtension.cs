@@ -31,7 +31,7 @@
 
         public virtual async Task InvokeAsync<TCommand>(
             TCommand command,
-            RequestCommandRegistration<TCommand> registration,
+            CommandRequestRegistration<TCommand> registration,
             HttpContext context)
             where TCommand : Command<object>
         {
