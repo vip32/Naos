@@ -13,6 +13,7 @@
 
     public class CommandRequestDocumentProcessor : IDocumentProcessor
     {
+        private static readonly IDictionary<string, JsonSchema> Schemas = new Dictionary<string, JsonSchema>();
         private readonly IEnumerable<CommandRequestRegistration> registrations;
 
         public CommandRequestDocumentProcessor(IEnumerable<CommandRequestRegistration> registrations)
@@ -49,10 +50,25 @@
                 item.Add(method, operation);
 
                 var hasResponseModel = registration.ResponseType?.Name.SafeEquals("object") == false && !registration.IsQueued;
+                var description = registration.OpenApiResponseDescription ?? (hasResponseModel ? registration.ResponseType : null)?.FullPrettyName();
+                var jsonSchema = context.SchemaGenerator.Generate(registration.ResponseType, context.SchemaResolver);
+                // reuse some previously generated schemas, so schema $refs are avoided
+                if (!description.IsNullOrEmpty())
+                {
+                    if (Schemas.ContainsKey(description))
+                    {
+                        jsonSchema = Schemas[description];
+                    }
+                    else
+                    {
+                        Schemas.Add(description, jsonSchema);
+                    }
+                }
+
                 operation.Responses.Add(((int)registration.OnSuccessStatusCode).ToString(), new OpenApiResponse
                 {
-                    Description = registration.OpenApiResponseDescription ?? (hasResponseModel ? registration.ResponseType : null)?.FullPrettyName(),
-                    Schema = hasResponseModel ? context.SchemaGenerator.Generate(registration.ResponseType, context.SchemaResolver) : null,
+                    Description = description,
+                    Schema = hasResponseModel ? jsonSchema : null,
                     //Examples = hasResponseModel ? Factory.Create(registration.ResponseType) : null // header?
                 });
                 operation.Responses.Add(((int)HttpStatusCode.BadRequest).ToString(), new OpenApiResponse
@@ -136,7 +152,9 @@
                 operation.Parameters.Add(new OpenApiParameter
                 {
                     //Description = "request model",
-                    Kind = OpenApiParameterKind.Query,
+                    Kind = registration.Route.Contains($"{{{property.Name}", System.StringComparison.OrdinalIgnoreCase)
+                        ? OpenApiParameterKind.Path
+                        : OpenApiParameterKind.Query,
                     Name = property.Name.Camelize(),
                     Type = type,
                 });

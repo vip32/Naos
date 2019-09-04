@@ -26,6 +26,8 @@
                 options.Context.Services.AddSingleton<CommandRequestRegistration>(sp =>
                     new CommandRequestRegistration<EchoCommand, EchoCommandResponse> { Route = "api/commands/echo", RequestMethod = "get" });
                 options.Context.Services.AddSingleton<CommandRequestRegistration>(sp =>
+                    new CommandRequestRegistration<EchoCommand, EchoCommandResponse> { Route = "api/commands/echo/{message}", RequestMethod = "get" });
+                options.Context.Services.AddSingleton<CommandRequestRegistration>(sp =>
                     new CommandRequestRegistration<PingCommand> { Route = "api/commands/ping", RequestMethod = "get" });
             }
 

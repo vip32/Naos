@@ -1,6 +1,7 @@
 ﻿namespace Naos.Foundation
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
     using Microsoft.AspNetCore.Http;
@@ -10,7 +11,7 @@
 
     public class RouteMatcher
     {
-        public RouteValueDictionary Match(string routeTemplate, string requestPath, IQueryCollection query = null)
+        public IDictionary<string, object> Match(string routeTemplate, string requestPath, IQueryCollection query = null)
         {
             // The TemplateParser can only parse the route part (path), and not the query string.
             // If the template provided by the user also has a query string, we separate that and match it manually.
@@ -35,7 +36,7 @@
 
             if (matcher.TryMatch(requestPath.StartsWith("/", StringComparison.OrdinalIgnoreCase) ? requestPath : $"/{requestPath}", values))
             {
-                return EnsureParameterConstraints(template, values);
+                return this.EnsureParameterConstraints(template, values);
             }
             else
             {
@@ -43,9 +44,9 @@
             }
         }
 
-        private static RouteValueDictionary EnsureParameterConstraints(RouteTemplate template, RouteValueDictionary values)
+        private IDictionary<string, object> EnsureParameterConstraints(RouteTemplate template, RouteValueDictionary values)
         {
-            var result = new RouteValueDictionary();
+            var result = new Dictionary<string, object>();
 
             // fixup the possible parameter constraints (:int :bool :datetime :decimal :double :float :guid :long) https://docs.microsoft.com/en-us/aspnet/core/fundamentals/routing?view=aspnetcore-2.2#route-constraint-reference
             // after matching all values are of type string, regardless of parameter constraint

@@ -62,22 +62,21 @@
             if (this.options.Registration != null
                 && context.Request.Method.EqualsAny(this.options.Registration.RequestMethod.Split(';')))
             {
-                var match = this.options.RouteMatcher.Match(this.options.Registration.Route, context.Request.Path, context.Request.Query);
-                if (match != null)
+                var routeValues = this.options.RouteMatcher.Match(this.options.Registration.Route, context.Request.Path, context.Request.Query);
+                if (routeValues != null)
                 {
                     //this.logger.LogInformation($"{{LogKey:l}} received (name={this.options.Registration.CommandType.Name.SliceTill("Command").SliceTill("Query")})", LogKeys.AppCommand);
-
                     context.Response.ContentType = this.options.Registration.OpenApiProduces;
                     context.Response.StatusCode = (int)this.options.Registration.OnSuccessStatusCode;
                     object command = null;
 
                     if (context.Request.Method.SafeEquals("get") || context.Request.Method.SafeEquals("delete"))
                     {
-                        command = this.ParseQueryOperation(context);
+                        command = this.ParseQueryOperation(context, routeValues);
                     }
                     else if (context.Request.Method.SafeEquals("post") || context.Request.Method.SafeEquals("put") || context.Request.Method.SafeEquals(string.Empty))
                     {
-                        command = this.ParseBodyOperation(context);
+                        command = this.ParseBodyOperation(context, routeValues);
                     }
                     else
                     {
@@ -150,7 +149,7 @@
             }
         }
 
-        private object ParseQueryOperation(HttpContext context)
+        private object ParseQueryOperation(HttpContext context, IDictionary<string, object> routeValues)
         {
             var properties = new Dictionary<string, object>();
             foreach (var queryItem in QueryHelpers.ParseQuery(context.Request.QueryString.Value))
@@ -158,11 +157,12 @@
                 properties.Add(queryItem.Key, queryItem.Value);
             }
 
-            return Factory.Create(this.options.Registration.CommandType, properties);
+            return Factory.Create(this.options.Registration.CommandType, properties.AddOrUpdate(routeValues));
         }
 
-        private object ParseBodyOperation(HttpContext context)
+        private object ParseBodyOperation(HttpContext context, IDictionary<string, object> routeValues)
         {
+            // TODO: what todo with the routeValues, copy them on the body object?
             return SerializationHelper.JsonDeserialize(context.Request.Body, this.options.Registration.CommandType);
         }
 
