@@ -9,17 +9,17 @@
     /// </summary>
     public static partial class Extensions
     {
-        public static IOrderedQueryable<T> OrderByIf<T>(
-            this IQueryable<T> source,
-            IFindOptions<T> options)
+        public static IOrderedQueryable<TEntity> OrderByIf<TEntity>(
+            this IQueryable<TEntity> source,
+            IFindOptions<TEntity> options)
         {
             if (options?.Order == null && options?.Orders.IsNullOrEmpty() == true)
             {
-                return source as IOrderedQueryable<T>; // TODO: this returns null, find a way to return an IOrderedQueryable event if no orders are provided. possible?
+                return source as IOrderedQueryable<TEntity>; // TODO: this returns null, find a way to return an IOrderedQueryable event if no orders are provided. possible?
             }
 
-            IOrderedQueryable<T> result = null;
-            foreach (var order in (options?.Orders ?? new List<OrderOption<T>>()).Insert(options?.Order))
+            IOrderedQueryable<TEntity> result = null;
+            foreach (var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
             {
                 result = result == null
                         ? order.Direction == OrderDirection.Ascending

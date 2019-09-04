@@ -10,9 +10,9 @@
     /// </summary>
     public static partial class Extensions
     {
-        public static IQueryable<TSource> WhereExpression<TSource>(
-            this IQueryable<TSource> source,
-            Expression<Func<TSource, bool>> expression)
+        public static IQueryable<TEntity> WhereExpression<TEntity>(
+            this IQueryable<TEntity> source,
+            Expression<Func<TEntity, bool>> expression)
         {
             if (expression != null)
             {
@@ -22,9 +22,9 @@
             return source;
         }
 
-        public static IQueryable<TSource> WhereExpressions<TSource>(
-            this IQueryable<TSource> source,
-            IEnumerable<Expression<Func<TSource, bool>>> expressions)
+        public static IQueryable<TEntity> WhereExpressions<TEntity>(
+            this IQueryable<TEntity> source,
+            IEnumerable<Expression<Func<TEntity, bool>>> expressions)
         {
             if (expressions?.Any() == true)
             {
