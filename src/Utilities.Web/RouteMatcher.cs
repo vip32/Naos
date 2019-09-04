@@ -52,35 +52,35 @@
             foreach (var value in values)
             {
                 var parameter = template.Parameters.FirstOrDefault(p => p.Name.Equals(value.Key, StringComparison.OrdinalIgnoreCase));
-                if (parameter?.InlineConstraints?.Any(c => c.Constraint.Equals("int", StringComparison.OrdinalIgnoreCase)) == true)
+                if (parameter?.InlineConstraints?.Any(c => c.Constraint.SafeEquals("int")) == true)
                 {
                     result.Add(value.Key, value.Value.To<int>());
                 }
-                else if (parameter?.InlineConstraints?.Any(c => c.Constraint.Equals("bool", StringComparison.OrdinalIgnoreCase)) == true)
+                else if (parameter?.InlineConstraints?.Any(c => c.Constraint.SafeEquals("bool")) == true)
                 {
                     result.Add(value.Key, value.Value.To<bool>());
                 }
-                else if (parameter?.InlineConstraints?.Any(c => c.Constraint.Equals("datetime", StringComparison.OrdinalIgnoreCase)) == true)
+                else if (parameter?.InlineConstraints?.Any(c => c.Constraint.SafeEquals("datetime")) == true)
                 {
                     result.Add(value.Key, value.Value.To<DateTime>());
                 }
-                else if (parameter?.InlineConstraints?.Any(c => c.Constraint.Equals("decimal", StringComparison.OrdinalIgnoreCase)) == true)
+                else if (parameter?.InlineConstraints?.Any(c => c.Constraint.SafeEquals("decimal")) == true)
                 {
                     result.Add(value.Key, value.Value.To<decimal>());
                 }
-                else if (parameter?.InlineConstraints?.Any(c => c.Constraint.Equals("double", StringComparison.OrdinalIgnoreCase)) == true)
+                else if (parameter?.InlineConstraints?.Any(c => c.Constraint.SafeEquals("double")) == true)
                 {
                     result.Add(value.Key, value.Value.To<double>());
                 }
-                else if (parameter?.InlineConstraints?.Any(c => c.Constraint.Equals("float", StringComparison.OrdinalIgnoreCase)) == true)
+                else if (parameter?.InlineConstraints?.Any(c => c.Constraint.SafeEquals("float")) == true)
                 {
                     result.Add(value.Key, value.Value.To<float>());
                 }
-                else if (parameter?.InlineConstraints?.Any(c => c.Constraint.Equals("guid", StringComparison.OrdinalIgnoreCase)) == true)
+                else if (parameter?.InlineConstraints?.Any(c => c.Constraint.SafeEquals("guid")) == true)
                 {
                     result.Add(value.Key, value.Value.To<Guid>());
                 }
-                else if (parameter?.InlineConstraints?.Any(c => c.Constraint.Equals("long", StringComparison.OrdinalIgnoreCase)) == true)
+                else if (parameter?.InlineConstraints?.Any(c => c.Constraint.SafeEquals("long")) == true)
                 {
                     result.Add(value.Key, value.Value.To<long>());
                 }
