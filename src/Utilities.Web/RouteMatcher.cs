@@ -1,5 +1,6 @@
 ﻿namespace Naos.Foundation
 {
+    using System;
     using System.Linq;
     using System.Text.RegularExpressions;
     using Microsoft.AspNetCore.Http;
@@ -32,7 +33,7 @@
             var matcher = new TemplateMatcher(template, this.GetDefaults(template));
             var values = new RouteValueDictionary();
 
-            if (matcher.TryMatch(requestPath.StartsWith("/", System.StringComparison.OrdinalIgnoreCase) ? requestPath : $"/{requestPath}", values))
+            if (matcher.TryMatch(requestPath.StartsWith("/", StringComparison.OrdinalIgnoreCase) ? requestPath : $"/{requestPath}", values))
             {
                 return EnsureParameterConstraints(template, values);
             }
@@ -45,16 +46,44 @@
         private static RouteValueDictionary EnsureParameterConstraints(RouteTemplate template, RouteValueDictionary values)
         {
             var result = new RouteValueDictionary();
-            // fixup possible constrainst (:int :bool :datetime :decimal :double :float :guid :long) https://docs.microsoft.com/en-us/aspnet/core/fundamentals/routing?view=aspnetcore-2.2#route-constraint-reference
+
+            // fixup the possible parameter constraints (:int :bool :datetime :decimal :double :float :guid :long) https://docs.microsoft.com/en-us/aspnet/core/fundamentals/routing?view=aspnetcore-2.2#route-constraint-reference
+            // after matching all values are of type string, regardless of parameter constraint
             foreach (var value in values)
             {
-                var parameter = template.Parameters.FirstOrDefault(p => p.Name.Equals(value.Key, System.StringComparison.OrdinalIgnoreCase));
-                if (parameter?.InlineConstraints?.Any(c => c.Constraint.Equals("int", System.StringComparison.OrdinalIgnoreCase)) == true)
+                var parameter = template.Parameters.FirstOrDefault(p => p.Name.Equals(value.Key, StringComparison.OrdinalIgnoreCase));
+                if (parameter?.InlineConstraints?.Any(c => c.Constraint.Equals("int", StringComparison.OrdinalIgnoreCase)) == true)
                 {
                     result.Add(value.Key, value.Value.To<int>());
                 }
-
-                // TODO: add more conversions....
+                else if (parameter?.InlineConstraints?.Any(c => c.Constraint.Equals("bool", StringComparison.OrdinalIgnoreCase)) == true)
+                {
+                    result.Add(value.Key, value.Value.To<bool>());
+                }
+                else if (parameter?.InlineConstraints?.Any(c => c.Constraint.Equals("datetime", StringComparison.OrdinalIgnoreCase)) == true)
+                {
+                    result.Add(value.Key, value.Value.To<DateTime>());
+                }
+                else if (parameter?.InlineConstraints?.Any(c => c.Constraint.Equals("decimal", StringComparison.OrdinalIgnoreCase)) == true)
+                {
+                    result.Add(value.Key, value.Value.To<decimal>());
+                }
+                else if (parameter?.InlineConstraints?.Any(c => c.Constraint.Equals("double", StringComparison.OrdinalIgnoreCase)) == true)
+                {
+                    result.Add(value.Key, value.Value.To<double>());
+                }
+                else if (parameter?.InlineConstraints?.Any(c => c.Constraint.Equals("float", StringComparison.OrdinalIgnoreCase)) == true)
+                {
+                    result.Add(value.Key, value.Value.To<float>());
+                }
+                else if (parameter?.InlineConstraints?.Any(c => c.Constraint.Equals("guid", StringComparison.OrdinalIgnoreCase)) == true)
+                {
+                    result.Add(value.Key, value.Value.To<Guid>());
+                }
+                else if (parameter?.InlineConstraints?.Any(c => c.Constraint.Equals("long", StringComparison.OrdinalIgnoreCase)) == true)
+                {
+                    result.Add(value.Key, value.Value.To<long>());
+                }
                 else
                 {
                     result.Add(value.Key, value.Value);
