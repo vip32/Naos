@@ -34,6 +34,7 @@
     <ProjectReference Include="..\Foundation.Application.Web.Startup\Application.Web.Startup.csproj" />
     <ProjectReference Include="..\Queueing.Infrastructure.Azure\Queueing.Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\Queueing\Queueing.csproj" />
+    <ProjectReference Include="..\Utilities.Web\Utilities.Web.csproj" />
   </ItemGroup>
 
 </Project>

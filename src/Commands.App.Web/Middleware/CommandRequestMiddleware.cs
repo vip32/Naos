@@ -54,42 +54,51 @@
             this.next = next;
             this.logger = logger;
             this.options = options.Value ?? new CommandRequestMiddlewareOptions();
+            this.options.RouteMatcher ??= new RouteMatcher();
         }
 
         public async Task Invoke(HttpContext context) // scoped dependencies go here as method args
         {
-            if (context.Request.Path.Equals(this.options.Registration.Route, StringComparison.OrdinalIgnoreCase)
+            if (this.options.Registration != null
                 && context.Request.Method.EqualsAny(this.options.Registration.RequestMethod.Split(';')))
             {
-                //this.logger.LogInformation($"{{LogKey:l}} received (name={this.options.Registration.CommandType.Name.SliceTill("Command").SliceTill("Query")})", LogKeys.AppCommand);
-
-                context.Response.ContentType = this.options.Registration.OpenApiProduces;
-                context.Response.StatusCode = (int)this.options.Registration.OnSuccessStatusCode;
-                object command = null;
-
-                if (context.Request.Method.SafeEquals("get") || context.Request.Method.SafeEquals("delete"))
+                var match = this.options.RouteMatcher.Match(this.options.Registration.Route, context.Request.Path, context.Request.Query);
+                if (match != null)
                 {
-                    command = this.ParseQueryOperation(context);
-                }
-                else if (context.Request.Method.SafeEquals("post") || context.Request.Method.SafeEquals("put") || context.Request.Method.SafeEquals(string.Empty))
-                {
-                    command = this.ParseBodyOperation(context);
+                    //this.logger.LogInformation($"{{LogKey:l}} received (name={this.options.Registration.CommandType.Name.SliceTill("Command").SliceTill("Query")})", LogKeys.AppCommand);
+
+                    context.Response.ContentType = this.options.Registration.OpenApiProduces;
+                    context.Response.StatusCode = (int)this.options.Registration.OnSuccessStatusCode;
+                    object command = null;
+
+                    if (context.Request.Method.SafeEquals("get") || context.Request.Method.SafeEquals("delete"))
+                    {
+                        command = this.ParseQueryOperation(context);
+                    }
+                    else if (context.Request.Method.SafeEquals("post") || context.Request.Method.SafeEquals("put") || context.Request.Method.SafeEquals(string.Empty))
+                    {
+                        command = this.ParseBodyOperation(context);
+                    }
+                    else
+                    {
+                        // TODO: ignore for now, or throw? +log
+                    }
+
+                    if (this.options.Registration.HasResponse)
+                    {
+                        await this.HandleCommandWithResponse(command, (dynamic)this.options.Registration, context);
+                    }
+                    else
+                    {
+                        await this.HandleCommandWithoutResponse(command, (dynamic)this.options.Registration, context);
+                    }
                 }
                 else
                 {
-                    // TODO: ignore for now, or throw? +log
+                    await this.next(context).AnyContext();
                 }
 
-                if (this.options.Registration.HasResponse)
-                {
-                    await this.HandleCommandWithResponse(command, (dynamic)this.options.Registration, context);
-                }
-                else
-                {
-                    await this.HandleCommandWithoutResponse(command, (dynamic)this.options.Registration, context);
-                }
-
-                // =terminating middlware
+                // =terminating middleware
             }
             else
             {

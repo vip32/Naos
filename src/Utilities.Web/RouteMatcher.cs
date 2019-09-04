@@ -32,16 +32,45 @@
             var matcher = new TemplateMatcher(template, this.GetDefaults(template));
             var values = new RouteValueDictionary();
 
-            return matcher.TryMatch(requestPath, values) ? values : null;
+            if (matcher.TryMatch(requestPath.StartsWith("/", System.StringComparison.OrdinalIgnoreCase) ? requestPath : $"/{requestPath}", values))
+            {
+                return EnsureParameterConstraints(template, values);
+            }
+            else
+            {
+                return null;
+            }
         }
 
-        private RouteValueDictionary GetDefaults(RouteTemplate parsedTemplate)
+        private static RouteValueDictionary EnsureParameterConstraints(RouteTemplate template, RouteValueDictionary values)
+        {
+            var result = new RouteValueDictionary();
+            // fixup possible constrainst (:int :bool :datetime :decimal :double :float :guid :long) https://docs.microsoft.com/en-us/aspnet/core/fundamentals/routing?view=aspnetcore-2.2#route-constraint-reference
+            foreach (var value in values)
+            {
+                var parameter = template.Parameters.FirstOrDefault(p => p.Name.Equals(value.Key, System.StringComparison.OrdinalIgnoreCase));
+                if (parameter?.InlineConstraints?.Any(c => c.Constraint.Equals("int", System.StringComparison.OrdinalIgnoreCase)) == true)
+                {
+                    result.Add(value.Key, value.Value.To<int>());
+                }
+
+                // TODO: add more conversions....
+                else
+                {
+                    result.Add(value.Key, value.Value);
+                }
+            }
+
+            return result;
+        }
+
+        private RouteValueDictionary GetDefaults(RouteTemplate template)
         {
             var result = new RouteValueDictionary();
 
-            if (parsedTemplate.Parameters != null)
+            if (template.Parameters != null)
             {
-                foreach (var parameter in parsedTemplate.Parameters)
+                foreach (var parameter in template.Parameters)
                 {
                     if (parameter.DefaultValue != null)
                     {

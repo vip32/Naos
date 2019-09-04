@@ -20,13 +20,15 @@
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
 
+            var routeMatcher = new RouteMatcher();
             foreach (var registration in naosOptions.Context.Application.ApplicationServices.GetServices<CommandRequestRegistration>().Safe()
                 .Where(r => !r.Route.IsNullOrEmpty()))
             {
                 naosOptions.Context.Application.UseMiddleware<CommandRequestMiddleware>(
                     Options.Create(new CommandRequestMiddlewareOptions
                     {
-                        Registration = registration
+                        Registration = registration,
+                        RouteMatcher = routeMatcher
                     }));
                 naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: command requests added (route={registration.Route}, method={registration.RequestMethod}, type={registration.CommandType.PrettyName()})");
             }
