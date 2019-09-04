@@ -13,4 +13,8 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Foundation.Extensions\Extensions.csproj" />
+  </ItemGroup>
+
 </Project>

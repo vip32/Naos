@@ -1,6 +1,6 @@
 ﻿namespace Naos.Foundation
 {
-    //using System.Linq;
+    using System.Linq;
     using System.Text.RegularExpressions;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Routing;
@@ -11,8 +11,9 @@
     {
         public RouteValueDictionary Match(string routeTemplate, string requestPath, IQueryCollection query = null)
         {
-            // The TemplateParser can only parse the route part, and not the query string.
+            // The TemplateParser can only parse the route part (path), and not the query string.
             // If the template provided by the user also has a query string, we separate that and match it manually.
+            requestPath = requestPath.SliceTill("?");
             var regex = new Regex(@"(.*)(\?[^{}]*$)");
             var match = regex.Match(routeTemplate);
             if (match.Success)
@@ -21,13 +22,13 @@
                 routeTemplate = match.Groups[1].Value;
                 var queryInTemplate = QueryHelpers.ParseQuery(queryString);
 
-                //if (!query.All(arg => queryInTemplate.ContainsKey(arg.Key.TrimStart('?')) && queryInTemplate[arg.Key.TrimStart('?')] == arg.Value))
-                //{
-                //    return null;
-                //}
+                if (query?.All(arg => queryInTemplate.ContainsKey(arg.Key.TrimStart('?')) && queryInTemplate[arg.Key.TrimStart('?')] == arg.Value) != true)
+                {
+                    return null;
+                }
             }
 
-            var template = TemplateParser.Parse(routeTemplate);
+            var template = TemplateParser.Parse(routeTemplate.SliceTill("?"));
             var matcher = new TemplateMatcher(template, this.GetDefaults(template));
             var values = new RouteValueDictionary();
 
