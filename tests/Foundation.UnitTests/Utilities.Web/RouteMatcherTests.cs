@@ -19,6 +19,9 @@
             sut.Match("/api/customers/{id}", "/api/customers/1234567").ContainsKey("id").ShouldBeTrue();
             sut.Match("/api/customers/{id}", "/api/customers/1234567")["id"].ShouldBe("1234567");
             sut.Match("/api/customers/{id}", "/api/customers/1234567/orders").ShouldBeNull();
+            sut.Match("/api/customers/{id}/orders", "/api/customers/1234567/orders").ShouldNotBeNull();
+            sut.Match("/api/customers/{id}/orders/{orderId}", "/api/customers/1234567/orders/778899").ShouldNotBeNull();
+            sut.Match("/api/customers/{id}/orders/{orderId}", "/api/customers/1234567/orders/778899")["orderId"].ShouldBe("778899");
         }
     }
 }
