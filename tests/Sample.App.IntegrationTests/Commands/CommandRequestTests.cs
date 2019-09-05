@@ -27,11 +27,13 @@
                 .AddMediatR(AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.GetName().Name.StartsWith("Microsoft.", StringComparison.OrdinalIgnoreCase)).ToArray())
                 .AddNaos(configuration, "Product", "Capability", new[] { "All" }, n => n
                     .AddOperations(o => o
-                        .AddLogging(correlationId: $"TEST{RandomGenerator.GenerateString(9)}"))
+                        .AddLogging(correlationId: $"TEST{RandomGenerator.GenerateString(9)}")
+                        .AddTracing())
                     .AddCommands(o => o
+                        .AddBehavior<TracerCommandBehavior>()
                         .AddBehavior<ValidateCommandBehavior>()
                         .AddBehavior<JournalCommandBehavior>()
-                        .AddBehavior(new FileStoragePersistCommandBehavior(
+                        .AddBehavior(sp => new FileStoragePersistCommandBehavior(
                             new FolderFileStorage(f => f
                                 .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "commands")))))));
 
@@ -61,6 +63,21 @@
             response.ShouldNotBeNull();
             response.Result.ShouldNotBeNull();
             response.Result.Message.ShouldNotBeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task CanSendInvalid_Test()
+        {
+            // arrange
+            var command = new EchoCommand();
+
+            // act
+            var response = await this.mediator.Send(command).AnyContext();
+
+            // assert
+            //response.ShouldNotBeNull();
+            //response.Result.ShouldNotBeNull();
+            //response.Result.Message.ShouldNotBeNullOrEmpty();
         }
 
         [Fact]

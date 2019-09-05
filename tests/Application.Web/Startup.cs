@@ -128,9 +128,10 @@
                     .AddRequestFiltering()
                     .AddServiceExceptions()
                     .AddCommands(o => o
+                        .AddBehavior<TracerCommandBehavior>()
                         .AddBehavior<ValidateCommandBehavior>()
                         .AddBehavior<JournalCommandBehavior>()
-                        .AddBehavior(new FileStoragePersistCommandBehavior(
+                        .AddBehavior(sp => new FileStoragePersistCommandBehavior(
                             new FolderFileStorage(o => o
                                 .Folder(Path.Combine(Path.GetTempPath(), "naos_commands", "journal")))))
                         .AddRequests(o => o

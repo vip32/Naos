@@ -1,12 +1,31 @@
 ﻿namespace Naos.Core.Commands.App
 {
+    using System;
     using System.Threading.Tasks;
     using EnsureThat;
+    using Microsoft.Extensions.Logging;
+    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
 
-    public class PersistCommandBehavior : ICommandBehavior
+    public class TracerCommandBehavior : ICommandBehavior, IDisposable
     {
+        private readonly ILogger<JournalCommandBehavior> logger;
+        private readonly ITracer tracer;
         private ICommandBehavior next;
+        private IScope scope;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TracerCommandBehavior"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        public TracerCommandBehavior(ILogger<JournalCommandBehavior> logger, ITracer tracer)
+        {
+            EnsureArg.IsNotNull(logger, nameof(logger));
+            EnsureArg.IsNotNull(tracer, nameof(tracer));
+
+            this.logger = logger;
+            this.tracer = tracer;
+        }
 
         public ICommandBehavior SetNext(ICommandBehavior next)
         {
@@ -22,13 +41,19 @@
         public async Task ExecutePreHandleAsync<TResponse>(Command<TResponse> request, CommandBehaviorResult result)
         {
             EnsureArg.IsNotNull(request);
-            // TODO: implement
-            // - check if command exists in repo/filestorage
-            // - if not add to repo, return CommandBehaviorResult
+
+            this.scope = this.tracer.BuildSpan(
+                        $"command {request.GetType().PrettyName()}".ToLowerInvariant(),
+                        LogKeys.AppCommand,
+                        SpanKind.Consumer).Activate(this.logger);
 
             if (!result.Cancelled && this.next != null)
             {
                 await this.next.ExecutePreHandleAsync(request, result).AnyContext();
+            }
+            else
+            {
+                this.scope?.Dispose();
             }
 
             // terminate here
@@ -36,10 +61,17 @@
 
         public async Task ExecutePostHandleAsync<TResponse>(CommandResponse<TResponse> response, CommandBehaviorResult result)
         {
+            this.scope?.Dispose();
+
             if (!result.Cancelled && this.next != null)
             {
                 await this.next.ExecutePostHandleAsync(response, result).AnyContext();
             }
+        }
+
+        public void Dispose()
+        {
+            this.scope?.Dispose();
         }
     }
 }

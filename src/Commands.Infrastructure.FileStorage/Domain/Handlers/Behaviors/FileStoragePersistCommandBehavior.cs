@@ -11,6 +11,7 @@
         private readonly IFileStorage storage;
         private readonly ISerializer serializer;
         private readonly string pathTemplate;
+        private ICommandBehavior next;
 
         public FileStoragePersistCommandBehavior(IFileStorage storage, ISerializer serializer = null, string pathTemplate = "{id}-{type}.json")
         {
@@ -21,12 +22,18 @@
             this.pathTemplate = pathTemplate ?? "{id}-{type}";
         }
 
+        public ICommandBehavior SetNext(ICommandBehavior next)
+        {
+            this.next = next;
+            return next;
+        }
+
         /// <summary>
         /// Executes this behavior for the specified command.
         /// </summary>
         /// <typeparam name="TResponse">The type of the response.</typeparam>
         /// <param name="request">The command.</param>
-        public async Task<CommandBehaviorResult> ExecuteAsync<TResponse>(Command<TResponse> request)
+        public async Task ExecutePreHandleAsync<TResponse>(Command<TResponse> request, CommandBehaviorResult result)
         {
             EnsureArg.IsNotNull(request);
 
@@ -36,7 +43,20 @@
 
             await this.storage.SaveFileObjectAsync(path, request, this.serializer).AnyContext();
 
-            return await Task.FromResult(new CommandBehaviorResult()).AnyContext();
+            if (!result.Cancelled && this.next != null)
+            {
+                await this.next.ExecutePreHandleAsync(request, result).AnyContext();
+            }
+
+            // terminate here
+        }
+
+        public async Task ExecutePostHandleAsync<TResponse>(CommandResponse<TResponse> response, CommandBehaviorResult result)
+        {
+            if (!result.Cancelled && this.next != null)
+            {
+                await this.next.ExecutePostHandleAsync(response, result).AnyContext();
+            }
         }
     }
 }

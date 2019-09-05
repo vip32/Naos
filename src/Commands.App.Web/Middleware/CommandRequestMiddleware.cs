@@ -115,7 +115,7 @@
             if (command != null)
             {
                 var extensions = this.EnsureExtensions(context);
-                this.logger.LogDebug($"{{LogKey:l}} command request extension chain: {extensions.Select(e => e.GetType().PrettyName()).ToString("|")} (name={registration.CommandType?.Name.SliceTill("Command").SliceTill("Query")})", LogKeys.AppCommand);
+                this.logger.LogDebug($"{{LogKey:l}} command request extension chain: {extensions.Select(e => e.GetType().PrettyName()).ToString("|")} (name={registration.CommandType.Name})", LogKeys.AppCommand);
                 if (extensions.Count > 0) // invoke all chained extensions
                 {
                     await extensions[0].InvokeAsync(command as TCommand, registration, context).AnyContext();
@@ -137,7 +137,7 @@
             if (command != null)
             {
                 var extensions = this.EnsureExtensions(context);
-                this.logger.LogDebug($"{{LogKey:l}} command request extension chain: {extensions.Select(e => e.GetType().PrettyName()).ToString("|")} (name={registration.CommandType?.Name.SliceTill("Command").SliceTill("Query")})", LogKeys.AppCommand);
+                this.logger.LogDebug($"{{LogKey:l}} command request extensions chain: {extensions.Select(e => e.GetType().PrettyName()).ToString("|")} (name={registration.CommandType.Name})", LogKeys.AppCommand);
                 if (extensions.Count > 0) // invoke all chained extensions
                 {
                     await extensions[0].InvokeAsync(command as TCommand, registration, context).AnyContext();
@@ -181,7 +181,7 @@
             // always add the default mediator (send+result) extensions at the end
             extensions.Add(context.RequestServices.GetService(typeof(MediatorDispatcherCommandRequestExtension)) as ICommandRequestExtension);
 
-            foreach (var extension in extensions.Safe()) // build up the extension chain
+            foreach (var extension in extensions.Safe()) // build up the extensions chain
             {
                 extension.SetNext(extensions.NextOf(extension));
             }
