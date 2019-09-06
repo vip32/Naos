@@ -43,15 +43,9 @@
             }
             catch (Exception ex)
             {
-                //this.logger.LogError(
-                //    ex != null ? new EventId(ex.HResult) : new EventId(-1),
-                //    ex,
-                //    $"[{ex?.GetType().PrettyName()}] {ex?.Message}");
-
                 var instance = context.HasCorrelationId() || context.HasRequestId()
                             ? $"{context.GetCorrelationId()} ({context.GetRequestId()})"
                             : context.TraceIdentifier;
-
                 if (context.Response.HasStarted)
                 {
                     this.logger.LogWarning("The response has already started, the http naos exception middleware will not be executed");
