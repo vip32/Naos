@@ -122,21 +122,6 @@
                 throw new NotSupportedException("Only method calls that take a single string argument and Enumerable.Contains methods are supported");
             }
 
-            string HandleMemberExpression(MemberExpression memberExpression, bool value, IEnumerable<string> columns = null)
-            {
-                if (!memberExpression.Member.Name.EqualsAny(columns))
-                {
-                    return string.Empty;
-                }
-
-                if (memberExpression.Type == typeof(bool))
-                {
-                    return $" AND [{this.Sanatize(memberExpression.Member.Name).ToLower()}{this.IndexColumnNameSuffix}] = {this.Sanatize(value.ToString())} ";
-                }
-
-                throw new NotSupportedException("Only boolean properties are allowed for where expressions without a comparison operator or method call");
-            }
-
             if (expression is MemberExpression memberExpression1)
             {
                 return HandleMemberExpression(memberExpression1, true, columns);
@@ -153,6 +138,21 @@
             }
 
             throw new NotSupportedException($"The expression supplied is not supported. Only simple BinaryExpressions, LogicalBinaryExpressions and some MethodCallExpressions are supported. The predicate is a {expression.GetType()}.");
+
+            string HandleMemberExpression(MemberExpression memberExpression, bool value, IEnumerable<string> columns = null)
+            {
+                if (!memberExpression.Member.Name.EqualsAny(columns))
+                {
+                    return string.Empty;
+                }
+
+                if (memberExpression.Type == typeof(bool))
+                {
+                    return $" AND [{this.Sanatize(memberExpression.Member.Name).ToLower()}{this.IndexColumnNameSuffix}] = {this.Sanatize(value.ToString())} ";
+                }
+
+                throw new NotSupportedException("Only boolean properties are allowed for where expressions without a comparison operator or method call");
+            }
         }
 
         //public virtual string BuildCriteriaSelect<T>(
