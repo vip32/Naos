@@ -34,7 +34,7 @@
 
         string BuildTagSelect(string tag);
 
-        string BuildSortingSelect(/*SortColumn sorting = SortColumn.Id*/);
+        string BuildSortingSelect(Expression expression, IEnumerable<string> columns = null);
 
         string BuildPagingSelect(int? skip = null, int? take = null, int? defaultTakeSize = 0, int? maxTakeSize = 0);
 

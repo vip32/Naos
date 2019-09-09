@@ -59,6 +59,11 @@
 
         public virtual string BuildCriteriaSelect(Expression expression, IEnumerable<string> columns = null)
         {
+            if (expression == null)
+            {
+                return string.Empty;
+            }
+
             // https://github.com/OctopusDeploy/Nevermore/blob/master/source/Nevermore/QueryBuilderWhereExtensions.cs
             if (expression is BinaryExpression binaryExpression)
             {
@@ -260,8 +265,22 @@
             return $" OFFSET {skip.Value} ROWS FETCH NEXT {take.Value} ROWS ONLY; ";
         }
 
-        public virtual string BuildSortingSelect(/*SortColumn sorting = SortColumn.Id*/)
+        public virtual string BuildSortingSelect(Expression expression, IEnumerable<string> columns = null)
         {
+            if(expression == null)
+            {
+                return string.Empty;
+            }
+
+            var column = this.GetColumnName(expression);
+
+            if (!column.EqualsAny(columns))
+            {
+                return string.Empty;
+            }
+
+            return $" ORDER BY [{column}{this.IndexColumnNameSuffix}] DESC ";
+
             //if (sorting == SortColumn.IdDescending)
             //{
             //    return " ORDER BY [id] DESC ";
@@ -287,7 +306,7 @@
             //    return " ORDER BY [timestamp] DESC ";
             //}
 
-            return " ORDER BY [id] ";
+            // return " ORDER BY [id] ";
         }
 
         public string BuildFromTillDateTimeSelect(
@@ -374,6 +393,21 @@
 
             throw new NotSupportedException(
                 $"The left hand side of the expression must be a property accessor (PropertyExpression or UnaryExpression). It is a {expression.GetType()}.");
+        }
+
+        private string GetColumnName(Expression expression)
+        {
+            if (expression is UnaryExpression uexpr)
+            {
+                expression = uexpr.Operand;
+            }
+
+            if (expression is MemberExpression memberExpression)
+            {
+                return memberExpression.Member.Name;
+            }
+
+            throw new NotSupportedException($"Expressions of type {expression.GetType()} are not supported for OrderBy and ThenBy");
         }
 
         private object GetValueFromExpression(Expression expression, Type resultType)

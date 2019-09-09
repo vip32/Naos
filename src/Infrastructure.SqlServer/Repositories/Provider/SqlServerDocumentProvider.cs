@@ -50,7 +50,7 @@
 
             foreach (var e in expressions.Safe())
             {
-                sql.Append(this.Options.SqlBuilder.BuildCriteriaSelect(e, this.Options.IndexMap));
+                sql.Append(this.Options.SqlBuilder.BuildCriteriaSelect(e, this.Options.IndexMap.Select(i => i.Name)));
             }
 
             using (var conn = await this.CreateConnectionAsync().AnyContext())
@@ -90,7 +90,7 @@
 
                 foreach (var e in expressions.Safe())
                 {
-                    sql.Append(this.Options.SqlBuilder.BuildCriteriaSelect(e, this.Options.IndexMap));
+                    sql.Append(this.Options.SqlBuilder.BuildCriteriaSelect(e, this.Options.IndexMap.Select(i => i.Name)));
                 }
 
                 //sql.Append(this.Options.SqlBuilder.BuildFromTillDateTimeSelect(fromDateTime, tillDateTime));
@@ -124,7 +124,7 @@
 
                 foreach (var e in expressions.Safe())
                 {
-                    sql.Append(this.Options.SqlBuilder.BuildCriteriaSelect(e, this.Options.IndexMap));
+                    sql.Append(this.Options.SqlBuilder.BuildCriteriaSelect(e, this.Options.IndexMap.Select(i => i.Name)));
                 }
 
                 return conn.Query<object>(sql.ToString());
@@ -143,7 +143,7 @@
 
                 foreach (var e in expressions.Safe())
                 {
-                    sql.Append(this.Options.SqlBuilder.BuildCriteriaSelect(e, this.Options.IndexMap));
+                    sql.Append(this.Options.SqlBuilder.BuildCriteriaSelect(e, this.Options.IndexMap.Select(i => i.Name)));
                 }
 
                 //sql.Append(SqlBuilder.BuildFromTillDateTimeSelect(fromDateTime, tillDateTime));
@@ -181,7 +181,7 @@
 
                 foreach (var e in expressions.Safe())
                 {
-                    sql.Append(this.Options.SqlBuilder.BuildCriteriaSelect(e, this.Options.IndexMap));
+                    sql.Append(this.Options.SqlBuilder.BuildCriteriaSelect(e, this.Options.IndexMap.Select(i => i.Name)));
                 }
 
                 //sql.Append(this.Options.SqlBuilder.BuildFromTillDateTimeSelect(fromDateTime, tillDateTime));
