@@ -70,7 +70,7 @@
                     return string.Empty;
                 }
 
-                if (property.PropertyType == typeof(string))
+                if (property.PropertyType == typeof(string) || property.PropertyType == typeof(DateTime) || property.PropertyType == typeof(char))
                 {
                     return binaryExpression.NodeType switch
                     {
@@ -83,7 +83,12 @@
                         _ => $" AND [{this.Sanatize(property.Name).ToLower()}{this.IndexColumnNameSuffix}] = '{this.Sanatize(value.ToString())}' ",
                     };
                 }
-                else if (property.PropertyType == typeof(int))
+                else if (property.PropertyType == typeof(short)
+                    || property.PropertyType == typeof(int)
+                    || property.PropertyType == typeof(long)
+                    || property.PropertyType == typeof(float)
+                    || property.PropertyType == typeof(decimal)
+                    || property.PropertyType == typeof(bool))
                 {
                     return binaryExpression.NodeType switch
                     {
@@ -96,8 +101,6 @@
                         _ => $" AND [{this.Sanatize(property.Name).ToLower()}{this.IndexColumnNameSuffix}] = {this.Sanatize(value.ToString())} ",
                     };
                 }
-
-                // TODO: bit/long/datetime/....
             }
 
             if (expression is MethodCallExpression methodExpression)
