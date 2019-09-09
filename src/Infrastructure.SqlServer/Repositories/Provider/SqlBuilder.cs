@@ -380,9 +380,9 @@
         {
             object result;
 
-            if (expression is ConstantExpression constantExpr)
+            if (expression is ConstantExpression constantExpression)
             {
-                result = constantExpr.Value;
+                result = constantExpression.Value;
             }
             else
             {
