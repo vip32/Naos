@@ -1,10 +1,19 @@
 ﻿namespace Naos.Foundation.Infrastructure
 {
+    using System.Collections.Generic;
     using Humanizer;
 
-    public class SqlServerDocumentProviderOptions : BaseOptions
+    public class SqlServerDocumentProviderOptions<T> : BaseOptions
     {
+        private string calculatedTableName;
+
+        public ISerializer Serializer { get; set; }
+
         public string ConnectionString { get; set; }
+
+        public ISqlBuilder SqlBuilder { get; set; }
+
+        public IEnumerable<IIndexMap<T>> IndexMap { get; set; }
 
         public string DataSource { get; set; }
 
@@ -22,35 +31,40 @@
 
         public bool UseTransactions { get; set; }
 
-        public int DefaultTakeSize { get; set; }
+        public int DefaultTakeSize { get; set; } = 1000;
 
-        public int MaxTakeSize { get; set; }
+        public int MaxTakeSize { get; set; } = 5000;
 
         public bool EnableLogging { get; set; }
 
         //public SortColumn DefaultSortColumn { get; set; }
 
-        public virtual string GetTableName<T>(string suffix = null)
+        public virtual string GetTableName(string suffix = null)
         {
-            var tableName = string.IsNullOrEmpty(this.TableName) ? typeof(T).Name.Pluralize() : this.TableName;
+            if (!this.calculatedTableName.IsNullOrEmpty())
+            {
+                return this.calculatedTableName;
+            }
+
+            this.calculatedTableName = string.IsNullOrEmpty(this.TableName) ? typeof(T).Name.Pluralize() : this.TableName;
             if (!string.IsNullOrEmpty(this.TableNamePrefix))
             {
-                tableName = this.TableNamePrefix + tableName;
+                this.calculatedTableName = this.TableNamePrefix + this.calculatedTableName;
             }
 
             if (!string.IsNullOrEmpty(this.TableNameSuffix))
             {
-                tableName = tableName + this.TableNameSuffix;
+                this.calculatedTableName += this.TableNameSuffix;
             }
 
             if (!string.IsNullOrEmpty(suffix))
             {
-                tableName = tableName + suffix;
+                this.calculatedTableName += suffix;
             }
 
             return !string.IsNullOrEmpty(this.SchemaName)
-                ? $"[{this.SchemaName}].[{tableName}]"
-                : $"[{tableName}]";
+                ? $"[{this.SchemaName}].[{this.calculatedTableName }]"
+                : $"[{this.calculatedTableName }]";
         }
     }
 }

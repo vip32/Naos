@@ -10,9 +10,11 @@
     <PackageReference Include="Dapper" Version="2.0.4" />
     <PackageReference Include="Humanizer.Core" Version="2.7.2" />
     <PackageReference Include="System.Data.SqlClient" Version="4.6.1" />
+    <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Foundation.Compression\Compression.csproj" />
     <ProjectReference Include="..\Foundation.Domain\Domain.csproj" />
     <ProjectReference Include="..\Foundation.Domain.Repositories\Domain.Repositories.csproj" />
   </ItemGroup>
