@@ -20,7 +20,7 @@
             EnsureArg.IsNotNull(options.IdGenerator, nameof(options.IdGenerator));
 
             this.options = options;
-            this.Logger = options.CreateLogger<IGenericRepository<TEntity>>();
+            this.Logger = options.CreateLogger<CosmosDbSqlRepository<TEntity>>();
 
             this.Logger.LogInformation($"{{LogKey:l}} construct cosmos repository (type={typeof(TEntity).PrettyName()})", LogKeys.DomainRepository);
         }
@@ -30,7 +30,7 @@
         {
         }
 
-        protected ILogger<IGenericRepository<TEntity>> Logger { get; }
+        protected ILogger<CosmosDbSqlRepository<TEntity>> Logger { get; }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
