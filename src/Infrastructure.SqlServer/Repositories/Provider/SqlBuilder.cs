@@ -101,6 +101,10 @@
                         _ => $" AND [{this.Sanatize(property.Name).ToLower()}{this.IndexColumnNameSuffix}] = {this.Sanatize(value.ToString())} ",
                     };
                 }
+                else
+                {
+                    throw new NotSupportedException("Only basic expression types are supported");
+                }
             }
 
             if (expression is MethodCallExpression methodExpression)
