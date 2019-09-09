@@ -53,6 +53,7 @@
 
         public static LoggingOptions UseConsole(this LoggingOptions options)
         {
+            // don't use in production, console logging is blockinghttps://medium.com/asos-techblog/maximising-net-core-api-performance-11ad883436c
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
