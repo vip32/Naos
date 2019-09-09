@@ -158,7 +158,7 @@
 
                 //foreach (var result in results)
                 //{
-                //    yield return Serializer.FromJson<TDoc>(result);
+                //    yield return this.Options.Serializer.Deserialize<T>(result);
                 //}
 
                 return results.Select(r => this.Options.Serializer.Deserialize<T>(r));
@@ -195,7 +195,7 @@
 
                 //foreach (var document in documents)
                 //{
-                //    yield return this.Options.Serializer.Deserialize<T>(document);
+                //    yield return  this.Options.Serializer.Deserialize<T>(document);
                 //}
 
                 return documents.Select(d => this.Options.Serializer.Deserialize<T>(d));

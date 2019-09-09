@@ -28,7 +28,7 @@
 
         //string BuildCriteriaSelect(string column, CriteriaOperator op, string value);
 
-        string BuildCriteriaSelect<T>(Expression expression = null, IEnumerable<IIndexMap<T>> indexMaps = null);
+        string BuildCriteriaSelect(Expression expression = null, IEnumerable<string> columns = null);
 
         //string BuildCriteriaSelect<TDoc>(IEnumerable<IIndexMap<TDoc>> indexMaps = null, ICriteria criteria = null); //Expression<Func<T, bool>> expression
 
