@@ -101,6 +101,7 @@
 
                 if (this.storage.Count > this.MaxFiles)
                 {
+                    // storage full, remove oldest
                     this.storage.Remove(this.storage.OrderByDescending(kvp => kvp.Value.Item1.Created).First().Key);
                 }
             }
@@ -237,7 +238,9 @@
         {
             using (var ms = new MemoryStream())
             {
+                stream.Position = 0;
                 stream.CopyTo(ms);
+                stream.Position = stream.Length;
                 return ms.ToArray();
             }
         }

@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.Commands.App
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
@@ -13,10 +14,10 @@
     /// </summary>
     /// <typeparam name="TCommand">The type of the request.</typeparam>
     /// <typeparam name="TResponse">Return value of the wrapped command handler.</typeparam>
-    /// <seealso cref="App.BaseCommandHandler{TRequest, TResponse}" />
+    /// <seealso cref="App.CommandHandler{TRequest, TResponse}" />
     /// <seealso cref="MediatR.IRequestHandler{Command{TResponse}, CommandResponse{TResponse}}" />
     public abstract class BehaviorCommandHandler<TCommand, TResponse>
-        : BaseCommandHandler<TCommand, TResponse>
+        : CommandHandler<TCommand, TResponse>
         where TCommand : Command<TResponse>
     {
         private readonly IEnumerable<ICommandBehavior> behaviors;
@@ -28,7 +29,7 @@
         /// <param name="behaviors">The behaviors.</param>
         protected BehaviorCommandHandler(
             ILogger logger,
-            IEnumerable<ICommandBehavior> behaviors)
+            IEnumerable<ICommandBehavior> behaviors = null)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
 
@@ -39,35 +40,72 @@
         public ILogger Logger { get; }
 
         /// <summary>
-        /// Handles the specified request. All behaviors will be called first.
+        /// Handles the specified request. All pre/post behaviors will be called.
         /// </summary>
         /// <param name="request">The request.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         public override async Task<CommandResponse<TResponse>> Handle(TCommand request, CancellationToken cancellationToken)
         {
-            foreach (var behavior in this.behaviors.Safe())
-            {
-                var behaviorResult = await behavior.ExecuteAsync(request).AnyContext();
-                if (behaviorResult.Cancelled) // abort if this behavior did not succeed
-                {
-                    // TODO: log reason
-                    return new CommandResponse<TResponse>(behaviorResult.CancelledReason);
-                }
-            }
-
-            var commandName = typeof(TCommand).PrettyName();
-            this.Logger.LogJournal(LogKeys.AppCommand, $"command handle (name={commandName}, handler={this.GetType().PrettyName()}, id={request.Id})", LogPropertyKeys.TrackHandleCommand);
-            //this.Logger.LogTrace(LogKeys.AppCommand, request.Id, commandName, LogTraceNames.Command);
-
+            // TRACER here!!
             using (var timer = new Foundation.Timer())
             {
-                var result = await this.HandleRequest(request, cancellationToken).AnyContext();
+                var commandName = typeof(TCommand).PrettyName();
+                this.Logger.LogJournal(LogKeys.AppCommand, $"command handle (name={commandName}, handler={this.GetType().PrettyName()}, id={request.Id})", LogPropertyKeys.TrackHandleCommand);
 
+                var result = await this.ExecutePreHandleBehaviorsAsync(request).AnyContext();
+                if (result.Cancelled) // abort if a pre behavior did not succeed
+                {
+                    timer.Stop();
+                    this.Logger.LogInformation($"{{LogKey:l}} command cancelled (name={commandName}, handler={this.GetType().PrettyName()}, id={request.Id}) {result.CancelledReason} -> took {timer.Elapsed.Humanize()}", LogKeys.AppCommand);
+                    return new CommandResponse<TResponse>(result.CancelledReason); // TODO: log reason
+                }
+
+                var response = await this.HandleRequest(request, cancellationToken).AnyContext();
+
+                await this.ExecutePostHandleBehaviorsAsync(result, response).AnyContext();
                 timer.Stop();
-                //this.Logger.LogTrace(LogKeys.AppCommand, request.Id, commandName, LogTraceNames.Command, timer.Elapsed);
-                this.Logger.LogInformation($"{{LogKey:l}} command handled (name={commandName}, handler={this.GetType().PrettyName()}, id={request.Id}) -> took {timer.Elapsed.Humanize()}", LogKeys.AppCommand);
+                if (result.Cancelled) // abort if a post behavior did not succeed
+                {
+                    this.Logger.LogInformation($"{{LogKey:l}} command cancelled (name={commandName}, handler={this.GetType().PrettyName()}, id={request.Id}) {result.CancelledReason} -> took {timer.Elapsed.Humanize()}", LogKeys.AppCommand);
+                    return new CommandResponse<TResponse>(result.CancelledReason); // TODO: log reason
+                }
 
-                return result;
+                this.Logger.LogInformation($"{{LogKey:l}} command handled (name={commandName}, handler={this.GetType().PrettyName()}, id={request.Id}, cancelled={response.Cancelled}) -> took {timer.Elapsed.Humanize()}", LogKeys.AppCommand);
+
+                return response;
+            }
+        }
+
+        private async Task<CommandBehaviorResult> ExecutePreHandleBehaviorsAsync(TCommand request)
+        {
+            var behaviors = new List<ICommandBehavior>(this.behaviors.Safe()); // TODO: order!
+            foreach (var behavior in behaviors) // build up the behaviors chain
+            {
+                behavior.SetNext(behaviors.NextOf(behavior));
+            }
+
+            this.Logger.LogDebug($"{{LogKey:l}} command behaviors chain: pre={behaviors.Select(e => e.GetType().PrettyName()).ToString("|")}", LogKeys.AppCommand);
+            var result = new CommandBehaviorResult();
+            if (behaviors.Count > 0) // execute all chained behaviors
+            {
+                await this.behaviors.First().ExecutePreHandleAsync(request, result).AnyContext();
+            }
+
+            return result;
+        }
+
+        private async Task ExecutePostHandleBehaviorsAsync(CommandBehaviorResult result, CommandResponse<TResponse> response)
+        {
+            var behaviors = new List<ICommandBehavior>(this.behaviors.Safe().Reverse()); // TODO: order!
+            foreach (var behavior in behaviors) // build up the behaviors chain
+            {
+                behavior.SetNext(behaviors.NextOf(behavior));
+            }
+
+            this.Logger.LogDebug($"{{LogKey:l}} command behaviors chain: post={behaviors.Select(e => e.GetType().PrettyName()).ToString("|")}", LogKeys.AppCommand);
+            if (behaviors.Count > 0) // execute all chained behaviors
+            {
+                await this.behaviors.First().ExecutePostHandleAsync(response, result).AnyContext();
             }
         }
     }

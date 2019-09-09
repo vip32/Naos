@@ -8,12 +8,12 @@
     /// </summary>
     public static partial class Extensions
     {
-        public static IQueryable<T> SkipIf<T>(
-            this IQueryable<T> source, int? skip)
+        public static IQueryable<TEntity> SkipIf<TEntity>(
+            this IQueryable<TEntity> source, int? skip)
             => skip.HasValue && skip.Value > 0 ? source.Skip(skip.Value) : source;
 
-        public static IEnumerable<T> SkipIf<T>(
-            this IEnumerable<T> source, int? skip)
+        public static IEnumerable<TEntity> SkipIf<TEntity>(
+            this IEnumerable<TEntity> source, int? skip)
             => skip.HasValue && skip.Value > 0 ? source.Skip(skip.Value) : source;
     }
 }

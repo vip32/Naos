@@ -9,6 +9,7 @@
     public class ValidateCommandBehavior : ICommandBehavior
     {
         private readonly bool throwOnNotIsValid;
+        private ICommandBehavior next;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ValidateCommandBehavior"/> class.
@@ -19,33 +20,49 @@
             this.throwOnNotIsValid = throwOnNotIsValid;
         }
 
+        public ICommandBehavior SetNext(ICommandBehavior next)
+        {
+            this.next = next;
+            return next;
+        }
+
         /// <summary>
         /// Executes this behavior for the specified command.
         /// </summary>
         /// <typeparam name="TResponse">The type of the response.</typeparam>
         /// <param name="request">The command.</param>
-        public async Task<CommandBehaviorResult> ExecuteAsync<TResponse>(Command<TResponse> request)
+        public async Task ExecutePreHandleAsync<TResponse>(Command<TResponse> request, CommandBehaviorResult result)
         {
             EnsureArg.IsNotNull(request);
 
-            var result = request.Validate();
-            if (!result.IsValid)
+            var validationResult = request.Validate();
+            if (!validationResult.IsValid)
             {
-                // instead of cancel, throw an exception
                 // TODO: log validation errors
                 if (this.throwOnNotIsValid)
                 {
-                    throw new ValidationException($"{request.GetType().Name} has validation errors: " + result.Errors.Safe().Select(e => $"{e.PropertyName}={e}").ToString(", "), result.Errors);
+                    throw new ValidationException($"{request.GetType().Name} has validation errors: " + validationResult.Errors.Safe().Select(e => $"{e.PropertyName}={e}").ToString(", "), validationResult.Errors);
                 }
                 else
                 {
-                    return await Task.FromResult(
-                        new CommandBehaviorResult(
-                            $"{request.GetType().Name} has validation errors: " + result.Errors.Safe().Select(e => $"{e.PropertyName}={e}").ToString(", "))).AnyContext();
+                    result.SetCancelled($"{request.GetType().Name} has validation errors: " + validationResult.Errors.Safe().Select(e => $"{e.PropertyName}={e}").ToString(", "));
                 }
             }
 
-            return await Task.FromResult(new CommandBehaviorResult()).AnyContext();
+            if (!result.Cancelled && this.next != null)
+            {
+                await this.next.ExecutePreHandleAsync(request, result).AnyContext();
+            }
+
+            // terminate here
+        }
+
+        public async Task ExecutePostHandleAsync<TResponse>(CommandResponse<TResponse> response, CommandBehaviorResult result)
+        {
+            if (!result.Cancelled && this.next != null)
+            {
+                await this.next.ExecutePostHandleAsync(response, result).AnyContext();
+            }
         }
     }
 }

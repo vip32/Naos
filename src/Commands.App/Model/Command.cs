@@ -25,12 +25,12 @@
     ///                                                                          `--------------`
     ///
     /// </summary>
-    public abstract class Command
+    public class Command
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Command"/> class.
         /// </summary>
-        protected Command()
+        public Command()
             : this(IdGenerator.Instance.Next, IdGenerator.Instance.Next)
         {
         }
@@ -40,7 +40,7 @@
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <param name="correlationId">The correlation identifier.</param>
-        protected Command(string id, string correlationId = null)
+        public Command(string id, string correlationId = null)
         {
             EnsureArg.IsNotNullOrEmpty(id);
 
@@ -98,14 +98,14 @@
     /// <typeparam name="TResponse">The type of the response.</typeparam>
     /// <seealso cref="MediatR.IRequest{CommandResponse{TResponse}}" />
 #pragma warning disable SA1402 // File may only contain a single type
-    public abstract class Command<TResponse> : Command, IRequest<CommandResponse<TResponse>>
+    public class Command<TResponse> : Command, IRequest<CommandResponse<TResponse>>
     {
-        protected Command()
-            : this(IdGenerator.Instance.Next, IdGenerator.Instance.Next)
+        public Command()
+            : base(IdGenerator.Instance.Next, IdGenerator.Instance.Next)
         {
         }
 
-        protected Command(string id, string correlationId = null)
+        public Command(string id, string correlationId = null)
             : base(id, correlationId)
         {
         }

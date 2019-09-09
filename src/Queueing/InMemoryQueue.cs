@@ -54,12 +54,12 @@
                 await this.EnsureQueueAsync().AnyContext();
 
                 var item = new QueueItem<TData>(IdGenerator.Instance.Next, data/*.Clone()*/, this, DateTime.UtcNow, 0);
-                this.Logger.LogDebug($"queue item enqueue (id={item.Id}, queue={this.Options.Name})");
+                this.Logger.LogDebug($"queue item enqueue (id={item.Id}, queue={this.Options.QueueName})");
                 this.queue.Enqueue(item);
 
                 Interlocked.Increment(ref this.enqueuedCount);
 
-                this.Logger.LogJournal(LogKeys.Queueing, $"item enqueued (id={item.Id}, queue={this.Options.Name}, type={typeof(TData).PrettyName()})", LogPropertyKeys.TrackEnqueue);
+                this.Logger.LogJournal(LogKeys.Queueing, $"item enqueued (id={item.Id}, queue={this.Options.QueueName}, type={typeof(TData).PrettyName()})", LogPropertyKeys.TrackEnqueue);
                 this.Logger.LogTrace(LogKeys.Queueing, item.Id, typeof(TData).PrettyName(), LogTraceNames.Queue);
                 this.LastEnqueuedDate = DateTime.UtcNow;
                 return item.Id;
@@ -70,7 +70,7 @@
         {
             EnsureArg.IsNotNull(item, nameof(item));
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
-            this.Logger.LogDebug($"queue item renew (id={item.Id}, queue={this.Options.Name})");
+            this.Logger.LogDebug($"queue item renew (id={item.Id}, queue={this.Options.QueueName})");
 
             var addItem = item as QueueItem<TData>;
             this.dequeued.AddOrUpdate(item.Id, addItem, (key, value) =>
@@ -83,7 +83,7 @@
                 return value;
             });
 
-            this.Logger.LogJournal(LogKeys.Queueing, $"item lock renewed (id={item.Id}, queue={this.Options.Name}, type={typeof(TData).PrettyName()})", LogPropertyKeys.TrackDequeue);
+            this.Logger.LogJournal(LogKeys.Queueing, $"item lock renewed (id={item.Id}, queue={this.Options.QueueName}, type={typeof(TData).PrettyName()})", LogPropertyKeys.TrackDequeue);
             this.LastDequeuedDate = DateTime.UtcNow;
             return Task.CompletedTask;
         }
@@ -92,7 +92,7 @@
         {
             EnsureArg.IsNotNull(item, nameof(item));
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
-            this.Logger.LogDebug($"queue item complete (id={item.Id}, queue={this.Options.Name})");
+            this.Logger.LogDebug($"queue item complete (id={item.Id}, queue={this.Options.QueueName})");
 
             if (item.IsAbandoned || item.IsCompleted)
             {
@@ -111,7 +111,7 @@
             Interlocked.Increment(ref this.completedCount);
             item.MarkCompleted();
 
-            this.Logger.LogJournal(LogKeys.Queueing, $"item completed (id={item.Id}, queue={this.Options.Name}, type={typeof(TData).PrettyName()})", LogPropertyKeys.TrackDequeue);
+            this.Logger.LogJournal(LogKeys.Queueing, $"item completed (id={item.Id}, queue={this.Options.QueueName}, type={typeof(TData).PrettyName()})", LogPropertyKeys.TrackDequeue);
             this.LastDequeuedDate = DateTime.UtcNow;
             return Task.CompletedTask;
         }
@@ -120,7 +120,7 @@
         {
             EnsureArg.IsNotNull(item, nameof(item));
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
-            this.Logger.LogDebug($"queue item abandon (id={item.Id}, queue={this.Options.Name})");
+            this.Logger.LogDebug($"queue item abandon (id={item.Id}, queue={this.Options.QueueName})");
 
             if (item.IsAbandoned || item.IsCompleted)
             {
@@ -163,7 +163,7 @@
             Interlocked.Increment(ref this.abandonedCount);
             item.MarkAbandoned();
 
-            this.Logger.LogJournal(LogKeys.Queueing, $"item abandoned (id={item.Id}, queue={this.Options.Name}, type={typeof(TData).PrettyName()})", LogPropertyKeys.TrackDequeue);
+            this.Logger.LogJournal(LogKeys.Queueing, $"item abandoned (id={item.Id}, queue={this.Options.QueueName}, type={typeof(TData).PrettyName()})", LogPropertyKeys.TrackDequeue);
             this.LastDequeuedDate = DateTime.UtcNow;
             return Task.CompletedTask;
         }
@@ -250,11 +250,11 @@
         protected override async Task<IQueueItem<TData>> DequeueWithIntervalAsync(CancellationToken cancellationToken)
         {
             await this.EnsureQueueAsync().AnyContext();
-            this.Logger.LogDebug($"queue item dequeue (queue={this.Options.Name}, count={this.queue.Count})");
+            this.Logger.LogDebug($"queue item dequeue (queue={this.Options.QueueName}, count={this.queue.Count})");
 
             if (this.queue.Count == 0)
             {
-                this.Logger.LogDebug($"no queue items, waiting (name={this.Options.Name})");
+                this.Logger.LogDebug($"no queue items, waiting (name={this.Options.QueueName})");
 
                 while (this.queue.Count == 0
                     && !cancellationToken.IsCancellationRequested)
@@ -288,7 +288,7 @@
             {
                 await item.RenewLockAsync().AnyContext();
 
-                this.Logger.LogJournal(LogKeys.Queueing, $"item dequeued (id={item.Id}, queue={this.Options.Name}, type={typeof(TData).PrettyName()})", LogPropertyKeys.TrackEnqueue);
+                this.Logger.LogJournal(LogKeys.Queueing, $"item dequeued (id={item.Id}, queue={this.Options.QueueName}, type={typeof(TData).PrettyName()})", LogPropertyKeys.TrackEnqueue);
                 this.Logger.LogTrace(LogKeys.Queueing, item.Id, typeof(TData).PrettyName(), LogTraceNames.Queue, DateTime.UtcNow - item.EnqueuedDate);
                 this.LastDequeuedDate = DateTime.UtcNow;
                 return item;
@@ -306,7 +306,7 @@
 
             Task.Run(async () =>
             {
-                this.Logger.LogInformation($"{{LogKey:l}} processing started (queue={this.Options.Name}, type={this.GetType().PrettyName()})", args: new[] { LogKeys.Queueing });
+                this.Logger.LogInformation($"{{LogKey:l}} processing started (queue={this.Options.QueueName}, type={this.GetType().PrettyName()})", args: new[] { LogKeys.Queueing });
                 while (!linkedCancellationToken.IsCancellationRequested)
                 {
                     IQueueItem<TData> item = null;
@@ -351,7 +351,7 @@
                     }
                 }
 
-                this.Logger.LogDebug($"queue processing exiting (name={this.Options.Name}, cancellation={linkedCancellationToken.IsCancellationRequested})");
+                this.Logger.LogDebug($"queue processing exiting (name={this.Options.QueueName}, cancellation={linkedCancellationToken.IsCancellationRequested})");
             }, linkedCancellationToken.Token).ContinueWith(t => linkedCancellationToken.Dispose());
         }
 

@@ -15,7 +15,7 @@
 
         public InMemoryQueueOptionsBuilder Name(string name)
         {
-            this.Target.Name = name;
+            this.Target.QueueName = name;
             return this;
         }
 

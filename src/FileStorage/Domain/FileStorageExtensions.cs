@@ -19,7 +19,6 @@
                 path,
 #pragma warning disable CA2000 // Dispose objects before losing scope
                 new MemoryStream(bytes),
-#pragma warning restore CA2000 // Dispose objects before losing scope
                 cancellationToken);
         }
 
@@ -33,7 +32,6 @@
                 path,
 #pragma warning disable CA2000 // Dispose objects before losing scope
                 new MemoryStream(bytes),
-#pragma warning restore CA2000 // Dispose objects before losing scope
                 cancellationToken);
         }
 

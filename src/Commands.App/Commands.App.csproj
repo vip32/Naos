@@ -26,6 +26,7 @@
     <ProjectReference Include="..\Commands.Domain\Commands.Domain.csproj" />
     <ProjectReference Include="..\Configuration.App.Web\Configuration.App.Web.csproj" />
     <ProjectReference Include="..\Configuration.App\Configuration.App.csproj" />
+    <ProjectReference Include="..\Tracing.Domain\Tracing.Domain.csproj" />
   </ItemGroup>
 
 </Project>

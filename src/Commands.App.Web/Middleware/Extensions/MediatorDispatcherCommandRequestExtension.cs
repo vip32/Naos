@@ -8,7 +8,7 @@
     using Naos.Foundation;
     using Newtonsoft.Json.Linq;
 
-    public class MediatorDispatcherCommandRequestExtension : CommandRequestBaseExtension
+    public class MediatorDispatcherCommandRequestExtension : CommandRequestExtension
     {
         private readonly ILogger<LoggingCommandRequestExtension> logger;
         private readonly IMediator mediator;
@@ -36,7 +36,6 @@
             if (response != null)
             {
                 var jResponse = JObject.FromObject(response);
-
                 if (!jResponse.GetValueByPath<bool>("cancelled"))
                 {
                     var resultToken = jResponse.SelectToken("result") ?? jResponse.SelectToken("Result");
@@ -54,13 +53,13 @@
                 }
             }
 
-            await context.Response.Header("x-commandid", command.Id).AnyContext();
+            await context.Response.Header(CommandRequestHeaders.CommandId, command.Id).AnyContext();
             // the extension chain is terminated here
         }
 
         public override async Task InvokeAsync<TCommand>(
             TCommand command,
-            RequestCommandRegistration<TCommand> registration,
+            CommandRequestRegistration<TCommand> registration,
             HttpContext context)
         {
             this.logger.LogInformation($"{{LogKey:l}} request command dispatch (name={registration.CommandType.PrettyName()}, id={command.Id}), type=mediator)", LogKeys.AppCommand);
@@ -80,7 +79,7 @@
                 }
             }
 
-            await context.Response.Header("x-commandid", command.Id).AnyContext();
+            await context.Response.Header(CommandRequestHeaders.CommandId, command.Id).AnyContext();
             // the extension chain is terminated here
         }
     }

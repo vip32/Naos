@@ -93,11 +93,11 @@
             return base.CanRoundTripSeekableStreamAsync();
         }
 
-        [Fact]
-        public override Task WillRespectStreamOffsetAsync()
-        {
-            return base.WillRespectStreamOffsetAsync();
-        }
+        //[Fact]
+        //public override Task WillRespectStreamOffsetAsync()
+        //{
+        //    return base.WillRespectStreamOffsetAsync();
+        //}
 
         protected override IFileStorage GetStorage()
         {

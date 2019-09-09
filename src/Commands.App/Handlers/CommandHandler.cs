@@ -11,7 +11,7 @@
     /// <typeparam name="TCommand">The type of the request.</typeparam>
     /// <typeparam name="TResponse">Return value of the wrapped command handler.</typeparam>
     /// <seealso cref="MediatR.IRequestHandler{Command{TResponse}, CommandResponse{TResponse}}" />
-    public abstract class BaseCommandHandler<TCommand, TResponse>
+    public abstract class CommandHandler<TCommand, TResponse>
         : IRequestHandler<TCommand, CommandResponse<TResponse>>
         where TCommand : Command<TResponse>
     {

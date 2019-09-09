@@ -129,7 +129,7 @@
                         .Mediator(Substitute.For<IMediator>())
                         .LoggerFactory(Substitute.For<ILoggerFactory>())
                         .ConnectionString(connectionString)
-                        .Name(name)
+                        .QueueName(name)
                         .Retries(retries)
                         .RetryPolicy(retries <= 0 ? new NoRetry() : (IRetryPolicy)new ExponentialRetry(retryDelay.GetValueOrDefault(TimeSpan.FromMinutes(1)), retries))
                         .ProcessInterval(processInterval.GetValueOrDefault(TimeSpan.FromMinutes(5)))

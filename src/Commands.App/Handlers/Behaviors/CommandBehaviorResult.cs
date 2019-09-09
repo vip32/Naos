@@ -4,11 +4,11 @@
 
     public class CommandBehaviorResult
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CommandBehaviorResult"/> class.
-        /// </summary>
-        /// <param name="cancelledReason">The cancelled reason.</param>
-        public CommandBehaviorResult(string cancelledReason = null)
+        public bool Cancelled { get; private set; }
+
+        public string CancelledReason { get; private set; }
+
+        public void SetCancelled(string cancelledReason)
         {
             if (!cancelledReason.IsNullOrEmpty())
             {
@@ -16,9 +16,5 @@
                 this.CancelledReason = cancelledReason;
             }
         }
-
-        public bool Cancelled { get; }
-
-        public string CancelledReason { get; }
     }
 }

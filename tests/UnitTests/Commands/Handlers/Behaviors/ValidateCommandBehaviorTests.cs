@@ -14,19 +14,21 @@
         public async Task ValidCommand_Succeeds()
         {
             // arrange/act
-            var result = await new ValidateCommandBehavior().ExecuteAsync(new StubCommand("Name1")).AnyContext();
+            var behaviorResult = new CommandBehaviorResult();
+            await new ValidateCommandBehavior().ExecutePreHandleAsync(new StubCommand("Name1"), behaviorResult).AnyContext();
 
             // assert
-            Assert.NotNull(result);
-            Assert.False(result.Cancelled);
+            behaviorResult.ShouldNotBeNull();
+            behaviorResult.Cancelled.ShouldBeFalse();
         }
 
         [Fact]
         public async Task InvalidatCommand_Fails()
         {
             // arrange/act
+            var behaviorResult = new CommandBehaviorResult();
             var ex = await Assert.ThrowsAsync<ValidationException>(() =>
-                new ValidateCommandBehavior().ExecuteAsync(new StubCommand(null))).AnyContext();
+                new ValidateCommandBehavior().ExecutePreHandleAsync(new StubCommand(null), behaviorResult)).AnyContext();
 
             // assert
             ex.Message.ShouldContain("has validation errors");

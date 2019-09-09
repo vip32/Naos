@@ -12,7 +12,7 @@ variables:
   deployEnabled: true
   deployAzureSubscription: 'Visual Studio Premium with MSDN (bIT) (b527698f-a403-465f-8005-932acc5d9f7d)' # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/resources?view=azure-devops#troubleshooting-authorization-for-a-yaml-pipeline
   deployAppName: 'naos-sample'
-  vmImage: 'windows-2019' # https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/hosted?view=azure-devops&tabs=yaml#use-a-microsoft-hosted-agent
+  vmImage: 'windows-latest' # https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/hosted?view=azure-devops&tabs=yaml#use-a-microsoft-hosted-agent
   group: vars # azure pipelines variable group https://docs.microsoft.com/en-us/azure/devops/pipelines/library/variable-groups?view=azdevops&tabs=yaml
 
 trigger:

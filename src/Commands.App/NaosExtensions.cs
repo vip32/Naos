@@ -58,25 +58,25 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            options.Context.Services.AddSingleton<ICommandBehavior, TBehavior>();
+            options.Context.Services.AddScoped<ICommandBehavior, TBehavior>();
 
             options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: commands behavior added (type={typeof(TBehavior).Name})"); // TODO: list available commands/handlers
 
             return options;
         }
 
-        public static CommandsOptions AddBehavior<TBehavior>(
+        public static CommandsOptions AddBehavior(
             this CommandsOptions options,
-            TBehavior behavior)
-            where TBehavior : class, ICommandBehavior
+            Func<IServiceProvider, ICommandBehavior> behavior)
+            //where TBehavior : class, ICommandBehavior
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
             EnsureArg.IsNotNull(behavior, nameof(behavior));
 
-            options.Context.Services.AddSingleton<ICommandBehavior>(behavior);
+            options.Context.Services.AddScoped(behavior);
 
-            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: commands behavior added (type={typeof(TBehavior).Name})"); // TODO: list available commands/handlers
+            //options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: commands behavior added (type={typeof(TBehavior).Name})"); // TODO: list available commands/handlers
 
             return options;
         }

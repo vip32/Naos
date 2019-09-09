@@ -49,6 +49,8 @@
 
         public bool HasResponse => this.GetType().PrettyName().Contains(","); // is a second generic TResponse defined?
 
+        public bool IsQueued { get; set; }
+
         public IEnumerable<Type> ExtensionTypesBefore { get; set; } = new[] { typeof(LoggingCommandRequestExtension) };
 
         public IEnumerable<Type> ExtensionTypes { get; set; }
@@ -59,7 +61,8 @@
     }
 
 #pragma warning disable SA1402 // File may only contain a single type
-    public class CommandRequestRegistration<TCommand, TResponse> : CommandRequestRegistration
+    public class CommandRequestRegistration<TCommand, TResponse> :
+        CommandRequestRegistration
         where TCommand : Command<TResponse>
         //where TResponse : CommandResponse<TResponse>
     {
@@ -82,7 +85,7 @@
         public new Func<TCommand, HttpContext, Task> OnSuccess { get; set; }
     }
 
-    public class RequestCommandRegistration<TCommand> : CommandRequestRegistration
+    public class CommandRequestRegistration<TCommand> : CommandRequestRegistration
         where TCommand : Command<object>
         //where TResponse : CommandResponse<TResponse>
     {

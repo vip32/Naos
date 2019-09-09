@@ -6,7 +6,7 @@
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
 
-    public class LoggingCommandRequestExtension : CommandRequestBaseExtension
+    public class LoggingCommandRequestExtension : CommandRequestExtension
     {
         private readonly ILogger<LoggingCommandRequestExtension> logger;
 
@@ -30,7 +30,7 @@
 
         public override async Task InvokeAsync<TCommand>(
             TCommand command,
-            RequestCommandRegistration<TCommand> registration,
+            CommandRequestRegistration<TCommand> registration,
             HttpContext context)
         {
             this.logger.LogInformation($"{{LogKey:l}} command request received (name={registration.CommandType.PrettyName()}, id={command.Id})", LogKeys.AppCommand);

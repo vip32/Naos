@@ -4,11 +4,11 @@
     using Microsoft.AspNetCore.Http;
     using Naos.Foundation;
 
-    public abstract class CommandRequestBaseExtension : ICommandRequestExtension
+    public abstract class CommandRequestExtension : ICommandRequestExtension
     {
         private ICommandRequestExtension next;
 
-        public CommandRequestBaseExtension SetNext(ICommandRequestExtension extension)
+        public CommandRequestExtension SetNext(ICommandRequestExtension extension)
         {
             this.next = extension;
 
@@ -31,7 +31,7 @@
 
         public virtual async Task InvokeAsync<TCommand>(
             TCommand command,
-            RequestCommandRegistration<TCommand> registration,
+            CommandRequestRegistration<TCommand> registration,
             HttpContext context)
             where TCommand : Command<object>
         {

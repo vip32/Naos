@@ -6,7 +6,6 @@
     using System.Linq;
     using System.Net;
     using System.Threading;
-    using MediatR;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Diagnostics.HealthChecks;
     using Microsoft.AspNetCore.Hosting;
@@ -19,16 +18,12 @@
     using Microsoft.Extensions.Logging;
     using Naos.Core.App.Web;
     using Naos.Core.Commands.App;
-    using Naos.Core.Commands.App.Web;
     using Naos.Core.Commands.Infrastructure.FileStorage;
     using Naos.Core.Configuration.App;
     using Naos.Core.FileStorage.Infrastructure;
     using Naos.Core.JobScheduling.App;
     using Naos.Core.JobScheduling.Domain;
     using Naos.Core.Messaging.Domain;
-    using Naos.Core.Queueing;
-    using Naos.Core.Queueing.App.Web;
-    using Naos.Core.Queueing.Domain;
     using Naos.Foundation;
     using Naos.Sample.Customers.App;
     using Newtonsoft.Json;
@@ -48,14 +43,6 @@
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IQueue<CommandWrapper>>(sp =>
-                new InMemoryQueue<CommandWrapper>(o => o
-                        .Mediator(sp.GetRequiredService<IMediator>())
-                        .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
-                        .RetryDelay(TimeSpan.FromMinutes(1))
-                        .ProcessInterval(TimeSpan.FromMilliseconds(200))
-                        .DequeueInterval(TimeSpan.FromMilliseconds(200))));
-
             services
                 .AddMiddlewareAnalysis()
                 .AddHttpContextAccessor()
@@ -141,17 +128,22 @@
                     .AddRequestFiltering()
                     .AddServiceExceptions()
                     .AddCommands(o => o
+                        .AddBehavior<TracerCommandBehavior>()
                         .AddBehavior<ValidateCommandBehavior>()
                         .AddBehavior<JournalCommandBehavior>()
-                        .AddBehavior(new FileStoragePersistCommandBehavior(
+                        .AddBehavior(sp => new FileStoragePersistCommandBehavior(
                             new FolderFileStorage(o => o
-                                .Folder(Path.Combine(Path.GetTempPath(), "naos_filestorage", "commands")))))
+                                .Folder(Path.Combine(Path.GetTempPath(), "naos_commands", "journal")))))
                         .AddRequests(o => o
-                            .Post<CreateCustomerCommand>("api/commands/customers/create", HttpStatusCode.Created, onSuccess: (cmd, ctx) => ctx.Response.Location($"api/customers/{cmd.Customer.Id}"))
-                            .Get<GetActiveCustomersQuery, IEnumerable<Sample.Customers.Domain.Customer>>("api/commands/customers/active")
-                            // queued commands
-                            .Get<PingCommand>("api/commands/queue/ping", HttpStatusCode.Accepted, extensions: new[] { typeof(QueueDispatcherCommandRequestExtension) })
-                            .Get<GetActiveCustomersQuery, IEnumerable<Sample.Customers.Domain.Customer>>("api/commands/queue/customers/active", HttpStatusCode.Accepted, extensions: new[] { typeof(QueueDispatcherCommandRequestExtension) })))
+                            .Post<CreateCustomerCommand>("api/commands/customers/create", HttpStatusCode.Created, "Customers", onSuccess: (cmd, ctx) => ctx.Response.Location($"api/customers/{cmd.Customer.Id}"))
+                            .Get<GetActiveCustomersQuery, IEnumerable<Sample.Customers.Domain.Customer>>("api/commands/customers/active", groupName: "Customers")
+                            //.UseInMemoryQueue()
+                            .UseAzureStorageQueue()
+                            //.UseInMemoryStorage()
+                            //.UseFolderStorage()
+                            .UseAzureBlobStorage()
+                            .GetQueued<PingCommand>("api/commands/queue/ping")
+                            .GetQueued<GetActiveCustomersQuery, IEnumerable<Sample.Customers.Domain.Customer>>("api/commands/queue/customers/active", groupName: "Customers")))
                     .AddOperations(o => o
                         .AddInteractiveConsole()
                         .AddLogging(o => o

@@ -5,7 +5,7 @@
     using Newtonsoft.Json.Converters;
     using Newtonsoft.Json.Serialization;
 
-    public static class DefaultJsonSerializerSettings
+    public static class TypedJsonSerializerSettings
     {
         public static JsonSerializerSettings Create()
         {
@@ -14,7 +14,8 @@
                 DefaultValueHandling = DefaultValueHandling.Ignore,
                 NullValueHandling = NullValueHandling.Ignore,
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                TypeNameHandling = TypeNameHandling.None,
+#pragma warning disable SCS0028 // TypeNameHandling is set to other value than 'None' that may lead to deserialization vulnerability
+                TypeNameHandling = TypeNameHandling.All,
                 //DateParseHandling = DateParseHandling.DateTimeOffset,
                 //DateFormatHandling = DateFormatHandling.IsoDateFormat,
                 //DateTimeZoneHandling = DateTimeZoneHandling.Utc,

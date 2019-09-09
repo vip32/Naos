@@ -11,8 +11,8 @@
     /// </summary>
     public static partial class Extensions
     {
-        public static Task<List<TSource>> ToListAsyncSafe<TSource>(
-            this IQueryable<TSource> source,
+        public static Task<List<TEntity>> ToListAsyncSafe<TEntity>(
+            this IQueryable<TEntity> source,
             CancellationToken cancellationToken = default)
         {
             if (source == null)
@@ -20,7 +20,7 @@
                 throw new System.ArgumentNullException(nameof(source));
             }
 
-            if (!(source is IAsyncEnumerable<TSource>))
+            if (!(source is IAsyncEnumerable<TEntity>))
             {
                 return Task.FromResult(source.ToList());
             }

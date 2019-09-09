@@ -14,6 +14,11 @@
         private readonly FolderFileStorageOptions options;
         private readonly object @lock = new object();
 
+        public FolderFileStorage()
+            : this(new FolderFileStorageOptions())
+        {
+        }
+
         public FolderFileStorage(FolderFileStorageOptions options)
         {
             this.options = options ?? new FolderFileStorageOptions();
