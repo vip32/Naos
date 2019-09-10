@@ -20,6 +20,7 @@
                 //DateTimeZoneHandling = DateTimeZoneHandling.Utc,
                 Converters = new List<JsonConverter>
                 {
+                    //new GuidConverter(),
                     new StringEnumConverter(),
                     new IsoDateTimeConverter
                     {

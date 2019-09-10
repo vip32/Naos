@@ -120,7 +120,8 @@
                     .AddModules(m => m
                         .AddCountriesModule()
                         .AddCustomersModule()
-                        .AddUserAccountsModule())
+                        .AddUserAccountsModule()
+                        .AddCatalogsModule())
                     .AddServiceContext()
                     //.AddAuthenticationApiKeyStatic()
                     //.AddEasyAuthentication(/*o => o.Provider = EasyAuthProviders.AzureActiveDirectory*/)

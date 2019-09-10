@@ -7,8 +7,25 @@
 
     public static class ExpressionHelper
     {
+        public static Expression Unwrap(Expression expression)
+        {
+            if (expression is LambdaExpression lambdaExpression)
+            {
+                return lambdaExpression.Body;
+            }
+
+            return expression;
+        }
+
         public static string GetPropertyName(Expression expression)
         {
+            expression = Unwrap(expression);
+
+            if (expression is LambdaExpression lambdaExpression)
+            {
+                return GetPropertyName(lambdaExpression.Body);
+            }
+
             if (expression is UnaryExpression unaryExpression)
             {
                 expression = unaryExpression.Operand;
@@ -24,6 +41,13 @@
 
         public static PropertyInfo GetProperty(Expression expression)
         {
+            expression = Unwrap(expression);
+
+            if (expression is LambdaExpression lambdaExpression)
+            {
+                return GetProperty(lambdaExpression.Body);
+            }
+
             if (expression is UnaryExpression unaryExpr)
             {
                 expression = unaryExpr.Operand;

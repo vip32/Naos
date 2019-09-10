@@ -12,6 +12,11 @@
 
         public static byte[] Compress(byte[] source)
         {
+            if(source == null)
+            {
+                return null;
+            }
+
             using (var sourceStream = new MemoryStream(source))
             {
                 using (var destinationStream = new MemoryStream())
@@ -24,6 +29,11 @@
 
         public static byte[] Decompress(byte[] source)
         {
+            if (source == null)
+            {
+                return null;
+            }
+
             using (var sourceStream = new MemoryStream(source))
             {
                 using (var destinationStream = new MemoryStream())

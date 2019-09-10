@@ -2,7 +2,7 @@
 {
     using Humanizer;
 
-    public class SqliteDocumentProviderOptions : SqlServerDocumentProviderOptions
+    public class SqliteDocumentProviderOptions<T> : SqlServerDocumentProviderOptions<T>
     {
     }
 }

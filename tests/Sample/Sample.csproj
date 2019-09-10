@@ -22,7 +22,7 @@
     <PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="2.2.2" />
     <PackageReference Include="AspNetCore.HealthChecks.DocumentDb" Version="2.2.1" />
     <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="2.2.1" />
-    <PackageReference Include="Humanizer.Core" Version="2.6.2" />
+    <PackageReference Include="Humanizer.Core" Version="2.7.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Api.Analyzers" Version="2.2.6" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.6" />
@@ -46,6 +46,8 @@
     <ProjectReference Include="..\..\src\App.Web\App.Web.csproj" />
     <ProjectReference Include="..\..\src\App\App.csproj" />
     <ProjectReference Include="..\..\src\Commands.App\Commands.App.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure.Sqlite\Infrastructure.Sqlite.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure.SqlServer\Infrastructure.SqlServer.csproj" />
     <ProjectReference Include="..\..\src\Queueing.Infrastructure.Azure\Queueing.Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\..\src\ServiceContext.App\ServiceContext.App.csproj" />
   </ItemGroup>

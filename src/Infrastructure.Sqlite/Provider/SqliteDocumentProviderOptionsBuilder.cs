@@ -1,6 +1,6 @@
 ﻿namespace Naos.Foundation.Infrastructure
 {
-    public class SqliteDocumentProviderOptionsBuilder : SqlServerDocumentProviderOptionsBuilder
+    public class SqliteDocumentProviderOptionsBuilder<T> : SqlServerDocumentProviderOptionsBuilder<T>
     {
     }
 }

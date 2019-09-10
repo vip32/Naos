@@ -5,6 +5,8 @@
     public interface IIndexMap
     {
         string Name { get; set; }
+
+        Type Type { get; set; }
     }
 
     public interface IIndexMap<T> : IIndexMap

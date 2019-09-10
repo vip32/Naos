@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.IntegrationTests.Customers.Domain
+﻿namespace Naos.Sample.IntegrationTests.Customers.Infrastructure
 {
     using System;
     using System.Linq;

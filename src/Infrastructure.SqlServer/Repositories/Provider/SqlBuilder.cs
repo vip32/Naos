@@ -1,12 +1,9 @@
 ﻿namespace Naos.Foundation.Infrastructure
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
-    using System.Reflection;
-    using EnsureThat;
 
     public class SqlBuilder : ISqlBuilder
     {
@@ -64,9 +61,20 @@
                 return string.Empty;
             }
 
+            if (expression is LambdaExpression lambdaExpression)
+            {
+                return this.BuildCriteriaSelect(lambdaExpression.Body, indexMaps);
+            }
+
             // https://github.com/OctopusDeploy/Nevermore/blob/master/source/Nevermore/QueryBuilderWhereExtensions.cs
             if (expression is BinaryExpression binaryExpression)
             {
+                //(binaryExpression.Left as BinaryExpression).Left
+                if(binaryExpression.NodeType== ExpressionType.AndAlso)
+                {
+                    return $"{this.BuildCriteriaSelect(binaryExpression.Left, indexMaps)} { this.BuildCriteriaSelect(binaryExpression.Right, indexMaps)}";
+                }
+
                 var property = ExpressionHelper.GetProperty(binaryExpression.Left);
                 var value = ExpressionHelper.GetValueFromExpression(binaryExpression.Right, property.PropertyType);
                 if (!property.Name.EqualsAny(indexMaps?.Select(i => i.Name)))
@@ -83,7 +91,7 @@
                         ExpressionType.GreaterThanOrEqual => $" AND [{this.Sanatize(property.Name).ToLower()}{this.IndexColumnNameSuffix}] >= '{this.Sanatize(value.ToString())}' ",
                         ExpressionType.LessThan => $" AND [{this.Sanatize(property.Name).ToLower()}{this.IndexColumnNameSuffix}] < '{this.Sanatize(value.ToString())}' ",
                         ExpressionType.LessThanOrEqual => $" AND [{this.Sanatize(property.Name).ToLower()}{this.IndexColumnNameSuffix}] <= '{this.Sanatize(value.ToString())}' ",
-                        ExpressionType.AndAlso => $"{this.BuildCriteriaSelect(binaryExpression.Left, indexMaps)} {this.BuildCriteriaSelect(binaryExpression.Right, indexMaps)}",
+                        //ExpressionType.AndAlso => $"{this.BuildCriteriaSelect(binaryExpression.Left, indexMaps)} {this.BuildCriteriaSelect(binaryExpression.Right, indexMaps)}",
                         _ => $" AND [{this.Sanatize(property.Name).ToLower()}{this.IndexColumnNameSuffix}] = '{this.Sanatize(value.ToString())}' ",
                     };
                 }
@@ -152,7 +160,7 @@
 
                 if (memberExpression.Type == typeof(bool))
                 {
-                    return $" AND [{this.Sanatize(memberExpression.Member.Name).ToLower()}{this.IndexColumnNameSuffix}] = {this.Sanatize(value.ToString())} ";
+                    return $" AND [{this.Sanatize(memberExpression.Member.Name).ToLower()}{this.IndexColumnNameSuffix}] = '{this.Sanatize(value.ToString())}' "; // =bit dbtype
                 }
 
                 throw new NotSupportedException("Only boolean properties are allowed for where expressions without a comparison operator or method call");
@@ -256,7 +264,7 @@
                 take = maxTakeSize;
             }
 
-            if(skip == 0 && !take.HasValue)
+            if (skip == 0 && !take.HasValue)
             {
                 return string.Empty;
             }
@@ -264,17 +272,20 @@
             return $" OFFSET {skip.Value} ROWS FETCH NEXT {take.Value} ROWS ONLY; ";
         }
 
-        public virtual string BuildSortingSelect(Expression expression, IEnumerable<IIndexMap> indexMaps = null)
+        public virtual string BuildOrderingSelect(
+            Expression expression = null,
+            bool descending = false,
+            IEnumerable<IIndexMap> indexMaps = null)
         {
-            if(expression == null)
+            if (expression == null || indexMaps.IsNullOrEmpty())
             {
-                return string.Empty;
+                return " ORDER BY [id] ";
             }
 
             var column = ExpressionHelper.GetPropertyName(expression);
             if (!column.EqualsAny(indexMaps?.Select(i => i.Name)))
             {
-                return string.Empty;
+                return " ORDER BY [id] ";
             }
 
             return $" ORDER BY [{column}{this.IndexColumnNameSuffix}] DESC ";
@@ -330,6 +341,44 @@
             return @"
     SELECT QUOTENAME(TABLE_SCHEMA) + '.' + QUOTENAME(TABLE_NAME) AS Name
     FROM INFORMATION_SCHEMA.TABLES";
+        }
+
+        public string ToDbType(Type type)
+        {
+            if (type == typeof(int))
+            {
+                return "int";
+            }
+            else if (type == typeof(bool))
+            {
+                return "bit";
+            }
+            else if (type == typeof(decimal))
+            {
+                return "decimal";
+            }
+            else if (type == typeof(long))
+            {
+                return "bigint";
+            }
+            else if (type == typeof(short))
+            {
+                return "smallint";
+            }
+            else if (type == typeof(float))
+            {
+                return "float";
+            }
+            else if (type == typeof(DateTime))
+            {
+                return "datetime";
+            }
+            else if (type == typeof(char))
+            {
+                return "NVARCHAR(1)";
+            }
+
+            return "NVARCHAR(2048)";
         }
 
         private string Sanatize(string value)

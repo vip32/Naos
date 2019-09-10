@@ -19,10 +19,14 @@
         {
         }
 
-        protected override async Task<IDbConnection> CreateConnectionAsync()
+        protected override async Task<IDbConnection> CreateConnectionAsync(bool openConnection = true)
         {
             var connection = new SQLiteConnection(this.Options.ConnectionString);
-            await connection.OpenAsync().AnyContext();
+            if (openConnection)
+            {
+                await connection.OpenAsync().AnyContext();
+            }
+
             return connection;
         }
 

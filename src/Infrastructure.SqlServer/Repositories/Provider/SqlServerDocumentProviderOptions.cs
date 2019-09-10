@@ -19,7 +19,7 @@
 
         public string DatabaseName { get; set; }
 
-        public string SchemaName { get; set; }
+        public string SchemaName { get; set; } = "dbo";
 
         public bool BufferedLoad { get; set; }
 
@@ -37,7 +37,7 @@
 
         public bool EnableLogging { get; set; }
 
-        //public SortColumn DefaultSortColumn { get; set; }
+        public string DefaultSortColumn { get; set; } = "id";
 
         public virtual string GetTableName(string suffix = null)
         {
@@ -62,9 +62,11 @@
                 this.calculatedTableName += suffix;
             }
 
-            return !string.IsNullOrEmpty(this.SchemaName)
+            this.calculatedTableName = !string.IsNullOrEmpty(this.SchemaName)
                 ? $"[{this.SchemaName}].[{this.calculatedTableName }]"
                 : $"[{this.calculatedTableName }]";
+
+            return this.calculatedTableName;
         }
     }
 }

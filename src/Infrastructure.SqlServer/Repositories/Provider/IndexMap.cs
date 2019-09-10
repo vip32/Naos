@@ -6,6 +6,8 @@
     public class IndexMap
     {
         public string Name { get; set; }
+
+        public Type Type { get; set; }
     }
 
 #pragma warning disable SA1402 // File may only contain a single type
@@ -16,6 +18,7 @@
             if (expression != null)
             {
                 this.Name = ExpressionHelper.GetPropertyName(expression);
+                this.Type = ExpressionHelper.GetProperty(expression).PropertyType;
                 this.Expression = expression.Compile();
             }
         }
