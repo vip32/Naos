@@ -3,9 +3,66 @@
     using System;
     using System.Linq.Dynamic.Core;
     using System.Linq.Expressions;
+    using System.Reflection;
 
     public static class ExpressionHelper
     {
+        public static string GetPropertyName(Expression expression)
+        {
+            if (expression is UnaryExpression unaryExpression)
+            {
+                expression = unaryExpression.Operand;
+            }
+
+            if (expression is MemberExpression memberExpression)
+            {
+                return memberExpression.Member.Name;
+            }
+
+            return null;
+        }
+
+        public static PropertyInfo GetProperty(Expression expression)
+        {
+            if (expression is UnaryExpression unaryExpr)
+            {
+                expression = unaryExpr.Operand;
+            }
+
+            if (expression is MemberExpression memberExpr && memberExpr.Member is PropertyInfo propertyInfo)
+            {
+                return propertyInfo;
+            }
+
+            throw new NotSupportedException(
+                $"The left hand side of the expression must be a property accessor (PropertyExpression or UnaryExpression). It is a {expression.GetType()}.");
+        }
+
+        public static object GetValueFromExpression(Expression expression, Type resultType)
+        {
+            object result;
+
+            if (expression is ConstantExpression constantExpression)
+            {
+                result = constantExpression.Value;
+            }
+            else
+            {
+                var objectMember = Expression.Convert(expression, typeof(object));
+                var getterLambda = Expression.Lambda<Func<object>>(objectMember);
+                result = getterLambda.Compile()();
+            }
+
+            if (resultType.GetTypeInfo().IsEnum
+                && result != null
+                && result.GetType().GetTypeInfo().IsPrimitive)
+            {
+                return Enum.ToObject(resultType, result);
+            }
+
+            return result;
+        }
+
         /// <summary>
         /// Cretes expression for specific property.
         /// </summary>

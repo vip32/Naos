@@ -13,7 +13,7 @@
 
         public ISqlBuilder SqlBuilder { get; set; }
 
-        public IEnumerable<IIndexMap<T>> IndexMap { get; set; }
+        public IEnumerable<IIndexMap<T>> IndexMaps { get; set; }
 
         public string DataSource { get; set; }
 

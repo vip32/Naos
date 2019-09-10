@@ -28,13 +28,13 @@
 
         //string BuildCriteriaSelect(string column, CriteriaOperator op, string value);
 
-        string BuildCriteriaSelect(Expression expression = null, IEnumerable<string> columns = null);
+        string BuildCriteriaSelect(Expression expression = null, IEnumerable<IIndexMap> indexMaps = null);
 
         //string BuildCriteriaSelect<TDoc>(IEnumerable<IIndexMap<TDoc>> indexMaps = null, ICriteria criteria = null); //Expression<Func<T, bool>> expression
 
         string BuildTagSelect(string tag);
 
-        string BuildSortingSelect(Expression expression, IEnumerable<string> columns = null);
+        string BuildSortingSelect(Expression expression, IEnumerable<IIndexMap> indexMaps = null);
 
         string BuildPagingSelect(int? skip = null, int? take = null, int? defaultTakeSize = 0, int? maxTakeSize = 0);
 

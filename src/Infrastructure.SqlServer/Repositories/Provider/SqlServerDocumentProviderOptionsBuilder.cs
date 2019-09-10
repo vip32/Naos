@@ -5,6 +5,8 @@
     public class SqlServerDocumentProviderOptionsBuilder<T> :
         BaseOptionsBuilder<SqlServerDocumentProviderOptions<T>, SqlServerDocumentProviderOptionsBuilder<T>>
     {
+        private readonly List<IIndexMap<T>> indexMaps = new List<IIndexMap<T>>();
+
         public SqlServerDocumentProviderOptionsBuilder<T> Serializer(ISerializer serializer)
         {
             this.Target.Serializer = serializer;
@@ -18,9 +20,10 @@
             return this;
         }
 
-        public SqlServerDocumentProviderOptionsBuilder<T> IndexMap(IEnumerable<IIndexMap<T>> indexMap = null)
+        public SqlServerDocumentProviderOptionsBuilder<T> AddIndex(IEnumerable<IIndexMap<T>> indexMap = null)
         {
-            this.Target.IndexMap = indexMap;
+            this.indexMaps.Add(indexMap);
+            this.Target.IndexMaps = this.indexMaps.DistinctBy(i => i.Name);
             return this;
         }
     }

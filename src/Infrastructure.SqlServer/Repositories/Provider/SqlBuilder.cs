@@ -57,9 +57,9 @@
             return $" AND [tags] LIKE '%||{this.Sanatize(tag)}||%'";
         }
 
-        public virtual string BuildCriteriaSelect(Expression expression, IEnumerable<string> columns = null)
+        public virtual string BuildCriteriaSelect(Expression expression, IEnumerable<IIndexMap> indexMaps = null)
         {
-            if (expression == null)
+            if (expression == null || indexMaps.IsNullOrEmpty())
             {
                 return string.Empty;
             }
@@ -67,10 +67,9 @@
             // https://github.com/OctopusDeploy/Nevermore/blob/master/source/Nevermore/QueryBuilderWhereExtensions.cs
             if (expression is BinaryExpression binaryExpression)
             {
-                var property = this.GetProperty(binaryExpression.Left);
-                var value = this.GetValueFromExpression(binaryExpression.Right, property.PropertyType);
-
-                if (!property.Name.EqualsAny(columns))
+                var property = ExpressionHelper.GetProperty(binaryExpression.Left);
+                var value = ExpressionHelper.GetValueFromExpression(binaryExpression.Right, property.PropertyType);
+                if (!property.Name.EqualsAny(indexMaps?.Select(i => i.Name)))
                 {
                     return string.Empty;
                 }
@@ -84,7 +83,7 @@
                         ExpressionType.GreaterThanOrEqual => $" AND [{this.Sanatize(property.Name).ToLower()}{this.IndexColumnNameSuffix}] >= '{this.Sanatize(value.ToString())}' ",
                         ExpressionType.LessThan => $" AND [{this.Sanatize(property.Name).ToLower()}{this.IndexColumnNameSuffix}] < '{this.Sanatize(value.ToString())}' ",
                         ExpressionType.LessThanOrEqual => $" AND [{this.Sanatize(property.Name).ToLower()}{this.IndexColumnNameSuffix}] <= '{this.Sanatize(value.ToString())}' ",
-                        ExpressionType.AndAlso => $"{this.BuildCriteriaSelect(binaryExpression.Left, columns)} {this.BuildCriteriaSelect(binaryExpression.Right, columns)}",
+                        ExpressionType.AndAlso => $"{this.BuildCriteriaSelect(binaryExpression.Left, indexMaps)} {this.BuildCriteriaSelect(binaryExpression.Right, indexMaps)}",
                         _ => $" AND [{this.Sanatize(property.Name).ToLower()}{this.IndexColumnNameSuffix}] = '{this.Sanatize(value.ToString())}' ",
                     };
                 }
@@ -102,7 +101,7 @@
                         ExpressionType.GreaterThanOrEqual => $" AND [{this.Sanatize(property.Name).ToLower()}{this.IndexColumnNameSuffix}] >= {this.Sanatize(value.ToString())} ",
                         ExpressionType.LessThan => $" AND [{this.Sanatize(property.Name).ToLower()}{this.IndexColumnNameSuffix}] < {this.Sanatize(value.ToString())} ",
                         ExpressionType.LessThanOrEqual => $" AND [{this.Sanatize(property.Name).ToLower()}{this.IndexColumnNameSuffix}] <= {this.Sanatize(value.ToString())} ",
-                        ExpressionType.AndAlso => $"{this.BuildCriteriaSelect(binaryExpression.Left, columns)} {this.BuildCriteriaSelect(binaryExpression.Right, columns)}",
+                        ExpressionType.AndAlso => $"{this.BuildCriteriaSelect(binaryExpression.Left, indexMaps)} {this.BuildCriteriaSelect(binaryExpression.Right, indexMaps)}",
                         _ => $" AND [{this.Sanatize(property.Name).ToLower()}{this.IndexColumnNameSuffix}] = {this.Sanatize(value.ToString())} ",
                     };
                 }
@@ -116,12 +115,12 @@
             {
                 if (methodExpression.Arguments.Count == 1 && methodExpression.Method.DeclaringType == typeof(string))
                 {
-                    return this.AddStringMethodFromExpression(methodExpression, columns);
+                    return this.AddStringMethodFromExpression(methodExpression, indexMaps);
                 }
 
                 if (methodExpression.Method.Name == "Contains")
                 {
-                    return this.AddContainsFromExpression(methodExpression, columns); // TODO: implement
+                    return this.AddContainsFromExpression(methodExpression, indexMaps); // TODO: implement
                 }
 
                 throw new NotSupportedException("Only method calls that take a single string argument and Enumerable.Contains methods are supported");
@@ -129,7 +128,7 @@
 
             if (expression is MemberExpression memberExpression1)
             {
-                return HandleMemberExpression(memberExpression1, true, columns);
+                return HandleMemberExpression(memberExpression1, true, indexMaps);
             }
 
             if (expression is UnaryExpression unaryExpression)
@@ -139,14 +138,14 @@
                     throw new NotSupportedException("Only boolean properties are allowed when the ! operator is used, i.e. Where(e => !e.BoolProp)");
                 }
 
-                return HandleMemberExpression(memberExpression2, false, columns);
+                return HandleMemberExpression(memberExpression2, false, indexMaps);
             }
 
             throw new NotSupportedException($"The expression supplied is not supported. Only simple BinaryExpressions, LogicalBinaryExpressions and some MethodCallExpressions are supported. The predicate is a {expression.GetType()}.");
 
-            string HandleMemberExpression(MemberExpression memberExpression, bool value, IEnumerable<string> columns = null)
+            string HandleMemberExpression(MemberExpression memberExpression, bool value, IEnumerable<IIndexMap> indexMaps = null)
             {
-                if (!memberExpression.Member.Name.EqualsAny(columns))
+                if (!memberExpression.Member.Name.EqualsAny(indexMaps?.Select(i => i.Name)))
                 {
                     return string.Empty;
                 }
@@ -265,16 +264,15 @@
             return $" OFFSET {skip.Value} ROWS FETCH NEXT {take.Value} ROWS ONLY; ";
         }
 
-        public virtual string BuildSortingSelect(Expression expression, IEnumerable<string> columns = null)
+        public virtual string BuildSortingSelect(Expression expression, IEnumerable<IIndexMap> indexMaps = null)
         {
             if(expression == null)
             {
                 return string.Empty;
             }
 
-            var column = this.GetColumnName(expression);
-
-            if (!column.EqualsAny(columns))
+            var column = ExpressionHelper.GetPropertyName(expression);
+            if (!column.EqualsAny(indexMaps?.Select(i => i.Name)))
             {
                 return string.Empty;
             }
@@ -350,16 +348,15 @@
             return value;
         }
 
-        private string AddStringMethodFromExpression(MethodCallExpression methodExpression, IEnumerable<string> columns = null)
+        private string AddStringMethodFromExpression(MethodCallExpression methodExpression, IEnumerable<IIndexMap> indexMaps = null)
         {
-            var property = this.GetProperty(methodExpression.Object);
-
-            if (!property.Name.EqualsAny(columns))
+            var property = ExpressionHelper.GetProperty(methodExpression.Object);
+            if (!property.Name.EqualsAny(indexMaps?.Select(i => i.Name)))
             {
                 return string.Empty;
             }
 
-            var value = (string)this.GetValueFromExpression(methodExpression.Arguments[0], typeof(string));
+            var value = (string)ExpressionHelper.GetValueFromExpression(methodExpression.Arguments[0], typeof(string));
 
             return methodExpression.Method.Name switch
             {
@@ -370,69 +367,13 @@
             };
         }
 
-        private string AddContainsFromExpression(MethodCallExpression methodExpression, IEnumerable<string> columns = null)
+        private string AddContainsFromExpression(MethodCallExpression methodExpression, IEnumerable<IIndexMap> indexMaps = null)
         {
             //var property = this.GetProperty(methodExpression.Arguments.Count == 1 ? methodExpression.Arguments[0] : methodExpression.Arguments[1]);
             //var values = (IEnumerable)this.GetValueFromExpression(methodExpression.Arguments.Count == 1 ? methodExpression.Object : methodExpression.Arguments[0], property.PropertyType);
 
             //return $" AND [{this.Sanatize(property.Name).ToLower()}{this.IndexColumnNameSuffix}] IN ({values.Select(a => )}) ";
             return string.Empty; // TODO
-        }
-
-        private PropertyInfo GetProperty(Expression expression)
-        {
-            if (expression is UnaryExpression unaryExpr)
-            {
-                expression = unaryExpr.Operand;
-            }
-
-            if (expression is MemberExpression memberExpr && memberExpr.Member is PropertyInfo pi)
-            {
-                return pi;
-            }
-
-            throw new NotSupportedException(
-                $"The left hand side of the expression must be a property accessor (PropertyExpression or UnaryExpression). It is a {expression.GetType()}.");
-        }
-
-        private string GetColumnName(Expression expression)
-        {
-            if (expression is UnaryExpression uexpr)
-            {
-                expression = uexpr.Operand;
-            }
-
-            if (expression is MemberExpression memberExpression)
-            {
-                return memberExpression.Member.Name;
-            }
-
-            throw new NotSupportedException($"Expressions of type {expression.GetType()} are not supported for OrderBy and ThenBy");
-        }
-
-        private object GetValueFromExpression(Expression expression, Type resultType)
-        {
-            object result;
-
-            if (expression is ConstantExpression constantExpression)
-            {
-                result = constantExpression.Value;
-            }
-            else
-            {
-                var objectMember = Expression.Convert(expression, typeof(object));
-                var getterLambda = Expression.Lambda<Func<object>>(objectMember);
-                result = getterLambda.Compile()();
-            }
-
-            if (resultType.GetTypeInfo().IsEnum
-                && result != null
-                && result.GetType().GetTypeInfo().IsPrimitive)
-            {
-                return Enum.ToObject(resultType, result);
-            }
-
-            return result;
         }
     }
 }
