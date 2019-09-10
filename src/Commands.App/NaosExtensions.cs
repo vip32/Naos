@@ -32,7 +32,7 @@
             // needed for mediator, register all commands + handlers
             naosOptions.Context.Services
                 .Scan(scan => scan
-                    .FromApplicationDependencies()
+                    .FromApplicationDependencies(a => !a.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) && !a.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase))
                     .AddClasses(classes => classes.Where(c => (c.Name.EndsWith("Command", StringComparison.OrdinalIgnoreCase) || c.Name.EndsWith("CommandHandler", StringComparison.OrdinalIgnoreCase)) && !c.Name.Contains("ConsoleCommand")))
                     .AsImplementedInterfaces());
 

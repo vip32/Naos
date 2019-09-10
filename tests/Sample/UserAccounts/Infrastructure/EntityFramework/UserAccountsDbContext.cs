@@ -10,7 +10,7 @@
         {
         }
 
-        public UserAccountsDbContext(DbContextOptions options)
+        public UserAccountsDbContext(DbContextOptions<UserAccountsDbContext> options)
             : base(options)
         {
         }

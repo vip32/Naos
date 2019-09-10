@@ -183,6 +183,10 @@
                         .UseFileSystemRegistry()));
 
             // TODO: need to find a way to start the MessageBroker (done by resolving the IMessageBroker somewhere, HostedService? like scheduling)
+            services.AddHealthChecksUI(setupSettings: setup =>
+            {
+                setup.AddHealthCheckEndpoint("Product.Capability", "https://localhost:5001/healthcheck");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -210,33 +214,42 @@
 
             // https://blog.elmah.io/asp-net-core-2-2-health-checks-explained/
             // https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks/blob/master/src/HealthChecks.UI/ServiceCollectionExtensions.cs
-            app.UseHealthChecks("/health", new HealthCheckOptions // TODO: move to UseNaosOperationsHealthChecks
+            app.UseHealthChecks("/healthcheck", new HealthCheckOptions // TODO: move to UseNaosOperationsHealthChecks
             {
-                ResponseWriter = async (c, r) =>
-                {
-                    c.Response.ContentType = ContentType.JSON.ToValue();
-                    await c.Response.WriteAsync(JsonConvert.SerializeObject(new
-                    {
-                        status = r.Status.ToString(),
-                        took = r.TotalDuration.ToString(),
-                        checks = r.Entries.Select(e => new
-                        {
-                            //service = c.GetServiceName(),
-                            key = e.Key,
-                            status = e.Value.Status.ToString(),
-                            took = e.Value.Duration.ToString(),
-                            message = e.Value.Exception?.Message,
-                            data = e.Value.Data
-                        })
-                    }, DefaultJsonSerializerSettings.Create())).AnyContext();
-                }
+                Predicate = _ => true,
+                ResponseWriter = HealthChecks.UI.Client.UIResponseWriter.WriteHealthCheckUIResponse
             });
 
-            //app.UseHealthChecksUI(s =>
+            //app.UseHealthChecks("/health", new HealthCheckOptions // TODO: move to UseNaosOperationsHealthChecks
             //{
-            //    s.ApiPath = "/health/api";
-            //    s.UIPath = "/health/ui";
+            //    ResponseWriter = async (c, r) =>
+            //    {
+            //        c.Response.ContentType = ContentType.JSON.ToValue();
+            //        await c.Response.WriteAsync(JsonConvert.SerializeObject(new
+            //        {
+            //            status = r.Status.ToString(),
+            //            took = r.TotalDuration.ToString(),
+            //            checks = r.Entries.Select(e => new
+            //            {
+            //                //service = c.GetServiceName(),
+            //                key = e.Key,
+            //                status = e.Value.Status.ToString(),
+            //                took = e.Value.Duration.ToString(),
+            //                message = e.Value.Exception?.Message,
+            //                data = e.Value.Data
+            //            })
+            //        }, DefaultJsonSerializerSettings.Create())).AnyContext();
+            //    }
             //});
+
+            app.UseHealthChecksUI(s =>
+            {
+                // https://jeremylindsayni.wordpress.com/2019/09/09/healthcheck-endpoints-in-c-in-mvc-projects-using-asp-net-core-and-writing-results-to-azure-application-insights/
+                // https://localhost:5001/healthchecks-ui
+                //s.UseRelativeApiPath = true;
+                //s.ApiPath = "/healthchecks-api";
+                //s.UIPath = "/health/ui";
+            });
 
             //app.UseAuthentication();
             app.UseMvc();
