@@ -78,6 +78,11 @@
 
             using (var conn = await this.CreateConnectionAsync().AnyContext())
             {
+                if (this.Options.IsLoggingEnabled)
+                {
+                    this.Logger.LogDebug($"sql document query: {sql}");
+                }
+
                 return conn.Query<int>(sql.ToString()).SingleOrDefault();
             }
         }
@@ -96,6 +101,11 @@
 
             using (var conn = await this.CreateConnectionAsync().AnyContext())
             {
+                if (this.Options.IsLoggingEnabled)
+                {
+                    this.Logger.LogDebug($"sql document query: {sql}");
+                }
+
                 return conn.Query<int>(sql.ToString(), new { key }).Any();
             }
         }
@@ -137,6 +147,11 @@
 
             using (var conn = await this.CreateConnectionAsync().AnyContext())
             {
+                if (this.Options.IsLoggingEnabled)
+                {
+                    this.Logger.LogDebug($"sql document query: {sql}");
+                }
+
                 return conn.Query<object>(sql.ToString());
             }
         }
@@ -211,6 +226,11 @@
 
             using (var conn = await this.CreateConnectionAsync().AnyContext())
             {
+                if (this.Options.IsLoggingEnabled)
+                {
+                    this.Logger.LogDebug($"sql document query: {sql}");
+                }
+
                 var results = conn.Query<byte[]>(sql.ToString(), new { key }/*, buffered: this.Options.BufferedLoad*/);
                 if (results == null)
                 {
@@ -296,6 +316,11 @@
 
             using (var conn = await this.CreateConnectionAsync().AnyContext())
             {
+                if (this.Options.IsLoggingEnabled)
+                {
+                    this.Logger.LogDebug($"sql document query: {sql}");
+                }
+
                 var results = conn.Query<string>(sql.ToString(), new { key }/*, buffered: this.Options.BufferedLoad*/);
                 if (results == null)
                 {
@@ -359,8 +384,10 @@
 
         protected async Task Initialize(bool force = false)
         {
-            if (!this.isInitialized || force) // TODO: lock
+            if (!this.isInitialized || force) // TODO: use lock
             {
+                this.Logger.LogInformation($"initialize sql document provider (type={this.GetType().Name})");
+
                 await this.EnsureDatabase(this.Options.DatabaseName).AnyContext();
                 await this.EnsureSchema(this.Options.SchemaName, this.Options.DatabaseName).AnyContext();
                 await this.EnsureTable(this.Options.DatabaseName, this.Options.GetTableName()).AnyContext();
@@ -374,7 +401,7 @@
         {
             using (var connection = await this.CreateConnectionAsync().AnyContext())
             {
-                this.Logger.LogInformation($"{tableName} exists [{connection.Database}]");
+                this.Logger.LogInformation($"sql exists table {tableName} [{connection.Database}]");
 
                 return connection.Query<string>($"{this.Options.SqlBuilder.BuildUseDatabase(databaseName)} {this.Options.SqlBuilder.TableNamesSelect()}")
                         .Any(t => t.Equals(tableName, StringComparison.OrdinalIgnoreCase));
@@ -387,7 +414,7 @@
 
             using (var connection = await this.CreateConnectionAsync(false).AnyContext())
             {
-                this.Logger.LogInformation($"{databaseName} ensure database [{connection.Database}]");
+                this.Logger.LogInformation($"sql ensure database {databaseName} [{connection.Database}]");
 
                 this.EnsureOpenConnection(connection);
 
@@ -407,7 +434,7 @@
                 catch (SqlException ex)
                 {
                     // swallow
-                    this.Logger.LogError(ex, $"create database: {ex.Message}");
+                    this.Logger.LogError(ex, $"sql create database {databaseName}: {ex.Message}");
                 }
             }
         }
@@ -441,7 +468,7 @@
                 catch (SqlException ex)
                 {
                     // swallow
-                    this.Logger.LogError(ex, $"create schema: {ex.Message}");
+                    this.Logger.LogError(ex, $"sql create schema {schemaName}: {ex.Message}");
                 }
             }
         }
@@ -453,10 +480,7 @@
                 return;
             }
 
-            using (var connection = await this.CreateConnectionAsync().AnyContext())
-            {
-                this.Logger.LogInformation($"{tableName} ensure table [{connection.Database}]"); // http://stackoverflow.com/questions/11938044/what-are-the-best-practices-for-using-a-guid-as-a-primary-key-specifically-rega
-                var sql = string.Format(@"
+            var sql = string.Format(@"
     {0}
     CREATE TABLE {1}(
     [uid] UNIQUEIDENTIFIER DEFAULT NEWID() NOT NULL PRIMARY KEY NONCLUSTERED,
@@ -472,8 +496,17 @@
     CREATE INDEX [IX_key_{2}] ON {1} ([key] ASC);
     CREATE INDEX [IX_tags_{2}] ON {1} ([tags] ASC);
     CREATE INDEX [IX_hash_{2}] ON {1} ([hash] ASC);",
-                    this.Options.SqlBuilder.BuildUseDatabase(databaseName),
-                    tableName, new Random().Next(1000, 9999).ToString());
+                this.Options.SqlBuilder.BuildUseDatabase(databaseName),
+                tableName, new Random().Next(1000, 9999).ToString());
+
+            using (var connection = await this.CreateConnectionAsync().AnyContext())
+            {
+                this.Logger.LogInformation($"sql ensure table {tableName} [{connection.Database}]"); // http://stackoverflow.com/questions/11938044/what-are-the-best-practices-for-using-a-guid-as-a-primary-key-specifically-rega
+                if (this.Options.IsLoggingEnabled)
+                {
+                    this.Logger.LogDebug($"sql document query: {sql}");
+                }
+
                 connection.Execute(sql);
             }
         }
@@ -490,18 +523,27 @@
                 await this.EnsureTable(databaseName, tableName).AnyContext();
             }
 
-            using (var connection = await this.CreateConnectionAsync().AnyContext())
-            {
-                this.Logger.LogInformation($"{tableName} ensure index [{connection.Database}], index={this.Options.IndexMaps.Select(i => i.Name).ToString(", ")}");
-                var sql = this.Options.IndexMaps.Select(i => string.Format(@"
+            var sql = this.Options.IndexMaps.Select(i => string.Format(@"
     {0}
     IF NOT EXISTS(SELECT * FROM sys.columns
-            WHERE Name = N'{2}{3}' AND Object_ID = Object_ID(N'{1}'))
+         WHERE Name = N'{2}{3}' AND Object_ID = Object_ID(N'{1}'))
     BEGIN
         ALTER TABLE {1} ADD [{2}{3}] {4}
         CREATE INDEX [IX_{2}{3}] ON {1} ([{2}{3}] ASC)
     END ", this.Options.SqlBuilder.BuildUseDatabase(databaseName), tableName, i.Name.ToLower(), this.Options.SqlBuilder.IndexColumnNameSuffix, this.Options.SqlBuilder.ToDbType(i.Type)));
-                sql.ForEach(s => connection.Execute(s));
+
+            using (var connection = await this.CreateConnectionAsync().AnyContext())
+            {
+                this.Logger.LogInformation($"sql ensure table indexes {tableName} [{connection.Database}], index={this.Options.IndexMaps.Select(i => i.Name).ToString(", ")}");
+                sql.ForEach(s =>
+                {
+                    if (this.Options.IsLoggingEnabled)
+                    {
+                        this.Logger.LogDebug($"sql document query: {s}");
+                    }
+
+                    connection.Execute(s);
+                });
             }
 
             // sqlite check column exists: http://stackoverflow.com/questions/18920136/check-if-a-column-exists-in-sqlite
@@ -517,9 +559,13 @@
 
             using (var connection = await this.CreateConnectionAsync().AnyContext())
             {
-                this.Logger.LogInformation($"{tableName} drop table [{connection.Database}]");
-
                 var sql = string.Format(@"{0} DROP TABLE {1}", this.Options.SqlBuilder.BuildUseDatabase(databaseName), tableName);
+                this.Logger.LogInformation($"sql drop table {tableName} [{connection.Database}]");
+                if (this.Options.IsLoggingEnabled)
+                {
+                    this.Logger.LogDebug($"sql document query: {sql}");
+                }
+
                 connection.Execute(sql);
             }
         }
@@ -531,13 +577,8 @@
                 return;
             }
 
-            using (var connection = await this.CreateConnectionAsync().AnyContext())
-            {
-                connection.Open();
-                this.Logger.LogInformation($"{tableName} drop table [{connection.Database}]");
-
-                var sql = this.Options.IndexMaps.Safe().Select(i =>
-                    string.Format(@"
+            var sql = this.Options.IndexMaps.Safe().Select(i =>
+                string.Format(@"
     {0}
     IF EXISTS(SELECT * FROM sys.columns
             WHERE Name = N'{2}{3}' AND Object_ID = Object_ID(N'{1}'))
@@ -545,7 +586,20 @@
         DROP INDEX {1}.[IX_{2}{3}]
         ALTER TABLE {1} DROP COLUMN [{2}{3}]
     END ", this.Options.SqlBuilder.BuildUseDatabase(databaseName), tableName, i.Name.ToLower(), this.Options.SqlBuilder.IndexColumnNameSuffix));
-                sql.ForEach(s => connection.Execute(s));
+
+            using (var connection = await this.CreateConnectionAsync().AnyContext())
+            {
+                connection.Open();
+                this.Logger.LogInformation($"sql drop table {tableName} [{connection.Database}]");
+                sql.ForEach(s =>
+                {
+                    if (this.Options.IsLoggingEnabled)
+                    {
+                        this.Logger.LogDebug($"sql document query: {s}");
+                    }
+
+                    connection.Execute(s);
+                });
             }
         }
 
@@ -563,7 +617,7 @@
                 //    throw;
                 //}
 
-                this.Logger.LogWarning($"fallback to db connectionstring with an empty initial catalog: {ex.Message}");
+                this.Logger.LogWarning($"sql fallback to db connectionstring with an empty initial catalog: {ex.Message}");
 
                 builder.InitialCatalog = string.Empty;
                 //this.Options.ConnectionString = builder.ConnectionString;
@@ -579,28 +633,33 @@
 
             // http://www.databasejournal.com/features/mssql/using-the-merge-statement-to-perform-an-upsert.html
             // http://stackoverflow.com/questions/2479488/syntax-for-single-row-merge-upsert-in-sql-server
+            ProviderAction result;
+            var sql = new StringBuilder();
+            if (!forceInsert && await this.ExistsAsync(key, tags).AnyContext())
+            {
+                result = this.Update(key, document, data, tags, sql);
+            }
+            else
+            {
+                result = this.Insert(key, document, data, tags, sql);
+            }
+
+            // PARAMS
+            var parameters = new DynamicParameters();
+            parameters.Add("key", key.ToString().SafeSubstring(0, 512));
+            parameters.Add("tags", $"||{tags.ToString("||")}||".SafeSubstring(0, 1028));
+            parameters.Add("hash", HashAlgorithm.ComputeHash(document).SafeSubstring(0, 128));
+            parameters.Add("timestamp", timestamp ?? DateTime.UtcNow);
+            parameters.Add("value", this.Options.Serializer.SerializeToString(document));
+            parameters.Add("data", CompressionHelper.Compress(StreamHelper.ToBytes(data)), DbType.Binary);
+            this.AddIndexParameters(document, parameters);
+
             using (var connection = await this.CreateConnectionAsync().AnyContext())
             {
-                ProviderAction result;
-                var sql = new StringBuilder();
-                if (!forceInsert && await this.ExistsAsync(key, tags).AnyContext())
+                if (this.Options.IsLoggingEnabled)
                 {
-                    result = this.Update(key, document, data, tags, sql);
+                    this.Logger.LogDebug($"sql document query: {sql}");
                 }
-                else
-                {
-                    result = this.Insert(key, document, data, tags, sql);
-                }
-
-                // PARAMS
-                var parameters = new DynamicParameters();
-                parameters.Add("key", key.ToString().SafeSubstring(0, 512));
-                parameters.Add("tags", $"||{tags.ToString("||")}||".SafeSubstring(0, 1028));
-                parameters.Add("hash", HashAlgorithm.ComputeHash(document).SafeSubstring(0, 128));
-                parameters.Add("timestamp", timestamp ?? DateTime.UtcNow);
-                parameters.Add("value", this.Options.Serializer.SerializeToString(document));
-                parameters.Add("data", CompressionHelper.Compress(StreamHelper.ToBytes(data)), DbType.Binary);
-                this.AddIndexParameters(document, parameters);
 
                 connection.Execute(sql.ToString(), parameters);
                 return result;
@@ -737,7 +796,5 @@
                 parameters.Add($"{item.Name.ToLower()}{this.Options.SqlBuilder.IndexColumnNameSuffix}", null);
             }
         }
-
-        // sql connection https://stackoverflow.com/questions/45401543/implement-idbconnection-in-net-core
     }
 }

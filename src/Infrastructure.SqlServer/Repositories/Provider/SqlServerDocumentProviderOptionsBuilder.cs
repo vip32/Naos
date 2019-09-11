@@ -42,5 +42,11 @@
             this.Target.IndexMaps = this.indexMaps.DistinctBy(i => i.Name);
             return this;
         }
+
+        public SqlServerDocumentProviderOptionsBuilder<T> EnableSqlLogging()
+        {
+            this.Target.IsLoggingEnabled = true;
+            return this;
+        }
     }
 }

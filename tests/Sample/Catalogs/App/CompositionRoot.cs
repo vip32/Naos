@@ -19,6 +19,7 @@
             options.Context.Services.AddSingleton<IDocumentProvider<Product>>(sp =>
                 new SqlServerDocumentProvider<Product>(o => o
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
+                    .EnableSqlLogging()
                     .ConnectionString("Server=(localdb)\\mssqllocaldb;Database=naos_sample;Trusted_Connection=True;MultipleActiveResultSets=True;")
                     // Schema("catalogs")
                     .AddIndex(p => p.Name)

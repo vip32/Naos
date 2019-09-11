@@ -35,7 +35,7 @@
 
         public int MaxTakeSize { get; set; } = 5000;
 
-        public bool EnableLogging { get; set; }
+        public bool IsLoggingEnabled { get; set; }
 
         public string DefaultSortColumn { get; set; } = "id";
 
