@@ -27,6 +27,16 @@
                     .AddIndex(p => p.Price)
                     .AddIndex(p => p.HasStock)));
 
+            //options.Context.Services.AddSingleton<IDocumentProvider<Product>>(sp =>
+            //    new SqliteDocumentProvider<Product>(new SqliteDocumentProviderOptionsBuilder<Product>()
+            //        .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
+            //        .EnableSqlLogging()
+            //        .ConnectionString(@"Data Source=c:\tmp\naos_sample_catalogs.db;Version=3;")
+            //        .AddIndex(p => p.Name)
+            //        .AddIndex(p => p.Region)
+            //        .AddIndex(p => p.Price)
+            //        .AddIndex(p => p.HasStock).Build()));
+
             options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: catalogs service added");
 
             return options;

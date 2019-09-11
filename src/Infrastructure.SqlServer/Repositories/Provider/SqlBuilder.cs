@@ -196,12 +196,15 @@
             }
         }
 
-        public virtual string BuildPagingSelect(int? skip = null, int? take = null,
-            int? defaultTakeSize = null, int? maxTakeSize = null)
+        public virtual string BuildPagingSelect(
+            int? skip = null,
+            int? take = null,
+            int? defaultTakeSize = null,
+            int? maxTakeSize = null)
         {
             if (!skip.HasValue && !take.HasValue)
             {
-                return $" OFFSET 0 ROWS FETCH NEXT {defaultTakeSize.ToString()} ROWS ONLY; ";
+                return $" OFFSET 0 ROWS FETCH NEXT {defaultTakeSize} ROWS ONLY; ";
             }
 
             if (!skip.HasValue)

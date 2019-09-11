@@ -10,16 +10,15 @@
     {
         private readonly List<IIndexMap<T>> indexMaps = new List<IIndexMap<T>>();
 
-        public override SqlServerDocumentProviderOptionsBuilder<T> LoggerFactory(ILoggerFactory loggerFactory)
-        {
-            base.LoggerFactory(loggerFactory);
-            this.Target.SqlBuilder = new SqlBuilder(loggerFactory);
-            return this;
-        }
-
         public SqlServerDocumentProviderOptionsBuilder<T> Serializer(ISerializer serializer)
         {
             this.Target.Serializer = serializer;
+            return this;
+        }
+
+        public SqlServerDocumentProviderOptionsBuilder<T> SqlBuilder(ISqlBuilder sqlBuilder)
+        {
+            this.Target.SqlBuilder = sqlBuilder;
             return this;
         }
 
@@ -27,6 +26,7 @@
         {
             this.Target.ConnectionString = connectionString;
             this.Target.DatabaseName = connectionString.SliceFrom("Database=").SliceTill(";");
+            this.Target.SqlBuilder = new SqlBuilder(this.Target.LoggerFactory);
             return this;
         }
 

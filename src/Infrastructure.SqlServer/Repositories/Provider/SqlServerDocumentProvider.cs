@@ -25,7 +25,7 @@
 
             this.Options = options;
             this.Options.Serializer ??= new JsonNetSerializer(TypedJsonSerializerSettings.Create());
-            this.Logger = options.CreateLogger<SqlServerDocumentProvider<T>>();
+            this.Logger = options.CreateLogger(this.GetType());
         }
 
         public SqlServerDocumentProvider(Builder<SqlServerDocumentProviderOptionsBuilder<T>, SqlServerDocumentProviderOptions<T>> optionsBuilder)
@@ -33,7 +33,7 @@
         {
         }
 
-        protected ILogger<SqlServerDocumentProvider<T>> Logger { get; }
+        protected ILogger Logger { get; }
 
         protected SqlServerDocumentProviderOptions<T> Options { get; }
 
@@ -404,7 +404,7 @@
                 this.Logger.LogInformation($"sql exists table {tableName} [{connection.Database}]");
 
                 return connection.Query<string>($"{this.Options.SqlBuilder.BuildUseDatabase(databaseName)} {this.Options.SqlBuilder.TableNamesSelect()}")
-                        .Any(t => t.Equals(tableName, StringComparison.OrdinalIgnoreCase));
+                        .Any(t => t.Equals(tableName, StringComparison.OrdinalIgnoreCase) || t.Equals(tableName.SliceFrom("[").SliceTill("]"), StringComparison.OrdinalIgnoreCase));
             }
         }
 
@@ -415,7 +415,6 @@
             using (var connection = await this.CreateConnectionAsync(false).AnyContext())
             {
                 this.Logger.LogInformation($"sql ensure database {databaseName} [{connection.Database}]");
-
                 this.EnsureOpenConnection(connection);
 
                 if (connection.Query<string>($@"
