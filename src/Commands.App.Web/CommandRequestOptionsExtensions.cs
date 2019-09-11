@@ -19,9 +19,6 @@
     using Naos.Core.Queueing.Domain;
     using Naos.Core.Queueing.Infrastructure.Azure;
     using Naos.Foundation;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
-    using Newtonsoft.Json.Serialization;
 
     [ExcludeFromCodeCoverage]
     public static class CommandRequestOptionsExtensions

@@ -20,6 +20,8 @@
 
         string BuildDataSelectByKey(string tableName);
 
+        string BuildDataSelectByTags(string tableName);
+
         //string BuildCriteriaSelect(string column, CriteriaOperator op, string value);
 
         string BuildCriteriaSelect(Expression expression = null, IEnumerable<IIndexMap> indexMaps = null);
@@ -32,7 +34,7 @@
 
         string BuildPagingSelect(int? skip = null, int? take = null, int? defaultTakeSize = 0, int? maxTakeSize = 0);
 
-        string BuildFromTillDateTimeSelect(DateTime? fromDateTime = null, DateTime? tillDateTime = null);
+        string BuildFromTillDateTimeSelect(DateTime? timestampFrom = null, DateTime? timestampTill = null);
 
         string TableNamesSelect();
 

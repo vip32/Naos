@@ -1,6 +1,5 @@
 ﻿namespace Naos.Foundation.UnitTests.Extensions
 {
-    using System.Collections.Generic;
     using Naos.Foundation;
     using Shouldly;
     using Xunit;

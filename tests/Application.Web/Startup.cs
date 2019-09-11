@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Net;
     using System.Threading;
     using Microsoft.AspNetCore.Builder;
@@ -26,7 +25,6 @@
     using Naos.Core.Messaging.Domain;
     using Naos.Foundation;
     using Naos.Sample.Customers.App;
-    using Newtonsoft.Json;
     using NSwag.Generation.Processors;
 
     public class Startup

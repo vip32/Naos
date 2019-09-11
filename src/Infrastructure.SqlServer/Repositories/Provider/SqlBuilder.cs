@@ -4,9 +4,19 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
+    using EnsureThat;
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Logging.Abstractions;
 
     public class SqlBuilder : ISqlBuilder
     {
+        private readonly ILogger<SqlBuilder> logger;
+
+        public SqlBuilder(ILoggerFactory loggerFactory)
+        {
+            this.logger = loggerFactory == null ? new NullLogger<SqlBuilder>() : loggerFactory.CreateLogger<SqlBuilder>();
+        }
+
         public virtual string IndexColumnNameSuffix => "_idx";
 
         public virtual string BuildUseDatabase(string databaseName = null)
@@ -21,27 +31,44 @@
 
         public virtual string BuildDeleteByKey(string tableName)
         {
+            EnsureArg.IsNotNullOrEmpty(tableName, nameof(tableName));
+
             return $"DELETE FROM {tableName} WHERE [key]=@key";
         }
 
         public virtual string BuildDeleteByTags(string tableName)
         {
+            EnsureArg.IsNotNullOrEmpty(tableName, nameof(tableName));
+
             return $"DELETE FROM {tableName} WHERE ";
         }
 
         public virtual string BuildValueSelectByKey(string tableName)
         {
+            EnsureArg.IsNotNullOrEmpty(tableName, nameof(tableName));
+
             return $"SELECT [value] FROM {tableName} WHERE [key]=@key";
         }
 
         public virtual string BuildValueSelectByTags(string tableName)
         {
+            EnsureArg.IsNotNullOrEmpty(tableName, nameof(tableName));
+
             return $"SELECT [value] FROM {tableName} WHERE [id]>0";
         }
 
         public virtual string BuildDataSelectByKey(string tableName)
         {
+            EnsureArg.IsNotNullOrEmpty(tableName, nameof(tableName));
+
             return $"SELECT [data] FROM {tableName} WHERE [key]=@key";
+        }
+
+        public virtual string BuildDataSelectByTags(string tableName)
+        {
+            EnsureArg.IsNotNullOrEmpty(tableName, nameof(tableName));
+
+            return $"SELECT [data] FROM {tableName} WHERE [id]>0";
         }
 
         public virtual string BuildTagSelect(string tag)
@@ -79,6 +106,7 @@
                 var value = ExpressionHelper.GetValueFromExpression(binaryExpression.Right, property.PropertyType);
                 if (!property.Name.EqualsAny(indexMaps?.Select(i => i.Name)))
                 {
+                    this.logger.LogWarning($"expression with property name {property.Name} is not part of any index, it will not be used in the query (WHERE)");
                     return string.Empty;
                 }
 
@@ -155,6 +183,7 @@
             {
                 if (!memberExpression.Member.Name.EqualsAny(indexMaps?.Select(i => i.Name)))
                 {
+                    this.logger.LogWarning($"expression with property name {memberExpression.Member.Name} is not part of any index, it will not be used in the query (WHERE)");
                     return string.Empty;
                 }
 
@@ -166,80 +195,6 @@
                 throw new NotSupportedException("Only boolean properties are allowed for where expressions without a comparison operator or method call");
             }
         }
-
-        //public virtual string BuildCriteriaSelect<T>(
-        //    IEnumerable<IIndexMap<T>> indexMaps = null,
-        //    ICriteria criteria = null) // Expression<Func<T, bool>> expression
-        //{
-        //    if (indexMaps == null || !indexMaps.Any())
-        //    {
-        //        return null;
-        //    }
-
-        //    if (criteria == null)
-        //    {
-        //        return null;
-        //    }
-
-        //    var indexMap = indexMaps.FirstOrDefault(i =>
-        //        i.Name.Equals(criteria.Name, StringComparison.OrdinalIgnoreCase));
-        //    if (indexMap == null)
-        //    {
-        //        return null;
-        //    }
-
-        //    // small equals hack to handle multiple values and optimize for single values (%)
-        //    if ((indexMap.Values != null && indexMap.Value == null) && criteria.Operator == CriteriaOperator.Eq)
-        //    {
-        //        criteria.Operator = CriteriaOperator.Eqm;
-        //    }
-
-        //    return BuildCriteriaSelect(indexMap.Name, criteria.Operator, criteria.Value);
-        //}
-
-        //public virtual string BuildCriteriaSelect(string column, CriteriaOperator op, string value)
-        //{
-        //    if (string.IsNullOrEmpty(column))
-        //    {
-        //        return null;
-        //    }
-
-        //    // TODO: use sql cmd paramaters for the values
-        //    // TODO: null value handling
-        //    if (op == CriteriaOperator.Gt /*op.Equals(CriteriaOperator.Gt)*/)
-        //    {
-        //        return $" AND [{this.Sanatize(column).ToLower()}{this.IndexColumnNameSuffix}] > '||{this.Sanatize(value)}' ";
-        //    }
-
-        //    if (op == CriteriaOperator.Ge /*op.Equals(CriteriaOperator.Ge)*/)
-        //    {
-        //        return $" AND [{this.Sanatize(column).ToLower()}{this.IndexColumnNameSuffix}] >= '||{this.Sanatize(value)}' ";
-        //    }
-
-        //    if (op == CriteriaOperator.Lt /*op.Equals(CriteriaOperator.Lt)*/)
-        //    {
-        //        return $" AND [{this.Sanatize(column).ToLower()}{this.IndexColumnNameSuffix}] < '||{this.Sanatize(value)}' ";
-        //    }
-
-        //    if (op == CriteriaOperator.Le /*op.Equals(CriteriaOperator.Le)*/)
-        //    {
-        //        return $" AND [{this.Sanatize(column).ToLower()}{this.IndexColumnNameSuffix}] <= '||{this.Sanatize(value)}' ";
-        //    }
-
-        //    if (op == CriteriaOperator.Contains /*op.Equals(CriteriaOperator.Contains)*/)
-        //    {
-        //        return $" AND [{this.Sanatize(column).ToLower()}{this.IndexColumnNameSuffix}] LIKE '||%{this.Sanatize(value)}%||' ";
-        //    }
-
-        //    if (op == CriteriaOperator.Eqm /*op.Equals(CriteriaOperator.Eqm)*/)
-        //    {
-        //        return $" AND [{this.Sanatize(column).ToLower()}{this.IndexColumnNameSuffix}] LIKE '%||{this.Sanatize(value)}||%' ";
-        //    }
-
-        //    // TODO: remove % for much faster PERF
-
-        //    return $" AND [{this.Sanatize(column).ToLower()}{this.IndexColumnNameSuffix}] = '||{this.Sanatize(value)}||' ";
-        //}
 
         public virtual string BuildPagingSelect(int? skip = null, int? take = null,
             int? defaultTakeSize = null, int? maxTakeSize = null)
@@ -285,52 +240,26 @@
             var column = ExpressionHelper.GetPropertyName(expression);
             if (!column.EqualsAny(indexMaps?.Select(i => i.Name)))
             {
+                this.logger.LogWarning($"expression with property name {column} is not part of any index, it will not be used in the query (ORDER BY)");
                 return " ORDER BY [id] ";
             }
 
-            return $" ORDER BY [{column}{this.IndexColumnNameSuffix}] DESC ";
-
-            //if (sorting == SortColumn.IdDescending)
-            //{
-            //    return " ORDER BY [id] DESC ";
-            //}
-
-            //if (sorting == SortColumn.Key)
-            //{
-            //    return " ORDER BY [key] ";
-            //}
-
-            //if (sorting == SortColumn.KeyDescending)
-            //{
-            //    return " ORDER BY [key] DESC ";
-            //}
-
-            //if (sorting == SortColumn.Timestamp)
-            //{
-            //    return " ORDER BY [timestamp] ";
-            //}
-
-            //if (sorting == SortColumn.TimestampDescending)
-            //{
-            //    return " ORDER BY [timestamp] DESC ";
-            //}
-
-            // return " ORDER BY [id] ";
+            return $" ORDER BY [{column}{this.IndexColumnNameSuffix}] {(descending ? "DESC" : string.Empty)} ";
         }
 
-        public string BuildFromTillDateTimeSelect(
-            DateTime? fromDateTime = null,
-            DateTime? tillDateTime = null)
+        public string BuildFromTillDateTimeSelect( // not used
+            DateTime? timestampFrom = null,
+            DateTime? timestampTill = null)
         {
             var result = string.Empty;
-            if (fromDateTime.HasValue)
+            if (timestampFrom.HasValue)
             {
-                result = $"{result} AND [timestamp] >= '{fromDateTime.Value.ToString("s")}'";
+                result = $"{result} AND [timestamp] >= '{timestampFrom.Value.ToString("s")}'";
             }
 
-            if (tillDateTime.HasValue)
+            if (timestampTill.HasValue)
             {
-                result = $"{result} AND [timestamp] < '{tillDateTime.Value.ToString("s")}'";
+                result = $"{result} AND [timestamp] < '{timestampTill.Value.ToString("s")}'";
             }
 
             return result;
@@ -339,8 +268,8 @@
         public virtual string TableNamesSelect()
         {
             return @"
-    SELECT QUOTENAME(TABLE_SCHEMA) + '.' + QUOTENAME(TABLE_NAME) AS Name
-    FROM INFORMATION_SCHEMA.TABLES";
+SELECT QUOTENAME(TABLE_SCHEMA) + '.' + QUOTENAME(TABLE_NAME) AS Name
+FROM INFORMATION_SCHEMA.TABLES";
         }
 
         public string ToDbType(Type type)
@@ -402,6 +331,7 @@
             var property = ExpressionHelper.GetProperty(methodExpression.Object);
             if (!property.Name.EqualsAny(indexMaps?.Select(i => i.Name)))
             {
+                this.logger.LogWarning($"expression with property name {property.Name} is not part of any index, it will not be used in the query (WHERE)");
                 return string.Empty;
             }
 

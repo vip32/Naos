@@ -1,13 +1,8 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
     using EnsureThat;
-    using MediatR;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
-    using Naos.Foundation.Domain;
     using Naos.Foundation.Infrastructure;
     using Naos.Sample.Catalogs.Domain;
 
@@ -23,6 +18,7 @@
 
             options.Context.Services.AddSingleton<IDocumentProvider<Product>>(sp =>
                 new SqlServerDocumentProvider<Product>(o => o
+                    .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                     .ConnectionString("Server=(localdb)\\mssqllocaldb;Database=naos_sample;Trusted_Connection=True;MultipleActiveResultSets=True;")
                     // Schema("catalogs")
                     .AddIndex(p => p.Name)

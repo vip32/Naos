@@ -52,7 +52,16 @@
             await this.Initialize(true).AnyContext();
         }
 
-        public async Task<long> CountAsync(IEnumerable<Expression<Func<T, bool>>> expressions = null, IEnumerable<string> tags = null)
+        public async Task<long> CountAsync(
+            Expression<Func<T, bool>> expression,
+            IEnumerable<string> tags = null)
+        {
+            return await this.CountAsync(new[] { expression }, tags).AnyContext();
+        }
+
+        public async Task<long> CountAsync(
+        IEnumerable<Expression<Func<T, bool>>> expressions = null,
+        IEnumerable<string> tags = null)
         {
             await this.Initialize().AnyContext();
 
@@ -75,6 +84,8 @@
 
         public async Task<bool> ExistsAsync(object key, IEnumerable<string> tags = null)
         {
+            EnsureArg.IsNotNull(key, nameof(key));
+
             await this.Initialize().AnyContext();
 
             var sql = new StringBuilder($"{this.Options.SqlBuilder.BuildUseDatabase(this.Options.DatabaseName)} SELECT [id] FROM {this.Options.GetTableName()} WHERE [key]='{key}'");
@@ -89,6 +100,69 @@
             }
         }
 
+        public async Task<IEnumerable<object>> LoadKeysAsync(
+            Expression<Func<T, bool>> expression = null,
+            IEnumerable<string> tags = null,
+            int? skip = null,
+            int? take = null,
+            Expression<Func<T, object>> orderExpression = null,
+            bool orderDescending = false)
+        {
+            return await this.LoadKeysAsync(new[] { expression }, tags, skip, take, orderExpression, orderDescending).AnyContext();
+        }
+
+        public async Task<IEnumerable<object>> LoadKeysAsync(
+            IEnumerable<Expression<Func<T, bool>>> expressions = null,
+            IEnumerable<string> tags = null,
+            int? skip = null,
+            int? take = null,
+            Expression<Func<T, object>> orderExpression = null,
+            bool orderDescending = false)
+        {
+            await this.Initialize().AnyContext();
+
+            var sql = new StringBuilder($"{this.Options.SqlBuilder.BuildUseDatabase(this.Options.DatabaseName)} SELECT [key] FROM {this.Options.GetTableName()} WHERE [id]>0");
+            foreach (var t in tags.Safe())
+            {
+                sql.Append(this.Options.SqlBuilder.BuildTagSelect(t));
+            }
+
+            foreach (var e in expressions.Safe())
+            {
+                sql.Append(this.Options.SqlBuilder.BuildCriteriaSelect(e, this.Options.IndexMaps));
+            }
+
+            sql.Append(this.Options.SqlBuilder.BuildOrderingSelect(orderExpression, orderDescending, this.Options.IndexMaps));
+            sql.Append(this.Options.SqlBuilder.BuildPagingSelect(skip, take, this.Options.DefaultTakeSize, this.Options.MaxTakeSize));
+
+            using (var conn = await this.CreateConnectionAsync().AnyContext())
+            {
+                return conn.Query<object>(sql.ToString());
+            }
+        }
+
+        public async Task<IEnumerable<Stream>> LoadDataAsync(
+            Expression<Func<T, bool>> expression,
+            IEnumerable<string> tags = null,
+            int? skip = null,
+            int? take = null,
+            Expression<Func<T, object>> orderExpression = null,
+            bool orderDescending = false)
+        {
+            return await this.LoadDataAsync(null, new[] { expression }, tags, skip, take, orderExpression, orderDescending).AnyContext();
+        }
+
+        public async Task<IEnumerable<Stream>> LoadDataAsync(
+            IEnumerable<Expression<Func<T, bool>>> expressions = null,
+            IEnumerable<string> tags = null,
+            int? skip = null,
+            int? take = null,
+            Expression<Func<T, object>> orderExpression = null,
+            bool orderDescending = false)
+        {
+            return await this.LoadDataAsync(null, expressions, tags, skip, take, orderExpression, orderDescending).AnyContext();
+        }
+
         public async Task<IEnumerable<Stream>> LoadDataAsync(
             object key,
             IEnumerable<Expression<Func<T, bool>>> expressions = null,
@@ -100,23 +174,32 @@
         {
             await this.Initialize().AnyContext();
 
+            var sql = new StringBuilder();
+            if (key != null)
+            {
+                sql.Append($"{this.Options.SqlBuilder.BuildUseDatabase(this.Options.DatabaseName)} {this.Options.SqlBuilder.BuildDataSelectByKey(this.Options.GetTableName())}");
+            }
+            else
+            {
+                sql.Append($"{this.Options.SqlBuilder.BuildUseDatabase(this.Options.DatabaseName)} {this.Options.SqlBuilder.BuildDataSelectByTags(this.Options.GetTableName())}");
+            }
+
+            foreach (var t in tags.Safe())
+            {
+                sql.Append(this.Options.SqlBuilder.BuildTagSelect(t));
+            }
+
+            foreach (var e in expressions.Safe())
+            {
+                sql.Append(this.Options.SqlBuilder.BuildCriteriaSelect(e, this.Options.IndexMaps));
+            }
+
+            //sql.Append(this.Options.SqlBuilder.BuildFromTillDateTimeSelect(fromDateTime, tillDateTime));
+            sql.Append(this.Options.SqlBuilder.BuildOrderingSelect(orderExpression, orderDescending, this.Options.IndexMaps));
+            sql.Append(this.Options.SqlBuilder.BuildPagingSelect(skip, take, this.Options.DefaultTakeSize, this.Options.MaxTakeSize));
+
             using (var conn = await this.CreateConnectionAsync().AnyContext())
             {
-                var sql = new StringBuilder($"{this.Options.SqlBuilder.BuildUseDatabase(this.Options.DatabaseName)} {this.Options.SqlBuilder.BuildDataSelectByKey(this.Options.GetTableName())}");
-                foreach (var t in tags.Safe())
-                {
-                    sql.Append(this.Options.SqlBuilder.BuildTagSelect(t));
-                }
-
-                foreach (var e in expressions.Safe())
-                {
-                    sql.Append(this.Options.SqlBuilder.BuildCriteriaSelect(e, this.Options.IndexMaps));
-                }
-
-                //sql.Append(this.Options.SqlBuilder.BuildFromTillDateTimeSelect(fromDateTime, tillDateTime));
-                //sql.Append(this.Options.SqlBuilder.BuildSortingSelect(this.Options.DefaultSortColumn));
-                sql.Append(this.Options.SqlBuilder.BuildPagingSelect(skip, take, this.Options.DefaultTakeSize, this.Options.MaxTakeSize));
-
                 var results = conn.Query<byte[]>(sql.ToString(), new { key }/*, buffered: this.Options.BufferedLoad*/);
                 if (results == null)
                 {
@@ -132,34 +215,26 @@
             }
         }
 
-        public async Task<IEnumerable<object>> LoadKeysAsync(
-            IEnumerable<Expression<Func<T, bool>>> expressions = null,
+        public async Task<IEnumerable<T>> LoadValuesAsync(
+            Expression<Func<T, bool>> expression,
             IEnumerable<string> tags = null,
             int? skip = null,
             int? take = null,
             Expression<Func<T, object>> orderExpression = null,
             bool orderDescending = false)
         {
-            await this.Initialize().AnyContext();
+            return await this.LoadValuesAsync(null, new[] { expression }.AsEnumerable(), tags, skip, take, orderExpression, orderDescending).AnyContext();
+        }
 
-            using (var conn = await this.CreateConnectionAsync().AnyContext())
-            {
-                var sql = new StringBuilder($"{this.Options.SqlBuilder.BuildUseDatabase(this.Options.DatabaseName)} SELECT [key] FROM {this.Options.GetTableName()} WHERE [id]>0");
-                foreach (var t in tags.Safe())
-                {
-                    sql.Append(this.Options.SqlBuilder.BuildTagSelect(t));
-                }
-
-                foreach (var e in expressions.Safe())
-                {
-                    sql.Append(this.Options.SqlBuilder.BuildCriteriaSelect(e, this.Options.IndexMaps));
-                }
-
-                sql.Append(this.Options.SqlBuilder.BuildOrderingSelect(orderExpression, orderDescending, this.Options.IndexMaps));
-                sql.Append(this.Options.SqlBuilder.BuildPagingSelect(skip, take, this.Options.DefaultTakeSize, this.Options.MaxTakeSize));
-
-                return conn.Query<object>(sql.ToString());
-            }
+        public async Task<IEnumerable<T>> LoadValuesAsync(
+        IEnumerable<Expression<Func<T, bool>>> expressions = null,
+        IEnumerable<string> tags = null,
+        int? skip = null,
+        int? take = null,
+        Expression<Func<T, object>> orderExpression = null,
+        bool orderDescending = false)
+        {
+            return await this.LoadValuesAsync(null, expressions.AsEnumerable(), tags, skip, take, orderExpression, orderDescending).AnyContext();
         }
 
         public async Task<IEnumerable<T>> LoadValuesAsync(
@@ -173,23 +248,32 @@
         {
             await this.Initialize().AnyContext();
 
+            var sql = new StringBuilder();
+            if (key != null)
+            {
+                sql.Append($"{this.Options.SqlBuilder.BuildUseDatabase(this.Options.DatabaseName)} {this.Options.SqlBuilder.BuildValueSelectByKey(this.Options.GetTableName())}");
+            }
+            else
+            {
+                sql.Append($"{this.Options.SqlBuilder.BuildUseDatabase(this.Options.DatabaseName)} {this.Options.SqlBuilder.BuildValueSelectByTags(this.Options.GetTableName())}");
+            }
+
+            foreach (var t in tags.Safe())
+            {
+                sql.Append(this.Options.SqlBuilder.BuildTagSelect(t));
+            }
+
+            foreach (var e in expressions.Safe())
+            {
+                sql.Append(this.Options.SqlBuilder.BuildCriteriaSelect(e, this.Options.IndexMaps));
+            }
+
+            //sql.Append(SqlBuilder.BuildFromTillDateTimeSelect(fromDateTime, tillDateTime));
+            sql.Append(this.Options.SqlBuilder.BuildOrderingSelect(orderExpression, orderDescending, this.Options.IndexMaps));
+            sql.Append(this.Options.SqlBuilder.BuildPagingSelect(skip, take, this.Options.DefaultTakeSize, this.Options.MaxTakeSize));
+
             using (var conn = await this.CreateConnectionAsync().AnyContext())
             {
-                var sql = new StringBuilder($"{this.Options.SqlBuilder.BuildUseDatabase(this.Options.DatabaseName)} {this.Options.SqlBuilder.BuildValueSelectByKey(this.Options.GetTableName())}");
-                foreach (var t in tags.Safe())
-                {
-                    sql.Append(this.Options.SqlBuilder.BuildTagSelect(t));
-                }
-
-                foreach (var e in expressions.Safe())
-                {
-                    sql.Append(this.Options.SqlBuilder.BuildCriteriaSelect(e, this.Options.IndexMaps));
-                }
-
-                //sql.Append(SqlBuilder.BuildFromTillDateTimeSelect(fromDateTime, tillDateTime));
-                sql.Append(this.Options.SqlBuilder.BuildOrderingSelect(orderExpression, orderDescending, this.Options.IndexMaps));
-                sql.Append(this.Options.SqlBuilder.BuildPagingSelect(skip, take, this.Options.DefaultTakeSize, this.Options.MaxTakeSize));
-
                 var results = conn.Query<string>(sql.ToString(), new { key }/*, buffered: this.Options.BufferedLoad*/);
                 if (results == null)
                 {
@@ -202,58 +286,6 @@
                 //}
 
                 return results.Select(r => this.Options.Serializer.Deserialize<T>(r));
-            }
-        }
-
-        public async Task<IEnumerable<T>> LoadValuesAsync(
-            Expression<Func<T, bool>> expression,
-            IEnumerable<string> tags = null,
-            int? skip = null,
-            int? take = null,
-            Expression<Func<T, object>> orderExpression = null,
-            bool orderDescending = false)
-        {
-            return await this.LoadValuesAsync(new[] { expression }.AsEnumerable(), tags, skip, take, orderExpression, orderDescending).AnyContext();
-        }
-
-        public async Task<IEnumerable<T>> LoadValuesAsync(
-        IEnumerable<Expression<Func<T, bool>>> expressions = null,
-        IEnumerable<string> tags = null,
-        int? skip = null,
-        int? take = null,
-        Expression<Func<T, object>> orderExpression = null,
-        bool orderDescending = false)
-        {
-            await this.Initialize().AnyContext();
-
-            using (var conn = await this.CreateConnectionAsync().AnyContext())
-            {
-                var sql = new StringBuilder($"{this.Options.SqlBuilder.BuildUseDatabase(this.Options.DatabaseName)} {this.Options.SqlBuilder.BuildValueSelectByTags(this.Options.GetTableName())}");
-                foreach (var t in tags.Safe())
-                {
-                    sql.Append(this.Options.SqlBuilder.BuildTagSelect(t));
-                }
-
-                foreach (var e in expressions.Safe())
-                {
-                    sql.Append(this.Options.SqlBuilder.BuildCriteriaSelect(e, this.Options.IndexMaps));
-                }
-
-                //sql.Append(this.Options.SqlBuilder.BuildFromTillDateTimeSelect(fromDateTime, tillDateTime));
-                sql.Append(this.Options.SqlBuilder.BuildOrderingSelect(orderExpression, orderDescending, this.Options.IndexMaps));
-                sql.Append(this.Options.SqlBuilder.BuildPagingSelect(skip, take, this.Options.DefaultTakeSize, this.Options.MaxTakeSize));
-                var documents = conn.Query<string>(sql.ToString()/*, buffered: this.Options.BufferedLoad*/);
-                if (documents == null)
-                {
-                    return Enumerable.Empty<T>(); //TODO: yield break;
-                }
-
-                //foreach (var document in documents)
-                //{
-                //    yield return  this.Options.Serializer.Deserialize<T>(document);
-                //}
-
-                return documents.Select(d => this.Options.Serializer.Deserialize<T>(d));
             }
         }
 

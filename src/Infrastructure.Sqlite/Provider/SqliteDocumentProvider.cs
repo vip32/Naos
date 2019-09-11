@@ -1,11 +1,8 @@
 ﻿namespace Naos.Foundation.Infrastructure
 {
     using System.Data;
-    using System.Data.SqlClient;
     using System.Data.SQLite;
     using System.Threading.Tasks;
-    using EnsureThat;
-    using Microsoft.Extensions.Logging;
 
     public class SqliteDocumentProvider<T> : SqlServerDocumentProvider<T>
     {

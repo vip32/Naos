@@ -146,5 +146,18 @@
             results.ShouldNotBeEmpty();
             results.ToList().ForEach(p => p.Price.ShouldBeGreaterThan(0));
         }
+
+        [Fact]
+        public async Task LoadValuesAsync_WithExpression7_Test()
+        {
+            // arange/act
+#pragma warning disable CA1307 // Specify StringComparison
+            var results = await this.sut.LoadValuesAsync(p => p.Region.Contains("ast")).AnyContext();
+
+            // assert
+            results.ShouldNotBeNull();
+            results.ShouldNotBeEmpty();
+            results.ToList().ForEach(p => p.Region.ShouldBe("East"));
+        }
     }
 }

@@ -3,11 +3,19 @@
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
+    using Microsoft.Extensions.Logging;
 
     public class SqlServerDocumentProviderOptionsBuilder<T> :
         BaseOptionsBuilder<SqlServerDocumentProviderOptions<T>, SqlServerDocumentProviderOptionsBuilder<T>>
     {
         private readonly List<IIndexMap<T>> indexMaps = new List<IIndexMap<T>>();
+
+        public override SqlServerDocumentProviderOptionsBuilder<T> LoggerFactory(ILoggerFactory loggerFactory)
+        {
+            base.LoggerFactory(loggerFactory);
+            this.Target.SqlBuilder = new SqlBuilder(loggerFactory);
+            return this;
+        }
 
         public SqlServerDocumentProviderOptionsBuilder<T> Serializer(ISerializer serializer)
         {
@@ -19,7 +27,6 @@
         {
             this.Target.ConnectionString = connectionString;
             this.Target.DatabaseName = connectionString.SliceFrom("Database=").SliceTill(";");
-            this.Target.SqlBuilder = new SqlBuilder();
             return this;
         }
 

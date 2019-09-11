@@ -6,10 +6,15 @@
     using System.Linq.Expressions;
     using System.Threading.Tasks;
 
-#pragma warning disable SA1201 // Elements should appear in the correct order
     public interface IDocumentProvider<T>
     {
-        Task<long> CountAsync(IEnumerable<Expression<Func<T, bool>>> expressions = null, IEnumerable<string> tags = null/*, IEnumerable<Criteria> criterias = null*/);
+        Task<long> CountAsync(
+            Expression<Func<T, bool>> expression,
+            IEnumerable<string> tags = null);
+
+        Task<long> CountAsync(
+            IEnumerable<Expression<Func<T, bool>>> expressions = null,
+            IEnumerable<string> tags = null/*, IEnumerable<Criteria> criterias = null*/);
 
         Task ResetAsync(bool indexOnly = false);
 
@@ -25,6 +30,14 @@
             bool forceInsert = false, DateTime? timestamp = null);
 
         Task<IEnumerable<object>> LoadKeysAsync(
+            Expression<Func<T, bool>> expression = null,
+            IEnumerable<string> tags = null,
+            int? skip = null,
+            int? take = null,
+            Expression<Func<T, object>> orderExpression = null,
+            bool orderDescending = false);
+
+        Task<IEnumerable<object>> LoadKeysAsync(
             IEnumerable<Expression<Func<T, bool>>> expressions = null,
             IEnumerable<string> tags = null,
             int? skip = null,
@@ -32,12 +45,17 @@
             Expression<Func<T, object>> orderExpression = null,
             bool orderDescending = false);
 
-        Task<IEnumerable<T>> LoadValuesAsync(
-            object key,
+        Task<IEnumerable<Stream>> LoadDataAsync(
+             Expression<Func<T, bool>> expression,
+             IEnumerable<string> tags = null,
+             int? skip = null,
+             int? take = null,
+             Expression<Func<T, object>> orderExpression = null,
+             bool orderDescending = false);
+
+        Task<IEnumerable<Stream>> LoadDataAsync(
             IEnumerable<Expression<Func<T, bool>>> expressions = null,
             IEnumerable<string> tags = null,
-            //DateTime? fromDateTime = null, DateTime? tillDateTime = null,, IEnumerable<string> tags = null,
-            //DateTime? fromDateTime = null, DateTime? tillDateTime = null,
             int? skip = null,
             int? take = null,
             Expression<Func<T, object>> orderExpression = null,
@@ -47,7 +65,6 @@
             object key,
             IEnumerable<Expression<Func<T, bool>>> expressions = null,
             IEnumerable<string> tags = null,
-            //DateTime? fromDateTime = null, DateTime? tillDateTime = null,
             int? skip = null,
             int? take = null,
             Expression<Func<T, object>> orderExpression = null,
@@ -65,6 +82,17 @@
         Task<IEnumerable<T>> LoadValuesAsync(
             IEnumerable<Expression<Func<T, bool>>> expressions = null,
             IEnumerable<string> tags = null,
+            //DateTime? fromDateTime = null, DateTime? tillDateTime = null,
+            int? skip = null,
+            int? take = null,
+            Expression<Func<T, object>> orderExpression = null,
+            bool orderDescending = false);
+
+        Task<IEnumerable<T>> LoadValuesAsync(
+            object key,
+            IEnumerable<Expression<Func<T, bool>>> expressions = null,
+            IEnumerable<string> tags = null,
+            //DateTime? fromDateTime = null, DateTime? tillDateTime = null,, IEnumerable<string> tags = null,
             //DateTime? fromDateTime = null, DateTime? tillDateTime = null,
             int? skip = null,
             int? take = null,

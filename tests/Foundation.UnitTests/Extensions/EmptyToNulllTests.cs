@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using Naos.Foundation;
-    using Shouldly;
     using Xunit;
 
     public class EmptyToNulllTests
