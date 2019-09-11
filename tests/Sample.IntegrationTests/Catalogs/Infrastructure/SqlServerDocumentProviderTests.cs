@@ -84,16 +84,26 @@
         }
 
         [Fact]
-        public async Task LoadValuesAsync_Test()
+        public async Task LoadValuesAsync_All_Test()
         {
-            // arrange
-
-            // act
+            // arrange/act
             var results = await this.sut.LoadValuesAsync().AnyContext();
 
             // assert
             results.ShouldNotBeNull();
             results.ShouldNotBeEmpty();
+        }
+
+        [Fact]
+        public async Task LoadValuesAsync_Paged_Test()
+        {
+            // arrange/act
+            var results = await this.sut.LoadValuesAsync(skip: 5, take: 2).AnyContext();
+
+            // assert
+            results.ShouldNotBeNull();
+            results.ShouldNotBeEmpty();
+            results.Count().ShouldBe(2);
         }
 
         [Fact]
@@ -104,12 +114,13 @@
             await this.sut.UpsertAsync(entity.Id, entity).AnyContext();
 
             // act
-            var result = await this.sut.LoadValuesAsync(entity.Id).AnyContext();
+            var results = await this.sut.LoadValuesAsync(entity.Id).AnyContext();
 
             // assert
-            result.ShouldNotBeNull();
-            result.Count().ShouldBe(1);
-            result.FirstOrDefault()?.Id.ShouldBe(entity.Id);
+            results.ShouldNotBeNull();
+            results.ShouldNotBeEmpty();
+            results.Count().ShouldBe(1);
+            results.FirstOrDefault()?.Id.ShouldBe(entity.Id);
         }
 
         [Fact]
@@ -125,13 +136,14 @@
             await this.sut.UpsertAsync(entity2.Id, entity2, new[] { entity2.Region }).AnyContext();
 
             // act
-            var result = await this.sut.LoadValuesAsync(entity1.Id, null, new[] { "de-de" }).AnyContext();
+            var results = await this.sut.LoadValuesAsync(entity1.Id, null, new[] { "de-de" }).AnyContext();
 
             // assert
-            result.ShouldNotBeNull();
-            result.Count().ShouldBe(1);
-            result.FirstOrDefault()?.Id.ShouldBe(entity1.Id);
-            result.FirstOrDefault()?.Region.ShouldBe("de-de");
+            results.ShouldNotBeNull();
+            results.ShouldNotBeEmpty();
+            results.Count().ShouldBe(1);
+            results.FirstOrDefault()?.Id.ShouldBe(entity1.Id);
+            results.FirstOrDefault()?.Region.ShouldBe("de-de");
         }
 
         [Fact]
