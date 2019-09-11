@@ -45,6 +45,14 @@
             Expression<Func<T, object>> orderExpression = null,
             bool orderDescending = false);
 
+        //Task<IEnumerable<Stream>> LoadDataAsync(
+        //     object key,
+        //     IEnumerable<string> tags = null,
+        //     int? skip = null,
+        //     int? take = null,
+        //     Expression<Func<T, object>> orderExpression = null,
+        //     bool orderDescending = false);
+
         Task<IEnumerable<Stream>> LoadDataAsync(
              Expression<Func<T, bool>> expression,
              IEnumerable<string> tags = null,
@@ -69,6 +77,14 @@
             int? take = null,
             Expression<Func<T, object>> orderExpression = null,
             bool orderDescending = false);
+
+        //Task<IEnumerable<T>> LoadValuesAsync(
+        //    object key,
+        //    IEnumerable<string> tags = null,
+        //    int? skip = null,
+        //    int? take = null,
+        //    Expression<Func<T, object>> orderExpression = null,
+        //    bool orderDescending = false);
 
         Task<IEnumerable<T>> LoadValuesAsync(
             Expression<Func<T, bool>> expression,

@@ -73,7 +73,7 @@
 
             foreach (var e in expressions.Safe())
             {
-                sql.Append(this.Options.SqlBuilder.BuildCriteriaSelect(e, this.Options.IndexMaps));
+                sql.Append(this.Options.SqlBuilder.BuildExpressionSelect(e, this.Options.IndexMaps));
             }
 
             using (var conn = await this.CreateConnectionAsync().AnyContext())
@@ -129,7 +129,7 @@
 
             foreach (var e in expressions.Safe())
             {
-                sql.Append(this.Options.SqlBuilder.BuildCriteriaSelect(e, this.Options.IndexMaps));
+                sql.Append(this.Options.SqlBuilder.BuildExpressionSelect(e, this.Options.IndexMaps));
             }
 
             sql.Append(this.Options.SqlBuilder.BuildOrderingSelect(orderExpression, orderDescending, this.Options.IndexMaps));
@@ -140,6 +140,17 @@
                 return conn.Query<object>(sql.ToString());
             }
         }
+
+        //public async Task<IEnumerable<Stream>> LoadDataAsync(
+        //    object key,
+        //    IEnumerable<string> tags = null,
+        //    int? skip = null,
+        //    int? take = null,
+        //    Expression<Func<T, object>> orderExpression = null,
+        //    bool orderDescending = false)
+        //{
+        //    return await this.LoadDataAsync(null, null, tags, skip, take, orderExpression, orderDescending).AnyContext();
+        //}
 
         public async Task<IEnumerable<Stream>> LoadDataAsync(
             Expression<Func<T, bool>> expression,
@@ -174,14 +185,14 @@
         {
             await this.Initialize().AnyContext();
 
-            var sql = new StringBuilder();
+            var sql = new StringBuilder(this.Options.SqlBuilder.BuildUseDatabase(this.Options.DatabaseName));
             if (key != null)
             {
-                sql.Append($"{this.Options.SqlBuilder.BuildUseDatabase(this.Options.DatabaseName)} {this.Options.SqlBuilder.BuildDataSelectByKey(this.Options.GetTableName())}");
+                sql.Append(this.Options.SqlBuilder.BuildDataSelectByKey(this.Options.GetTableName()));
             }
             else
             {
-                sql.Append($"{this.Options.SqlBuilder.BuildUseDatabase(this.Options.DatabaseName)} {this.Options.SqlBuilder.BuildDataSelectByTags(this.Options.GetTableName())}");
+                sql.Append(this.Options.SqlBuilder.BuildDataSelectByTags(this.Options.GetTableName()));
             }
 
             foreach (var t in tags.Safe())
@@ -191,7 +202,7 @@
 
             foreach (var e in expressions.Safe())
             {
-                sql.Append(this.Options.SqlBuilder.BuildCriteriaSelect(e, this.Options.IndexMaps));
+                sql.Append(this.Options.SqlBuilder.BuildExpressionSelect(e, this.Options.IndexMaps));
             }
 
             //sql.Append(this.Options.SqlBuilder.BuildFromTillDateTimeSelect(fromDateTime, tillDateTime));
@@ -214,6 +225,17 @@
                 return results.Safe().Select(d => new MemoryStream(CompressionHelper.Decompress(d)));
             }
         }
+
+        //public async Task<IEnumerable<T>> LoadValuesAsync(
+        //    object key,
+        //    IEnumerable<string> tags = null,
+        //    int? skip = null,
+        //    int? take = null,
+        //    Expression<Func<T, object>> orderExpression = null,
+        //    bool orderDescending = false)
+        //{
+        //    return await this.LoadValuesAsync(key, null, tags, skip, take, orderExpression, orderDescending).AnyContext();
+        //}
 
         public async Task<IEnumerable<T>> LoadValuesAsync(
             Expression<Func<T, bool>> expression,
@@ -248,14 +270,14 @@
         {
             await this.Initialize().AnyContext();
 
-            var sql = new StringBuilder();
+            var sql = new StringBuilder(this.Options.SqlBuilder.BuildUseDatabase(this.Options.DatabaseName));
             if (key != null)
             {
-                sql.Append($"{this.Options.SqlBuilder.BuildUseDatabase(this.Options.DatabaseName)} {this.Options.SqlBuilder.BuildValueSelectByKey(this.Options.GetTableName())}");
+                sql.Append(this.Options.SqlBuilder.BuildValueSelectByKey(this.Options.GetTableName()));
             }
             else
             {
-                sql.Append($"{this.Options.SqlBuilder.BuildUseDatabase(this.Options.DatabaseName)} {this.Options.SqlBuilder.BuildValueSelectByTags(this.Options.GetTableName())}");
+                sql.Append(this.Options.SqlBuilder.BuildValueSelectByTags(this.Options.GetTableName()));
             }
 
             foreach (var t in tags.Safe())
@@ -265,7 +287,7 @@
 
             foreach (var e in expressions.Safe())
             {
-                sql.Append(this.Options.SqlBuilder.BuildCriteriaSelect(e, this.Options.IndexMaps));
+                sql.Append(this.Options.SqlBuilder.BuildExpressionSelect(e, this.Options.IndexMaps));
             }
 
             //sql.Append(SqlBuilder.BuildFromTillDateTimeSelect(fromDateTime, tillDateTime));

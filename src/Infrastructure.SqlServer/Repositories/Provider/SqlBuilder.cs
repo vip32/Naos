@@ -33,42 +33,42 @@
         {
             EnsureArg.IsNotNullOrEmpty(tableName, nameof(tableName));
 
-            return $"DELETE FROM {tableName} WHERE [key]=@key";
+            return $" DELETE FROM {tableName} WHERE [key]=@key";
         }
 
         public virtual string BuildDeleteByTags(string tableName)
         {
             EnsureArg.IsNotNullOrEmpty(tableName, nameof(tableName));
 
-            return $"DELETE FROM {tableName} WHERE ";
+            return $" DELETE FROM {tableName} WHERE ";
         }
 
         public virtual string BuildValueSelectByKey(string tableName)
         {
             EnsureArg.IsNotNullOrEmpty(tableName, nameof(tableName));
 
-            return $"SELECT [value] FROM {tableName} WHERE [key]=@key";
+            return $" SELECT [value] FROM {tableName} WHERE [key]=@key";
         }
 
         public virtual string BuildValueSelectByTags(string tableName)
         {
             EnsureArg.IsNotNullOrEmpty(tableName, nameof(tableName));
 
-            return $"SELECT [value] FROM {tableName} WHERE [id]>0";
+            return $" SELECT [value] FROM {tableName} WHERE [id]>0";
         }
 
         public virtual string BuildDataSelectByKey(string tableName)
         {
             EnsureArg.IsNotNullOrEmpty(tableName, nameof(tableName));
 
-            return $"SELECT [data] FROM {tableName} WHERE [key]=@key";
+            return $" SELECT [data] FROM {tableName} WHERE [key]=@key";
         }
 
         public virtual string BuildDataSelectByTags(string tableName)
         {
             EnsureArg.IsNotNullOrEmpty(tableName, nameof(tableName));
 
-            return $"SELECT [data] FROM {tableName} WHERE [id]>0";
+            return $" SELECT [data] FROM {tableName} WHERE [id]>0";
         }
 
         public virtual string BuildTagSelect(string tag)
@@ -81,7 +81,7 @@
             return $" AND [tags] LIKE '%||{this.Sanatize(tag)}||%'";
         }
 
-        public virtual string BuildCriteriaSelect(Expression expression, IEnumerable<IIndexMap> indexMaps = null)
+        public virtual string BuildExpressionSelect(Expression expression, IEnumerable<IIndexMap> indexMaps = null)
         {
             if (expression == null || indexMaps.IsNullOrEmpty())
             {
@@ -90,7 +90,7 @@
 
             if (expression is LambdaExpression lambdaExpression)
             {
-                return this.BuildCriteriaSelect(lambdaExpression.Body, indexMaps);
+                return this.BuildExpressionSelect(lambdaExpression.Body, indexMaps);
             }
 
             // https://github.com/OctopusDeploy/Nevermore/blob/master/source/Nevermore/QueryBuilderWhereExtensions.cs
@@ -99,7 +99,7 @@
                 //(binaryExpression.Left as BinaryExpression).Left
                 if(binaryExpression.NodeType== ExpressionType.AndAlso)
                 {
-                    return $"{this.BuildCriteriaSelect(binaryExpression.Left, indexMaps)} { this.BuildCriteriaSelect(binaryExpression.Right, indexMaps)}";
+                    return $"{this.BuildExpressionSelect(binaryExpression.Left, indexMaps)} { this.BuildExpressionSelect(binaryExpression.Right, indexMaps)}";
                 }
 
                 var property = ExpressionHelper.GetProperty(binaryExpression.Left);
@@ -137,7 +137,7 @@
                         ExpressionType.GreaterThanOrEqual => $" AND [{this.Sanatize(property.Name).ToLower()}{this.IndexColumnNameSuffix}] >= {this.Sanatize(value.ToString())} ",
                         ExpressionType.LessThan => $" AND [{this.Sanatize(property.Name).ToLower()}{this.IndexColumnNameSuffix}] < {this.Sanatize(value.ToString())} ",
                         ExpressionType.LessThanOrEqual => $" AND [{this.Sanatize(property.Name).ToLower()}{this.IndexColumnNameSuffix}] <= {this.Sanatize(value.ToString())} ",
-                        ExpressionType.AndAlso => $"{this.BuildCriteriaSelect(binaryExpression.Left, indexMaps)} {this.BuildCriteriaSelect(binaryExpression.Right, indexMaps)}",
+                        ExpressionType.AndAlso => $"{this.BuildExpressionSelect(binaryExpression.Left, indexMaps)} {this.BuildExpressionSelect(binaryExpression.Right, indexMaps)}",
                         _ => $" AND [{this.Sanatize(property.Name).ToLower()}{this.IndexColumnNameSuffix}] = {this.Sanatize(value.ToString())} ",
                     };
                 }

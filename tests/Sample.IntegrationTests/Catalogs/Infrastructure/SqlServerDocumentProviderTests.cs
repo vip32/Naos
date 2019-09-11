@@ -56,6 +56,34 @@
         }
 
         [Fact]
+        public async Task ExistsAsync_Test()
+        {
+            // arrange
+            var entity = this.entityFaker.Generate();
+            await this.sut.UpsertAsync(entity.Id, entity).AnyContext();
+
+            // act
+            var result = await this.sut.ExistsAsync(entity.Id).AnyContext();
+
+            // assert
+            result.ShouldBeTrue();
+        }
+
+        [Fact]
+        public async Task CountAsync_Test()
+        {
+            // arrange
+            var entity = this.entityFaker.Generate();
+            await this.sut.UpsertAsync(entity.Id, entity).AnyContext();
+
+            // act
+            var result = await this.sut.CountAsync().AnyContext();
+
+            // assert
+            result.ShouldBeGreaterThan(0);
+        }
+
+        [Fact]
         public async Task LoadValuesAsync_Test()
         {
             // arrange
@@ -66,6 +94,44 @@
             // assert
             results.ShouldNotBeNull();
             results.ShouldNotBeEmpty();
+        }
+
+        [Fact]
+        public async Task LoadValuesAsync_ByKey_Test()
+        {
+            // arrange
+            var entity = this.entityFaker.Generate();
+            await this.sut.UpsertAsync(entity.Id, entity).AnyContext();
+
+            // act
+            var result = await this.sut.LoadValuesAsync(entity.Id).AnyContext();
+
+            // assert
+            result.ShouldNotBeNull();
+            result.Count().ShouldBe(1);
+            result.FirstOrDefault()?.Id.ShouldBe(entity.Id);
+        }
+
+        [Fact]
+        public async Task LoadValuesAsync_ByTags_Test()
+        {
+            // arrange
+            var entity1 = this.entityFaker.Generate();
+            entity1.Region = "en-us";
+            var entity2 = this.entityFaker.Generate();
+            entity2.Id = entity1.Id; // same ids
+            entity2.Region = "de-de";
+            await this.sut.UpsertAsync(entity1.Id, entity1, new[] { entity1.Region }).AnyContext();
+            await this.sut.UpsertAsync(entity2.Id, entity2, new[] { entity2.Region }).AnyContext();
+
+            // act
+            var result = await this.sut.LoadValuesAsync(entity1.Id, null, new[] { "de-de" }).AnyContext();
+
+            // assert
+            result.ShouldNotBeNull();
+            result.Count().ShouldBe(1);
+            result.FirstOrDefault()?.Id.ShouldBe(entity1.Id);
+            result.FirstOrDefault()?.Region.ShouldBe("de-de");
         }
 
         [Fact]
