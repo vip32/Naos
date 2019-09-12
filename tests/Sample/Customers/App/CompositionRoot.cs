@@ -30,7 +30,7 @@
             {
                 return new CustomerRepository(
                     new RepositoryTracingDecorator<Customer>(
-                        sp.GetRequiredService<ITracer>(),
+                        sp.GetService<ITracer>(), // not required if tracing not enabled
                         sp.GetRequiredService<ILogger<CustomerRepository>>(),
                         new RepositoryLoggingDecorator<Customer>(
                             sp.GetRequiredService<ILogger<CustomerRepository>>(),

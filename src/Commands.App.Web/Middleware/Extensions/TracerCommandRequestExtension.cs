@@ -13,8 +13,6 @@
 
         public TracerCommandRequestExtension(ITracer tracer = null)
         {
-            EnsureArg.IsNotNull(tracer);
-
             this.tracer = tracer;
         }
 

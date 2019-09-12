@@ -29,13 +29,10 @@
 
         public override async Task<CommandResponse<IEnumerable<Customer>>> HandleRequest(GetActiveCustomersQuery request, CancellationToken cancellationToken)
         {
-            return await Task.Run(() =>
+            return new CommandResponse<IEnumerable<Customer>>
             {
-                return new CommandResponse<IEnumerable<Customer>>
-                {
-                    Result = new List<Customer> { new Customer { FirstName = "John", LastName = "Doe" } }
-                };
-            }).AnyContext();
+                Result = await this.repository.FindAllAsync().AnyContext()
+            };
         }
     }
 }

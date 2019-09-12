@@ -18,10 +18,9 @@
         /// Initializes a new instance of the <see cref="TracerCommandBehavior"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        public TracerCommandBehavior(ILogger<TracerCommandBehavior> logger, ITracer tracer)
+        public TracerCommandBehavior(ILogger<TracerCommandBehavior> logger, ITracer tracer = null)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
-            EnsureArg.IsNotNull(tracer, nameof(tracer));
 
             this.logger = logger;
             this.tracer = tracer;
@@ -49,7 +48,7 @@
                 parentSpan = new Span(null, request.Properties.GetValueOrDefault(CommandPropertyKeys.ParentSpanId) as string);
             }
 
-            this.scope = this.tracer.BuildSpan(
+            this.scope = this.tracer?.BuildSpan(
                         $"command {request.GetType().PrettyName()}".ToLowerInvariant(),
                         LogKeys.AppCommand,
                         SpanKind.Consumer,
