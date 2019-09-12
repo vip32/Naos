@@ -8,8 +8,6 @@
 
         public string CorrelationId { get; set; }
 
-        public string ParentSpanId { get; set; }
-
         public CommandRequestStatus Status { get; set; }
 
         public string StatusDescription { get; set; } // Finished datetime/ Failure message

@@ -51,7 +51,7 @@
 
         public bool IsQueued { get; set; }
 
-        public IEnumerable<Type> ExtensionTypesBefore { get; set; } = new[] { typeof(LoggingCommandRequestExtension) };
+        public IEnumerable<Type> ExtensionTypesBefore { get; set; } = new[] { typeof(LoggingCommandRequestExtension), typeof(TracerCommandRequestExtension) };
 
         public IEnumerable<Type> ExtensionTypes { get; set; }
 

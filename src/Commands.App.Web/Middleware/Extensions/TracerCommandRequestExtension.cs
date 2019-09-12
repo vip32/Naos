@@ -7,15 +7,15 @@
     using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
 
-    public class LoggingCommandRequestExtension : CommandRequestExtension
+    public class TracerCommandRequestExtension : CommandRequestExtension
     {
-        private readonly ILogger<LoggingCommandRequestExtension> logger;
+        private readonly ITracer tracer;
 
-        public LoggingCommandRequestExtension(ILogger<LoggingCommandRequestExtension> logger)
+        public TracerCommandRequestExtension(ITracer tracer = null)
         {
-            EnsureArg.IsNotNull(logger);
+            EnsureArg.IsNotNull(tracer);
 
-            this.logger = logger;
+            this.tracer = tracer;
         }
 
         public override async Task InvokeAsync<TCommand, TResponse>(
@@ -23,7 +23,10 @@
             CommandRequestRegistration<TCommand, TResponse> registration,
             HttpContext context)
         {
-            this.logger.LogInformation($"{{LogKey:l}} command request received (name={registration.CommandType.PrettyName()}, id={command.Id})", LogKeys.AppCommand);
+            if (this.tracer != null)
+            {
+                command.Properties.Add(CommandPropertyKeys.ParentSpanId, this.tracer.CurrentSpan.SpanId);
+            }
 
             // contiue with next extension
             await base.InvokeAsync(command, registration, context).AnyContext();
@@ -34,7 +37,10 @@
             CommandRequestRegistration<TCommand> registration,
             HttpContext context)
         {
-            this.logger.LogInformation($"{{LogKey:l}} command request received (name={registration.CommandType.PrettyName()}, id={command.Id})", LogKeys.AppCommand);
+            if (this.tracer != null)
+            {
+                command.Properties.Add(CommandPropertyKeys.ParentSpanId, this.tracer.CurrentSpan.SpanId);
+            }
 
             // contiue with next extension
             await base.InvokeAsync(command, registration, context).AnyContext();

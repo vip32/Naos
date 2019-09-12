@@ -1,7 +1,6 @@
 ﻿namespace Naos.Core.Commands.App
 {
     using System;
-    using System.Collections.Generic;
     using EnsureThat;
     using FluentValidation.Results;
     using MediatR;
@@ -51,7 +50,7 @@
         }
 
         [JsonIgnore] // so it will not appear in the swagger
-        public string Id { get; internal set; }
+        public string Id { get; internal set; } // TODO: rename to CommandId
 
         [JsonIgnore] // so it will not appear in the swagger
         public string Identifier { get; internal set; } // obsolete? just a short identifier
@@ -62,8 +61,7 @@
         [JsonIgnore] // so it will not appear in the swagger
         public DateTimeOffset Created { get; }
 
-        [JsonIgnore] // so it will not appear in the swagger, needed?
-        public IDictionary<string, object> Properties { get; internal set; } = new DataDictionary();
+        public DataDictionary Properties { get; internal set; } = new DataDictionary();
 
         //public void Update(string id, string correlationId)
         //{

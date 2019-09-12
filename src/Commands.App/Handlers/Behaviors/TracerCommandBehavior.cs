@@ -9,7 +9,7 @@
 
     public class TracerCommandBehavior : ICommandBehavior, IDisposable
     {
-        private readonly ILogger<JournalCommandBehavior> logger;
+        private readonly ILogger<TracerCommandBehavior> logger;
         private readonly ITracer tracer;
         private ICommandBehavior next;
         private IScope scope;
@@ -18,7 +18,7 @@
         /// Initializes a new instance of the <see cref="TracerCommandBehavior"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        public TracerCommandBehavior(ILogger<JournalCommandBehavior> logger, ITracer tracer)
+        public TracerCommandBehavior(ILogger<TracerCommandBehavior> logger, ITracer tracer)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(tracer, nameof(tracer));
@@ -42,10 +42,18 @@
         {
             EnsureArg.IsNotNull(request);
 
+            ISpan parentSpan = null;
+
+            if (request.Properties.ContainsKey("ParentSpanId"))
+            {
+                parentSpan = new Span(null, request.Properties.GetValueOrDefault(CommandPropertyKeys.ParentSpanId) as string);
+            }
+
             this.scope = this.tracer.BuildSpan(
                         $"command {request.GetType().PrettyName()}".ToLowerInvariant(),
                         LogKeys.AppCommand,
-                        SpanKind.Consumer).Activate(this.logger);
+                        SpanKind.Consumer,
+                        parentSpan).Activate(this.logger);
 
             if (!result.Cancelled && this.next != null)
             {
