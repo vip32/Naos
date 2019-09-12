@@ -26,6 +26,9 @@
                 command.Properties.Add(CommandPropertyKeys.ParentSpanId, this.tracer.CurrentSpan.SpanId);
             }
 
+            // TODO: or start a whole new SERVER span here, which is the parent for the COMMAND span?
+            //       otherwhise the received and queued command is not visible in the trace untill it is dequeued
+
             // contiue with next extension
             await base.InvokeAsync(command, registration, context).AnyContext();
         }
