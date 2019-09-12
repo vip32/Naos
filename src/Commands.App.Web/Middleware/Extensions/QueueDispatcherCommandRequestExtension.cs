@@ -23,12 +23,12 @@
     /// </summary>
     public class QueueDispatcherCommandRequestExtension : CommandRequestExtension
     {
-        private readonly ILogger<LoggingCommandRequestExtension> logger;
+        private readonly ILogger<QueueDispatcherCommandRequestExtension> logger;
         private readonly IQueue<CommandRequestWrapper> queue;
         private readonly CommandRequestStore storage;
 
         public QueueDispatcherCommandRequestExtension(
-            ILogger<LoggingCommandRequestExtension> logger,
+            ILogger<QueueDispatcherCommandRequestExtension> logger,
             IQueue<CommandRequestWrapper> queue,
             CommandRequestStore storage = null)
         {

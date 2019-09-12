@@ -6,13 +6,14 @@
     using EnsureThat;
     using global::Serilog;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Logging;
     using Naos.Core.Operations.App;
     using Naos.Foundation;
 
     [ExcludeFromCodeCoverage]
     public static class LoggingOptionsExtensions
     {
-        public static LoggingOptions UseFile(this LoggingOptions options)
+        public static LoggingOptions UseFile(this LoggingOptions options, LogLevel logLevel = LogLevel.Debug)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
@@ -39,6 +40,7 @@
                 options.LoggerConfiguration?.WriteTo.File(
                     path,
                     //outputTemplate: logFileConfiguration.OutputTemplate "{Timestamp:yyyy-MM-dd HH:mm:ss}|{Level} => {CorrelationId} => {Service}::{SourceContext}{NewLine}    {Message}{NewLine}{Exception}",
+                    restrictedToMinimumLevel: MapLevel(logLevel),
                     fileSizeLimitBytes: configuration.FileSizeLimitBytes,
                     rollOnFileSizeLimit: configuration.RollOnFileSizeLimit,
                     rollingInterval: (RollingInterval)Enum.Parse(typeof(RollingInterval), configuration.RollingInterval), // TODO: use tryparse
@@ -51,7 +53,7 @@
             return options;
         }
 
-        public static LoggingOptions UseConsole(this LoggingOptions options)
+        public static LoggingOptions UseConsole(this LoggingOptions options, LogLevel logLevel = LogLevel.Information)
         {
             // don't use in production, console logging is blockinghttps://medium.com/asos-techblog/maximising-net-core-api-performance-11ad883436c
             EnsureArg.IsNotNull(options, nameof(options));
@@ -62,7 +64,7 @@
             {
                 // configure the serilog sink
                 options.LoggerConfiguration?.WriteTo.LiterateConsole(
-                    restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information,
+                    restrictedToMinimumLevel: MapLevel(logLevel),
                     //outputTemplate: "[{Timestamp:HH:mm:ss.fff} {Level:u3}] {CorrelationId}|{Service}|{SourceContext}: {Message:lj}{NewLine}{Exception}");
                     outputTemplate: "[{Timestamp:HH:mm:ss.fff} {Level:u3}] {Message:lj}{NewLine}{Exception}");
 
@@ -70,6 +72,34 @@
             }
 
             return options;
+        }
+
+        public static Serilog.Events.LogEventLevel MapLevel(LogLevel logLevel) // TODO: make generally available
+        {
+            var result = Serilog.Events.LogEventLevel.Information;
+
+            if (logLevel == LogLevel.Trace)
+            {
+                result = Serilog.Events.LogEventLevel.Verbose;
+            }
+            else if (logLevel == LogLevel.Debug)
+            {
+                result = Serilog.Events.LogEventLevel.Debug;
+            }
+            else if (logLevel == LogLevel.Error)
+            {
+                result = Serilog.Events.LogEventLevel.Error;
+            }
+            else if (logLevel == LogLevel.Critical)
+            {
+                result = Serilog.Events.LogEventLevel.Fatal;
+            }
+            else if (logLevel == LogLevel.Warning)
+            {
+                result = Serilog.Events.LogEventLevel.Warning;
+            }
+
+            return result;
         }
     }
 }

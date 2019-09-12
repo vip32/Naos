@@ -6,6 +6,7 @@
     using EnsureThat;
     using global::Serilog;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Logging;
     using Naos.Core.Operations.App;
     using Naos.Foundation;
     using Naos.Foundation.Infrastructure;
@@ -13,7 +14,7 @@
     [ExcludeFromCodeCoverage]
     public static class LoggingOptionsExtensions
     {
-        public static LoggingOptions AddAzureDiagnosticsLogStream(this LoggingOptions options)
+        public static LoggingOptions AddAzureDiagnosticsLogStream(this LoggingOptions options, LogLevel logLevel = LogLevel.Debug)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
@@ -32,6 +33,7 @@
                 options.LoggerConfiguration?.WriteTo.File(
                     path,
                     //outputTemplate: diagnosticsLogStreamConfiguration.OutputTemplate "{Timestamp:yyyy-MM-dd HH:mm:ss}|{Level} => {CorrelationId} => {Service}::{SourceContext}{NewLine}    {Message}{NewLine}{Exception}",
+                    restrictedToMinimumLevel: MapLevel(logLevel),
                     fileSizeLimitBytes: configuration.FileSizeLimitBytes,
                     rollOnFileSizeLimit: configuration.RollOnFileSizeLimit,
                     rollingInterval: (RollingInterval)Enum.Parse(typeof(RollingInterval), configuration.RollingInterval), // TODO: use tryparse
@@ -44,7 +46,7 @@
             return options;
         }
 
-        public static LoggingOptions AddAzureApplicationInsights(this LoggingOptions options)
+        public static LoggingOptions AddAzureApplicationInsights(this LoggingOptions options, LogLevel logLevel = LogLevel.Information)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
@@ -62,7 +64,7 @@
             return options;
         }
 
-        public static LoggingOptions UseAzureBlobStorage(this LoggingOptions options)
+        public static LoggingOptions UseAzureBlobStorage(this LoggingOptions options, LogLevel logLevel = LogLevel.Information)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
@@ -77,7 +79,7 @@
                     .Replace("{capability}", options.Context.Descriptor?.Capability?.ToLower());
 
                 options.LoggerConfiguration?.WriteTo.AzureBlobStorage(
-                    restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information,
+                    restrictedToMinimumLevel: MapLevel(logLevel),
                     connectionString: configuration.ConnectionString,
                     storageContainerName: configuration.ContainerName.EmptyToNull() ?? $"{options.Context.Environment.ToLower()}-operations",
                     storageFileName: path,
@@ -91,7 +93,7 @@
             return options;
         }
 
-        public static LoggingOptions UseAzureLogAnalytics(this LoggingOptions options, bool dashboardEnabled = true)
+        public static LoggingOptions UseAzureLogAnalytics(this LoggingOptions options, bool dashboardEnabled = true, LogLevel logLevel = LogLevel.Debug)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
@@ -116,6 +118,7 @@
                     options.LoggerConfiguration?.WriteTo.AzureAnalytics(
                         configuration.WorkspaceId,
                         configuration.AuthenticationId,
+                        restrictedToMinimumLevel: MapLevel(logLevel),
                         logName: logName, // without _CL
                         storeTimestampInUtc: true,
                         logBufferSize: configuration.BufferSize,
@@ -133,6 +136,34 @@
             }
 
             return options;
+        }
+
+        public static Serilog.Events.LogEventLevel MapLevel(LogLevel logLevel) // TODO: make generally available
+        {
+            var result = Serilog.Events.LogEventLevel.Information;
+
+            if (logLevel == LogLevel.Trace)
+            {
+                result = Serilog.Events.LogEventLevel.Verbose;
+            }
+            else if (logLevel == LogLevel.Debug)
+            {
+                result = Serilog.Events.LogEventLevel.Debug;
+            }
+            else if (logLevel == LogLevel.Error)
+            {
+                result = Serilog.Events.LogEventLevel.Error;
+            }
+            else if (logLevel == LogLevel.Critical)
+            {
+                result = Serilog.Events.LogEventLevel.Fatal;
+            }
+            else if (logLevel == LogLevel.Warning)
+            {
+                result = Serilog.Events.LogEventLevel.Warning;
+            }
+
+            return result;
         }
     }
 }

@@ -10,11 +10,11 @@
 
     public class MediatorDispatcherCommandRequestExtension : CommandRequestExtension
     {
-        private readonly ILogger<LoggingCommandRequestExtension> logger;
+        private readonly ILogger<MediatorDispatcherCommandRequestExtension> logger;
         private readonly IMediator mediator;
 
         public MediatorDispatcherCommandRequestExtension(
-            ILogger<LoggingCommandRequestExtension> logger,
+            ILogger<MediatorDispatcherCommandRequestExtension> logger,
             IMediator mediator)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));

@@ -38,6 +38,10 @@
                 {
                     url += "/api/operations/logevents/dashboard?q=TrackType=journal";
                 }
+                else if (request.Command.Swagger)
+                {
+                    url += "/swagger/index.html";
+                }
 
                 Console.WriteLine($"opening browser: {url}", Color.Gray);
 

@@ -16,6 +16,9 @@
         [Option('j', "journal", HelpText = "Open the journal dashboard", Required = false)]
         public bool Journal { get; set; }
 
+        [Option('s', "swagger", HelpText = "Open the journal dashboard", Required = false)]
+        public bool Swagger { get; set; }
+
         public async Task<bool> SendAsync(IMediator mediator)
         {
             return await mediator.Send(new ConsoleCommandEvent<OpenBrowserConsoleCommand>(this)).AnyContext();
