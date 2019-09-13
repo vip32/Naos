@@ -29,8 +29,8 @@
         private readonly string name;
 
         public RepositoryTracingDecorator(
-            ITracer tracer,
             ILogger<IGenericRepository<TEntity>> logger,
+            ITracer tracer,
             IGenericRepository<TEntity> decoratee)
         {
             EnsureArg.IsNotNull(decoratee, nameof(decoratee));

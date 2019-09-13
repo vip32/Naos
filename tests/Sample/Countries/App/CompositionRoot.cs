@@ -26,8 +26,8 @@
             {
                 return new CountryRepository(
                     new RepositoryTracingDecorator<Country>(
-                        sp.GetRequiredService<ITracer>(),
-                        sp.GetRequiredService<ILogger<CountryRepository>>(),
+                        sp.GetService<ILogger<CountryRepository>>(),
+                        sp.GetService<ITracer>(),
                         new RepositoryLoggingDecorator<Country>(
                             sp.GetRequiredService<ILogger<CountryRepository>>(),
                             new RepositoryTenantDecorator<Country>(

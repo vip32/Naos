@@ -9,10 +9,12 @@
 
     public class TracerCommandRequestExtension : CommandRequestExtension
     {
+        private readonly ILogger<TracerCommandRequestExtension> logger;
         private readonly ITracer tracer;
 
-        public TracerCommandRequestExtension(ITracer tracer = null)
+        public TracerCommandRequestExtension(ILogger<TracerCommandRequestExtension> logger, ITracer tracer = null)
         {
+            this.logger = logger;
             this.tracer = tracer;
         }
 
@@ -21,17 +23,19 @@
             CommandRequestRegistration<TCommand, TResponse> registration,
             HttpContext context)
         {
-            if (this.tracer != null)
+            using (var scope = this.tracer?.BuildSpan(
+                        $"command request {command.GetType().PrettyName()}".ToLowerInvariant(),
+                        LogKeys.AppCommand,
+                        SpanKind.Server).Activate(this.logger))
             {
-                command.Properties.Add(CommandPropertyKeys.ParentSpanId, this.tracer.CurrentSpan.SpanId);
+                command.Properties.Add(CommandPropertyKeys.ParentSpanId, scope?.Span?.SpanId); // hydrate
+                // TODO: or start a whole new SERVER span here, which is the parent for the COMMAND span?
+                //       otherwhise the received and queued command is not visible in the trace untill it is dequeued
+                //       registration.IsQueued
+
+                // contiue with next extension
+                await base.InvokeAsync(command, registration, context).AnyContext();
             }
-
-            // TODO: or start a whole new SERVER span here, which is the parent for the COMMAND span?
-            //       otherwhise the received and queued command is not visible in the trace untill it is dequeued
-            //       registration.IsQueued
-
-            // contiue with next extension
-            await base.InvokeAsync(command, registration, context).AnyContext();
         }
 
         public override async Task InvokeAsync<TCommand>(
@@ -39,13 +43,19 @@
             CommandRequestRegistration<TCommand> registration,
             HttpContext context)
         {
-            if (this.tracer != null)
+            using (var scope = this.tracer?.BuildSpan(
+                        $"command request {command.GetType().PrettyName()}".ToLowerInvariant(),
+                        LogKeys.AppCommand,
+                        SpanKind.Server).Activate(this.logger))
             {
-                command.Properties.Add(CommandPropertyKeys.ParentSpanId, this.tracer.CurrentSpan.SpanId);
-            }
+                command.Properties.Add(CommandPropertyKeys.ParentSpanId, scope?.Span?.SpanId); // hydrate
+                // TODO: or start a whole new SERVER span here, which is the parent for the COMMAND span?
+                //       otherwhise the received and queued command is not visible in the trace untill it is dequeued
+                //       registration.IsQueued
 
-            // contiue with next extension
-            await base.InvokeAsync(command, registration, context).AnyContext();
+                // contiue with next extension
+                await base.InvokeAsync(command, registration, context).AnyContext();
+            }
         }
     }
 }
