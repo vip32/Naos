@@ -1,10 +1,56 @@
 ﻿namespace Naos.Foundation.UnitTests.Serialization
 {
+    using System.IO;
     using Naos.Foundation;
+    using Shouldly;
     using Xunit;
 
     public class JsonNetSerializerTests : SerializerTestsBase
     {
+        [Fact]
+        public void CanRoundTripStream_Test()
+        {
+            // arrange
+            var sut = this.GetSerializer();
+            var model = new StubModel()
+            {
+                StringProperty = "abc"
+            };
+
+            using (var stream = new MemoryStream())
+            {
+                // act
+                sut.Serialize(model, stream);
+                var newModel = sut.Deserialize<StubModel>(stream);
+
+                // assert
+                stream.ShouldNotBeNull();
+                stream.Length.ShouldBeGreaterThan(0);
+                newModel.ShouldNotBeNull();
+                newModel.StringProperty.ShouldBe(model.StringProperty);
+            }
+        }
+
+        [Fact]
+        public void CanRoundTripEmptyStream_Test()
+        {
+            // arrange
+            var sut = this.GetSerializer();
+            StubModel model = null;
+
+            using (var stream = new MemoryStream())
+            {
+                // act
+                sut.Serialize(model, stream);
+                var newModel = sut.Deserialize<StubModel>(stream);
+
+                // assert
+                stream.ShouldNotBeNull();
+                stream.Length.ShouldBe(0);
+                newModel.ShouldBeNull();
+            }
+        }
+
         [Fact]
         public override void CanRoundTripBytes_Test()
         {
