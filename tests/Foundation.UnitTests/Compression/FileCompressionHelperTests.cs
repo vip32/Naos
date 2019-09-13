@@ -30,14 +30,43 @@
         }
 
         [Fact]
-        public void StreamCompressionRoundtrip_Test()
+        public void StreamCompressionRoundtrip_JsonNetSerializer_Test()
+        {
+            this.StreamCompressionRoundtrip_Test(new JsonNetSerializer());
+        }
+
+        [Fact]
+        public void StreamCompressionRoundtrip_BsonDataSerializer_Test()
+        {
+            this.StreamCompressionRoundtrip_Test(new BsonDataSerializer());
+        }
+
+        [Fact]
+        public void StreamCompressionRoundtrip_HexSerializer_Test()
+        {
+            this.StreamCompressionRoundtrip_Test(new HexSerializer());
+        }
+
+        [Fact]
+        public void StreamCompressionRoundtrip_Base64Serializer_Test()
+        {
+            this.StreamCompressionRoundtrip_Test(new Base64Serializer());
+        }
+
+        [Fact]
+        public void StreamCompressionRoundtrip_MessagePackSerializer_Test()
+        {
+            this.StreamCompressionRoundtrip_Test(new MessagePackSerializer());
+        }
+
+        private void StreamCompressionRoundtrip_Test(ISerializer serializer)
         {
             // arrange, write test file
-            var serializer = new JsonNetSerializer();
-            var path = Path.Combine($"test-{Guid.NewGuid().ToString("N").Substring(10)}.gz");
+            var path = Path.Combine($"test-{serializer.GetType().Name}-{Guid.NewGuid().ToString("N").Substring(10)}.gz");
             var model = new StubModel
             {
-                StringProperty = "abc"
+                StringProperty = "abc",
+                IntProperty = 999
             };
             StubModel newModel = null;
 
@@ -57,6 +86,7 @@
             // assert
             newModel.ShouldNotBeNull();
             newModel.StringProperty.ShouldBe(model.StringProperty);
+            newModel.IntProperty.ShouldBe(model.IntProperty);
         }
     }
 
