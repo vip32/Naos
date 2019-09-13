@@ -25,7 +25,7 @@
         {
             this.logger.LogInformation($"{{LogKey:l}} command request received (name={registration.CommandType.PrettyName()}, id={command.Id})", LogKeys.AppCommand);
 
-            // contiue with next extension
+            // continue with next extension
             await base.InvokeAsync(command, registration, context).AnyContext();
         }
 
@@ -36,7 +36,7 @@
         {
             this.logger.LogInformation($"{{LogKey:l}} command request received (name={registration.CommandType.PrettyName()}, id={command.Id})", LogKeys.AppCommand);
 
-            // contiue with next extension
+            // continue with next extension
             await base.InvokeAsync(command, registration, context).AnyContext();
         }
     }

@@ -28,12 +28,10 @@
                         LogKeys.AppCommand,
                         SpanKind.Server).Activate(this.logger))
             {
+                // start a whole new SERVER span here, which is the parent for the COMMAND span
                 command.Properties.Add(CommandPropertyKeys.ParentSpanId, scope?.Span?.SpanId); // hydrate
-                // TODO: or start a whole new SERVER span here, which is the parent for the COMMAND span?
-                //       otherwhise the received and queued command is not visible in the trace untill it is dequeued
-                //       registration.IsQueued
 
-                // contiue with next extension
+                // continue with next extension
                 await base.InvokeAsync(command, registration, context).AnyContext();
             }
         }
@@ -48,12 +46,10 @@
                         LogKeys.AppCommand,
                         SpanKind.Server).Activate(this.logger))
             {
+                // start a whole new SERVER span here, which is the parent for the COMMAND span
                 command.Properties.Add(CommandPropertyKeys.ParentSpanId, scope?.Span?.SpanId); // hydrate
-                // TODO: or start a whole new SERVER span here, which is the parent for the COMMAND span?
-                //       otherwhise the received and queued command is not visible in the trace untill it is dequeued
-                //       registration.IsQueued
 
-                // contiue with next extension
+                // continue with next extension
                 await base.InvokeAsync(command, registration, context).AnyContext();
             }
         }
