@@ -69,11 +69,11 @@
     <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure.ServiceBus\Infrastructure.Azure.ServiceBus.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure\Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Infrastructure.EntityFramework\Infrastructure.EntityFramework.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Utilities.Web\Utilities.Web.csproj" />
     <ProjectReference Include="..\..\src\ServiceContext.App\ServiceContext.App.csproj" />
     <ProjectReference Include="..\..\src\ServiceDiscovery.App.Consul\ServiceDiscovery.App.Consul.csproj" />
     <ProjectReference Include="..\..\src\ServiceDiscovery.App.Web.Router\ServiceDiscovery.App.Web.Router.csproj" />
     <ProjectReference Include="..\..\src\ServiceDiscovery.App\ServiceDiscovery.App.csproj" />
-    <ProjectReference Include="..\..\src\Utilities.Web\Utilities.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>

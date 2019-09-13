@@ -1,6 +1,7 @@
 ﻿namespace Naos.Core.Operations.App.Web
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
     using Humanizer;
@@ -102,6 +103,9 @@
                 var entities = await this.repository.FindAllAsync(
                     this.filterContext.GetSpecifications<LogTrace>(),
                     this.filterContext.GetFindOptions<LogTrace>()).AnyContext();
+
+                //var nodes = Node<LogTrace>.CreateTree(entities, l => l.SpanId, l => l.ParentSpanId, true)
+                //    .Where(n => !n.Children.IsNullOrEmpty()).ToList();
 
                 foreach (var entity in entities) // .Where(l => !l.TrackType.EqualsAny(new[] { LogTrackTypes.Trace }))
                 {

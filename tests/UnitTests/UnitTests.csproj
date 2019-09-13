@@ -46,7 +46,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Commands.Domain\Commands.Domain.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Abstractions\Abstractions.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Application.Web.Startup\Application.Web.Startup.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Application.Web\Application.Web.csproj" />
@@ -83,6 +82,7 @@
     <ProjectReference Include="..\..\src\Foundation.Infrastructure.EntityFramework\Infrastructure.EntityFramework.csproj" />
     <ProjectReference Include="..\..\src\App.Web\App.Web.csproj" />
     <ProjectReference Include="..\..\src\Authentication.App.Web\Authentication.App.Web.csproj" />
+    <ProjectReference Include="..\..\src\Commands.Domain\Commands.Domain.csproj" />
     <ProjectReference Include="..\..\src\Commands.App\Commands.App.csproj" />
     <ProjectReference Include="..\..\src\App\App.csproj" />
     <ProjectReference Include="..\..\src\Commands.Infrastructure.FileStorage\Commands.Infrastructure.FileStorage.csproj" />

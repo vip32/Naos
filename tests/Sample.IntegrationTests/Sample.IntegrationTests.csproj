@@ -30,9 +30,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Foundation.Abstractions\Abstractions.csproj" />
     <ProjectReference Include="..\..\src\App\App.csproj" />
     <ProjectReference Include="..\..\src\Commands.Infrastructure.FileStorage\Commands.Infrastructure.FileStorage.csproj" />
-    <ProjectReference Include="..\..\src\Foundation.Abstractions\Abstractions.csproj" />
     <ProjectReference Include="..\Sample\Sample.csproj" />
   </ItemGroup>
 

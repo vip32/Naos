@@ -168,8 +168,8 @@
             return !(value1 == value2);
         }
 
-        public static IEnumerable<Node<T>> CreateTree<TId>(IEnumerable<T> values, Func<T, TId> idSelector, Func<T, TId?> parentIdSelector)
-            where TId : struct
+        public static IEnumerable<Node<T>> CreateTree<TId>(IEnumerable<T> values, Func<T, TId> idSelector, Func<T, TId/*?*/> parentIdSelector, bool ignoreOnMissingParent = false)
+            //where TId : struct
         {
             if (!values.SafeAny())
             {
@@ -181,16 +181,16 @@
                 throw new ArgumentException("at least one value has the same id and parentid");
             }
 
-            return CreateTree(values.Select(v => new Node<T>(v)), idSelector, parentIdSelector);
+            return CreateTree(values.Select(v => new Node<T>(v)), idSelector, parentIdSelector, ignoreOnMissingParent);
         }
 
-        public static IEnumerable<Node<T>> CreateTree<TId>(IEnumerable<Node<T>> rootNodes, Func<T, TId> idSelector, Func<T, TId?> parentIdSelector)
-            where TId : struct
+        public static IEnumerable<Node<T>> CreateTree<TId>(IEnumerable<Node<T>> rootNodes, Func<T, TId> idSelector, Func<T, TId/*?*/> parentIdSelector, bool ignoreOnMissingParent = false)
+            //where TId : struct
         {
             var result = rootNodes.ToList();
             if (result.Duplicates(n => n).Any())
             {
-                throw new ArgumentException($"one or more values contains duplicate keys");
+                throw new ArgumentException("one or more values contains duplicate keys");
             }
 
             foreach (var rootNode in result)
@@ -202,9 +202,9 @@
                 {
                     parent.Add(rootNode);
                 }
-                else if (parentId != null)
+                else if (parentId != null && !ignoreOnMissingParent) // there is no node with this parentId in the tree, ignore?
                 {
-                    throw new ArgumentException($"a value has the parent id [{parentId.Value}] but no other nodes has this id");
+                    throw new ArgumentException($"a node has the parent id [{parentId/*.Value*/}] but no other nodes has this id");
                 }
             }
 
@@ -232,17 +232,17 @@
 
             if (!childNode.IsRoot)
             {
-                throw new ArgumentException($"the child node cannot be added because it is not a root node");
+                throw new ArgumentException("the child node cannot be added because it is not a root node");
             }
 
             if (this.Root == childNode)
             {
-                throw new ArgumentException($"the child node is the rootnode of the parent");
+                throw new ArgumentException("the child node is the rootnode of the parent");
             }
 
             if (childNode.SelfAndDescendants.Any(n => this == n))
             {
-                throw new ArgumentException($"the child node cannot be added to itself or its descendants");
+                throw new ArgumentException("the child node cannot be added to itself or its descendants");
             }
 
             childNode.Parent = this;
@@ -384,10 +384,15 @@
             return base.GetHashCode();
         }
 
-        private static bool IsSameId<TId>(TId id, TId? parentId)
-            where TId : struct
+        //private static bool IsSameId<TId>(TId id, TId? parentId)
+        //    where TId : struct
+        //{
+        //    return parentId != null && id.Equals(parentId.Value);
+        //}
+
+        private static bool IsSameId<TId>(TId id, TId parentId)
         {
-            return parentId != null && id.Equals(parentId.Value);
+            return parentId != null && id.Equals(parentId);
         }
 
         private bool Other(Node<T> node)

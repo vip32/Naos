@@ -17,7 +17,7 @@
         }
 
         ///// <summary>
-        /////     Stream to object T
+        ///// Stream to object T
         ///// </summary>
         ///// <typeparam name="T"></typeparam>
         ///// <param name="stream">The stream.</param>

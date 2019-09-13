@@ -35,7 +35,7 @@
     <ProjectReference Include="..\Queueing.Infrastructure.Azure\Queueing.Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\Queueing\Queueing.csproj" />
     <ProjectReference Include="..\Tracing.Domain\Tracing.Domain.csproj" />
-    <ProjectReference Include="..\Utilities.Web\Utilities.Web.csproj" />
+    <ProjectReference Include="..\Foundation.Utilities.Web\Utilities.Web.csproj" />
   </ItemGroup>
 
 </Project>

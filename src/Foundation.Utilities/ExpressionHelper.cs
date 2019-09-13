@@ -62,8 +62,13 @@
                 $"The left hand side of the expression must be a property accessor (PropertyExpression or UnaryExpression). It is a {expression.GetType()}.");
         }
 
-        public static object GetValueFromExpression(Expression expression, Type resultType)
+        public static object GetValue(Expression expression, Type resultType)
         {
+            if(expression == null)
+            {
+                return null;
+            }
+
             object result;
 
             if (expression is ConstantExpression constantExpression)
@@ -78,8 +83,7 @@
             }
 
             if (resultType.GetTypeInfo().IsEnum
-                && result != null
-                && result.GetType().GetTypeInfo().IsPrimitive)
+                && result?.GetType().GetTypeInfo().IsPrimitive == true)
             {
                 return Enum.ToObject(resultType, result);
             }
@@ -114,8 +118,7 @@
             if (source != null)
             {
                 var result = source.ToString();
-                // strip the parameter from the expression
-                var name = result.SliceTill(" =>");
+                var name = result.SliceTill(" =>"); // strip the parameter from the expression
                 return result.Replace($"{name}.", string.Empty).SliceFrom("=> ");
             }
 
@@ -127,8 +130,7 @@
             if (source != null)
             {
                 var result = source.ToString();
-                // strip the parameter from the expression
-                var name = result.SliceTill(" =>");
+                var name = result.SliceTill(" =>"); // strip the parameter from the expression
                 return result.Replace($"{name}.", string.Empty).SliceFrom("=> ");
             }
 
@@ -140,8 +142,7 @@
             if (source != null)
             {
                 var result = source.ToString();
-                // strip the parameter from the expression
-                var name = result.SliceTill(" =>");
+                var name = result.SliceTill(" =>"); // strip the parameter from the expression
                 return result.Replace($"{name}.", string.Empty).SliceFrom("=> ");
             }
 
@@ -153,8 +154,7 @@
             if (source != null)
             {
                 var result = source.ToString();
-                // strip the parameter from the expression
-                var name = result.SliceTill(" =>");
+                var name = result.SliceTill(" =>"); // strip the parameter from the expression
                 return result.Replace($"{name}.", string.Empty).SliceFrom("=> ");
             }
 

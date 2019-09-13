@@ -103,7 +103,7 @@
                 }
 
                 var property = ExpressionHelper.GetProperty(binaryExpression.Left);
-                var value = ExpressionHelper.GetValueFromExpression(binaryExpression.Right, property.PropertyType);
+                var value = ExpressionHelper.GetValue(binaryExpression.Right, property.PropertyType);
                 if (!property.Name.EqualsAny(indexMaps?.Select(i => i.Name)))
                 {
                     this.logger.LogWarning($"expression with property name {property.Name} is not part of any index, it will not be used in the query (WHERE)");
@@ -338,7 +338,7 @@ FROM INFORMATION_SCHEMA.TABLES";
                 return string.Empty;
             }
 
-            var value = (string)ExpressionHelper.GetValueFromExpression(methodExpression.Arguments[0], typeof(string));
+            var value = (string)ExpressionHelper.GetValue(methodExpression.Arguments[0], typeof(string));
 
             return methodExpression.Method.Name switch
             {
