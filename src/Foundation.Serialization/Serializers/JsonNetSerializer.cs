@@ -35,8 +35,11 @@
                 return;
             }
 
-            using (var writer = new JsonTextWriter(new StreamWriter(output, Encoding.UTF8, 1024, true)))
+            using (var writer = new JsonTextWriter(
+                new StreamWriter(output, Encoding.UTF8, 1024, true)))
             {
+                writer.AutoCompleteOnClose = false;
+                writer.CloseOutput = false;
                 this.serializer.Serialize(writer, value, value.GetType());
                 writer.Flush();
             }

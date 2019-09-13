@@ -25,6 +25,16 @@
         /// <param name="output">The output.</param>
         public void Serialize(object value, Stream output)
         {
+            if (value == null)
+            {
+                return;
+            }
+
+            if (output == null)
+            {
+                return;
+            }
+
             var bytes = Convert.FromBase64String(
                 Convert.ToBase64String(
                     Encoding.UTF8.GetBytes(
@@ -39,6 +49,12 @@
         /// <param name="type">The type.</param>
         public object Deserialize(Stream input, Type type)
         {
+            if (input == null || input.Length == 0)
+            {
+                return null;
+            }
+
+            input.Position = 0;
             var buffer = new byte[16 * 1024];
             using (var ms = new MemoryStream())
             {
@@ -60,6 +76,12 @@
         /// <param name="input">The input.</param>
         public T Deserialize<T>(Stream input)
         {
+            if (input == null || input.Length == 0)
+            {
+                return default;
+            }
+
+            input.Position = 0;
             var buffer = new byte[16 * 1024];
             using (var ms = new MemoryStream())
             {

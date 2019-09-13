@@ -25,11 +25,22 @@
         /// <param name="output">The output.</param>
         public void Serialize(object value, Stream output)
         {
+            if (value == null)
+            {
+                return;
+            }
+
+            if (output == null)
+            {
+                return;
+            }
+
             using (var writer = new BsonDataWriter(output))
             {
+                writer.AutoCompleteOnClose = false;
+                writer.CloseOutput = false;
                 this.serializer.Serialize(writer, value);
                 writer.Flush();
-                //output.Position = 0;
             }
         }
 
@@ -40,8 +51,15 @@
         /// <param name="type">The type.</param>
         public object Deserialize(Stream input, Type type)
         {
+            if(input == null)
+            {
+                return null;
+            }
+
+            input.Position = 0;
             using (var reader = new BsonDataReader(input))
             {
+                reader.CloseInput = false;
                 return this.serializer.Deserialize(reader, type);
             }
         }
@@ -53,8 +71,15 @@
         /// <param name="input">The input.</param>
         public T Deserialize<T>(Stream input)
         {
+            if (input == null)
+            {
+                return default;
+            }
+
+            input.Position = 0;
             using (var reader = new BsonDataReader(input))
             {
+                reader.CloseInput = false;
                 var serializer = new JsonSerializer();
                 return serializer.Deserialize<T>(reader);
             }

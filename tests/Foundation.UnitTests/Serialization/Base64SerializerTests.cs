@@ -6,6 +6,18 @@
     public class Base64SerializerTests : SerializerTestsBase
     {
         [Fact]
+        public override void CanRoundTripStream_Test()
+        {
+            base.CanRoundTripStream_Test();
+        }
+
+        [Fact]
+        public override void CanRoundTripEmptyStream_Test()
+        {
+            base.CanRoundTripEmptyStream_Test();
+        }
+
+        [Fact]
         public override void CanRoundTripBytes_Test()
         {
             base.CanRoundTripBytes_Test();

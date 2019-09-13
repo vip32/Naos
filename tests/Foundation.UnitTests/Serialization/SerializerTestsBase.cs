@@ -1,11 +1,55 @@
 ﻿namespace Naos.Foundation.UnitTests.Serialization
 {
     using System.Collections.Generic;
+    using System.IO;
     using Naos.Foundation;
+    using Shouldly;
     using Xunit;
 
     public abstract class SerializerTestsBase
     {
+        public virtual void CanRoundTripStream_Test()
+        {
+            // arrange
+            var sut = this.GetSerializer();
+            var model = new StubModel()
+            {
+                StringProperty = "abc"
+            };
+
+            using (var stream = new MemoryStream())
+            {
+                // act
+                sut.Serialize(model, stream);
+                var newModel = sut.Deserialize<StubModel>(stream);
+
+                // assert
+                stream.ShouldNotBeNull();
+                stream.Length.ShouldBeGreaterThan(0);
+                newModel.ShouldNotBeNull();
+                newModel.StringProperty.ShouldBe(model.StringProperty);
+            }
+        }
+
+        public virtual void CanRoundTripEmptyStream_Test()
+        {
+            // arrange
+            var sut = this.GetSerializer();
+            StubModel model = null;
+
+            using (var stream = new MemoryStream())
+            {
+                // act
+                sut.Serialize(model, stream);
+                var newModel = sut.Deserialize<StubModel>(stream);
+
+                // assert
+                stream.ShouldNotBeNull();
+                stream.Length.ShouldBe(0);
+                newModel.ShouldBeNull();
+            }
+        }
+
         public virtual void CanRoundTripBytes_Test()
         {
             var serializer = this.GetSerializer();
