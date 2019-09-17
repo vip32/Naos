@@ -179,7 +179,7 @@
             var sb = new StringBuilder();
             sb.AppendLine($"<span style='color: {messageColor}; {extraStyles}'>");
             //sb.AppendLine(logEvent.TrackType.SafeEquals("journal") ? "*" : "&nbsp;"); // journal prefix
-            sb.AppendLine($"{entity.Message} ({entity.SpanId}) <a target=\"blank\" href=\"/api/operations/logtraces?q=Id={entity.Id}\">*</a> {entity.ParentSpanId} -> took {entity.Duration.Humanize()}");
+            sb.AppendLine($"{entity.Message} ({entity.SpanId}) <a target=\"blank\" href=\"/api/operations/logtraces?q=Id={entity.Id}\">*</a> -> took {entity.Duration.Humanize()}");
             sb.AppendLine("</span>");
             sb.AppendLine("</div>");
 
