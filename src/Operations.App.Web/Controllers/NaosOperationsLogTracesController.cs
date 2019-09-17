@@ -108,44 +108,82 @@
                 var nodes = Node<LogTrace>.CreateTree(entities, l => l.SpanId, l => l.ParentSpanId, true)
                     .Where(n => !n.Children.IsNullOrEmpty()).ToList();
 
-                foreach (var entity in entities) // .Where(l => !l.TrackType.EqualsAny(new[] { LogTrackTypes.Trace }))
-                {
-                    var levelColor = "lime";
-                    if (entity.Status.SafeEquals(nameof(SpanStatus.Transient)))
-                    {
-                        levelColor = "#75715E";
-                    }
-                    else if (entity.Status.SafeEquals(nameof(SpanStatus.Cancelled)))
-                    {
-                        levelColor = "#FF8C00";
-                    }
-                    else if (entity.Status.SafeEquals(nameof(SpanStatus.Failed)))
-                    {
-                        levelColor = "#FF0000";
-                    }
+                nodes.Render(
+                    async t => await this.WriteTraceHeaderAsync(t).AnyContext(),
+                    async t => await this.WriteTraceAsync(t).AnyContext(),
+                    async i => await this.WriteTraceIndentAsync(i).AnyContext());
 
-                    var messageColor = levelColor;
-                    var extraStyles = string.Empty;
-
-                    var sb = new StringBuilder();
-                    sb.AppendLine("<div style='white-space: nowrap;'><span style='color: #EB1864; font-size: x-small;'>");
-                    sb.AppendLine($"{entity.Timestamp.ToUniversalTime():u}");
-                    sb.AppendLine("</span>");
-                    sb.AppendLine($"&nbsp;[<span style='color: {levelColor}'>");
-                    sb.AppendLine($"{entity.Kind?.ToUpper().Truncate(6, string.Empty)}</span>]");
-                    sb.AppendLine(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logtraces/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;");
-                    sb.AppendLine($"<span style='color: {messageColor}; {extraStyles}'>");
-                    //sb.AppendLine(logEvent.TrackType.SafeEquals("journal") ? "*" : "&nbsp;"); // journal prefix
-                    sb.AppendLine($"{entity.SpanId} {entity.Message} <a target=\"blank\" href=\"/api/operations/logtraces?q=Id={entity.Id}\">*</a> {entity.ParentSpanId} -> took {entity.Duration.Humanize()}");
-                    sb.AppendLine("</span>");
-                    sb.AppendLine("</div>");
-                    await this.HttpContext.Response.WriteAsync(sb.ToString()).AnyContext();
-                }
+                //foreach (var entity in entities) // .Where(l => !l.TrackType.EqualsAny(new[] { LogTrackTypes.Trace }))
+                //{
+                //    await this.WriteTraceAsync(entity).AnyContext();
+                //}
             }
             finally
             {
                 await this.HttpContext.Response.WriteAsync("</body></html>").AnyContext();
             }
+        }
+
+        private async Task WriteTraceHeaderAsync(LogTrace entity)
+        {
+            var levelColor = "lime";
+            if (entity.Status.SafeEquals(nameof(SpanStatus.Transient)))
+            {
+                levelColor = "#75715E";
+            }
+            else if (entity.Status.SafeEquals(nameof(SpanStatus.Cancelled)))
+            {
+                levelColor = "#FF8C00";
+            }
+            else if (entity.Status.SafeEquals(nameof(SpanStatus.Failed)))
+            {
+                levelColor = "#FF0000";
+            }
+
+            var sb = new StringBuilder();
+            sb.AppendLine("<div style='white-space: nowrap;'>");
+            sb.AppendLine("<span style='color: #EB1864; font-size: x-small;'>");
+            sb.AppendLine($"{entity.Timestamp.ToUniversalTime():u}");
+            sb.AppendLine("</span>");
+            sb.AppendLine($"&nbsp;[<span style='color: {levelColor}'>");
+            sb.AppendLine($"{entity.Kind?.ToUpper().Truncate(6, string.Empty)}</span>]");
+            //sb.AppendLine(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logtraces/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;");
+
+            await this.HttpContext.Response.WriteAsync(sb.ToString()).AnyContext();
+        }
+
+        private async Task WriteTraceIndentAsync(string indent)
+        {
+            await this.HttpContext.Response.WriteAsync(indent).AnyContext();
+        }
+
+        private async Task WriteTraceAsync(LogTrace entity)
+        {
+            var levelColor = "lime";
+            if (entity.Status.SafeEquals(nameof(SpanStatus.Transient)))
+            {
+                levelColor = "#75715E";
+            }
+            else if (entity.Status.SafeEquals(nameof(SpanStatus.Cancelled)))
+            {
+                levelColor = "#FF8C00";
+            }
+            else if (entity.Status.SafeEquals(nameof(SpanStatus.Failed)))
+            {
+                levelColor = "#FF0000";
+            }
+
+            var messageColor = levelColor;
+            var extraStyles = string.Empty;
+
+            var sb = new StringBuilder();
+            sb.AppendLine($"<span style='color: {messageColor}; {extraStyles}'>");
+            //sb.AppendLine(logEvent.TrackType.SafeEquals("journal") ? "*" : "&nbsp;"); // journal prefix
+            sb.AppendLine($"{entity.Message} ({entity.SpanId}) <a target=\"blank\" href=\"/api/operations/logtraces?q=Id={entity.Id}\">*</a> {entity.ParentSpanId} -> took {entity.Duration.Humanize()}");
+            sb.AppendLine("</span>");
+            sb.AppendLine("</div>");
+
+            await this.HttpContext.Response.WriteAsync(sb.ToString()).AnyContext();
         }
 
         // Application parts? https://docs.microsoft.com/en-us/aspnet/core/mvc/advanced/app-parts?view=aspnetcore-2.1
