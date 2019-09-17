@@ -47,10 +47,7 @@
         {
             this.logger.LogInformation($"{{LogKey:l}} command request dispatch (name={registration.CommandType.PrettyName()}, id={command.Id}, type=queue)", LogKeys.AppCommand);
 
-            //var wrapper = new CommandWrapper().SetCommand<TCommand, TResponse>(command);
             var wrapper = new CommandRequestWrapper().SetCommand(command);
-            //wrapper.ParentSpanId = command.Properties.GetValueOrDefault("ParentSpanId") as string; // TODO: no magic string
-
             await this.queue.EnqueueAsync(wrapper).AnyContext();
 
             var metrics = await this.queue.GetMetricsAsync().AnyContext();
