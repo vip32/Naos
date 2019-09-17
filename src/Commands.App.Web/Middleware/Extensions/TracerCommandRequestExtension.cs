@@ -26,7 +26,7 @@
             using (var scope = this.tracer?.BuildSpan(
                         $"command request {command.GetType().PrettyName()}".ToLowerInvariant(),
                         LogKeys.AppCommand,
-                        SpanKind.Server).Activate(this.logger))
+                        SpanKind.Consumer).Activate(this.logger))
             {
                 // start a whole new SERVER span later, which is the parent for the current 'COMMAND REQUEST' span
                 command.Properties.Add(CommandPropertyKeys.TraceId, scope?.Span?.TraceId); // propagate
@@ -45,7 +45,7 @@
             using (var scope = this.tracer?.BuildSpan(
                         $"command request {command.GetType().PrettyName()}".ToLowerInvariant(),
                         LogKeys.AppCommand,
-                        SpanKind.Server).Activate(this.logger))
+                        SpanKind.Consumer).Activate(this.logger))
             {
                 // start a whole new SERVER span later, which is the parent for the current 'COMMAND REQUEST' span
                 command.Properties.Add(CommandPropertyKeys.TraceId, scope?.Span?.TraceId); // propagate

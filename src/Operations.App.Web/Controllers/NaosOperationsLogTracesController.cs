@@ -126,26 +126,12 @@
 
         private async Task WriteTraceHeaderAsync(LogTrace entity)
         {
-            var levelColor = "lime";
-            if (entity.Status.SafeEquals(nameof(SpanStatus.Transient)))
-            {
-                levelColor = "#75715E";
-            }
-            else if (entity.Status.SafeEquals(nameof(SpanStatus.Cancelled)))
-            {
-                levelColor = "#FF8C00";
-            }
-            else if (entity.Status.SafeEquals(nameof(SpanStatus.Failed)))
-            {
-                levelColor = "#FF0000";
-            }
-
             var sb = new StringBuilder();
             sb.AppendLine("<div style='white-space: nowrap;'>");
             sb.AppendLine("<span style='color: #EB1864; font-size: x-small;'>");
             sb.AppendLine($"{entity.Timestamp.ToUniversalTime():u}");
             sb.AppendLine("</span>");
-            sb.AppendLine($"&nbsp;[<span style='color: {levelColor}'>");
+            sb.AppendLine($"&nbsp;[<span style='color: {this.GetTraceLevelColor(entity)}'>");
             sb.AppendLine($"{entity.Kind?.ToUpper().Truncate(6, string.Empty)}</span>]");
             //sb.AppendLine(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logtraces/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;");
 
@@ -159,6 +145,20 @@
 
         private async Task WriteTraceAsync(LogTrace entity)
         {
+            var extraStyles = string.Empty;
+
+            var sb = new StringBuilder();
+            sb.AppendLine($"<span style='color: {this.GetTraceLevelColor(entity)}; {extraStyles}'>");
+            //sb.AppendLine(logEvent.TrackType.SafeEquals("journal") ? "*" : "&nbsp;"); // journal prefix
+            sb.AppendLine($"{entity.Message} ({entity.SpanId}) <a target=\"blank\" href=\"/api/operations/logtraces?q=Id={entity.Id}\">*</a> -> took {entity.Duration.Humanize()}");
+            sb.AppendLine("</span>");
+            sb.AppendLine("</div>");
+
+            await this.HttpContext.Response.WriteAsync(sb.ToString()).AnyContext();
+        }
+
+        private string GetTraceLevelColor(LogTrace entity)
+        {
             var levelColor = "lime";
             if (entity.Status.SafeEquals(nameof(SpanStatus.Transient)))
             {
@@ -173,17 +173,7 @@
                 levelColor = "#FF0000";
             }
 
-            var messageColor = levelColor;
-            var extraStyles = string.Empty;
-
-            var sb = new StringBuilder();
-            sb.AppendLine($"<span style='color: {messageColor}; {extraStyles}'>");
-            //sb.AppendLine(logEvent.TrackType.SafeEquals("journal") ? "*" : "&nbsp;"); // journal prefix
-            sb.AppendLine($"{entity.Message} ({entity.SpanId}) <a target=\"blank\" href=\"/api/operations/logtraces?q=Id={entity.Id}\">*</a> -> took {entity.Duration.Humanize()}");
-            sb.AppendLine("</span>");
-            sb.AppendLine("</div>");
-
-            await this.HttpContext.Response.WriteAsync(sb.ToString()).AnyContext();
+            return levelColor;
         }
 
         // Application parts? https://docs.microsoft.com/en-us/aspnet/core/mvc/advanced/app-parts?view=aspnetcore-2.1
