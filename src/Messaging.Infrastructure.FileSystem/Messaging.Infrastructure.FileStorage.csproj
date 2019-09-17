@@ -14,6 +14,7 @@
     <ProjectReference Include="..\Foundation.Extensions\Extensions.csproj" />
     <ProjectReference Include="..\FileStorage\FileStorage.csproj" />
     <ProjectReference Include="..\Messaging\Messaging.csproj" />
+    <ProjectReference Include="..\Tracing.Domain\Tracing.Domain.csproj" />
   </ItemGroup>
 
 </Project>

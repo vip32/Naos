@@ -2,11 +2,18 @@
 {
     using MediatR;
     using Naos.Core.Messaging.Domain;
+    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
 
     public class RabbitMQMessageBrokerOptionsBuilder :
         BaseOptionsBuilder<RabbitMQMessageBrokerOptions, RabbitMQMessageBrokerOptionsBuilder>
     {
+        public RabbitMQMessageBrokerOptionsBuilder Tracer(ITracer tracer)
+        {
+            this.Target.Tracer = tracer;
+            return this;
+        }
+
         public RabbitMQMessageBrokerOptionsBuilder Mediator(IMediator mediator)
         {
             this.Target.Mediator = mediator;

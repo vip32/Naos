@@ -42,10 +42,10 @@
             EnsureArg.IsNotNull(request);
 
             ISpan parentSpan = null;
-
-            if (request.Properties.ContainsKey("ParentSpanId"))
+            if (request.Properties.ContainsKey(CommandPropertyKeys.TraceId) && request.Properties.ContainsKey(CommandPropertyKeys.ParentSpanId))
             {
-                parentSpan = new Span(null, request.Properties.GetValueOrDefault(CommandPropertyKeys.ParentSpanId) as string);
+                // dehydrate parent span
+                parentSpan = new Span(request.Properties.GetValueOrDefault(CommandPropertyKeys.TraceId) as string, request.Properties.GetValueOrDefault(CommandPropertyKeys.ParentSpanId) as string);
             }
 
             this.scope = this.tracer?.BuildSpan(

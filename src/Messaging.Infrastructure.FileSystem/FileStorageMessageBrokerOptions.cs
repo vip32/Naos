@@ -4,10 +4,13 @@
     using MediatR;
     using Naos.Core.FileStorage.Domain;
     using Naos.Core.Messaging.Domain;
+    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
 
     public class FileStorageMessageBrokerOptions : BaseOptions
     {
+        public ITracer Tracer { get; set; }
+
         public IMediator Mediator { get; set; }
 
         public IMessageHandlerFactory HandlerFactory { get; set; }

@@ -82,7 +82,7 @@
         /// Publishes the specified message.
         /// </summary>
         /// <param name="message">The message.</param>
-        public void Publish(Domain.Message message) // TODO: provide (parent) SPAN here? as ITracer is scope and this broker is singleton
+        public void Publish(Domain.Message message)
         {
             EnsureArg.IsNotNull(message, nameof(message));
             if (message.CorrelationId.IsNullOrEmpty())
@@ -92,54 +92,52 @@
 
             var messageName = message.GetType().PrettyName();
             using (var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Producer).Activate(this.logger))
+            using (this.logger.BeginScope(new Dictionary<string, object>
             {
-                using (this.logger.BeginScope(new Dictionary<string, object>
+                [LogPropertyKeys.CorrelationId] = message.CorrelationId
+            }))
+            {
+                if (message.Id.IsNullOrEmpty())
                 {
-                    [LogPropertyKeys.CorrelationId] = message.CorrelationId
-                }))
-                {
-                    if (message.Id.IsNullOrEmpty())
-                    {
-                        message.Id = IdGenerator.Instance.Next;
-                        this.logger.LogDebug($"{{LogKey:l}} set message (id={message.Id})", LogKeys.Messaging);
-                    }
-
-                    if (message.Origin.IsNullOrEmpty())
-                    {
-                        message.Origin = this.options.MessageScope;
-                        this.logger.LogDebug($"{{LogKey:l}} set message (origin={message.Origin})", LogKeys.Messaging);
-                    }
-
-                    // TODO: async publish!
-                    if (this.options.Mediator != null)
-                    {
-                        /*await */
-                        this.options.Mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.AnyContext();*/
-                    }
-
-                    // TODO: really need non-async Result?
-                    var serviceBusMessage = new Microsoft.Azure.ServiceBus.Message
-                    {
-                        Label = messageName,
-                        MessageId = message.Id,
-                        CorrelationId = message.CorrelationId.IsNullOrEmpty() ? IdGenerator.Instance.Next : message.CorrelationId,
-                        //Body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)), // TODO: use ISerializer here, compacter messages
-                        Body = this.serializer.SerializeToBytes(message),
-                        To = this.options.FilterScope
-                    };
-                    serviceBusMessage.UserProperties.AddOrUpdate("Origin", this.options.MessageScope);
-                    // propagate the span infos
-                    if (scope?.Span != null)
-                    {
-                        serviceBusMessage.UserProperties.AddOrUpdate("TraceId", scope.Span.TraceId);
-                        serviceBusMessage.UserProperties.AddOrUpdate("SpanId", scope.Span.SpanId);
-                    }
-
-                    this.logger.LogJournal(LogKeys.Messaging, $"publish (name={{MessageName}}, id={{MessageId}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes().ToString("#.##")})", LogPropertyKeys.TrackPublishMessage, args: new[] { messageName, message.Id, message.Origin });
-                    this.logger.LogTrace(LogKeys.Messaging, message.Id, messageName, LogTraceNames.Message);
-
-                    this.options.Provider.TopicClientFactory().SendAsync(serviceBusMessage).GetAwaiter().GetResult();
+                    message.Id = IdGenerator.Instance.Next;
+                    this.logger.LogDebug($"{{LogKey:l}} set message (id={message.Id})", LogKeys.Messaging);
                 }
+
+                if (message.Origin.IsNullOrEmpty())
+                {
+                    message.Origin = this.options.MessageScope;
+                    this.logger.LogDebug($"{{LogKey:l}} set message (origin={message.Origin})", LogKeys.Messaging);
+                }
+
+                // TODO: async publish!
+                if (this.options.Mediator != null)
+                {
+                    /*await */
+                    this.options.Mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.AnyContext();*/
+                }
+
+                // TODO: really need non-async Result?
+                var serviceBusMessage = new Microsoft.Azure.ServiceBus.Message
+                {
+                    Label = messageName,
+                    MessageId = message.Id,
+                    CorrelationId = message.CorrelationId.IsNullOrEmpty() ? IdGenerator.Instance.Next : message.CorrelationId,
+                    //Body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)), // TODO: use ISerializer here, compacter messages
+                    Body = this.serializer.SerializeToBytes(message),
+                    To = this.options.FilterScope
+                };
+                serviceBusMessage.UserProperties.AddOrUpdate("Origin", this.options.MessageScope);
+                if (scope?.Span != null)
+                {
+                    // propagate the span infos
+                    serviceBusMessage.UserProperties.AddOrUpdate("TraceId", scope.Span.TraceId);
+                    serviceBusMessage.UserProperties.AddOrUpdate("SpanId", scope.Span.SpanId);
+                }
+
+                this.logger.LogJournal(LogKeys.Messaging, $"publish (name={{MessageName}}, id={{MessageId}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes().ToString("#.##")})", LogPropertyKeys.TrackPublishMessage, args: new[] { messageName, message.Id, message.Origin });
+                this.logger.LogTrace(LogKeys.Messaging, message.Id, messageName, LogTraceNames.Message);
+
+                this.options.Provider.TopicClientFactory().SendAsync(serviceBusMessage).GetAwaiter().GetResult();
             }
         }
 
@@ -216,52 +214,57 @@
                     }
 
                     // get parent span infos from message
-                    var traceId = serviceBusMessage.UserProperties.ContainsKey("TraceId") ? serviceBusMessage.UserProperties["TraceId"] as string : string.Empty;
-                    var spanId = serviceBusMessage.UserProperties.ContainsKey("SpanId") ? serviceBusMessage.UserProperties["SpanId"] as string : string.Empty;
-                    var parentSpan = new Span(traceId, spanId);
+                    ISpan parentSpan = null;
+                    if (serviceBusMessage.UserProperties.ContainsKey("TraceId") && serviceBusMessage.UserProperties.ContainsKey("SpanId"))
+                    {
+                        // dehydrate parent span
+                        parentSpan = new Span(serviceBusMessage.UserProperties["TraceId"] as string, serviceBusMessage.UserProperties["SpanId"] as string);
+                    }
 
                     using (var scope = tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Consumer, parentSpan).Activate(logger))
+                    using (logger.BeginScope(new Dictionary<string, object>
                     {
-                        using (logger.BeginScope(new Dictionary<string, object>
+                        [LogPropertyKeys.CorrelationId] = serviceBusMessage.CorrelationId,
+                        //[LogPropertyKeys.TrackId] = scope.Span.SpanId = allready done in Span ScopeManager (activate)
+                    }))
+                    {
+                        // map some message properties to the typed message
+                        //var jsonMessage = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(serviceBusMessage.Body), messageType); // TODO: use ISerializer here, compacter messages
+                        //var message = jsonMessage as Domain.Message;
+                        if (!(serializer.Deserialize(serviceBusMessage.Body, messageType) is Domain.Message message))
                         {
-                            [LogPropertyKeys.CorrelationId] = serviceBusMessage.CorrelationId,
-                            //[LogPropertyKeys.TrackId] = scope.Span.SpanId
-                        }))
+                            return false;
+                        }
+
+                        // TODO: message can be null, skip
+                        if (message.Origin.IsNullOrEmpty())
                         {
-                            // map some message properties to the typed message
-                            //var jsonMessage = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(serviceBusMessage.Body), messageType); // TODO: use ISerializer here, compacter messages
-                            //var message = jsonMessage as Domain.Message;
-                            var message = serializer.Deserialize(serviceBusMessage.Body, messageType) as Domain.Message;
-                            // TODO: message can be null, skip
-                            if (message.Origin.IsNullOrEmpty())
+                            //message.CorrelationId = jsonMessage.AsJToken().GetStringPropertyByToken("CorrelationId");
+                            message.Origin = serviceBusMessage.UserProperties.ContainsKey("Origin") ? serviceBusMessage.UserProperties["Origin"] as string : string.Empty;
+                        }
+
+                        logger.LogJournal(LogKeys.Messaging, $"process (name={{MessageName}}, id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes().ToString("#.##")})",
+                        LogPropertyKeys.TrackReceiveMessage, args: new[] { serviceBusMessage.Label, message?.Id, messageScope, message.Origin });
+                        logger.LogTrace(LogKeys.Messaging, message.Id, serviceBusMessage.Label, LogTraceNames.Message);
+
+                        // construct the handler by using the DI container
+                        var handler = handlerFactory.Create(subscription.HandlerType); // should not be null, did you forget to register your generic handler (EntityMessageHandler<T>)
+                        var concreteType = typeof(IMessageHandler<>).MakeGenericType(messageType);
+
+                        var method = concreteType.GetMethod("Handle");
+                        if (handler != null && method != null)
+                        {
+                            if (mediator != null)
                             {
-                                //message.CorrelationId = jsonMessage.AsJToken().GetStringPropertyByToken("CorrelationId");
-                                message.Origin = serviceBusMessage.UserProperties.ContainsKey("Origin") ? serviceBusMessage.UserProperties["Origin"] as string : string.Empty;
+                                await mediator.Publish(new MessageHandledDomainEvent(message, messageScope)).AnyContext();
                             }
 
-                            logger.LogJournal(LogKeys.Messaging, $"process (name={{MessageName}}, id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes().ToString("#.##")})",
-                            LogPropertyKeys.TrackReceiveMessage, args: new[] { serviceBusMessage.Label, message?.Id, messageScope, message.Origin });
-                            logger.LogTrace(LogKeys.Messaging, message.Id, serviceBusMessage.Label, LogTraceNames.Message);
-
-                            // construct the handler by using the DI container
-                            var handler = handlerFactory.Create(subscription.HandlerType); // should not be null, did you forget to register your generic handler (EntityMessageHandler<T>)
-                            var concreteType = typeof(IMessageHandler<>).MakeGenericType(messageType);
-
-                            var method = concreteType.GetMethod("Handle");
-                            if (handler != null && method != null)
-                            {
-                                if (mediator != null)
-                                {
-                                    await mediator.Publish(new MessageHandledDomainEvent(message, messageScope)).AnyContext();
-                                }
-
-                                await ((Task)method.Invoke(handler, new object[] { message as object })).AnyContext();
-                            }
-                            else
-                            {
-                                logger.LogWarning("{LogKey:l} process failed, message handler could not be created. is the handler registered in the service provider? (name={MessageName}, service={Service}, id={MessageId}, origin={MessageOrigin})",
-                                    LogKeys.Messaging, serviceBusMessage.Label, messageScope, message.Id, message.Origin);
-                            }
+                            await ((Task)method.Invoke(handler, new object[] { message as object })).AnyContext();
+                        }
+                        else
+                        {
+                            logger.LogWarning("{LogKey:l} process failed, message handler could not be created. is the handler registered in the service provider? (name={MessageName}, service={Service}, id={MessageId}, origin={MessageOrigin})",
+                                LogKeys.Messaging, serviceBusMessage.Label, messageScope, message.Id, message.Origin);
                         }
                     }
                 }

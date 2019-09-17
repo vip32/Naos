@@ -5,7 +5,7 @@
     using Newtonsoft.Json;
 
     public class Message
-        : IEntity<string>, IHaveDiscriminator, IAggregateRoot // TODO: really need this? or just like DomainEvent (=clean)
+        : IEntity<string>, IAggregateRoot // TODO: really need this? or just like DomainEvent (=clean)
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Message"/> class.
@@ -45,17 +45,17 @@
         }
 
         /// <summary>
+        /// Gets or sets the short identifier for this message.
+        /// </summary>
+        public string Identifier { get; set; }
+
+        /// <summary>
         /// Gets or sets the correlation identifier.
         /// </summary>
         /// <value>
         /// The correlation identifier.
         /// </value>
         public string CorrelationId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the short identifier for this message.
-        /// </summary>
-        public string Identifier { get; set; }
 
         /// <summary>
         /// Gets the type of the entity (discriminator).
@@ -80,6 +80,8 @@
         /// The status.
         /// </value>
         public MessageStatus Status { get; set; }
+
+        public DataDictionary Properties { get; internal set; } = new DataDictionary();
 
         public DomainEvents DomainEvents => new DomainEvents();
     }

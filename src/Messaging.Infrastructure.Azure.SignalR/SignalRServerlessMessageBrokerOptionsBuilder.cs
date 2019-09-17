@@ -3,11 +3,18 @@
     using System.Net.Http;
     using MediatR;
     using Naos.Core.Messaging.Domain;
+    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
 
     public class SignalRServerlessMessageBrokerOptionsBuilder :
         BaseOptionsBuilder<SignalRServerlessMessageBrokerOptions, SignalRServerlessMessageBrokerOptionsBuilder>
     {
+        public SignalRServerlessMessageBrokerOptionsBuilder Tracer(ITracer tracer)
+        {
+            this.Target.Tracer = tracer;
+            return this;
+        }
+
         public SignalRServerlessMessageBrokerOptionsBuilder Mediator(IMediator mediator)
         {
             this.Target.Mediator = mediator;

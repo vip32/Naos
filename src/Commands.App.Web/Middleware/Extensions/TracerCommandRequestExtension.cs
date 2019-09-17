@@ -47,7 +47,8 @@
                         SpanKind.Server).Activate(this.logger))
             {
                 // start a whole new SERVER span here, which is the parent for the COMMAND span
-                command.Properties.Add(CommandPropertyKeys.ParentSpanId, scope?.Span?.SpanId); // hydrate
+                command.Properties.Add(CommandPropertyKeys.TraceId, scope?.Span?.TraceId); // propagate
+                command.Properties.Add(CommandPropertyKeys.ParentSpanId, scope?.Span?.TraceId); // propagate
 
                 // continue with next extension
                 await base.InvokeAsync(command, registration, context).AnyContext();

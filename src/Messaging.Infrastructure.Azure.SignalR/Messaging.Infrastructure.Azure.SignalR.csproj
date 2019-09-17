@@ -18,6 +18,7 @@
     <ProjectReference Include="..\Foundation.Serialization\Serialization.csproj" />
     <ProjectReference Include="..\Foundation.Infrastructure.Azure\Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\Messaging\Messaging.csproj" />
+    <ProjectReference Include="..\Tracing.Domain\Tracing.Domain.csproj" />
   </ItemGroup>
 
 </Project>
