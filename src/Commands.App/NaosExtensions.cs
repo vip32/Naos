@@ -34,7 +34,7 @@
                 .Scan(scan => scan
                     .FromApplicationDependencies(a => !a.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) && !a.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase))
                     .AddClasses(classes => classes.Where(c => (c.Name.EndsWith("Command", StringComparison.OrdinalIgnoreCase) || c.Name.EndsWith("CommandHandler", StringComparison.OrdinalIgnoreCase)) && !c.Name.Contains("ConsoleCommand")))
-                    .AsImplementedInterfaces());
+                    .AsImplementedInterfaces().WithScopedLifetime());
 
             naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos services builder: commands added"); // TODO: list available commands/handlers
 

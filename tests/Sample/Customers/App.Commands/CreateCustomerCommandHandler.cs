@@ -6,6 +6,7 @@
     using EnsureThat;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Commands.App;
+    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
     using Naos.Sample.Customers.Domain;
 
@@ -15,10 +16,11 @@
         private readonly ICustomerRepository repository;
 
         public CreateCustomerCommandHandler(
+            ICustomerRepository repository,
             ILogger<CreateCustomerCommandHandler> logger,
-            IEnumerable<ICommandBehavior> behaviors,
-            ICustomerRepository repository)
-            : base(logger, behaviors)
+            ITracer tracer = null,
+            IEnumerable<ICommandBehavior> behaviors = null)
+            : base(logger, tracer, behaviors)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(repository, nameof(repository));

@@ -150,7 +150,7 @@
             var sb = new StringBuilder();
             sb.AppendLine($"<span style='color: {this.GetTraceLevelColor(entity)}; {extraStyles}'>");
             //sb.AppendLine(logEvent.TrackType.SafeEquals("journal") ? "*" : "&nbsp;"); // journal prefix
-            sb.AppendLine($"{entity.Message} ({entity.SpanId}) <a target=\"blank\" href=\"/api/operations/logtraces?q=Id={entity.Id}\">*</a> -> took {entity.Duration.Humanize()}");
+            sb.AppendLine($"{entity.Message} ({entity.SpanId}) <a target=\"blank\" href=\"/api/operations/logtraces?q=Id={entity.Id}\">*</a> <span style=\"color: gray;\">-> took {entity.Duration.Humanize()}</span>");
             sb.AppendLine("</span>");
             sb.AppendLine("</div>");
 

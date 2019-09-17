@@ -12,7 +12,7 @@
         private readonly ILogger<TracerCommandBehavior> logger;
         private readonly ITracer tracer;
         private ICommandBehavior next;
-        private IScope scope;
+        //private IScope scope;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TracerCommandBehavior"/> class.
@@ -41,18 +41,18 @@
         {
             EnsureArg.IsNotNull(request);
 
-            ISpan parentSpan = null;
-            if (request.Properties.ContainsKey(CommandPropertyKeys.TraceId) && request.Properties.ContainsKey(CommandPropertyKeys.ParentSpanId))
-            {
-                // dehydrate parent span
-                parentSpan = new Span(request.Properties.GetValueOrDefault(CommandPropertyKeys.TraceId) as string, request.Properties.GetValueOrDefault(CommandPropertyKeys.ParentSpanId) as string);
-            }
+            //ISpan parentSpan = null;
+            //if (request.Properties.ContainsKey(CommandPropertyKeys.TraceId) && request.Properties.ContainsKey(CommandPropertyKeys.ParentSpanId))
+            //{
+            //    // dehydrate parent span
+            //    parentSpan = new Span(request.Properties.GetValueOrDefault(CommandPropertyKeys.TraceId) as string, request.Properties.GetValueOrDefault(CommandPropertyKeys.ParentSpanId) as string);
+            //}
 
-            this.scope = this.tracer?.BuildSpan(
-                        $"command {request.GetType().PrettyName()}".ToLowerInvariant(),
-                        LogKeys.AppCommand,
-                        SpanKind.Consumer,
-                        parentSpan).Activate(this.logger);
+            //this.scope = this.tracer?.BuildSpan(
+            //            $"command {request.GetType().PrettyName()}".ToLowerInvariant(),
+            //            LogKeys.AppCommand,
+            //            SpanKind.Consumer,
+            //            parentSpan).Activate(this.logger);
 
             if (!result.Cancelled && this.next != null)
             {
@@ -60,7 +60,7 @@
             }
             else
             {
-                this.scope?.Dispose();
+                //this.scope?.Dispose();
             }
 
             // terminate here
@@ -68,7 +68,7 @@
 
         public async Task ExecutePostHandleAsync<TResponse>(CommandResponse<TResponse> response, CommandBehaviorResult result)
         {
-            this.scope?.Dispose();
+            //this.scope?.Dispose();
 
             if (!result.Cancelled && this.next != null)
             {
@@ -78,7 +78,7 @@
 
         public void Dispose()
         {
-            this.scope?.Dispose();
+            //this.scope?.Dispose();
         }
     }
 }

@@ -4,7 +4,7 @@
 
     public interface IScopeManager
     {
-        IScope Current { get; }
+        IScope Current { get; set; }
 
         IScope Activate(ISpan span, ILogger logger, bool finishOnDispose = true);
 

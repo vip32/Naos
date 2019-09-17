@@ -4,6 +4,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
 
     /// <summary>
@@ -16,8 +17,9 @@
     {
         public TestCommandHandler(
             ILogger<TestCommandHandler<TRequest>> logger,
-            IEnumerable<ICommandBehavior> behaviors)
-            : base(logger, behaviors)
+            ITracer tracer = null,
+            IEnumerable<ICommandBehavior> behaviors = null)
+            : base(logger, tracer, behaviors)
         {
         }
 

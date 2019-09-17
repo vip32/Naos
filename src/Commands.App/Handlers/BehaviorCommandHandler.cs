@@ -7,6 +7,7 @@
     using EnsureThat;
     using Humanizer;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
 
     /// <summary>
@@ -29,15 +30,19 @@
         /// <param name="behaviors">The behaviors.</param>
         protected BehaviorCommandHandler(
             ILogger logger,
+            ITracer tracer = null,
             IEnumerable<ICommandBehavior> behaviors = null)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
 
             this.Logger = logger;
+            this.Tracer = tracer; // cannot be done properly with an extra behavior (missing current scope in handlers)
             this.behaviors = behaviors;
         }
 
         public ILogger Logger { get; }
+
+        public ITracer Tracer { get; }
 
         /// <summary>
         /// Handles the specified request. All pre/post behaviors will be called.
@@ -46,7 +51,19 @@
         /// <param name="cancellationToken">The cancellation token.</param>
         public override async Task<CommandResponse<TResponse>> Handle(TCommand request, CancellationToken cancellationToken)
         {
-            // TRACER here!!
+            var parentSpan = this.Tracer?.CurrentSpan;
+            if (request.Properties.ContainsKey(CommandPropertyKeys.TraceId) && request.Properties.ContainsKey(CommandPropertyKeys.ParentSpanId))
+            {
+                // dehydrate parent span
+                parentSpan = new Span(request.Properties.GetValueOrDefault(CommandPropertyKeys.TraceId) as string, request.Properties.GetValueOrDefault(CommandPropertyKeys.ParentSpanId) as string);
+            }
+
+            // TODO: log scope (correlationid)?
+            using (var scope = this.Tracer?.BuildSpan(
+                $"command {request.GetType().PrettyName()}".ToLowerInvariant(),
+                LogKeys.AppCommand,
+                SpanKind.Consumer,
+                parentSpan).Activate(this.Logger))
             using (var timer = new Foundation.Timer())
             {
                 var commandName = typeof(TCommand).PrettyName();

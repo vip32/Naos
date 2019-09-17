@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
+    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
 
     /// <summary>
@@ -18,8 +19,9 @@
 
         public PingCommandHandler(
             ILogger<EchoCommandHandler> logger,
-            IEnumerable<ICommandBehavior> behaviors)
-            : base(logger, behaviors)
+            ITracer tracer = null,
+            IEnumerable<ICommandBehavior> behaviors = null)
+            : base(logger, tracer, behaviors)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
 
