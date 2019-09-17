@@ -96,5 +96,10 @@
 
             return (DateTime.UtcNow - this.Timestamp).Humanize();
         }
+
+        public override string ToString()
+        {
+            return $"{this.Timestamp.ToUniversalTime():u} - {this.Message} ({this.SpanId}) -> took {this.Duration.Humanize()}";
+        }
     }
 }

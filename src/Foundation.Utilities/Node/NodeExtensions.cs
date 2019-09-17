@@ -13,24 +13,30 @@
         //  │ └─NAM2bb
         //  ├─NAM3a
         //  └─NAM4a
-        private const string Cross = "&nbsp;├─"; // " ├─";
-        private const string Corner = "&nbsp;└─"; //" └─";
-        private const string Vertical = "&nbsp;│&nbsp;"; //" │ ";
-        private const string Space = "&nbsp;&nbsp;&nbsp;"; //"   ";
-
-        public static void Render<T>(this IEnumerable<Node<T>> source, Action<T> preAction, Action<T> nameAction, Action<string> indentAction)
+        public static void RenderConsole<T>(this IEnumerable<Node<T>> source, INodeRenderOptions options = null)
         {
+            Action<T> preAction = null;
+            Action<T> nameAction = t => Console.WriteLine(t.ToString());
+            Action<string> indentAction = i => Console.Write(i);
+
+            source.Render(preAction, nameAction, indentAction, options);
+        }
+
+        public static void Render<T>(this IEnumerable<Node<T>> source, Action<T> preAction, Action<T> nameAction, Action<string> indentAction, INodeRenderOptions options = null)
+        {
+            options ??= new DefaultNodeRenderOptions();
+
             foreach(var node in source.Safe())
             {
-                preAction(node.Value); // PRE
-                PrintNode(node, indent: string.Empty, preAction, nameAction, indentAction); // ROOT
+                preAction?.Invoke(node.Value);
+                RenderNode(node, indent: string.Empty, preAction, nameAction, indentAction, options); // ROOT
             }
         }
 
-        private static void PrintNode<T>(Node<T> node, string indent, Action<T> preAction, Action<T> nameAction, Action<string> indentAction)
+        private static void RenderNode<T>(Node<T> node, string indent, Action<T> preAction, Action<T> nameAction, Action<string> indentAction, INodeRenderOptions options)
         {
             //Console.WriteLine(node.Value.ToString()); // NAME
-            nameAction(node.Value);
+            nameAction?.Invoke(node.Value);
 
             // Loop through the children recursively, passing in the
             // indent, and the isLast parameter
@@ -40,16 +46,16 @@
                 var child = node.Children.ToList()[i]; // ? optimize
                 var isLast = i == (numberOfChildren - 1);
 
-                preAction(node.Value); // PRE
-                PrintChildNode(child, indent, isLast, preAction, nameAction, indentAction);
+                preAction?.Invoke(node.Value);
+                RenderChildNode(child, indent, isLast, preAction, nameAction, indentAction, options);
             }
         }
 
-        private static void PrintChildNode<T>(Node<T> node, string indent, bool isLast, Action<T> preAction, Action<T> nameAction, Action<string> indentAction)
+        private static void RenderChildNode<T>(Node<T> node, string indent, bool isLast, Action<T> preAction, Action<T> nameAction, Action<string> indentAction, INodeRenderOptions options)
         {
             // Print the provided pipes/spaces indent
             //Console.Write(indent);
-            indentAction(indent);
+            indentAction?.Invoke(indent);
 
             // Depending if this node is a last child, print the
             // corner or cross, and calculate the indent that will
@@ -57,17 +63,17 @@
             if (isLast)
             {
                 //Console.Write(Corner);
-                indentAction(Corner);
-                indent += Space;
+                indentAction?.Invoke(options.Corner);
+                indent += options.Space;
             }
             else
             {
                 //Console.Write(Cross);
-                indentAction(Cross);
-                indent += Vertical;
+                indentAction?.Invoke(options.Cross);
+                indent += options.Vertical;
             }
 
-            PrintNode(node, indent, preAction, nameAction, indentAction);
+            RenderNode(node, indent, preAction, nameAction, indentAction, options);
         }
     }
 }

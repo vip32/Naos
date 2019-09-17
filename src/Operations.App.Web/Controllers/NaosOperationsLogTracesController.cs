@@ -104,14 +104,14 @@
                 var entities = await this.repository.FindAllAsync(
                     this.filterContext.GetSpecifications<LogTrace>(),
                     this.filterContext.GetFindOptions<LogTrace>()).AnyContext();
-
                 var nodes = Node<LogTrace>.CreateTree(entities, l => l.SpanId, l => l.ParentSpanId, true)
                     .Where(n => !n.Children.IsNullOrEmpty()).ToList();
 
                 nodes.Render(
                     async t => await this.WriteTraceHeaderAsync(t).AnyContext(),
                     async t => await this.WriteTraceAsync(t).AnyContext(),
-                    async i => await this.WriteTraceIndentAsync(i).AnyContext());
+                    async i => await this.WriteTraceIndentAsync(i).AnyContext(),
+                    new HtmlNodeRenderOptions());
 
                 //foreach (var entity in entities) // .Where(l => !l.TrackType.EqualsAny(new[] { LogTrackTypes.Trace }))
                 //{

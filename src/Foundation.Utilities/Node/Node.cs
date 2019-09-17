@@ -392,7 +392,7 @@
 
         private static bool IsSameId<TId>(TId id, TId parentId)
         {
-            return parentId != null && id.Equals(parentId);
+            return parentId != null && id?.Equals(parentId) == true;
         }
 
         private bool Other(Node<T> node)
