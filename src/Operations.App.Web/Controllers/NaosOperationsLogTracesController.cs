@@ -9,6 +9,7 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.ObjectPool;
     using Naos.Core.RequestFiltering.App;
     using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
@@ -22,6 +23,7 @@
         private readonly FilterContext filterContext;
         private readonly ILogTraceRepository repository;
         private readonly ILogEventService service;
+        private readonly ObjectPool<StringBuilder> stringBuilderPool = new DefaultObjectPoolProvider().CreateStringBuilderPool();
 
         public NaosOperationsLogTracesController(
             ILoggerFactory loggerFactory,
@@ -126,16 +128,17 @@
 
         private async Task WriteTraceHeaderAsync(LogTrace entity)
         {
-            var sb = new StringBuilder();
+            var sb = this.stringBuilderPool.Get(); // less allocations
             sb.AppendLine("<div style='white-space: nowrap;'>");
             sb.AppendLine("<span style='color: #EB1864; font-size: x-small;'>");
-            sb.AppendLine($"{entity.Timestamp.ToUniversalTime():u}");
+            sb.AppendFormat("{0:u}", entity.Timestamp.ToUniversalTime()).AppendLine();
             sb.AppendLine("</span>");
-            sb.AppendLine($"&nbsp;[<span style='color: {this.GetTraceLevelColor(entity)}'>");
-            sb.AppendLine($"{entity.Kind?.ToUpper().Truncate(6, string.Empty)}</span>]");
+            sb.Append("&nbsp;[<span style='color: ").Append(this.GetTraceLevelColor(entity)).AppendLine("'>");
+            sb.Append(entity.Kind?.ToUpper().Truncate(6, string.Empty)).AppendLine("</span>]");
             //sb.AppendLine(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logtraces/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;");
 
             await this.HttpContext.Response.WriteAsync(sb.ToString()).AnyContext();
+            this.stringBuilderPool.Return(sb);
         }
 
         private async Task WriteTraceIndentAsync(string indent)
@@ -147,14 +150,15 @@
         {
             var extraStyles = string.Empty;
 
-            var sb = new StringBuilder();
-            sb.AppendLine($"<span style='color: {this.GetTraceLevelColor(entity)}; {extraStyles}'>");
+            var sb = this.stringBuilderPool.Get(); // less allocations
+            sb.Append("<span style='color: ").Append(this.GetTraceLevelColor(entity)).Append("; ").Append(extraStyles).AppendLine("'>");
             //sb.AppendLine(logEvent.TrackType.SafeEquals("journal") ? "*" : "&nbsp;"); // journal prefix
-            sb.AppendLine($"{entity.Message} ({entity.SpanId}) <a target=\"blank\" href=\"/api/operations/logtraces?q=Id={entity.Id}\">*</a> <span style=\"color: gray;\">-> took {entity.Duration.Humanize()}</span>");
+            sb.Append(entity.Message).Append(" (").Append(entity.SpanId).Append(") <a target=\"blank\" href=\"/api/operations/logtraces?q=Id=").Append(entity.Id).Append("\">*</a> <span style=\"color: gray;\">-> took ").Append(entity.Duration.Humanize()).AppendLine("</span>");
             sb.AppendLine("</span>");
             sb.AppendLine("</div>");
 
             await this.HttpContext.Response.WriteAsync(sb.ToString()).AnyContext();
+            this.stringBuilderPool.Return(sb);
         }
 
         private string GetTraceLevelColor(LogTrace entity)
