@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net;
+    using System.Text;
     using System.Threading.Tasks;
     using Humanizer;
     using Microsoft.AspNetCore.Http;
@@ -104,8 +105,8 @@
                     this.filterContext.GetSpecifications<LogTrace>(),
                     this.filterContext.GetFindOptions<LogTrace>()).AnyContext();
 
-                //var nodes = Node<LogTrace>.CreateTree(entities, l => l.SpanId, l => l.ParentSpanId, true)
-                //    .Where(n => !n.Children.IsNullOrEmpty()).ToList();
+                var nodes = Node<LogTrace>.CreateTree(entities, l => l.SpanId, l => l.ParentSpanId, true)
+                    .Where(n => !n.Children.IsNullOrEmpty()).ToList();
 
                 foreach (var entity in entities) // .Where(l => !l.TrackType.EqualsAny(new[] { LogTrackTypes.Trace }))
                 {
@@ -126,17 +127,19 @@
                     var messageColor = levelColor;
                     var extraStyles = string.Empty;
 
-                    await this.HttpContext.Response.WriteAsync("<div style='white-space: nowrap;'><span style='color: #EB1864; font-size: x-small;'>").AnyContext();
-                    await this.HttpContext.Response.WriteAsync($"{entity.Timestamp.ToUniversalTime():u}").AnyContext();
-                    await this.HttpContext.Response.WriteAsync("</span>").AnyContext();
-                    await this.HttpContext.Response.WriteAsync($"&nbsp;[<span style='color: {levelColor}'>").AnyContext();
-                    await this.HttpContext.Response.WriteAsync($"{entity.Kind?.ToUpper().Truncate(6, string.Empty)}</span>]").AnyContext();
-                    await this.HttpContext.Response.WriteAsync(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logtraces/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;").AnyContext();
-                    await this.HttpContext.Response.WriteAsync($"<span style='color: {messageColor}; {extraStyles}'>").AnyContext();
-                    //await this.HttpContext.Response.WriteAsync(logEvent.TrackType.SafeEquals("journal") ? "*" : "&nbsp;"); // journal prefix
-                    await this.HttpContext.Response.WriteAsync($"{entity.SpanId} {entity.Message} <a target=\"blank\" href=\"/api/operations/logtraces?q=Id={entity.Id}\">*</a> {entity.ParentSpanId} -> took {entity.Duration.Humanize()}").AnyContext();
-                    await this.HttpContext.Response.WriteAsync("</span>").AnyContext();
-                    await this.HttpContext.Response.WriteAsync("</div>").AnyContext();
+                    var sb = new StringBuilder();
+                    sb.AppendLine("<div style='white-space: nowrap;'><span style='color: #EB1864; font-size: x-small;'>");
+                    sb.AppendLine($"{entity.Timestamp.ToUniversalTime():u}");
+                    sb.AppendLine("</span>");
+                    sb.AppendLine($"&nbsp;[<span style='color: {levelColor}'>");
+                    sb.AppendLine($"{entity.Kind?.ToUpper().Truncate(6, string.Empty)}</span>]");
+                    sb.AppendLine(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logtraces/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;");
+                    sb.AppendLine($"<span style='color: {messageColor}; {extraStyles}'>");
+                    //sb.AppendLine(logEvent.TrackType.SafeEquals("journal") ? "*" : "&nbsp;"); // journal prefix
+                    sb.AppendLine($"{entity.SpanId} {entity.Message} <a target=\"blank\" href=\"/api/operations/logtraces?q=Id={entity.Id}\">*</a> {entity.ParentSpanId} -> took {entity.Duration.Humanize()}");
+                    sb.AppendLine("</span>");
+                    sb.AppendLine("</div>");
+                    await this.HttpContext.Response.WriteAsync(sb.ToString()).AnyContext();
                 }
             }
             finally
