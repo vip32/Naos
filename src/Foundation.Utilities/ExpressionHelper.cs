@@ -21,6 +21,11 @@
         {
             expression = Unwrap(expression);
 
+            if (expression is BinaryExpression binaryExpression)
+            {
+                return GetPropertyName(binaryExpression.Left);
+            }
+
             if (expression is LambdaExpression lambdaExpression)
             {
                 return GetPropertyName(lambdaExpression.Body);
@@ -43,17 +48,22 @@
         {
             expression = Unwrap(expression);
 
+            if (expression is BinaryExpression binaryExpression)
+            {
+                return GetProperty(binaryExpression.Left);
+            }
+
             if (expression is LambdaExpression lambdaExpression)
             {
                 return GetProperty(lambdaExpression.Body);
             }
 
-            if (expression is UnaryExpression unaryExpr)
+            if (expression is UnaryExpression unaryExpression)
             {
-                expression = unaryExpr.Operand;
+                expression = unaryExpression.Operand;
             }
 
-            if (expression is MemberExpression memberExpr && memberExpr.Member is PropertyInfo propertyInfo)
+            if (expression is MemberExpression memberExpression && memberExpression.Member is PropertyInfo propertyInfo)
             {
                 return propertyInfo;
             }

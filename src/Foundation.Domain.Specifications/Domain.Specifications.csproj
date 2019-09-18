@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Foundation.Domain\Domain.csproj" />
+    <ProjectReference Include="..\Foundation.Utilities\Utilities.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
+    using Naos.Foundation.Domain;
 
     public class TracesConsoleCommandEventHandler : ConsoleCommandEventHandler<TracesConsoleCommand>
     {
@@ -21,7 +22,7 @@
         {
             if (request.Command.Recent)
             {
-                var entities = await this.repository.FindAllAsync().AnyContext();
+                var entities = await this.repository.FindAllAsync(new Specification<LogTrace>(t => t.TrackType == "trace")).AnyContext();
                 var nodes = Node<LogTrace>.CreateTree(entities, l => l.SpanId, l => l.ParentSpanId, true)
                     .Where(n => !n.Children.IsNullOrEmpty()).ToList();
 

@@ -104,7 +104,7 @@
                 LoggingFilterContext.Prepare(this.filterContext);
 
                 var entities = await this.repository.FindAllAsync(
-                    this.filterContext.GetSpecifications<LogTrace>(),
+                    this.filterContext.GetSpecifications<LogTrace>(), // TODO: add default > new Specification<LogTrace>(t => t.TrackType == "trace")
                     this.filterContext.GetFindOptions<LogTrace>()).AnyContext();
                 var nodes = Node<LogTrace>.CreateTree(entities, l => l.SpanId, l => l.ParentSpanId, true)
                     .Where(n => !n.Children.IsNullOrEmpty()).ToList();
@@ -158,7 +158,7 @@
             var sb = this.stringBuilderPool.Get(); // less allocations
             sb.Append("<span style='color: ").Append(this.GetTraceLevelColor(entity)).Append("; ").Append(extraStyles).AppendLine("'>");
             //sb.AppendLine(logEvent.TrackType.SafeEquals("journal") ? "*" : "&nbsp;"); // journal prefix
-            sb.Append(entity.Message).Append(" (").Append(entity.SpanId).Append("/").Append(entity.ParentSpanId).Append(")")
+            sb.Append(entity.Message).Append(" (").Append(entity.SpanId).Append("/").Append(entity.ParentSpanId).Append("/").Append(entity.Kind).Append(")")
                 .AppendLine(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logtraces/dashboard?q=TrackType=trace,CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;")
                 .Append("<a target=\"blank\" href=\"/api/operations/logtraces?q=Id=").Append(entity.Id).Append("\">*</a> <span style=\"color: gray;\">-> took ").Append(entity.Duration.Humanize()).AppendLine("</span>");
             sb.AppendLine("</span>");

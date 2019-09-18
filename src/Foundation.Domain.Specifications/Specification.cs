@@ -15,7 +15,10 @@
 
         public Specification(Expression<Func<T, bool>> expression)
         {
+            EnsureArg.IsNotNull(expression);
+
             this.expression = expression;
+            this.Name = ExpressionHelper.GetPropertyName(expression);
         }
 
         public Specification(string expression)
@@ -23,6 +26,7 @@
             EnsureArg.IsNotNullOrEmpty(expression);
 
             this.expression = ExpressionHelper.FromExpressionString<T>(expression);
+            this.Name = ExpressionHelper.GetPropertyName(this.expression);
         }
 
         public string Name { get; set; }

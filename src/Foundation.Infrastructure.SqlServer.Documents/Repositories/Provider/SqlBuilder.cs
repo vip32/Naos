@@ -97,7 +97,7 @@
             if (expression is BinaryExpression binaryExpression)
             {
                 //(binaryExpression.Left as BinaryExpression).Left
-                if(binaryExpression.NodeType== ExpressionType.AndAlso)
+                if(binaryExpression.NodeType == ExpressionType.AndAlso)
                 {
                     return $"{this.BuildExpressionSelect(binaryExpression.Left, indexMaps)} { this.BuildExpressionSelect(binaryExpression.Right, indexMaps)}";
                 }
