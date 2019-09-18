@@ -52,6 +52,8 @@
 
             var metrics = await this.queue.GetMetricsAsync().AnyContext();
             this.logger.LogInformation($"{{LogKey:l}} request command queue (enqueued=#{metrics.Enqueued}, queued=#{metrics.Queued})", LogKeys.AppCommand);
+            this.logger.LogWarning($"queued COMMAND: {command.Dump()}");
+            this.logger.LogWarning($"queued WRAPPER: {wrapper.Dump()}");
 
             await context.Response.Location($"api/commands/{command.Id}/response").AnyContext();
             await context.Response.Header(CommandRequestHeaders.CommandId, command.Id).AnyContext();
@@ -73,6 +75,7 @@
 
             var metrics = await this.queue.GetMetricsAsync().AnyContext();
             this.logger.LogInformation($"{{LogKey:l}} request command queue (enqueued=#{metrics.Enqueued}, queued=#{metrics.Queued})", LogKeys.AppCommand);
+            this.logger.LogInformation($"queued COMMAND: {command.Dump()}");
 
             await context.Response.Location($"api/commands/{command.Id}/response").AnyContext();
             await context.Response.Header(CommandRequestHeaders.CommandId, command.Id).AnyContext();

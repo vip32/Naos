@@ -46,6 +46,7 @@
                     using (var scope = this.serviceScopeFactory.CreateScope())
                     {
                         this.logger.LogInformation($"{{LogKey:l}} command request dequeued (name={request.Item.Data.Command.GetType().PrettyName()}, id={request.Item.Data.Command?.Id}, type=queue)", LogKeys.AppCommand);
+                        this.logger.LogWarning($"dequeued DATA: {request.Item.Data.Dump()}");
 
                         // TODO: start command TRACER
                         var mediator = scope.ServiceProvider.GetService<IMediator>(); // =scoped

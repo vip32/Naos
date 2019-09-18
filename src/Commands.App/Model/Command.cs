@@ -49,28 +49,28 @@
             this.Created = DateTimeOffset.UtcNow;
         }
 
-        [JsonIgnore] // so it will not appear in the swagger
-        public string Id { get; internal set; } // TODO: rename to CommandId
+        //[JsonIgnore] // so it will not appear in the swagger
+        public string Id { get; private set; } // TODO: rename to CommandId
 
-        [JsonIgnore] // so it will not appear in the swagger
-        public string Identifier { get; internal set; } // obsolete? just a short identifier
+       // [JsonIgnore] // so it will not appear in the swagger
+        public string Identifier { get; } // obsolete? just a short identifier
 
-        [JsonIgnore] // so it will not appear in the swagger
-        public string CorrelationId { get; internal set; }
+        //[JsonIgnore] // so it will not appear in the swagger
+        public string CorrelationId { get; private set; }
 
         [JsonIgnore] // so it will not appear in the swagger
         public DateTimeOffset Created { get; }
 
-        public DataDictionary Properties { get; internal set; } = new DataDictionary();
+        public DataDictionary Properties { get; private set; } = new DataDictionary();
 
         public void Update(string id = null, string correlationId = null)
         {
-            if (this.Id.IsNullOrEmpty())
+            if (!id.IsNullOrEmpty())
             {
                 this.Id = id;
             }
 
-            if (this.CorrelationId.IsNullOrEmpty())
+            if (!correlationId.IsNullOrEmpty())
             {
                 this.CorrelationId = correlationId;
             }
