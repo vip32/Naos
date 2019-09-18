@@ -1,7 +1,6 @@
 ﻿namespace Naos.Core.Commands.App.Web
 {
     using System.Threading.Tasks;
-    using EnsureThat;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Tracing.Domain;

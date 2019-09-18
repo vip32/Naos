@@ -63,18 +63,18 @@
 
         public DataDictionary Properties { get; internal set; } = new DataDictionary();
 
-        //public void Update(string id, string correlationId)
-        //{
-        //    if(this.Id.IsNullOrEmpty())
-        //    {
-        //        this.Id = id;
-        //    }
+        public void Update(string id = null, string correlationId = null)
+        {
+            if (this.Id.IsNullOrEmpty())
+            {
+                this.Id = id;
+            }
 
-        //    if(this.CorrelationId.IsNullOrEmpty())
-        //    {
-        //        this.CorrelationId = correlationId;
-        //    }
-        //}
+            if (this.CorrelationId.IsNullOrEmpty())
+            {
+                this.CorrelationId = correlationId;
+            }
+        }
     }
 
     /// <summary>

@@ -11,6 +11,7 @@
     using Microsoft.Extensions.Options;
     using Naos.Core.Commands.App;
     using Naos.Foundation;
+    using Naos.Foundation.Application;
 
     /// <summary>
     ///
@@ -38,7 +39,7 @@
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandRequestMiddleware"/> class.
-        /// Creates a new instance of the CorrelationIdMiddleware.
+        /// Creates a new instance of the CommandRequestMiddleware.
         /// </summary>
         /// <param name="next">The next middleware in the pipeline.</param>
         /// <param name="logger">The logger.</param>
@@ -118,7 +119,9 @@
                 this.logger.LogDebug($"{{LogKey:l}} command request extension chain: {extensions.Select(e => e.GetType().PrettyName()).ToString("|")} (name={registration.CommandType.Name})", LogKeys.AppCommand);
                 if (extensions.Count > 0) // invoke all chained extensions
                 {
-                    await extensions[0].InvokeAsync(command as TCommand, registration, context).AnyContext();
+                    var tCommand = command as TCommand;
+                    tCommand?.Update(correlationId: context.GetCorrelationId()); // use correlationid from inbound http request
+                    await extensions[0].InvokeAsync(tCommand, registration, context).AnyContext();
                 }
                 else
                 {
@@ -140,7 +143,9 @@
                 this.logger.LogDebug($"{{LogKey:l}} command request extensions chain: {extensions.Select(e => e.GetType().PrettyName()).ToString("|")} (name={registration.CommandType.Name})", LogKeys.AppCommand);
                 if (extensions.Count > 0) // invoke all chained extensions
                 {
-                    await extensions[0].InvokeAsync(command as TCommand, registration, context).AnyContext();
+                    var tCommand = command as TCommand;
+                    tCommand?.Update(correlationId: context.GetCorrelationId()); // use correlationid from inbound http request
+                    await extensions[0].InvokeAsync(tCommand, registration, context).AnyContext();
                 }
                 else
                 {
