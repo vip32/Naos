@@ -32,7 +32,7 @@
                 }
                 else if (request.Command.Traces)
                 {
-                    url += "/api/operations/logtraces/dashboard?q=TrackType=trace";
+                    url += "/api/operations/logtraces/dashboard";
                 }
                 else if (request.Command.Journal)
                 {
