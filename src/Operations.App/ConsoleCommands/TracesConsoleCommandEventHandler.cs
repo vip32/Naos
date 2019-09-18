@@ -3,6 +3,8 @@
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using Naos.Core.Operations.App;
+    using Naos.Core.RequestFiltering.App;
     using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
     using Naos.Foundation.Domain;
@@ -22,7 +24,12 @@
         {
             if (request.Command.Recent)
             {
-                var entities = await this.repository.FindAllAsync(new Specification<LogTrace>(t => t.TrackType == "trace")).AnyContext();
+                var filterContext = new FilterContext();
+                LoggingFilterContext.Prepare(filterContext); // add some default criteria
+
+                var entities = await this.repository.FindAllAsync(
+                    filterContext.GetSpecifications<LogTrace>().Insert(new Specification<LogTrace>(t => t.TrackType == "trace")),
+                    filterContext.GetFindOptions<LogTrace>()).AnyContext();
                 var nodes = Node<LogTrace>.CreateTree(entities, l => l.SpanId, l => l.ParentSpanId, true)
                     .Where(n => !n.Children.IsNullOrEmpty()).ToList();
 

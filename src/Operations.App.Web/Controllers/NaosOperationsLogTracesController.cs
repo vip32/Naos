@@ -101,10 +101,10 @@
 ").AnyContext(); // TODO: reuse from ServiceContextMiddleware.cs
             try
             {
-                LoggingFilterContext.Prepare(this.filterContext);
+                LoggingFilterContext.Prepare(this.filterContext); // add some default criteria
 
                 var entities = await this.repository.FindAllAsync(
-                    this.filterContext.GetSpecifications<LogTrace>(), // TODO: add default > new Specification<LogTrace>(t => t.TrackType == "trace")
+                    this.filterContext.GetSpecifications<LogTrace>(), // TODO: add default > .Insert(new Specification<LogTrace>(t => t.TrackType == "trace"))
                     this.filterContext.GetFindOptions<LogTrace>()).AnyContext();
                 var nodes = Node<LogTrace>.CreateTree(entities, l => l.SpanId, l => l.ParentSpanId, true)
                     .Where(n => !n.Children.IsNullOrEmpty()).ToList();
