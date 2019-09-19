@@ -28,8 +28,8 @@
                         SpanKind.Consumer).Activate(this.logger))
             {
                 // start a whole new SERVER span later, which is the parent for the current 'COMMAND REQUEST' span
-                command.Properties.Add(CommandPropertyKeys.TraceId, scope?.Span?.TraceId); // propagate
-                command.Properties.Add(CommandPropertyKeys.ParentSpanId, scope?.Span?.SpanId); // propagate
+                command.Properties.Add(CommandPropertyKeys.TraceId, scope?.Span?.TraceId); // propagate the span infos
+                command.Properties.Add(CommandPropertyKeys.ParentSpanId, scope?.Span?.SpanId); // propagate the span infos
 
                 // continue with next extension
                 await base.InvokeAsync(command, registration, context).AnyContext();
@@ -47,8 +47,8 @@
                         SpanKind.Consumer).Activate(this.logger))
             {
                 // start a whole new SERVER span later, which is the parent for the current 'COMMAND REQUEST' span
-                command.Properties.Add(CommandPropertyKeys.TraceId, scope?.Span?.TraceId); // propagate
-                command.Properties.Add(CommandPropertyKeys.ParentSpanId, scope?.Span?.SpanId); // propagate
+                command.Properties.Add(CommandPropertyKeys.TraceId, scope?.Span?.TraceId); // propagate the span infos
+                command.Properties.Add(CommandPropertyKeys.ParentSpanId, scope?.Span?.SpanId); // propagate the span infos
 
                 // continue with next extension
                 await base.InvokeAsync(command, registration, context).AnyContext();

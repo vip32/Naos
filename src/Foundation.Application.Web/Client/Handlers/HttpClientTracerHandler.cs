@@ -1,15 +1,18 @@
 ﻿namespace Naos.Foundation.Application
 {
+    using System;
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Tracing.Domain;
 
     public class HttpClientTracerHandler : DelegatingHandler
     {
         private readonly ILogger logger;
-        private readonly ITracer tracer;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HttpClientTracerHandler"/> class.
@@ -18,30 +21,40 @@
         /// <param name="logger">User defined <see cref="ILogger"/>.</param>
         public HttpClientTracerHandler(
             ILogger logger,
-            ITracer tracer = null)
+            IHttpContextAccessor httpContextAccessor)
         {
             this.logger = logger;
-            this.tracer = tracer;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            //var correlationId = request.GetCorrelationId();
-            var requestId = request.GetRequestId();
+            var tracer = this.httpContextAccessor.HttpContext.RequestServices.GetService<ITracer>();  // scoped workaround
+            // WARN: proper scoped dependencies seem not possible in DelegatingHandlers https://github.com/aspnet/HttpClientFactory/issues/134
+            //       that's why we need the httpContextAccessor to properly get a scoped ITracer (with current span set)
 
-            using (var scope = this.tracer?.BuildSpan(
-                        $"{LogTraceNames.Http} {request.Method.ToString().ToLowerInvariant()} {request.RequestUri.AbsolutePath} ({requestId})",
-                        LogKeys.OutboundRequest,
-                        SpanKind.Client).Activate(this.logger)) // TODO: get service name as operationname (servicedescriptor?)
+            if (tracer != null)
             {
-                if (scope?.Span?.SpanId.IsNullOrEmpty() != true)
+                var requestId = request.GetRequestId();
+                using (var scope = tracer.BuildSpan(
+                            $"[{requestId}] {LogTraceNames.Http} {request.Method.ToString().ToLowerInvariant()} {request.RequestUri.AbsoluteUri}",
+                            LogKeys.OutboundRequest,
+                            SpanKind.Client).Activate(this.logger)) // TODO: get service name as operationname (servicedescriptor?)
                 {
-                    request.Headers.Add("x-spanid", scope.Span.SpanId);
-                }
+                    if (scope?.Span != null)
+                    {
+                        this.logger.LogDebug($"{{LogKey:l}} [{requestId}] http added tracing headers", LogKeys.OutboundRequest);
 
-                // TODO: add trace/correlationid + spanid to httprequest = propagate (header)
-                return await base.SendAsync(request, cancellationToken).AnyContext();
+                        // propagate the span infos as headers
+                        request.Headers.Add("x-traceid", scope.Span.TraceId);
+                        request.Headers.Add("x-spanid", scope.Span.SpanId);
+                    }
+
+                    return await base.SendAsync(request, cancellationToken).AnyContext();
+                }
             }
+
+            return await base.SendAsync(request, cancellationToken).AnyContext();
         }
     }
 }

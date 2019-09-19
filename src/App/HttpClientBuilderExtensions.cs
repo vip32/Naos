@@ -49,7 +49,7 @@
                                 onRetry: (outcome, timespan, retryAttempt, context) =>
                                 {
                                     sp.GetService<ILogger<HttpClient>>()
-                                        .LogWarning($"delaying for {timespan.TotalMilliseconds}ms, then making retry {retryAttempt}");
+                                        .LogWarning($"delaying for {timespan.TotalMilliseconds} milliseconds, then making retry {retryAttempt}");
                                 }))
                     .AddPolicyHandler((sp, req) =>
                         HttpPolicyExtensions.HandleTransientHttpError()

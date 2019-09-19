@@ -26,12 +26,10 @@
             var correlationId = this.correlationContext?.Context?.CorrelationId; // current correlationid will be set on outgoing request
             var requestId = RandomGenerator.GenerateString(5, false); // every outgoing request needs a unique id
 
-            var loggerState = new Dictionary<string, object>
+            using (this.logger.BeginScope(new Dictionary<string, object>
             {
                 [LogPropertyKeys.CorrelationId] = correlationId
-            };
-
-            using (this.logger.BeginScope(loggerState))
+            }))
             {
                 this.logger.LogDebug($"{{LogKey:l}} [{requestId}] http added correlation headers", LogKeys.OutboundRequest);
 

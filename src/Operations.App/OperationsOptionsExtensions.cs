@@ -44,8 +44,8 @@
             options.Context.Services.AddSingleton(typeof(ILogger<>), typeof(LoggingAdapter<>));
             options.Context.Services.AddSingleton(typeof(Logging.ILogger), typeof(LoggingAdapter));
 
-            options.Context.Services.AddTransient<HttpClientLogHandler>(); // scoped?
-            options.Context.Services.AddTransient<HttpClientTracerHandler>(); // scoped?
+            options.Context.Services.AddScoped<HttpClientLogHandler>();
+            options.Context.Services.AddScoped<HttpClientTracerHandler>();
             options.Context.Services.Replace(ServiceDescriptor.Singleton<IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>()); // scoped?
 
             return options;

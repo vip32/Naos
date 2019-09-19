@@ -18,7 +18,7 @@
             return naosOptions;
         }
 
-        public static NaosServicesContextOptions AddServiceClient(this NaosServicesContextOptions naosOptions, string name, Action<IHttpClientBuilder> setupAction = null)
+        public static NaosServicesContextOptions AddServiceClient(this NaosServicesContextOptions naosOptions, string name = "default", Action<IHttpClientBuilder> setupAction = null)
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
             EnsureArg.IsNotNull(naosOptions.Context, nameof(naosOptions.Context));

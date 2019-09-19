@@ -2,6 +2,7 @@
 {
     using System;
     using EnsureThat;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Http;
     using Microsoft.Extensions.Logging;
     using Naos.Core.Tracing.Domain;
@@ -10,16 +11,12 @@
     {
         // https://www.stevejgordon.co.uk/httpclientfactory-asp-net-core-logging
         private readonly ILoggerFactory loggerFactory;
-        private readonly ITracer tracer;
 
-        public HttpClientLogHandlerBuilderFilter(
-            ILoggerFactory loggerFactory,
-            ITracer tracer = null)
+        public HttpClientLogHandlerBuilderFilter(ILoggerFactory loggerFactory)
         {
             EnsureArg.IsNotNull(loggerFactory, nameof(loggerFactory));
 
             this.loggerFactory = loggerFactory;
-            this.tracer = tracer;
         }
 
         public Action<HttpMessageHandlerBuilder> Configure(Action<HttpMessageHandlerBuilder> next)
@@ -33,11 +30,12 @@
                 builder.AdditionalHandlers
                     .Insert(0, new HttpClientLogHandler(this.loggerFactory.CreateLogger($"System.Net.Http.HttpClient.{builder.Name}.LogicalHandler")));
 
-                if (this.tracer != null)
-                {
-                    builder.AdditionalHandlers
-                        .Insert(0, new HttpClientTracerHandler(this.loggerFactory.CreateLogger($"System.Net.Http.HttpClient.{builder.Name}.LogicalHandler"), this.tracer));
-                }
+                //var tracer = builder.Services.GetService<ITracer>(); // we need a scoped (current) itracer
+                //if (tracer != null)
+                //{
+                //builder.AdditionalHandlers
+                //   .Insert(new HttpClientTracerHandler(builder.Services.GetService<ILogger>(), builder.Services));
+                //}
             };
         }
     }

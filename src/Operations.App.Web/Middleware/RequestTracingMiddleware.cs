@@ -46,10 +46,13 @@
                 context.GetRouteData()?.Values.TryGetValue("Controller", out controller);
 
                 using (var scope = tracer.BuildSpan(
-                        $"http {action ?? context.Request.Method.ToLowerInvariant()} {uri.AbsolutePath}{(controller != null ? $" ({controller.ToString().Singularize()})" : string.Empty)}",
+                        $"{LogTraceNames.Http} {action ?? context.Request.Method.ToLowerInvariant()} {uri.AbsolutePath}{(controller != null ? $" ({controller.ToString().Singularize()})" : string.Empty)}",
                         LogKeys.InboundRequest,
                         SpanKind.Server,
-                        new Span(context.GetCorrelationId(), null)) // TODO: get service name as operationname (servicedescriptor?)
+                        new Span(
+                            context.Request.Headers.GetValue("x-traceid").EmptyToNull() ?? context.GetCorrelationId(), // dehydrate the span infos
+                            context.Request.Headers.GetValue("x-spanid"))) // dehydrate the span infos
+                                                                           // TODO: get service name as operationname (servicedescriptor?)
                     .IgnoreParentSpan()
                     .SetSpanId(context.GetRequestId())
                     .WithTag(SpanTagKey.HttpMethod, context.Request.Method.ToLowerInvariant())

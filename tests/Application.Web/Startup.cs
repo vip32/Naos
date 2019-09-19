@@ -166,7 +166,7 @@
                     //.Register("jobevent1", Cron.Minutely(), () => new EchoJobEventData { Text = "+++ hello from jobevent1 +++" }))
                     //.Register<EchoJob>("echojob2", Cron.MinuteInterval(2), j => j.EchoAsync("+++ hello from echojob2 +++", CancellationToken.None, true), enabled: false)
                     //.Register<EchoJob>("testlongjob4", Cron.Minutely(), j => j.EchoLongAsync("+++ hello from testlongjob4 +++", CancellationToken.None)))
-                    .AddServiceClient("default")
+                    .AddServiceClient()
                     .AddQueueing()
                     .AddMessaging(o => o
                         //.UseFileSystemBroker(s => s
