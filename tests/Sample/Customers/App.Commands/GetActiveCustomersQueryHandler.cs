@@ -49,11 +49,7 @@
 #pragma warning disable IDE0067 // Dispose objects before losing scope
 #pragma warning disable CA2000 // Dispose objects before losing scope
             var client = this.httpClientFactory.CreateClient("default");
-            var requestMessage = new HttpRequestMessage(HttpMethod.Get, "https://enjkefte1b0qq.x.pipedream.net/"); // https://requestbin.com/r/enjkefte1b0qq/1R4UqFlQ0HE1hnaW6VXayZykSmS
-            // TODO: this is still dirty
-            //requestMessage.Properties.Add("traceid", this.Tracer.CurrentSpan.TraceId); // propagate span infos to request properties
-            //requestMessage.Properties.Add("spanid", this.Tracer.CurrentSpan.SpanId); // propagate span infos to request properties
-            var response = await client.SendAsync(requestMessage).AnyContext();
+            await client.GetAsync("https://enjkefte1b0qq.x.pipedream.net/").AnyContext();
 
             return new CommandResponse<IEnumerable<Customer>>
             {
