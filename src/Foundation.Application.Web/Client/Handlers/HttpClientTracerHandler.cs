@@ -35,15 +35,14 @@
 
             if (tracer != null)
             {
-                var requestId = request.GetRequestId();
                 using (var scope = tracer.BuildSpan(
-                            $"[{requestId}] {LogTraceNames.Http} {request.Method.ToString().ToLowerInvariant()} {request.RequestUri.AbsoluteUri}",
+                            $"{LogTraceNames.Http} {request.Method.ToString().ToLowerInvariant()} {request.RequestUri.AbsoluteUri}",
                             LogKeys.OutboundRequest,
                             SpanKind.Client).Activate(this.logger)) // TODO: get service name as operationname (servicedescriptor?)
                 {
                     if (scope?.Span != null)
                     {
-                        this.logger.LogDebug($"{{LogKey:l}} [{requestId}] http added tracing headers", LogKeys.OutboundRequest);
+                        this.logger.LogDebug($"{{LogKey:l}} [{request.GetRequestId()}] http added tracing headers", LogKeys.OutboundRequest);
 
                         // propagate the span infos as headers
                         request.Headers.Add("x-traceid", scope.Span.TraceId);
