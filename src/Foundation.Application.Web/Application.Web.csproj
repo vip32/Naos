@@ -28,6 +28,7 @@
     <ProjectReference Include="..\Foundation.Utilities\Utilities.csproj" />
     <ProjectReference Include="..\Foundation.ContentTypes\ContentTypes.csproj" />
     <ProjectReference Include="..\Foundation.Logging\Logging.csproj" />
+    <ProjectReference Include="..\Tracing.Domain\Tracing.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

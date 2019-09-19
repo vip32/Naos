@@ -168,7 +168,7 @@
             return !(value1 == value2);
         }
 
-        public static IEnumerable<Node<T>> CreateTree<TId>(IEnumerable<T> values, Func<T, TId> idSelector, Func<T, TId/*?*/> parentIdSelector, bool ignoreOnMissingParent = false)
+        public static IEnumerable<Node<T>> ToHierarchy<TId>(IEnumerable<T> values, Func<T, TId> idSelector, Func<T, TId/*?*/> parentIdSelector, bool ignoreOnMissingParent = false)
             //where TId : struct
         {
             if (!values.SafeAny())
@@ -181,10 +181,10 @@
                 throw new ArgumentException("at least one value has the same id and parentid");
             }
 
-            return CreateTree(values.Select(v => new Node<T>(v)), idSelector, parentIdSelector, ignoreOnMissingParent);
+            return ToHierarchy(values.Select(v => new Node<T>(v)), idSelector, parentIdSelector, ignoreOnMissingParent);
         }
 
-        public static IEnumerable<Node<T>> CreateTree<TId>(IEnumerable<Node<T>> rootNodes, Func<T, TId> idSelector, Func<T, TId/*?*/> parentIdSelector, bool ignoreOnMissingParent = false)
+        public static IEnumerable<Node<T>> ToHierarchy<TId>(IEnumerable<Node<T>> rootNodes, Func<T, TId> idSelector, Func<T, TId/*?*/> parentIdSelector, bool ignoreOnMissingParent = false)
             //where TId : struct
         {
             var result = rootNodes.ToList();
@@ -202,7 +202,7 @@
                 {
                     parent.Add(rootNode);
                 }
-                else if (parentId != null && !ignoreOnMissingParent) // there is no node with this parentId in the tree, ignore?
+                else if (parentId != null && !ignoreOnMissingParent) // there is no node with this parentId in the hierarchy, ignore?
                 {
                     throw new ArgumentException($"a node has the parent id [{parentId/*.Value*/}] but no other nodes has this id");
                 }

@@ -46,14 +46,14 @@
 
         public static IQueryable<T> OrderByDynamic<T>(this IQueryable<T> source, string name, bool ascending = true)
         {
-            var param = Expression.Parameter(typeof(T), "p");
-            var prop = Expression.Property(param, name);
-            var exp = Expression.Lambda(prop, param);
+            var parameter = Expression.Parameter(typeof(T), "p");
+            var property = Expression.Property(parameter, name);
+            var expression = Expression.Lambda(property, parameter);
             var method = ascending ? "OrderBy" : "OrderByDescending";
-            var types = new Type[] { source.ElementType, exp.Body.Type };
-            var mce = Expression.Call(typeof(Queryable), method, types, source.Expression, exp);
+            var types = new Type[] { source.ElementType, expression.Body.Type };
 
-            return source.Provider.CreateQuery<T>(mce);
+            return source.Provider.CreateQuery<T>(
+                Expression.Call(typeof(Queryable), method, types, source.Expression, expression));
         }
     }
 }

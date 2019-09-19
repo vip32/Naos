@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Foundation.Extensions\Extensions.csproj" />
+    <ProjectReference Include="..\Foundation.Utilities\Utilities.csproj" />
   </ItemGroup>
 
 </Project>

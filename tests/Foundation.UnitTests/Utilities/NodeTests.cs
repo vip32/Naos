@@ -28,7 +28,7 @@
         [Fact]
         public void CanCreateTree()
         {
-            var nodes = Node<StubNode>.CreateTree(this.Items, l => l.Id, l => l.ParentId);
+            var nodes = Node<StubNode>.ToHierarchy(this.Items, l => l.Id, l => l.ParentId);
 
             nodes.Count().ShouldBe(2);
             nodes.First().ShouldNotBeNull();

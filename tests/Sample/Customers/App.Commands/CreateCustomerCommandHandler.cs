@@ -10,7 +10,7 @@
     using Naos.Foundation;
     using Naos.Sample.Customers.Domain;
 
-    public class CreateCustomerCommandHandler : BehaviorCommandHandler<CreateCustomerCommand, object>
+    public class CreateCustomerCommandHandler : BaseCommandHandler<CreateCustomerCommand, object>
     {
         private readonly ILogger<CreateCustomerCommandHandler> logger;
         private readonly ICustomerRepository repository;

@@ -107,14 +107,13 @@
                 var entities = await this.repository.FindAllAsync(
                     this.filterContext.GetSpecifications<LogTrace>().Insert(new Specification<LogTrace>(t => t.TrackType == "trace")),
                     this.filterContext.GetFindOptions<LogTrace>()).AnyContext();
-                var nodes = Node<LogTrace>.CreateTree(entities, l => l.SpanId, l => l.ParentSpanId, true)
-                    .Where(n => !n.Children.IsNullOrEmpty()).ToList();
+                var nodes = Node<LogTrace>.ToHierarchy(entities, l => l.SpanId, l => l.ParentSpanId, true).ToList();
 
-                nodes.Render(
-                    async t => await this.WriteTraceHeaderAsync(t).AnyContext(),
-                    async t => await this.WriteTraceAsync(t).AnyContext(),
-                    async i => await this.WriteTraceIndentAsync(i).AnyContext(),
-                    new HtmlNodeRenderOptions());
+                await nodes.RenderAsync(
+                    t => this.WriteTrace(t),
+                    t => this.WriteTraceHeader(t),
+                    orderBy: t => t.Ticks,
+                    options: new HtmlNodeRenderOptions(this.HttpContext) { ChildNodeBreak = string.Empty }).AnyContext();
 
                 //foreach (var entity in entities) // .Where(l => !l.TrackType.EqualsAny(new[] { LogTrackTypes.Trace }))
                 //{
@@ -127,46 +126,43 @@
             }
         }
 
-        private async Task WriteTraceHeaderAsync(LogTrace entity)
+        private string WriteTraceHeader(LogTrace entity)
         {
             var sb = this.stringBuilderPool.Get(); // less allocations
-            if (entity.ParentSpanId.IsNullOrEmpty())
-            {
-                sb.AppendLine("<hr/>");
-            }
+            sb.Append("<div style='white-space: nowrap;'>")
+                .Append("<span style='color: #EB1864; font-size: x-small;'>")
+                .AppendFormat("{0:u}", entity.Timestamp.ToUniversalTime())
+                .Append("</span>");
+            sb.Append("&nbsp;[<span style='color: ")
+                .Append(this.GetTraceLevelColor(entity)).Append("'>")
+                .Append(entity.Kind?.ToUpper().Truncate(6, string.Empty))
+                .Append("</span>]");
+            sb.Append(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logevents/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;");
+            //sb.Append(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logtraces/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;");
 
-            sb.AppendLine($"<div style='white-space: nowrap;'>");
-            sb.AppendLine("<span style='color: #EB1864; font-size: x-small;'>");
-            sb.AppendFormat("{0:u}", entity.Timestamp.ToUniversalTime()).AppendLine();
-            sb.AppendLine("</span>");
-            sb.Append("&nbsp;[<span style='color: ").Append(this.GetTraceLevelColor(entity)).AppendLine("'>");
-            sb.Append(entity.Kind?.ToUpper().Truncate(6, string.Empty)).AppendLine("</span>]");
-            //sb.AppendLine(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logtraces/dashboard,CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;");
-
-            await this.HttpContext.Response.WriteAsync(sb.ToString()).AnyContext();
+            var result = sb.ToString();
             this.stringBuilderPool.Return(sb);
+            return result;
         }
 
-        private async Task WriteTraceIndentAsync(string indent)
-        {
-            await this.HttpContext.Response.WriteAsync(indent).AnyContext();
-        }
-
-        private async Task WriteTraceAsync(LogTrace entity)
+        private string WriteTrace(LogTrace entity)
         {
             var extraStyles = string.Empty;
 
             var sb = this.stringBuilderPool.Get(); // less allocations
-            sb.Append("<span style='color: ").Append(this.GetTraceLevelColor(entity)).Append("; ").Append(extraStyles).AppendLine("'>");
-            //sb.AppendLine(logEvent.TrackType.SafeEquals("journal") ? "*" : "&nbsp;"); // journal prefix
-            sb.Append(entity.Message).Append(" (").Append(entity.SpanId).Append("/").Append(entity.ParentSpanId).Append("/").Append(entity.Kind).Append(")")
-                .AppendLine(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logtraces/dashboard,CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;")
-                .Append("<a target=\"blank\" href=\"/api/operations/logtraces?q=Id=").Append(entity.Id).Append("\">*</a> <span style=\"color: gray;\">-> took ").Append(entity.Duration.Humanize()).AppendLine("</span>");
-            sb.AppendLine("</span>");
-            sb.AppendLine("</div>");
+            sb.Append("<span style='color: ").Append(this.GetTraceLevelColor(entity)).Append("; ").Append(extraStyles).Append("'>")
+                //.Append(logEvent.TrackType.SafeEquals("journal") ? "*" : "&nbsp;"); // journal prefix
+                .Append(entity.Message).Append(" (").Append(entity.SpanId).Append("/").Append(entity.ParentSpanId).Append(")&nbsp;")
+                .Append("<a target=\"blank\" href=\"/api/operations/logtraces?q=Id=").Append(entity.Id).Append("\">*</a> ")
+                .Append("<span style=\"color: gray;\">-> took ")
+                .Append(entity.Duration.Humanize())
+                .Append("</span>");
+            sb.Append("</span>");
+            sb.Append("</div>");
 
-            await this.HttpContext.Response.WriteAsync(sb.ToString()).AnyContext();
+            var result = sb.ToString();
             this.stringBuilderPool.Return(sb);
+            return result;
         }
 
         private string GetTraceLevelColor(LogTrace entity)

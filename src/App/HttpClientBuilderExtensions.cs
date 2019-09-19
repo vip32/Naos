@@ -25,6 +25,7 @@
                 return builder
                     .AddHttpMessageHandler<HttpClientCorrelationHandler>()
                     .AddHttpMessageHandler<HttpClientServiceContextHandler>()
+                    .AddHttpMessageHandler<HttpClientTracerHandler>()
                     .AddHttpMessageHandler<HttpClientLogHandler>();
             }
         }

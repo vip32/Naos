@@ -1,13 +1,21 @@
 ﻿namespace Naos.Foundation
 {
+    using System.Threading.Tasks;
+
     public interface INodeRenderOptions
     {
-        string Corner { get; }
+        string RootNodeBreak { get; set; }
 
-        string Cross { get; }
+        string ChildNodeBreak { get; set; }
 
-        string Space { get; }
+        string Corner { get; set; }
 
-        string Vertical { get; }
+        string Cross { get; set; }
+
+        string Space { get; set; }
+
+        string Vertical { get; set; }
+
+        Task WriteAsync(string value);
     }
 }

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
 
     public static class NodeExtensions
     {
@@ -13,67 +14,90 @@
         //  │ └─NAM2bb
         //  ├─NAM3a
         //  └─NAM4a
-        public static void RenderConsole<T>(this IEnumerable<Node<T>> source, INodeRenderOptions options = null)
+        public static async Task RenderConsole<T>(
+            this IEnumerable<Node<T>> source,
+            Func<T, string> name = null,
+            Func<T, string> header = null,
+            Func<T, object> orderBy = null,
+            INodeRenderOptions options = null)
         {
-            Action<T> preAction = null;
-            Action<T> nameAction = t => Console.WriteLine(t.ToString());
-            Action<string> indentAction = i => Console.Write(i);
+            options ??= new ConsoleNodeRenderOptions();
 
-            source.Render(preAction, nameAction, indentAction, options);
+            await source.RenderAsync(name, header, orderBy, new ConsoleNodeRenderOptions()).AnyContext();
         }
 
-        public static void Render<T>(this IEnumerable<Node<T>> source, Action<T> preAction, Action<T> nameAction, Action<string> indentAction, INodeRenderOptions options = null)
+        public static async Task RenderAsync<T>(
+            this IEnumerable<Node<T>> source,
+            Func<T, string> name = null,
+            Func<T, string> header = null,
+            Func<T, object> orderBy = null,
+            INodeRenderOptions options = null)
         {
-            options ??= new DefaultNodeRenderOptions();
+            name ??= t => t.ToString();
+            orderBy ??= t => true == true;
+            options ??= new ConsoleNodeRenderOptions();
 
-            foreach(var node in source.Safe())
+            foreach(var node in source.Safe()/*.OrderBy(n => orderBy(n.Value))*/)
             {
-                preAction?.Invoke(node.Value);
-                RenderNode(node, indent: string.Empty, preAction, nameAction, indentAction, options); // ROOT
+                if (source.IndexOf(node) != 0)
+                {
+                    await options.WriteAsync(options.RootNodeBreak).AnyContext();
+                }
+
+                await options.WriteAsync(header?.Invoke(node.Value)).AnyContext();
+                await RenderNodeAsync(node, indent: string.Empty, name: name, header: header, orderBy: orderBy, options: options).AnyContext(); // ROOT
             }
         }
 
-        private static void RenderNode<T>(Node<T> node, string indent, Action<T> preAction, Action<T> nameAction, Action<string> indentAction, INodeRenderOptions options)
+        private static async Task RenderNodeAsync<T>(
+            Node<T> node,
+            string indent,
+            Func<T, string> name,
+            Func<T, string> header,
+            Func<T, object> orderBy,
+            INodeRenderOptions options)
         {
-            //Console.WriteLine(node.Value.ToString()); // NAME
-            nameAction?.Invoke(node.Value);
+            await options.WriteAsync(name?.Invoke(node.Value)).AnyContext();
+            await options.WriteAsync(options.ChildNodeBreak).AnyContext();
 
             // Loop through the children recursively, passing in the
             // indent, and the isLast parameter
-            var numberOfChildren = node.Children.Count();
-            for (var i = 0; i < numberOfChildren; i++)
-            {
-                var child = node.Children.ToList()[i]; // ? optimize
-                var isLast = i == (numberOfChildren - 1);
+            var children = node.Children.OrderBy(n => orderBy(n.Value)).ToList();
+            var childrenCount = node.Children.Count();
 
-                preAction?.Invoke(node.Value);
-                RenderChildNode(child, indent, isLast, preAction, nameAction, indentAction, options);
+            for (var i = 0; i < childrenCount; i++)
+            {
+                await options.WriteAsync(header?.Invoke(children[i].Value)).AnyContext();
+                await RenderChildNodeAsync(children[i], indent, i == (childrenCount - 1), name, header, orderBy, options).AnyContext();
             }
         }
 
-        private static void RenderChildNode<T>(Node<T> node, string indent, bool isLast, Action<T> preAction, Action<T> nameAction, Action<string> indentAction, INodeRenderOptions options)
+        private static async Task RenderChildNodeAsync<T>(
+            Node<T> node,
+            string indent,
+            bool isLast,
+            Func<T, string> name,
+            Func<T, string> header,
+            Func<T, object> orderBy,
+            INodeRenderOptions options)
         {
-            // Print the provided pipes/spaces indent
-            //Console.Write(indent);
-            indentAction?.Invoke(indent);
+            await options.WriteAsync(indent).AnyContext();
 
             // Depending if this node is a last child, print the
             // corner or cross, and calculate the indent that will
             // be passed to its children
             if (isLast)
             {
-                //Console.Write(Corner);
-                indentAction?.Invoke(options.Corner);
+                await options.WriteAsync(options.Corner).AnyContext();
                 indent += options.Space;
             }
             else
             {
-                //Console.Write(Cross);
-                indentAction?.Invoke(options.Cross);
+                await options.WriteAsync(options.Cross).AnyContext();
                 indent += options.Vertical;
             }
 
-            RenderNode(node, indent, preAction, nameAction, indentAction, options);
+            await RenderNodeAsync(node, indent, name, header, orderBy, options).AnyContext();
         }
     }
 }

@@ -17,18 +17,18 @@
     /// <typeparam name="TResponse">Return value of the wrapped command handler.</typeparam>
     /// <seealso cref="App.CommandHandler{TRequest, TResponse}" />
     /// <seealso cref="MediatR.IRequestHandler{Command{TResponse}, CommandResponse{TResponse}}" />
-    public abstract class BehaviorCommandHandler<TCommand, TResponse>
+    public abstract class BaseCommandHandler<TCommand, TResponse>
         : CommandHandler<TCommand, TResponse>
         where TCommand : Command<TResponse>
     {
         private readonly IEnumerable<ICommandBehavior> behaviors;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BehaviorCommandHandler{TRequest, TResponse}" /> class.
+        /// Initializes a new instance of the <see cref="BaseCommandHandler{TRequest, TResponse}" /> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="behaviors">The behaviors.</param>
-        protected BehaviorCommandHandler(
+        protected BaseCommandHandler(
             ILogger logger,
             ITracer tracer = null,
             IEnumerable<ICommandBehavior> behaviors = null)

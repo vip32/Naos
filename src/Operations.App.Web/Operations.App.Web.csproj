@@ -25,6 +25,7 @@
     <ProjectReference Include="..\FileStorage.Infrastructure.FileSystem\FileStorage.Infrastructure.FileSystem.csproj" />
     <ProjectReference Include="..\FileStorage\FileStorage.csproj" />
     <ProjectReference Include="..\Filtering.App\RequestFiltering.App.csproj" />
+    <ProjectReference Include="..\Foundation.Utilities.Web\Utilities.Web.csproj" />
     <ProjectReference Include="..\Foundation.Utilities\Utilities.csproj" />
     <ProjectReference Include="..\Operations.App\Operations.App.csproj" />
     <ProjectReference Include="..\Operations.Domain\Operations.Domain.csproj" />

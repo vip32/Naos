@@ -63,8 +63,8 @@
                 this.WriteLog(LogKeys.OutboundRequest, $"[{requestId}] http headers={string.Join("|", request.Headers.Select(h => $"{h.Key}={string.Join("|", h.Value)}"))}");
             }
 
-            this.WriteLog(LogKeys.OutboundRequest, $"[{requestId}] http {request?.Method} {{Url:l}} ({correlationId})", type: LogPropertyKeys.TrackOutboundRequest, args: new object[] { request.RequestUri });
-            Foundation.LoggerExtensions.LogTrace(this.logger, LogKeys.OutboundRequest, requestId, request.RequestUri.PathAndQuery.SliceTill("?"), LogTraceNames.Http);
+            this.WriteLog(LogKeys.OutboundRequest, $"[{requestId}] http {request?.Method.ToString().ToLowerInvariant()} {{Url:l}} ({correlationId})", type: LogPropertyKeys.TrackOutboundRequest, args: new object[] { request.RequestUri });
+            //Foundation.LoggerExtensions.LogTrace(this.logger, LogKeys.OutboundRequest, requestId, request.RequestUri.PathAndQuery.SliceTill("?"), LogTraceNames.Http);
         }
 
         protected async Task LogHttpResponse(HttpResponseMessage response, string requestId, TimeSpan duration)
@@ -90,8 +90,8 @@
                 this.WriteLog(LogKeys.OutboundResponse, $"[{requestId}] http headers={string.Join("|", response.Headers.Select(h => $"{h.Key}={string.Join("|", h.Value)}"))}", level: level);
             }
 
-            this.WriteLog(LogKeys.OutboundResponse, $"[{requestId}] http {response.RequestMessage.Method} {{Url:l}} {{StatusCode}} ({response.StatusCode}) -> took {duration.Humanize()}", type: LogPropertyKeys.TrackOutboundResponse, duration: duration, args: new object[] { response.RequestMessage.RequestUri, (int)response.StatusCode });
-            Foundation.LoggerExtensions.LogTrace(this.logger, LogKeys.OutboundResponse, requestId, response.RequestMessage.RequestUri.PathAndQuery.SliceTill("?"), LogTraceNames.Http, duration);
+            this.WriteLog(LogKeys.OutboundResponse, $"[{requestId}] http {response.RequestMessage.Method.ToString().ToLowerInvariant()} {{Url:l}} {{StatusCode}} ({response.StatusCode}) -> took {duration.Humanize()}", type: LogPropertyKeys.TrackOutboundResponse, duration: duration, args: new object[] { response.RequestMessage.RequestUri, (int)response.StatusCode });
+            //Foundation.LoggerExtensions.LogTrace(this.logger, LogKeys.OutboundResponse, requestId, response.RequestMessage.RequestUri.PathAndQuery.SliceTill("?"), LogTraceNames.Http, duration);
         }
 
         private void WriteLog(

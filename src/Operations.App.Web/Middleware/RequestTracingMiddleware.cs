@@ -45,15 +45,14 @@
                 context.GetRouteData()?.Values.TryGetValue("Action", out action);
                 context.GetRouteData()?.Values.TryGetValue("Controller", out controller);
 
-                using (var scope = tracer
-                    .BuildSpan(
-                        $"http {action ?? context.Request.Method} {(controller != null ? controller.ToString().Singularize() ?? controller : uri.AbsolutePath)}".ToLowerInvariant(),
+                using (var scope = tracer.BuildSpan(
+                        $"http {action ?? context.Request.Method.ToLowerInvariant()} {uri.AbsolutePath}{(controller != null ? $" ({controller.ToString().Singularize()})" : string.Empty)}",
                         LogKeys.InboundRequest,
                         SpanKind.Server,
                         new Span(context.GetCorrelationId(), null)) // TODO: get service name as operationname (servicedescriptor?)
                     .IgnoreParentSpan()
                     .SetSpanId(context.GetRequestId())
-                    .WithTag(SpanTagKey.HttpMethod, context.Request.Method)
+                    .WithTag(SpanTagKey.HttpMethod, context.Request.Method.ToLowerInvariant())
                     .WithTag(SpanTagKey.HttpUrl, context.Request.GetDisplayUrl())
                     .WithTag(SpanTagKey.HttpHost, uri.Port > 0 ? $"{uri.Host}:{uri.Port}" : uri.Host)
                     .WithTag(SpanTagKey.HttpPath, uri.AbsolutePath)

@@ -10,7 +10,7 @@
     using Naos.Foundation;
     using Naos.Sample.Customers.Domain;
 
-    public class GetActiveCustomersQueryHandler : BehaviorCommandHandler<GetActiveCustomersQuery, IEnumerable<Customer>>
+    public class GetActiveCustomersQueryHandler : BaseCommandHandler<GetActiveCustomersQuery, IEnumerable<Customer>>
     {
         private readonly ILogger<GetActiveCustomersQueryHandler> logger;
         private readonly ICustomerRepository repository;
@@ -31,6 +31,16 @@
 
         public override async Task<CommandResponse<IEnumerable<Customer>>> HandleRequest(GetActiveCustomersQuery request, CancellationToken cancellationToken)
         {
+            using (var scope = this.Tracer?.BuildSpan("http get /api/customers DUMMY1").Activate(this.logger))
+            {
+                // do nothing
+            }
+
+            using (var scope = this.Tracer?.BuildSpan("dummy2 dummy2 dummy2").Activate(this.logger))
+            {
+                // do nothing
+            }
+
             return new CommandResponse<IEnumerable<Customer>>
             {
                 Result = await this.repository.FindAllAsync().AnyContext()

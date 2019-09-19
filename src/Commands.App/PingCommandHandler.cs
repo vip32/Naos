@@ -12,8 +12,8 @@
     /// Ping handler for the <see cref="TRequest" /> command request, response has no result.
     /// </summary>
     /// <typeparam name="TRequest">The type of the request.</typeparam>
-    /// <seealso cref="App.BehaviorCommandHandler{TRequest, bool}" />
-    public class PingCommandHandler : BehaviorCommandHandler<PingCommand, object>
+    /// <seealso cref="App.BaseCommandHandler{TRequest, bool}" />
+    public class PingCommandHandler : BaseCommandHandler<PingCommand, object>
     {
         private readonly ILogger<EchoCommandHandler> logger;
 

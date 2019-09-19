@@ -51,16 +51,16 @@
             return source;
         }
 
-        public static ILogger LogTrace( // TODO: obsolete
-            this ILogger source,
-            string logKey,
-            string span,
-            string message, // span id
-            string name = null, // LogTraceEventNames.Http
-            TimeSpan? duration = null,
-            IDictionary<string, object> properties = null,
-            params object[] args)
-        {
+        //public static ILogger LogTrace( // TODO: obsolete
+        //    this ILogger source,
+        //    string logKey,
+        //    string span,
+        //    string message, // span id
+        //    string name = null, // LogTraceEventNames.Http
+        //    TimeSpan? duration = null,
+        //    IDictionary<string, object> properties = null,
+        //    params object[] args)
+        //{
             // REPLACED with SPAN/TRACER
             //if(!message.IsNullOrEmpty())
             //{
@@ -95,7 +95,7 @@
 
             // TODO: publish tracing notification (so other tracers can pick it up?), mediator publish
 
-            return source;
-        }
+        //    return source;
+        //}
     }
 }

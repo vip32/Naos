@@ -12,8 +12,8 @@
     /// Echo handler for the <see cref="TRequest" /> command request, response result is always the input message.
     /// </summary>
     /// <typeparam name="TRequest">The type of the request.</typeparam>
-    /// <seealso cref="App.BehaviorCommandHandler{TRequest, bool}" />
-    public class EchoCommandHandler : BehaviorCommandHandler<EchoCommand, EchoCommandResponse>
+    /// <seealso cref="App.BaseCommandHandler{TRequest, bool}" />
+    public class EchoCommandHandler : BaseCommandHandler<EchoCommand, EchoCommandResponse>
     {
         private readonly ILogger<EchoCommandHandler> logger;
 

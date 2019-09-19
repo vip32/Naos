@@ -11,8 +11,8 @@
     /// Test handler for the <see cref="TRequest" /> command request, response result is always true.
     /// </summary>
     /// <typeparam name="TRequest">The type of the request.</typeparam>
-    /// <seealso cref="App.BehaviorCommandHandler{TRequest, bool}" />
-    public class TestCommandHandler<TRequest> : BehaviorCommandHandler<TRequest, bool>
+    /// <seealso cref="App.BaseCommandHandler{TRequest, bool}" />
+    public class TestCommandHandler<TRequest> : BaseCommandHandler<TRequest, bool>
         where TRequest : Command<bool>
     {
         public TestCommandHandler(
