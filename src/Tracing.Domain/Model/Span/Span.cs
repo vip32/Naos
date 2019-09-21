@@ -40,6 +40,8 @@
 
         public SpanStatus? Status { get; private set; }
 
+        public bool? IsSampled { get; private set; }
+
         public string StatusDescription { get; private set; }
 
         public DateTimeOffset? StartTime { get; private set; }
@@ -143,6 +145,12 @@
         {
             this.Status = status;
             this.StatusDescription = description;
+            return this;
+        }
+
+        public ISpan SetSampled(bool? isSampled = true)
+        {
+            this.IsSampled = isSampled;
             return this;
         }
 

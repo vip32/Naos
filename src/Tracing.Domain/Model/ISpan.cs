@@ -20,6 +20,8 @@
 
         SpanStatus? Status { get; }
 
+        bool? IsSampled { get; }
+
         string StatusDescription { get; }
 
         DateTimeOffset? StartTime { get; }
@@ -47,6 +49,8 @@
         ISpan WithTags(DataDictionary tags);
 
         ISpan SetStatus(SpanStatus status, string description = null);
+
+        ISpan SetSampled(bool? isSampled = true);
 
         ISpan AddLog(string message);
 

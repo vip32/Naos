@@ -45,14 +45,19 @@
                 context.GetRouteData()?.Values.TryGetValue("Action", out action);
                 context.GetRouteData()?.Values.TryGetValue("Controller", out controller);
 
+                // dehydrate the span infos
+                var parentSpan = new Span(
+                            context.Request.Headers.GetValue("x-traceid").EmptyToNull() ?? context.GetCorrelationId(), // dehydrate the span infos
+                            context.Request.Headers.GetValue("x-spanid"));
+                parentSpan.SetSampled(context.Request.Headers.GetValue("x-tracesampled").To<bool>());
+
                 using (var scope = tracer.BuildSpan(
                         $"{LogTraceNames.Http} {action ?? context.Request.Method.ToLowerInvariant()} {uri.AbsolutePath}{(controller != null ? $" ({controller.ToString().Singularize()})" : string.Empty)}",
                         LogKeys.InboundRequest,
                         SpanKind.Server,
-                        new Span(
-                            context.Request.Headers.GetValue("x-traceid").EmptyToNull() ?? context.GetCorrelationId(), // dehydrate the span infos
-                            context.Request.Headers.GetValue("x-spanid"))) // dehydrate the span infos
-                                                                           // TODO: get service name as operationname (servicedescriptor?)
+                        parentSpan)
+
+                    // TODO: get service name as operationname (servicedescriptor?)
                     .IgnoreParentSpan()
                     .SetSpanId(context.GetRequestId())
                     .WithTag(SpanTagKey.HttpMethod, context.Request.Method.ToLowerInvariant())
@@ -64,6 +69,15 @@
                 {
                     try
                     {
+                        if(scope.Span.IsSampled == false)
+                        {
+                            this.logger.LogDebug($"{{LogKey:l}} span not sampled (id={scope.Span.SpanId}, sampler={scope.Span.Tags.GetValueOrDefault(SpanTagKey.SamplerType)})", LogKeys.Tracing);
+                        }
+                        else
+                        {
+                            this.logger.LogDebug($"{{LogKey:l}} span sampled (id={scope.Span.SpanId}, sampler={scope.Span.Tags.GetValueOrDefault(SpanTagKey.SamplerType)})", LogKeys.Tracing);
+                        }
+
                         await this.next.Invoke(context).AnyContext();
 
                         scope.Span.WithTag("http.status_code", context.Response.StatusCode);

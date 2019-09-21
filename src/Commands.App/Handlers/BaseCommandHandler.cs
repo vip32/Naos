@@ -52,10 +52,11 @@
         public override async Task<CommandResponse<TResponse>> Handle(TCommand request, CancellationToken cancellationToken)
         {
             var parentSpan = this.Tracer?.CurrentSpan;
-            if (request.Properties.ContainsKey(CommandPropertyKeys.TraceId) && request.Properties.ContainsKey(CommandPropertyKeys.ParentSpanId))
+            if (request.Properties.ContainsKey(CommandPropertyKeys.TraceId) && request.Properties.ContainsKey(CommandPropertyKeys.TraceSpanId))
             {
                 // dehydrate parent span
-                parentSpan = new Span(request.Properties.GetValueOrDefault(CommandPropertyKeys.TraceId) as string, request.Properties.GetValueOrDefault(CommandPropertyKeys.ParentSpanId) as string);
+                parentSpan = new Span(request.Properties.GetValueOrDefault(CommandPropertyKeys.TraceId) as string, request.Properties.GetValueOrDefault(CommandPropertyKeys.TraceSpanId) as string);
+                parentSpan.SetSampled(request.Properties.GetValueOrDefault(CommandPropertyKeys.TraceSampled).To<bool>());
             }
 
             // TODO: log scope (correlationid)?

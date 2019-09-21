@@ -90,9 +90,10 @@
             options.Context.Services.AddScoped<ITracer>(sp =>
             {
                 return new Tracer(
-                    new AsyncLocalScopeManager((IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator))));
-                //sp.GetRequiredService<ICorrelationContextAccessor>().Context.CorrelationId
+                    new AsyncLocalScopeManager((IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator))),
+                    sp.GetService<ISampler>());
             });
+            options.Context.Services.AddSingleton<ISampler, ConstantSampler>(); // TODO: configure different samplers
 
             return options;
         }

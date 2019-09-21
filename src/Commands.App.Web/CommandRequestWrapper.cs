@@ -36,7 +36,6 @@
                 this.Id = command.Id;
                 this.Created = DateTime.UtcNow;
                 this.CorrelationId = command.CorrelationId;
-                //this.ParentSpanId = command.s
                 this.Command = command;
             }
 

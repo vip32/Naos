@@ -6,6 +6,16 @@
     public struct SpanTagKey
     {
         /// <summary>
+        /// Span tag key to describe the type of sampler used on the root span.
+        /// </summary>
+        public const string SamplerType = "sampler.type";
+
+        /// <summary>
+        /// Span tag key to describe the parameter of the sampler used on the root span.
+        /// </summary>
+        public const string SamplerParam = "sampler.param";
+
+        /// <summary>
         /// The software package, framework, library, or module that generated the associated Span. E.g., "grpc", "django", "JDBI".
         /// </summary>
         public const string Component = "component";

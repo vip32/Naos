@@ -4,6 +4,8 @@
     {
         public const string TraceId = "TraceId";
 
-        public const string ParentSpanId = "ParentSpanId";
+        public const string TraceSpanId = "TraceSpanId";
+
+        public const string TraceSampled = "TraceSampled";
     }
 }

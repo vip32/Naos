@@ -11,7 +11,9 @@
         private readonly ILogger<TracerCommandRequestExtension> logger;
         private readonly ITracer tracer;
 
-        public TracerCommandRequestExtension(ILogger<TracerCommandRequestExtension> logger, ITracer tracer = null)
+        public TracerCommandRequestExtension(
+            ILogger<TracerCommandRequestExtension> logger,
+            ITracer tracer = null)
         {
             this.logger = logger;
             this.tracer = tracer;
@@ -29,7 +31,8 @@
             {
                 // start a whole new SERVER span later, which is the parent for the current 'COMMAND REQUEST' span
                 command.Properties.Add(CommandPropertyKeys.TraceId, scope?.Span?.TraceId); // propagate the span infos
-                command.Properties.Add(CommandPropertyKeys.ParentSpanId, scope?.Span?.SpanId); // propagate the span infos
+                command.Properties.Add(CommandPropertyKeys.TraceSpanId, scope?.Span?.SpanId); // propagate the span infos
+                command.Properties.Add(CommandPropertyKeys.TraceSampled, scope?.Span?.IsSampled); // propagate the span infos
 
                 // continue with next extension
                 await base.InvokeAsync(command, registration, context).AnyContext();
@@ -41,17 +44,35 @@
             CommandRequestRegistration<TCommand> registration,
             HttpContext context)
         {
-            using (var scope = this.tracer?.BuildSpan(
-                        $"command request {command.GetType().PrettyName()}".ToLowerInvariant(),
-                        LogKeys.AppCommand,
-                        SpanKind.Consumer).Activate(this.logger))
+            if(this.tracer == null)
             {
-                // start a whole new SERVER span later, which is the parent for the current 'COMMAND REQUEST' span
-                command.Properties.Add(CommandPropertyKeys.TraceId, scope?.Span?.TraceId); // propagate the span infos
-                command.Properties.Add(CommandPropertyKeys.ParentSpanId, scope?.Span?.SpanId); // propagate the span infos
-
                 // continue with next extension
                 await base.InvokeAsync(command, registration, context).AnyContext();
+            }
+            else
+            {
+                using (var scope = this.tracer.BuildSpan(
+                            $"command request {command.GetType().PrettyName()}".ToLowerInvariant(),
+                            LogKeys.AppCommand,
+                            SpanKind.Consumer).Activate(this.logger))
+                {
+                    // start a whole new SERVER span later, which is the parent for the current 'COMMAND REQUEST' span
+                    command.Properties.Add(CommandPropertyKeys.TraceId, scope.Span.TraceId); // propagate the span infos
+                    command.Properties.Add(CommandPropertyKeys.TraceSpanId, scope.Span.SpanId); // propagate the span infos
+                    command.Properties.Add(CommandPropertyKeys.TraceSampled, scope.Span.IsSampled); // propagate the span infos
+
+                    if (scope.Span.IsSampled == false)
+                    {
+                        this.logger.LogDebug($"{{LogKey:l}} span not sampled (id={scope.Span.SpanId})", LogKeys.Tracing);
+                    }
+                    else
+                    {
+                        this.logger.LogDebug($"{{LogKey:l}} span sampled (id={scope.Span.SpanId})", LogKeys.Tracing);
+                    }
+
+                    // continue with next extension
+                    await base.InvokeAsync(command, registration, context).AnyContext();
+                }
             }
         }
     }

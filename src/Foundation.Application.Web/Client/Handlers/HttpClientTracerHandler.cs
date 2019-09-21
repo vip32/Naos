@@ -29,7 +29,14 @@
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var tracer = this.httpContextAccessor.HttpContext.RequestServices.GetService<ITracer>();  // scoped workaround
+            if(this.httpContextAccessor?.HttpContext == null)
+            {
+                // TODO: get current scoped tracer in here! only happens in out of httpcontext request, for example inside a dequeued message handler.
+                //       all fine within a httpcontext, also the with commands+handlers (only inside queued commands+handlers its an issue)
+                this.logger.LogWarning($"{{LogKey:l}} no httpcontext available, cannot get current tracer (with parent span). this client http request will not be traced.", LogKeys.Tracing);
+            }
+
+            var tracer = this.httpContextAccessor?.HttpContext?.RequestServices.GetService<ITracer>();  // scoped workaround
             // WARN: proper scoped dependencies seem not possible in DelegatingHandlers https://github.com/aspnet/HttpClientFactory/issues/134
             //       that's why we need the httpContextAccessor to properly get a scoped ITracer (with current span set)
 
@@ -47,6 +54,10 @@
                         // propagate the span infos as headers
                         request.Headers.Add("x-traceid", scope.Span.TraceId);
                         request.Headers.Add("x-spanid", scope.Span.SpanId);
+                        if (scope.Span.IsSampled.HasValue)
+                        {
+                            request.Headers.Add("x-tracesampled", scope.Span.IsSampled.Value.ToString());
+                        }
                     }
 
                     return await base.SendAsync(request, cancellationToken).AnyContext();

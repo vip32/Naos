@@ -52,16 +52,21 @@
     /// <seealso cref="ITracer" />
     public class Tracer : ITracer
     {
-        public Tracer(IScopeManager scopeManager) // needs correlationid (=traceid) get from ICorrelationContextAccessor
+        public Tracer(
+            IScopeManager scopeManager,
+            ISampler sampler = null)
         {
             EnsureArg.IsNotNull(scopeManager, nameof(scopeManager));
 
             this.ScopeManager = scopeManager;
+            this.Sampler = sampler ?? new ConstantSampler();
         }
 
-        public ISpan CurrentSpan => this.ScopeManager.Current?.Span; // use in outbound httpclient
+        public ISpan CurrentSpan => this.ScopeManager.Current?.Span;
 
         public IScopeManager ScopeManager { get; }
+
+        public ISampler Sampler { get; }
 
         public ISpanBuilder BuildSpan(
             string operationName,
@@ -70,7 +75,12 @@
             ISpan parent = null,
             bool ignoreCurrentSpan = false)
         {
-            return new SpanBuilder(this, operationName, logKey ?? LogKeys.Tracing, kind, parent == null && ignoreCurrentSpan ? null : parent ?? this.CurrentSpan)
+            return new SpanBuilder(
+                this,
+                operationName,
+                logKey ?? LogKeys.Tracing,
+                kind,
+                parent == null && ignoreCurrentSpan ? null : parent ?? this.CurrentSpan)
                 .WithTag(SpanTagKey.SpanKind, kind.ToString()); // pass correlationid as traceid
         }
 

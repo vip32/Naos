@@ -32,13 +32,25 @@
 
         public ISpan Build()
         {
-            return new Span(this.traceId ?? IdGenerator.Instance.Next, RandomGenerator.GenerateString(5), this.kind, this.parent?.SpanId)
+            var span = new Span(this.traceId ?? IdGenerator.Instance.Next, RandomGenerator.GenerateString(5), this.kind, this.parent?.SpanId)
                 .WithOperationName(this.operationName)
                 .WithLogKey(this.logKey)
                 .WithTags(this.tags)
                 .SetStatus(SpanStatus.Transient)
                 .SetSpanId(this.spanId)
                 .Start();
+
+            if (this.parent != null)
+            {
+                span.SetSampled(this.parent.IsSampled);
+            }
+            else
+            {
+                // root span sampling needs to be determined
+                this.tracer.Sampler?.SetSampled(span);
+            }
+
+            return span;
         }
 
         public IScope Activate(ILogger logger, bool finishOnDispose = true)
