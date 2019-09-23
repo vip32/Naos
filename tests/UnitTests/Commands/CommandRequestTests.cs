@@ -1,8 +1,8 @@
-﻿namespace Naos.Core.UnitTests.Commands
+﻿namespace Naos.UnitTests.Commands
 {
     using System.Threading.Tasks;
     using MediatR;
-    using Naos.Core.Commands.App;
+    using Naos.Commands.App;
     using Naos.Foundation;
     using NSubstitute;
     using Shouldly;

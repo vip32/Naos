@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Queueing.Infrastructure.Azure
+﻿namespace Naos.Queueing.Infrastructure.Azure
 {
     using System;
     using MediatR;

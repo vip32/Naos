@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.App.Web
+﻿namespace Naos.App.Web
 {
     using System;
     using System.Diagnostics.CodeAnalysis;

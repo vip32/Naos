@@ -1,8 +1,8 @@
-﻿namespace Naos.Core.Commands.App.Web
+﻿namespace Naos.Commands.App.Web
 {
     using System.Threading.Tasks;
     using EnsureThat;
-    using Naos.Core.FileStorage.Domain;
+    using Naos.FileStorage.Domain;
     using Naos.Foundation;
 
     public class CommandRequestStore

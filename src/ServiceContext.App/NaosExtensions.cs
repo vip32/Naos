@@ -2,9 +2,9 @@
 {
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
-    using Naos.Core.Configuration.App;
-    using Naos.Core.ServiceContext.App.Web;
+    using Naos.Configuration.App;
     using Naos.Foundation;
+    using Naos.ServiceContext.App.Web;
 
     /// <summary>
     /// Extensions on the <see cref="IServiceCollection"/>.

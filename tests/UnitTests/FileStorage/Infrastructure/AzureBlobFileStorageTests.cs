@@ -1,9 +1,9 @@
-﻿namespace Naos.Core.UnitTests.FileStorage.Infrastructure
+﻿namespace Naos.UnitTests.FileStorage.Infrastructure
 {
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.FileStorage.Domain;
-    using Naos.Core.FileStorage.Infrastructure;
+    using Naos.FileStorage.Domain;
+    using Naos.FileStorage.Infrastructure;
     using Naos.Foundation;
     using NSubstitute;
     using Xunit;

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.KeyValueStorage.Infrastructure.FileStorage
+﻿namespace Naos.KeyValueStorage.Infrastructure.FileStorage
 {
     using System;
     using System.Collections.Generic;
@@ -7,9 +7,9 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.FileStorage.Domain;
-    using Naos.Core.KeyValueStorage.Domain;
+    using Naos.FileStorage.Domain;
     using Naos.Foundation;
+    using Naos.KeyValueStorage.Domain;
 
     /// <summary>
     /// A table keyvalue provider for file storage.

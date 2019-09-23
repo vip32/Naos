@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Messaging
+﻿namespace Naos.Messaging
 {
     using System;
     using EnsureThat;

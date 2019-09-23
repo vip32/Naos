@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Operations.App.Web
+﻿namespace Naos.Operations.App.Web
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -10,10 +10,10 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.ObjectPool;
-    using Naos.Core.RequestFiltering.App;
-    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
     using Naos.Foundation.Domain;
+    using Naos.RequestFiltering.App;
+    using Naos.Tracing.Domain;
     using NSwag.Annotations;
 
     [Route("api/operations/logtraces")]

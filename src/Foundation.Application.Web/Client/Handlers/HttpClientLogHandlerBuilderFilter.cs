@@ -5,7 +5,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Http;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Tracing.Domain;
+    using Naos.Tracing.Domain;
 
     public class HttpClientLogHandlerBuilderFilter : IHttpMessageHandlerBuilderFilter
     {

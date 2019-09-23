@@ -1,10 +1,10 @@
-﻿namespace Naos.Core.Operations.App
+﻿namespace Naos.Operations.App
 {
     //using System.Collections.Generic;
     //using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Operations.Domain;
-    //using Naos.Core.RequestFiltering.App;
+    using Naos.Operations.Domain;
+    //using Naos.RequestFiltering.App;
 
     public class LogEventService : ILogEventService
     {

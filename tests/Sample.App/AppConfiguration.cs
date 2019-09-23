@@ -1,6 +1,6 @@
 ﻿//namespace Naos.Sample.App
 //{
-//    using Naos.Core.Configuration;
+//    using Naos.Configuration;
 
 //    public class AppConfiguration : NaosAppConfiguration
 //    {

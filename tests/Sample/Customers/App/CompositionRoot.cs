@@ -4,14 +4,14 @@
     using MediatR;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Queueing.Domain;
-    using Naos.Core.Queueing.Infrastructure.Azure;
-    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
     using Naos.Foundation.Domain;
     using Naos.Foundation.Infrastructure;
+    using Naos.Queueing.Domain;
+    using Naos.Queueing.Infrastructure.Azure;
     using Naos.Sample.Customers.App.Client;
     using Naos.Sample.Customers.Domain;
+    using Naos.Tracing.Domain;
 
     public static partial class CompositionRoot
     {

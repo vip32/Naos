@@ -1,12 +1,12 @@
-﻿namespace Naos.Core.Commands.App
+﻿namespace Naos.Commands.App
 {
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
+    using Naos.Tracing.Domain;
 
     /// <summary>
     /// Echo handler for the <see cref="TRequest" /> command request, response result is always the input message.

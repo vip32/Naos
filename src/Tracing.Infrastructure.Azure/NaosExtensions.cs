@@ -5,10 +5,10 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Microsoft.IdentityModel.Clients.ActiveDirectory;
-    using Naos.Core.Tracing.Domain;
-    using Naos.Core.Tracing.Infrastructure.Azure;
     using Naos.Foundation;
     using Naos.Foundation.Infrastructure;
+    using Naos.Tracing.Domain;
+    using Naos.Tracing.Infrastructure.Azure;
 
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions

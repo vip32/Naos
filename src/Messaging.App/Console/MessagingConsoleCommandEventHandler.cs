@@ -1,12 +1,12 @@
-﻿namespace Naos.Core.Messaging.App
+﻿namespace Naos.Messaging.App
 {
     using System.Drawing;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Messaging.Domain;
     using Naos.Foundation;
     using Naos.Foundation.Domain;
+    using Naos.Messaging.Domain;
     using Console = Colorful.Console;
 
     public class MessagingConsoleCommandEventHandler : ConsoleCommandEventHandler<MessagingConsoleCommand>

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.KeyValueStorage.Infrastructure.Azure
+﻿namespace Naos.KeyValueStorage.Infrastructure.Azure
 {
     using System;
     using System.Collections.Concurrent;
@@ -10,8 +10,8 @@
     using EnsureThat;
     using Microsoft.Azure.Cosmos.Table;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.KeyValueStorage.Domain;
     using Naos.Foundation;
+    using Naos.KeyValueStorage.Domain;
 
     /// <summary>
     /// A table keyvalue provider for Azure Table Storage AND Azure Cosmos DB Table API.

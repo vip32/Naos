@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.JobScheduling
+﻿namespace Naos.JobScheduling
 {
     using System;
     using System.Collections.Generic;
@@ -9,8 +9,8 @@
     using EnsureThat;
     using MediatR;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.JobScheduling.Domain;
     using Naos.Foundation;
+    using Naos.JobScheduling.Domain;
 
     public class JobSchedulerOptions
     {

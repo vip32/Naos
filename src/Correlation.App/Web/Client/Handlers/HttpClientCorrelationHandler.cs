@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.RequestCorrelation.App.Web
+﻿namespace Naos.RequestCorrelation.App.Web
 {
     using System.Collections.Generic;
     using System.Net.Http;

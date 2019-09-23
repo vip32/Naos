@@ -1,8 +1,8 @@
-﻿namespace Naos.Core.Messaging.Infrastructure.Azure
+﻿namespace Naos.Messaging.Infrastructure.Azure
 {
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Messaging.Domain;
+    using Naos.Messaging.Domain;
 
     public class StorageQueueMessageBroker : IMessageBroker
     {

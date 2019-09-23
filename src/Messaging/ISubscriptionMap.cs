@@ -1,8 +1,8 @@
-﻿namespace Naos.Core.Messaging
+﻿namespace Naos.Messaging
 {
     using System;
     using System.Collections.Generic;
-    using Naos.Core.Messaging.Domain;
+    using Naos.Messaging.Domain;
 
     public interface ISubscriptionMap
     {

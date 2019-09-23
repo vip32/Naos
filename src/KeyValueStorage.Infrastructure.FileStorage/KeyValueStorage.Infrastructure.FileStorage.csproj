@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.KeyValueStorage.Infrastructure.FileStorage</AssemblyName>
-    <RootNamespace>Naos.Core.KeyValueStorage.Infrastructure.FileStorage</RootNamespace>
+    <AssemblyName>Naos.KeyValueStorage.Infrastructure.FileStorage</AssemblyName>
+    <RootNamespace>Naos.KeyValueStorage.Infrastructure.FileStorage</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

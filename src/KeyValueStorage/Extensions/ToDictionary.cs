@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.KeyValueStorage
+﻿namespace Naos.KeyValueStorage
 {
     using System.Collections.Generic;
     using System.Linq;

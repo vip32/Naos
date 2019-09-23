@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.ServiceContext.App.Web
+﻿namespace Naos.ServiceContext.App.Web
 {
     using System;
     using System.Collections.Generic;

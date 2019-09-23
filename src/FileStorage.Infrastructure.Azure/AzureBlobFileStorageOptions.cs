@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.FileStorage.Infrastructure
+﻿namespace Naos.FileStorage.Infrastructure
 {
     using Naos.Foundation;
 

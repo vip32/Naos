@@ -1,9 +1,9 @@
-﻿namespace Naos.Core.Commands.Infrastructure.FileStorage
+﻿namespace Naos.Commands.Infrastructure.FileStorage
 {
     using System.Threading.Tasks;
     using EnsureThat;
-    using Naos.Core.Commands.App;
-    using Naos.Core.FileStorage.Domain;
+    using Naos.Commands.App;
+    using Naos.FileStorage.Domain;
     using Naos.Foundation;
 
     public class FileStoragePersistCommandBehavior : ICommandBehavior

@@ -1,7 +1,7 @@
 ﻿//namespace Naos.Sample.Customers.App.Web.Controllers
 //{
 //    using EnsureThat;
-//    using Naos.Core.App.Web.Controllers;
+//    using Naos.App.Web.Controllers;
 //    using Naos.Sample.Customers.App.Client;
 //    using Naos.Sample.Customers.Domain;
 

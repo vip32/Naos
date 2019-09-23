@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.App.Web.Controllers
+﻿namespace Naos.App.Web.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
     using Naos.Foundation.Domain;

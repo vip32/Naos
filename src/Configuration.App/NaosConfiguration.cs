@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Configuration.App
+﻿namespace Naos.Configuration.App
 {
     public class NaosConfiguration
     {

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Tracing.Domain
+﻿namespace Naos.Tracing.Domain
 {
     using System.Linq;
     using System.Threading;

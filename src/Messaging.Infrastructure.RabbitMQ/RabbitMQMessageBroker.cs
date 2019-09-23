@@ -1,10 +1,10 @@
-﻿namespace Naos.Core.Messaging.Infrastructure.RabbitMQ
+﻿namespace Naos.Messaging.Infrastructure.RabbitMQ
 {
     using System;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Messaging.Domain;
     using Naos.Foundation;
+    using Naos.Messaging.Domain;
 
     public class RabbitMQMessageBroker : IMessageBroker
     {

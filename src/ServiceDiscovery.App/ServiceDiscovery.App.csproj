@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.ServiceDiscovery.App</AssemblyName>
-    <RootNamespace>Naos.Core.ServiceDiscovery.App</RootNamespace>
+    <AssemblyName>Naos.ServiceDiscovery.App</AssemblyName>
+    <RootNamespace>Naos.ServiceDiscovery.App</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

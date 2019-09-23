@@ -1,12 +1,12 @@
-﻿namespace Naos.Core.UnitTests.KeyValueStorage.Infrastructure
+﻿namespace Naos.UnitTests.KeyValueStorage.Infrastructure
 {
     using System.IO;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.FileStorage.Infrastructure;
-    using Naos.Core.KeyValueStorage.Domain;
-    using Naos.Core.KeyValueStorage.Infrastructure.FileStorage;
+    using Naos.FileStorage.Infrastructure;
     using Naos.Foundation;
+    using Naos.KeyValueStorage.Domain;
+    using Naos.KeyValueStorage.Infrastructure.FileStorage;
     using NSubstitute;
     using Xunit;
 

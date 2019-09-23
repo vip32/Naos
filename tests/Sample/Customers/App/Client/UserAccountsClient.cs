@@ -2,7 +2,7 @@
 {
     using System.Net.Http;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.ServiceDiscovery.App;
+    using Naos.ServiceDiscovery.App;
 
     public class UserAccountsClient : ServiceDiscoveryClient
     {

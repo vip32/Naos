@@ -7,9 +7,9 @@
     using global::Serilog;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Operations.App;
     using Naos.Foundation;
     using Naos.Foundation.Infrastructure;
+    using Naos.Operations.App;
 
     [ExcludeFromCodeCoverage]
     public static class LoggingOptionsExtensions

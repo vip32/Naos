@@ -1,10 +1,10 @@
-﻿namespace Naos.Core.JobScheduling.Domain
+﻿namespace Naos.JobScheduling.Domain
 {
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
+    using Naos.Tracing.Domain;
 
     public class EchoJobEventHandler : JobEventHandler<EchoJobEventData>
     {

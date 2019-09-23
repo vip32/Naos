@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Commands.App
+﻿namespace Naos.Commands.App
 {
     public class PingCommand : Command<object> // object means no response type
     {

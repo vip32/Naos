@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.ServiceDiscovery.App
+﻿namespace Naos.ServiceDiscovery.App
 {
     public class RouterServiceRegistryConfiguration
     {

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Operations.App.Web
+﻿namespace Naos.Operations.App.Web
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -8,9 +8,9 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Operations.Domain;
-    using Naos.Core.RequestFiltering.App;
     using Naos.Foundation;
+    using Naos.Operations.Domain;
+    using Naos.RequestFiltering.App;
     using NSwag.Annotations;
 
     [Route("api/operations/logevents")]

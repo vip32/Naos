@@ -1,9 +1,9 @@
-﻿namespace Naos.Core.Tracing.App
+﻿namespace Naos.Tracing.App
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
+    using Naos.Tracing.Domain;
 
     public class SpanViewModel
     {

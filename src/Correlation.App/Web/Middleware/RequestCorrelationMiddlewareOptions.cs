@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Commands.Correlation.App.Web
+﻿namespace Naos.Commands.Correlation.App.Web
 {
     /// <summary>
     /// Options for correlation.

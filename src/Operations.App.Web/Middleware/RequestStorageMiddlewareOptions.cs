@@ -1,6 +1,6 @@
-﻿namespace Naos.Core.Operations.App.Web
+﻿namespace Naos.Operations.App.Web
 {
-    using Naos.Core.FileStorage.Domain;
+    using Naos.FileStorage.Domain;
 
     /// <summary>
     /// Options for operations request response logging.

@@ -4,9 +4,9 @@
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Options;
-    using Naos.Core.Commands.Correlation.App.Web;
-    using Naos.Core.RequestCorrelation.App;
+    using Naos.Commands.Correlation.App.Web;
     using Naos.Foundation;
+    using Naos.RequestCorrelation.App;
 
     /// <summary>
     /// Extension methods for the correlation middleware.

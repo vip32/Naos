@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Authentication.App.Web
+﻿namespace Naos.Authentication.App.Web
 {
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Http;

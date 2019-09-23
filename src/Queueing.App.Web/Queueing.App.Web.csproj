@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.Queueing.App.Web</AssemblyName>
-    <RootNamespace>Naos.Core.Queueing.App.Web</RootNamespace>
+    <AssemblyName>Naos.Queueing.App.Web</AssemblyName>
+    <RootNamespace>Naos.Queueing.App.Web</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,10 +1,10 @@
-﻿namespace Naos.Core.UnitTests.Tracing.Domain
+﻿namespace Naos.UnitTests.Tracing.Domain
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using MediatR;
-    using Naos.Core.Tracing.Domain;
+    using Naos.Tracing.Domain;
     using NSubstitute;
     using Shouldly;
     using Xunit;

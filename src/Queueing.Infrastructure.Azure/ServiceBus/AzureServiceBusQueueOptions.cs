@@ -1,10 +1,10 @@
-﻿namespace Naos.Core.Queueing.Infrastructure.Azure
+﻿namespace Naos.Queueing.Infrastructure.Azure
 {
     using System;
     using MediatR;
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Azure.ServiceBus.Management;
-    using Naos.Core.Queueing.Domain;
+    using Naos.Queueing.Domain;
 
     public class AzureServiceBusQueueOptions : BaseQueueOptions
     {

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Tracing.Domain
+﻿namespace Naos.Tracing.Domain
 {
     /// <summary>
     /// Standard tag keys https://github.com/opentracing/specification/blob/master/semantic_conventions.md#span-tags-table

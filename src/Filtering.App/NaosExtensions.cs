@@ -3,10 +3,10 @@
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection.Extensions;
-    using Naos.Core.Configuration.App;
-    using Naos.Core.RequestFiltering.App;
-    using Naos.Core.RequestFiltering.App.Web;
+    using Naos.Configuration.App;
     using Naos.Foundation;
+    using Naos.RequestFiltering.App;
+    using Naos.RequestFiltering.App.Web;
 
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions

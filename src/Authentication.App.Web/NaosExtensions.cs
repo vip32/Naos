@@ -6,8 +6,8 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Authorization.Policy;
     using Microsoft.Extensions.Configuration;
-    using Naos.Core.Authentication.App.Web;
-    using Naos.Core.Configuration.App;
+    using Naos.Authentication.App.Web;
+    using Naos.Configuration.App;
     using Naos.Foundation;
 
     [ExcludeFromCodeCoverage]

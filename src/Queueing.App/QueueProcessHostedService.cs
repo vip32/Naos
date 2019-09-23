@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Queueing.App
+﻿namespace Naos.Queueing.App
 {
     using System;
     using System.Threading;
@@ -6,8 +6,8 @@
     using EnsureThat;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Queueing.Domain;
     using Naos.Foundation;
+    using Naos.Queueing.Domain;
 
     public class QueueProcessHostedService<T> : IHostedService, IDisposable
         where T : class

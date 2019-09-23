@@ -1,8 +1,8 @@
-﻿namespace Naos.Core.Queueing.Infrastructure.Azure
+﻿namespace Naos.Queueing.Infrastructure.Azure
 {
     using EnsureThat;
     using Microsoft.WindowsAzure.Storage.Queue;
-    using Naos.Core.Queueing.Domain;
+    using Naos.Queueing.Domain;
 
     public class AzureStorageQueueItem<TData> : QueueItem<TData>
         where TData : class

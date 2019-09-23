@@ -8,10 +8,10 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Configuration.App;
-    using Naos.Core.ServiceDiscovery.App;
-    using Naos.Core.ServiceDiscovery.App.Web;
+    using Naos.Configuration.App;
     using Naos.Foundation;
+    using Naos.ServiceDiscovery.App;
+    using Naos.ServiceDiscovery.App.Web;
     //using ProxyKit;
 
     /// <summary>

@@ -1,10 +1,10 @@
-﻿namespace Naos.Core.UnitTests.Queueing
+﻿namespace Naos.UnitTests.Queueing
 {
     using System;
     using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
-    using Naos.Core.Queueing.Domain;
+    using Naos.Queueing.Domain;
     using Xunit;
 
 #pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task

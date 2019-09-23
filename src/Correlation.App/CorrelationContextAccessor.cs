@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.RequestCorrelation.App
+﻿namespace Naos.RequestCorrelation.App
 {
     using System.Threading;
 

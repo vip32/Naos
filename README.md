@@ -1,8 +1,8 @@
-[![Build Status](https://dev.azure.com/doomsday32/Naos/_apis/build/status/vip32.Naos.Core?branchName=develop)](https://dev.azure.com/doomsday32/Naos/_build/latest?definitionId=4)
-[![CodeFactor](https://www.codefactor.io/repository/github/vip32/naos.core/badge)](https://www.codefactor.io/repository/github/vip32/naos.core)
-[![codecov](https://codecov.io/gh/vip32/Naos.Core/branch/master/graph/badge.svg)](https://codecov.io/gh/vip32/Naos.Core)
-[![GitHub issues](https://img.shields.io/github/issues/vip32/Naos.Core.svg)](https://github.com/vip32/Naos.Core/issues)
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/vip32/Naos.Core/master/LICENSE)
+[![Build Status](https://dev.azure.com/doomsday32/Naos/_apis/build/status/vip32.Naos?branchName=develop)](https://dev.azure.com/doomsday32/Naos/_build/latest?definitionId=4)
+[![CodeFactor](https://www.codefactor.io/repository/github/vip32/Naos/badge)](https://www.codefactor.io/repository/github/vip32/Naos)
+[![codecov](https://codecov.io/gh/vip32/Naos/branch/master/graph/badge.svg)](https://codecov.io/gh/vip32/Naos)
+[![GitHub issues](https://img.shields.io/github/issues/vip32/Naos.svg)](https://github.com/vip32/Naos/issues)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/vip32/Naos/master/LICENSE)
 
 ![logo](docs/logo5.png)
 
@@ -525,7 +525,7 @@ GET https://localhost:5001/api/countries?q=name=Belgium&order=name&take=1
   - ValidationException handled by ClientFormatExceptionResponseHandler with ValidationProblemDetails response
   - ClientFormatException handled by FluentValidationExceptionResponseHandler with ValidationProblemDetails response
   - BadHttpRequestException handled by KestrelExceptionResponseHandler with ProblemDetails response
-- Create your own handler by implementing Naos.Core.Commands.Exceptions.Web.IExceptionResponseHandler
+- Create your own handler by implementing Naos.Commands.Exceptions.Web.IExceptionResponseHandler
 
 example http response when requesting an invalid criteria (or ordering) name:
 
@@ -533,7 +533,7 @@ example http response when requesting an invalid criteria (or ordering) name:
 GET https://localhost:5001/api/countries?q=nameX=Belgium&order=name&take=1
 {
 "errors": {},
-"type": "Naos.Core.Common.NaosClientFormatException",
+"type": "Naos.Common.NaosClientFormatException",
 "title": "A request content client format error has occurred while executing the request",
 "status": 400,
 "detail": "'nameX' is not a member of type 'Naos.Sample.Countries.Domain.Country'",

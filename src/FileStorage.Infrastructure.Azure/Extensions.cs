@@ -1,11 +1,11 @@
-﻿namespace Naos.Core.FileStorage.Infrastructure
+﻿namespace Naos.FileStorage.Infrastructure
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
     using Microsoft.WindowsAzure.Storage.Blob;
-    using Naos.Core.FileStorage.Domain;
+    using Naos.FileStorage.Domain;
     using Naos.Foundation;
 
     public static class Extensions

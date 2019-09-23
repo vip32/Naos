@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Commands.Correlation.App.Web
+﻿namespace Naos.Commands.Correlation.App.Web
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -7,9 +7,9 @@
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Microsoft.Extensions.Primitives;
-    using Naos.Core.RequestCorrelation.App;
     using Naos.Foundation;
     using Naos.Foundation.Application;
+    using Naos.RequestCorrelation.App;
 
     /// <summary>
     /// Middleware which attempts to reads / creates a Correlation ID that can then be used in logs and

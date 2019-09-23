@@ -5,10 +5,10 @@
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.ServiceDiscovery.App.Web;
-    using Naos.Core.ServiceDiscovery.App.Web.Router;
     using Naos.Foundation;
     using Naos.Foundation.Application;
+    using Naos.ServiceDiscovery.App.Web;
+    using Naos.ServiceDiscovery.App.Web.Router;
     using ProxyKit;
 
     /// <summary>

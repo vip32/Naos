@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Operations.App.Web
+﻿namespace Naos.Operations.App.Web
 {
     /// <summary>
     /// Options for operations request response logging.

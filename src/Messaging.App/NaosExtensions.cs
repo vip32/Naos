@@ -4,10 +4,10 @@
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Configuration.App;
-    using Naos.Core.Messaging;
-    using Naos.Core.Messaging.App;
-    using Naos.Core.Messaging.Domain;
+    using Naos.Configuration.App;
+    using Naos.Messaging;
+    using Naos.Messaging.App;
+    using Naos.Messaging.Domain;
 
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions

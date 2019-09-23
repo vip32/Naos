@@ -1,13 +1,13 @@
-﻿namespace Naos.Core.Commands.App.Web
+﻿namespace Naos.Commands.App.Web
 {
     using System;
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Queueing.Domain;
     using Naos.Foundation;
     using Naos.Foundation.Application;
+    using Naos.Queueing.Domain;
 
     public class CommandRequestQueueProcessor : IStartupTask
     {

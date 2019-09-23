@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.KeyValueStorage.Domain
+﻿namespace Naos.KeyValueStorage.Domain
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -6,8 +6,8 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Humanizer;
-    using Naos.Core.KeyValueStorage;
     using Naos.Foundation;
+    using Naos.KeyValueStorage;
 
     public static class Extensions
     {

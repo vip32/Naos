@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Queueing.Infrastructure.Azure
+﻿namespace Naos.Queueing.Infrastructure.Azure
 {
     using System;
     using System.Collections.Generic;
@@ -8,9 +8,9 @@
     using Microsoft.Extensions.Logging;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Queue;
-    using Naos.Core.Queueing.Domain;
     using Naos.Foundation;
     using Naos.Foundation.Domain;
+    using Naos.Queueing.Domain;
 
     public class AzureStorageQueue<TData> : BaseQueue<TData, AzureStorageQueueOptions>
         where TData : class

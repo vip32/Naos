@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Authentication.App.Web.Controllers
+﻿namespace Naos.Authentication.App.Web.Controllers
 {
     using System.Linq;
     using System.Net;

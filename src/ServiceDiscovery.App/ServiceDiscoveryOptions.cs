@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.ServiceDiscovery.App
+﻿namespace Naos.ServiceDiscovery.App
 {
     using Microsoft.Extensions.DependencyInjection;
 

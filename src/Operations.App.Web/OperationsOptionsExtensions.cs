@@ -3,8 +3,8 @@
     using System;
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
-    using Naos.Core.Operations.App;
-    using Naos.Core.Operations.App.Web;
+    using Naos.Operations.App;
+    using Naos.Operations.App.Web;
 
     [ExcludeFromCodeCoverage]
     public static class OperationsOptionsExtensions

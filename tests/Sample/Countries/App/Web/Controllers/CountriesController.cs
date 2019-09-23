@@ -4,7 +4,7 @@
     using System.Net;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
-    using Naos.Core.App.Web.Controllers;
+    using Naos.App.Web.Controllers;
     using Naos.Foundation;
     using Naos.Foundation.Application;
     using Naos.Sample.Countries.Domain;

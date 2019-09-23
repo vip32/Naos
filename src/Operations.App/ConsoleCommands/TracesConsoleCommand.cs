@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Tracing.App
+﻿namespace Naos.Tracing.App
 {
     using System.Threading.Tasks;
     using CommandLine;

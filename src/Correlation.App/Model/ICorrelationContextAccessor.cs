@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.RequestCorrelation.App
+﻿namespace Naos.RequestCorrelation.App
 {
     /// <summary>
     /// Provides access to the <see cref="CorrelationContext"/> for the current request.

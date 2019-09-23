@@ -1,12 +1,12 @@
-﻿namespace Naos.Core.ServiceDiscovery.App
+﻿namespace Naos.ServiceDiscovery.App
 {
     using System;
     using System.Linq;
     using System.Net.Http;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.ServiceDiscovery.App.Web;
     using Naos.Foundation;
+    using Naos.ServiceDiscovery.App.Web;
 
     public abstract class ServiceDiscoveryClient
     {

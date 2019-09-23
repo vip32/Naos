@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Authentication.App.Web
+﻿namespace Naos.Authentication.App.Web
 {
     using System.Collections.Generic;
     using Newtonsoft.Json;

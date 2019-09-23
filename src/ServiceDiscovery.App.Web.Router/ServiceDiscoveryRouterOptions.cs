@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.ServiceDiscovery.App.Web.Router
+﻿namespace Naos.ServiceDiscovery.App.Web.Router
 {
     using Microsoft.Extensions.DependencyInjection;
 

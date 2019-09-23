@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.Operations.App</AssemblyName>
-    <RootNamespace>Naos.Core.Operations.App</RootNamespace>
+    <AssemblyName>Naos.Operations.App</AssemblyName>
+    <RootNamespace>Naos.Operations.App</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

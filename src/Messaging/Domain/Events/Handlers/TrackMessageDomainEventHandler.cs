@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Messaging.Domain
+﻿namespace Naos.Messaging.Domain
 {
     using System.Threading;
     using System.Threading.Tasks;

@@ -1,12 +1,12 @@
-﻿namespace Naos.Core.UnitTests.Messaging.Domain.Events.Handlers
+﻿namespace Naos.UnitTests.Messaging.Domain.Events.Handlers
 {
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Messaging;
-    using Naos.Core.Messaging.Domain;
     using Naos.Foundation;
     using Naos.Foundation.Domain;
+    using Naos.Messaging;
+    using Naos.Messaging.Domain;
     using NSubstitute;
     using Xunit;
 

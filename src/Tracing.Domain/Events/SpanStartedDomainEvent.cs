@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Tracing.Domain
+﻿namespace Naos.Tracing.Domain
 {
     using Naos.Foundation.Domain;
 

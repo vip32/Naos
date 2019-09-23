@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Messaging.App.Web.Controllers
+﻿namespace Naos.Messaging.App.Web.Controllers
 {
     using System.Collections.Generic;
     using System.Net;
@@ -6,8 +6,8 @@
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Queueing.Domain;
     using Naos.Foundation;
+    using Naos.Queueing.Domain;
     using NSwag.Annotations;
 
     [Route("api/echo/queueing")]

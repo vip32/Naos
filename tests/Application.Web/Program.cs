@@ -3,7 +3,7 @@
     using System.Threading.Tasks;
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
-    using Naos.Core.Configuration.App;
+    using Naos.Configuration.App;
     using Naos.Foundation;
     using Serilog;
 

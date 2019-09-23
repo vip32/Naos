@@ -1,6 +1,6 @@
-﻿namespace Naos.Core.Messaging
+﻿namespace Naos.Messaging
 {
-    using Naos.Core.Messaging.Domain;
+    using Naos.Messaging.Domain;
 
     /// <summary>
     /// Describes the interface of the messagebus.

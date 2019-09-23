@@ -48,7 +48,7 @@
         //[Fact]
         //public async Task FindAllAsync_WithTenantExtension_Test()
         //{
-        //    // causes issues when used in mapped repos <TEntity, TDesitination>, Unable to cast object of type 'xxxDto' to type 'Naos.Core.Domain.ITenantEntity'. better use the tenant decorator for this
+        //    // causes issues when used in mapped repos <TEntity, TDesitination>, Unable to cast object of type 'xxxDto' to type 'Naos.Domain.ITenantEntity'. better use the tenant decorator for this
         //    // arrange/act
         //    var result = await this.sut.FindAllAsync(this.tenantId, default).AnyContext();
 

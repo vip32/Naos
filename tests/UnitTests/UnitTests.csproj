@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <AssemblyName>Naos.Core.UnitTests</AssemblyName>
-    <RootNamespace>Naos.Core.UnitTests</RootNamespace>
+    <AssemblyName>Naos.UnitTests</AssemblyName>
+    <RootNamespace>Naos.UnitTests</RootNamespace>
     <IsPackable>false</IsPackable>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
   </PropertyGroup>

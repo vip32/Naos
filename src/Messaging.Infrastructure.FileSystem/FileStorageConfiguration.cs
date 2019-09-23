@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Messaging.Infrastructure
+﻿namespace Naos.Messaging.Infrastructure
 {
     public class FileStorageConfiguration
     {

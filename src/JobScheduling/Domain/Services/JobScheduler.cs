@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.JobScheduling.Domain
+﻿namespace Naos.JobScheduling.Domain
 {
     using System;
     using System.Collections.Generic;
@@ -7,8 +7,8 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
+    using Naos.Tracing.Domain;
 
     public class JobScheduler : IJobScheduler
     {

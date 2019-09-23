@@ -1,9 +1,9 @@
-﻿namespace Naos.Core.Queueing.Infrastructure.Azure
+﻿namespace Naos.Queueing.Infrastructure.Azure
 {
     using System;
     using MediatR;
     using Microsoft.WindowsAzure.Storage.RetryPolicies;
-    using Naos.Core.Queueing.Domain;
+    using Naos.Queueing.Domain;
 
     public class AzureStorageQueueOptions : BaseQueueOptions
     {

@@ -1,11 +1,11 @@
-﻿namespace Naos.Core.App.Web
+﻿namespace Naos.App.Web
 {
     using System;
     using System.Collections.Generic;
     using System.Reflection;
     using Microsoft.AspNetCore.Mvc.ApplicationParts;
     using Microsoft.AspNetCore.Mvc.Controllers;
-    using Naos.Core.App.Web.Controllers;
+    using Naos.App.Web.Controllers;
     using Naos.Foundation;
 
     public class GenericRepositoryControllerFeatureProvider : IApplicationFeatureProvider<ControllerFeature>

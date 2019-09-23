@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Commands.App.Web
+﻿namespace Naos.Commands.App.Web
 {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;

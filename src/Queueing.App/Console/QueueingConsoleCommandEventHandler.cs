@@ -1,12 +1,12 @@
-﻿namespace Naos.Core.Queueing.App
+﻿namespace Naos.Queueing.App
 {
     using System.Drawing;
     using System.Threading;
     using System.Threading.Tasks;
     using MediatR;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Queueing.Domain;
     using Naos.Foundation;
+    using Naos.Queueing.Domain;
     using Console = Colorful.Console;
 
     public class QueueingConsoleCommandEventHandler : ConsoleCommandEventHandler<QueueingConsoleCommand>

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Commands.App
+﻿namespace Naos.Commands.App
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -7,8 +7,8 @@
     using EnsureThat;
     using Humanizer;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
+    using Naos.Tracing.Domain;
 
     /// <summary>
     /// A base implementation for handling application commands and ensuring all behaviors are executed with proper responses (not cancelled).

@@ -9,10 +9,10 @@
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Http;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Operations.App;
-    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
     using Naos.Foundation.Application;
+    using Naos.Operations.App;
+    using Naos.Tracing.Domain;
 
     [ExcludeFromCodeCoverage]
     public static class OperationsOptionsExtensions

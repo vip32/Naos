@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Queueing
+﻿namespace Naos.Queueing
 {
     using System;
     using System.Collections.Concurrent;
@@ -8,9 +8,9 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Queueing.Domain;
     using Naos.Foundation;
     using Naos.Foundation.Domain;
+    using Naos.Queueing.Domain;
 
     public class InMemoryQueue<TData> : BaseQueue<TData, InMemoryQueueOptions>
         where TData : class

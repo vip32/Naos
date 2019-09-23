@@ -1,11 +1,11 @@
-﻿namespace Naos.Core.UnitTests.FileStorage.Infrastructure
+﻿namespace Naos.UnitTests.FileStorage.Infrastructure
 {
     using System.Linq;
     using System.Reflection;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.FileStorage.Domain;
-    using Naos.Core.FileStorage.Infrastructure;
+    using Naos.FileStorage.Domain;
+    using Naos.FileStorage.Infrastructure;
     using Naos.Foundation;
     using NSubstitute;
     using Xunit;
@@ -23,7 +23,7 @@
 
             using (storage)
             {
-                var fileInfo = await storage.GetFileInformationAsync(@"Naos\Core\UnitTests/FileStorage\StubFile.txt").AnyContext();
+                var fileInfo = await storage.GetFileInformationAsync(@"Naos\UnitTests/FileStorage\StubFile.txt").AnyContext();
                 Assert.NotNull(fileInfo);
                 Assert.True(fileInfo.ContentType == ContentType.TEXT);
             }
@@ -40,7 +40,7 @@
 
             using (storage)
             {
-                var fileInfo = await storage.GetFileInformationAsync(@"Naos\Core\UnitTests/FileStorage\StubFile.json").AnyContext();
+                var fileInfo = await storage.GetFileInformationAsync(@"Naos\UnitTests/FileStorage\StubFile.json").AnyContext();
                 Assert.NotNull(fileInfo);
                 Assert.True(fileInfo.ContentType == ContentType.JSON);
             }
@@ -57,7 +57,7 @@
 
             using (storage)
             {
-                var fileInfo = await storage.GetFileInformationAsync(@"Naos\Core\UnitTests\FileStorage\DoesNotExist.txt").AnyContext();
+                var fileInfo = await storage.GetFileInformationAsync(@"Naos\UnitTests\FileStorage\DoesNotExist.txt").AnyContext();
                 Assert.Null(fileInfo);
             }
         }
@@ -109,7 +109,7 @@
 
             using (storage)
             {
-                var stream = await storage.GetFileStreamAsync(@"Naos\Core\UnitTests\FileStorage\StubFile.txt").AnyContext();
+                var stream = await storage.GetFileStreamAsync(@"Naos\UnitTests\FileStorage\StubFile.txt").AnyContext();
                 Assert.NotNull(stream);
                 Assert.True(stream.Length > 0);
             }
@@ -126,7 +126,7 @@
 
             using (storage)
             {
-                var stream = await storage.GetFileStreamAsync(@"Naos\Core\UnitTests\FileStorage\DoesNotExist.txt").AnyContext();
+                var stream = await storage.GetFileStreamAsync(@"Naos\UnitTests\FileStorage\DoesNotExist.txt").AnyContext();
                 Assert.Null(stream);
             }
         }

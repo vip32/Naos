@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.KeyValueStorage.Domain
+﻿namespace Naos.KeyValueStorage.Domain
 {
     using System;
     using System.Diagnostics;

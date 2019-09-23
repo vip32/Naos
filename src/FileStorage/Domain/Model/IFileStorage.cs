@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.FileStorage.Domain
+﻿namespace Naos.FileStorage.Domain
 {
     using System.IO;
     using System.Threading;

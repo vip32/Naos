@@ -1,12 +1,12 @@
-﻿namespace Naos.Core.Operations.App
+﻿namespace Naos.Operations.App
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Operations.Domain;
-    using Naos.Core.RequestFiltering.App;
     using Naos.Foundation;
+    using Naos.Operations.Domain;
+    using Naos.RequestFiltering.App;
 
     public static class LoggingFilterContext
     {

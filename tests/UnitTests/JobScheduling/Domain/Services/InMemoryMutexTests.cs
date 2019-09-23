@@ -1,7 +1,7 @@
-﻿namespace Naos.Core.UnitTests.JobScheduling.Domain.Model
+﻿namespace Naos.UnitTests.JobScheduling.Domain.Model
 {
     using Microsoft.Extensions.Logging;
-    using Naos.Core.JobScheduling.Domain;
+    using Naos.JobScheduling.Domain;
     using NSubstitute;
     using Shouldly;
     using Xunit;

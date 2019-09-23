@@ -1,14 +1,14 @@
-﻿namespace Naos.Core.Tracing.App
+﻿namespace Naos.Tracing.App
 {
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Humanizer;
-    using Naos.Core.Operations.App;
-    using Naos.Core.RequestFiltering.App;
-    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
     using Naos.Foundation.Domain;
+    using Naos.Operations.App;
+    using Naos.RequestFiltering.App;
+    using Naos.Tracing.Domain;
 
     public class TracesConsoleCommandEventHandler : ConsoleCommandEventHandler<TracesConsoleCommand>
     {

@@ -7,7 +7,7 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Tracing.Domain;
+    using Naos.Tracing.Domain;
 
     public class HttpClientTracerHandler : DelegatingHandler
     {

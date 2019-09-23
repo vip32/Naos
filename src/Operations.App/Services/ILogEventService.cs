@@ -1,7 +1,7 @@
-﻿namespace Naos.Core.Operations.App
+﻿namespace Naos.Operations.App
 {
     //using System.Collections.Generic;
-    //using Naos.Core.RequestFiltering.App;
+    //using Naos.RequestFiltering.App;
 
     public interface ILogEventService
     {

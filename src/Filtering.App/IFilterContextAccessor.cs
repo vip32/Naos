@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.RequestFiltering.App
+﻿namespace Naos.RequestFiltering.App
 {
     /// <summary>
     /// Provides access to the <see cref="FilterContext"/> for the current request.

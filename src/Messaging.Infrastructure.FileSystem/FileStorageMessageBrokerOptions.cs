@@ -1,11 +1,11 @@
-﻿namespace Naos.Core.Messaging.Infrastructure
+﻿namespace Naos.Messaging.Infrastructure
 {
     using System.IO;
     using MediatR;
-    using Naos.Core.FileStorage.Domain;
-    using Naos.Core.Messaging.Domain;
-    using Naos.Core.Tracing.Domain;
+    using Naos.FileStorage.Domain;
     using Naos.Foundation;
+    using Naos.Messaging.Domain;
+    using Naos.Tracing.Domain;
 
     public class FileStorageMessageBrokerOptions : BaseOptions
     {

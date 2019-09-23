@@ -1,10 +1,10 @@
-﻿namespace Naos.Core.Messaging
+﻿namespace Naos.Messaging
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Naos.Core.Messaging.Domain;
     using Naos.Foundation;
+    using Naos.Messaging.Domain;
 
     public class SubscriptionMap : ISubscriptionMap
     {

@@ -1,8 +1,8 @@
-﻿namespace Naos.Core.Queueing
+﻿namespace Naos.Queueing
 {
     using System;
     using MediatR;
-    using Naos.Core.Queueing.Domain;
+    using Naos.Queueing.Domain;
 
     public class InMemoryQueueOptions : BaseQueueOptions
     {

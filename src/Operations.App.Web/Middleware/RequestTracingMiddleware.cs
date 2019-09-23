@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Operations.App.Web
+﻿namespace Naos.Operations.App.Web
 {
     using System;
     using System.Threading.Tasks;
@@ -9,9 +9,9 @@
     using Microsoft.AspNetCore.WebUtilities;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
-    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
     using Naos.Foundation.Application;
+    using Naos.Tracing.Domain;
 
     public class RequestTracingMiddleware
     {

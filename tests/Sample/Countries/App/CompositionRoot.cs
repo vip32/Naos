@@ -5,11 +5,11 @@
     using EnsureThat;
     using MediatR;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
     using Naos.Foundation.Domain;
     using Naos.Sample.Countries.Domain;
     using Naos.Sample.Countries.Infrastructure;
+    using Naos.Tracing.Domain;
 
     [ExcludeFromCodeCoverage]
     public static partial class CompositionRoot

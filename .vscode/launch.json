@@ -9,7 +9,7 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "${workspaceFolder}/tests/Sample.Messaging.App.Console/bin/Debug/netcoreapp2.2/Naos.Core.Sample.Messaging.App.Console.dll",
+      "program": "${workspaceFolder}/tests/Sample.Messaging.App.Console/bin/Debug/netcoreapp2.2/Naos.Sample.Messaging.App.Console.dll",
       "args": [],
       "cwd": "${workspaceFolder}",
       "console": "internalConsole",

@@ -1,7 +1,7 @@
 ﻿namespace Naos.Sample.Customers.App
 {
     using FluentValidation.Results;
-    using Naos.Core.Commands.App;
+    using Naos.Commands.App;
     using Naos.Sample.Customers.Domain;
 
     public class CreateCustomerCommand : Command<object>

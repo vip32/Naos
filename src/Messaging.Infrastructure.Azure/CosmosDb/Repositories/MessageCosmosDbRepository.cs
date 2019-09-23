@@ -1,8 +1,8 @@
-﻿//namespace Naos.Core.Messaging.Infrastructure.Azure
+﻿//namespace Naos.Messaging.Infrastructure.Azure
 //{
 //    using Domain.Model;
 //    using MediatR;
-//    using Naos.Core.Infrastructure.Azure.CosmosDb;
+//    using Naos.Infrastructure.Azure.CosmosDb;
 
 //    public class MessageCosmosDbRepository : CosmosDbSqlRepository<Message>
 //    {

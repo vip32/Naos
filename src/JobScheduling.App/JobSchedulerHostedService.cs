@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.JobScheduling.App
+﻿namespace Naos.JobScheduling.App
 {
     using System;
     using System.Threading;
@@ -6,8 +6,8 @@
     using EnsureThat;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.JobScheduling.Domain;
     using Naos.Foundation;
+    using Naos.JobScheduling.Domain;
 
     public class JobSchedulerHostedService : IHostedService, IDisposable // TODO: or use BackgroundService? https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/multi-container-microservice-net-applications/background-tasks-with-ihostedservice#implementing-ihostedservice-with-a-custom-hosted-service-class-deriving-from-the-backgroundservice-base-class
     {

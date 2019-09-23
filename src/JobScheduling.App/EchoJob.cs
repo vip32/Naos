@@ -1,11 +1,11 @@
-﻿namespace Naos.Core.JobScheduling.App
+﻿namespace Naos.JobScheduling.App
 {
     using System;
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
-    //using Naos.Core.Tracing.Domain;
+    //using Naos.Tracing.Domain;
     using Naos.Foundation;
 
     public class EchoJob

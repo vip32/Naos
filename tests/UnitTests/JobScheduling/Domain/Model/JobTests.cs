@@ -1,10 +1,10 @@
-﻿namespace Naos.Core.UnitTests.JobScheduling.Domain
+﻿namespace Naos.UnitTests.JobScheduling.Domain
 {
     using System;
     using System.Threading;
     using System.Threading.Tasks;
-    using Naos.Core.JobScheduling.Domain;
     using Naos.Foundation;
+    using Naos.JobScheduling.Domain;
     using Shouldly;
     using Xunit;
 

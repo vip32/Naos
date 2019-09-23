@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.JobScheduling.App
+﻿namespace Naos.JobScheduling.App
 {
     using Microsoft.Extensions.DependencyInjection;
 

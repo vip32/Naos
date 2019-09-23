@@ -1,10 +1,10 @@
-﻿namespace Naos.Core.Messaging.Infrastructure.Azure
+﻿namespace Naos.Messaging.Infrastructure.Azure
 {
     using System.Net.Http;
     using MediatR;
-    using Naos.Core.Messaging.Domain;
-    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
+    using Naos.Messaging.Domain;
+    using Naos.Tracing.Domain;
 
     public class SignalRServerlessMessageBrokerOptionsBuilder :
         BaseOptionsBuilder<SignalRServerlessMessageBrokerOptions, SignalRServerlessMessageBrokerOptionsBuilder>

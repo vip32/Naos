@@ -1,10 +1,10 @@
-﻿namespace Naos.Core.FileStorage
+﻿namespace Naos.FileStorage
 {
     using System;
     using EnsureThat;
     using Microsoft.Extensions.FileProviders;
     using Microsoft.Extensions.Primitives;
-    using Naos.Core.FileStorage.Domain;
+    using Naos.FileStorage.Domain;
 
     public class FileStorageProvider : IFileProvider, IDisposable
     {

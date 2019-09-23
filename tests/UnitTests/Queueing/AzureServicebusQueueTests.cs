@@ -1,13 +1,13 @@
-﻿namespace Naos.Core.UnitTests.Queueing
+﻿namespace Naos.UnitTests.Queueing
 {
     using System;
     using System.Threading.Tasks;
     using MediatR;
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Queueing.Domain;
-    using Naos.Core.Queueing.Infrastructure.Azure;
     using Naos.Foundation;
+    using Naos.Queueing.Domain;
+    using Naos.Queueing.Infrastructure.Azure;
     using NSubstitute;
     using Xunit;
 

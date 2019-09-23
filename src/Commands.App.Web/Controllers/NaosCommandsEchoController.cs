@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Commands.App.Web.Controllers
+﻿namespace Naos.Commands.App.Web.Controllers
 {
     using System.Collections.Generic;
     using System.Net;

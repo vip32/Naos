@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.FileStorage.Csv</AssemblyName>
-    <RootNamespace>Naos.Core.FileStorage.Csv</RootNamespace>
+    <AssemblyName>Naos.FileStorage.Csv</AssemblyName>
+    <RootNamespace>Naos.FileStorage.Csv</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

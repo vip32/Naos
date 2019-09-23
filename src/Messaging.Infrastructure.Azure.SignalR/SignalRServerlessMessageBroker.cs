@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Messaging.Infrastructure.Azure
+﻿namespace Naos.Messaging.Infrastructure.Azure
 {
     using System;
     using System.Collections.Generic;
@@ -10,9 +10,9 @@
     using EnsureThat;
     using Microsoft.AspNetCore.SignalR.Client;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Messaging.Domain;
-    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
+    using Naos.Messaging.Domain;
+    using Naos.Tracing.Domain;
     using Newtonsoft.Json;
 
     public class SignalRServerlessMessageBroker : IMessageBroker, IDisposable

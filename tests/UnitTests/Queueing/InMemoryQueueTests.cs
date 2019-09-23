@@ -1,12 +1,12 @@
-﻿namespace Naos.Core.UnitTests.Queueing
+﻿namespace Naos.UnitTests.Queueing
 {
     using System;
     using System.Threading.Tasks;
     using MediatR;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Queueing;
-    using Naos.Core.Queueing.Domain;
     using Naos.Foundation;
+    using Naos.Queueing;
+    using Naos.Queueing.Domain;
     using NSubstitute;
     using Xunit;
 

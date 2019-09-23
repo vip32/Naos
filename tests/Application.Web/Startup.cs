@@ -16,15 +16,15 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.App.Web;
-    using Naos.Core.Commands.App;
-    using Naos.Core.Commands.Infrastructure.FileStorage;
-    using Naos.Core.Configuration.App;
-    using Naos.Core.FileStorage.Infrastructure;
-    using Naos.Core.JobScheduling.App;
-    using Naos.Core.JobScheduling.Domain;
-    using Naos.Core.Messaging.Domain;
+    using Naos.App.Web;
+    using Naos.Commands.App;
+    using Naos.Commands.Infrastructure.FileStorage;
+    using Naos.Configuration.App;
+    using Naos.FileStorage.Infrastructure;
     using Naos.Foundation;
+    using Naos.JobScheduling.App;
+    using Naos.JobScheduling.Domain;
+    using Naos.Messaging.Domain;
     using Naos.Sample.Customers.App;
     using Newtonsoft.Json;
     using NSwag.Generation.Processors;
@@ -87,7 +87,7 @@
                         {
                             Name = "Naos",
                             Email = string.Empty,
-                            Url = "https://github.com/vip32/Naos.Core"
+                            Url = "https://github.com/vip32/Naos"
                         };
                     };
                     if (true) // option.includeSecurityHeader

@@ -5,10 +5,10 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Http;
-    using Naos.Core.Configuration.App;
-    using Naos.Core.RequestCorrelation.App.Web;
+    using Naos.Configuration.App;
     using Naos.Foundation;
     using Naos.Foundation.Application;
+    using Naos.RequestCorrelation.App.Web;
     using Shouldly;
     using Xunit;
 

@@ -182,7 +182,7 @@ namespace Naos.Foundation.UnitTests.Domain
         }
 
         //[Fact]
-        //public async Task FindMappedEntitiesWithIdSpecification_Test() // fails due to HasIdSpecification (Unable to cast object of type 'StubDto' to type 'Naos.Core.Domain.IEntity'.
+        //public async Task FindMappedEntitiesWithIdSpecification_Test() // fails due to HasIdSpecification (Unable to cast object of type 'StubDto' to type 'Naos.Domain.IEntity'.
         //{
         //    // arrange
         //    var mediator = Substitute.For<IMediator>();

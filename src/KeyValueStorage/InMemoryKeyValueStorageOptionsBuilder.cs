@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.KeyValueStorage
+﻿namespace Naos.KeyValueStorage
 {
     using Naos.Foundation;
 

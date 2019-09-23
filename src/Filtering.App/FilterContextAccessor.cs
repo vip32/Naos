@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.RequestFiltering.App
+﻿namespace Naos.RequestFiltering.App
 {
     using System.Threading;
 

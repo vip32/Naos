@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Messaging.Infrastructure.Azure
+﻿namespace Naos.Messaging.Infrastructure.Azure
 {
     using System;
     using System.Collections.Generic;

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.ServiceContext.App.Web.Controllers
+﻿namespace Naos.ServiceContext.App.Web.Controllers
 {
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -9,7 +9,7 @@
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Configuration.App;
+    using Naos.Configuration.App;
     using Naos.Foundation;
     using Naos.Foundation.Application;
     using NSwag.Annotations;

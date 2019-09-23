@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.ServiceDiscovery.App.Web.Controllers
+﻿namespace Naos.ServiceDiscovery.App.Web.Controllers
 {
     using System.Collections.Generic;
     using System.Net;
@@ -6,8 +6,8 @@
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.ServiceDiscovery.App.Web.Router;
     using Naos.Foundation;
+    using Naos.ServiceDiscovery.App.Web.Router;
     using NSwag.Annotations;
 
     [Route("api/echo/servicediscovery/router")]

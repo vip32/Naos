@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.JobScheduling.Domain
+﻿namespace Naos.JobScheduling.Domain
 {
     using System.Threading;
     using System.Threading.Tasks;

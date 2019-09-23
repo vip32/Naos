@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Authentication.App.Web
+﻿namespace Naos.Authentication.App.Web
 {
     public struct EasyAuthProviders // https://docs.microsoft.com/en-us/azure/app-service/app-service-authentication-how-to?WT.mc_id=easyauth-github-marouill
     {

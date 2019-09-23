@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Commands.App.Web
+﻿namespace Naos.Commands.App.Web
 {
     using System;
     using System.Collections.Generic;
@@ -9,7 +9,7 @@
     using Microsoft.AspNetCore.WebUtilities;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
-    using Naos.Core.Commands.App;
+    using Naos.Commands.App;
     using Naos.Foundation;
     using Naos.Foundation.Application;
 

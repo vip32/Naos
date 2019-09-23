@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Tracing.Domain
+﻿namespace Naos.Tracing.Domain
 {
     /// <summary>
     /// Standard log keys https://github.com/opentracing/specification/blob/master/semantic_conventions.md#log-fields-table

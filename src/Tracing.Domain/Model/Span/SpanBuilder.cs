@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Tracing.Domain
+﻿namespace Naos.Tracing.Domain
 {
     using EnsureThat;
     using Microsoft.Extensions.Logging;

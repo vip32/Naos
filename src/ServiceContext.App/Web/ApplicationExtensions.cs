@@ -4,8 +4,8 @@
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Options;
-    using Naos.Core.ServiceContext.App.Web;
     using Naos.Foundation;
+    using Naos.ServiceContext.App.Web;
 
     /// <summary>
     /// Extension methods for the correlation middleware.

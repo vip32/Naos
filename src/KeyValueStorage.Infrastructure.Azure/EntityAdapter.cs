@@ -1,14 +1,14 @@
-﻿namespace Naos.Core.KeyValueStorage.Infrastructure.Azure
+﻿namespace Naos.KeyValueStorage.Infrastructure.Azure
 {
     using System;
     using System.Collections.Generic;
     using System.Net;
     using EnsureThat;
     using Microsoft.Azure.Cosmos.Table;
+    using Naos.Foundation;
     //using Microsoft.WindowsAzure.Storage;
     //using Microsoft.WindowsAzure.Storage.Table;
-    using Naos.Core.KeyValueStorage.Domain;
-    using Naos.Foundation;
+    using Naos.KeyValueStorage.Domain;
 
     public class EntityAdapter : ITableEntity
     {

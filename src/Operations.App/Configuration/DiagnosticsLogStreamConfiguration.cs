@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Operations.App
+﻿namespace Naos.Operations.App
 {
     public class DiagnosticsLogStreamConfiguration : LogFileConfiguration
     {

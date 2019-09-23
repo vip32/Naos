@@ -1,11 +1,11 @@
-﻿namespace Naos.Core.ServiceDiscovery.App
+﻿namespace Naos.ServiceDiscovery.App
 {
     using System.Collections.Generic;
     using System.IO;
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.FileStorage.Domain;
+    using Naos.FileStorage.Domain;
     using Naos.Foundation;
     using Newtonsoft.Json;
 

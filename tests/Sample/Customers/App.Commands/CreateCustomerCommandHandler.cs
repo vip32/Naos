@@ -5,10 +5,10 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Commands.App;
-    using Naos.Core.Tracing.Domain;
+    using Naos.Commands.App;
     using Naos.Foundation;
     using Naos.Sample.Customers.Domain;
+    using Naos.Tracing.Domain;
 
     public class CreateCustomerCommandHandler : BaseCommandHandler<CreateCustomerCommand, object>
     {

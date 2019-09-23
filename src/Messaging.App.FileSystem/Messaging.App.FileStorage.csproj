@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.Messaging.App.FileStorage</AssemblyName>
-    <RootNamespace>Naos.Core.Messaging.App.FileStorage</RootNamespace>
+    <AssemblyName>Naos.Messaging.App.FileStorage</AssemblyName>
+    <RootNamespace>Naos.Messaging.App.FileStorage</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

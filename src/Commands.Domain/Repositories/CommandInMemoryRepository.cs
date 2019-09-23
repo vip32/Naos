@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Commands.Domain
+﻿namespace Naos.Commands.Domain
 {
     using Naos.Foundation;
     using Naos.Foundation.Domain;

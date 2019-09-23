@@ -10,15 +10,15 @@
     using MediatR;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Commands.App;
-    using Naos.Core.Commands.App.Web;
-    using Naos.Core.FileStorage;
-    using Naos.Core.FileStorage.Domain;
-    using Naos.Core.FileStorage.Infrastructure;
-    using Naos.Core.Queueing;
-    using Naos.Core.Queueing.Domain;
-    using Naos.Core.Queueing.Infrastructure.Azure;
+    using Naos.Commands.App;
+    using Naos.Commands.App.Web;
+    using Naos.FileStorage;
+    using Naos.FileStorage.Domain;
+    using Naos.FileStorage.Infrastructure;
     using Naos.Foundation;
+    using Naos.Queueing;
+    using Naos.Queueing.Domain;
+    using Naos.Queueing.Infrastructure.Azure;
 
     [ExcludeFromCodeCoverage]
     public static class CommandRequestOptionsExtensions

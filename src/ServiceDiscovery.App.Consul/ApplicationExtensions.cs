@@ -10,7 +10,7 @@
 //    using Microsoft.Extensions.Configuration;
 //    using Microsoft.Extensions.DependencyInjection;
 //    using Naos.Foundation;
-//    using Naos.Core.ServiceDiscovery.App;
+//    using Naos.ServiceDiscovery.App;
 
 //    /// <summary>
 //    /// Extension methods for the correlation middleware.

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.ServiceDiscovery.App
+﻿namespace Naos.ServiceDiscovery.App
 {
     using System;
     using System.Collections.Generic;

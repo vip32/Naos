@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Commands.App
+﻿namespace Naos.Commands.App
 {
     using System.Linq;
     using System.Threading.Tasks;

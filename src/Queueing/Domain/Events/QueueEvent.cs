@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Queueing.Domain
+﻿namespace Naos.Queueing.Domain
 {
     using System;
     using MediatR;

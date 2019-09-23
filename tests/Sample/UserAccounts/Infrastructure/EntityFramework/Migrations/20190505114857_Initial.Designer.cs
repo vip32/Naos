@@ -45,7 +45,7 @@ namespace Naos.Sample.UserAccounts.Infrastructure.EntityFramework.Migrations
 
             modelBuilder.Entity("Naos.Sample.UserAccounts.Domain.UserAccount", b =>
                 {
-                    b.OwnsOne("Naos.Core.Domain.State", "State", b1 =>
+                    b.OwnsOne("Naos.Domain.State", "State", b1 =>
                         {
                             b1.Property<Guid>("UserAccountId");
 
@@ -101,7 +101,7 @@ namespace Naos.Sample.UserAccounts.Infrastructure.EntityFramework.Migrations
 
                             b1.HasOne("Naos.Sample.UserAccounts.Domain.UserAccount")
                                 .WithOne("State")
-                                .HasForeignKey("Naos.Core.Domain.State", "UserAccountId")
+                                .HasForeignKey("Naos.Domain.State", "UserAccountId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
 

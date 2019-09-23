@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.Authentication.App.Web</AssemblyName>
-    <RootNamespace>Naos.Core.Authentication.App.Web</RootNamespace>
+    <AssemblyName>Naos.Authentication.App.Web</AssemblyName>
+    <RootNamespace>Naos.Authentication.App.Web</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

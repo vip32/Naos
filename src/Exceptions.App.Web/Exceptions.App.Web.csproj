@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.App.Exceptions.Web</AssemblyName>
-    <RootNamespace>Naos.Core.App.Exceptions.Web</RootNamespace>
+    <AssemblyName>Naos.App.Exceptions.Web</AssemblyName>
+    <RootNamespace>Naos.App.Exceptions.Web</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

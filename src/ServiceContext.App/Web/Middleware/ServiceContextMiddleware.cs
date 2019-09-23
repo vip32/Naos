@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.ServiceContext.App.Web
+﻿namespace Naos.ServiceContext.App.Web
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -6,7 +6,7 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
-    using Naos.Core.Configuration.App;
+    using Naos.Configuration.App;
     using Naos.Foundation;
     using Naos.Foundation.Application;
 

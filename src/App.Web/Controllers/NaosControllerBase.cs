@@ -1,11 +1,11 @@
-﻿namespace Naos.Core.App.Web.Controllers
+﻿namespace Naos.App.Web.Controllers
 {
     using MediatR;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.RequestCorrelation.App;
-    using Naos.Core.RequestFiltering.App;
+    using Naos.RequestCorrelation.App;
+    using Naos.RequestFiltering.App;
 
     [Route("api/[controller]")]
     [ApiController]

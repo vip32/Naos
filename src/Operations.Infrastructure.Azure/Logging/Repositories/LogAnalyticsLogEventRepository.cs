@@ -1,11 +1,11 @@
-﻿namespace Naos.Core.Operations.Infrastructure.Azure
+﻿namespace Naos.Operations.Infrastructure.Azure
 {
     using System.Collections.Generic;
     using System.Net.Http;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Operations.Domain;
     using Naos.Foundation.Infrastructure;
     using Naos.Foundation.Infrastructure.Azure;
+    using Naos.Operations.Domain;
 
     public class LogAnalyticsLogEventRepository : LogAnalyticsRepository<LogEvent>, ILogEventRepository
     {

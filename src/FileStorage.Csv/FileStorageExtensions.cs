@@ -1,11 +1,11 @@
-﻿namespace Naos.Core.FileStorage.Csv.Domain
+﻿namespace Naos.FileStorage.Csv.Domain
 {
     using System.Collections.Generic;
     using System.Globalization;
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
-    using Naos.Core.FileStorage.Domain;
+    using Naos.FileStorage.Domain;
     using Naos.Foundation;
 
     public static class FileStorageExtensions

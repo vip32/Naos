@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.ServiceContext.App.Web.Controllers
+﻿namespace Naos.ServiceContext.App.Web.Controllers
 {
     using System.Net;
     using EnsureThat;

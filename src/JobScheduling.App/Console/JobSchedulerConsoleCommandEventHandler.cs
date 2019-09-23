@@ -1,11 +1,11 @@
-﻿namespace Naos.Core.JobScheduling.App.Console
+﻿namespace Naos.JobScheduling.App.Console
 {
     using System.Drawing;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.JobScheduling.Domain;
     using Naos.Foundation;
+    using Naos.JobScheduling.Domain;
     using Console = Colorful.Console;
 
     public class JobSchedulerConsoleCommandEventHandler : ConsoleCommandEventHandler<JobSchedulerConsoleCommand>

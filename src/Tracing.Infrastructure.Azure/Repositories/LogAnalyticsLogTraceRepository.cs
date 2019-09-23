@@ -1,11 +1,11 @@
-﻿namespace Naos.Core.Tracing.Infrastructure.Azure
+﻿namespace Naos.Tracing.Infrastructure.Azure
 {
     using System.Net.Http;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
     using Naos.Foundation.Infrastructure;
     using Naos.Foundation.Infrastructure.Azure;
+    using Naos.Tracing.Domain;
 
     public class LogAnalyticsLogTraceRepository : LogAnalyticsRepository<LogTrace>, ILogTraceRepository
     {

@@ -4,7 +4,7 @@
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Options;
-    using Naos.Core.Commands.App.Web;
+    using Naos.Commands.App.Web;
     using Naos.Foundation;
 
     /// <summary>

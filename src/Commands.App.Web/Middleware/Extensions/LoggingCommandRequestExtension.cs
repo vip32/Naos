@@ -1,11 +1,11 @@
-﻿namespace Naos.Core.Commands.App.Web
+﻿namespace Naos.Commands.App.Web
 {
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
+    using Naos.Tracing.Domain;
 
     public class LoggingCommandRequestExtension : CommandRequestExtension
     {

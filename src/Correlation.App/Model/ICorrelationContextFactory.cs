@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.RequestCorrelation.App
+﻿namespace Naos.RequestCorrelation.App
 {
     /// <summary>
     /// A factory for creating and disposing an instance of a <see cref="CorrelationContext"/>.

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Commands.App.Web
+﻿namespace Naos.Commands.App.Web
 {
     using System;
     using System.Collections.Generic;
@@ -8,8 +8,8 @@
     using MediatR;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Queueing.Domain;
     using Naos.Foundation;
+    using Naos.Queueing.Domain;
     using Newtonsoft.Json.Linq;
 
     public class CommandRequestQueueEventHandler : QueueEventHandler<CommandRequestWrapper>

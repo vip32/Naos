@@ -1,10 +1,10 @@
-﻿namespace Naos.Core.RequestFiltering.App.Web.Controllers
+﻿namespace Naos.RequestFiltering.App.Web.Controllers
 {
     using System.Net;
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.RequestFiltering.App;
+    using Naos.RequestFiltering.App;
     using NSwag.Annotations;
 
     [Route("api/echo/requestfiltering")]

@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.Messaging.App.Azure</AssemblyName>
-    <RootNamespace>Naos.Core.Messaging.App.Azure</RootNamespace>
+    <AssemblyName>Naos.Messaging.App.Azure</AssemblyName>
+    <RootNamespace>Naos.Messaging.App.Azure</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

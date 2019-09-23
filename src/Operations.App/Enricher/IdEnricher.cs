@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Operations.App
+﻿namespace Naos.Operations.App
 {
     using global::Serilog.Core;
     using global::Serilog.Events;

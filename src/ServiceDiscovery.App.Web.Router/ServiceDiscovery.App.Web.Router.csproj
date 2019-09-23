@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.ServiceDiscovery.App.Web.Router</AssemblyName>
-    <RootNamespace>Naos.Core.ServiceDiscovery.App.Web.Router</RootNamespace>
+    <AssemblyName>Naos.ServiceDiscovery.App.Web.Router</AssemblyName>
+    <RootNamespace>Naos.ServiceDiscovery.App.Web.Router</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

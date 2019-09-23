@@ -1,11 +1,11 @@
-﻿namespace Naos.Core.KeyValueStorage
+﻿namespace Naos.KeyValueStorage
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.KeyValueStorage.Domain;
     using Naos.Foundation;
+    using Naos.KeyValueStorage.Domain;
 
     public class InMemoryKeyValueStorage : IKeyValueStorage
     {

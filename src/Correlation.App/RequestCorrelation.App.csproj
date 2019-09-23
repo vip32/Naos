@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.RequestCorrelation.App</AssemblyName>
-    <RootNamespace>Naos.Core.RequestCorrelation.App</RootNamespace>
+    <AssemblyName>Naos.RequestCorrelation.App</AssemblyName>
+    <RootNamespace>Naos.RequestCorrelation.App</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

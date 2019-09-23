@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Authentication.App.Web
+﻿namespace Naos.Authentication.App.Web
 {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Authentication;

@@ -7,13 +7,13 @@
     using Microsoft.EntityFrameworkCore.Diagnostics;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
     using Naos.Foundation.Application;
     using Naos.Foundation.Domain;
     using Naos.Foundation.Infrastructure;
     using Naos.Sample.UserAccounts.Domain;
     using Naos.Sample.UserAccounts.Infrastructure.EntityFramework;
+    using Naos.Tracing.Domain;
 
     /// <summary>
     /// Naos service extensions.

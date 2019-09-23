@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Commands.App
+﻿namespace Naos.Commands.App
 {
     public class EchoCommandResponse
     {

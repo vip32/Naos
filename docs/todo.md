@@ -190,7 +190,7 @@ http://gigi.nullneuron.net/gigilabs/abstracting-rabbitmq-rpc-with-taskcompletion
 https://github.com/OctopusDeploy/Halibut
 https://github.com/Cysharp/MagicOnion
 
-code coverage https://github.com/tonerdo/coverlet + https://codecov.io/gh/vip32/Naos.Core
+code coverage https://github.com/tonerdo/coverlet + https://codecov.io/gh/vip32/Naos
 api problem details https://www.strathweb.com/2018/07/centralized-exception-handling-and-request-validation-in-asp-net-core/
 performance test websurge https://github.com/edjCase/JsonRpc/blob/master/test/PerformanceTests/BasicTests.websurge
 miniprofiler https://miniprofiler.com/dotnet/
@@ -302,26 +302,26 @@ Journaling.Infrastructure.Azure.CosmosDb
 
 projects:
 
-- Naos.Core.App (servicedescriptor, servicecontext)
-- Naos.Core.App.Web (host/webservicecontextbuilder)
-- Naos.Core.App.Console (host)
+- Naos.App (servicedescriptor, servicecontext)
+- Naos.App.Web (host/webservicecontextbuilder)
+- Naos.App.Console (host)
 
-- Naos.Core.Common (json/hashhelper)
-- Naos.Core.Common.Extensions
-- Naos.Core.Common.Web
-- Naos.Core.Common.Web.Extensions
-- Naos.Core.Domain (model/repo/specs/services)
-- Naos.Core.Infrastructure.azure.cosmosdb (repo for documents/sql)
-- Naos.Core.Infrastructure.azure.sqlserver (repo for ef core)
+- Naos.Common (json/hashhelper)
+- Naos.Common.Extensions
+- Naos.Common.Web
+- Naos.Common.Web.Extensions
+- Naos.Domain (model/repo/specs/services)
+- Naos.Infrastructure.azure.cosmosdb (repo for documents/sql)
+- Naos.Infrastructure.azure.sqlserver (repo for ef core)
 
-- Naos.Core.App.Messaging (model/repo/imessagebroker/message+handler)
-- Naos.Core.App.Messaging.Infrastructure.Azure.Servicebus (messagebroker)
-- Naos.Core.App.Messaging.Infrastructure.RabbitMQ (messagebroker)
-- Naos.Core.App.Messaging.Infrastructure.Azure.Cosmosdb
+- Naos.App.Messaging (model/repo/imessagebroker/message+handler)
+- Naos.App.Messaging.Infrastructure.Azure.Servicebus (messagebroker)
+- Naos.App.Messaging.Infrastructure.RabbitMQ (messagebroker)
+- Naos.App.Messaging.Infrastructure.Azure.Cosmosdb
 
-- Naos.Core.App.Queries/Commands
-- Naos.Core.App.Cqs (commands+behaviors/queries)
-- Naos.Core.App.Cqs.Infrastructure.Azure.Cosmosdb (command repo)
+- Naos.App.Queries/Commands
+- Naos.App.Cqs (commands+behaviors/queries)
+- Naos.App.Cqs.Infrastructure.Azure.Cosmosdb (command repo)
 
 naos-shop-app
 

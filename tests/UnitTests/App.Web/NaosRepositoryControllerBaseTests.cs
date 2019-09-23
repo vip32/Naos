@@ -1,10 +1,10 @@
-﻿namespace Naos.Core.UnitTests.App.Web
+﻿namespace Naos.UnitTests.App.Web
 {
     using System;
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
-    using Naos.Core.App.Web.Controllers;
+    using Naos.App.Web.Controllers;
     using Naos.Foundation.Domain;
     using Shouldly;
     using Xunit;

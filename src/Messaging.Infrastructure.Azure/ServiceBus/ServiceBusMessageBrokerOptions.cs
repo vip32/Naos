@@ -1,11 +1,11 @@
-﻿namespace Naos.Core.Messaging.Infrastructure.Azure
+﻿namespace Naos.Messaging.Infrastructure.Azure
 {
     using MediatR;
     using Microsoft.Azure.ServiceBus;
-    using Naos.Core.Messaging.Domain;
-    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
     using Naos.Foundation.Infrastructure;
+    using Naos.Messaging.Domain;
+    using Naos.Tracing.Domain;
 
     public class ServiceBusMessageBrokerOptions : BaseOptions
     {

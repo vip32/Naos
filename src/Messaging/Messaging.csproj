@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.Messaging</AssemblyName>
-    <RootNamespace>Naos.Core.Messaging</RootNamespace>
+    <AssemblyName>Naos.Messaging</AssemblyName>
+    <RootNamespace>Naos.Messaging</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Queueing.App
+﻿namespace Naos.Queueing.App
 {
     using Microsoft.Extensions.DependencyInjection;
 

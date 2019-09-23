@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.JobScheduling.App.Web
+﻿namespace Naos.JobScheduling.App.Web
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -6,9 +6,9 @@
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.JobScheduling.Domain;
     using Naos.Foundation;
     using Naos.Foundation.Application;
+    using Naos.JobScheduling.Domain;
     using NSwag.Annotations;
 
     [Route("api/jobregistrations")]

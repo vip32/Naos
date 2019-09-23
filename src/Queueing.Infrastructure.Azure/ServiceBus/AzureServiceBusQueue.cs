@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Queueing.Infrastructure.Azure
+﻿namespace Naos.Queueing.Infrastructure.Azure
 {
     using System;
     using System.Collections.Generic;
@@ -10,9 +10,9 @@
     using Microsoft.Azure.ServiceBus.Core;
     using Microsoft.Azure.ServiceBus.Management;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Queueing.Domain;
     using Naos.Foundation;
     using Naos.Foundation.Domain;
+    using Naos.Queueing.Domain;
 
     public class AzureServiceBusQueue<TData> : BaseQueue<TData, AzureServiceBusQueueOptions>
          where TData : class

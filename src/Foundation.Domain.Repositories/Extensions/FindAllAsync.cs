@@ -14,7 +14,7 @@
         /// <param name="source">The source.</param>
         /// <param name="tenantId">The tenant identifier.</param>
         /// <param name="options">The options.</param>
-        public static async Task<IEnumerable<TEntity>> FindAllAsync<TEntity>( // causes issues when used in mapped repos <TEntity, TDesitination>, Unable to cast object of type 'xxxDto' to type 'Naos.Core.Domain.ITenantEntity'. better use the tenant decorator for this
+        public static async Task<IEnumerable<TEntity>> FindAllAsync<TEntity>( // causes issues when used in mapped repos <TEntity, TDesitination>, Unable to cast object of type 'xxxDto' to type 'Naos.Domain.ITenantEntity'. better use the tenant decorator for this
             this IGenericRepository<TEntity> source,
             string tenantId,
             IFindOptions<TEntity> options = null)

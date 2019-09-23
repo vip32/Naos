@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.ServiceDiscovery.App.Consul
+﻿namespace Naos.ServiceDiscovery.App.Consul
 {
     public class ConsulServiceRegistryConfiguration
     {

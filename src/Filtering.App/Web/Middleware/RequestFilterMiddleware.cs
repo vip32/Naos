@@ -1,13 +1,13 @@
-﻿namespace Naos.Core.RequestFiltering.App.Web
+﻿namespace Naos.RequestFiltering.App.Web
 {
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
-    using Naos.Core.RequestFiltering.App;
     using Naos.Foundation;
     using Naos.Foundation.Application;
+    using Naos.RequestFiltering.App;
 
     /// <summary>
     /// Middleware which attempts to reads / creates a Correlation ID that can then be used in logs and

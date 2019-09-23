@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.UnitTests.Infrastructure.EntityFramework
+﻿namespace Naos.UnitTests.Infrastructure.EntityFramework
 {
     using System;
     using System.Linq;

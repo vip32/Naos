@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.Messaging.Infrastructure.RabbitMQ</AssemblyName>
-    <RootNamespace>Naos.Core.Messaging.Infrastructure.RabbitMQ</RootNamespace>
+    <AssemblyName>Naos.Messaging.Infrastructure.RabbitMQ</AssemblyName>
+    <RootNamespace>Naos.Messaging.Infrastructure.RabbitMQ</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

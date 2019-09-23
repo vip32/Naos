@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.FileStorage.Infrastructure.FileSystem</AssemblyName>
-    <RootNamespace>Naos.Core.FileStorage.Infrastructure</RootNamespace>
+    <AssemblyName>Naos.FileStorage.Infrastructure.FileSystem</AssemblyName>
+    <RootNamespace>Naos.FileStorage.Infrastructure</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

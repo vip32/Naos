@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Commands.App.Web
+﻿namespace Naos.Commands.App.Web
 {
     using System;
     using System.Collections.Generic;
@@ -6,7 +6,7 @@
     using System.Net;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
-    using Naos.Core.Commands.App;
+    using Naos.Commands.App;
     using Naos.Foundation;
 
     [DebuggerDisplay("Route={Route}, Method={RequestMethod}")]

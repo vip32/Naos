@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.JobScheduling.App.Console
+﻿namespace Naos.JobScheduling.App.Console
 {
     using System.Threading.Tasks;
     using CommandLine;

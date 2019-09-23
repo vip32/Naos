@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Queueing.App
+﻿namespace Naos.Queueing.App
 {
     using System.Threading.Tasks;
     using CommandLine;

@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.FileStorage
+﻿namespace Naos.FileStorage
 {
     using System;
     using System.Collections.Generic;
@@ -9,7 +9,7 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Humanizer;
-    using Naos.Core.FileStorage.Domain;
+    using Naos.FileStorage.Domain;
     using Naos.Foundation;
 
     public class InMemoryFileStorage : IFileStorage

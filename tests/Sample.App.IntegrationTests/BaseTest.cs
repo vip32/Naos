@@ -4,7 +4,7 @@
     using System.Diagnostics;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Naos.Core.Configuration.App;
+    using Naos.Configuration.App;
     using Naos.Foundation;
     using Xunit.Abstractions;
 

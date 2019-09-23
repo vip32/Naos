@@ -1,4 +1,4 @@
-namespace Naos.Core.Messaging.Domain
+namespace Naos.Messaging.Domain
 {
     public class DummyMessage : Message
     {

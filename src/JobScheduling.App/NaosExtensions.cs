@@ -6,12 +6,12 @@
     using MediatR;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Configuration.App;
-    using Naos.Core.JobScheduling;
-    using Naos.Core.JobScheduling.App;
-    using Naos.Core.JobScheduling.Domain;
-    using Naos.Core.Tracing.Domain;
+    using Naos.Configuration.App;
     using Naos.Foundation;
+    using Naos.JobScheduling;
+    using Naos.JobScheduling.App;
+    using Naos.JobScheduling.Domain;
+    using Naos.Tracing.Domain;
 
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions

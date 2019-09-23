@@ -8,13 +8,13 @@
     using MediatR;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.FileStorage.Domain;
-    using Naos.Core.FileStorage.Infrastructure;
-    using Naos.Core.Messaging;
-    using Naos.Core.Messaging.App;
-    using Naos.Core.Messaging.Domain;
-    using Naos.Core.Messaging.Infrastructure;
+    using Naos.FileStorage.Domain;
+    using Naos.FileStorage.Infrastructure;
     using Naos.Foundation;
+    using Naos.Messaging;
+    using Naos.Messaging.App;
+    using Naos.Messaging.Domain;
+    using Naos.Messaging.Infrastructure;
 
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions

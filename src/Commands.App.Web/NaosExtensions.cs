@@ -3,8 +3,8 @@
     using System;
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
-    using Naos.Core.Commands.App;
-    using Naos.Core.Commands.App.Web;
+    using Naos.Commands.App;
+    using Naos.Commands.App.Web;
     using Naos.Foundation;
     using NSwag.Generation.Processors;
 

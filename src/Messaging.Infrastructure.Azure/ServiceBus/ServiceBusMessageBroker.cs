@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Messaging.Infrastructure.Azure
+﻿namespace Naos.Messaging.Infrastructure.Azure
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -7,9 +7,9 @@
     using MediatR;
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Messaging.Domain;
-    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
+    using Naos.Messaging.Domain;
+    using Naos.Tracing.Domain;
 
     public class ServiceBusMessageBroker : IMessageBroker
     {

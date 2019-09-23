@@ -1,4 +1,4 @@
-namespace Naos.Core.Messaging.Domain
+namespace Naos.Messaging.Domain
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

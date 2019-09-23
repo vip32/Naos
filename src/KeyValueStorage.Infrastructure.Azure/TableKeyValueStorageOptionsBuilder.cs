@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.KeyValueStorage.Infrastructure.Azure
+﻿namespace Naos.KeyValueStorage.Infrastructure.Azure
 {
     using Naos.Foundation;
 

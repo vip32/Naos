@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.ServiceDiscovery.App.Web
+﻿namespace Naos.ServiceDiscovery.App.Web
 {
     public struct ServiceDiscoveryRouterHeaders
     {

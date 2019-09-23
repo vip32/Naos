@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Messaging.App
+﻿namespace Naos.Messaging.App
 {
     using System;
     using System.Threading;

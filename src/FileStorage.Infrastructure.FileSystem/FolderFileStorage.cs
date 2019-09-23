@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.FileStorage.Infrastructure
+﻿namespace Naos.FileStorage.Infrastructure
 {
     using System.Collections.Generic;
     using System.IO;
@@ -6,7 +6,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
-    using Naos.Core.FileStorage.Domain;
+    using Naos.FileStorage.Domain;
     using Naos.Foundation;
 
     public class FolderFileStorage : IFileStorage

@@ -3,10 +3,10 @@
     using System;
     using System.Net.Http;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.RequestCorrelation.App.Web;
-    using Naos.Core.ServiceContext.App.Web;
     using Naos.Foundation;
     using Naos.Foundation.Application;
+    using Naos.RequestCorrelation.App.Web;
+    using Naos.ServiceContext.App.Web;
     using Polly;
     using Polly.Extensions.Http;
 

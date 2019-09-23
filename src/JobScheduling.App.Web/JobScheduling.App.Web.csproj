@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Core.JobScheduling.App.Web</AssemblyName>
-    <RootNamespace>Naos.Core.JobScheduling.App.Web</RootNamespace>
+    <AssemblyName>Naos.JobScheduling.App.Web</AssemblyName>
+    <RootNamespace>Naos.JobScheduling.App.Web</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

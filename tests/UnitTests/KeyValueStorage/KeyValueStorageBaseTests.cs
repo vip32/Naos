@@ -1,12 +1,12 @@
-﻿namespace Naos.Core.UnitTests.KeyValueStorage
+﻿namespace Naos.UnitTests.KeyValueStorage
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using FizzWare.NBuilder;
-    using Naos.Core.KeyValueStorage.Domain;
     using Naos.Foundation;
+    using Naos.KeyValueStorage.Domain;
     using Shouldly;
 
     public class KeyValueStorageBaseTests : BaseTests

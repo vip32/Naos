@@ -7,9 +7,9 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
-    using Naos.Core.Operations.App.Web;
-    using Naos.Core.Tracing.Domain;
     using Naos.Foundation;
+    using Naos.Operations.App.Web;
+    using Naos.Tracing.Domain;
 
     /// <summary>
     /// Extension methods for the correlation middleware.

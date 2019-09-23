@@ -1,4 +1,4 @@
-﻿namespace Naos.Core.Commands.App.Web.Controllers
+﻿namespace Naos.Commands.App.Web.Controllers
 {
     using System.IO;
     using System.Net;
@@ -6,8 +6,8 @@
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using Naos.Core.Queueing.Domain;
     using Naos.Foundation;
+    using Naos.Queueing.Domain;
     using NSwag.Annotations;
 
     [Route("api/commands")]
