@@ -55,6 +55,7 @@
 
             var entityFrameworkConfiguration = options.Context.Configuration?.GetSection(section).Get<EntityFrameworkConfiguration>();
             options.Context.Services.AddDbContext<UserAccountsDbContext>(o => o
+                //.UseSqlServer("Server=.;Database=naos_sample;User=sa;Password=Abcd1234!;Trusted_Connection=False;MultipleActiveResultSets=True;", o => o // docker
                 .UseSqlServer(connectionString.EmptyToNull() ?? entityFrameworkConfiguration.ConnectionString.EmptyToNull() ?? $"Server=(localdb)\\mssqllocaldb;Database={nameof(UserAccountsDbContext)};Trusted_Connection=True;MultipleActiveResultSets=True;", o => o
                     .EnableRetryOnFailure())
                 .UseLoggerFactory(options.Context.Services.BuildServiceProvider().GetRequiredService<ILoggerFactory>())
