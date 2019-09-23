@@ -27,6 +27,7 @@
                 .RuleFor(u => u.Number, f => f.Random.Replace("??-#####"))
                 .RuleFor(u => u.Name, f => f.Commerce.ProductName())
                 .RuleFor(u => u.Description, f => f.Lorem.Random.Words(10))
+                .RuleFor(u => u.Type, f => f.PickRandom(new[] { "product", "subscription" }))
                 .RuleFor(u => u.Price, f => f.Commerce.Price(1, 999).To<decimal>())
                 .RuleFor(u => u.Region, (f, u) => f.PickRandom(new[] { "East", "West" }))
                 .RuleFor(u => u.HasStock, (f, u) => f.PickRandom(new[] { true, false }))
@@ -156,6 +157,18 @@
             results.ShouldNotBeNull();
             results.ShouldNotBeEmpty();
             results.ToList().ForEach(p => p.Region.ShouldBe("East"));
+        }
+
+        [Fact]
+        public async Task LoadValuesAsync_WithNonIndexedExpression_Test()
+        {
+            // arange/act
+            var results = await this.sut.LoadValuesAsync(p => p.Type == "product").AnyContext();
+
+            // assert
+            results.ShouldNotBeNull();
+            results.ShouldNotBeEmpty();
+            //results.ToList().ForEach(p => p.Keywords.ShouldBe("product"));
         }
 
         [Fact]
