@@ -8,7 +8,7 @@ variables:
   publishWebApp: true
   publishArtifacts: true
   pushNuGet: false
-  nuGetFeed: ''
+  nuGetFeed: 'https://pkgs.dev.azure.com/doomsday32/_packaging/naos/nuget/v3/index.json'
   deployEnabled: true
   deployAzureSubscription: 'Visual Studio Premium with MSDN (bIT) (b527698f-a403-465f-8005-932acc5d9f7d)' # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/resources?view=azure-devops#troubleshooting-authorization-for-a-yaml-pipeline
   deployAppName: 'naos-sample'
@@ -136,7 +136,7 @@ stages:
         verbosityPack: Normal
 #
     - task: DotNetCoreCLI@2 # https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/dotnet-core?view=azure-devops#push-nuget-packages
-      displayName: Push nugets
+      displayName: Push nugets # TODO: github package repository https://help.github.com/en/articles/about-github-package-registry#supported-clients-and-formats
       enabled: true
       condition: |
         and
@@ -149,6 +149,7 @@ stages:
         nuGetFeedType: internal
         packagesToPush: '$(System.DefaultWorkingDirectory)/packages/*.nupkg'
         publishVstsFeed: $(nuGetFeed)
+#      apikey: $(key-vault-clientId)
 
 - stage: DeployDev
   displayName: Deploy stage (dev)
