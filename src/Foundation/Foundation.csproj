@@ -21,15 +21,6 @@
     <ProjectReference Include="..\Foundation.Domain\Domain.csproj" />
     <ProjectReference Include="..\Foundation.Encoding\Encoding.csproj" />
     <ProjectReference Include="..\Foundation.Extensions\Extensions.csproj" />
-    <ProjectReference Include="..\Foundation.Infrastructure.Azure.Arm\Infrastructure.Azure.Arm.csproj" />
-    <ProjectReference Include="..\Foundation.Infrastructure.Azure.CosmosDb\Infrastructure.Azure.CosmosDb.csproj" />
-    <ProjectReference Include="..\Foundation.Infrastructure.Azure.KeyVault\Infrastructure.Azure.KeyVault.csproj" />
-    <ProjectReference Include="..\Foundation.Infrastructure.Azure.LogAnalytics\Infrastructure.Azure.LogAnalytics.csproj" />
-    <ProjectReference Include="..\Foundation.Infrastructure.Azure.ServiceBus\Infrastructure.Azure.ServiceBus.csproj" />
-    <ProjectReference Include="..\Foundation.Infrastructure.Azure\Infrastructure.Azure.csproj" />
-    <ProjectReference Include="..\Foundation.Infrastructure.EntityFramework\Infrastructure.EntityFramework.csproj" />
-    <ProjectReference Include="..\Foundation.Infrastructure.Sqlite.Documents\Infrastructure.Sqlite.Documents.csproj" />
-    <ProjectReference Include="..\Foundation.Infrastructure.SqlServer.Documents\Infrastructure.SqlServer.Documents.csproj" />
     <ProjectReference Include="..\Foundation.Logging\Logging.csproj" />
     <ProjectReference Include="..\Foundation.Mapping.AutoMapper\Mapping.AutoMapper.csproj" />
     <ProjectReference Include="..\Foundation.Mapping\Mapping.csproj" />
