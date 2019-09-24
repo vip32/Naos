@@ -7,8 +7,9 @@ variables:
   publishFunctionApp: false
   publishWebApp: true
   publishArtifacts: true
-  pushNuGet: true
-  nuGetFeed: 'https://pkgs.dev.azure.com/doomsday32/_packaging/naos/nuget/v3/index.json'
+  nuGetPush: true
+  nuGetFeed: 'dbb15cab-7d04-4d02-8262-10946716ffd9' # https://pkgs.dev.azure.com/doomsday32/_packaging/naos/nuget/v3/index.json
+  nuGetFeedType: 'internal' # 'external'
   deployEnabled: false
   deployAzureSubscription: 'Visual Studio Premium with MSDN (bIT) (b527698f-a403-465f-8005-932acc5d9f7d)' # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/resources?view=azure-devops#troubleshooting-authorization-for-a-yaml-pipeline
   deployAppName: 'naos-sample'
@@ -123,7 +124,7 @@ stages:
       condition: |
         and
         (
-           eq(variables['pushNuGet'], 'true'),
+           eq(variables['nuGetPush'], 'true'),
            eq(variables['Build.SourceBranch'], 'refs/heads/master')
         )
       inputs:
@@ -141,15 +142,14 @@ stages:
       condition: |
         and
         (
-           eq(variables['pushNuGet'], 'true'),
+           eq(variables['nuGetPush'], 'true'),
            eq(variables['Build.SourceBranch'], 'refs/heads/master')
         )
       inputs:
         command: push
-        nuGetFeedType: internal
         packagesToPush: '$(System.DefaultWorkingDirectory)/packages/*.nupkg'
         publishVstsFeed: $(nuGetFeed)
-#      apikey: $(key-vault-clientId)
+        nuGetFeedType: $(nuGetFeedType)
 
 - stage: DeployDev
   displayName: Deploy stage (dev)
