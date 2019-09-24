@@ -31,6 +31,7 @@
     <ProjectReference Include="..\ServiceContext.App\ServiceContext.App.csproj" />
     <ProjectReference Include="..\ServiceDiscovery.App.Consul\ServiceDiscovery.App.Consul.csproj" />
     <ProjectReference Include="..\ServiceDiscovery.App\ServiceDiscovery.App.csproj" />
+    <ProjectReference Include="..\Tracing.App\Tracing.App.csproj" />
   </ItemGroup>
 
 </Project>

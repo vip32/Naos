@@ -20,6 +20,7 @@
     <ProjectReference Include="..\Commands.App.Web\Commands.App.Web.csproj" />
     <ProjectReference Include="..\Correlation.App\RequestCorrelation.App.csproj" />
     <ProjectReference Include="..\Filtering.App\RequestFiltering.App.csproj" />
+    <ProjectReference Include="..\Foundation.Application.Web.Startup\Application.Web.Startup.csproj" />
     <ProjectReference Include="..\Foundation.Application.Web\Application.Web.csproj" />
     <ProjectReference Include="..\Foundation.Domain.Repositories\Domain.Repositories.csproj" />
     <ProjectReference Include="..\Foundation.Domain.Specifications\Domain.Specifications.csproj" />
