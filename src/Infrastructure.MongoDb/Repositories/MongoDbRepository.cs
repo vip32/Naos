@@ -69,13 +69,12 @@
                 return await this.FindAllAsync(options, cancellationToken).AnyContext();
             }
 
-            var specification = specifications.First();
-            foreach(var sp in specifications.Skip(1)) // concatenate the specifications (AND)
+            if (specifications.Count() == 1)
             {
-                specification = specification.And(sp);
+                return await this.FindAllAsync(specifications.First(), options, cancellationToken).AnyContext();
             }
 
-            return await this.FindAllAsync(specification, options, cancellationToken).AnyContext();
+            return await this.FindAllAsync(specifications.First().And(specifications.Skip(1)), options, cancellationToken).AnyContext();
         }
 
         public async Task<TEntity> InsertAsync(TEntity entity)

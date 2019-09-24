@@ -1,6 +1,7 @@
 ﻿namespace Naos.Foundation.Domain
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq.Expressions;
 
     public interface ISpecification<T>
@@ -15,7 +16,11 @@
 
         ISpecification<T> Or(ISpecification<T> specification);
 
+        ISpecification<T> Or(IEnumerable<ISpecification<T>> specifications);
+
         ISpecification<T> And(ISpecification<T> specification);
+
+        ISpecification<T> And(IEnumerable<ISpecification<T>> specifications);
 
         ISpecification<T> Not();
 

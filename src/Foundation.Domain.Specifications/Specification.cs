@@ -1,6 +1,8 @@
 ﻿namespace Naos.Foundation.Domain
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Linq.Expressions;
     using EnsureThat;
 
@@ -67,6 +69,28 @@
             return new AndSpecification<T>(this, specification);
         }
 
+        public ISpecification<T> And(IEnumerable<ISpecification<T>> specifications)
+        {
+            if (!specifications.IsNullOrEmpty())
+            {
+                if(specifications.Count() == 1)
+                {
+                    return this.And(specifications.First());
+                }
+
+                var result = specifications.First();
+
+                foreach(var specification in specifications.Skip(1))
+                {
+                    result = result.And(specification);
+                }
+
+                return result;
+            }
+
+            return this;
+        }
+
         public ISpecification<T> Or(ISpecification<T> specification)
         {
             if (this == All || specification == All)
@@ -75,6 +99,28 @@
             }
 
             return new OrSpecification<T>(this, specification);
+        }
+
+        public ISpecification<T> Or(IEnumerable<ISpecification<T>> specifications)
+        {
+            if (!specifications.IsNullOrEmpty())
+            {
+                if (specifications.Count() == 1)
+                {
+                    return this.Or(specifications.First());
+                }
+
+                var result = specifications.First();
+
+                foreach (var specification in specifications.Skip(1))
+                {
+                    result = result.Or(specification);
+                }
+
+                return result;
+            }
+
+            return this;
         }
 
         public ISpecification<T> Not()
