@@ -7,9 +7,9 @@ variables:
   publishFunctionApp: false
   publishWebApp: true
   publishArtifacts: true
-  pushNuGet: false
+  pushNuGet: true
   nuGetFeed: 'https://pkgs.dev.azure.com/doomsday32/_packaging/naos/nuget/v3/index.json'
-  deployEnabled: true
+  deployEnabled: false
   deployAzureSubscription: 'Visual Studio Premium with MSDN (bIT) (b527698f-a403-465f-8005-932acc5d9f7d)' # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/resources?view=azure-devops#troubleshooting-authorization-for-a-yaml-pipeline
   deployAppName: 'naos-sample'
   vmImage: 'windows-latest' # https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/hosted?view=azure-devops&tabs=yaml#use-a-microsoft-hosted-agent
