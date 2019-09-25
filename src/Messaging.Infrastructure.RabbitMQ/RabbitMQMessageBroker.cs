@@ -24,6 +24,7 @@
         public RabbitMQMessageBroker(Builder<RabbitMQMessageBrokerOptionsBuilder, RabbitMQMessageBrokerOptions> optionsBuilder)
             : this(optionsBuilder(new RabbitMQMessageBrokerOptionsBuilder()).Build())
         {
+            // TODO: maybe use this client https://github.com/EasyNetQ/EasyNetQ  http://easynetq.com/
         }
 
         public void Publish(Message message)
