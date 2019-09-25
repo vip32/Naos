@@ -1,3 +1,5 @@
+# https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+
 ### Test
 GET https://www.google.com HTTP/1.1
 
