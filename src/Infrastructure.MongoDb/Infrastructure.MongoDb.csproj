@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Humanizer.Core" Version="2.7.2" />
     <PackageReference Include="MongoDB.Driver" Version="2.8.1" />
   </ItemGroup>
 
@@ -14,10 +15,6 @@
     <ProjectReference Include="..\Foundation.Domain.Repositories\Domain.Repositories.csproj" />
     <ProjectReference Include="..\Foundation.Domain.Specifications\Domain.Specifications.csproj" />
     <ProjectReference Include="..\Foundation.Domain\Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Repositories\Extensions\" />
   </ItemGroup>
 
 </Project>

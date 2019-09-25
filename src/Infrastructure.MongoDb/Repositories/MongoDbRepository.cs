@@ -6,7 +6,12 @@
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
+    using Humanizer;
     using Microsoft.Extensions.Logging;
+    using MongoDB.Bson;
+    using MongoDB.Bson.Serialization;
+    using MongoDB.Bson.Serialization.IdGenerators;
+    using MongoDB.Bson.Serialization.Serializers;
     using MongoDB.Driver;
     using Naos.Foundation.Domain;
 
@@ -25,7 +30,15 @@
             this.options = options;
             this.logger = options.CreateLogger<IGenericRepository<TEntity>>();
 
-            this.Collection = options.Client.GetDatabase(options.Database).GetCollection<TEntity>(typeof(TEntity).Name);
+            //BsonClassMap.RegisterClassMap<TEntity>(cm =>
+            //{
+            //    cm.AutoMap();
+            //    cm.MapIdMember(c => c.Id)
+            //        .SetIdGenerator(StringObjectIdGenerator.Instance)
+            //        .SetSerializer(new StringSerializer(BsonType.ObjectId));
+            //});
+
+            this.Collection = options.Client.GetDatabase(options.Database).GetCollection<TEntity>(typeof(TEntity).Name.Pluralize());
         }
 
         public MongoDbRepository(Builder<MongoDbRepositoryOptionsBuilder, MongoDbRepositoryOptions> optionsBuilder)
@@ -37,18 +50,27 @@
 
         public async Task<bool> ExistsAsync(object id)
         {
+            if (id.IsDefault())
+            {
+                return false;
+            }
+
             return (await this.FindOneAsync(id).AnyContext()) != null;
         }
 
         public async Task<TEntity> FindOneAsync(object id)
         {
+            if (id.IsDefault())
+            {
+                return null;
+            }
+
             return await this.Collection.Find(e => e.Id.Equals(id)).SingleOrDefaultAsync().AnyContext();
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            return await this.Collection.Find(e => e != null).ToListAsync().AnyContext();
-            // TODO: skip/take https://www.codementor.io/pmbanugo/working-with-mongodb-in-net-part-3-skip-sort-limit-and-projections-oqfwncyka
+            return await this.FindAllAsync(Enumerable.Empty<ISpecification<TEntity>>(), options, cancellationToken).AnyContext();
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
@@ -58,51 +80,130 @@
                 return await this.FindAllAsync(options, cancellationToken).AnyContext();
             }
 
-            return await this.Collection.Find(specification?.ToExpression()).ToListAsync().AnyContext();
-            // TODO: skip/take https://www.codementor.io/pmbanugo/working-with-mongodb-in-net-part-3-skip-sort-limit-and-projections-oqfwncyka
+            return await this.FindAllAsync(new[] { specification }, options, cancellationToken).AnyContext();
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            if (specifications.IsNullOrEmpty())
-            {
-                return await this.FindAllAsync(options, cancellationToken).AnyContext();
-            }
+            var specificationsArray = specifications as ISpecification<TEntity>[] ?? specifications.ToArray();
+            var expressions = specificationsArray.Safe().Select(s => s.ToExpression());
 
-            if (specifications.Count() == 1)
+            return await Task.Run(() =>
             {
-                return await this.FindAllAsync(specifications.First(), options, cancellationToken).AnyContext();
-            }
-
-            return await this.FindAllAsync(specifications.First().And(specifications.Skip(1)), options, cancellationToken).AnyContext();
+                if (options?.HasOrders() == true)
+                {
+                    return this.Collection.AsQueryable()
+                        .WhereExpressions(expressions)
+                        .SkipIf(options?.Skip)
+                        .TakeIf(options?.Take)
+                        .OrderByIf(options)
+                        .ToList();
+                }
+                else
+                {
+                    return this.Collection.AsQueryable()
+                        .WhereExpressions(expressions)
+                        .SkipIf(options?.Skip)
+                        .TakeIf(options?.Take)
+                        .ToList();
+                }
+            }).AnyContext();
         }
 
         public async Task<TEntity> InsertAsync(TEntity entity)
         {
+            if (entity == null)
+            {
+                return entity;
+            }
+
             await this.Collection.InsertOneAsync(entity).AnyContext();
             return entity;
         }
 
         public async Task<TEntity> UpdateAsync(TEntity entity)
         {
+            if (entity == null)
+            {
+                return entity;
+            }
+
             await this.Collection.ReplaceOneAsync(e => e.Id.Equals(entity.Id), entity).AnyContext();
             return entity;
         }
 
-        public Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
+        public async Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
         {
-            // TODO: insert or update
-            throw new NotImplementedException();
+            if (entity == null)
+            {
+                return (null, ActionResult.None);
+            }
+
+            var isNew = entity.Id.IsDefault() || !await this.ExistsAsync(entity.Id).AnyContext();
+
+            if (this.options.PublishEvents && this.options.Mediator != null)
+            {
+                if (isNew)
+                {
+                    await this.options.Mediator.Publish(new EntityInsertDomainEvent(entity)).AnyContext();
+                }
+                else
+                {
+                    await this.options.Mediator.Publish(new EntityUpdateDomainEvent(entity)).AnyContext();
+                }
+            }
+
+            this.logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogKeys.DomainRepository);
+            if (isNew)
+            {
+                if (entity is IStateEntity stateEntity)
+                {
+                    stateEntity.State.SetCreated();
+                }
+
+                entity = await this.InsertAsync(entity).AnyContext();
+            }
+            else if (entity is IStateEntity stateEntity)
+            {
+                entity = await this.UpdateAsync(entity).AnyContext();
+            }
+
+            if (this.options.PublishEvents && this.options.Mediator != null)
+            {
+                if (isNew)
+                {
+                    await this.options.Mediator.Publish(new EntityInsertedDomainEvent(entity)).AnyContext();
+                }
+                else
+                {
+                    await this.options.Mediator.Publish(new EntityUpdatedDomainEvent(entity)).AnyContext();
+                }
+            }
+
+            //this.logger.LogInformation($"{{LogKey:l}} upserted entity: {entity.GetType().PrettyName()}, id: {entity.Id}, isNew: {isNew}", LogEventKeys.DomainRepository);
+#pragma warning disable SA1008 // Opening parenthesis must be spaced correctly
+            return isNew ? (entity, ActionResult.Inserted) : (entity, ActionResult.Updated);
+#pragma warning restore SA1008 // Opening parenthesis must be spaced correctly
         }
 
         public async Task<ActionResult> DeleteAsync(object id)
         {
+            if (id.IsDefault())
+            {
+                return ActionResult.None;
+            }
+
             var result = await this.Collection.DeleteOneAsync(e => e.Id.Equals(id)).AnyContext();
             return result.DeletedCount > 0 ? ActionResult.Deleted : ActionResult.None;
         }
 
         public async Task<ActionResult> DeleteAsync(TEntity entity)
         {
+            if (entity == null)
+            {
+                return ActionResult.None;
+            }
+
             return await this.DeleteAsync(entity.Id).AnyContext();
         }
     }

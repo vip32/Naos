@@ -48,6 +48,7 @@
     <ProjectReference Include="..\..\src\App.Web\App.Web.csproj" />
     <ProjectReference Include="..\..\src\App\App.csproj" />
     <ProjectReference Include="..\..\src\Commands.App\Commands.App.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure.MongoDb\Infrastructure.MongoDb.csproj" />
     <ProjectReference Include="..\..\src\Queueing.Infrastructure.Azure\Queueing.Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\..\src\ServiceContext.App\ServiceContext.App.csproj" />
   </ItemGroup>

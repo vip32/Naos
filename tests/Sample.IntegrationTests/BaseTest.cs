@@ -35,7 +35,8 @@
                         .AddCountriesModule()
                         .AddCustomersModule()
                         .AddUserAccountsModule($"Server=(localdb)\\mssqllocaldb;Database={nameof(UserAccountsDbContext)};Trusted_Connection=True;MultipleActiveResultSets=True;")
-                        .AddCatalogsModule())
+                        .AddCatalogsModule()
+                        .AddInventoryModule())
                     //.AddSampleUserAccounts(dbContext: new UserAccountsContext(
                     //    new DbContextOptionsBuilder()
                     //        .UseSqlServer(entityFrameworkConfiguration.ConnectionString)

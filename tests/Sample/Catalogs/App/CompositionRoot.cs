@@ -9,19 +9,23 @@
     public static partial class CompositionRoot
     {
         public static ModuleOptions AddCatalogsModule(
-            this ModuleOptions options)
+            this ModuleOptions options,
+            string connectionString = null,
+            string section = "naos:sample:catalogs:documents")
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
             options.Context.AddTag("Catalogs");
 
+            // TODO: read configuration with conn string
+
             options.Context.Services.AddSingleton<IDocumentProvider<Product>>(sp =>
                 new SqlServerDocumentProvider<Product>(o => o
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                     .EnableSqlLogging()
                     //.ConnectionString("Server=.;Database=naos_sample;User=sa;Password=Abcd1234!;Trusted_Connection=False;MultipleActiveResultSets=True;") // docker
-                    .ConnectionString("Server=(localdb)\\mssqllocaldb;Database=naos_sample;Trusted_Connection=True;MultipleActiveResultSets=True;")
+                    .ConnectionString(connectionString ?? "Server=(localdb)\\mssqllocaldb;Database=naos_sample;Trusted_Connection=True;MultipleActiveResultSets=True;")
                     // Schema("catalogs")
                     .AddIndex(p => p.Name)
                     .AddIndex(p => p.Region)
