@@ -25,7 +25,7 @@
             this.sut = this.ServiceProvider.GetRequiredService<IInventoryRepository>();
             var domains = new[] { "East", "West" };
             this.entityFaker = new Faker<ProductInventory>() //https://github.com/bchavez/Bogus
-                .RuleFor(u => u.Id, f => Guid.NewGuid().ToString())
+                //.RuleFor(u => u.Id, f => Guid.NewGuid().ToString())
                 .RuleFor(u => u.Number, f => f.Random.Replace("??-#####"))
                 .RuleFor(u => u.Region, (f, u) => f.PickRandom(new[] { "East", "West" }))
                 .RuleFor(u => u.Quantity, f => f.Random.Int(0, 999))
@@ -115,7 +115,7 @@
         }
 
         [Fact]
-        public async Task FindAllAsync_WithAndSpecification2_Test()
+        public async Task FindAllAsync_WithMultipleSpecifications_Test()
         {
             // arrange/act
             var result = await this.sut.FindAllAsync(
@@ -123,6 +123,21 @@
                 {
                     new HasRegionSpecification("East"),
                     new Specification<ProductInventory>(e => e.Quantity > 0)
+                }).AnyContext();
+
+            // assert
+            result.ShouldNotBeNull();
+            result.ShouldNotBeEmpty();
+        }
+
+        [Fact]
+        public async Task FindAllAsync_WithMultiSpecification_Test()
+        {
+            // arrange/act
+            var result = await this.sut.FindAllAsync(
+                new[]
+                {
+                    new Specification<ProductInventory>(e => e.Region == "East" && e.Quantity > 0 )
                 }).AnyContext();
 
             // assert
@@ -211,11 +226,11 @@
                 // assert
                 result.action.ShouldNotBe(ActionResult.None);
                 result.entity.ShouldNotBeNull();
-                //result.entity.Id.ShouldNotBeNull();
-                //result.entity.IdentifierHash.ShouldNotBeNull(); // EntityInsertDomainEventHandler
-                //result.entity.State.ShouldNotBeNull();
-                //result.entity.State.CreatedDescription.ShouldNotBeNull(); // EntityInsertDomainEventHandler
-                //result.entity.State.CreatedBy.ShouldNotBeNull(); // EntityInsertDomainEventHandler
+                result.entity.Id.ShouldNotBeNull();
+                result.entity.IdentifierHash.ShouldNotBeNull(); // EntityInsertDomainEventHandler
+                result.entity.State.ShouldNotBeNull();
+                result.entity.State.CreatedDescription.ShouldNotBeNull(); // EntityInsertDomainEventHandler
+                result.entity.State.CreatedBy.ShouldNotBeNull(); // EntityInsertDomainEventHandler
             }
         }
 

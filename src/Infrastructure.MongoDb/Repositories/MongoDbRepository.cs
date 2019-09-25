@@ -8,10 +8,10 @@
     using EnsureThat;
     using Humanizer;
     using Microsoft.Extensions.Logging;
-    using MongoDB.Bson;
-    using MongoDB.Bson.Serialization;
-    using MongoDB.Bson.Serialization.IdGenerators;
-    using MongoDB.Bson.Serialization.Serializers;
+    //using MongoDB.Bson;
+    //using MongoDB.Bson.Serialization;
+    //using MongoDB.Bson.Serialization.IdGenerators;
+    //using MongoDB.Bson.Serialization.Serializers;
     using MongoDB.Driver;
     using Naos.Foundation.Domain;
 
@@ -19,13 +19,14 @@
         where TEntity : class, IEntity, IAggregateRoot
     {
         private readonly ILogger<IGenericRepository<TEntity>> logger;
-        private readonly MongoDbRepositoryOptions options;
+        private readonly MongoDbRepositoryOptions<TEntity> options;
 
-        public MongoDbRepository(MongoDbRepositoryOptions options)
+        public MongoDbRepository(MongoDbRepositoryOptions<TEntity> options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Client, nameof(options.Client));
             EnsureArg.IsNotNullOrEmpty(options.Database, nameof(options.Database));
+            EnsureArg.IsNotNull(options.IdGenerator, nameof(options.IdGenerator));
 
             this.options = options;
             this.logger = options.CreateLogger<IGenericRepository<TEntity>>();
@@ -41,8 +42,8 @@
             this.Collection = options.Client.GetDatabase(options.Database).GetCollection<TEntity>(typeof(TEntity).Name.Pluralize());
         }
 
-        public MongoDbRepository(Builder<MongoDbRepositoryOptionsBuilder, MongoDbRepositoryOptions> optionsBuilder)
-            : this(optionsBuilder(new MongoDbRepositoryOptionsBuilder()).Build())
+        public MongoDbRepository(Builder<MongoDbRepositoryOptionsBuilder<TEntity>, MongoDbRepositoryOptions<TEntity>> optionsBuilder)
+            : this(optionsBuilder(new MongoDbRepositoryOptionsBuilder<TEntity>()).Build())
         {
         }
 
@@ -140,6 +141,11 @@
             }
 
             var isNew = entity.Id.IsDefault() || !await this.ExistsAsync(entity.Id).AnyContext();
+
+            if (entity.Id.IsDefault())
+            {
+                this.options.IdGenerator.SetNew(entity);
+            }
 
             if (this.options.PublishEvents && this.options.Mediator != null)
             {

@@ -2,8 +2,10 @@
 {
     using MediatR;
     using MongoDB.Driver;
+    using Naos.Foundation.Domain;
 
-    public class MongoDbRepositoryOptions : BaseOptions
+    public class MongoDbRepositoryOptions<TEntity> : BaseOptions
+        where TEntity : class, IEntity, IAggregateRoot
     {
         /// <summary>
         /// Gets or sets the mediator.
@@ -18,5 +20,7 @@
         public IMongoClient Client { get; set; }
 
         public string Database { get; set; }
+
+        public IEntityIdGenerator<TEntity> IdGenerator { get; set; } = new EntityGuidIdGenerator<TEntity>();
     }
 }

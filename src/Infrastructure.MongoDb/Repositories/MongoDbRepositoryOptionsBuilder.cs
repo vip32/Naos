@@ -2,29 +2,31 @@
 {
     using MediatR;
     using MongoDB.Driver;
+    using Naos.Foundation.Domain;
 
-    public class MongoDbRepositoryOptionsBuilder :
-        BaseOptionsBuilder<MongoDbRepositoryOptions, MongoDbRepositoryOptionsBuilder>
+    public class MongoDbRepositoryOptionsBuilder<TEntity> :
+        BaseOptionsBuilder<MongoDbRepositoryOptions<TEntity>, MongoDbRepositoryOptionsBuilder<TEntity>>
+        where TEntity : class, IEntity, IAggregateRoot
     {
-        public MongoDbRepositoryOptionsBuilder Mediator(IMediator mediator)
+        public MongoDbRepositoryOptionsBuilder<TEntity> Mediator(IMediator mediator)
         {
             this.Target.Mediator = mediator;
             return this;
         }
 
-        public MongoDbRepositoryOptionsBuilder Pub(bool publishEvents)
+        public MongoDbRepositoryOptionsBuilder<TEntity> Pub(bool publishEvents)
         {
             this.Target.PublishEvents = publishEvents;
             return this;
         }
 
-        public MongoDbRepositoryOptionsBuilder Client(IMongoClient client)
+        public MongoDbRepositoryOptionsBuilder<TEntity> Client(IMongoClient client)
         {
             this.Target.Client = client;
             return this;
         }
 
-        public MongoDbRepositoryOptionsBuilder Database(string database)
+        public MongoDbRepositoryOptionsBuilder<TEntity> Database(string database)
         {
             this.Target.Database = database;
             return this;
