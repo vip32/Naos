@@ -24,6 +24,15 @@
             var leftExpression = this.leftSpecification.ToExpression();
             var rightExpression = this.rightSpecification.ToExpression();
 
+            // mongo fix: https://stackoverflow.com/questions/54959750/mongodb-expression-system-invalidoperationexception-is-not-supported
+            //var param = leftExpression.Parameters[0];
+            //if (ReferenceEquals(param, rightExpression.Parameters[0]))
+            //{
+            //    // simple version
+            //    return Expression.Lambda<Func<T, bool>>(
+            //        Expression.AndAlso(leftExpression.Body, rightExpression.Body), param);
+            //}
+
             //var andExpression = Expression.AndAlso(leftExpression.Body, rightExpression.Body);
             var andExpression = Expression.AndAlso(
                 leftExpression.Body,

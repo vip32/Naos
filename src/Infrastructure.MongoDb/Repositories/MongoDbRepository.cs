@@ -118,6 +118,11 @@
                 return entity;
             }
 
+            if (entity.Id.IsDefault())
+            {
+                this.options.IdGenerator.SetNew(entity);
+            }
+
             await this.Collection.InsertOneAsync(entity).AnyContext();
             return entity;
         }

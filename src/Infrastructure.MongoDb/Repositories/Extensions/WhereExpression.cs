@@ -16,7 +16,7 @@
         {
             if (expression != null)
             {
-                return source.Where(expression);
+                return source.Where(expression.Expand());
             }
 
             return source;
@@ -30,7 +30,7 @@
             {
                 foreach (var expression in expressions)
                 {
-                    source = source.Where(expression);
+                    source = source.Where(expression.Expand());
                 }
             }
 

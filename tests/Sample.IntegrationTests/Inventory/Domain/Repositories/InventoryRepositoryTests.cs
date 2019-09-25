@@ -104,6 +104,8 @@
         [Fact]
         public async Task FindAllAsync_WithAndSpecification1_Test()
         {
+            // AND Specification is giving problems with expression translation in mongo.driver
+
             // arrange/act
             var result = await this.sut.FindAllAsync(
                 new HasRegionSpecification("East")
