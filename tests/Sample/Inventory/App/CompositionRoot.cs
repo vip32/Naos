@@ -24,8 +24,7 @@
 
             var mongoConfiguration = options.Context.Configuration?.GetSection($"{section}:mongo").Get<MongoConfiguration>() ?? new MongoConfiguration();
 
-            //options.Context.Services.AddStartupTaskScoped<SeederStartupTask>();
-            options.Context.Services.AddStartupTask<SeederStartupTask>(sp =>
+            options.Context.Services.AddStartupTask(sp =>
                 new SeederStartupTask(
                     sp.GetRequiredService<ILoggerFactory>(),
                     sp.CreateScope().ServiceProvider.GetService(typeof(IInventoryRepository)) as IInventoryRepository));
