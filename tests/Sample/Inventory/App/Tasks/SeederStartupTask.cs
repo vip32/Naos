@@ -28,6 +28,8 @@
 
         public Task StartAsync(CancellationToken cancellationToken = default)
         {
+            this.logger.LogInformation("started inventory seeder task");
+
             new List<ProductInventory>
             {
                 new ProductInventory
