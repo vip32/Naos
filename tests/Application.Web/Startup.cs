@@ -110,6 +110,7 @@
                     {
                         // Countries repository is exposed with a dedicated controller, no need to register here
                         o.AddGenericRepositoryController<Sample.Customers.Domain.Customer, Sample.Customers.Domain.ICustomerRepository>();
+                        o.AddGenericRepositoryController<Sample.Inventory.Domain.ProductInventory, Sample.Inventory.Domain.IInventoryRepository>();
                         o.AddGenericRepositoryController<Sample.UserAccounts.Domain.UserAccount>(); // `=implicit IRepository<UserAccount>
                     })
                     .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
