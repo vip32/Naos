@@ -43,6 +43,13 @@
                     Number = "AA1234",
                     Quantity = 88,
                     Region = "West"
+                },
+                new ProductInventory
+                {
+                    Id = "558fb10f-2ad4-4bd1-9b33-6414a5ce7b28",
+                    Number = "BB1234",
+                    Quantity = 77,
+                    Region = "East"
                 }
             }.ForEach(async e =>
             {
