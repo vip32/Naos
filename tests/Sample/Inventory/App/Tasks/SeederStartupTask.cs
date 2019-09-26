@@ -24,7 +24,7 @@
             this.repository = repository;
         }
 
-        public TimeSpan? Delay { get; set; } = new TimeSpan(0, 0, 5); //TimeSpan.Zero;
+        public TimeSpan? Delay { get; set; } = new TimeSpan(0, 0, 5);
 
         public Task StartAsync(CancellationToken cancellationToken = default)
         {
