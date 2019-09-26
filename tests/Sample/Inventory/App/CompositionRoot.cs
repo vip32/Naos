@@ -3,9 +3,7 @@
     using EnsureThat;
     using MediatR;
     using Microsoft.Extensions.Logging;
-    using MongoDB.Bson;
     using MongoDB.Driver;
-    using MongoDB.Driver.Core.Events;
     using Naos.Foundation;
     using Naos.Foundation.Domain;
     using Naos.Foundation.Infrastructure;
@@ -26,6 +24,7 @@
 
             // TODO: read configuration with conn string
 
+            options.Context.Services.AddMongoClient(connectionString);
             options.Context.Services.AddScoped<IInventoryRepository>(sp =>
             {
                 return new InventoryRepository(
@@ -38,23 +37,7 @@
                                 .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                                 .Mediator(sp.GetRequiredService<IMediator>())
                                 .Client(sp.GetRequiredService<IMongoClient>())
-                                .Database("naos_sample")))));
-            });
-
-            options.Context.Services.AddSingleton<IMongoClient>(sp =>
-            {
-                var logger = sp.GetRequiredService<ILogger>();
-                var mongoClientSettings = MongoClientSettings.FromUrl(
-                    new MongoUrl(connectionString ?? "mongodb://localhost:27017?connectTimeoutMS=300000"));
-                mongoClientSettings.ClusterConfigurator = c =>
-                {
-                    c.Subscribe<CommandStartedEvent>(e =>
-                    {
-                        logger.LogInformation($"{e.CommandName} - {e.Command.ToJson()}");
-                    });
-                };
-
-                return new MongoClient(mongoClientSettings);
+                                .DatabaseName("naos_sample")))));
             });
 
             options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: inventory service added");

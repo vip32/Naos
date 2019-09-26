@@ -26,9 +26,15 @@
             return this;
         }
 
-        public MongoDbRepositoryOptionsBuilder<TEntity> Database(string database)
+        public MongoDbRepositoryOptionsBuilder<TEntity> DatabaseName(string name)
         {
-            this.Target.Database = database;
+            this.Target.DatabaseName = name;
+            return this;
+        }
+
+        public MongoDbRepositoryOptionsBuilder<TEntity> CollectionName(string name)
+        {
+            this.Target.CollectionName = name;
             return this;
         }
     }

@@ -10,6 +10,11 @@
     {
         public static IServiceCollection AddMediatr(this IServiceCollection services)
         {
+            if (services == null)
+            {
+                return services;
+            }
+
             var context = DependencyContext.Default;
 
             // find all assembly references (including unloaded), so mediatr can inspect all available assemblies

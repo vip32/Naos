@@ -25,7 +25,8 @@
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Client, nameof(options.Client));
-            EnsureArg.IsNotNullOrEmpty(options.Database, nameof(options.Database));
+            EnsureArg.IsNotNullOrEmpty(options.DatabaseName, nameof(options.DatabaseName));
+            EnsureArg.IsNotNullOrEmpty(options.CollectionName, nameof(options.CollectionName));
             EnsureArg.IsNotNull(options.IdGenerator, nameof(options.IdGenerator));
 
             this.options = options;
@@ -39,7 +40,9 @@
             //        .SetSerializer(new StringSerializer(BsonType.ObjectId));
             //});
 
-            this.Collection = options.Client.GetDatabase(options.Database).GetCollection<TEntity>(typeof(TEntity).Name.Pluralize());
+            this.Collection = options.Client
+                .GetDatabase(options.DatabaseName)
+                .GetCollection<TEntity>(options.CollectionName);
         }
 
         public MongoDbRepository(Builder<MongoDbRepositoryOptionsBuilder<TEntity>, MongoDbRepositoryOptions<TEntity>> optionsBuilder)

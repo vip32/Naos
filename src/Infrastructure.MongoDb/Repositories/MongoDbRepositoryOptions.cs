@@ -1,5 +1,6 @@
 ﻿namespace Naos.Foundation.Infrastructure
 {
+    using Humanizer;
     using MediatR;
     using MongoDB.Driver;
     using Naos.Foundation.Domain;
@@ -19,7 +20,9 @@
 
         public IMongoClient Client { get; set; }
 
-        public string Database { get; set; }
+        public string DatabaseName { get; set; } = "master";
+
+        public string CollectionName { get; set; } = typeof(TEntity).Name.Pluralize();
 
         public IEntityIdGenerator<TEntity> IdGenerator { get; set; } = new EntityGuidIdGenerator<TEntity>();
     }
