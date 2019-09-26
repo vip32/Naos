@@ -1,6 +1,9 @@
 ﻿namespace Naos.Foundation.Infrastructure
 {
+    using System;
     using MediatR;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
     using MongoDB.Driver;
     using Naos.Foundation.Domain;
 
@@ -8,21 +11,31 @@
         BaseOptionsBuilder<MongoDbRepositoryOptions<TEntity>, MongoDbRepositoryOptionsBuilder<TEntity>>
         where TEntity : class, IEntity, IAggregateRoot
     {
+        public MongoDbRepositoryOptionsBuilder<TEntity> Setup(IServiceProvider sp, MongoConfiguration configuration = null)
+        {
+            this.LoggerFactory(sp.GetRequiredService<ILoggerFactory>());
+            this.Mediator(sp.GetRequiredService<IMediator>());
+            this.MongoClient(sp.GetRequiredService<IMongoClient>());
+            this.DatabaseName(configuration.DatabaseName);
+
+            return this;
+        }
+
         public MongoDbRepositoryOptionsBuilder<TEntity> Mediator(IMediator mediator)
         {
             this.Target.Mediator = mediator;
             return this;
         }
 
-        public MongoDbRepositoryOptionsBuilder<TEntity> Pub(bool publishEvents)
+        public MongoDbRepositoryOptionsBuilder<TEntity> PublishEvents(bool publishEvents)
         {
             this.Target.PublishEvents = publishEvents;
             return this;
         }
 
-        public MongoDbRepositoryOptionsBuilder<TEntity> Client(IMongoClient client)
+        public MongoDbRepositoryOptionsBuilder<TEntity> MongoClient(IMongoClient client)
         {
-            this.Target.Client = client;
+            this.Target.MongoClient = client;
             return this;
         }
 

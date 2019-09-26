@@ -12,7 +12,7 @@
             return this;
         }
 
-        public EntityFrameworkRepositoryOptionsBuilder Pub(bool publishEvents)
+        public EntityFrameworkRepositoryOptionsBuilder PublishEvents(bool publishEvents)
         {
             this.Target.PublishEvents = publishEvents;
             return this;

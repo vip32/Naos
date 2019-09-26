@@ -25,7 +25,7 @@
             options.Context.AddTag("Customers");
             options.Context.AddServiceClient<UserAccountsClient>();
 
-            var cosmosDbConfiguration = options.Context.Configuration?.GetSection($"{section}:cosmosDb").Get<CosmosDbConfiguration>();
+            var cosmosDbConfiguration = options.Context.Configuration?.GetSection($"{section}:cosmosDb").Get<CosmosDbConfiguration>() ?? new CosmosDbConfiguration();
             options.Context.Services.AddScoped<ICustomerRepository>(sp =>
             {
                 return new CustomerRepository(

@@ -24,7 +24,7 @@
         public MongoDbRepository(MongoDbRepositoryOptions<TEntity> options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
-            EnsureArg.IsNotNull(options.Client, nameof(options.Client));
+            EnsureArg.IsNotNull(options.MongoClient, nameof(options.MongoClient));
             EnsureArg.IsNotNullOrEmpty(options.DatabaseName, nameof(options.DatabaseName));
             EnsureArg.IsNotNullOrEmpty(options.CollectionName, nameof(options.CollectionName));
             EnsureArg.IsNotNull(options.IdGenerator, nameof(options.IdGenerator));
@@ -40,7 +40,7 @@
             //        .SetSerializer(new StringSerializer(BsonType.ObjectId));
             //});
 
-            this.Collection = options.Client
+            this.Collection = options.MongoClient
                 .GetDatabase(options.DatabaseName)
                 .GetCollection<TEntity>(options.CollectionName);
         }

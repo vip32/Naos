@@ -1,6 +1,7 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using EnsureThat;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
     using Naos.Foundation.Infrastructure;
@@ -10,23 +11,22 @@
     {
         public static ModuleOptions AddCatalogsModule(
             this ModuleOptions options,
-            string connectionString = null,
-            string section = "naos:sample:catalogs:documents")
+            string section = "naos:sample:catalogs")
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
             options.Context.AddTag("Catalogs");
 
-            // TODO: read configuration with conn string
+            var documentsConfiguration = options.Context.Configuration?.GetSection($"{section}:sqlDocuments").Get<SqlDocumentsConfiguration>() ?? new SqlDocumentsConfiguration();
 
             options.Context.Services.AddSingleton<IDocumentProvider<Product>>(sp =>
                 new SqlServerDocumentProvider<Product>(o => o
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                     .EnableSqlLogging()
                     //.ConnectionString("Server=.;Database=naos_sample;User=sa;Password=Abcd1234!;Trusted_Connection=False;MultipleActiveResultSets=True;") // docker
-                    .ConnectionString(connectionString ?? "Server=(localdb)\\mssqllocaldb;Database=naos_sample;Trusted_Connection=True;MultipleActiveResultSets=True;")
-                    // Schema("catalogs")
+                    .ConnectionString(documentsConfiguration.ConnectionString ?? "Server=(localdb)\\mssqllocaldb;Database=naos_sample;Trusted_Connection=True;MultipleActiveResultSets=True;")
+                    .Schema(documentsConfiguration.SchemaName)
                     .AddIndex(p => p.Name)
                     .AddIndex(p => p.Region)
                     .AddIndex(p => p.Price)

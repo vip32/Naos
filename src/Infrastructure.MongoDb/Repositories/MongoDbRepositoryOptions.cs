@@ -18,7 +18,7 @@
 
         public bool PublishEvents { get; set; } = true; // Obsolete > optional decorator
 
-        public IMongoClient Client { get; set; }
+        public IMongoClient MongoClient { get; set; }
 
         public string DatabaseName { get; set; } = "master";
 

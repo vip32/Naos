@@ -2,6 +2,7 @@
 {
     using EnsureThat;
     using MediatR;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using MongoDB.Driver;
     using Naos.Foundation;
@@ -14,17 +15,16 @@
     {
         public static ModuleOptions AddInventoryModule(
             this ModuleOptions options,
-            string connectionString = null,
-            string section = "naos:sample:inventory:mongo")
+            string section = "naos:sample:inventory")
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
             options.Context.AddTag("Inventory");
 
-            // TODO: read configuration with conn string
+            var mongoConfiguration = options.Context.Configuration?.GetSection($"{section}:mongo").Get<MongoConfiguration>() ?? new MongoConfiguration();
 
-            options.Context.Services.AddMongoClient(connectionString);
+            options.Context.Services.AddMongoClient(mongoConfiguration);
             options.Context.Services.AddScoped<IInventoryRepository>(sp =>
             {
                 return new InventoryRepository(
@@ -34,10 +34,11 @@
                         new RepositoryLoggingDecorator<ProductInventory>(
                             sp.GetRequiredService<ILogger<InventoryRepository>>(),
                             new MongoDbRepository<ProductInventory>(o => o
+                                //.Setup(sp, mongoConfiguration)
                                 .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                                 .Mediator(sp.GetRequiredService<IMediator>())
-                                .Client(sp.GetRequiredService<IMongoClient>())
-                                .DatabaseName("naos_sample")))));
+                                .MongoClient(sp.GetRequiredService<IMongoClient>())
+                                .DatabaseName(mongoConfiguration.DatabaseName)))));
             });
 
             options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: inventory service added");

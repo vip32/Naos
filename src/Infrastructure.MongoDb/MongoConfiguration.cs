@@ -2,8 +2,10 @@
 {
     public class MongoConfiguration
     {
-        public string ConnectionString { get; set; }
+        public string ConnectionString { get; set; } = "mongodb://localhost:27017?connectTimeoutMS=300000";
 
-        public string Database { get; set; }
+        public string DatabaseName { get; set; } = "master";
+
+        public bool LogCommands { get; set; } = true;
     }
 }
