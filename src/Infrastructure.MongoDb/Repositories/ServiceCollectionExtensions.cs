@@ -39,8 +39,7 @@
                 ConventionRegistry.Register("naos_conventions", new MongoDbConventions(), x => true);
 
                 var logger = sp.GetRequiredService<ILogger>();
-                var settings = MongoClientSettings.FromUrl(
-                    new MongoUrl(configuration.ConnectionString));
+                var settings = MongoClientSettings.FromUrl(new MongoUrl(configuration.ConnectionString));
                 settings.ClusterConfigurator = c =>
                 {
                     c.Subscribe<CommandStartedEvent>(e =>
