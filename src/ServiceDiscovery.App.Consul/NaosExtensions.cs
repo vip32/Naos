@@ -9,7 +9,6 @@
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Naos.Configuration.App;
-    using Naos.Foundation;
     using Naos.ServiceDiscovery.App;
     using Naos.ServiceDiscovery.App.Consul;
     using Naos.ServiceDiscovery.App.Web;

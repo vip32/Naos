@@ -5,7 +5,6 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Microsoft.IdentityModel.Clients.ActiveDirectory;
-    using Naos.Foundation;
     using Naos.Foundation.Infrastructure;
     using Naos.Tracing.Domain;
     using Naos.Tracing.Infrastructure.Azure;

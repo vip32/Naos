@@ -7,7 +7,6 @@
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Naos.Configuration.App;
-    using Naos.Foundation;
     using Naos.JobScheduling;
     using Naos.JobScheduling.App;
     using Naos.JobScheduling.Domain;

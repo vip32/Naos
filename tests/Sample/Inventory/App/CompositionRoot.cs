@@ -5,9 +5,9 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using MongoDB.Driver;
-    using Naos.Foundation;
     using Naos.Foundation.Domain;
     using Naos.Foundation.Infrastructure;
+    using Naos.Sample.Inventory.Application;
     using Naos.Sample.Inventory.Domain;
     using Naos.Tracing.Domain;
 
@@ -23,6 +23,12 @@
             options.Context.AddTag("Inventory");
 
             var mongoConfiguration = options.Context.Configuration?.GetSection($"{section}:mongo").Get<MongoConfiguration>() ?? new MongoConfiguration();
+
+            //options.Context.Services.AddStartupTaskScoped<SeederStartupTask>();
+            options.Context.Services.AddStartupTask<SeederStartupTask>(sp =>
+                new SeederStartupTask(
+                    sp.GetRequiredService<ILoggerFactory>(),
+                    sp.CreateScope().ServiceProvider.GetService(typeof(IInventoryRepository)) as IInventoryRepository));
 
             options.Context.Services.AddMongoClient(mongoConfiguration);
             options.Context.Services.AddScoped<IInventoryRepository>(sp =>

@@ -4,7 +4,6 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
-    using Naos.Foundation;
     using Naos.Foundation.Domain;
 
     public class SpanEndedLoggerDomainEventHandler

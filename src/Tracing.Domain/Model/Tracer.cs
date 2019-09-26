@@ -2,6 +2,7 @@
 {
     using System;
     using EnsureThat;
+    using Microsoft.Extensions.Logging;
     using Naos.Foundation;
 
     /// <summary>

@@ -2,7 +2,6 @@
 {
     using System.Net.Http;
     using Microsoft.Extensions.Logging;
-    using Naos.Foundation;
     using Naos.Foundation.Infrastructure;
     using Naos.Foundation.Infrastructure.Azure;
     using Naos.Tracing.Domain;

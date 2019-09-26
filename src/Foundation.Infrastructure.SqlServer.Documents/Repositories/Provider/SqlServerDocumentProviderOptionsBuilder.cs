@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
-    using Microsoft.Extensions.Logging;
 
     public class SqlServerDocumentProviderOptionsBuilder<T> :
         BaseOptionsBuilder<SqlServerDocumentProviderOptions<T>, SqlServerDocumentProviderOptionsBuilder<T>>

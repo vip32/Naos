@@ -2,8 +2,8 @@
 {
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
-    using Naos.Foundation;
     using Naos.ServiceExceptions.App.Web;
 
     public static class ApplicationExtensions

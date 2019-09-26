@@ -1,7 +1,5 @@
 ﻿namespace Naos.Tracing.Domain
 {
-    using System.Collections.Generic;
-
     public class ConstantSampler : ISampler
     {
         public void SetSampled(ISpan span)

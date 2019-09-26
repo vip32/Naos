@@ -3,8 +3,8 @@
     using System;
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
+    using Microsoft.Extensions.Logging;
     using Naos.Configuration.App;
-    using Naos.Foundation;
     using Naos.Operations.App;
 
     [ExcludeFromCodeCoverage]

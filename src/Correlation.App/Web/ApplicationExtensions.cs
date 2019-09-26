@@ -3,9 +3,9 @@
     using System;
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Naos.Commands.Correlation.App.Web;
-    using Naos.Foundation;
     using Naos.RequestCorrelation.App;
 
     /// <summary>

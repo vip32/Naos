@@ -3,10 +3,9 @@
     using System;
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
+    using Microsoft.Extensions.Logging;
     using Naos.Configuration.App;
     //using Microsoft.Extensions.Hosting;
-    //using Microsoft.Extensions.Logging;
-    using Naos.Foundation;
     using Naos.Queueing.App;
 
     [ExcludeFromCodeCoverage]

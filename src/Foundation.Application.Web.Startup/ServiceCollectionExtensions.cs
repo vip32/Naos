@@ -37,6 +37,18 @@
                     .AddStartupTaskServerDecorator()
                     .AddTransient<IStartupTask, TStartupTask>();
 
+        public static IServiceCollection AddStartupTaskScoped<TStartupTask>(this IServiceCollection services)
+            where TStartupTask : class, IStartupTask
+                => services
+                    .AddStartupTaskServerDecorator()
+                    .AddTransient(sp => sp.CreateScope().ServiceProvider.GetService<TStartupTask>());
+
+        public static IServiceCollection AddStartupTask<TStartupTask>(this IServiceCollection services, Func<IServiceProvider, TStartupTask> implementationFactory)
+            where TStartupTask : class, IStartupTask
+                => services
+                    .AddStartupTaskServerDecorator()
+                    .AddTransient<IStartupTask>(sp => implementationFactory(sp));
+
         public static IServiceCollection AddStartupTask<TStartupTask>(this IServiceCollection services, TimeSpan delay)
             where TStartupTask : class, IStartupTask
                 => services

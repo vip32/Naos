@@ -3,6 +3,7 @@
     using System.Linq;
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Naos.Commands.App.Web;
     using Naos.Foundation;

@@ -38,15 +38,18 @@
 
                 ConventionRegistry.Register("naos_conventions", new MongoDbConventions(), x => true);
 
-                var logger = sp.GetRequiredService<ILogger>();
                 var settings = MongoClientSettings.FromUrl(new MongoUrl(configuration.ConnectionString));
-                settings.ClusterConfigurator = c =>
+                if (configuration.LoggingEnabled)
                 {
-                    c.Subscribe<CommandStartedEvent>(e =>
+                    var logger = sp.GetRequiredService<ILogger>();
+                    settings.ClusterConfigurator = c =>
                     {
-                        logger.LogDebug($"mongo command: {e.Command.ToJson()}");
-                    });
-                };
+                        c.Subscribe<CommandStartedEvent>(e =>
+                        {
+                            logger.LogDebug("{LogKey:l} execute mongo command: {@Command}", LogKeys.Infrastructure, e.Command.ToJson());
+                        });
+                    };
+                }
 
                 return new MongoClient(settings);
             });

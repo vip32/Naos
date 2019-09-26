@@ -3,8 +3,8 @@
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection.Extensions;
+    using Microsoft.Extensions.Logging;
     using Naos.Configuration.App;
-    using Naos.Foundation;
     using Naos.RequestCorrelation.App;
     using Naos.RequestCorrelation.App.Web;
 

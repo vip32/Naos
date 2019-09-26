@@ -3,7 +3,6 @@
     using EnsureThat;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using Naos.Foundation;
     using Naos.Foundation.Infrastructure;
     using Naos.Sample.Catalogs.Domain;
 

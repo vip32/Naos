@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using Microsoft.Extensions.Logging;
     using Naos.Foundation;
     using Naos.Foundation.Domain;
 

@@ -1,9 +1,5 @@
 ﻿namespace Naos.Tracing.Domain
 {
-    using System;
-    using EnsureThat;
-    using Naos.Foundation;
-
     public interface ISampler
     {
         /// <summary>

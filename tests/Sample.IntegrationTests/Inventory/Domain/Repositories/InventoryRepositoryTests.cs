@@ -1,10 +1,8 @@
 ﻿namespace Naos.Sample.IntegrationTests.Inventory.Domain
 {
-    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using Bogus;
-    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Foundation;
     using Naos.Foundation.Domain;

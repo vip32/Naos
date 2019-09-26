@@ -6,6 +6,6 @@
 
         public string DatabaseName { get; set; } = "master";
 
-        public bool LogCommands { get; set; } = true;
+        public bool LoggingEnabled { get; set; } = true;
     }
 }

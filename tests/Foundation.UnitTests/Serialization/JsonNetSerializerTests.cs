@@ -1,8 +1,6 @@
 ﻿namespace Naos.Foundation.UnitTests.Serialization
 {
-    using System.IO;
     using Naos.Foundation;
-    using Shouldly;
     using Xunit;
 
     public class JsonNetSerializerTests : SerializerTestsBase

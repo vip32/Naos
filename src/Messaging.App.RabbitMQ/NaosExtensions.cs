@@ -7,7 +7,6 @@
     using EnsureThat;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using Naos.Foundation;
     using Naos.Messaging;
     using Naos.Messaging.App;
     using Naos.Messaging.Domain;

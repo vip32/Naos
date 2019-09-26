@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Foundation;
 
     public class AsyncLocalScope : IScope
     {

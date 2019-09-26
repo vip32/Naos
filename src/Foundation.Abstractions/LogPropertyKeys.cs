@@ -1,4 +1,4 @@
-﻿namespace Naos.Foundation
+﻿namespace Microsoft.Extensions.Logging
 {
     public struct LogPropertyKeys
     {

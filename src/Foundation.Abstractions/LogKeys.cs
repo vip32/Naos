@@ -1,4 +1,4 @@
-﻿namespace Naos.Foundation
+﻿namespace Microsoft.Extensions.Logging
 {
     public struct LogKeys
     {
@@ -11,6 +11,7 @@
         public const string OutboundResponse = "OUTRES";
         public const string AppCommand = "APPCMD";
         public const string DomainRepository = "DOMREP";
+        public const string Infrastructure = "INFRST";
         public const string DomainEvent = "DOMEVT";
         public const string Messaging = "MESSAG";
         public const string JobScheduling = "JOBSCH";

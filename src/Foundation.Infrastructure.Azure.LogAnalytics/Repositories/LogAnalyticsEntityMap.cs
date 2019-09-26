@@ -1,6 +1,7 @@
 ﻿namespace Naos.Foundation.Infrastructure.Azure
 {
     using System.Collections.Generic;
+    using Microsoft.Extensions.Logging;
     using Naos.Foundation;
 
     public class LogAnalyticsEntityMap

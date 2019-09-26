@@ -5,7 +5,6 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
-    using Naos.Tracing.Domain;
 
     public class LoggingCommandRequestExtension : CommandRequestExtension
     {

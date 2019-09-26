@@ -1,7 +1,6 @@
 ﻿namespace Naos.Tracing.Domain
 {
     using System.Collections.Generic;
-    using EnsureThat;
     using Naos.Foundation;
 
     /// <summary>

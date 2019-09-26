@@ -7,7 +7,6 @@
     using Microsoft.Extensions.Logging;
     using Naos.FileStorage.Domain;
     using Naos.FileStorage.Infrastructure;
-    using Naos.Foundation;
     using Naos.Foundation.Infrastructure;
     using Naos.Operations.App;
     using Naos.Operations.App.Web;
