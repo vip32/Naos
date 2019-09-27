@@ -25,7 +25,6 @@
     <ProjectReference Include="..\Messaging.App.FileSystem\Messaging.App.FileStorage.csproj" />
     <ProjectReference Include="..\Messaging.App.RabbitMQ\Messaging.App.RabbitMQ.csproj" />
     <ProjectReference Include="..\Messaging.App\Messaging.App.csproj" />
-    <ProjectReference Include="..\Operations.App.Azure\Operations.App.Azure.csproj" />
     <ProjectReference Include="..\Operations.App\Operations.App.csproj" />
     <ProjectReference Include="..\Queueing.App\Queueing.App.csproj" />
     <ProjectReference Include="..\ServiceContext.App\ServiceContext.App.csproj" />

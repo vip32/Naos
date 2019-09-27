@@ -20,7 +20,7 @@
                 .AddNaos(configuration, "Product", "Capability", new[] { "All" }, n => n
                     .AddOperations(o => o
                         .AddLogging(
-                            l => l.UseAzureLogAnalytics(), // registers ILogEventRepository
+                            l => l.UseAzureLogAnalytics(), // registers loganalytics sink
                             correlationId: $"TEST{IdGenerator.Instance.Next}"))
                     .AddJobScheduling());
 

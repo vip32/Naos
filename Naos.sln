@@ -155,8 +155,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.App", "src\Messag
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Operations.App", "src\Operations.App\Operations.App.csproj", "{43426134-C349-424B-8EFB-5B0BE4FB4770}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Operations.App.Azure", "src\Operations.App.Azure\Operations.App.Azure.csproj", "{231DFFA5-1A61-4BB4-BA85-E553160FCCD5}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Operations.Infrastructure.Azure", "src\Operations.Infrastructure.Azure\Operations.Infrastructure.Azure.csproj", "{4A75E6AE-B6FF-4EB2-8ED6-B3FC95D7AFC9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dashboard", "Dashboard", "{E8E0A86B-4320-4769-9CB3-158FCFB567C6}"
@@ -243,9 +241,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Foundation.Infrastructure",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Mongo", "src\Foundation.Infrastructure.Mongo\Infrastructure.Mongo.csproj", "{EAA5F0C8-3E6C-4CA2-B279-74FC12B54A78}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Operations.Infrastructure.Mongo", "src\Operations.Infrastructure.Mongo\Operations.Infrastructure.Mongo.csproj", "{FF2B24EF-BBE6-4C2B-9384-CEA121F0F942}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Operations.Infrastructure.Mongo", "src\Operations.Infrastructure.Mongo\Operations.Infrastructure.Mongo.csproj", "{FF2B24EF-BBE6-4C2B-9384-CEA121F0F942}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Operations.Abstractions", "src\Operations.Abstractions\Operations.Abstractions.csproj", "{0CED38FB-1DB5-42B0-879F-334132E887FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Operations.Abstractions", "src\Operations.Abstractions\Operations.Abstractions.csproj", "{0CED38FB-1DB5-42B0-879F-334132E887FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -881,18 +879,6 @@ Global
 		{43426134-C349-424B-8EFB-5B0BE4FB4770}.Release|x64.Build.0 = Release|Any CPU
 		{43426134-C349-424B-8EFB-5B0BE4FB4770}.Release|x86.ActiveCfg = Release|Any CPU
 		{43426134-C349-424B-8EFB-5B0BE4FB4770}.Release|x86.Build.0 = Release|Any CPU
-		{231DFFA5-1A61-4BB4-BA85-E553160FCCD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{231DFFA5-1A61-4BB4-BA85-E553160FCCD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{231DFFA5-1A61-4BB4-BA85-E553160FCCD5}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{231DFFA5-1A61-4BB4-BA85-E553160FCCD5}.Debug|x64.Build.0 = Debug|Any CPU
-		{231DFFA5-1A61-4BB4-BA85-E553160FCCD5}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{231DFFA5-1A61-4BB4-BA85-E553160FCCD5}.Debug|x86.Build.0 = Debug|Any CPU
-		{231DFFA5-1A61-4BB4-BA85-E553160FCCD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{231DFFA5-1A61-4BB4-BA85-E553160FCCD5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{231DFFA5-1A61-4BB4-BA85-E553160FCCD5}.Release|x64.ActiveCfg = Release|Any CPU
-		{231DFFA5-1A61-4BB4-BA85-E553160FCCD5}.Release|x64.Build.0 = Release|Any CPU
-		{231DFFA5-1A61-4BB4-BA85-E553160FCCD5}.Release|x86.ActiveCfg = Release|Any CPU
-		{231DFFA5-1A61-4BB4-BA85-E553160FCCD5}.Release|x86.Build.0 = Release|Any CPU
 		{4A75E6AE-B6FF-4EB2-8ED6-B3FC95D7AFC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4A75E6AE-B6FF-4EB2-8ED6-B3FC95D7AFC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A75E6AE-B6FF-4EB2-8ED6-B3FC95D7AFC9}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -1457,7 +1443,6 @@ Global
 		{5E99E54E-C80C-43C2-8200-EAC38CE4AAA0} = {AFFFA2BF-7B96-438F-B295-C5DF03786CB4}
 		{0252F08C-D6DD-4871-BC7E-D11D0BF5749C} = {126FE8D9-ED1F-4122-B0E8-07E13D94795A}
 		{43426134-C349-424B-8EFB-5B0BE4FB4770} = {AF6ABB51-8C80-4AB1-9AE0-82F2C38F4092}
-		{231DFFA5-1A61-4BB4-BA85-E553160FCCD5} = {AF6ABB51-8C80-4AB1-9AE0-82F2C38F4092}
 		{4A75E6AE-B6FF-4EB2-8ED6-B3FC95D7AFC9} = {AF6ABB51-8C80-4AB1-9AE0-82F2C38F4092}
 		{E8E0A86B-4320-4769-9CB3-158FCFB567C6} = {09D80029-71E3-4B4D-AA1A-CD153787AED0}
 		{5FA2F253-A90C-49DC-8C3C-B3AAEFFB537B} = {B3E3492F-C362-469F-BF49-20C58714A183}

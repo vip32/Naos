@@ -33,6 +33,7 @@
     <ProjectReference Include="..\..\src\App\App.csproj" />
     <ProjectReference Include="..\..\src\Commands.Infrastructure.FileStorage\Commands.Infrastructure.FileStorage.csproj" />
     <ProjectReference Include="..\..\src\Messaging\Messaging.csproj" />
+    <ProjectReference Include="..\..\src\Operations.Infrastructure.Azure\Operations.Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\Sample.App\Sample.App.csproj" />
   </ItemGroup>
 
