@@ -1,5 +1,6 @@
 ﻿namespace Naos.Sample.IntegrationTests.Inventory.Domain
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using Bogus;
@@ -10,23 +11,27 @@
     using Shouldly;
     using Xunit;
 
-    public class InventoryRepositoryTests : BaseTest
+    public class ReplenishmentRepositoryTests : BaseTest
     {
         // https://xunit.github.io/docs/shared-context.html
-        private readonly IGenericRepository<ProductInventory> sut;
-        private readonly Faker<ProductInventory> entityFaker;
+        private readonly IGenericRepository<ProductReplenishment> sut;
+        private readonly Faker<ProductReplenishment> entityFaker;
         private readonly string tenantId = "naos_sample_test";
 
-        public InventoryRepositoryTests()
+        public ReplenishmentRepositoryTests()
         {
             //this.sut = this.ServiceProvider.GetService<IUserAccountRepository>();
-            this.sut = this.ServiceProvider.GetRequiredService<IInventoryRepository>();
+            this.sut = this.ServiceProvider.GetRequiredService<IReplenishmentRepository>();
             var domains = new[] { "East", "West" };
-            this.entityFaker = new Faker<ProductInventory>() //https://github.com/bchavez/Bogus
+            this.entityFaker = new Faker<ProductReplenishment>() //https://github.com/bchavez/Bogus
                 //.RuleFor(u => u.Id, f => Guid.NewGuid().ToString())
                 .RuleFor(u => u.Number, f => f.Random.Replace("??-#####"))
                 .RuleFor(u => u.Region, (f, u) => f.PickRandom(new[] { "East", "West" }))
                 .RuleFor(u => u.Quantity, f => f.Random.Int(0, 999))
+                .RuleFor(u => u.ShippedFromLocation, (f, u) => f.PickRandom(new[] { "de", "us", "ch", "pl" }))
+                .RuleFor(u => u.ArrivedAtLocation, (f, u) => f.PickRandom(new[] { "de", "us", "ch", "pl" }))
+                .RuleFor(u => u.ShippedDate, (f, u) => DateTime.UtcNow)
+                .RuleFor(u => u.ArrivedDate, (f, u) => DateTime.UtcNow)
                 .RuleFor(u => u.TenantId, f => this.tenantId);
         }
 
@@ -46,7 +51,7 @@
         {
             // arrange/act
             var result = await this.sut.FindAllAsync(
-                new FindOptions<ProductInventory>(order: new OrderOption<ProductInventory>(e => e.Region))).AnyContext();
+                new FindOptions<ProductReplenishment>(order: new OrderOption<ProductReplenishment>(e => e.Region))).AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -60,7 +65,7 @@
         {
             // arrange/act
             var result = await this.sut.FindAllAsync(
-                new FindOptions<ProductInventory>(take: 3)).AnyContext();
+                new FindOptions<ProductReplenishment>(take: 3)).AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -84,7 +89,7 @@
         {
             // arrange/act
             var result = await this.sut.FindAllAsync(
-                new InventoryHasRegionSpecification("East")).AnyContext();
+                new ReplenishmentHasRegionSpecification("East")).AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -92,7 +97,7 @@
 
             // arrange/act
             result = await this.sut.FindAllAsync(
-                new Specification<ProductInventory>(e => e.Quantity > 0)).AnyContext();
+                new Specification<ProductReplenishment>(e => e.Quantity > 0)).AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -106,8 +111,8 @@
 
             // arrange/act
             var result = await this.sut.FindAllAsync(
-                new InventoryHasRegionSpecification("East")
-                .And(new Specification<ProductInventory>(e => e.Quantity > 0))).AnyContext();
+                new ReplenishmentHasRegionSpecification("East")
+                .And(new Specification<ProductReplenishment>(e => e.Quantity > 0))).AnyContext();
 
             // assert
             result.ShouldNotBeNull();
@@ -121,8 +126,8 @@
             var result = await this.sut.FindAllAsync(
                 new[]
                 {
-                    new InventoryHasRegionSpecification("East"),
-                    new Specification<ProductInventory>(e => e.Quantity > 0)
+                    new ReplenishmentHasRegionSpecification("East"),
+                    new Specification<ProductReplenishment>(e => e.Quantity > 0)
                 }).AnyContext();
 
             // assert
@@ -137,7 +142,7 @@
             var result = await this.sut.FindAllAsync(
                 new[]
                 {
-                    new Specification<ProductInventory>(e => e.Region == "East" && e.Quantity > 0 )
+                    new Specification<ProductReplenishment>(e => e.Region == "East" && e.Quantity > 0 )
                 }).AnyContext();
 
             // assert
@@ -150,7 +155,7 @@
         {
             // arrange
             var entities = await this.sut.FindAllAsync(
-                new FindOptions<ProductInventory>(take: 1)).AnyContext();
+                new FindOptions<ProductReplenishment>(take: 1)).AnyContext();
 
             // act
             var entity = await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).AnyContext();
@@ -166,7 +171,7 @@
         {
             // arrange
             var entities = await this.sut.FindAllAsync(
-                new FindOptions<ProductInventory>(take: 1)).AnyContext();
+                new FindOptions<ProductReplenishment>(take: 1)).AnyContext();
 
             // act
             var entity = await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).AnyContext();
@@ -192,7 +197,7 @@
         {
             // arrange
             var entities = await this.sut.FindAllAsync(
-                new FindOptions<ProductInventory>(take: 1)).AnyContext();
+                new FindOptions<ProductReplenishment>(take: 1)).AnyContext();
 
             // act
             var entity = await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).AnyContext();
@@ -227,10 +232,10 @@
                 result.action.ShouldNotBe(ActionResult.None);
                 result.entity.ShouldNotBeNull();
                 result.entity.Id.ShouldNotBeNull();
-                result.entity.IdentifierHash.ShouldNotBeNull(); // EntityInsertDomainEventHandler
-                result.entity.State.ShouldNotBeNull();
-                result.entity.State.CreatedDescription.ShouldNotBeNull(); // EntityInsertDomainEventHandler
-                result.entity.State.CreatedBy.ShouldNotBeNull(); // EntityInsertDomainEventHandler
+                //result.entity.IdentifierHash.ShouldNotBeNull(); // EntityInsertDomainEventHandler
+                //result.entity.State.ShouldNotBeNull();
+                //result.entity.State.CreatedDescription.ShouldNotBeNull(); // EntityInsertDomainEventHandler
+                //result.entity.State.CreatedBy.ShouldNotBeNull(); // EntityInsertDomainEventHandler
             }
         }
 
@@ -239,7 +244,7 @@
         {
             // arrange
             var entities = await this.sut.FindAllAsync(
-                new FindOptions<ProductInventory>(take: 1)).AnyContext();
+                new FindOptions<ProductReplenishment>(take: 1)).AnyContext();
 
             // act
             await this.sut.DeleteAsync(entities.FirstOrDefault()).AnyContext();

@@ -9,6 +9,7 @@
     using Naos.Foundation.Infrastructure;
     using Naos.Sample.Inventory.Application;
     using Naos.Sample.Inventory.Domain;
+    using Naos.Sample.Inventory.Infrastructure;
     using Naos.Tracing.Domain;
 
     public static partial class CompositionRoot
@@ -44,6 +45,25 @@
                                 .Mediator(sp.GetRequiredService<IMediator>())
                                 .MongoClient(sp.GetRequiredService<IMongoClient>())
                                 .DatabaseName(mongoConfiguration.DatabaseName)))));
+            });
+
+            options.Context.Services.AddScoped<IReplenishmentRepository>(sp =>
+            {
+                return new ReplenishmentRepository(
+                    new RepositoryTracingDecorator<ProductReplenishment>(
+                        sp.GetService<ILogger<ReplenishmentRepository>>(),
+                        sp.GetService<ITracer>(),
+                        new RepositoryLoggingDecorator<ProductReplenishment>(
+                            sp.GetRequiredService<ILogger<ReplenishmentRepository>>(),
+                            new MongoRepository<ProductReplenishment, DtoProductReplenishment>(o => o
+                                //.Setup(sp, mongoConfiguration)
+                                .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
+                                .Mediator(sp.GetRequiredService<IMediator>())
+                                .MongoClient(sp.GetRequiredService<IMongoClient>())
+                                .Mapper(new AutoMapperEntityMapper(MapperFactory.Create()))
+                                .DatabaseName(mongoConfiguration.DatabaseName)
+                                .CollectionName("ProductReplenishments"),
+                                e => e.Id))));
             });
 
             options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: inventory service added");

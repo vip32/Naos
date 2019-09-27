@@ -2,9 +2,9 @@
 {
     using Naos.Foundation.Domain;
 
-    public class HasRegionSpecification : Specification<ProductInventory>
+    public class InventoryHasRegionSpecification : Specification<ProductInventory>
     {
-        public HasRegionSpecification(string region)
+        public InventoryHasRegionSpecification(string region)
             : base(e => e.Region == region)
         {
         }
