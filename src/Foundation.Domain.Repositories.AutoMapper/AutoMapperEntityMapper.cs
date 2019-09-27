@@ -46,5 +46,13 @@
                 .MapExpression<Expression<Func<TDestination, bool>>>(specification.ToExpression());
             return expression.Compile(); // replace wit CompileFast()? https://github.com/dadhi/FastExpressionCompiler
         }
+
+        public Expression<Func<TDestination, bool>> MapSpecification2<TSource, TDestination>(ISpecification<TSource> specification)
+        {
+            EnsureArg.IsNotNull(specification, nameof(specification));
+
+            return this.mapper
+                .MapExpression<Expression<Func<TDestination, bool>>>(specification.ToExpression()); // replace wit CompileFast()? https://github.com/dadhi/FastExpressionCompiler
+        }
     }
 }

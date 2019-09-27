@@ -46,5 +46,7 @@
         /// </summary>
         /// <param name="specification">The specification.</param>
         Func<TDestination, bool> MapSpecification<TSource, TDestination>(ISpecification<TSource> specification);
+
+        Expression<Func<TDestination, bool>> MapSpecification2<TSource, TDestination>(ISpecification<TSource> specification);
     }
 }

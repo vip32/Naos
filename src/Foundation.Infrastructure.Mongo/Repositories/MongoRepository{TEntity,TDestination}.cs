@@ -87,14 +87,14 @@
         public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
             var specificationsArray = specifications as ISpecification<TEntity>[] ?? specifications.ToArray();
-            //var expressions = specificationsArray.Safe().Select(s => s.ToExpression());
+            var expressions = specificationsArray.Safe().Select(s => this.EnsurePredicate(s));
 
             var result = await Task.Run(() =>
             {
                 if (options?.HasOrders() == true)
                 {
                     return this.Collection.AsQueryable()
-                        .WhereExpressions(specificationsArray.Select(e => this.EnsurePredicate(e)))
+                        .WhereExpressions(expressions)
                         .SkipIf(options?.Skip)
                         .TakeIf(options?.Take)
                         //.OrderByIf(options)
@@ -103,7 +103,7 @@
                 else
                 {
                     return this.Collection.AsQueryable()
-                        .WhereExpressions(specificationsArray.Select(e => this.EnsurePredicate(e)))
+                        .WhereExpressions(expressions)
                         .SkipIf(options?.Skip)
                         .TakeIf(options?.Take)
                         .ToList();
@@ -221,9 +221,9 @@
             return await this.DeleteAsync(entity.Id).AnyContext();
         }
 
-        protected Func<TDestination, bool> EnsurePredicate(ISpecification<TEntity> specification)
+        protected Expression<Func<TDestination, bool>> EnsurePredicate(ISpecification<TEntity> specification)
         {
-            return this.Options.Mapper.MapSpecification<TEntity, TDestination>(specification);
+            return this.Options.Mapper.MapSpecification2<TEntity, TDestination>(specification);
         }
 
         protected virtual LambdaExpression EnsureExpression(LambdaExpression expression)
