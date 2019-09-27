@@ -1,5 +1,7 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
+    using System;
+    using System.Linq.Expressions;
     using EnsureThat;
     using MediatR;
     using Microsoft.Extensions.Configuration;
@@ -62,8 +64,7 @@
                                 .MongoClient(sp.GetRequiredService<IMongoClient>())
                                 .Mapper(new AutoMapperEntityMapper(MapperFactory.Create()))
                                 .DatabaseName(mongoConfiguration.DatabaseName)
-                                .CollectionName("ProductReplenishments"),
-                                e => e.Id))));
+                                .CollectionName("ProductReplenishments")))));
             });
 
             options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: inventory service added");

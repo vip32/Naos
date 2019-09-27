@@ -2,9 +2,10 @@
 {
     using System;
     using Microsoft.Extensions.Logging;
+    using Naos.Foundation.Infrastructure;
     using Newtonsoft.Json;
 
-    public class MongoLogEvent
+    public class MongoLogEvent : IMongoEntity
     {
         public string Id { get; set; }
 

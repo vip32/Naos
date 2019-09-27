@@ -176,12 +176,9 @@
             // act
             var entity = await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).AnyContext();
             entity.ShouldNotBeNull();
-            entity.State.ShouldNotBeNull();
-            entity.Number.ShouldNotBeNull();
 
             var newNumber = RandomGenerator.GenerateString(8);
             entity.Number = newNumber;
-            entity.State.SetUpdated("test", "reason " + new DateTimeEpoch().Epoch);
             await this.sut.UpsertAsync(entity).AnyContext();
             var modifiedEntity = await this.sut.FindOneAsync(entity.Id).AnyContext();
 
@@ -189,7 +186,6 @@
             entity.ShouldNotBeNull();
             modifiedEntity.ShouldNotBeNull();
             modifiedEntity.Number.ShouldBe(newNumber);
-            modifiedEntity.State.UpdatedReasons.ToString(";").ShouldContain("reason ");
         }
 
         [Fact]

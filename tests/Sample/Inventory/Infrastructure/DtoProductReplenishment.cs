@@ -2,8 +2,9 @@
 {
     using System;
     using Naos.Foundation.Domain;
+    using Naos.Foundation.Infrastructure;
 
-    public class DtoProductReplenishment
+    public class DtoProductReplenishment : IMongoEntity
     {
         public string Id { get; set; }
 

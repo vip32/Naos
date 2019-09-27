@@ -17,13 +17,12 @@
 
     public class MongoRepository<TEntity, TDestination> : IGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
+        where TDestination : class, IMongoEntity
     {
         private readonly ILogger<IGenericRepository<TEntity>> logger;
-        private readonly Func<TDestination, object> idSelector;
 
         public MongoRepository(
-            MongoRepositoryOptions<TEntity> options,
-            Func<TDestination, object> idSelector)
+            MongoRepositoryOptions<TEntity> options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.MongoClient, nameof(options.MongoClient));
@@ -31,19 +30,17 @@
             EnsureArg.IsNotNullOrEmpty(options.CollectionName, nameof(options.CollectionName));
             EnsureArg.IsNotNull(options.IdGenerator, nameof(options.IdGenerator));
             EnsureArg.IsNotNull(options.Mapper, nameof(options.Mapper));
-            EnsureArg.IsNotNull(idSelector, nameof(idSelector));
 
             this.Options = options;
             this.logger = options.CreateLogger<IGenericRepository<TEntity>>();
-            this.idSelector = idSelector;
 
             this.Collection = options.MongoClient
                 .GetDatabase(options.DatabaseName)
                 .GetCollection<TDestination>(options.CollectionName);
         }
 
-        public MongoRepository(Builder<MongoRepositoryOptionsBuilder<TEntity>, MongoRepositoryOptions<TEntity>> optionsBuilder, Func<TDestination, object> idSelector)
-            : this(optionsBuilder(new MongoRepositoryOptionsBuilder<TEntity>()).Build(), idSelector)
+        public MongoRepository(Builder<MongoRepositoryOptionsBuilder<TEntity>, MongoRepositoryOptions<TEntity>> optionsBuilder)
+            : this(optionsBuilder(new MongoRepositoryOptionsBuilder<TEntity>()).Build())
         {
         }
 
@@ -68,7 +65,7 @@
                 return null;
             }
 
-            var result = await this.Collection.Find(e => this.idSelector(e) == id).SingleOrDefaultAsync().AnyContext();
+            var result = await this.Collection.Find(e => e.Id.Equals(id)).SingleOrDefaultAsync().AnyContext();
             return this.Options.Mapper.Map<TEntity>(result);
         }
 
@@ -140,7 +137,7 @@
             }
 
             var dEntity = this.Options.Mapper.Map<TDestination>(entity);
-            await this.Collection.ReplaceOneAsync(e => this.idSelector(e) == entity.Id, dEntity).AnyContext();
+            await this.Collection.ReplaceOneAsync(e => e.Id.Equals(entity.Id), dEntity).AnyContext();
             return entity;
         }
 
@@ -210,7 +207,7 @@
                 return ActionResult.None;
             }
 
-            var result = await this.Collection.DeleteOneAsync(e => this.idSelector(e) == id).AnyContext();
+            var result = await this.Collection.DeleteOneAsync(e => e.Id.Equals(id)).AnyContext();
             return result.DeletedCount > 0 ? ActionResult.Deleted : ActionResult.None;
         }
 
