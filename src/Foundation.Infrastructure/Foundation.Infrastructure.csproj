@@ -16,7 +16,7 @@
     <ProjectReference Include="..\Foundation.Infrastructure.EntityFramework\Infrastructure.EntityFramework.csproj" />
     <ProjectReference Include="..\Foundation.Infrastructure.Sqlite.Documents\Infrastructure.Sqlite.Documents.csproj" />
     <ProjectReference Include="..\Foundation.Infrastructure.SqlServer.Documents\Infrastructure.SqlServer.Documents.csproj" />
-    <ProjectReference Include="..\Infrastructure.MongoDb\Infrastructure.MongoDb.csproj" />
+    <ProjectReference Include="..\Foundation.Infrastructure.Mongo\Infrastructure.Mongo.csproj" />
   </ItemGroup>
 
 </Project>
