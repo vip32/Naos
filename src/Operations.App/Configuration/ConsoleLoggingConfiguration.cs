@@ -1,6 +1,6 @@
 ﻿namespace Naos.Operations.App
 {
-    public class LogConsoleConfiguration
+    public class ConsoleLoggingConfiguration
     {
         public bool Enabled { get; set; } = true;
     }

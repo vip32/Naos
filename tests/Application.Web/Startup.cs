@@ -153,7 +153,8 @@
                             .UseConsole(LogLevel.Debug)
                             .UseFile()
                             //.UseAzureBlobStorage()
-                            .UseAzureLogAnalytics())
+                            .UseAzureLogAnalytics()
+                            .UseMongo())
                         .AddSystemHealthChecks()
                         .AddRequestStorage(o => o
                             .UseAzureBlobStorage())

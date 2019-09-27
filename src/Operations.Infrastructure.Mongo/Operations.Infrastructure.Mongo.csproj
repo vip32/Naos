@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serilog.Sinks.MongoDB" Version="4.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Foundation.Infrastructure.Mongo\Infrastructure.Mongo.csproj" />
+    <ProjectReference Include="..\Operations.Abstractions\Operations.Abstractions.csproj" />
+    <ProjectReference Include="..\Operations.Domain\Operations.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

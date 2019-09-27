@@ -13,13 +13,13 @@
     using MongoDB.Driver;
     using Naos.Foundation.Domain;
 
-    public class MongoDbRepository<TEntity> : IGenericRepository<TEntity>
+    public class MongoRepository<TEntity> : IGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
         private readonly ILogger<IGenericRepository<TEntity>> logger;
-        private readonly MongoDbRepositoryOptions<TEntity> options;
+        private readonly MongoRepositoryOptions<TEntity> options;
 
-        public MongoDbRepository(MongoDbRepositoryOptions<TEntity> options)
+        public MongoRepository(MongoRepositoryOptions<TEntity> options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.MongoClient, nameof(options.MongoClient));
@@ -43,8 +43,8 @@
                 .GetCollection<TEntity>(options.CollectionName);
         }
 
-        public MongoDbRepository(Builder<MongoDbRepositoryOptionsBuilder<TEntity>, MongoDbRepositoryOptions<TEntity>> optionsBuilder)
-            : this(optionsBuilder(new MongoDbRepositoryOptionsBuilder<TEntity>()).Build())
+        public MongoRepository(Builder<MongoRepositoryOptionsBuilder<TEntity>, MongoRepositoryOptions<TEntity>> optionsBuilder)
+            : this(optionsBuilder(new MongoRepositoryOptionsBuilder<TEntity>()).Build())
         {
         }
 

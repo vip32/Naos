@@ -38,7 +38,7 @@
                         sp.GetService<ITracer>(),
                         new RepositoryLoggingDecorator<ProductInventory>(
                             sp.GetRequiredService<ILogger<InventoryRepository>>(),
-                            new MongoDbRepository<ProductInventory>(o => o
+                            new MongoRepository<ProductInventory>(o => o
                                 //.Setup(sp, mongoConfiguration)
                                 .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                                 .Mediator(sp.GetRequiredService<IMediator>())

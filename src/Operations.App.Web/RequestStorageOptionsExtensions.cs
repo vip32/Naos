@@ -21,7 +21,7 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            var configuration = options.Context.Configuration?.GetSection(section).Get<LogFileConfiguration>();
+            var configuration = options.Context.Configuration?.GetSection(section).Get<FileLoggingConfiguration>();
             if (configuration?.Enabled == true)
             {
                 options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: request storage added (type={typeof(FolderFileStorage).Name})");

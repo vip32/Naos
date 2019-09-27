@@ -7,11 +7,11 @@
     using MongoDB.Driver;
     using Naos.Foundation.Domain;
 
-    public class MongoDbRepositoryOptionsBuilder<TEntity> :
-        BaseOptionsBuilder<MongoDbRepositoryOptions<TEntity>, MongoDbRepositoryOptionsBuilder<TEntity>>
+    public class MongoRepositoryOptionsBuilder<TEntity> :
+        BaseOptionsBuilder<MongoRepositoryOptions<TEntity>, MongoRepositoryOptionsBuilder<TEntity>>
         where TEntity : class, IEntity, IAggregateRoot
     {
-        public MongoDbRepositoryOptionsBuilder<TEntity> Setup(IServiceProvider sp, MongoConfiguration configuration = null)
+        public MongoRepositoryOptionsBuilder<TEntity> Setup(IServiceProvider sp, MongoConfiguration configuration = null)
         {
             this.LoggerFactory(sp.GetRequiredService<ILoggerFactory>());
             this.Mediator(sp.GetRequiredService<IMediator>());
@@ -21,31 +21,31 @@
             return this;
         }
 
-        public MongoDbRepositoryOptionsBuilder<TEntity> Mediator(IMediator mediator)
+        public MongoRepositoryOptionsBuilder<TEntity> Mediator(IMediator mediator)
         {
             this.Target.Mediator = mediator;
             return this;
         }
 
-        public MongoDbRepositoryOptionsBuilder<TEntity> PublishEvents(bool publishEvents)
+        public MongoRepositoryOptionsBuilder<TEntity> PublishEvents(bool publishEvents)
         {
             this.Target.PublishEvents = publishEvents;
             return this;
         }
 
-        public MongoDbRepositoryOptionsBuilder<TEntity> MongoClient(IMongoClient client)
+        public MongoRepositoryOptionsBuilder<TEntity> MongoClient(IMongoClient client)
         {
             this.Target.MongoClient = client;
             return this;
         }
 
-        public MongoDbRepositoryOptionsBuilder<TEntity> DatabaseName(string name)
+        public MongoRepositoryOptionsBuilder<TEntity> DatabaseName(string name)
         {
             this.Target.DatabaseName = name;
             return this;
         }
 
-        public MongoDbRepositoryOptionsBuilder<TEntity> CollectionName(string name)
+        public MongoRepositoryOptionsBuilder<TEntity> CollectionName(string name)
         {
             this.Target.CollectionName = name;
             return this;

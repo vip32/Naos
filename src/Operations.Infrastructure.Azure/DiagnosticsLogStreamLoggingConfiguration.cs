@@ -2,8 +2,17 @@
 {
     using System.IO;
 
-    public class LogFileConfiguration
+    public class DiagnosticsLogStreamLoggingConfiguration
     {
+        public DiagnosticsLogStreamLoggingConfiguration()
+        {
+            this.File = @"D:\home\LogFiles\Application\naos.log";
+            this.FileSizeLimitBytes = 1_000_000;
+            this.RollOnFileSizeLimit = true;
+            this.Shared = true;
+            this.FlushToDiskIntervalSeconds = 1;
+        }
+
         public bool Enabled { get; set; } = true;
 
         public string Folder { get; set; } = Path.GetTempPath();

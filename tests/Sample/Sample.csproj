@@ -44,7 +44,7 @@
     <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure.CosmosDb\Infrastructure.Azure.CosmosDb.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Infrastructure.EntityFramework\Infrastructure.EntityFramework.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Infrastructure.Sqlite.Documents\Infrastructure.Sqlite.Documents.csproj" />
-    <ProjectReference Include="..\..\src\Foundation.Infrastructure.MongoDb\Infrastructure.Mongo.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Infrastructure.Mongo\Infrastructure.Mongo.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Infrastructure.SqlServer.Documents\Infrastructure.SqlServer.Documents.csproj" />
     <ProjectReference Include="..\..\src\App.Web\App.Web.csproj" />
     <ProjectReference Include="..\..\src\App\App.csproj" />

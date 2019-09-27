@@ -36,7 +36,7 @@
                         new NullableSerializer<decimal>(new DecimalSerializer(BsonType.Decimal128)));
                 }
 
-                ConventionRegistry.Register("naos_conventions", new MongoDbConventions(), x => true);
+                ConventionRegistry.Register("naos_conventions", new MongoConventions(), x => true);
 
                 var settings = MongoClientSettings.FromUrl(new MongoUrl(configuration.ConnectionString));
                 if (configuration.LoggingEnabled)
@@ -57,7 +57,7 @@
             return services;
         }
 
-        private class MongoDbConventions : IConventionPack
+        private class MongoConventions : IConventionPack
         {
             public IEnumerable<IConvention> Conventions => new List<IConvention>
             {
