@@ -1,31 +1,21 @@
 ﻿namespace Naos.Operations.Infrastructure.Mongo
 {
+    using System;
     using Naos.Foundation;
     using Naos.Foundation.Infrastructure;
     using Naos.Operations.Domain;
 
-    public class MongoLogEventRepository : MongoRepository<LogEvent>, ILogEventRepository
+    public class MongoLogEventRepository : MongoRepository<LogEvent, MongoLogEvent>, ILogEventRepository
     {
-        public MongoLogEventRepository(MongoRepositoryOptions<LogEvent> options)
-            : base(options)
+        public MongoLogEventRepository(MongoRepositoryOptions<LogEvent> options, Func<MongoLogEvent, object> idSelector)
+            : base(options, idSelector)
         {
         }
 
         public MongoLogEventRepository(
-            Builder<MongoRepositoryOptionsBuilder<LogEvent>, MongoRepositoryOptions<LogEvent>> optionsBuilder)
-            : base(optionsBuilder)
+            Builder<MongoRepositoryOptionsBuilder<LogEvent>, MongoRepositoryOptions<LogEvent>> optionsBuilder, Func<MongoLogEvent, object> idSelector)
+            : base(optionsBuilder, idSelector)
         {
-            // TODO: property mapping map
         }
-
-        //public LogAnalyticsLogEventRepository(
-        //    ILoggerFactory loggerFactory,
-        //    HttpClient httpClient,
-        //    LogAnalyticsConfiguration configuration,
-        //    string accessToken,
-        //    IEnumerable<LogAnalyticsEntityMap> entityMap = null)
-        //    : base(loggerFactory, httpClient, configuration, accessToken, entityMap)
-        //{
-        //}
     }
 }

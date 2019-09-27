@@ -25,5 +25,7 @@
         public string CollectionName { get; set; } = typeof(TEntity).Name.Pluralize();
 
         public IEntityIdGenerator<TEntity> IdGenerator { get; set; } = new EntityGuidIdGenerator<TEntity>();
+
+        public IEntityMapper Mapper { get; set; }
     }
 }

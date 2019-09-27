@@ -41,7 +41,7 @@
             this.configuration = configuration;
             this.accessToken = accessToken;
             this.entityMap = LogAnalyticsEntityMap.CreateDefault()
-                .Concat(entityMap.Safe()).DistinctBy(e => e.SourceProperty);
+                .Concat(entityMap.Safe()).DistinctBy(e => e.EntityProperty);
 
             this.logger.LogInformation($"{{LogKey:l}} construct loganalytics repository (type={typeof(TEntity).PrettyName()})", LogKeys.DomainRepository);
         }
@@ -100,10 +100,10 @@
 
             foreach (var specification in specifications.Safe())
             {
-                var map = this.entityMap.FirstOrDefault(e => e.SourceProperty.SafeEquals(specification.Name));
-                if (map != default)
+                var map = this.entityMap.FirstOrDefault(e => e.EntityProperty.SafeEquals(specification.Name));
+                if (map != null)
                 {
-                    result.Add($"{map.TargetPropertyFull} {specification.ToString(true).SliceFrom(" ")}");
+                    result.Add($"{map.DtoPropertyFull} {specification.ToString(true).SliceFrom(" ")}");
                 }
             }
 
@@ -167,7 +167,7 @@
                         {
                             try
                             {
-                                accessors[result, item.SourceProperty] = properties.TryGetValue(item.TargetProperty);
+                                accessors[result, item.EntityProperty] = properties.TryGetValue(item.DtoProperty);
                                 //properties.Remove(item.TargetProperty); // TODO: remove only if no further mappings based on TargetProperty
                             }
                             catch (System.ArgumentOutOfRangeException)

@@ -50,5 +50,11 @@
             this.Target.CollectionName = name;
             return this;
         }
+
+        public MongoRepositoryOptionsBuilder<TEntity> Mapper(IEntityMapper mapper)
+        {
+            this.Target.Mapper = mapper;
+            return this;
+        }
     }
 }

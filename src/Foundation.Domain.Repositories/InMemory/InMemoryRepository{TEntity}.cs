@@ -38,6 +38,36 @@
         protected ILogger<IGenericRepository<TEntity>> Logger { get; set; }
 
         /// <summary>
+        /// Finds the by identifier asynchronous.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <exception cref="ArgumentOutOfRangeException">id.</exception>
+        public virtual async Task<TEntity> FindOneAsync(object id)
+        {
+            if (id.IsDefault())
+            {
+                return default;
+            }
+
+            this.@lock.EnterReadLock();
+            try
+            {
+                var result = this.Options.Context.Entities.FirstOrDefault(x => x.Id.Equals(id));
+
+                if (this.Options.Mapper != null && result != null)
+                {
+                    return this.Options.Mapper.Map<TEntity>(result);
+                }
+
+                return await Task.FromResult(result).AnyContext();
+            }
+            finally
+            {
+                this.@lock.ExitReadLock();
+            }
+        }
+
+        /// <summary>
         /// Finds all asynchronous.
         /// </summary>
         /// <param name="options">The options.</param>
@@ -84,36 +114,6 @@
             }
 
             return await Task.FromResult(this.FindAll(result, options, cancellationToken).ToList()).AnyContext();
-        }
-
-        /// <summary>
-        /// Finds the by identifier asynchronous.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <exception cref="ArgumentOutOfRangeException">id.</exception>
-        public virtual async Task<TEntity> FindOneAsync(object id)
-        {
-            if (id.IsDefault())
-            {
-                return default;
-            }
-
-            this.@lock.EnterReadLock();
-            try
-            {
-                var result = this.Options.Context.Entities.FirstOrDefault(x => x.Id.Equals(id));
-
-                if (this.Options.Mapper != null && result != null)
-                {
-                    return this.Options.Mapper.Map<TEntity>(result);
-                }
-
-                return await Task.FromResult(result).AnyContext();
-            }
-            finally
-            {
-                this.@lock.ExitReadLock();
-            }
         }
 
         /// <summary>

@@ -38,27 +38,6 @@
         }
 
         /// <summary>
-        /// Finds all asynchronous.
-        /// </summary>
-        /// <param name="specifications">The specifications.</param>
-        /// <param name="options">The options.</param>
-        /// <param name="cancellationToken">The cancellationToken.</param>
-        public override async Task<IEnumerable<TEntity>> FindAllAsync(
-            IEnumerable<ISpecification<TEntity>> specifications,
-            IFindOptions<TEntity> options = null,
-            CancellationToken cancellationToken = default)
-        {
-            var result = this.Options.Context.Entities.Safe().Select(e => this.Options.Mapper.Map<TDestination>(e)); // work on destination objects
-
-            foreach (var specification in specifications.Safe())
-            {
-                result = result.Where(this.EnsurePredicate(specification)); // translate specification to destination predicate
-            }
-
-            return await Task.FromResult(this.FindAll(result, options)).AnyContext();
-        }
-
-        /// <summary>
         /// Finds the by identifier asynchronous.
         /// </summary>
         /// <param name="id">The identifier.</param>
@@ -80,6 +59,27 @@
             }
 
             return default;
+        }
+
+        /// <summary>
+        /// Finds all asynchronous.
+        /// </summary>
+        /// <param name="specifications">The specifications.</param>
+        /// <param name="options">The options.</param>
+        /// <param name="cancellationToken">The cancellationToken.</param>
+        public override async Task<IEnumerable<TEntity>> FindAllAsync(
+            IEnumerable<ISpecification<TEntity>> specifications,
+            IFindOptions<TEntity> options = null,
+            CancellationToken cancellationToken = default)
+        {
+            var result = this.Options.Context.Entities.Safe().Select(e => this.Options.Mapper.Map<TDestination>(e)); // work on destination objects
+
+            foreach (var specification in specifications.Safe())
+            {
+                result = result.Where(this.EnsurePredicate(specification)); // translate specification to destination predicate
+            }
+
+            return await Task.FromResult(this.FindAll(result, options)).AnyContext();
         }
 
         protected new Func<TDestination, bool> EnsurePredicate(ISpecification<TEntity> specification)

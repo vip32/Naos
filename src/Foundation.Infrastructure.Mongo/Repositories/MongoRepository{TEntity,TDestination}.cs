@@ -1,7 +1,9 @@
 ﻿namespace Naos.Foundation.Infrastructure
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
@@ -13,42 +15,41 @@
     using MongoDB.Driver;
     using Naos.Foundation.Domain;
 
-    public class MongoRepository<TEntity> : IGenericRepository<TEntity>
+    public class MongoRepository<TEntity, TDestination> : IGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
         private readonly ILogger<IGenericRepository<TEntity>> logger;
-        private readonly MongoRepositoryOptions<TEntity> options;
+        private readonly Func<TDestination, object> idSelector;
 
-        public MongoRepository(MongoRepositoryOptions<TEntity> options)
+        public MongoRepository(
+            MongoRepositoryOptions<TEntity> options,
+            Func<TDestination, object> idSelector)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.MongoClient, nameof(options.MongoClient));
             EnsureArg.IsNotNullOrEmpty(options.DatabaseName, nameof(options.DatabaseName));
             EnsureArg.IsNotNullOrEmpty(options.CollectionName, nameof(options.CollectionName));
             EnsureArg.IsNotNull(options.IdGenerator, nameof(options.IdGenerator));
+            EnsureArg.IsNotNull(options.Mapper, nameof(options.Mapper));
+            EnsureArg.IsNotNull(idSelector, nameof(idSelector));
 
-            this.options = options;
+            this.Options = options;
             this.logger = options.CreateLogger<IGenericRepository<TEntity>>();
-
-            //BsonClassMap.RegisterClassMap<TEntity>(cm =>
-            //{
-            //    cm.AutoMap();
-            //    cm.MapIdMember(c => c.Id)
-            //        .SetIdGenerator(StringObjectIdGenerator.Instance)
-            //        .SetSerializer(new StringSerializer(BsonType.ObjectId));
-            //});
+            this.idSelector = idSelector;
 
             this.Collection = options.MongoClient
                 .GetDatabase(options.DatabaseName)
-                .GetCollection<TEntity>(options.CollectionName);
+                .GetCollection<TDestination>(options.CollectionName);
         }
 
-        public MongoRepository(Builder<MongoRepositoryOptionsBuilder<TEntity>, MongoRepositoryOptions<TEntity>> optionsBuilder)
-            : this(optionsBuilder(new MongoRepositoryOptionsBuilder<TEntity>()).Build())
+        public MongoRepository(Builder<MongoRepositoryOptionsBuilder<TEntity>, MongoRepositoryOptions<TEntity>> optionsBuilder, Func<TDestination, object> idSelector)
+            : this(optionsBuilder(new MongoRepositoryOptionsBuilder<TEntity>()).Build(), idSelector)
         {
         }
 
-        protected IMongoCollection<TEntity> Collection { get;  }
+        protected MongoRepositoryOptions<TEntity> Options { get; set; }
+
+        protected IMongoCollection<TDestination> Collection { get; }
 
         public async Task<bool> ExistsAsync(object id)
         {
@@ -67,7 +68,8 @@
                 return null;
             }
 
-            return await this.Collection.Find(e => e.Id.Equals(id)).SingleOrDefaultAsync().AnyContext();
+            var result = await this.Collection.Find(e => this.idSelector(e) == id).SingleOrDefaultAsync().AnyContext();
+            return this.Options.Mapper.Map<TEntity>(result);
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
@@ -88,28 +90,30 @@
         public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
             var specificationsArray = specifications as ISpecification<TEntity>[] ?? specifications.ToArray();
-            var expressions = specificationsArray.Safe().Select(s => s.ToExpression());
+            //var expressions = specificationsArray.Safe().Select(s => s.ToExpression());
 
-            return await Task.Run(() =>
+            var result = await Task.Run(() =>
             {
                 if (options?.HasOrders() == true)
                 {
                     return this.Collection.AsQueryable()
-                        .WhereExpressions(expressions)
+                        .WhereExpressions(specificationsArray.Select(e => this.EnsurePredicate(e)))
                         .SkipIf(options?.Skip)
                         .TakeIf(options?.Take)
-                        .OrderByIf(options)
+                        //.OrderByIf(options)
                         .ToList();
                 }
                 else
                 {
                     return this.Collection.AsQueryable()
-                        .WhereExpressions(expressions)
+                        .WhereExpressions(specificationsArray.Select(e => this.EnsurePredicate(e)))
                         .SkipIf(options?.Skip)
                         .TakeIf(options?.Take)
                         .ToList();
                 }
             }).AnyContext();
+
+            return result.Select(d => this.Options.Mapper.Map<TEntity>(d));
         }
 
         public async Task<TEntity> InsertAsync(TEntity entity)
@@ -121,10 +125,10 @@
 
             if (entity.Id.IsDefault())
             {
-                this.options.IdGenerator.SetNew(entity);
+                this.Options.IdGenerator.SetNew(entity);
             }
 
-            await this.Collection.InsertOneAsync(entity).AnyContext();
+            await this.Collection.InsertOneAsync(this.Options.Mapper.Map<TDestination>(entity)).AnyContext();
             return entity;
         }
 
@@ -135,7 +139,8 @@
                 return entity;
             }
 
-            await this.Collection.ReplaceOneAsync(e => e.Id.Equals(entity.Id), entity).AnyContext();
+            var dEntity = this.Options.Mapper.Map<TDestination>(entity);
+            await this.Collection.ReplaceOneAsync(e => this.idSelector(e) == entity.Id, dEntity).AnyContext();
             return entity;
         }
 
@@ -150,18 +155,18 @@
 
             if (entity.Id.IsDefault())
             {
-                this.options.IdGenerator.SetNew(entity);
+                this.Options.IdGenerator.SetNew(entity);
             }
 
-            if (this.options.PublishEvents && this.options.Mediator != null)
+            if (this.Options.PublishEvents && this.Options.Mediator != null)
             {
                 if (isNew)
                 {
-                    await this.options.Mediator.Publish(new EntityInsertDomainEvent(entity)).AnyContext();
+                    await this.Options.Mediator.Publish(new EntityInsertDomainEvent(entity)).AnyContext();
                 }
                 else
                 {
-                    await this.options.Mediator.Publish(new EntityUpdateDomainEvent(entity)).AnyContext();
+                    await this.Options.Mediator.Publish(new EntityUpdateDomainEvent(entity)).AnyContext();
                 }
             }
 
@@ -180,15 +185,15 @@
                 entity = await this.UpdateAsync(entity).AnyContext();
             }
 
-            if (this.options.PublishEvents && this.options.Mediator != null)
+            if (this.Options.PublishEvents && this.Options.Mediator != null)
             {
                 if (isNew)
                 {
-                    await this.options.Mediator.Publish(new EntityInsertedDomainEvent(entity)).AnyContext();
+                    await this.Options.Mediator.Publish(new EntityInsertedDomainEvent(entity)).AnyContext();
                 }
                 else
                 {
-                    await this.options.Mediator.Publish(new EntityUpdatedDomainEvent(entity)).AnyContext();
+                    await this.Options.Mediator.Publish(new EntityUpdatedDomainEvent(entity)).AnyContext();
                 }
             }
 
@@ -205,7 +210,7 @@
                 return ActionResult.None;
             }
 
-            var result = await this.Collection.DeleteOneAsync(e => e.Id.Equals(id)).AnyContext();
+            var result = await this.Collection.DeleteOneAsync(e => this.idSelector(e) == id).AnyContext();
             return result.DeletedCount > 0 ? ActionResult.Deleted : ActionResult.None;
         }
 
@@ -217,6 +222,16 @@
             }
 
             return await this.DeleteAsync(entity.Id).AnyContext();
+        }
+
+        protected Func<TDestination, bool> EnsurePredicate(ISpecification<TEntity> specification)
+        {
+            return this.Options.Mapper.MapSpecification<TEntity, TDestination>(specification);
+        }
+
+        protected virtual LambdaExpression EnsureExpression(LambdaExpression expression)
+        {
+            return this.Options.Mapper.MapExpression<Expression<Func<TDestination, object>>>(expression);
         }
     }
 }

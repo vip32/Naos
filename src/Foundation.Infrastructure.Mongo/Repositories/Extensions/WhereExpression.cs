@@ -36,5 +36,32 @@
 
             return source;
         }
+
+        public static IQueryable<TEntity> WhereExpression<TEntity>(
+            this IQueryable<TEntity> source,
+            Func<TEntity, bool> expression)
+        {
+            if (expression != null)
+            {
+                return source.Where(e => expression(e));
+            }
+
+            return source;
+        }
+
+        public static IQueryable<TEntity> WhereExpressions<TEntity>(
+            this IQueryable<TEntity> source,
+            IEnumerable<Func<TEntity, bool>> expressions)
+        {
+            if (expressions?.Any() == true)
+            {
+                foreach (var expression in expressions)
+                {
+                    return source.Where(e => expression(e));
+                }
+            }
+
+            return source;
+        }
     }
 }
