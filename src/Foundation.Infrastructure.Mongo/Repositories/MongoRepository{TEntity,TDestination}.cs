@@ -98,7 +98,7 @@
                         .WhereExpressions(expressions)
                         .SkipIf(options?.Skip)
                         .TakeIf(options?.Take)
-                        //.OrderByIf(options)
+                        .OrderByIf(options, this.Options.Mapper)
                         .ToList();
                 }
                 else
