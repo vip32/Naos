@@ -88,7 +88,7 @@
         {
             var specificationsArray = specifications as ISpecification<TEntity>[] ?? specifications.ToArray();
             var expressions = specificationsArray.Safe()
-                .Select(s => this.Options.Mapper.MapAsExpression<TEntity, TDestination>(s));
+                .Select(s => this.Options.Mapper.MapSpecification<TEntity, TDestination>(s));
 
             var result = await Task.Run(() =>
             {

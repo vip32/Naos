@@ -16,7 +16,7 @@
             var sut = new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create());
 
             // act
-            var result = sut.MapAsPredicate<StubEntity, StubDb>(specification);
+            var result = sut.MapSpecification<StubEntity, StubDb>(specification).Compile();
 
             // assert
             result(dto1).ShouldBeTrue();
@@ -33,7 +33,7 @@
             var sut = new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create());
 
             // act
-            var result = sut.MapAsPredicate<StubEntity, StubDb>(specification);
+            var result = sut.MapSpecification<StubEntity, StubDb>(specification).Compile();
 
             // assert
             result(dto1).ShouldBeTrue();
