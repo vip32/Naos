@@ -38,7 +38,7 @@
             return this.mapper.MapExpression<TDestination>(expression);
         }
 
-        //public Func<TDestination, bool> MapSpecificationOld<TSource, TDestination>(ISpecification<TSource> specification)
+        //public Func<TDestination, bool> MapSpecification<TSource, TDestination>(ISpecification<TSource> specification)
         //{
         //    EnsureArg.IsNotNull(specification, nameof(specification));
 
