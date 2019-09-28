@@ -1,6 +1,6 @@
 ﻿namespace Naos.Foundation.Infrastructure
 {
-    public class CosmosDbConfiguration
+    public class CosmosConfiguration
     {
         public string DatabaseId { get; set; }
 

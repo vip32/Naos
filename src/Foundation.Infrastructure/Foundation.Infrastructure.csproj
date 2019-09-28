@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Foundation.Infrastructure.Azure.Arm\Infrastructure.Azure.Arm.csproj" />
-    <ProjectReference Include="..\Foundation.Infrastructure.Azure.CosmosDb\Infrastructure.Azure.CosmosDb.csproj" />
     <ProjectReference Include="..\Foundation.Infrastructure.Azure.KeyVault\Infrastructure.Azure.KeyVault.csproj" />
     <ProjectReference Include="..\Foundation.Infrastructure.Azure.LogAnalytics\Infrastructure.Azure.LogAnalytics.csproj" />
     <ProjectReference Include="..\Foundation.Infrastructure.Azure.ServiceBus\Infrastructure.Azure.ServiceBus.csproj" />
@@ -16,6 +15,7 @@
     <ProjectReference Include="..\Foundation.Infrastructure.EntityFramework\Infrastructure.EntityFramework.csproj" />
     <ProjectReference Include="..\Foundation.Infrastructure.Sqlite.Documents\Infrastructure.Sqlite.Documents.csproj" />
     <ProjectReference Include="..\Foundation.Infrastructure.SqlServer.Documents\Infrastructure.SqlServer.Documents.csproj" />
+    <ProjectReference Include="..\Foundation.Infrastructure.Azure.Cosmos\Infrastructure.Azure.Cosmos.csproj" />
     <ProjectReference Include="..\Foundation.Infrastructure.Mongo\Infrastructure.Mongo.csproj" />
   </ItemGroup>
 

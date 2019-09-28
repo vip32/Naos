@@ -1,6 +1,6 @@
 ﻿namespace Naos.Foundation.Infrastructure
 {
-    public enum CosmosDbSqlProtocol
+    public enum CosmosSqlProtocol
     {
         Https = 0,
         Tcp = 1

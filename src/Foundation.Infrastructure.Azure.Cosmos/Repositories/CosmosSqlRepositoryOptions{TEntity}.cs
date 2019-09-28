@@ -3,12 +3,12 @@
     using MediatR;
     using Naos.Foundation.Domain;
 
-    public class CosmosDbSqlRepositoryOptions<TEntity> : BaseOptions
+    public class CosmosSqlRepositoryOptions<TEntity> : BaseOptions
         where TEntity : class, IEntity, IAggregateRoot
     {
         public IMediator Mediator { get; set; }
 
-        public ICosmosDbSqlProvider<TEntity> Provider { get; set; }
+        public ICosmosSqlProvider<TEntity> Provider { get; set; }
 
         public bool PublishEvents { get; set; } = true;
 

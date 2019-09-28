@@ -6,12 +6,12 @@
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
 
-    public static class CosmosDbClientV2
+    public static class CosmosClientV2
     {
         public static IDocumentClient Create(
             string serviceEndpointUri,
             string authKeyOrResourceToken,
-            CosmosDbSqlConnectionPolicy connectionPolicy = null,
+            CosmosSqlConnectionPolicy connectionPolicy = null,
             JsonSerializerSettings jsonSettings = null)
         {
             EnsureThat.EnsureArg.IsNotNullOrEmpty(serviceEndpointUri, nameof(serviceEndpointUri));

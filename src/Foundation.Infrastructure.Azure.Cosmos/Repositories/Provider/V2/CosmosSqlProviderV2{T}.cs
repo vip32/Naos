@@ -15,10 +15,10 @@
     using Naos.Foundation.Domain;
     using Newtonsoft.Json;
 
-    public class CosmosDbSqlProviderV2<T> : ICosmosDbSqlProvider<T>
+    public class CosmosSqlProviderV2<T> : ICosmosSqlProvider<T>
         where T : IHaveDiscriminator // obsolete because of cosmos client v3
     {
-        private readonly ILogger<CosmosDbSqlProviderV2<T>> logger;
+        private readonly ILogger<CosmosSqlProviderV2<T>> logger;
         private readonly IDocumentClient client;
         private readonly string databaseId;
         private readonly AsyncLazy<Database> database;
@@ -31,8 +31,8 @@
         private readonly JsonSerializerSettings jsonSerializerSettings;
         private readonly AsyncLazy<DocumentCollection> documentCollection;
 
-        public CosmosDbSqlProviderV2( // TODO: use OptionsBuilder here
-            ILogger<CosmosDbSqlProviderV2<T>> logger,
+        public CosmosSqlProviderV2( // TODO: use OptionsBuilder here
+            ILogger<CosmosSqlProviderV2<T>> logger,
             IDocumentClient client,
             string databaseId,
             Func<string> collectionIdFactory = null,

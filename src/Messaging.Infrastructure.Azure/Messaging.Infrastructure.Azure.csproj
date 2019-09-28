@@ -18,8 +18,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Foundation.Extensions\Extensions.csproj" />
+    <ProjectReference Include="..\Foundation.Infrastructure.Azure.Cosmos\Infrastructure.Azure.Cosmos.csproj" />
     <ProjectReference Include="..\Foundation.Serialization\Serialization.csproj" />
-    <ProjectReference Include="..\Foundation.Infrastructure.Azure.CosmosDb\Infrastructure.Azure.CosmosDb.csproj" />
     <ProjectReference Include="..\Foundation.Infrastructure.Azure.ServiceBus\Infrastructure.Azure.ServiceBus.csproj" />
     <ProjectReference Include="..\Messaging\Messaging.csproj" />
   </ItemGroup>

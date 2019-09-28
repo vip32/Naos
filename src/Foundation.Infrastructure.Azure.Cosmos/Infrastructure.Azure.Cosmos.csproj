@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Foundation.Infrastructure.Infrastructure.Azure.CosmosDb</AssemblyName>
+    <AssemblyName>Naos.Foundation.Infrastructure.Infrastructure.Azure.Cosmos</AssemblyName>
     <RootNamespace>Naos.Foundation.Infrastructure.Infrastructure</RootNamespace>
   </PropertyGroup>
 

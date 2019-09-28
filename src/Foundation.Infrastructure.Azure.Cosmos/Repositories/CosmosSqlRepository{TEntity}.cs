@@ -8,29 +8,29 @@
     using Microsoft.Extensions.Logging;
     using Naos.Foundation.Domain;
 
-    public class CosmosDbSqlRepository<TEntity> : IGenericRepository<TEntity>
+    public class CosmosSqlRepository<TEntity> : IGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot //, IDiscriminated
     {
-        private readonly CosmosDbSqlRepositoryOptions<TEntity> options;
+        private readonly CosmosSqlRepositoryOptions<TEntity> options;
 
-        public CosmosDbSqlRepository(CosmosDbSqlRepositoryOptions<TEntity> options)
+        public CosmosSqlRepository(CosmosSqlRepositoryOptions<TEntity> options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Provider, nameof(options.Provider));
             EnsureArg.IsNotNull(options.IdGenerator, nameof(options.IdGenerator));
 
             this.options = options;
-            this.Logger = options.CreateLogger<CosmosDbSqlRepository<TEntity>>();
+            this.Logger = options.CreateLogger<CosmosSqlRepository<TEntity>>();
 
             this.Logger.LogInformation($"{{LogKey:l}} construct cosmos repository (type={typeof(TEntity).PrettyName()})", LogKeys.DomainRepository);
         }
 
-        public CosmosDbSqlRepository(Builder<CosmosDbSqlRepositoryOptionsBuilder<TEntity>, CosmosDbSqlRepositoryOptions<TEntity>> optionsBuilder)
-            : this(optionsBuilder(new CosmosDbSqlRepositoryOptionsBuilder<TEntity>()).Build())
+        public CosmosSqlRepository(Builder<CosmosSqlRepositoryOptionsBuilder<TEntity>, CosmosSqlRepositoryOptions<TEntity>> optionsBuilder)
+            : this(optionsBuilder(new CosmosSqlRepositoryOptionsBuilder<TEntity>()).Build())
         {
         }
 
-        protected ILogger<CosmosDbSqlRepository<TEntity>> Logger { get; }
+        protected ILogger<CosmosSqlRepository<TEntity>> Logger { get; }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {

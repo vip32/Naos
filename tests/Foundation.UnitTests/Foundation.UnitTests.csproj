@@ -51,7 +51,7 @@
     <ProjectReference Include="..\..\src\Foundation.Encoding\Encoding.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Extensions\Extensions.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure.Arm\Infrastructure.Azure.Arm.csproj" />
-    <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure.CosmosDb\Infrastructure.Azure.CosmosDb.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure.Cosmos\Infrastructure.Azure.Cosmos.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure.KeyVault\Infrastructure.Azure.KeyVault.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure.ServiceBus\Infrastructure.Azure.ServiceBus.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure\Infrastructure.Azure.csproj" />
@@ -64,7 +64,6 @@
     <ProjectReference Include="..\..\src\Foundation.Serialization\Serialization.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Utilities\Utilities.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure.Arm\Infrastructure.Azure.Arm.csproj" />
-    <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure.Cosmosdb\Infrastructure.Azure.CosmosDb.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure.KeyVault\Infrastructure.Azure.KeyVault.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure.ServiceBus\Infrastructure.Azure.ServiceBus.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure\Infrastructure.Azure.csproj" />
@@ -82,7 +81,7 @@
     <Folder Include="Domain\Repositories\Extensions\" />
     <Folder Include="Domain\Repositories\Decorators\" />
     <Folder Include="App\" />
-    <Folder Include="Infrastructure.CosmosDb\" />
+    <Folder Include="Infrastructure.Cosmos\" />
   </ItemGroup>
 
 </Project>

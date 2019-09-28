@@ -13,29 +13,29 @@
 
     // https://github.com/Azure/azure-cosmos-dotnet-v3
     // https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.cosmos
-    public class CosmosDbSqlProviderV3<T> : ICosmosDbSqlProvider<T>, IDisposable
+    public class CosmosSqlProviderV3<T> : ICosmosSqlProvider<T>, IDisposable
     //where T : IHaveDiscriminator // needed? each type T is persisted in own collection
     {
-        private readonly CosmosDbSqlProviderV3Options<T> options;
-        private readonly ILogger<CosmosDbSqlProviderV3<T>> logger;
+        private readonly CosmosSqlProviderV3Options<T> options;
+        private readonly ILogger<CosmosSqlProviderV3<T>> logger;
         private CosmosClient client;
         private Database database;
         private Container container;
         private string containerName;
 
-        public CosmosDbSqlProviderV3(
-            CosmosDbSqlProviderV3Options<T> options)
+        public CosmosSqlProviderV3(
+            CosmosSqlProviderV3Options<T> options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Client, nameof(options.Client));
             EnsureArg.IsNotNullOrEmpty(options.PartitionKey, nameof(options.PartitionKey));
 
             this.options = options;
-            this.logger = this.options.CreateLogger<CosmosDbSqlProviderV3<T>>();
+            this.logger = this.options.CreateLogger<CosmosSqlProviderV3<T>>();
         }
 
-        public CosmosDbSqlProviderV3(Builder<CosmosDbSqlProviderV3OptionsBuilder<T>, CosmosDbSqlProviderV3Options<T>> optionsBuilder)
-            : this(optionsBuilder(new CosmosDbSqlProviderV3OptionsBuilder<T>()).Build())
+        public CosmosSqlProviderV3(Builder<CosmosSqlProviderV3OptionsBuilder<T>, CosmosSqlProviderV3Options<T>> optionsBuilder)
+            : this(optionsBuilder(new CosmosSqlProviderV3OptionsBuilder<T>()).Build())
         {
         }
 
@@ -256,7 +256,7 @@
             return options;
         }
 
-        private void Initialize(CosmosDbSqlProviderV3Options<T> options)
+        private void Initialize(CosmosSqlProviderV3Options<T> options)
         {
             if (this.container == null)
             {

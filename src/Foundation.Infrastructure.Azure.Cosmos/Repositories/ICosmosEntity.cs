@@ -1,6 +1,6 @@
 ﻿namespace Naos.Foundation.Infrastructure.Infrastructure
 {
-    public interface ICosmosDbEntity
+    public interface ICosmosEntity
     {
         string Id { get; set; } // maps to id
     }

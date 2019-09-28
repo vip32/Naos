@@ -14,13 +14,13 @@
     public class CosmosDbSqlProviderV3Tests : BaseTest
     {
         // https://xunit.github.io/docs/shared-context.html
-        private readonly ICosmosDbSqlProvider<Customer> sut;
+        private readonly ICosmosSqlProvider<Customer> sut;
         private readonly Faker<Customer> entityFaker;
         private readonly string tenantId = "naos_sample_test";
 
         public CosmosDbSqlProviderV3Tests()
         {
-            this.sut = this.ServiceProvider.GetService<ICosmosDbSqlProvider<Customer>>();
+            this.sut = this.ServiceProvider.GetService<ICosmosSqlProvider<Customer>>();
             this.entityFaker = new Faker<Customer>() //https://github.com/bchavez/Bogus
                 .RuleFor(u => u.Id, f => Guid.NewGuid().ToString())
                 .RuleFor(u => u.CustomerNumber, f => f.Random.Replace("??-#####"))

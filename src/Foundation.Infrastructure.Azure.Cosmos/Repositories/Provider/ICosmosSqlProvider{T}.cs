@@ -8,7 +8,7 @@
     using System.Threading.Tasks;
     //using Microsoft.Azure.Documents;
 
-    public interface ICosmosDbSqlProvider<T>
+    public interface ICosmosSqlProvider<T>
     {
         Task<T> GetByIdAsync(string id, object partitionKey = null);
 

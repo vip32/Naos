@@ -24,7 +24,7 @@
             options.Context.AddTag("Customers");
             options.Context.AddServiceClient<UserAccountsClient>();
 
-            var cosmosDbConfiguration = options.Context.Configuration?.GetSection($"{section}:cosmosDb").Get<CosmosDbConfiguration>() ?? new CosmosDbConfiguration();
+            var cosmosDbConfiguration = options.Context.Configuration?.GetSection($"{section}:cosmosDb").Get<CosmosConfiguration>() ?? new CosmosConfiguration();
             options.Context.Services.AddScoped<ICustomerRepository>(sp =>
             {
                 return new CustomerRepository(
@@ -35,10 +35,10 @@
                             sp.GetRequiredService<ILogger<CustomerRepository>>(),
                             new RepositoryTenantDecorator<Customer>(
                                 "naos_sample_test",
-                                new CosmosDbSqlRepository<Customer>(o => o
+                                new CosmosSqlRepository<Customer>(o => o
                                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                                     .Mediator(sp.GetRequiredService<IMediator>())
-                                    .Provider(sp.GetRequiredService<ICosmosDbSqlProvider<Customer>>())))))); // v3
+                                    .Provider(sp.GetRequiredService<ICosmosSqlProvider<Customer>>())))))); // v3
                                     //.Provider(new CosmosDbSqlProviderV2<Customer>( // v2
                                     //    logger: sp.GetRequiredService<ILogger<CosmosDbSqlProviderV2<Customer>>>(),
                                     //    client: CosmosDbClientV2.Create(cosmosDbConfiguration.ServiceEndpointUri, cosmosDbConfiguration.AuthKeyOrResourceToken),
@@ -49,9 +49,9 @@
                                     //    isMasterCollection: cosmosDbConfiguration.IsMasterCollection)))))));
             });
 
-            options.Context.Services.AddScoped<ICosmosDbSqlProvider<Customer>>(sp =>
+            options.Context.Services.AddScoped<ICosmosSqlProvider<Customer>>(sp =>
             {
-                return new CosmosDbSqlProviderV3<Customer>(o => o
+                return new CosmosSqlProviderV3<Customer>(o => o
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                     .Account(cosmosDbConfiguration.ServiceEndpointUri, cosmosDbConfiguration.AuthKeyOrResourceToken)
                     .Database(cosmosDbConfiguration.DatabaseId)

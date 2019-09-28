@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Web", "src\Foun
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "src\Foundation.Domain\Domain.csproj", "{635C5135-B567-4DE0-8CCA-76FA97C2F540}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Azure.CosmosDb", "src\Foundation.Infrastructure.Azure.CosmosDb\Infrastructure.Azure.CosmosDb.csproj", "{B5FC5E1B-B108-43EF-80FF-99DF8C490F72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Azure.Cosmos", "src\Foundation.Infrastructure.Azure.Cosmos\Infrastructure.Azure.Cosmos.csproj", "{B5FC5E1B-B108-43EF-80FF-99DF8C490F72}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Azure.LogAnalytics", "src\Foundation.Infrastructure.Azure.LogAnalytics\Infrastructure.Azure.LogAnalytics.csproj", "{EF1B2EF1-6CC0-492A-AC49-83E27A7697C3}"
 EndProject
