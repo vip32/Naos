@@ -45,8 +45,12 @@
         /// Maps the specified TSource specification to an expression for TDestination types.
         /// </summary>
         /// <param name="specification">The specification.</param>
-        Func<TDestination, bool> MapSpecification<TSource, TDestination>(ISpecification<TSource> specification);
+        Func<TDestination, bool> MapAsPredicate<TSource, TDestination>(ISpecification<TSource> specification);
 
-        Expression<Func<TDestination, bool>> MapSpecification2<TSource, TDestination>(ISpecification<TSource> specification);
+        /// <summary>
+        /// Maps the specified TSource specification to a predicate for TDestination types.
+        /// </summary>
+        /// <param name="specification">The specification.</param>
+        Expression<Func<TDestination, bool>> MapAsExpression<TSource, TDestination>(ISpecification<TSource> specification);
     }
 }

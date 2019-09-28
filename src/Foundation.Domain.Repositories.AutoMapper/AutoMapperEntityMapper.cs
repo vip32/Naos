@@ -38,7 +38,7 @@
             return this.mapper.MapExpression<TDestination>(expression);
         }
 
-        public Func<TDestination, bool> MapSpecification<TSource, TDestination>(ISpecification<TSource> specification)
+        public Func<TDestination, bool> MapAsPredicate<TSource, TDestination>(ISpecification<TSource> specification)
         {
             EnsureArg.IsNotNull(specification, nameof(specification));
 
@@ -47,7 +47,7 @@
             return expression.Compile(); // replace wit CompileFast()? https://github.com/dadhi/FastExpressionCompiler
         }
 
-        public Expression<Func<TDestination, bool>> MapSpecification2<TSource, TDestination>(ISpecification<TSource> specification)
+        public Expression<Func<TDestination, bool>> MapAsExpression<TSource, TDestination>(ISpecification<TSource> specification)
         {
             EnsureArg.IsNotNull(specification, nameof(specification));
 

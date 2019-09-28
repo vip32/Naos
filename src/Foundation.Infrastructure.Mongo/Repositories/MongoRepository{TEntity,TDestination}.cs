@@ -87,7 +87,8 @@
         public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
             var specificationsArray = specifications as ISpecification<TEntity>[] ?? specifications.ToArray();
-            var expressions = specificationsArray.Safe().Select(s => this.EnsurePredicate(s));
+            var expressions = specificationsArray.Safe()
+                .Select(s => this.Options.Mapper.MapAsExpression<TEntity, TDestination>(s));
 
             var result = await Task.Run(() =>
             {
@@ -221,10 +222,10 @@
             return await this.DeleteAsync(entity.Id).AnyContext();
         }
 
-        protected Expression<Func<TDestination, bool>> EnsurePredicate(ISpecification<TEntity> specification)
-        {
-            return this.Options.Mapper.MapSpecification2<TEntity, TDestination>(specification);
-        }
+        //protected Expression<Func<TDestination, bool>> EnsurePredicate(ISpecification<TEntity> specification)
+        //{
+        //    return this.Options.Mapper.MapSpecification2<TEntity, TDestination>(specification);
+        //}
 
         protected virtual LambdaExpression EnsureExpression(LambdaExpression expression)
         {

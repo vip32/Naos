@@ -84,7 +84,7 @@
 
         protected new Func<TDestination, bool> EnsurePredicate(ISpecification<TEntity> specification)
         {
-            return this.Options.Mapper.MapSpecification<TEntity, TDestination>(specification);
+            return this.Options.Mapper.MapAsPredicate<TEntity, TDestination>(specification);
         }
 
         protected IEnumerable<TEntity> FindAll(IEnumerable<TDestination> entities, IFindOptions<TEntity> options = null)
