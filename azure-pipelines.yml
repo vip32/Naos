@@ -11,7 +11,7 @@ variables:
   nuGetFeed: 'naos' # https://vip32.pkgs.visualstudio.com/Naos/_packaging/naos/nuget/v3/index.json
   nuGetFeedType: 'internal' # 'external'
   deployEnabled: false
-  deployAzureSubscription: 'Visual Studio Enterprise – MPN 22463ad3-c6d2-4e7e-911d-c50474250fa0' # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/resources?view=azure-devops#troubleshooting-authorization-for-a-yaml-pipeline
+  deployAzureSubscription: 'Naos 22463ad3-c6d2-4e7e-911d-c50474250fa0' # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/resources?view=azure-devops#troubleshooting-authorization-for-a-yaml-pipeline
   deployAppName: 'naos-sample'
   vmImage: 'windows-latest' # https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/hosted?view=azure-devops&tabs=yaml#use-a-microsoft-hosted-agent
   group: vars # azure pipelines variable group https://docs.microsoft.com/en-us/azure/devops/pipelines/library/variable-groups?view=azdevops&tabs=yaml
