@@ -12,7 +12,7 @@ variables:
   nuGetFeed: '1c1f3027-49d3-41bf-9b3a-a7469c02065f/2a77cb80-68ef-4e46-b13a-188c73b8a3f1' # https://pkgs.dev.azure.com/doomsday32/Naos/_packaging/naos-public/nuget/v3/index.json
   nuGetFeedType: 'internal' # 'external'
   deployEnabled: false
-  deployAzureSubscription: 'Visual Studio Premium with MSDN (bIT) (b527698f-a403-465f-8005-932acc5d9f7d)' # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/resources?view=azure-devops#troubleshooting-authorization-for-a-yaml-pipeline
+  deployAzureSubscription: '22463ad3-c6d2-4e7e-911d-c50474250fa0' # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/resources?view=azure-devops#troubleshooting-authorization-for-a-yaml-pipeline
   deployAppName: 'naos-sample'
   vmImage: 'windows-latest' # https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/hosted?view=azure-devops&tabs=yaml#use-a-microsoft-hosted-agent
   group: vars # azure pipelines variable group https://docs.microsoft.com/en-us/azure/devops/pipelines/library/variable-groups?view=azdevops&tabs=yaml
