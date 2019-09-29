@@ -1,4 +1,4 @@
-[![Build Status](https://dev.azure.com/doomsday32/Naos/_apis/build/status/vip32.Naos?branchName=develop)](https://dev.azure.com/doomsday32/Naos/_build/latest?definitionId=4)
+[![Build Status](https://vip32.visualstudio.com/Naos/_apis/build/status/vip32.Naos?branchName=master)](https://vip32.visualstudio.com/Naos/_build/latest?definitionId=4&branchName=master)
 [![CodeFactor](https://www.codefactor.io/repository/github/vip32/Naos/badge)](https://www.codefactor.io/repository/github/vip32/Naos)
 [![codecov](https://codecov.io/gh/vip32/Naos/branch/master/graph/badge.svg)](https://codecov.io/gh/vip32/Naos)
 [![GitHub issues](https://img.shields.io/github/issues/vip32/Naos.svg)](https://github.com/vip32/Naos/issues)
