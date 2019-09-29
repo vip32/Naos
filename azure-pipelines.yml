@@ -1,6 +1,7 @@
 # https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/?view=vsts
 # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema
 # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/expressions?view=azure-devops
+
 variables:
   solution: '**/*.sln'
   buildConfiguration: 'Release'
