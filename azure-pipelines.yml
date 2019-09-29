@@ -151,18 +151,6 @@ stages:
         publishVstsFeed: $(nuGetFeed)
         nuGetFeedType: $(nuGetFeedType)
 
-#    - task: DockerCompose@0 # https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/docker-compose?view=azure-devops
-#      displayName: Push docker images
-#      enabled: false
-#      inputs:
-#        action: 'Build services'
-#        azureSubscription: $(deployAzureSubscription)
-#        containerregistrytype: 'Azure Container Registry'
-#        azureContainerRegistry: 'naossample'
-#        dockerComposeFile: '**/docker-compose.yml'
-#        includeLatestTag: true
-#        additionalImageTags: $(Build.BuildId)
-
 - stage: DeployDev
   displayName: Deploy stage (dev)
   condition: |
