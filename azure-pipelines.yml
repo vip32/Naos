@@ -8,7 +8,7 @@ variables:
   publishWebApp: true
   publishArtifacts: true
   nuGetPush: true
-  nuGetFeed: 'https://vip32.pkgs.visualstudio.com/Naos/_packaging/naos/nuget/v3/index.json'
+  nuGetFeed: '164130b9-cbc9-46a4-85b0-3bd84e74894d/151703fd-0d42-49db-a7a3-d22198435821' # https://vip32.pkgs.visualstudio.com/Naos/_packaging/naos/nuget/v3/index.json
   nuGetFeedType: 'internal' # 'external'
   deployEnabled: false
   deployAzureSubscription: 'Naos 22463ad3-c6d2-4e7e-911d-c50474250fa0' # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/resources?view=azure-devops#troubleshooting-authorization-for-a-yaml-pipeline
