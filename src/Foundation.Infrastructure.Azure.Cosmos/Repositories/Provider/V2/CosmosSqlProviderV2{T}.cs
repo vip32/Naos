@@ -176,7 +176,7 @@
             var query = this.client.CreateDocumentQuery<T>(
                     UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
                     new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned, PartitionKey = new PartitionKey(partitionKeyValue ?? this.partitionKeyValue) })
-                    .WhereIf(expression)
+                    .WhereExpression(expression)
                     .WhereIf(e => e.Discriminator == typeof(T).FullName, this.isMasterCollection)
                     .TakeIf(take)
                     .OrderByIf(orderExpression, orderDescending)
@@ -198,7 +198,7 @@
             var query = this.client.CreateDocumentQuery<T>(
                     UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
                     new FeedOptions { MaxItemCount = take, EnableCrossPartitionQuery = this.isPartitioned, PartitionKey = new PartitionKey(partitionKeyValue ?? this.partitionKeyValue) })
-                    .WhereIf(expressions)
+                    .WhereExpressions(expressions)
                     .WhereIf(e => e.Discriminator == typeof(T).FullName, this.isMasterCollection)
                     .TakeIf(take)
                     .OrderByIf(orderExpression, orderDescending)
@@ -222,7 +222,7 @@
                 this.client.CreateDocumentQuery<T>(
                     UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
                     new FeedOptions { MaxItemCount = take, EnableCrossPartitionQuery = this.isPartitioned, PartitionKey = new PartitionKey(partitionKeyValue ?? this.partitionKeyValue) })
-                    .WhereIf(expression)
+                    .WhereExpression(expression)
                     .WhereIf(e => e.Discriminator == typeof(T).FullName, this.isMasterCollection)
                     .Select(selector)
                     .TakeIf(take)

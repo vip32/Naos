@@ -116,7 +116,7 @@
             double requestCharge = 0;
             var result = new List<T>();
             var iterator = this.container.GetItemLinqQueryable<T>(requestOptions: options)
-                .WhereIf(expression)
+                .WhereExpression(expression)
                 .SkipIf(skip)
                 .TakeIf(take)
                 .OrderByIf(orderExpression, orderDescending).ToFeedIterator(); // https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.cosmos.container.getitemlinqqueryable?view=azure-dotnet
@@ -149,7 +149,7 @@
             double requestCharge = 0;
             var result = new List<T>();
             var iterator = this.container.GetItemLinqQueryable<T>(requestOptions: options)
-                .WhereIf(expressions)
+                .WhereExpressions(expressions)
                 .SkipIf(skip)
                 .TakeIf(take)
                 .OrderByIf(orderExpression, orderDescending).ToFeedIterator(); // https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.cosmos.container.getitemlinqqueryable?view=azure-dotnet

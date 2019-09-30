@@ -199,10 +199,23 @@
         }
 
         [Fact]
-        public async Task WhereAsync_Test()
+        public async Task Where1Async_Test()
         {
             // arrange/act
             var result = await this.sut.WhereAsync(e => e.FirstName == "John").AnyContext();
+
+            // assert
+            result.ShouldNotBeNull();
+            result.ShouldNotBeEmpty();
+            result.FirstOrDefault()?.FirstName.ShouldBe("John");
+            result.FirstOrDefault()?.LastName.ShouldBe("Doe");
+        }
+
+        [Fact]
+        public async Task Where2Async_Test()
+        {
+            // arrange/act
+            var result = await this.sut.WhereAsync(e => e.FirstName == "John" && e.LastName == "Doe").AnyContext();
 
             // assert
             result.ShouldNotBeNull();
