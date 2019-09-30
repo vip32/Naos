@@ -1,24 +1,17 @@
 ﻿namespace Naos.Foundation.Infrastructure
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    //using MongoDB.Bson;
-    //using MongoDB.Bson.Serialization;
-    //using MongoDB.Bson.Serialization.IdGenerators;
-    //using MongoDB.Bson.Serialization.Serializers;
     using MongoDB.Driver;
     using Naos.Foundation.Domain;
 
     public class MongoRepository<TEntity> : IGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
-        private readonly ILogger<IGenericRepository<TEntity>> logger;
-
         public MongoRepository(MongoRepositoryOptions<TEntity> options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
@@ -28,11 +21,13 @@
             EnsureArg.IsNotNull(options.IdGenerator, nameof(options.IdGenerator));
 
             this.Options = options;
-            this.logger = options.CreateLogger<IGenericRepository<TEntity>>();
+            this.Logger = options.CreateLogger<MongoRepository<TEntity>>();
 
             this.Collection = options.MongoClient
                 .GetDatabase(options.DatabaseName)
                 .GetCollection<TEntity>(options.CollectionName);
+
+            this.Logger.LogInformation($"{{LogKey:l}} construct mongo repository (type={typeof(TEntity).PrettyName()})", LogKeys.DomainRepository);
         }
 
         public MongoRepository(Builder<MongoRepositoryOptionsBuilder<TEntity>, MongoRepositoryOptions<TEntity>> optionsBuilder)
@@ -41,6 +36,8 @@
         }
 
         protected MongoRepositoryOptions<TEntity> Options { get; set; }
+
+        protected ILogger<MongoRepository<TEntity>> Logger { get; }
 
         protected IMongoCollection<TEntity> Collection { get;  }
 
@@ -159,7 +156,7 @@
                 }
             }
 
-            this.logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogKeys.DomainRepository);
+            this.Logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogKeys.DomainRepository);
             if (isNew)
             {
                 if (entity is IStateEntity stateEntity)

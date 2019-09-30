@@ -17,6 +17,6 @@
 - entityframework sql repository, tenant decorator
 - TODO: handle CreatedCustomer message
 
-- `Add-Migration [NAME] -OutputDir .\UserAccounts\Infrastructure\EntityFramework\Migrations -StartupProject Sample.App.Web -Project Sample`
+- `Add-Migration [NAME] -OutputDir .\UserAccounts\Infrastructure\EntityFramework\Migrations -Project Sample`
 - `Script-Migration -StartupProject Sample.App.Web -Project Sample`
 - `Update-Database -StartupProject Sample.App.Web -Project Sample`

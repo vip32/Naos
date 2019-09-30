@@ -19,8 +19,6 @@
         where TEntity : class, IEntity, IAggregateRoot
         where TDestination : class, IMongoEntity
     {
-        private readonly ILogger<IGenericRepository<TEntity>> logger;
-
         public MongoRepository(
             MongoRepositoryOptions<TEntity> options)
         {
@@ -32,11 +30,13 @@
             EnsureArg.IsNotNull(options.Mapper, nameof(options.Mapper));
 
             this.Options = options;
-            this.logger = options.CreateLogger<IGenericRepository<TEntity>>();
+            this.Logger = options.CreateLogger<MongoRepository<TEntity>>();
 
             this.Collection = options.MongoClient
                 .GetDatabase(options.DatabaseName)
                 .GetCollection<TDestination>(options.CollectionName);
+
+            this.Logger.LogInformation($"{{LogKey:l}} construct mongo repository (type={typeof(TEntity).PrettyName()})", LogKeys.DomainRepository);
         }
 
         public MongoRepository(Builder<MongoRepositoryOptionsBuilder<TEntity>, MongoRepositoryOptions<TEntity>> optionsBuilder)
@@ -44,7 +44,9 @@
         {
         }
 
-        protected MongoRepositoryOptions<TEntity> Options { get; set; }
+        protected MongoRepositoryOptions<TEntity> Options { get; }
+
+        protected ILogger<MongoRepository<TEntity>> Logger { get; }
 
         protected IMongoCollection<TDestination> Collection { get; }
 
@@ -65,8 +67,8 @@
                 return null;
             }
 
-            var result = await this.Collection.Find(e => e.Id.Equals(id)).SingleOrDefaultAsync().AnyContext();
-            return this.Options.Mapper.Map<TEntity>(result);
+            return this.Options.Mapper.Map<TEntity>(
+                await this.Collection.Find(e => e.Id.Equals(id)).SingleOrDefaultAsync().AnyContext());
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
@@ -168,7 +170,7 @@
                 }
             }
 
-            this.logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogKeys.DomainRepository);
+            this.Logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogKeys.DomainRepository);
             if (isNew)
             {
                 if (entity is IStateEntity stateEntity)

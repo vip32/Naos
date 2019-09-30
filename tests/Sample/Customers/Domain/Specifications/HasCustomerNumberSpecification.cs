@@ -2,9 +2,9 @@
 {
     using Naos.Foundation.Domain;
 
-    public class HasNumberSpecification : Specification<Customer>
+    public class HasCustomerNumberSpecification : Specification<Customer>
     {
-        public HasNumberSpecification(string value)
+        public HasCustomerNumberSpecification(string value)
             : base(e => e.CustomerNumber == value)
         {
         }

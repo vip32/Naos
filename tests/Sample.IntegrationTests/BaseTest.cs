@@ -13,7 +13,7 @@
     using Naos.FileStorage.Infrastructure;
     using Naos.Foundation;
     using Naos.Foundation.Infrastructure;
-    using Naos.Sample.UserAccounts.Infrastructure.EntityFramework;
+    using Naos.Sample.UserAccounts.Infrastructure;
     using Xunit.Abstractions;
 
     public abstract class BaseTest

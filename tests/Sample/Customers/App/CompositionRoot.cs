@@ -10,6 +10,7 @@
     using Naos.Queueing.Infrastructure.Azure;
     using Naos.Sample.Customers.App.Client;
     using Naos.Sample.Customers.Domain;
+    using Naos.Sample.Customers.Infrastructure;
     using Naos.Tracing.Domain;
 
     public static partial class CompositionRoot
@@ -47,15 +48,38 @@
                                     //    partitionKeyPath: cosmosDbConfiguration.CollectionPartitionKey,
                                     //    throughput: cosmosDbConfiguration.CollectionOfferThroughput,
                                     //    isMasterCollection: cosmosDbConfiguration.IsMasterCollection)))))));
-            });
-
-            options.Context.Services.AddScoped<ICosmosSqlProvider<Customer>>(sp =>
+            }).AddScoped<ICosmosSqlProvider<Customer>>(sp =>
             {
                 return new CosmosSqlProviderV3<Customer>(o => o
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                     .Account(cosmosDbConfiguration.ServiceEndpointUri, cosmosDbConfiguration.AuthKeyOrResourceToken)
                     .Database(cosmosDbConfiguration.DatabaseId)
                     .PartitionKey(e => e.Region));
+            });
+
+            options.Context.Services.AddScoped<IOrderRepository>(sp =>
+            {
+                return new OrderRepository(
+                    new RepositoryTracingDecorator<Order>(
+                        sp.GetService<ILogger<OrderRepository>>(),
+                        sp.GetService<ITracer>(),
+                        new RepositoryLoggingDecorator<Order>(
+                            sp.GetRequiredService<ILogger<OrderRepository>>(),
+                            new RepositoryTenantDecorator<Order>(
+                                "naos_sample_test",
+                                new CosmosSqlRepository<Order, DtoOrder>(o => o
+                                    .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
+                                    .Mediator(sp.GetRequiredService<IMediator>())
+                                    .Provider(sp.GetRequiredService<ICosmosSqlProvider<DtoOrder>>())
+                                    .Mapper(new AutoMapperEntityMapper(MapperFactory.Create()))))))); // v3
+            }).AddScoped<ICosmosSqlProvider<DtoOrder>>(sp =>
+            {
+                return new CosmosSqlProviderV3<DtoOrder>(o => o
+                    .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
+                    .Account(cosmosDbConfiguration.ServiceEndpointUri, cosmosDbConfiguration.AuthKeyOrResourceToken)
+                    .Database(cosmosDbConfiguration.DatabaseId)
+                    .Container("orders")
+                    .PartitionKey(e => e.Location));
             });
 
             var queueStorageConfiguration = options.Context.Configuration?.GetSection($"{section}:queueStorage").Get<QueueStorageConfiguration>();

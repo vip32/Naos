@@ -2,6 +2,7 @@
 {
     using MediatR;
     using Microsoft.EntityFrameworkCore;
+    using Naos.Foundation.Domain;
 
     public class EntityFrameworkRepositoryOptions : BaseOptions
     {
@@ -22,5 +23,7 @@
         /// The database context.
         /// </value>
         public DbContext DbContext { get; set; }
+
+        public IEntityMapper Mapper { get; set; }
     }
 }

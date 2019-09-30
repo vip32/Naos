@@ -39,7 +39,6 @@
     <ProjectReference Include="..\..\src\FileStorage.Infrastructure.Azure\FileStorage.Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\..\src\Operations.Infrastructure.Azure\Operations.Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\..\src\Operations.Infrastructure.Mongo\Operations.Infrastructure.Mongo.csproj" />
-    <ProjectReference Include="..\Sample.App\Sample.App.csproj" />
     <ProjectReference Include="..\Sample\Sample.csproj" />
   </ItemGroup>
 

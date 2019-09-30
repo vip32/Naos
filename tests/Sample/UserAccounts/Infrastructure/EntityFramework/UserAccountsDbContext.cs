@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.UserAccounts.Infrastructure.EntityFramework
+﻿namespace Naos.Sample.UserAccounts.Infrastructure
 {
     using System;
     using Microsoft.EntityFrameworkCore;
@@ -17,6 +17,8 @@
 
         // All (and only) aggregate roots are exposed as dbsets
         public DbSet<UserAccount> UserAccounts { get; set; }
+
+        public DbSet<UserVisit> UserVisits { get; set; }
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
@@ -44,6 +46,19 @@
 
             modelBuilder.Entity<UserAccount>().OwnsOne(e => e.AdAccount, od =>
                 od.ToTable("AdAccounts"));
+
+            modelBuilder.Entity<UserVisit>().OwnsOne(e => e.State, od =>
+            {
+                od.Property(p => p.DeactivatedReasons)
+                    .HasConversion(
+                        v => string.Join(";", v),
+                        v => v.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries));
+                od.Property(p => p.UpdatedReasons)
+                    .HasConversion(
+                        v => string.Join(";", v),
+                        v => v.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries));
+                //od.ToTable("EntityStates");
+            });
         }
     }
 }

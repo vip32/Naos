@@ -13,6 +13,6 @@
         }
 
         public async Task<Customer> FindByNumber(string value)
-            => (await this.FindAllAsync(new HasNumberSpecification(value)).AnyContext()).FirstOrDefault();
+            => (await this.FindAllAsync(new HasCustomerNumberSpecification(value)).AnyContext()).FirstOrDefault();
     }
 }

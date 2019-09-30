@@ -2,9 +2,9 @@
 {
     using Naos.Foundation.Domain;
 
-    public class HasEastRegionSpecification : Specification<Customer>
+    public class HasEastRegionCustomerSpecification : Specification<Customer>
     {
-        public HasEastRegionSpecification()
+        public HasEastRegionCustomerSpecification()
             : base(e => e.Region == "East")
         {
         }

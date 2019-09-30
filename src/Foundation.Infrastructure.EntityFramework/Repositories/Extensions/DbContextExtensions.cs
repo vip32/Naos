@@ -23,17 +23,17 @@
         /// seperate DbContext instances.
         /// </para>
         /// </summary>
-        /// <typeparam name="TEntity">The type of the entity to save.</typeparam>
+        /// <typeparam name="T">The type of the entity to save.</typeparam>
         /// <param name="source">The source.</param>
-        public static async Task<int> SaveChangesAsync<TEntity>(this DbContext source)
-            where TEntity : class, IEntity, IAggregateRoot
+        public static async Task<int> SaveChangesAsync<T>(this DbContext source)
+            where T : class//, IEntity, IAggregateRoot
         {
             EnsureArg.IsNotNull(source, nameof(source));
 
             // find all other aggregates
             var other = source.ChangeTracker.Entries()
                 .Where(x => x.Entity.GetType() is IAggregateRoot
-                    && !typeof(TEntity).IsAssignableFrom(x.Entity.GetType())
+                    && !typeof(T).IsAssignableFrom(x.Entity.GetType())
                     && x.State != EntityState.Unchanged)
                 .GroupBy(x => x.State)
                 .ToList();
@@ -41,7 +41,7 @@
             // set all other aggregates to unchanged
             foreach (var entry in source.ChangeTracker.Entries()
                 .Where(x => x.Entity.GetType() is IAggregateRoot
-                    && !typeof(TEntity).IsAssignableFrom(x.Entity.GetType())))
+                    && !typeof(T).IsAssignableFrom(x.Entity.GetType())))
             {
                 // WARN: this is not 100% fool proof: as other modified aggregate child entities are not marked as unchanged
                 entry.State = EntityState.Unchanged;

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Naos.Sample.UserAccounts.Infrastructure;
 
 namespace Naos.Sample.UserAccounts.Infrastructure.EntityFramework.Migrations
 {
     [DbContext(typeof(UserAccountsDbContext))]
-    partial class UserAccountsContextModelSnapshot : ModelSnapshot
+    [Migration("20190930124636_UserVisit")]
+    partial class UserVisit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -6,6 +6,7 @@
     <RootNamespace>Naos.Sample.App.IntegrationTests</RootNamespace>
     <IsPackable>false</IsPackable>
     <LangVersion>7.1</LangVersion>
+    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Alba" Version="3.1.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="2.2.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.2.6" />
@@ -27,6 +29,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.All" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,7 +37,7 @@
     <ProjectReference Include="..\..\src\Commands.Infrastructure.FileStorage\Commands.Infrastructure.FileStorage.csproj" />
     <ProjectReference Include="..\..\src\Messaging\Messaging.csproj" />
     <ProjectReference Include="..\..\src\Operations.Infrastructure.Azure\Operations.Infrastructure.Azure.csproj" />
-    <ProjectReference Include="..\Sample.App\Sample.App.csproj" />
+    <ProjectReference Include="..\Application.Web\Application.Web.csproj" /> <!-- This is still important to reference explicitly even though it's a transitive dependency of your web application  -->
   </ItemGroup>
 
 </Project>

@@ -1,39 +1,43 @@
 ﻿namespace Naos.Foundation.Infrastructure
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation.Domain;
 
-    public class CosmosSqlRepository<TEntity> : IGenericRepository<TEntity>
+    public class CosmosSqlRepository<TEntity, TDestination> : IGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot //, IDiscriminated
+        where TDestination : class, ICosmosEntity
     {
-        public CosmosSqlRepository(CosmosSqlRepositoryOptions<TEntity> options)
+        public CosmosSqlRepository(CosmosSqlRepositoryOptions<TEntity, TDestination> options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Provider, nameof(options.Provider));
             EnsureArg.IsNotNull(options.IdGenerator, nameof(options.IdGenerator));
+            EnsureArg.IsNotNull(options.Mapper, nameof(options.Mapper));
 
             this.Options = options;
-            this.Logger = options.CreateLogger<CosmosSqlRepository<TEntity>>();
+            this.Logger = options.CreateLogger<CosmosSqlRepository<TEntity, TDestination>>();
             this.Provider = options.Provider;
 
             this.Logger.LogInformation($"{{LogKey:l}} construct cosmos repository (type={typeof(TEntity).PrettyName()})", LogKeys.DomainRepository);
         }
 
-        public CosmosSqlRepository(Builder<CosmosSqlRepositoryOptionsBuilder<TEntity>, CosmosSqlRepositoryOptions<TEntity>> optionsBuilder)
-            : this(optionsBuilder(new CosmosSqlRepositoryOptionsBuilder<TEntity>()).Build())
+        public CosmosSqlRepository(Builder<CosmosSqlRepositoryOptionsBuilder<TEntity, TDestination>, CosmosSqlRepositoryOptions<TEntity, TDestination>> optionsBuilder)
+            : this(optionsBuilder(new CosmosSqlRepositoryOptionsBuilder<TEntity, TDestination>()).Build())
         {
         }
 
-        protected CosmosSqlRepositoryOptions<TEntity> Options { get; }
+        protected CosmosSqlRepositoryOptions<TEntity, TDestination> Options { get; }
 
-        protected ILogger<CosmosSqlRepository<TEntity>> Logger { get; }
+        protected ILogger<CosmosSqlRepository<TEntity, TDestination>> Logger { get; }
 
-        protected ICosmosSqlProvider<TEntity> Provider { get; }
+        protected ICosmosSqlProvider<TDestination> Provider { get; }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
@@ -42,23 +46,25 @@
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            return await this.FindAllAsync(new[] { specification}, options, cancellationToken).AnyContext();
+            return await this.FindAllAsync(new[] { specification }, options, cancellationToken).AnyContext();
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
             var specificationsArray = specifications as ISpecification<TEntity>[] ?? specifications.ToArray();
-            var expressions = specificationsArray.Safe().Select(s => s.ToExpression().Expand()); // expand fixes Invoke in expression issue
+            var expressions = specificationsArray.Safe()
+                .Select(s => this.Options.Mapper.MapSpecification<TEntity, TDestination>(s).Expand()); // expand fixes Invoke in expression issue
             var order = (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order).FirstOrDefault(); // cosmos only supports single orderby
 
-            var entities = await this.Provider
+            var result = await this.Provider
                 .WhereAsync(
                     expressions: expressions,
                     skip: options?.Skip ?? -1,
                     take: options?.Take ?? -1,
-                    orderExpression: order?.Expression,
+                    orderExpression: this.Options.Mapper.MapExpression<Expression<Func<TDestination, object>>>(order?.Expression),
                     orderDescending: order?.Direction == OrderDirection.Descending).AnyContext();
-            return entities.ToList();
+
+            return result.Select(d => this.Options.Mapper.Map<TEntity>(d));
         }
 
         public async Task<TEntity> FindOneAsync(object id)
@@ -68,7 +74,7 @@
                 return default;
             }
 
-            return await this.Provider.GetByIdAsync(id as string).AnyContext();
+            return this.Options.Mapper.Map<TEntity>(await this.Provider.GetByIdAsync(id as string).AnyContext());
         }
 
         public async Task<bool> ExistsAsync(object id)
@@ -144,7 +150,8 @@
             }
 
             this.Logger.LogInformation($"{{LogKey:l}} upsert entity: {entity.GetType().PrettyName()}, isNew: {isNew}", LogKeys.DomainRepository);
-            var result = await this.Provider.UpsertAsync(entity).AnyContext();
+            var result = this.Options.Mapper.Map<TEntity>(
+                await this.Provider.UpsertAsync(this.Options.Mapper.Map<TDestination>(entity)).AnyContext());
 
             if (this.Options.PublishEvents && this.Options.Mediator != null)
             {
