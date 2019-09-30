@@ -25,7 +25,7 @@
                     .EnableSqlLogging()
                     //.ConnectionString("Server=.;Database=naos_sample;User=sa;Password=Abcd1234!;Trusted_Connection=False;MultipleActiveResultSets=True;") // docker
                     .ConnectionString(documentsConfiguration.ConnectionString ?? "Server=(localdb)\\mssqllocaldb;Database=naos_sample;Trusted_Connection=True;MultipleActiveResultSets=True;")
-                    .Schema(documentsConfiguration.SchemaName)
+                    .Schema(documentsConfiguration.SchemaName ?? "catalogs")
                     .AddIndex(p => p.Name)
                     .AddIndex(p => p.Region)
                     .AddIndex(p => p.Price)

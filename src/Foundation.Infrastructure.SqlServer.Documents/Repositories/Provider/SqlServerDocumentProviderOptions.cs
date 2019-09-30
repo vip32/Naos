@@ -62,6 +62,7 @@
                 this.calculatedTableName += suffix;
             }
 
+            this.SchemaName ??= "dbo";
             this.calculatedTableName = !string.IsNullOrEmpty(this.SchemaName)
                 ? $"[{this.SchemaName}].[{this.calculatedTableName }]"
                 : $"[{this.calculatedTableName }]";
