@@ -1,4 +1,4 @@
-﻿namespace Naos.Foundation.Infrastructure
+﻿namespace Naos.Foundation
 {
     using System;
     using System.Collections.Generic;
@@ -6,7 +6,7 @@
     using System.Linq.Expressions;
     using System.Reflection;
 
-    public static partial class Extensions
+    public static class ExpressionExtensions
     {
         /// <summary>
         /// Expands the specified expression.
