@@ -6,7 +6,6 @@
     <Description>A mildly opiniated modern cloud service architecture blueprint + reference implementation</Description>
     <Product>Naos</Product>
     <Copyright>Copyright 2019 (c) vip32. All rights reserved.</Copyright>
-
     <!--sourcelink https://github.com/dotnet/sourcelink -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
@@ -25,7 +24,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors></WarningsAsErrors>
     <CodeAnalysisRuleSet></CodeAnalysisRuleSet>
-    <UseSharedCompilation>true</UseSharedCompilation>    <!--roslyn build speed-->
+    <UseSharedCompilation>true</UseSharedCompilation>   <!--roslyn build speed-->
   </PropertyGroup>
 
   <ItemGroup>
