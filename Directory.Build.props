@@ -10,7 +10,7 @@
     <!--sourcelink https://github.com/dotnet/sourcelink -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-    <IncludeSymbols>true</IncludeSymbols>
+    <!--<IncludeSymbols>true</IncludeSymbols>-->
     <!--<SymbolPackageFormat>snupkg</SymbolPackageFormat>--> <!--not supported by Azure DevOps Artifacts service.-->
 
     <!-- build date https://www.meziantou.net/2018/09/24/getting-the-date-of-build-of-a-net-assembly-at-runtime -->
