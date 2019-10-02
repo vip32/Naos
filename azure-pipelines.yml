@@ -148,8 +148,10 @@ stages:
       inputs:
         command: push
         packagesToPush: '$(System.DefaultWorkingDirectory)/packages/*.nupkg'
+        nobuild: true
         publishVstsFeed: $(nuGetFeed)
         nuGetFeedType: $(nuGetFeedType)
+        allowPackageConflicts: true
 
 - stage: DeployDev
   displayName: Deploy stage (dev)

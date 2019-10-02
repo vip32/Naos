@@ -1,5 +1,6 @@
 ﻿namespace Naos.Messaging.Infrastructure.Azure
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using EnsureThat;
@@ -11,7 +12,7 @@
     using Naos.Messaging.Domain;
     using Naos.Tracing.Domain;
 
-    public class ServiceBusMessageBroker : IMessageBroker
+    public class ServiceBusMessageBroker : IMessageBroker, IDisposable
     {
         private readonly ServiceBusMessageBrokerOptions options;
         private readonly ILogger<ServiceBusMessageBroker> logger;
@@ -60,7 +61,7 @@
 
                 try
                 {
-                    this.logger.LogInformation($"{{LogKey:l}} servicebus add subscription rule: {ruleName} (name={messageName}, type={typeof(TMessage).Name})", LogKeys.Messaging);
+                    this.logger.LogInformation($"{{LogKey:l}} add servicebus subscription rule: {ruleName} (name={messageName}, type={typeof(TMessage).Name})", LogKeys.Messaging);
                     this.options.Client.AddRuleAsync(new RuleDescription
                     {
                         Filter = new CorrelationFilter { Label = messageName, To = this.options.FilterScope }, // filterscope ist used to lock the rule for a specific machine
@@ -126,7 +127,7 @@
                     Body = this.serializer.SerializeToBytes(message),
                     To = this.options.FilterScope
                 };
-                serviceBusMessage.UserProperties.AddOrUpdate("Origin", this.options.MessageScope);
+                serviceBusMessage.UserProperties.AddOrUpdate("Origin", message.Origin);
                 if (scope?.Span != null)
                 {
                     // propagate the span infos
@@ -157,7 +158,7 @@
 
             try
             {
-                this.logger.LogInformation($"{{LogKey:l}} servicebus remove subscription rule: {ruleName}", LogKeys.Messaging);
+                this.logger.LogInformation($"{{LogKey:l}} remove servicebus subscription rule: {ruleName}", LogKeys.Messaging);
                 this.options.Client
                  .RemoveRuleAsync(ruleName)
                  .GetAwaiter()
@@ -169,6 +170,11 @@
             }
 
             this.options.Subscriptions.Remove<TMessage, THandler>();
+        }
+
+        public void Dispose()
+        {
+            this.options?.Subscriptions?.Clear();
         }
 
         private string GetRuleName(string messageName)
@@ -244,7 +250,7 @@
                         }
 
                         logger.LogJournal(LogKeys.Messaging, $"process (name={{MessageName}}, id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes().ToString("#.##")})",
-                        LogPropertyKeys.TrackReceiveMessage, args: new[] { serviceBusMessage.Label, message?.Id, messageScope, message.Origin });
+                            LogPropertyKeys.TrackReceiveMessage, args: new[] { serviceBusMessage.Label, message?.Id, messageScope, message.Origin });
                         logger.LogTrace(LogKeys.Messaging, message.Id, serviceBusMessage.Label, LogTraceNames.Message);
 
                         // construct the handler by using the DI container
