@@ -3,7 +3,6 @@
     using System;
     using System.Diagnostics;
     using EnsureThat;
-    using Microsoft.AspNetCore.Internal;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
@@ -28,7 +27,7 @@
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
 
-            naosOptions.Context.Application.UseEndpointRouting(); // needed by middleware to get action/controller https://www.stevejgordon.co.uk/asp-net-core-first-look-at-global-routing-dispatcher
+            //naosOptions.Context.Application.UseEndpointRouting(); // needed by middleware to get action/controller https://www.stevejgordon.co.uk/asp-net-core-first-look-at-global-routing-dispatcher
             naosOptions.Context.Application
                 .UseMiddleware<RequestLoggingMiddleware>(
                     Options.Create(requestLoggingMiddlewareOptions ?? naosOptions.Context.Application.ApplicationServices.GetService<RequestLoggingMiddlewareOptions>() ?? new RequestLoggingMiddlewareOptions()))
@@ -61,7 +60,7 @@
                 }
             }
 
-            naosOptions.Context.Application.UseEndpointRouting(); // needed by middleware to get action/controller https://www.stevejgordon.co.uk/asp-net-core-first-look-at-global-routing-dispatcher
+            //naosOptions.Context.Application.UseEndpointRouting(); // needed by middleware to get action/controller https://www.stevejgordon.co.uk/asp-net-core-first-look-at-global-routing-dispatcher
             naosOptions.Context.Application.UseMiddleware<RequestTracingMiddleware>(
                     Options.Create(requestTracingMiddlewareOptions ?? naosOptions.Context.Application.ApplicationServices.GetService<RequestTracingMiddlewareOptions>() ?? new RequestTracingMiddlewareOptions()));
             naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: operations tracing added");

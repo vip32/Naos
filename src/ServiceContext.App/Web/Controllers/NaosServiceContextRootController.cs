@@ -1,5 +1,6 @@
 ﻿namespace Naos.ServiceContext.App.Web.Controllers
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -56,7 +57,7 @@
                     ["requestId"] = this.HttpContext.GetRequestId(),
                     ["isLocal"] = this.HttpContext.Request.IsLocal(),
                     ["host"] = Dns.GetHostName(),
-                    ["ip"] = (await Dns.GetHostAddressesAsync(Dns.GetHostName()).AnyContext()).Select(i => i.ToString()).Where(i => i.Contains("."))
+                    ["ip"] = (await Dns.GetHostAddressesAsync(Dns.GetHostName()).AnyContext()).Select(i => i.ToString()).Where(i => i.Contains(".", StringComparison.OrdinalIgnoreCase))
                     //["userIdentity"] = serviceContext.UserIdentity,
                     //["username"] = serviceContext.Username
                 },

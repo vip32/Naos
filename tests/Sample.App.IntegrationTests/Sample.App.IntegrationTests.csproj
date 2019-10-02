@@ -19,7 +19,7 @@
     <PackageReference Include="Alba" Version="3.1.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="3.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.2.6" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0" />
     <PackageReference Include="NBuilder" Version="6.0.1" />
     <PackageReference Include="NSubstitute" Version="4.2.1" />
@@ -29,7 +29,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.AspNetCore.All" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,7 +36,7 @@
     <ProjectReference Include="..\..\src\Commands.Infrastructure.FileStorage\Commands.Infrastructure.FileStorage.csproj" />
     <ProjectReference Include="..\..\src\Messaging\Messaging.csproj" />
     <ProjectReference Include="..\..\src\Operations.Infrastructure.Azure\Operations.Infrastructure.Azure.csproj" />
-    <ProjectReference Include="..\Application.Web\Application.Web.csproj" /> <!-- This is still important to reference explicitly even though it's a transitive dependency of your web application  -->
+    <ProjectReference Include="..\Application.Web3\Application.Web3.csproj" /> <!-- This is still important to reference explicitly even though it's a transitive dependency of your web application  -->
   </ItemGroup>
 
 </Project>

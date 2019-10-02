@@ -1,18 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netcoreapp3.0;netstandard2.0</TargetFrameworks>
     <AssemblyName>Naos.ServiceDiscovery.App</AssemblyName>
     <RootNamespace>Naos.ServiceDiscovery.App</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.Uris" Version="3.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Hosting.Server.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="3.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-    <PackageReference Include="microsoft.extensions.configuration.binder" Version="3.0.0" />
+    <PackageReference Include="microsoft.Extensions.Configuration.Binder" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="3.0.0" />

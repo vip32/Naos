@@ -1,11 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netcoreapp3.0;netstandard2.0</TargetFrameworks>
     <AssemblyName>Naos.Sample</AssemblyName>
     <RootNamespace>Naos.Sample</RootNamespace>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+  </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Countries\App.Commands\" />
@@ -22,11 +30,9 @@
     <PackageReference Include="AspNetCore.HealthChecks.DocumentDb" Version="3.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="3.0.0" />
     <PackageReference Include="Humanizer.Core" Version="2.7.9" />
-    <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Api.Analyzers" Version="2.2.6" />-->
-    <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />-->
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.6">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
