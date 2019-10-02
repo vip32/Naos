@@ -176,8 +176,8 @@
                     .AddMessaging(o => o
                         //.UseFileSystemBroker(s => s
                         //.UseSignalRBroker(s => s
-                        //.UseRabbitMQBroker(s => s
-                        .UseServiceBusBroker(s => s
+                        .UseRabbitMQBroker(s => s
+                        //.UseServiceBusBroker(s => s
                             .Subscribe<EchoMessage, EchoMessageHandler>()))
                     .AddServiceDiscovery(o => o
                         .UseFileSystemClientRegistry())

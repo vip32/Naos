@@ -15,8 +15,20 @@
 
         public IMessageHandlerFactory HandlerFactory { get; set; }
 
-        public ISubscriptionMap Map { get; set; }
+        public string SubscriptionName { get; set; }
+
+        public ISubscriptionMap Subscriptions { get; set; } = new SubscriptionMap();
+
+        public string FilterScope { get; set; } // for machine scope
+
+        public string MessageScope { get; set; } // message origin service name
+
+        public IRabbitMQProvider Provider { get; set; }
+
+        public string ExchangeName { get; set; } = "naos_exchange";
 
         public string Host { get; set; }
+
+        public int RetryCount { get; set; } = 3;
     }
 }
