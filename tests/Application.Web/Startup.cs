@@ -43,6 +43,8 @@
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<Microsoft.Extensions.Hosting.ConsoleLifetimeOptions>(opts => opts.SuppressStatusMessages = true); // https://andrewlock.net/new-in-aspnetcore-3-structured-logging-for-startup-messages/
+
             services
                 .AddMiddlewareAnalysis()
                 .AddHttpContextAccessor()

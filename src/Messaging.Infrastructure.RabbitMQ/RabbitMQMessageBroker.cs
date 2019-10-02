@@ -51,7 +51,7 @@
             where THandler : IMessageHandler<TMessage>
         {
             var messageName = typeof(TMessage).PrettyName();
-            var ruleName = this.GetRuleName(messageName);
+            var routingKey = this.GetRoutingKey(messageName);
 
             if (!this.options.Subscriptions.Exists<TMessage>())
             {
@@ -62,13 +62,13 @@
                     this.options.Provider.TryConnect();
                 }
 
-                this.logger.LogInformation($"{{LogKey:l}} add rabbitmq subscription rule: {ruleName} (name={messageName}, type={typeof(TMessage).Name})", LogKeys.Messaging);
+                this.logger.LogInformation($"{{LogKey:l}} bind rabbitmq queue (queue={this.options.SubscriptionName}, routingKey={routingKey})", LogKeys.Messaging);
                 using (var channel = this.options.Provider.CreateModel())
                 {
                     channel.QueueBind(
                         queue: this.options.SubscriptionName,
                         exchange: this.options.ExchangeName,
-                        routingKey: messageName);
+                        routingKey: routingKey);
                 }
 
                 this.options.Subscriptions.Add<TMessage, THandler>();
@@ -170,11 +170,10 @@
             where THandler : IMessageHandler<TMessage>
         {
             var messageName = typeof(TMessage).PrettyName();
-            var ruleName = this.GetRuleName(messageName);
+            var routingKey = this.GetRoutingKey(messageName);
 
             this.logger.LogInformation("{LogKey:l} (name={MessageName}, orgin={MessageOrigin}, filterScope={FilterScope}, handler={MessageHandlerType})", LogKeys.Messaging, messageName, this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name);
 
-            this.logger.LogInformation($"{{LogKey:l}} remove rabbitmq subscription rule: {ruleName}", LogKeys.Messaging);
             if (!this.options.Provider.IsConnected)
             {
                 this.options.Provider.TryConnect();
@@ -182,10 +181,12 @@
 
             using (var channel = this.options.Provider.CreateModel())
             {
+                this.logger.LogInformation($"{{LogKey:l}} unbind rabbitmq queue (queue={this.options.SubscriptionName}, routingKey={routingKey})", LogKeys.Messaging);
+
                 channel.QueueUnbind(
                     queue: this.options.SubscriptionName,
                     exchange: this.options.ExchangeName,
-                    routingKey: messageName);
+                    routingKey: routingKey);
             }
 
             this.options.Subscriptions.Remove<TMessage, THandler>();
@@ -197,7 +198,7 @@
             this.options?.Subscriptions?.Clear();
         }
 
-        private string GetRuleName(string messageName)
+        private string GetRoutingKey(string messageName)
         {
             var ruleName = messageName;
 
@@ -216,16 +217,15 @@
                 this.options.Provider.TryConnect();
             }
 
-            this.logger.LogInformation($"{{LogKey:l}} create rabbitmq consumer channel (exchange={this.options.ExchangeName}, queue={queueName})", LogKeys.Messaging);
+            this.logger.LogInformation($"{{LogKey:l}} declare rabbitmq consumer channel (exchange={this.options.ExchangeName}, queue={queueName})", LogKeys.Messaging);
             var channel = this.options.Provider.CreateModel();
-            channel.ExchangeDeclare(exchange: this.options.ExchangeName,
-                                    type: "direct"); /*durable: true*/
-
-            channel.QueueDeclare(queue: queueName,
-                                 durable: true,
-                                 exclusive: false,
-                                 autoDelete: false,
-                                 arguments: null);
+            channel.ExchangeDeclare(exchange: this.options.ExchangeName, type: "direct"); /*durable: true*/
+            channel.QueueDeclare(
+                queue: queueName,
+                durable: true,
+                exclusive: false,
+                autoDelete: false,
+                arguments: null);
 
             channel.CallbackException += (sender, ea) =>
             {
@@ -262,32 +262,27 @@
         private async Task Message_Received(object sender, BasicDeliverEventArgs eventArgs)
         {
             var messageName = eventArgs.RoutingKey;
-            var rabbitMQMessage = Encoding.UTF8.GetString(eventArgs.Body);
+            //var rabbitMQMessage = Encoding.UTF8.GetString(eventArgs.Body);
 
             try
             {
-                if (rabbitMQMessage.ToLowerInvariant().Contains("throw-fake-exception", StringComparison.OrdinalIgnoreCase))
+                if (await this.ProcessMessage(messageName, eventArgs).AnyContext())
                 {
-                    throw new InvalidOperationException($"Fake RabbitMQ exception requested: \"{rabbitMQMessage}\"");
+                    // Even on exception message is taken off the queue
+                    // in a REAL WORLD service this should be handled with a Dead Letter Exchange (DLX)
+                    this.consumerChannel.BasicAck(eventArgs.DeliveryTag, multiple: false);
+                    // TODO: dead letter in case of exception https://www.rabbitmq.com/dlx.html
                 }
-
-                var result = await this.ProcessMessage(messageName, eventArgs).AnyContext();
             }
             catch (Exception ex)
             {
-                this.logger.LogWarning(ex, "{LogKey:l} ----- error rabbitmq processing message \"{Message}\"", LogKeys.Messaging, rabbitMQMessage);
+                this.logger.LogError(ex, $"{{LogKey:l}} error processing rabbitmq message (name={messageName}, id={eventArgs.BasicProperties.MessageId})", LogKeys.Messaging);
             }
-
-            // Even on exception we take the message off the queue.
-            // in a REAL WORLD app this should be handled with a Dead Letter Exchange (DLX).
-            // For more information see: https://www.rabbitmq.com/dlx.html
-            this.consumerChannel.BasicAck(eventArgs.DeliveryTag, multiple: false);
         }
 
         private async Task<bool> ProcessMessage(string messageName, BasicDeliverEventArgs eventArgs)
         {
-            this.logger.LogInformation("Processing RabbitMQ event: {EventName}", messageName);
-
+            this.logger.LogDebug($"{{LogKey:l}} processing rabbitmq message (name={messageName}, id={eventArgs.BasicProperties.MessageId})", LogKeys.Messaging);
             var processed = false;
 
             if (this.options.Subscriptions.Exists(messageName))
@@ -339,7 +334,7 @@
                                 await this.options.Mediator.Publish(new MessageHandledDomainEvent(message, message.Origin)).AnyContext();
                             }
 
-                            await((Task)method.Invoke(handler, new object[] { message as object })).AnyContext();
+                            await ((Task)method.Invoke(handler, new object[] { message as object })).AnyContext();
                         }
                         else
                         {
@@ -353,7 +348,7 @@
             }
             else
             {
-                this.logger.LogDebug($"{{LogKey:l}} unprocessed: {messageName}", LogKeys.Messaging);
+                this.logger.LogWarning($"{{LogKey:l}} could not process rabbitmq message, no subscription exists (name={messageName}, id={eventArgs.BasicProperties.MessageId})", LogKeys.Messaging);
             }
 
             return processed;
