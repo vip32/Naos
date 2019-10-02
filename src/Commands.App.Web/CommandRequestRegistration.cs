@@ -47,7 +47,7 @@
 
         public string OpenApiGroupName { get; set; }
 
-        public bool HasResponse => this.GetType().PrettyName().Contains(","); // is a second generic TResponse defined?
+        public bool HasResponse => this.GetType().PrettyName().Contains(",", StringComparison.OrdinalIgnoreCase); // is a second generic TResponse defined?
 
         public bool IsQueued { get; set; }
 
