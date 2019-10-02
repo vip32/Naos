@@ -47,9 +47,9 @@
 
         public TimeSpan Timeout { get; }
 
-        public bool IsDue(DateTime fromUtc, TimeSpan? span = null)
+        public bool IsDue(DateTime moment, TimeSpan? span = null)
         {
-            EnsureArg.IsTrue(fromUtc.Kind == DateTimeKind.Utc);
+            EnsureArg.IsTrue(moment.Kind == DateTimeKind.Utc);
 
             if (this.cronExpression == null)
             {
@@ -57,14 +57,14 @@
             }
 
             span ??= TimeSpan.FromMinutes(1);
-            var occurrence = this.cronExpression.GetNextOccurrence(fromUtc, true);
+            var occurrence = this.cronExpression.GetNextOccurrence(moment, true);
 
             if (!occurrence.HasValue)
             {
                 return false;
             }
 
-            return occurrence.Value - fromUtc < span;
+            return occurrence.Value - moment < span;
         }
 
         public bool IsDue(DateTime fromUtc, DateTime toUtc)
