@@ -8,14 +8,14 @@
 
   <ItemGroup>
     <PackageReference Include="MediatR" Version="7.0.0" />
-    <PackageReference Include="Humanizer.Core" Version="2.7.2" />
+    <PackageReference Include="Humanizer.Core" Version="2.7.9" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="NJsonSchema" Version="10.0.23" />
     <PackageReference Include="NSwag.Annotations" Version="13.0.6" />
     <PackageReference Include="NSwag.Generation" Version="13.0.6" />
     <PackageReference Include="Scrutor" Version="3.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.0.0" />
     <!--<PackageReference Include="Microsoft.Extensions.Options" Version="2.2.0" />-->
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Api.Analyzers" Version="2.2.6" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
