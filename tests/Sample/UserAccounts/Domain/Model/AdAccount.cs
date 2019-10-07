@@ -22,7 +22,7 @@
         public static AdAccount For(string value)
         {
             EnsureArg.IsNotNullOrEmpty(value, nameof(value));
-            EnsureArg.IsTrue(value.Contains("\\"), nameof(value));
+            EnsureArg.IsTrue(value.Contains("\\", System.StringComparison.OrdinalIgnoreCase), nameof(value));
 
             return new AdAccount
             {

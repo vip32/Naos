@@ -2,7 +2,7 @@
 {
     using System.Threading.Tasks;
     using Alba;
-    using Naos.Application.Web;
+    using Application.Web3;
     using Naos.Foundation;
     using Shouldly;
     using Xunit;

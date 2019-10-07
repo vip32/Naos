@@ -670,10 +670,13 @@ development-naos--operations--logging--azureLogAnalytics--workspaceName
 # FileStorage
 
 - Serializers (json/bson/messagepack)
-- Folder
-- Azure Storage
-- InMemory
-- SSH
+- Providers:
+  - Folder
+  - Azure Blob Storage
+  - Azure FileShare Storage
+  - InMemory
+  - SSH
+  - Embedded (resources)
 
 # KeyValueStorage
 

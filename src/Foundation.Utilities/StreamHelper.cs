@@ -12,8 +12,10 @@
             }
 
             stream.Position = 0;
-            var reader = new StreamReader(stream);
-            return reader.ReadToEnd();
+            using (var reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
         }
 
         ///// <summary>

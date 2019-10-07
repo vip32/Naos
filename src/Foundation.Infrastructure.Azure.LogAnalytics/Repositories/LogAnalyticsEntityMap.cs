@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using Microsoft.Extensions.Logging;
-    using Naos.Foundation;
     using Naos.Operations.Domain;
 
     public class LogAnalyticsEntityMap

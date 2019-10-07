@@ -1,7 +1,6 @@
 ﻿namespace Naos.Foundation.Infrastructure
 {
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Diagnostics;
     using Microsoft.Extensions.Configuration;
 
     public static partial class Extensions
@@ -14,7 +13,7 @@
             var entityFrameworkConfiguration = configuration.GetSection(section).Get<EntityFrameworkConfiguration>();
 
             return source.UseSqlServer(entityFrameworkConfiguration?.ConnectionString ?? "Server=(localdb)\\mssqllocaldb;Database=naos;Trusted_Connection=True;MultipleActiveResultSets=True;")
-                .ConfigureWarnings(w => w.Throw(RelationalEventId.QueryClientEvaluationWarning))
+                //.ConfigureWarnings(w => w.Throw(RelationalEventId.QueryClientEvaluationWarning))
                 .EnableSensitiveDataLogging()
                 .EnableDetailedErrors();
         }
@@ -24,7 +23,7 @@
             string connectionString)
         {
             return source.UseSqlServer(connectionString ?? "Server=(localdb)\\mssqllocaldb;Database=naos;Trusted_Connection=True;MultipleActiveResultSets=True;")
-                .ConfigureWarnings(w => w.Throw(RelationalEventId.QueryClientEvaluationWarning))
+                //.ConfigureWarnings(w => w.Throw(RelationalEventId.QueryClientEvaluationWarning))
                 .EnableSensitiveDataLogging()
                 .EnableDetailedErrors();
         }

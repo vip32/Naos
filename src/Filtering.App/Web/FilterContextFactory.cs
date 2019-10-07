@@ -92,13 +92,13 @@
 
                 var name = item.SliceTill("=");
                 var value = item.SliceFrom("=");
-                var @operator = value.Contains(":") ? value.SliceTill(":").Trim() : "eq";
+                var @operator = value.Contains(":", StringComparison.OrdinalIgnoreCase) ? value.SliceTill(":").Trim() : "eq";
 
                 result.Add(
                     new Criteria(
                         name.Trim(),
                         CriteriaExtensions.FromAbbreviation(@operator),
-                        (value.Contains(":") ? value.SliceFrom(":") : value).Trim().EmptyToNull()));
+                        (value.Contains(":", StringComparison.OrdinalIgnoreCase) ? value.SliceFrom(":") : value).Trim().EmptyToNull()));
                 // TODO: properly determine numeric oder not and pass to criteria
             }
 
@@ -124,8 +124,8 @@
             var result = new List<Order>();
             foreach (var item in items.Where(c => !c.IsNullOrEmpty()))
             {
-                var name = item.Contains(":") ? item.SliceFrom(":").Trim() : item;
-                var direction = item.Contains(":") ? item.SliceTill(":").Trim() : "ascending";
+                var name = item.Contains(":", StringComparison.OrdinalIgnoreCase) ? item.SliceFrom(":").Trim() : item;
+                var direction = item.Contains(":", StringComparison.OrdinalIgnoreCase) ? item.SliceTill(":").Trim() : "ascending";
 
                 result.Add(
                     new Order(

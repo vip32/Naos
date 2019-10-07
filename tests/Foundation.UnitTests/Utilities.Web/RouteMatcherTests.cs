@@ -1,6 +1,6 @@
 ﻿namespace Naos.Foundation.UnitTests.Utilities
 {
-    using Microsoft.AspNetCore.Http.Internal;
+    using Microsoft.AspNetCore.Http;
     using Naos.Foundation;
     using Shouldly;
     using Xunit;

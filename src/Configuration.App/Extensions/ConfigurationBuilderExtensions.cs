@@ -1,13 +1,20 @@
-﻿namespace Naos.Configuration.App
+﻿namespace Microsoft.Extensions.Configuration
 {
     using System;
-    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Hosting;
+    using Naos.Configuration.App;
 
     /// <summary>
     /// <see cref="IConfigurationBuilder"/> extension methods.
     /// </summary>
     public static class ConfigurationBuilderExtensions
     {
+        public static IConfigurationBuilder AddNaos(this IConfigurationBuilder source, HostBuilderContext context)
+        {
+            NaosConfigurationFactory.Create(context, source);
+            return source;
+        }
+
         /// <summary>
         /// Executes the specified action if the specified <paramref name="condition"/> is <c>true</c> which can be
         /// used to conditionally add to the configuration pipeline.

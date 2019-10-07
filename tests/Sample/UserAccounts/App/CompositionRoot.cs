@@ -4,7 +4,6 @@
     using EnsureThat;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Diagnostics;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
@@ -78,7 +77,7 @@
                 .UseSqlServer(connectionString.EmptyToNull() ?? entityFrameworkConfiguration.ConnectionString.EmptyToNull() ?? $"Server=(localdb)\\mssqllocaldb;Database={nameof(UserAccountsDbContext)};Trusted_Connection=True;MultipleActiveResultSets=True;", o => o
                     .EnableRetryOnFailure())
                 .UseLoggerFactory(options.Context.Services.BuildServiceProvider().GetRequiredService<ILoggerFactory>())
-                .ConfigureWarnings(w => w.Throw(RelationalEventId.QueryClientEvaluationWarning))
+                //.ConfigureWarnings(w => w.Throw(RelationalEventId.QueryClientEvaluationWarning))
                 .EnableSensitiveDataLogging()
                 .EnableDetailedErrors());
 
