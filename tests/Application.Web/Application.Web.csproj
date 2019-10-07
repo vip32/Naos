@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
-    <AssemblyName>Naos.Application.Web3</AssemblyName>
+    <AssemblyName>Naos.Application.Web</AssemblyName>
     <RootNamespace>Naos.Application.Web</RootNamespace>
   </PropertyGroup>
 

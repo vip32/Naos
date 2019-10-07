@@ -32,12 +32,9 @@ namespace Application.Web3
 
     public class Startup
     {
-        private readonly ILogger<Startup> logger;
-
-        public Startup(ILogger<Startup> logger = null)
+        public Startup()
         {
             this.Configuration = NaosConfigurationFactory.Create();
-            this.logger = logger;
         }
 
         public IConfiguration Configuration { get; }
