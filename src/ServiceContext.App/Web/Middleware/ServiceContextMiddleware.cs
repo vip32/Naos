@@ -116,7 +116,7 @@ hr {
                 {
                     context.Response.ContentType = ContentType.ICO.ToValue();
                     var icon = ResourcesHelper.GetIconAsBytes();
-                    context.Response.Body.Write(icon, 0, icon.Length);
+                    await context.Response.Body.WriteAsync(icon, 0, icon.Length).AnyContext();
                 }
                 else if (context.Request.Path == "/error")
                 {

@@ -38,7 +38,7 @@
                         .GetRequiredService<TDbContext>()
                         .Database.MigrateAsync().AnyContext();
                 }
-                catch (SqlException ex)
+                catch (Exception ex) // was SqlException
                 {
                     this.logger.LogError(ex, $"{{LogKey:l}} database migration failed: {ex.Message}", LogKeys.StartupTask);
                 }

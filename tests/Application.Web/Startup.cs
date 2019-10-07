@@ -1,4 +1,4 @@
-﻿namespace Naos.Application.Web
+namespace Application.Web3
 {
     using System;
     using System.Collections.Generic;
@@ -15,6 +15,7 @@
     using Microsoft.AspNetCore.Mvc.Routing;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Naos.App.Web;
     using Naos.Commands.App;
@@ -33,7 +34,7 @@
     {
         private readonly ILogger<Startup> logger;
 
-        public Startup(ILogger<Startup> logger)
+        public Startup(ILogger<Startup> logger = null)
         {
             this.Configuration = NaosConfigurationFactory.Create();
             this.logger = logger;
@@ -41,12 +42,15 @@
 
         public IConfiguration Configuration { get; }
 
+        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<Microsoft.Extensions.Hosting.ConsoleLifetimeOptions>(opts => opts.SuppressStatusMessages = true); // https://andrewlock.net/new-in-aspnetcore-3-structured-logging-for-startup-messages/
+            services.Configure<ConsoleLifetimeOptions>(opts => opts.SuppressStatusMessages = true); // https://andrewlock.net/new-in-aspnetcore-3-structured-logging-for-startup-messages/
+
+            //services.AddControllers();
 
             services
-                .AddMiddlewareAnalysis()
+                //.AddMiddlewareAnalysis()
                 .AddHttpContextAccessor()
                 .AddSingleton<IActionContextAccessor, ActionContextAccessor>() // needed for GetUrlHelper (IUrlHelperFactory below)
                 .AddScoped(sp =>
@@ -80,7 +84,7 @@
                     c.OperationProcessors.Add(new ApiVersionProcessor());
                     c.PostProcess = document =>
                     {
-                        var descriptor = sp.GetService<Foundation.ServiceDescriptor>();
+                        var descriptor = sp.GetService<Naos.Foundation.ServiceDescriptor>();
                         document.Info.Version = descriptor?.Version.EmptyToNull() ?? "v1";
                         document.Info.Title = descriptor?.Name.EmptyToNull() ?? "Naos";
                         document.Info.Description = descriptor?.Tags.ToString(", ").EmptyToNull() ?? "Naos";
@@ -104,22 +108,20 @@
                     }
                 })
                 .AddMvc(o =>
-                    {
-                        //o.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build())); // https://tahirnaushad.com/2017/08/28/asp-net-core-2-0-mvc-filters/ or use controller attribute (Authorize)
-                    })
+                {
+                    //o.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build())); // https://tahirnaushad.com/2017/08/28/asp-net-core-2-0-mvc-filters/ or use controller attribute (Authorize)
+                })
                     // naos mvc configuration
                     .AddNaos(o =>
                     {
                         // Countries repository is exposed with a dedicated controller, no need to register here
-                        o.AddGenericRepositoryController<Sample.Customers.Domain.Customer, Sample.Customers.Domain.ICustomerRepository>();
-                        o.AddGenericRepositoryController<Sample.Inventory.Domain.ProductInventory, Sample.Inventory.Domain.IInventoryRepository>();
-                        o.AddGenericRepositoryController<Sample.Inventory.Domain.ProductReplenishment, Sample.Inventory.Domain.IReplenishmentRepository>();
-                        o.AddGenericRepositoryController<Sample.UserAccounts.Domain.UserAccount>(); // =implicit IRepository<UserAccount>
-                        o.AddGenericRepositoryController<Sample.UserAccounts.Domain.UserVisit>(); // =implicit IRepository<UserVisit>
-                    })
-                    .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                        o.AddGenericRepositoryController<Naos.Sample.Customers.Domain.Customer, Naos.Sample.Customers.Domain.ICustomerRepository>();
+                        o.AddGenericRepositoryController<Naos.Sample.Inventory.Domain.ProductInventory, Naos.Sample.Inventory.Domain.IInventoryRepository>();
+                        o.AddGenericRepositoryController<Naos.Sample.Inventory.Domain.ProductReplenishment, Naos.Sample.Inventory.Domain.IReplenishmentRepository>();
+                        o.AddGenericRepositoryController<Naos.Sample.UserAccounts.Domain.UserAccount>(); // =implicit IRepository<UserAccount>
+                        o.AddGenericRepositoryController<Naos.Sample.UserAccounts.Domain.UserVisit>(); // =implicit IRepository<UserVisit>
+                    });
 
-            // naos application services
             services
                 .AddNaos(this.Configuration, "Product", "Capability", new[] { "All" }, n => n
                     .AddModules(m => m
@@ -143,14 +145,14 @@
                                 .Folder(Path.Combine(Path.GetTempPath(), "naos_commands", "journal")))))
                         .AddRequests(o => o
                             .Post<CreateCustomerCommand>("api/commands/customers/create", HttpStatusCode.Created, "Customers", onSuccess: (cmd, ctx) => ctx.Response.Location($"api/customers/{cmd.Customer.Id}"))
-                            .Get<GetActiveCustomersQuery, IEnumerable<Sample.Customers.Domain.Customer>>("api/commands/customers/active", groupName: "Customers")
+                            .Get<GetActiveCustomersQuery, IEnumerable<Naos.Sample.Customers.Domain.Customer>>("api/commands/customers/active", groupName: "Customers")
                             //.UseInMemoryQueue()
                             .UseAzureStorageQueue()
                             //.UseInMemoryStorage()
                             //.UseFolderStorage()
                             .UseAzureBlobStorage()
                             .GetQueued<PingCommand>("api/commands/queue/ping")
-                            .GetQueued<GetActiveCustomersQuery, IEnumerable<Sample.Customers.Domain.Customer>>("api/commands/queue/customers/active", groupName: "Customers")))
+                            .GetQueued<GetActiveCustomersQuery, IEnumerable<Naos.Sample.Customers.Domain.Customer>>("api/commands/queue/customers/active", groupName: "Customers")))
                     .AddOperations(o => o
                         .AddInteractiveConsole()
                         .AddLogging(o => o
@@ -188,24 +190,19 @@
                     //.UseRouterClientRegistry())
                     .AddServiceDiscoveryRouter(o => o
                         .UseFileSystemRegistry()));
-
-            // TODO: need to find a way to start the MessageBroker (done by resolving the IMessageBroker somewhere, HostedService? like scheduling)
-            //services.AddHealthChecksUI(setupSettings: setup =>
-            //{
-            //    setup.AddHealthCheckEndpoint("Product.Capability", "https://localhost:5001/healthcheck");
-            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment environment)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (environment.IsProduction())
+            if (env.IsDevelopment())
             {
-                app.UseHsts();
+                app.UseDeveloperExceptionPage();
             }
 
+            app.UseHttpsRedirection();
+
             app
-                .UseHttpsRedirection()
                 .UseNaos(s => s
                     .UseRequestCorrelation()
                     .UseServiceContext()
@@ -219,44 +216,12 @@
                 .UseOpenApi()
                 .UseSwaggerUi3();
 
-            // https://blog.elmah.io/asp-net-core-2-2-health-checks-explained/
-            // https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks/blob/master/src/HealthChecks.UI/ServiceCollectionExtensions.cs
-            //app.UseHealthChecks("/healthcheck", new HealthCheckOptions // TODO: move to UseNaosOperationsHealthChecks
-            //{
-            //    Predicate = _ => true,
-            //    ResponseWriter = HealthChecks.UI.Client.UIResponseWriter.WriteHealthCheckUIResponse
-            //});
-
-            app.UseHealthChecks("/healthcheck", new HealthCheckOptions // TODO: move to UseNaosOperationsHealthChecks
+            app.UseRouting();
+            //app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
             {
-                ResponseWriter = async (c, r) =>
-                {
-                    c.Response.ContentType = ContentType.JSON.ToValue();
-                    await c.Response.WriteAsync(JsonConvert.SerializeObject(new
-                    {
-                        status = r.Status.ToString(),
-                        took = r.TotalDuration.ToString(),
-                        checks = r.Entries.Select(e => new
-                        {
-                            //service = c.GetServiceName(),
-                            key = e.Key,
-                            status = e.Value.Status.ToString(),
-                            took = e.Value.Duration.ToString(),
-                            message = e.Value.Exception?.Message,
-                            data = e.Value.Data
-                        })
-                    }, DefaultJsonSerializerSettings.Create())).AnyContext();
-                }
+                endpoints.MapControllers();
             });
-
-            //app.UseHealthChecksUI(s =>
-            //{
-            //    // https://jeremylindsayni.wordpress.com/2019/09/09/healthcheck-endpoints-in-c-in-mvc-projects-using-asp-net-core-and-writing-results-to-azure-application-insights/
-            //    // https://localhost:5001/healthchecks-ui
-            //});
-
-            //app.UseAuthentication();
-            app.UseMvc();
         }
     }
 }

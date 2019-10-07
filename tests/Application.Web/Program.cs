@@ -1,8 +1,8 @@
-﻿namespace Naos.Application.Web
+namespace Application.Web3
 {
     using System.Threading.Tasks;
-    using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Hosting;
     using Naos.Configuration.App;
     using Naos.Foundation;
     using Serilog;
@@ -11,34 +11,23 @@
     {
         public static async Task Main(string[] args)
         {
-            await CreateWebHostBuilder(args).Build().RunAsync().AnyContext();
+            await CreateHostBuilder(args).Build().RunAsync().AnyContext();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((context, config) =>
                     NaosConfigurationFactory.Extend(config, args, context.HostingEnvironment.EnvironmentName))
-                //.UseUrls($"https://localhost:{GetNextAvailablePort()}")
-                //.CaptureStartupErrors(true)
-                .UseStartup<Startup>()
-                .UseSerilog();
-
-        //private static int GetNextAvailablePort()
-        //{
-        //    var l = new System.Net.Sockets.TcpListener(System.Net.IPAddress.Loopback, 0);
-        //    var port = 0;
-        //    try
-        //    {
-        //        l.Start();
-        //        port = ((System.Net.IPEndPoint)l.LocalEndpoint).Port;
-        //        l.Stop();
-        //        l.Server.Dispose();
-        //    }
-        //    catch
-        //    { /*do nothing */
-        //    }
-
-        //    return port;
-        //}
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder
+                        .UseStartup<Startup>()
+                        .UseSerilog();
+                })
+                .UseDefaultServiceProvider((context, options) => // https://andrewlock.net/new-in-asp-net-core-3-service-provider-validation/
+                {
+                    //options.ValidateScopes = context.HostingEnvironment.IsDevelopment();
+                    options.ValidateOnBuild = false; // TODO: turn validation on again
+                });
     }
 }
