@@ -13,7 +13,10 @@
         private readonly string pathTemplate;
         private ICommandBehavior next;
 
-        public FileStoragePersistCommandBehavior(IFileStorage storage, ISerializer serializer = null, string pathTemplate = "{id}-{type}.json")
+        public FileStoragePersistCommandBehavior(
+            IFileStorage storage,
+            ISerializer serializer = null,
+            string pathTemplate = "{id}-{type}.json")
         {
             EnsureArg.IsNotNull(storage, nameof(storage));
 

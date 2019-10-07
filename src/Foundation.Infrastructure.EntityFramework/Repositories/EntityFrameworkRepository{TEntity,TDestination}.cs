@@ -93,7 +93,14 @@
                 return null;
             }
 
+#if NETSTANDARD2_0
             return this.Options.Mapper.Map<TEntity>(await this.Options.DbContext.Set<TDestination>().FindAsync(this.TryParseGuid(id)).AnyContext());
+#endif
+
+#if NETSTANDARD2_1
+            return this.Options.Mapper.Map<TEntity>(await this.Options.DbContext.Set<TDestination>().FindAsync(this.TryParseGuid(id)));
+#endif
+
         }
 
         public async Task<bool> ExistsAsync(object id)
@@ -193,7 +200,13 @@
                 return ActionResult.None;
             }
 
+#if NETSTANDARD2_0
             var dEntity = await this.Options.DbContext.Set<TDestination>().FindAsync(this.TryParseGuid(id)).AnyContext();
+#endif
+
+#if NETSTANDARD2_1
+            var dEntity = await this.Options.DbContext.Set<TDestination>().FindAsync(this.TryParseGuid(id));
+#endif
             if (dEntity != null)
             {
                 this.Logger.LogInformation($"{{LogKey:l}} delete entity: {dEntity.GetType().PrettyName()}, id: {id}", LogKeys.DomainRepository);

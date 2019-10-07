@@ -4,6 +4,7 @@
 variables:
   solution: '**/*.sln'
   buildConfiguration: 'Release'
+  publishWorkerService: false
   publishFunctionApp: false
   publishWebApp: true
   publishArtifacts: true
@@ -40,7 +41,7 @@ stages:
     - task: DotNetCoreInstaller@0
       displayName: Install dotnet SDK
       inputs:
-        version: 2.2.203
+        version: 3.0.100
         packageType: sdk
 
     - task: DotNetCoreCLI@2 # https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/dotnet-core?view=azure-devops#restore-nuget-packages
@@ -89,6 +90,18 @@ stages:
         targetPath: '$(Build.SourcesDirectory)'
 
     - task: DotNetCoreCLI@2
+      displayName: Publish worker service
+      enabled: true
+      condition: eq(variables['publishWorkerService'], 'true')
+      inputs:
+        command: publish
+        publishWebProjects: False
+        projects: '**/Application.WorkerService.csproj'
+        arguments: '--configuration $(buildConfiguration) --no-restore --no-build --output $(System.DefaultWorkingDirectory)/artifacts'
+        # self contained https://timheuer.com/blog/archive/2019/10/03/deploy-aspnet-core-applications-using-self-contained-dotnet-core.aspx?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+timheuer+%28Method+~+of+~+failed+by+Tim+Heuer%29
+        zipAfterPublish: True
+
+    - task: DotNetCoreCLI@2
       displayName: Publish web app
       enabled: true
       condition: eq(variables['publishWebApp'], 'true')
@@ -97,6 +110,7 @@ stages:
         publishWebProjects: True
         projects: '**/Application.Web.csproj'
         arguments: '--configuration $(buildConfiguration) --no-restore --no-build --output $(System.DefaultWorkingDirectory)/artifacts'
+        # self contained https://timheuer.com/blog/archive/2019/10/03/deploy-aspnet-core-applications-using-self-contained-dotnet-core.aspx?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+timheuer+%28Method+~+of+~+failed+by+Tim+Heuer%29
         zipAfterPublish: True
 
     - task: DotNetCoreCLI@2
@@ -108,6 +122,7 @@ stages:
         publishWebProjects: False
         projects: '**/Application.Functions.csproj'
         arguments: '--configuration $(buildConfiguration) --no-restore --no-build  --output $(System.DefaultWorkingDirectory)/artifacts'
+        # self contained https://timheuer.com/blog/archive/2019/10/03/deploy-aspnet-core-applications-using-self-contained-dotnet-core.aspx?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+timheuer+%28Method+~+of+~+failed+by+Tim+Heuer%29
         zipAfterPublish: True
 
     - task: PublishPipelineArtifact@0 # https://docs.microsoft.com/en-us/azure/devops/pipelines/artifacts/pipeline-artifacts?view=azure-devops&tabs=yaml
