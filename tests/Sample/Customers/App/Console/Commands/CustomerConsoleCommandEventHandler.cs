@@ -27,7 +27,8 @@
                         Id = IdGenerator.Instance.Next,
                         FirstName = "John",
                         LastName = RandomGenerator.GenerateString(4, false),
-                        Email = $"John.{RandomGenerator.GenerateString(5, lowerCase: true)}@gmail.com"
+                        Email = $"John.{RandomGenerator.GenerateString(5, lowerCase: true)}@gmail.com",
+                        Region = "West"
                     });
 
                 var response = await this.mediator.Send(command).AnyContext();

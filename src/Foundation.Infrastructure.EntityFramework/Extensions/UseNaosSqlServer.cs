@@ -1,7 +1,6 @@
 ﻿namespace Naos.Foundation.Infrastructure
 {
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Diagnostics;
     using Microsoft.Extensions.Configuration;
 
     public static partial class Extensions

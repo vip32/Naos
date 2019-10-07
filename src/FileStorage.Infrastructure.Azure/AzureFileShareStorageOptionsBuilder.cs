@@ -1,6 +1,5 @@
 ﻿namespace Naos.FileStorage.Infrastructure
 {
-    using System.Linq;
     using Naos.Foundation;
 
     public class AzureFileShareStorageOptionsBuilder :

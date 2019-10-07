@@ -2,8 +2,8 @@ namespace Application.Web3
 {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Hosting;
-    using Naos.Configuration.App;
     using Naos.Foundation;
     using Serilog;
 
@@ -16,18 +16,17 @@ namespace Application.Web3
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration((context, config) =>
-                    NaosConfigurationFactory.Extend(config, args, context.HostingEnvironment.EnvironmentName))
-                .ConfigureWebHostDefaults(webBuilder =>
+                .ConfigureAppConfiguration((ctx, cfg) => cfg.AddNaos(ctx))
+                .ConfigureWebHostDefaults(builder =>
                 {
-                    webBuilder
+                    builder
                         .UseStartup<Startup>()
                         .UseSerilog();
                 })
-                .UseDefaultServiceProvider((context, options) => // https://andrewlock.net/new-in-asp-net-core-3-service-provider-validation/
+                .UseDefaultServiceProvider((ctx, opt) => // https://andrewlock.net/new-in-asp-net-core-3-service-provider-validation/
                 {
                     //options.ValidateScopes = context.HostingEnvironment.IsDevelopment();
-                    options.ValidateOnBuild = false; // TODO: turn validation on again
+                    opt.ValidateOnBuild = false; // TODO: turn validation on again
                 });
     }
 }

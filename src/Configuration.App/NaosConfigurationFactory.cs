@@ -3,6 +3,7 @@
     using System;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Configuration.AzureAppConfiguration;
+    using Microsoft.Extensions.Hosting;
     using Naos.Foundation;
     using Naos.Foundation.Infrastructure;
 
@@ -20,7 +21,12 @@
         //        .Bind(instance);
         //}
 
-        public static IConfigurationBuilder Extend(IConfigurationBuilder config, string[] args = null, string environmentName = "Development")
+        public static IConfigurationBuilder Create(HostBuilderContext context, IConfigurationBuilder config, string[] args = null)
+        {
+            return CreateBuilder(null, args, config, context?.HostingEnvironment?.EnvironmentName ?? "Development");
+        }
+
+        public static IConfigurationBuilder Create(IConfigurationBuilder config, string[] args = null, string environmentName = "Development")
         {
             return CreateBuilder(null, args, config, environmentName);
         }

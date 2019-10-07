@@ -1,7 +1,5 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
-    using System;
-    using System.Linq.Expressions;
     using EnsureThat;
     using MediatR;
     using Microsoft.Extensions.Configuration;

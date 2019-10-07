@@ -3,14 +3,11 @@ namespace Application.Web3
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Net;
     using System.Threading;
     using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Diagnostics.HealthChecks;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Infrastructure;
     using Microsoft.AspNetCore.Mvc.Routing;
     using Microsoft.Extensions.Configuration;
@@ -20,21 +17,19 @@ namespace Application.Web3
     using Naos.App.Web;
     using Naos.Commands.App;
     using Naos.Commands.Infrastructure.FileStorage;
-    using Naos.Configuration.App;
     using Naos.FileStorage.Infrastructure;
     using Naos.Foundation;
     using Naos.JobScheduling.App;
     using Naos.JobScheduling.Domain;
     using Naos.Messaging.Domain;
     using Naos.Sample.Customers.App;
-    using Newtonsoft.Json;
     using NSwag.Generation.Processors;
 
     public class Startup
     {
-        public Startup()
+        public Startup(IConfiguration configuration)
         {
-            this.Configuration = NaosConfigurationFactory.Create();
+            this.Configuration = configuration; //NaosConfigurationFactory.Create();
         }
 
         public IConfiguration Configuration { get; }
@@ -177,8 +172,8 @@ namespace Application.Web3
                     .AddMessaging(o => o
                         //.UseFileSystemBroker(s => s
                         //.UseSignalRBroker(s => s
-                        .UseRabbitMQBroker(s => s
-                        //.UseServiceBusBroker(s => s
+                        //.UseRabbitMQBroker(s => s
+                        .UseServiceBusBroker(s => s
                             .Subscribe<EchoMessage, EchoMessageHandler>()))
                     .AddServiceDiscovery(o => o
                         .UseFileSystemClientRegistry())
