@@ -35,7 +35,7 @@
     <ProjectReference Include="..\..\src\Commands.Infrastructure.FileStorage\Commands.Infrastructure.FileStorage.csproj" />
     <ProjectReference Include="..\..\src\Messaging\Messaging.csproj" />
     <ProjectReference Include="..\..\src\Operations.Infrastructure.Azure\Operations.Infrastructure.Azure.csproj" />
-    <ProjectReference Include="..\Application.Web3\Application.Web.csproj" /> <!-- This is still important to reference explicitly even though it's a transitive dependency of your web application  -->
+    <ProjectReference Include="..\Application.Web\Application.Web.csproj" /> <!-- This is still important to reference explicitly even though it's a transitive dependency of your web application  -->
   </ItemGroup>
 
 </Project>
