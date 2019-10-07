@@ -22,6 +22,7 @@
         public FolderFileStorage(FolderFileStorageOptions options)
         {
             this.options = options ?? new FolderFileStorageOptions();
+            //this.options.Folder ??= Assembly.GetExecutingAssembly().Location;
             this.Serializer = this.options.Serializer ?? DefaultSerializer.Create;
 
             var folder = PathHelper.ExpandPath(this.options.Folder);

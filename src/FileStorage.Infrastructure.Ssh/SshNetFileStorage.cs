@@ -17,15 +17,18 @@
     public class SshNetFileStorage : IFileStorage
     {
         private readonly ILogger<SshNetFileStorage> logger;
+        private readonly SshNetFileStorageOptions options;
         private readonly ConnectionInfo connectionInfo;
         private readonly SftpClient client;
 
         public SshNetFileStorage(SshNetFileStorageOptions options)
         {
+            EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.ConnectionString, nameof(options.ConnectionString));
             EnsureArg.IsNotNull(options.LoggerFactory, nameof(options.LoggerFactory));
 
             this.logger = options.LoggerFactory.CreateLogger<SshNetFileStorage>();
-            options = options ?? new SshNetFileStorageOptions();
+            this.options = options;
             this.Serializer = options.Serializer ?? DefaultSerializer.Create;
 
             this.connectionInfo = this.CreateConnectionInfo(options);

@@ -21,7 +21,11 @@
 
         public AzureBlobFileStorage(AzureBlobFileStorageOptions options)
         {
-            this.options = options ?? new AzureBlobFileStorageOptions();
+            EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNullOrEmpty(options.ConnectionString, nameof(options.ConnectionString));
+            EnsureArg.IsNotNullOrEmpty(options.ContainerName, nameof(options.ContainerName));
+
+            this.options = options;
             this.Serializer = this.options.Serializer ?? DefaultSerializer.Create;
         }
 
@@ -116,16 +120,16 @@
             EnsureArg.IsNotNullOrEmpty(targetPath, nameof(targetPath));
 
             this.Initialize();
-            var oldBlob = this.container.GetBlockBlobReference(path);
-            var newBlob = this.container.GetBlockBlobReference(targetPath);
+            var blob = this.container.GetBlockBlobReference(path);
+            var targetBlob = this.container.GetBlockBlobReference(targetPath);
 
-            await newBlob.StartCopyAsync(oldBlob, null, null, null, null, cancellationToken).AnyContext();
-            while (newBlob.CopyState.Status == CopyStatus.Pending)
+            await targetBlob.StartCopyAsync(blob, null, null, null, null, cancellationToken).AnyContext();
+            while (targetBlob.CopyState.Status == CopyStatus.Pending) // todo: really wait?
             {
                 await Task.Delay(50, cancellationToken).AnyContext();
             }
 
-            return newBlob.CopyState.Status == CopyStatus.Success;
+            return targetBlob.CopyState.Status == CopyStatus.Success;
         }
 
         public Task<bool> DeleteFileAsync(string path, CancellationToken cancellationToken = default)
@@ -191,7 +195,7 @@
                 prefix = slashPos >= 0 ? searchPattern.Substring(0, slashPos) : string.Empty;
             }
 
-            prefix = prefix ?? string.Empty;
+            prefix ??= string.Empty;
 
             BlobContinuationToken continuationToken = null;
             var blobs = new List<CloudBlockBlob>();
@@ -203,7 +207,7 @@
                 // TODO: Implement paging
                 blobs.AddRange(listingResult.Results.OfType<CloudBlockBlob>().Matches(patternRegex));
             }
-            while (continuationToken != null && blobs.Count < limit.GetValueOrDefault(int.MaxValue));
+            while (continuationToken != null && blobs.Count < (limit ?? int.MaxValue));
 
             if (limit.HasValue)
             {
