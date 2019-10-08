@@ -67,7 +67,7 @@
 
             if (options?.HasOrders() == true)
             {
-                return (await this.Options.DbContext.Set<TDestination>()
+                return (await this.Options.DbContext.Set<TDestination>() // .AsAsyncEnumerable()
                     .WhereExpressions(expressions)
                     .SkipIf(options?.Skip)
                     .TakeIf(options?.Take)
@@ -77,7 +77,7 @@
             }
             else
             {
-                return (await this.Options.DbContext.Set<TDestination>()
+                return (await this.Options.DbContext.Set<TDestination>() // .AsAsyncEnumerable()
                     .WhereExpressions(expressions)
                     .SkipIf(options?.Skip)
                     .TakeIf(options?.Take)

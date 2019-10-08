@@ -5,7 +5,6 @@
     <AssemblyName>Naos.Sample.IntegrationTests</AssemblyName>
     <RootNamespace>Naos.Sample.IntegrationTests</RootNamespace>
     <IsPackable>false</IsPackable>
-    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

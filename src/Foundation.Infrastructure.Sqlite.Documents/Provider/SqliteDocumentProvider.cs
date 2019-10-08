@@ -30,19 +30,19 @@
             return connection;
         }
 
-        protected override Task EnsureSchema(string schemaName, string databaseName)
+        protected override Task EnsureSchemaAsync(string schemaName, string databaseName)
         {
             return Task.CompletedTask; // not needed
         }
 
-        protected override Task EnsureDatabase(string databaseName)
+        protected override Task EnsureDatabaseAsync(string databaseName)
         {
             return Task.CompletedTask; // not needed
         }
 
-        protected override async Task EnsureTable(string databaseName, string tableName)
+        protected override async Task EnsureTableAsync(string databaseName, string tableName)
         {
-            if (await this.TableExists(databaseName, tableName).AnyContext())
+            if (await this.TableExistsAsync(databaseName, tableName).AnyContext())
             {
                 return;
             }

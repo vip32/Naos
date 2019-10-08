@@ -53,7 +53,7 @@
         //     Expression<Func<T, object>> orderExpression = null,
         //     bool orderDescending = false);
 
-        Task<IEnumerable<Stream>> LoadDataAsync(
+        IAsyncEnumerable<Stream> LoadDataAsync(
              Expression<Func<T, bool>> expression,
              IEnumerable<string> tags = null,
              int? skip = null,
@@ -61,7 +61,7 @@
              Expression<Func<T, object>> orderExpression = null,
              bool orderDescending = false);
 
-        Task<IEnumerable<Stream>> LoadDataAsync(
+        IAsyncEnumerable<Stream> LoadDataAsync(
             IEnumerable<Expression<Func<T, bool>>> expressions = null,
             IEnumerable<string> tags = null,
             int? skip = null,
@@ -69,7 +69,7 @@
             Expression<Func<T, object>> orderExpression = null,
             bool orderDescending = false);
 
-        Task<IEnumerable<Stream>> LoadDataAsync(
+        IAsyncEnumerable<Stream> LoadDataAsync(
             object key,
             IEnumerable<Expression<Func<T, bool>>> expressions = null,
             IEnumerable<string> tags = null,
@@ -86,7 +86,7 @@
         //    Expression<Func<T, object>> orderExpression = null,
         //    bool orderDescending = false);
 
-        Task<IEnumerable<T>> LoadValuesAsync(
+        IAsyncEnumerable<T> LoadValuesAsync(
             Expression<Func<T, bool>> expression,
             IEnumerable<string> tags = null,
             //DateTime? fromDateTime = null, DateTime? tillDateTime = null,
@@ -95,7 +95,7 @@
             Expression<Func<T, object>> orderExpression = null,
             bool orderDescending = false);
 
-        Task<IEnumerable<T>> LoadValuesAsync(
+        IAsyncEnumerable<T> LoadValuesAsync(
             IEnumerable<Expression<Func<T, bool>>> expressions = null,
             IEnumerable<string> tags = null,
             //DateTime? fromDateTime = null, DateTime? tillDateTime = null,
@@ -104,7 +104,7 @@
             Expression<Func<T, object>> orderExpression = null,
             bool orderDescending = false);
 
-        Task<IEnumerable<T>> LoadValuesAsync(
+        IAsyncEnumerable<T> LoadValuesAsync(
             object key,
             IEnumerable<Expression<Func<T, bool>>> expressions = null,
             IEnumerable<string> tags = null,
