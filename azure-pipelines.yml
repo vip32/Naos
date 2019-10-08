@@ -38,10 +38,10 @@ stages:
     - task: GitVersion@5 # alternative https://github.com/adamralph/minver
       displayName: Apply git version
 
-    - task: DotNetCoreInstaller@0
+    - task: DotNetCoreInstaller@2
       displayName: Install dotnet SDK
       inputs:
-        version: 3.0.100
+        version: 3.x
         packageType: sdk
 
     - task: DotNetCoreCLI@2 # https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/dotnet-core?view=azure-devops#restore-nuget-packages
