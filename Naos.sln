@@ -233,8 +233,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Sqlite.Docum
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Foundation", "src\Foundation\Foundation.csproj", "{874B448F-729D-45A7-AECE-7037B60C6ED3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Foundation.Infrastructure", "src\Foundation.Infrastructure\Foundation.Infrastructure.csproj", "{2A262574-D191-42F9-A79B-8C39BCCB1A4B}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Mongo", "src\Foundation.Infrastructure.Mongo\Infrastructure.Mongo.csproj", "{EAA5F0C8-3E6C-4CA2-B279-74FC12B54A78}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Operations.Infrastructure.Mongo", "src\Operations.Infrastructure.Mongo\Operations.Infrastructure.Mongo.csproj", "{FF2B24EF-BBE6-4C2B-9384-CEA121F0F942}"
