@@ -15,7 +15,7 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            options.Context.AddTag("Catalogs");
+            options.Context.AddTag("catalogs");
 
             var documentsConfiguration = options.Context.Configuration?.GetSection($"{section}:sqlDocuments").Get<SqlDocumentsConfiguration>() ?? new SqlDocumentsConfiguration();
 

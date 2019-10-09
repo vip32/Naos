@@ -34,8 +34,8 @@
                 {
                     return new MongoLogEventRepository(o => o
                         .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
-                        .MongoClient(sp.GetServices<MongoClient>()
-                            .FirstOrDefault(c => c.Settings.ApplicationName == "logging"))
+                        .MongoClient(sp.GetServices<IMongoClient>()
+                            .FirstOrDefault(c => c.Settings.ApplicationName == "logging")) //TODO: make nice extension to get a named mongoclient
                         .Mapper(new AutoMapperEntityMapper(MapperFactory.Create()))
                         .CollectionName(configuration.CollectionName));
                 });

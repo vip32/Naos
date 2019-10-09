@@ -22,7 +22,7 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            options.Context.AddTag("Customers");
+            options.Context.AddTag("customers");
             options.Context.AddServiceClient<UserAccountsClient>();
 
             var cosmosDbConfiguration = options.Context.Configuration?.GetSection($"{section}:cosmosDb").Get<CosmosConfiguration>() ?? new CosmosConfiguration();

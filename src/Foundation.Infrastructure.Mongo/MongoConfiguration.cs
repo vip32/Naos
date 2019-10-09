@@ -6,7 +6,7 @@
 
         public string DatabaseName { get; set; } = "master";
 
-        public string ApplicationName { get; set; }
+        //public string ApplicationName { get; set; }
 
         public bool LoggingEnabled { get; set; } = true;
     }

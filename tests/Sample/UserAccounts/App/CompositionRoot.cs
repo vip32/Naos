@@ -28,7 +28,7 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            options.Context.AddTag("UserAccounts");
+            options.Context.AddTag("useraccounts");
 
             if (dbContext != null)
             {

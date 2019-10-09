@@ -22,7 +22,7 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            options.Context.AddTag("Inventory");
+            options.Context.AddTag("inventory");
 
             var mongoConfiguration = options.Context.Configuration?.GetSection($"{section}:mongo").Get<MongoConfiguration>() ?? new MongoConfiguration();
 
@@ -44,8 +44,8 @@
                                 //.Setup(sp, mongoConfiguration)
                                 .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                                 .Mediator(sp.GetRequiredService<IMediator>())
-                                .MongoClient(sp.GetServices<MongoClient>()
-                                    .FirstOrDefault(c => c.Settings.ApplicationName == "inventory"))
+                                .MongoClient(sp.GetServices<IMongoClient>()
+                                    .FirstOrDefault(c => c.Settings.ApplicationName == "inventory")) //TODO: make nice extension to get a named mongoclient
                                 .DatabaseName(mongoConfiguration.DatabaseName)))));
             });
 

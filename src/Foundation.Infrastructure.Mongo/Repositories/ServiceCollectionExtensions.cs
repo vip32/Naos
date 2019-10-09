@@ -49,6 +49,7 @@
                 ConventionRegistry.Register("naos_conventions", new MongoConventions(), x => true);
 
                 var settings = MongoClientSettings.FromUrl(new MongoUrl(configuration.ConnectionString));
+                settings.ApplicationName = applicationName; // for getservice<imongoclient> by app name
                 if (configuration.LoggingEnabled)
                 {
                     var logger = sp.GetRequiredService<ILogger>();
@@ -61,9 +62,7 @@
                     };
                 }
 
-                var client = new MongoClient(settings);
-                client.Settings.ApplicationName = configuration.ApplicationName;
-                return client;
+                return new MongoClient(settings);
             });
 
             return services;
