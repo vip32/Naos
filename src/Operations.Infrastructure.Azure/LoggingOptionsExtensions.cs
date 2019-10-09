@@ -93,7 +93,10 @@
             return options;
         }
 
-        public static LoggingOptions UseAzureLogAnalytics(this LoggingOptions options, bool dashboardEnabled = true, LogLevel logLevel = LogLevel.Debug)
+        public static LoggingOptions UseAzureLogAnalytics(
+            this LoggingOptions options,
+            bool dashboardEnabled = true,
+            LogLevel logLevel = LogLevel.Debug)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
@@ -111,7 +114,7 @@
                     return options;
                 }
 
-                if (configuration.Enabled == true
+                if (configuration.Enabled
                     && configuration.WorkspaceId.IsNullOrEmpty() == false
                     && configuration.AuthenticationId.IsNullOrEmpty() == false)
                 {

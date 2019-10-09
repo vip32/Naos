@@ -13,7 +13,17 @@
 
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddMongoClient(this IServiceCollection services, MongoConfiguration configuration)
+        public static IServiceCollection AddMongoClient(
+            this IServiceCollection services,
+            MongoConfiguration configuration)
+        {
+            return services.AddMongoClient(null, configuration);
+        }
+
+        public static IServiceCollection AddMongoClient(
+        this IServiceCollection services,
+        string applicationName,
+        MongoConfiguration configuration)
         {
             EnsureArg.IsNotNull(configuration, nameof(configuration));
             EnsureArg.IsNotNullOrEmpty(configuration.ConnectionString, nameof(configuration.ConnectionString));
@@ -51,7 +61,9 @@
                     };
                 }
 
-                return new MongoClient(settings);
+                var client = new MongoClient(settings);
+                client.Settings.ApplicationName = configuration.ApplicationName;
+                return client;
             });
 
             return services;

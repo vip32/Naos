@@ -152,7 +152,7 @@ namespace Application.Web3
                             .UseFile()
                             //.UseAzureBlobStorage()
                             .UseAzureLogAnalytics()
-                            .UseMongo())
+                            .UseMongo(false))
                         .AddSystemHealthChecks()
                         .AddRequestStorage(o => o
                             .UseAzureBlobStorage())

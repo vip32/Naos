@@ -10,7 +10,7 @@
     public class LogAnalyticsLogEventRepository : LogAnalyticsRepository<LogEvent>, ILogEventRepository
     {
         public LogAnalyticsLogEventRepository(
-            ILoggerFactory loggerFactory,
+            ILoggerFactory loggerFactory, // TODO: use optionsbuilder
             HttpClient httpClient,
             LogAnalyticsConfiguration configuration,
             string accessToken,

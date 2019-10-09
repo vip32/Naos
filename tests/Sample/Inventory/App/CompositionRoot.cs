@@ -1,5 +1,6 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
+    using System.Linq;
     using EnsureThat;
     using MediatR;
     using Microsoft.Extensions.Configuration;
@@ -30,7 +31,7 @@
                     sp.GetRequiredService<ILoggerFactory>(),
                     sp.CreateScope().ServiceProvider.GetService(typeof(IInventoryRepository)) as IInventoryRepository));
 
-            options.Context.Services.AddMongoClient(mongoConfiguration);
+            options.Context.Services.AddMongoClient("inventory", mongoConfiguration);
             options.Context.Services.AddScoped<IInventoryRepository>(sp =>
             {
                 return new InventoryRepository(
@@ -43,7 +44,8 @@
                                 //.Setup(sp, mongoConfiguration)
                                 .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                                 .Mediator(sp.GetRequiredService<IMediator>())
-                                .MongoClient(sp.GetRequiredService<IMongoClient>())
+                                .MongoClient(sp.GetServices<MongoClient>()
+                                    .FirstOrDefault(c => c.Settings.ApplicationName == "inventory"))
                                 .DatabaseName(mongoConfiguration.DatabaseName)))));
             });
 
@@ -59,7 +61,8 @@
                                 //.Setup(sp, mongoConfiguration)
                                 .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                                 .Mediator(sp.GetRequiredService<IMediator>())
-                                .MongoClient(sp.GetRequiredService<IMongoClient>())
+                                .MongoClient(sp.GetServices<MongoClient>()
+                                    .FirstOrDefault(c => c.Settings.ApplicationName == "inventory"))
                                 .Mapper(new AutoMapperEntityMapper(MapperFactory.Create()))
                                 .DatabaseName(mongoConfiguration.DatabaseName)
                                 .CollectionName("ProductReplenishments")))));

@@ -5,15 +5,15 @@
     using global::Serilog;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using Naos.Foundation.Domain;
     using Naos.Operations.App;
-    using Naos.Operations.Domain;
-    using Naos.Operations.Infrastructure.Mongo;
 
     [ExcludeFromCodeCoverage]
     public static class LoggingOptionsExtensions
     {
-        public static LoggingOptions UseMongo(this LoggingOptions options, LogLevel logLevel = LogLevel.Debug)
+        public static LoggingOptions UseMongo(
+            this LoggingOptions options,
+            bool dashboardEnabled = true,
+            LogLevel logLevel = LogLevel.Debug)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
@@ -43,10 +43,14 @@
                 }
 
                 options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: logging mongo sink added (collection={configuration.CollectionName})");
-            }
 
-            //options.Context.Services.AddScoped<ILogEventRepository>(sp =>
-            //    new MongoLogEventRepository(o => o.Mapper(new AutoMapperEntityMapper(MapperFactory.Create()))));
+                if (dashboardEnabled) // registers the mongo repo which is used by the dashboard (NaosOperationsLogEventsController)
+                {
+                    // configure the repository for the dashboard (controller)
+                    options.Context.AddMongoLogging();
+                    options.Context.AddMongoTracing();
+                }
+            }
 
             return options;
         }
