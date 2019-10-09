@@ -5,7 +5,10 @@
     using global::Serilog;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
+    using Naos.Foundation.Domain;
     using Naos.Operations.App;
+    using Naos.Operations.Domain;
+    using Naos.Operations.Infrastructure.Mongo;
 
     [ExcludeFromCodeCoverage]
     public static class LoggingOptionsExtensions
@@ -41,6 +44,9 @@
 
                 options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: logging mongo sink added (collection={configuration.CollectionName})");
             }
+
+            //options.Context.Services.AddScoped<ILogEventRepository>(sp =>
+            //    new MongoLogEventRepository(o => o.Mapper(new AutoMapperEntityMapper(MapperFactory.Create()))));
 
             return options;
         }

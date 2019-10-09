@@ -2,13 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Naos.Operations.Infrastructure.Mongo</AssemblyName>
+    <RootNamespace>Naos.Operations.Infrastructure.Mongo</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="Serilog.Sinks.MongoDB" Version="4.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Foundation.Domain.Repositories.AutoMapper\Domain.Repositories.AutoMapper.csproj" />
     <ProjectReference Include="..\Foundation.Infrastructure.Mongo\Infrastructure.Mongo.csproj" />
     <ProjectReference Include="..\Operations.Abstractions\Operations.Abstractions.csproj" />
     <ProjectReference Include="..\Operations.Domain\Operations.Domain.csproj" />
