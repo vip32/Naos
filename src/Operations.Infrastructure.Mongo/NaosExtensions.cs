@@ -44,34 +44,5 @@
 
             return context;
         }
-
-        public static INaosBuilderContext AddMongoTracing(this INaosBuilderContext context)
-        {
-            EnsureArg.IsNotNull(context, nameof(context));
-            EnsureArg.IsNotNull(context.Services, nameof(context.Services));
-
-            var configuration = context.Configuration?.GetSection("naos:operations:logging:mongo").Get<MongoLoggingConfiguration>();
-            if (configuration != null)
-            {
-                context.Services.AddMongoClient("logging", new MongoConfiguration
-                {
-                    ConnectionString = configuration.ConnectionString,
-                    DatabaseName = configuration.DatabaseName
-                });
-
-                context.Services.AddScoped<ILogTraceRepository>(sp =>
-                {
-                    return new MongoLogTraceRepository(o => o
-                        .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
-                        .MongoClient(sp.GetServices<MongoClient>()
-                            .FirstOrDefault(c => c.Settings.ApplicationName == "logging"))
-                        .Mapper(new AutoMapperEntityMapper(MapperFactory.Create()))
-                        .CollectionName(configuration.CollectionName));
-                });
-                context.Messages.Add($"{LogKeys.Startup} naos services builder: logging azure mongo repository added (collection={configuration.CollectionName})");
-            }
-
-            return context;
-        }
     }
 }

@@ -20,9 +20,6 @@
     <ProjectReference Include="..\Foundation.Infrastructure.Mongo\Infrastructure.Mongo.csproj" />
     <ProjectReference Include="..\Foundation.Domain.Repositories\Domain.Repositories.csproj" />
     <ProjectReference Include="..\Configuration.App\Configuration.App.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Repositories\Dto\" />
+    <ProjectReference Include="..\Tracing.Domain\Tracing.Domain.csproj" />
   </ItemGroup>
 </Project>

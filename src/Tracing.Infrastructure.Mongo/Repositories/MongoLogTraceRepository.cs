@@ -1,4 +1,4 @@
-﻿namespace Naos.Operations.Infrastructure.Mongo
+﻿namespace Naos.Tracing.Infrastructure.Mongo
 {
     using Naos.Foundation;
     using Naos.Foundation.Infrastructure;

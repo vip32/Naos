@@ -17,6 +17,7 @@
     <ProjectReference Include="..\Operations.Abstractions\Operations.Abstractions.csproj" />
     <ProjectReference Include="..\Operations.Domain\Operations.Domain.csproj" />
     <ProjectReference Include="..\Tracing.Domain\Tracing.Domain.csproj" />
+    <ProjectReference Include="..\Tracing.Infrastructure.Mongo\Tracing.Infrastructure.Mongo.csproj" />
   </ItemGroup>
 
 </Project>
