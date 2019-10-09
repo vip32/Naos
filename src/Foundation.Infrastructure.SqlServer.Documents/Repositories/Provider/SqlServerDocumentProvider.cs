@@ -15,6 +15,7 @@
 
     public class SqlServerDocumentProvider<T> : IDocumentProvider<T>
     {
+        // cons/cautions of storing serialized objects https://blog.goyello.com/2019/10/08/storing-serialized-objects-in-a-database-good-or-bad/
         private bool isInitialized;
 
         public SqlServerDocumentProvider(SqlServerDocumentProviderOptions<T> options)
