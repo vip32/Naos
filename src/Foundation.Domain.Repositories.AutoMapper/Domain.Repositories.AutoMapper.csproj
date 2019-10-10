@@ -16,8 +16,4 @@
     <ProjectReference Include="..\Foundation.Domain.Repositories\Domain.Repositories.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-
-  </ItemGroup>
-
 </Project>

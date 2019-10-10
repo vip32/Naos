@@ -5,7 +5,8 @@
     using global::Serilog;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using Naos.Operations.App;
+    using Naos.Operations;
+    using Naos.Operations.Infrastructure.Mongo;
 
     [ExcludeFromCodeCoverage]
     public static class LoggingOptionsExtensions
@@ -25,17 +26,18 @@
                 if (!configuration.CappedMaxDocuments.HasValue && !configuration.CappedMaxSizeMb.HasValue)
                 {
                     options.LoggerConfiguration?.WriteTo.MongoDB(
-                        configuration.ConnectionString,
+                        configuration.ConnectionString?.Replace("[DATABASENAME]", configuration.DatabaseName),
                         collectionName: configuration.CollectionName,
-                        //database:
+                        mongoDBJsonFormatter: new CamelCasedMongoDBJsonFormatter(true, renderMessage: true, formatProvider: null),
                         //outputTemplate: logFileConfiguration.OutputTemplate "{Timestamp:yyyy-MM-dd HH:mm:ss}|{Level} => {CorrelationId} => {Service}::{SourceContext}{NewLine}    {Message}{NewLine}{Exception}",
                         restrictedToMinimumLevel: MapLevel(logLevel));
                 }
                 else
                 {
                     options.LoggerConfiguration?.WriteTo.MongoDBCapped(
-                        configuration.ConnectionString,
+                        configuration.ConnectionString?.Replace("[DATABASENAME]", configuration.DatabaseName),
                         collectionName: configuration.CollectionName,
+                        mongoDBJsonFormatter: new CamelCasedMongoDBJsonFormatter(true, renderMessage: true, formatProvider: null),
                         cappedMaxDocuments: configuration.CappedMaxDocuments,
                         cappedMaxSizeMb: configuration.CappedMaxSizeMb ?? 50,
                         //outputTemplate: logFileConfiguration.OutputTemplate "{Timestamp:yyyy-MM-dd HH:mm:ss}|{Level} => {CorrelationId} => {Service}::{SourceContext}{NewLine}    {Message}{NewLine}{Exception}",

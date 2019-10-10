@@ -1,10 +1,13 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using EnsureThat;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
+    using MongoDB.Bson;
+    using MongoDB.Bson.Serialization.Conventions;
     using MongoDB.Driver;
     using Naos.Foundation.Domain;
     using Naos.Foundation.Infrastructure;
@@ -24,7 +27,7 @@
             {
                 context.Services.AddMongoClient("logging", new MongoConfiguration
                 {
-                    ConnectionString = configuration.ConnectionString,
+                    ConnectionString = configuration.ConnectionString?.Replace("[DATABASENAME]", configuration.DatabaseName),
                     DatabaseName = configuration.DatabaseName
                 });
 
@@ -32,9 +35,10 @@
                 {
                     return new MongoLogTraceRepository(o => o
                         .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
-                        .MongoClient(sp.GetServices<MongoClient>()
+                        .MongoClient(sp.GetServices<IMongoClient>()
                             .FirstOrDefault(c => c.Settings.ApplicationName == "logging")) //TODO: make nice extension to get a named mongoclient
                         .Mapper(new AutoMapperEntityMapper(MapperFactory.Create()))
+                        .DatabaseName(configuration.DatabaseName)
                         .CollectionName(configuration.CollectionName));
                 });
                 context.Messages.Add($"{LogKeys.Startup} naos services builder: logging azure mongo repository added (collection={configuration.CollectionName})");

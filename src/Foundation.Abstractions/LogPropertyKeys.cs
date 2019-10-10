@@ -17,6 +17,7 @@
 
         public const string TrackType = "ns_trktyp";
         public const string TrackName = "ns_trknm";
+        public const string TrackTraceId = "ns_trktid";
         public const string TrackId = "ns_trkid";
         public const string TrackParentId = "ns_trkpid";
         public const string TrackKind = "ns_trkknd";

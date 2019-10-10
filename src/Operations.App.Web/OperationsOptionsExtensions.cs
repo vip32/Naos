@@ -3,7 +3,7 @@
     using System;
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
-    using Naos.Operations.App;
+    using Naos.Operations;
     using Naos.Operations.App.Web;
 
     [ExcludeFromCodeCoverage]

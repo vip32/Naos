@@ -36,6 +36,7 @@
                     // map Span to LogTrace properties
                     [LogPropertyKeys.TrackType] = LogTrackTypes.Trace,
                     [LogPropertyKeys.TrackName] = notification.Span.OperationName,
+                    [LogPropertyKeys.TrackTraceId] = notification.Span.TraceId,
                     [LogPropertyKeys.TrackId] = notification.Span.SpanId,
                     [LogPropertyKeys.TrackParentId] = notification.Span.ParentSpanId,
                     [LogPropertyKeys.TrackKind] = notification.Span.Kind?.ToString(),

@@ -8,6 +8,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
+    using Naos.Operations;
     using Naos.Operations.App;
 
     [ExcludeFromCodeCoverage]

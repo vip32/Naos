@@ -105,7 +105,8 @@
                 LoggingFilterContext.Prepare(this.filterContext); // add some default criteria
 
                 var entities = await this.repository.FindAllAsync(
-                    this.filterContext.GetSpecifications<LogTrace>().Insert(new Specification<LogTrace>(t => t.TrackType == "trace")),
+                    this.filterContext.GetSpecifications<LogTrace>().Insert(
+                        new Specification<LogTrace>(t => t.TrackType == "trace")),
                     this.filterContext.GetFindOptions<LogTrace>()).AnyContext();
                 var nodes = Node<LogTrace>.ToHierarchy(entities, l => l.SpanId, l => l.ParentSpanId, true).ToList();
 

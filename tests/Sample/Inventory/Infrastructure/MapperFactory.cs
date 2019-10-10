@@ -1,7 +1,6 @@
 ﻿namespace Naos.Sample.Inventory.Infrastructure
 {
     using AutoMapper;
-    using Naos.Foundation.Domain;
     using Naos.Sample.Inventory.Domain;
 
     public static class MapperFactory
@@ -12,7 +11,7 @@
             {
                 // TODO: try reversemap https://stackoverflow.com/questions/13490456/automapper-bidirectional-mapping-with-reversemap-and-formember
                 //c.AddExpressionMapping();
-                c.IgnoreUnmapped();
+                //c.IgnoreUnmapped();
                 //c.AllowNullCollections = true;
                 c.CreateMap<ProductReplenishment, DtoProductReplenishment>()
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))

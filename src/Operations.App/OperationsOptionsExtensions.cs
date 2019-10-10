@@ -11,6 +11,7 @@
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
     using Naos.Foundation.Application;
+    using Naos.Operations;
     using Naos.Operations.App;
     using Naos.Tracing.Domain;
 

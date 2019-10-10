@@ -151,8 +151,8 @@ namespace Application.Web3
                             .UseConsole(LogLevel.Debug)
                             .UseFile()
                             //.UseAzureBlobStorage()
-                            .UseAzureLogAnalytics()
-                            .UseMongo(false))
+                            .UseAzureLogAnalytics(false)
+                            .UseMongo(true))
                         .AddSystemHealthChecks()
                         .AddRequestStorage(o => o
                             .UseAzureBlobStorage())

@@ -8,10 +8,6 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    //using MongoDB.Bson;
-    //using MongoDB.Bson.Serialization;
-    //using MongoDB.Bson.Serialization.IdGenerators;
-    //using MongoDB.Bson.Serialization.Serializers;
     using MongoDB.Driver;
     using Naos.Foundation.Domain;
 

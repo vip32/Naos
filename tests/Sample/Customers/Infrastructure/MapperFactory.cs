@@ -1,7 +1,7 @@
 ﻿namespace Naos.Sample.Customers.Infrastructure
 {
     using AutoMapper;
-    using Naos.Foundation.Domain;
+    using Naos.Foundation;
     using Naos.Sample.Customers.Domain;
 
     public static class MapperFactory

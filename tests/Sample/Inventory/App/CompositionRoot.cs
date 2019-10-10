@@ -61,7 +61,7 @@
                                 //.Setup(sp, mongoConfiguration)
                                 .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                                 .Mediator(sp.GetRequiredService<IMediator>())
-                                .MongoClient(sp.GetServices<MongoClient>()
+                                .MongoClient(sp.GetServices<IMongoClient>()
                                     .FirstOrDefault(c => c.Settings.ApplicationName == "inventory"))
                                 .Mapper(new AutoMapperEntityMapper(MapperFactory.Create()))
                                 .DatabaseName(mongoConfiguration.DatabaseName)

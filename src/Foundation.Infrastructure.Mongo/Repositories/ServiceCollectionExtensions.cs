@@ -9,21 +9,24 @@
     using MongoDB.Bson.Serialization.Serializers;
     using MongoDB.Driver;
     using MongoDB.Driver.Core.Events;
+    using Naos.Foundation;
     using Naos.Foundation.Infrastructure;
 
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddMongoClient(
             this IServiceCollection services,
-            MongoConfiguration configuration)
+            MongoConfiguration configuration,
+            IEnumerable<IConvention> conventions = null)
         {
-            return services.AddMongoClient(null, configuration);
+            return services.AddMongoClient(null, configuration, conventions);
         }
 
         public static IServiceCollection AddMongoClient(
         this IServiceCollection services,
         string applicationName,
-        MongoConfiguration configuration)
+        MongoConfiguration configuration,
+        IEnumerable<IConvention> conventions = null)
         {
             EnsureArg.IsNotNull(configuration, nameof(configuration));
             EnsureArg.IsNotNullOrEmpty(configuration.ConnectionString, nameof(configuration.ConnectionString));
@@ -46,7 +49,19 @@
                         new NullableSerializer<decimal>(new DecimalSerializer(BsonType.Decimal128)));
                 }
 
-                ConventionRegistry.Register("naos_conventions", new MongoConventions(), x => true);
+                // conventions are global
+                if (conventions.SafeAny())
+                {
+                    var conventionPack = new ConventionPack();
+                    conventionPack.AddRange(conventionPack);
+                    // warning: because of filter these conventions will always be applied, for every type
+                    ConventionRegistry.Register($"naos_conventions_{applicationName}", conventionPack, x => true);
+                }
+                else
+                {
+                    // warning: because of filter these conventions will always be applied, for every type
+                    ConventionRegistry.Register($"naos_conventions_{applicationName}", new DefaultMongoConventions(), x => true);
+                }
 
                 var settings = MongoClientSettings.FromUrl(new MongoUrl(configuration.ConnectionString));
                 settings.ApplicationName = applicationName; // for getservice<imongoclient> by app name
@@ -68,13 +83,22 @@
             return services;
         }
 
-        private class MongoConventions : IConventionPack
+        private class DefaultMongoConventions : IConventionPack
         {
             public IEnumerable<IConvention> Conventions => new List<IConvention>
             {
                 new IgnoreExtraElementsConvention(true),
                 new EnumRepresentationConvention(BsonType.String),
                 new CamelCaseElementNameConvention()
+            };
+        }
+
+        private class NoCasingMongoConventions : IConventionPack
+        {
+            public IEnumerable<IConvention> Conventions => new List<IConvention>
+            {
+                new IgnoreExtraElementsConvention(true),
+                new EnumRepresentationConvention(BsonType.String)
             };
         }
     }

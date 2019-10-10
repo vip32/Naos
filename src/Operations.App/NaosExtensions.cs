@@ -5,6 +5,7 @@
     using EnsureThat;
     using Microsoft.Extensions.Logging;
     using Naos.Configuration.App;
+    using Naos.Operations;
     using Naos.Operations.App;
 
     [ExcludeFromCodeCoverage]

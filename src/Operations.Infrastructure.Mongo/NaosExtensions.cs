@@ -8,10 +8,8 @@
     using MongoDB.Driver;
     using Naos.Foundation.Domain;
     using Naos.Foundation.Infrastructure;
-    using Naos.Operations.App;
     using Naos.Operations.Domain;
     using Naos.Operations.Infrastructure.Mongo;
-    using Naos.Tracing.Domain;
 
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions
@@ -26,7 +24,7 @@
             {
                 context.Services.AddMongoClient("logging", new MongoConfiguration
                 {
-                    ConnectionString = configuration.ConnectionString,
+                    ConnectionString = configuration.ConnectionString?.Replace("[DATABASENAME]", configuration.DatabaseName),
                     DatabaseName = configuration.DatabaseName
                 });
 
@@ -37,6 +35,7 @@
                         .MongoClient(sp.GetServices<IMongoClient>()
                             .FirstOrDefault(c => c.Settings.ApplicationName == "logging")) //TODO: make nice extension to get a named mongoclient
                         .Mapper(new AutoMapperEntityMapper(MapperFactory.Create()))
+                        .DatabaseName(configuration.DatabaseName)
                         .CollectionName(configuration.CollectionName));
                 });
                 context.Messages.Add($"{LogKeys.Startup} naos services builder: logging azure mongo repository added (collection={configuration.CollectionName})");

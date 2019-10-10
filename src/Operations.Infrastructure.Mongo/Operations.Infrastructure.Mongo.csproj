@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Foundation.Domain.Repositories.AutoMapper\Domain.Repositories.AutoMapper.csproj" />
     <ProjectReference Include="..\Foundation.Infrastructure.Mongo\Infrastructure.Mongo.csproj" />
+    <ProjectReference Include="..\Foundation.Mapping.AutoMapper\Mapping.AutoMapper.csproj" />
     <ProjectReference Include="..\Operations.Abstractions\Operations.Abstractions.csproj" />
     <ProjectReference Include="..\Operations.Domain\Operations.Domain.csproj" />
     <ProjectReference Include="..\Tracing.Domain\Tracing.Domain.csproj" />

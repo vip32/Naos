@@ -17,6 +17,28 @@
         public static void WriteJson<T>(this HttpResponse response, T content, ContentType contentType = ContentType.JSON, JsonSerializerSettings settings = null)
         {
             response.ContentType = contentType.ToValue();
+
+#if NETCOREAPP3_0
+            var writer = new HttpResponseStreamWriter(response.Body, Encoding.UTF8);
+            using (var jsonWriter = new JsonTextWriter(writer))
+            {
+                jsonWriter.CloseOutput = false;
+                jsonWriter.AutoCompleteOnClose = false;
+
+                if (settings == null)
+                {
+                    DefaultSerializer.Serialize(jsonWriter, content);
+                }
+                else
+                {
+                    JsonSerializer.Create(DefaultJsonSerializerSettings.Create()).Serialize(jsonWriter, content);
+                }
+            }
+
+            writer.DisposeAsync(); // mitigates 'Synchronous operations are disallowed' issue (netcore3) https://github.com/aspnet/Announcements/issues/342
+#endif
+
+#if NETSTANDARD2_0
             using (var writer = new HttpResponseStreamWriter(response.Body, Encoding.UTF8))
             {
                 using (var jsonWriter = new JsonTextWriter(writer))
@@ -34,6 +56,7 @@
                     }
                 }
             }
+#endif
         }
 
         public static Task Location(this HttpResponse source, string location = null)

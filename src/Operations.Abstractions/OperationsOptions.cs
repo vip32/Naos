@@ -1,4 +1,4 @@
-﻿namespace Naos.Operations.App
+﻿namespace Naos.Operations
 {
     using Microsoft.Extensions.DependencyInjection;
 
