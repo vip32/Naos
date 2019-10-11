@@ -8,6 +8,7 @@
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
     using Naos.Foundation.Application;
+    using Naos.Foundation.Application.Web.Startup.EntityFramework;
     using Naos.Foundation.Domain;
     using Naos.Foundation.Infrastructure;
     using Naos.Sample.UserAccounts.Domain;
@@ -35,7 +36,7 @@
                 options.Context.Services.AddSingleton(dbContext); // cross wiring, warning this will be a singleton (not scoped)
             }
 
-            var entityFrameworkConfiguration = options.Context.Configuration?.GetSection(section).Get<EntityFrameworkConfiguration>();
+            var configuration = options.Context.Configuration?.GetSection(section).Get<EntityFrameworkConfiguration>();
 
             options.Context.Services.AddScoped<IGenericRepository<UserAccount>>(sp =>
             {
@@ -74,7 +75,7 @@
 
             options.Context.Services.AddDbContext<UserAccountsDbContext>(o => o
                 //.UseSqlServer("Server=.;Database=naos_sample;User=sa;Password=Abcd1234!;Trusted_Connection=False;MultipleActiveResultSets=True;", o => o // docker
-                .UseSqlServer(connectionString.EmptyToNull() ?? entityFrameworkConfiguration.ConnectionString.EmptyToNull() ?? $"Server=(localdb)\\mssqllocaldb;Database={nameof(UserAccountsDbContext)};Trusted_Connection=True;MultipleActiveResultSets=True;", o => o
+                .UseSqlServer(connectionString.EmptyToNull() ?? configuration.ConnectionString.EmptyToNull() ?? $"Server=(localdb)\\mssqllocaldb;Database={nameof(UserAccountsDbContext)};Trusted_Connection=True;MultipleActiveResultSets=True;", o => o
                     .EnableRetryOnFailure())
                 .UseLoggerFactory(options.Context.Services.BuildServiceProvider().GetRequiredService<ILoggerFactory>())
                 //.ConfigureWarnings(w => w.Throw(RelationalEventId.QueryClientEvaluationWarning))
@@ -85,7 +86,7 @@
             options.Context.Services.AddStartupTask<EchoStartupTask>(new TimeSpan(0, 0, 3));
 
             options.Context.Services.AddHealthChecks()
-                .AddSqlServer(entityFrameworkConfiguration.ConnectionString, name: "UserAccounts-sqlserver");
+                .AddSqlServer(configuration.ConnectionString, name: "UserAccounts-sqlserver");
 
             options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: useraccounts service added");
 

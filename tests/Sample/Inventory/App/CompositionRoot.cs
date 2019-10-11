@@ -24,14 +24,14 @@
 
             options.Context.AddTag("inventory");
 
-            var mongoConfiguration = options.Context.Configuration?.GetSection($"{section}:mongo").Get<MongoConfiguration>() ?? new MongoConfiguration();
+            var configuration = options.Context.Configuration?.GetSection($"{section}:mongo").Get<MongoConfiguration>() ?? new MongoConfiguration();
 
             options.Context.Services.AddStartupTask(sp =>
                 new SeederStartupTask(
                     sp.GetRequiredService<ILoggerFactory>(),
                     sp.CreateScope().ServiceProvider.GetService(typeof(IInventoryRepository)) as IInventoryRepository));
 
-            options.Context.Services.AddMongoClient("inventory", mongoConfiguration);
+            options.Context.Services.AddMongoClient("inventory", configuration);
             options.Context.Services.AddScoped<IInventoryRepository>(sp =>
             {
                 return new InventoryRepository(
@@ -46,7 +46,7 @@
                                 .Mediator(sp.GetRequiredService<IMediator>())
                                 .MongoClient(sp.GetServices<IMongoClient>()
                                     .FirstOrDefault(c => c.Settings.ApplicationName == "inventory")) //TODO: make nice extension to get a named mongoclient
-                                .DatabaseName(mongoConfiguration.DatabaseName)))));
+                                .DatabaseName(configuration.DatabaseName)))));
             });
 
             options.Context.Services.AddScoped<IReplenishmentRepository>(sp =>
@@ -64,7 +64,7 @@
                                 .MongoClient(sp.GetServices<IMongoClient>()
                                     .FirstOrDefault(c => c.Settings.ApplicationName == "inventory"))
                                 .Mapper(new AutoMapperEntityMapper(MapperFactory.Create()))
-                                .DatabaseName(mongoConfiguration.DatabaseName)
+                                .DatabaseName(configuration.DatabaseName)
                                 .CollectionName("ProductReplenishments")))));
             });
 
