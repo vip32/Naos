@@ -10,14 +10,22 @@
     using NSubstitute;
     using Shouldly;
     using Xunit;
+    using Xunit.Abstractions;
 
     public class FilterContextFactoryTests
     {
+        private ITestOutputHelper output;
+
+        public FilterContextFactoryTests(ITestOutputHelper output)
+        {
+            this.output = output;
+        }
+
         [Fact]
         public void Create_Tests()
         {
             // arrange
-            var logger = Substitute.For<ILogger<FilterContextFactory>>();
+            var logger = this.output.CreateLogger<FilterContextFactory>(); //Substitute.For<ILogger<FilterContextFactory>>();
             var query = new QueryCollection(new Dictionary<string, StringValues>()
             {
                 ["q"] = "FirstName=John,Age=ge:21",
