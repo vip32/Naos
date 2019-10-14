@@ -77,7 +77,7 @@
                     }
                     else if (context.Request.Method.SafeEquals("post") || context.Request.Method.SafeEquals("put") || context.Request.Method.SafeEquals(string.Empty))
                     {
-                        command = this.ParseBodyOperation(context, routeValues);
+                        command = await this.ParseBodyOperationAsync(context, routeValues).AnyContext();
                     }
                     else
                     {
@@ -165,10 +165,22 @@
             return Factory.Create(this.options.Registration.CommandType, properties.AddOrUpdate(routeValues));
         }
 
-        private object ParseBodyOperation(HttpContext context, IDictionary<string, object> routeValues)
+        private async Task<object> ParseBodyOperationAsync(HttpContext context, IDictionary<string, object> routeValues)
         {
-            // TODO: what todo with the routeValues, copy them on the body object?
-            return SerializationHelper.JsonDeserialize(context.Request.Body, this.options.Registration.CommandType);
+#if NETCOREAPP3_0
+            var options = new System.Text.Json.JsonSerializerOptions
+            {
+                PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase,
+                IgnoreNullValues = true,
+                PropertyNameCaseInsensitive = true
+            };
+            return await System.Text.Json.JsonSerializer.DeserializeAsync(context.Request.Body, this.options.Registration.CommandType, options).ConfigureAwait(false);
+#endif
+
+#if NETSTANDARD2_0
+                        // TODO: what todo with the routeValues, copy them on the body object?
+                        return SerializationHelper.JsonDeserialize(context.Request.Body, this.options.Registration.CommandType);
+#endif
         }
 
         private List<ICommandRequestExtension> EnsureExtensions(HttpContext context)

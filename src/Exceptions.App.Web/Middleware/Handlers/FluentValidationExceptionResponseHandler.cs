@@ -37,7 +37,7 @@
                         Type = hideDetails ? null : validationException.GetType().FullPrettyName(),
                     };
                     validationException.Errors.Safe()
-                        .ForEach(e => details.Errors.Add(e.PropertyName, new[] { e.ToString() }));
+                        .ForEach(e => details.Errors.AddOrUpdate(e.PropertyName, new[] { e.ToString() }));
 
                     this.logger?.LogWarning($"{LogKeys.InboundResponse} [{requestId}] http request {details.Title} [{validationException.GetType().PrettyName()}] {validationException.Message}");
 

@@ -38,7 +38,7 @@
                         Type = hideDetails ? null : badRequestException.GetType().FullPrettyName(),
                     };
                     badRequestException.ModelState.Safe()
-                        .ForEach(i => details.Errors.Add(i.Key, i.Value.Errors.Select(e => e.ErrorMessage).ToArray()));
+                        .ForEach(i => details.Errors.AddOrUpdate(i.Key, i.Value.Errors.Select(e => e.ErrorMessage).ToArray()));
 
                     this.logger?.LogWarning($"{LogKeys.InboundResponse} [{requestId}] http request  {details.Title} [{badRequestException.GetType().PrettyName()}] {badRequestException.Message}");
 
