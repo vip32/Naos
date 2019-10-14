@@ -1,17 +1,21 @@
 ﻿namespace Naos.Foundation.Infrastructure
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
+    using MongoDB.Bson.Serialization.Attributes;
     using MongoDB.Driver;
     using Naos.Foundation.Domain;
 
     public class MongoRepository<TEntity> : IGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
+        private readonly bool hasBsonId;
+
         public MongoRepository(MongoRepositoryOptions<TEntity> options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
@@ -26,6 +30,7 @@
             this.Collection = options.MongoClient
                 .GetDatabase(options.DatabaseName)
                 .GetCollection<TEntity>(options.CollectionName);
+            this.hasBsonId = Attribute.IsDefined(typeof(TEntity).GetProperty("Id"), typeof(BsonIdAttribute));
 
             this.Logger.LogInformation($"{{LogKey:l}} construct mongo repository (type={typeof(TEntity).PrettyName()})", LogKeys.DomainRepository);
         }
@@ -39,7 +44,7 @@
 
         protected ILogger<MongoRepository<TEntity>> Logger { get; }
 
-        protected IMongoCollection<TEntity> Collection { get;  }
+        protected IMongoCollection<TEntity> Collection { get; }
 
         public async Task<bool> ExistsAsync(object id)
         {
@@ -58,7 +63,15 @@
                 return null;
             }
 
-            return await this.Collection.Find(e => e.Id.Equals(id)).SingleOrDefaultAsync().AnyContext();
+            if (this.hasBsonId)
+            {
+                return (await this.Collection.FindAsync(
+                    Builders<TEntity>.Filter.Eq("_id", MongoDB.Bson.ObjectId.Parse(id as string))).AnyContext()).SingleOrDefault();
+            }
+            else
+            {
+                return await this.Collection.Find(e => e.Id.Equals(id)).SingleOrDefaultAsync().AnyContext();
+            }
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
@@ -126,7 +139,16 @@
                 return entity;
             }
 
-            await this.Collection.ReplaceOneAsync(e => e.Id.Equals(entity.Id), entity).AnyContext();
+            if (this.hasBsonId)
+            {
+                await this.Collection.ReplaceOneAsync(
+                    Builders<TEntity>.Filter.Eq("_id", MongoDB.Bson.ObjectId.Parse(entity.Id as string)), entity).AnyContext();
+            }
+            else
+            {
+                await this.Collection.ReplaceOneAsync(e => e.Id == entity.Id, entity).AnyContext();
+            }
+
             return entity;
         }
 
@@ -196,7 +218,17 @@
                 return ActionResult.None;
             }
 
-            var result = await this.Collection.DeleteOneAsync(e => e.Id.Equals(id)).AnyContext();
+            DeleteResult result;
+            if (this.hasBsonId)
+            {
+                result = await this.Collection.DeleteOneAsync(
+                    Builders<TEntity>.Filter.Eq("_id", MongoDB.Bson.ObjectId.Parse(id as string))).AnyContext();
+            }
+            else
+            {
+                result = await this.Collection.DeleteOneAsync(e => e.Id == id).AnyContext();
+            }
+
             return result.DeletedCount > 0 ? ActionResult.Deleted : ActionResult.None;
         }
 

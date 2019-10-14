@@ -55,6 +55,17 @@
         }
 
         [HttpGet]
+        [Route("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
+        [OpenApiTag("Naos Operations")]
+        public async Task<ActionResult<LogEvent>> Get(string id)
+        {
+            return this.Ok(await this.repository.FindOneAsync(id).AnyContext());
+        }
+
+        [HttpGet]
         [Route("dashboard")]
         [Produces("text/html")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
@@ -132,7 +143,7 @@
                     await this.HttpContext.Response.WriteAsync(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logevents/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;").AnyContext();
                     await this.HttpContext.Response.WriteAsync($"<span style='color: {messageColor}; {extraStyles}'>").AnyContext();
                     //await this.HttpContext.Response.WriteAsync(logEvent.TrackType.SafeEquals("journal") ? "*" : "&nbsp;"); // journal prefix
-                    await this.HttpContext.Response.WriteAsync($"{entity.Message} <a target=\"blank\" href=\"/api/operations/logevents?q=Id={entity.Id}\">*</a>").AnyContext();
+                    await this.HttpContext.Response.WriteAsync($"{entity.Message} <a target=\"blank\" href=\"/api/operations/logevents/{entity.Id}\">*</a>").AnyContext();
                     await this.HttpContext.Response.WriteAsync("</span>").AnyContext();
                     await this.HttpContext.Response.WriteAsync("</div>").AnyContext();
                 }

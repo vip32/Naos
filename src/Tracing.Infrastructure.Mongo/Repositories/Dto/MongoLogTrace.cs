@@ -2,14 +2,13 @@
 {
     using System;
     using Microsoft.Extensions.Logging;
+    using MongoDB.Bson.Serialization.Attributes;
+    using MongoDB.Bson.Serialization.IdGenerators;
     using Naos.Foundation.Infrastructure;
     using Newtonsoft.Json;
 
     public class MongoLogTrace : IMongoEntity<object>
     {
-        //[JsonProperty("_id")]
-        //public Guid Id { get; set; }
-
         /// <summary>
         /// Gets or sets the entity identifier.
         /// </summary>
@@ -17,6 +16,7 @@
         /// The identifier.
         /// </value>
         [JsonIgnore]
+        [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
         public object Id { get; set; }
 
         /// <summary>
@@ -25,7 +25,6 @@
         /// <value>
         /// The identifier.
         /// </value>
-        //[JsonProperty(PropertyName = "_id")]
         object IMongoEntity.Id
         {
             get { return this.Id; }

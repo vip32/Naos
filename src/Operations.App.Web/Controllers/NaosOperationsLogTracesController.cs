@@ -59,6 +59,17 @@
         }
 
         [HttpGet]
+        [Route("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
+        [OpenApiTag("Naos Operations")]
+        public async Task<ActionResult<LogTrace>> Get(string id)
+        {
+            return this.Ok(await this.repository.FindOneAsync(id).AnyContext());
+        }
+
+        [HttpGet]
         [Route("dashboard")]
         [Produces("text/html")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
@@ -154,7 +165,7 @@
             sb.Append("<span style='color: ").Append(this.GetTraceLevelColor(entity)).Append("; ").Append(extraStyles).Append("'>")
                 //.Append(logEvent.TrackType.SafeEquals("journal") ? "*" : "&nbsp;"); // journal prefix
                 .Append(entity.Message).Append(" (").Append(entity.SpanId).Append("/").Append(entity.ParentSpanId).Append(")&nbsp;")
-                .Append("<a target=\"blank\" href=\"/api/operations/logtraces?q=Id=").Append(entity.Id).Append("\">*</a> ")
+                .Append("<a target=\"blank\" href=\"/api/operations/logtraces/").Append(entity.Id).Append("\">*</a> ")
                 .Append("<span style=\"color: gray;\">-> took ")
                 .Append(entity.Duration.Humanize())
                 .Append("</span>");
