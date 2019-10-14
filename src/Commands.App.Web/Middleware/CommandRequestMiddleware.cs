@@ -173,7 +173,10 @@
                 PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase,
                 IgnoreNullValues = true,
                 PropertyNameCaseInsensitive = true
+                // https://github.com/dotnet/corefx/blob/master/src/System.Text.Json/docs/SerializerProgrammingModel.md
             };
+            // new system.text json serializer is used as newtonsoft doesn't provide a DeserializeAsync method
+            // which is needed for the new async only request i/o (AllowSynchronousIO=false)
             return await System.Text.Json.JsonSerializer.DeserializeAsync(context.Request.Body, this.options.Registration.CommandType, options).ConfigureAwait(false);
 #endif
 
