@@ -7,10 +7,10 @@
     using Naos.Tracing.Domain;
 
     [ExcludeFromCodeCoverage]
-    public static class TracingOptionsExtensions
+    public static class OperationsTracingOptionsExtensions
     {
-        public static TracingOptions UseSampler<T>(
-            this TracingOptions options)
+        public static OperationsTracingOptions UseSampler<T>(
+            this OperationsTracingOptions options)
             where T : class, ISampler
         {
             EnsureArg.IsNotNull(options, nameof(options));
@@ -23,8 +23,8 @@
             return options;
         }
 
-        public static TracingOptions UseSampler(
-            this TracingOptions options,
+        public static OperationsTracingOptions UseSampler(
+            this OperationsTracingOptions options,
             ISampler sampler)
         {
             EnsureArg.IsNotNull(options, nameof(options));

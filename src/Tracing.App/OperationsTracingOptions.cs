@@ -2,9 +2,9 @@
 {
     using Microsoft.Extensions.DependencyInjection;
 
-    public class TracingOptions
+    public class OperationsTracingOptions
     {
-        public TracingOptions(INaosBuilderContext context)
+        public OperationsTracingOptions(INaosBuilderContext context)
         {
             this.Context = context;
         }
