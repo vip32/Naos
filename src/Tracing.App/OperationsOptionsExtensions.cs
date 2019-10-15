@@ -1,17 +1,20 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
     using MediatR;
     using Microsoft.Extensions.Logging;
     using Naos.Operations;
+    using Naos.Tracing.App;
     using Naos.Tracing.Domain;
 
     [ExcludeFromCodeCoverage]
     public static class OperationsOptionsExtensions
     {
         public static OperationsOptions AddTracing(
-            this OperationsOptions options)
+            this OperationsOptions options,
+            Action<TracingOptions> optionsAction = null)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
@@ -23,7 +26,16 @@
                     new AsyncLocalScopeManager((IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator))),
                     sp.GetService<ISampler>());
             });
-            options.Context.Services.AddSingleton<ISampler, ConstantSampler>(); // TODO: configure different samplers
+
+            if(optionsAction == null)
+            {
+                options.Context.Services.AddSingleton<ISampler, ConstantSampler>();
+            }
+            else
+            {
+                optionsAction.Invoke(new TracingOptions(options.Context));
+            }
+
             //options.Context.Services.AddSingleton<ISampler>(sp => new OperationNamePatternSampler(new[] { "http*" })); // TODO: configure different samplers
             //options.Context.Services.AddSingleton<ISampler>(sp => new RateLimiterSampler(new RateLimiter(2.0, 2.0))); // TODO: configure different samplers
 

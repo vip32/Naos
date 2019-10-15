@@ -23,6 +23,7 @@ namespace Application.Web3
     using Naos.JobScheduling.Domain;
     using Naos.Messaging.Domain;
     using Naos.Sample.Customers.App;
+    using Naos.Tracing.Domain;
     using NSwag.Generation.Processors;
 
     public class Startup
@@ -156,7 +157,9 @@ namespace Application.Web3
                         .AddSystemHealthChecks()
                         .AddRequestStorage(o => o
                             .UseAzureBlobStorage())
-                        .AddTracing())
+                        .AddTracing(o => o
+                            .UseSampler<ConstantSampler>()))
+                            //.UseSampler(new OperationNamePatternSampler(new[] { "http*" }))))
                     //.AddQueries()
                     //.AddSwaggerDocument() // s.Description = Product.Capability\
                     .AddJobScheduling(o => o

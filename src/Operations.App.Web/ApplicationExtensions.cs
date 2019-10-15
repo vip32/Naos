@@ -33,7 +33,7 @@
                     Options.Create(requestLoggingMiddlewareOptions ?? naosOptions.Context.Application.ApplicationServices.GetService<RequestLoggingMiddlewareOptions>() ?? new RequestLoggingMiddlewareOptions()))
                 .UseMiddleware<RequestStorageMiddleware>(
                     Options.Create(requestStorageMiddlewareOptions ?? naosOptions.Context.Application.ApplicationServices.GetService<RequestStorageMiddlewareOptions>() ?? new RequestStorageMiddlewareOptions()));
-            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: operations logging added");
+            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: operations request logging added");
 
             var diagnosticListener = naosOptions.Context.Application.ApplicationServices.GetService<DiagnosticListener>();
             diagnosticListener?.SubscribeWithAdapter(new NaosDiagnosticListener(naosOptions.Context.Application.ApplicationServices.GetService<ILoggerFactory>()));
@@ -63,7 +63,7 @@
             //naosOptions.Context.Application.UseEndpointRouting(); // needed by middleware to get action/controller https://www.stevejgordon.co.uk/asp-net-core-first-look-at-global-routing-dispatcher
             naosOptions.Context.Application.UseMiddleware<RequestTracingMiddleware>(
                     Options.Create(requestTracingMiddlewareOptions ?? naosOptions.Context.Application.ApplicationServices.GetService<RequestTracingMiddlewareOptions>() ?? new RequestTracingMiddlewareOptions()));
-            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: operations tracing added");
+            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: operations request tracing added");
 
             return naosOptions;
         }
