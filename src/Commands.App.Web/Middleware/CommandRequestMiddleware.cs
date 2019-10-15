@@ -167,16 +167,12 @@
 
         private async Task<object> ParseBodyOperationAsync(HttpContext context, IDictionary<string, object> routeValues)
         {
-#if NETCOREAPP3_0
+            // TODO: what todo with the routeValues, copy them on the body object?
+
             // new system.text json serializer is used as newtonsoft doesn't provide a DeserializeAsync method
             // which is needed for the new async only request i/o (AllowSynchronousIO=false)
             return await System.Text.Json.JsonSerializer.DeserializeAsync(context.Request.Body, this.options.Registration.CommandType, DefaultJsonSerializerOptions.Create()).ConfigureAwait(false);
-#endif
-
-#if NETSTANDARD2_0
-                        // TODO: what todo with the routeValues, copy them on the body object?
-                        return SerializationHelper.JsonDeserialize(context.Request.Body, this.options.Registration.CommandType);
-#endif
+            //return SerializationHelper.JsonDeserialize(context.Request.Body, this.options.Registration.CommandType);
         }
 
         private List<ICommandRequestExtension> EnsureExtensions(HttpContext context)
