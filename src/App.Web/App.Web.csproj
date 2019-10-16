@@ -40,5 +40,6 @@
     <ProjectReference Include="..\Configuration.App.Web\Configuration.App.Web.csproj" />
     <ProjectReference Include="..\Exceptions.App.Web\Exceptions.App.Web.csproj" />
     <ProjectReference Include="..\Messaging.App.Web\Messaging.App.Web.csproj" />
+    <ProjectReference Include="..\Tracing.App.Web\Tracing.App.Web.csproj" />
   </ItemGroup>
 </Project>
