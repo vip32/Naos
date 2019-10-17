@@ -26,7 +26,7 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            subscriptionName ??= options.Context.Descriptor.Name;
+            //subscriptionName ??= options.Context.Descriptor.Name;
             var rabbitMQConfiguration = options.Context.Configuration.GetSection(section).Get<RabbitMQConfiguration>() ?? new RabbitMQConfiguration();
 
             options.Context.Services.AddSingleton<IMessageBroker>(sp =>
@@ -34,7 +34,8 @@
                 var broker = new RabbitMQMessageBroker(o => o
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                     .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
-                    .SubscriptionName(subscriptionName)
+                    .MessageScope(options.Context.Descriptor.Name)
+                    //.SubscriptionName(subscriptionName)
                     .Provider(sp.GetRequiredService<IRabbitMQProvider>()));
 
                 brokerAction?.Invoke(broker);

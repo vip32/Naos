@@ -65,8 +65,8 @@
                 using (var channel = this.options.Provider.CreateModel())
                 {
                     channel.QueueBind(
-                        queue: this.options.SubscriptionName,
                         exchange: this.options.ExchangeName,
+                        queue: this.options.SubscriptionName,
                         routingKey: routingKey);
                 }
 
@@ -122,12 +122,12 @@
                     this.options.Provider.TryConnect();
                 }
 
-                var policy = RetryPolicy.Handle<BrokerUnreachableException>()
-                .Or<SocketException>()
-                .WaitAndRetry(this.options.RetryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
-                {
-                    this.logger.LogWarning(ex, "{LogKey:l} could not publish message: {MessageId} after {Timeout}s ({ExceptionMessage})", LogKeys.Messaging, message.Id, $"{time.TotalSeconds:n1}", ex.Message);
-                });
+                var policy = Policy.Handle<BrokerUnreachableException>()
+                    .Or<SocketException>()
+                    .WaitAndRetry(this.options.RetryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
+                    {
+                        this.logger.LogWarning(ex, "{LogKey:l} could not publish message: {MessageId} after {Timeout}s ({ExceptionMessage})", LogKeys.Messaging, message.Id, $"{time.TotalSeconds:n1}", ex.Message);
+                    });
 
                 using (var channel = this.options.Provider.CreateModel())
                 {
@@ -183,8 +183,8 @@
                 this.logger.LogInformation($"{{LogKey:l}} unbind rabbitmq queue (queue={this.options.SubscriptionName}, routingKey={routingKey})", LogKeys.Messaging);
 
                 channel.QueueUnbind(
-                    queue: this.options.SubscriptionName,
                     exchange: this.options.ExchangeName,
+                    queue: this.options.SubscriptionName,
                     routingKey: routingKey);
             }
 
