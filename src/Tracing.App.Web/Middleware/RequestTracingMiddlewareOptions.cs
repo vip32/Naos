@@ -1,4 +1,4 @@
-﻿namespace Naos.Operations.App.Web
+﻿namespace Naos.Tracing.App.Web
 {
     /// <summary>
     /// Options for operations request response tracing.

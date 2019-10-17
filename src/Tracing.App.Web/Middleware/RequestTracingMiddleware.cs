@@ -1,4 +1,4 @@
-﻿namespace Naos.Operations.App.Web
+﻿namespace Naos.Tracing.App.Web
 {
     using System;
     using System.Threading.Tasks;

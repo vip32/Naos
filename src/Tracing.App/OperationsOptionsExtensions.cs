@@ -14,7 +14,7 @@
     {
         public static OperationsOptions AddTracing(
             this OperationsOptions options,
-            Action<TracingOptions> optionsAction = null)
+            Action<OperationsTracingOptions> optionsAction = null)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
@@ -33,7 +33,7 @@
             }
             else
             {
-                optionsAction.Invoke(new TracingOptions(options.Context));
+                optionsAction.Invoke(new OperationsTracingOptions(options.Context));
             }
 
             //options.Context.Services.AddSingleton<ISampler>(sp => new OperationNamePatternSampler(new[] { "http*" })); // TODO: configure different samplers
