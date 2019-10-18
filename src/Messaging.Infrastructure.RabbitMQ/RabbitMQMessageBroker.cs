@@ -14,7 +14,6 @@
     using Naos.Messaging.Domain;
     using Naos.Tracing.Domain;
     using Polly;
-    using Polly.Retry;
 
     public class RabbitMQMessageBroker : IMessageBroker, IDisposable
     {
