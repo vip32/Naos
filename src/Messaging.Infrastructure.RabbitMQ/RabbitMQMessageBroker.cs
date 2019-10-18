@@ -23,6 +23,26 @@
         private readonly ISerializer serializer;
         private IModel consumerChannel;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RabbitMQMessageBroker"/> class.
+        ///
+        /// General dotnet rabbitmw docs: https://www.rabbitmq.com/dotnet-api-guide.html
+        ///
+        /// Direct exchange behaving as fanout (pub/sub): https://www.rabbitmq.com/tutorials/tutorial-four-dotnet.html
+        /// <para>
+        ///
+        /// Multiple bindings:
+        ///
+        ///           .---- queue1 ---> consumer1
+        ///          /keyA
+        ///         /
+        /// exchange
+        ///         \
+        ///          \keyA
+        ///           "---- queue2 ---> consumer2
+        /// </para>
+        /// </summary>
+        /// <param name="options"></param>
         public RabbitMQMessageBroker(RabbitMQMessageBrokerOptions options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
@@ -35,13 +55,13 @@
             this.logger = options.CreateLogger<RabbitMQMessageBroker>();
             this.serializer = this.options.Serializer ?? DefaultSerializer.Create;
             this.consumerChannel = this.CreateConsumerChannel(options.SubscriptionName);
-            this.StartBasicConsume(this.options.SubscriptionName);
+
+            this.StartBasicConsume(this.options.SubscriptionName); // TODO: do this after subscribe, see ReceiveLogsDirect.cs https://www.rabbitmq.com/tutorials/tutorial-four-dotnet.html
         }
 
         public RabbitMQMessageBroker(Builder<RabbitMQMessageBrokerOptionsBuilder, RabbitMQMessageBrokerOptions> optionsBuilder)
             : this(optionsBuilder(new RabbitMQMessageBrokerOptionsBuilder()).Build())
         {
-            // https://www.rabbitmq.com/dotnet-api-guide.html
             // TODO: maybe use this client/provider https://github.com/EasyNetQ/EasyNetQ  http://easynetq.com/
         }
 
@@ -219,6 +239,7 @@
             this.logger.LogInformation($"{{LogKey:l}} declare rabbitmq consumer channel (exchange={this.options.ExchangeName}, queue={queueName})", LogKeys.Messaging);
             var channel = this.options.Provider.CreateModel();
             channel.ExchangeDeclare(exchange: this.options.ExchangeName, type: "direct"); /*durable: true*/
+
             channel.QueueDeclare(
                 queue: queueName,
                 durable: true,
