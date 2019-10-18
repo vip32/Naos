@@ -151,6 +151,7 @@ namespace Application.Web3
                         .AddLogging(o => o
                             .UseConsole(LogLevel.Debug)
                             .UseFile()
+                            //.UseSink(w => w.LiterateConsole())
                             //.UseAzureBlobStorage()
                             .UseAzureLogAnalytics(false)
                             .UseMongo(true))

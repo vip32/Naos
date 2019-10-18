@@ -116,8 +116,8 @@
                 }
 
                 if (configuration.Enabled
-                    && configuration.WorkspaceId.IsNullOrEmpty() == false
-                    && configuration.AuthenticationId.IsNullOrEmpty() == false)
+                    && !configuration.WorkspaceId.IsNullOrEmpty()
+                    && !configuration.AuthenticationId.IsNullOrEmpty())
                 {
                     options.LoggerConfiguration?.WriteTo.AzureAnalytics(
                         configuration.WorkspaceId,

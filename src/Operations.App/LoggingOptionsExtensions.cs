@@ -10,6 +10,7 @@
     using Naos.Foundation;
     using Naos.Operations;
     using Naos.Operations.App;
+    using Serilog.Configuration;
 
     [ExcludeFromCodeCoverage]
     public static class LoggingOptionsExtensions
@@ -71,6 +72,13 @@
 
                 options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: logging console sink added");
             }
+
+            return options;
+        }
+
+        public static LoggingOptions UseSink(this LoggingOptions options, Func<LoggerSinkConfiguration, LoggerConfiguration> action)
+        {
+            action?.Invoke(options.LoggerConfiguration.WriteTo);
 
             return options;
         }

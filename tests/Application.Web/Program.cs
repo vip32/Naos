@@ -5,7 +5,6 @@ namespace Application.Web3
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Hosting;
     using Naos.Foundation;
-    using Serilog;
 
     public static class Program
     {
@@ -19,9 +18,7 @@ namespace Application.Web3
                 .ConfigureAppConfiguration((ctx, cfg) => cfg.AddNaos(ctx))
                 .ConfigureWebHostDefaults(builder =>
                 {
-                    builder
-                        .UseStartup<Startup>()
-                        .UseSerilog();
+                    builder.UseStartup<Startup>();
                 })
                 .UseDefaultServiceProvider((ctx, opt) => // https://andrewlock.net/new-in-asp-net-core-3-service-provider-validation/
                 {
