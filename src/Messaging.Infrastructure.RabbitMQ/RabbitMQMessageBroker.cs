@@ -34,21 +34,20 @@
         /// - multiple bindings with same key names (exchange fan out)
         /// - unique queue names with single subscriber (no round robing happnes)
         ///
-        ///                              .-----------.         .-----------.
-        ///                     .------->| Queue     |-------->| Consumer  |
-        ///                 msg/name     |           |         |           |
-        ///                   / (key)    |           |         |           |
-        ///    .-----------. /           "-----------"         "-----------"
-        ///    | Exchange  |/             descr+key
+        ///                              .-----------.         .------------.
+        ///                     .------->| Queue 1   |-------->| Consumer 1 |
+        ///             key=msg/name     |           |         |            |
+        ///                   /          |           |         |            |
+        ///    .-----------. /           "-----------"         "------------"
+        ///    | Exchange  |/             name=descr+key
         ///    |           |
         ///    |           |\
-        ///    "-----------" \           .-----------.         .-----------.
-        ///                msg\name      | Queue     |-------->| Consumer  |
-        ///                    "-------->|           |         |           |
-        ///                    (key)     |           |         |           |
-        ///                              "-----------"         "-----------"
-        ///                               descr+key
-        ///
+        ///    "-----------" \           .-----------.         .------------.
+        ///            key=msg\name      | Queue 2   |-------->| Consumer 2 |
+        ///                    "-------->|           |         |            |
+        ///                              |           |         |            |
+        ///                              "-----------"         "------------"
+        ///                               name=descr+key
         ///
         /// </para>
         /// </summary>
@@ -58,15 +57,15 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Provider, nameof(options.Provider));
             EnsureArg.IsNotNull(options.HandlerFactory, nameof(options.HandlerFactory));
-            EnsureArg.IsNotNullOrEmpty(options.SubscriptionName, nameof(options.SubscriptionName));
             EnsureArg.IsNotNullOrEmpty(options.ExchangeName, nameof(options.ExchangeName));
+            EnsureArg.IsNotNullOrEmpty(options.QueueName, nameof(options.QueueName));
 
             this.options = options;
             this.logger = options.CreateLogger<RabbitMQMessageBroker>();
             this.serializer = this.options.Serializer ?? DefaultSerializer.Create;
-            this.consumerChannel = this.CreateConsumerChannel(options.SubscriptionName);
+            this.consumerChannel = this.CreateConsumerChannel(options.QueueName);
 
-            this.StartBasicConsume(this.options.SubscriptionName); // TODO: do this after subscribe, see ReceiveLogsDirect.cs https://www.rabbitmq.com/tutorials/tutorial-four-dotnet.html
+            this.StartBasicConsume(this.options.QueueName); // TODO: do this after subscribe, see ReceiveLogsDirect.cs https://www.rabbitmq.com/tutorials/tutorial-four-dotnet.html
         }
 
         public RabbitMQMessageBroker(Builder<RabbitMQMessageBrokerOptionsBuilder, RabbitMQMessageBrokerOptions> optionsBuilder)
@@ -91,12 +90,12 @@
                     this.options.Provider.TryConnect();
                 }
 
-                this.logger.LogInformation($"{{LogKey:l}} bind rabbitmq queue (queue={this.options.SubscriptionName}, routingKey={routingKey})", LogKeys.Messaging);
+                this.logger.LogInformation($"{{LogKey:l}} bind rabbitmq queue (queue={this.options.QueueName}, routingKey={routingKey})", LogKeys.Messaging);
                 using (var channel = this.options.Provider.CreateModel())
                 {
                     channel.QueueBind(
                         exchange: this.options.ExchangeName,
-                        queue: this.options.SubscriptionName,
+                        queue: this.options.QueueName,
                         routingKey: routingKey);
                 }
 
@@ -210,11 +209,11 @@
 
             using (var channel = this.options.Provider.CreateModel())
             {
-                this.logger.LogInformation($"{{LogKey:l}} unbind rabbitmq queue (queue={this.options.SubscriptionName}, routingKey={routingKey})", LogKeys.Messaging);
+                this.logger.LogInformation($"{{LogKey:l}} unbind rabbitmq queue (queue={this.options.QueueName}, routingKey={routingKey})", LogKeys.Messaging);
 
                 channel.QueueUnbind(
                     exchange: this.options.ExchangeName,
-                    queue: this.options.SubscriptionName,
+                    queue: this.options.QueueName,
                     routingKey: routingKey);
             }
 

@@ -35,7 +35,7 @@
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                     .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
                     //.MessageScope(options.Context.Descriptor.Name)
-                    .SubscriptionName(subscriptionName)
+                    .QueueName(subscriptionName)
                     .Provider(sp.GetRequiredService<IRabbitMQProvider>()));
 
                 brokerAction?.Invoke(broker);
