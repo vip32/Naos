@@ -27,19 +27,30 @@
         /// Initializes a new instance of the <see cref="RabbitMQMessageBroker"/> class.
         ///
         /// General dotnet rabbitmw docs: https://www.rabbitmq.com/dotnet-api-guide.html
-        ///
-        /// Direct exchange behaving as fanout (pub/sub): https://www.rabbitmq.com/tutorials/tutorial-four-dotnet.html
         /// <para>
         ///
+        /// Direct exchange behaving as fanout (pub/sub): https://www.rabbitmq.com/tutorials/tutorial-four-dotnet.html
         /// Multiple bindings:
+        /// - single exchange
+        /// - multiple bindings with same key names (exchange fan out)
+        /// - unique queue names with single subscriber (no round robing happnes)
         ///
-        ///           .---- queue1 ---> consumer1
-        ///          /keyA
-        ///         /
-        /// exchange
-        ///         \
-        ///          \keyA
-        ///           "---- queue2 ---> consumer2
+        ///                              .-----------.         .-----------.
+        ///                     .------->| Queue     |-------->| Consumer  |
+        ///                 msg/name     |           |         |           |
+        ///                   / (key)    |           |         |           |
+        ///    .-----------. /           "-----------"         "-----------"
+        ///    | Exchange  |/             descr+key
+        ///    |           |
+        ///    |           |\
+        ///    "-----------" \           .-----------.         .-----------.
+        ///                msg\name      | Queue     |-------->| Consumer  |
+        ///                    "-------->|           |         |           |
+        ///                    (key)     |           |         |           |
+        ///                              "-----------"         "-----------"
+        ///                               descr+key
+        ///
+        ///
         /// </para>
         /// </summary>
         /// <param name="options"></param>
