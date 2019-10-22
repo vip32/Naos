@@ -91,6 +91,11 @@
             //    await this.HttpContext.Response.WriteAsync($"criteria: {criteria}<br/>");
             //}
 
+            context.Orders = new List<Order>
+            {
+                new Order("Ticks", OrderDirection.Desc)
+            };
+
             context.Take ??= 1000; // get amount per request, repeat while logevents.ticks >= past
 
             //await foreach(var name in this.service.GetLogEventsAsync(context))
