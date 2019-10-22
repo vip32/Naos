@@ -60,7 +60,7 @@
 
             if (!request.Headers.IsNullOrEmpty())
             {
-                this.WriteLog(LogKeys.OutboundRequest, $"[{requestId}] http headers={string.Join("|", request.Headers.Select(h => $"{h.Key}={string.Join("|", h.Value)}"))}");
+                this.WriteLog(LogKeys.OutboundRequest, $"[{requestId}] http headers={string.Join("|", request.Headers.Select(h => $"{h.Key}={string.Join("|", h.Value)}".Truncate(256)))}");
             }
 
             this.WriteLog(LogKeys.OutboundRequest, $"[{requestId}] http {request?.Method.ToString().ToLowerInvariant()} {{Url:l}} ({correlationId})", type: LogPropertyKeys.TrackOutboundRequest, args: new object[] { request.RequestUri });
@@ -87,7 +87,7 @@
 
             if (!response.Headers.IsNullOrEmpty())
             {
-                this.WriteLog(LogKeys.OutboundResponse, $"[{requestId}] http headers={string.Join("|", response.Headers.Select(h => $"{h.Key}={string.Join("|", h.Value)}"))}", level: level);
+                this.WriteLog(LogKeys.OutboundResponse, $"[{requestId}] http headers={string.Join("|", response.Headers.Select(h => $"{h.Key}={string.Join("|", h.Value)}".Truncate(256,)))}", level: level);
             }
 
             this.WriteLog(LogKeys.OutboundResponse, $"[{requestId}] http {response.RequestMessage.Method.ToString().ToLowerInvariant()} {{Url:l}} {{StatusCode}} ({response.StatusCode}) -> took {duration.Humanize()}", type: LogPropertyKeys.TrackOutboundResponse, duration: duration, args: new object[] { response.RequestMessage.RequestUri, (int)response.StatusCode });
