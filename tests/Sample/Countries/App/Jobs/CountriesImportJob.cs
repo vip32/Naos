@@ -36,9 +36,20 @@
                 this.logger.LogInformation("{LogKey:l} countries import", LogKeys.JobScheduling);
                 var countries = await this.repository.FindAllAsync().AnyContext();
 
-                var code = RandomGenerator.GenerateString(2, false, true);
-                var country = new Country { Code = code, LanguageCodes = new[] { $"{code}-{code}" }, Name = code, TenantId = "naos_sample_test", Id = code };
-                await this.repository.UpsertAsync(country).AnyContext();
+                using (var scope2 = this.tracer.BuildSpan("read csv").Activate(this.logger))
+                {
+                    this.logger.LogInformation("{LogKey:l} countries csv read", LogKeys.JobScheduling);
+                    // TODO: use storage to read file
+
+                    // TODO: foreach country in csv
+                    var code = RandomGenerator.GenerateString(2, false, true);
+                    var country = new Country { Code = code, LanguageCodes = new[] { $"{code}-{code}" }, Name = code, TenantId = "naos_sample_test", Id = code };
+                    await this.repository.UpsertAsync(country).AnyContext();
+
+                    code = RandomGenerator.GenerateString(2, false, true);
+                    country = new Country { Code = code, LanguageCodes = new[] { $"{code}-{code}" }, Name = code, TenantId = "naos_sample_test", Id = code };
+                    await this.repository.UpsertAsync(country).AnyContext();
+                }
             }
         }
     }
