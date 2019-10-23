@@ -22,7 +22,7 @@
         public T Create<T>()
             where T : class
         {
-            return Factory.Create(typeof(T), this.serviceProvider) as T;
+            return Factory.Create(typeof(T), this.serviceProvider) as T; /*.CreateScope().ServiceProvider*/
         }
 
         /// <summary>
@@ -31,7 +31,7 @@
         /// <param name="jobType">Type of the job.</param>
         public IJob CreateJob(Type jobType)
         {
-            return Factory.Create(jobType, this.serviceProvider) as IJob;
+            return Factory.Create(jobType, this.serviceProvider) as IJob; /*.CreateScope().ServiceProvider*/
         }
     }
 }

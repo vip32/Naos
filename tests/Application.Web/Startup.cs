@@ -22,6 +22,7 @@ namespace Application.Web3
     using Naos.JobScheduling.App;
     using Naos.JobScheduling.Domain;
     using Naos.Messaging.Domain;
+    using Naos.Sample.Catalogs.Application;
     using Naos.Sample.Customers.App;
     using Naos.Tracing.Domain;
     using NSwag.Generation.Processors;
@@ -165,8 +166,9 @@ namespace Application.Web3
                     //.AddSwaggerDocument() // s.Description = Product.Capability\
                     .AddJobScheduling(o => o
                         //.SetEnabled(true)
-                        .Register<EchoJob>("echojob1", Cron.MinuteInterval(10), (j) => j.EchoAsync("+++ hello from echojob1 +++", CancellationToken.None))
-                        .Register<EchoJob>("manualjob1", Cron.Never(), (j) => j.EchoAsync("+++ hello from manualjob1 +++", CancellationToken.None)))
+                        //.Register<EchoJob>("echojob1", Cron.MinuteInterval(10), (j) => j.EchoAsync("+++ hello from echojob1 +++", CancellationToken.None))
+                        //.Register<EchoJob>("manualjob1", Cron.Never(), (j) => j.EchoAsync("+++ hello from manualjob1 +++", CancellationToken.None))
+                        .Register<CountriesImportJob>("countriesimport", Cron.MinuteInterval(1)))
                     //.Register("anonymousjob2", Cron.Minutely(), (j) => Console.WriteLine("+++ hello from anonymousjob2 " + j))
                     //.Register("jobevent1", Cron.Minutely(), () => new EchoJobEventData { Text = "+++ hello from jobevent1 +++" }))
                     //.Register<EchoJob>("echojob2", Cron.MinuteInterval(2), j => j.EchoAsync("+++ hello from echojob2 +++", CancellationToken.None, true), enabled: false)
