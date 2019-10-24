@@ -21,7 +21,7 @@
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(tracer, nameof(tracer));
             EnsureArg.IsNotNull(repository, nameof(repository));
-            aaaaa
+
             this.logger = logger;
             this.tracer = tracer;
             this.repository = repository;
