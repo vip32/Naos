@@ -1,26 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.0;netstandard2.0;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1</TargetFrameworks>
     <AssemblyName>Naos.Sample</AssemblyName>
     <RootNamespace>Naos.Sample</RootNamespace>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.6">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
+  <ItemGroup>
+    <Compile Remove="Countries\App.Commands\**" />
+    <Compile Remove="Countries\App.Queries\**" />
+    <EmbeddedResource Remove="Countries\App.Commands\**" />
+    <EmbeddedResource Remove="Countries\App.Queries\**" />
+    <None Remove="Countries\App.Commands\**" />
+    <None Remove="Countries\App.Queries\**" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>
@@ -29,8 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Countries\App.Commands\" />
-    <Folder Include="Countries\App.Queries\" />
     <Folder Include="Customers\Domain\Repositories\Decorators\" />
     <Folder Include="Customers\App.Queries\" />
     <Folder Include="UserAccounts\App.Commands\" />
@@ -39,7 +33,7 @@
 
   <ItemGroup>
     <PackageReference Include="Humanizer.Core" Version="2.7.9" />
-    <PackageReference Include="FluentValidation" Version="8.5.0" />
+    <PackageReference Include="FluentValidation" Version="8.5.1" />
     <PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="3.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.DocumentDb" Version="3.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="3.0.0" />
@@ -49,6 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Foundation.Application.Web.Startup.EntityFramework\Application.Web.Startup.EntityFramework.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Console\Console.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Application.Web.Startup\Application.Web.Startup.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Domain.Repositories.AutoMapper\Domain.Repositories.AutoMapper.csproj" />
@@ -61,6 +56,7 @@
     <ProjectReference Include="..\..\src\App.Web\App.Web.csproj" />
     <ProjectReference Include="..\..\src\App\App.csproj" />
     <ProjectReference Include="..\..\src\Commands.App\Commands.App.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Mapping.AutoMapper\Mapping.AutoMapper.csproj" />
     <ProjectReference Include="..\..\src\Queueing.Infrastructure.Azure\Queueing.Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\..\src\ServiceContext.App\ServiceContext.App.csproj" />
   </ItemGroup>

@@ -5,7 +5,6 @@
     <AssemblyName>Naos.Sample.App.IntegrationTests</AssemblyName>
     <RootNamespace>Naos.Sample.App.IntegrationTests</RootNamespace>
     <IsPackable>false</IsPackable>
-    <LangVersion>7.1</LangVersion>
     <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
   </PropertyGroup>
 

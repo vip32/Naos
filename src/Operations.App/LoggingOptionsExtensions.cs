@@ -8,7 +8,9 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
+    using Naos.Operations;
     using Naos.Operations.App;
+    using Serilog.Configuration;
 
     [ExcludeFromCodeCoverage]
     public static class LoggingOptionsExtensions
@@ -74,32 +76,37 @@
             return options;
         }
 
+        public static LoggingOptions UseSink(this LoggingOptions options, Func<LoggerSinkConfiguration, LoggerConfiguration> action)
+        {
+            action?.Invoke(options.LoggerConfiguration.WriteTo);
+
+            return options;
+        }
+
         public static Serilog.Events.LogEventLevel MapLevel(LogLevel logLevel) // TODO: make generally available
         {
-            var result = Serilog.Events.LogEventLevel.Information;
-
             if (logLevel == LogLevel.Trace)
             {
-                result = Serilog.Events.LogEventLevel.Verbose;
+                return Serilog.Events.LogEventLevel.Verbose;
             }
             else if (logLevel == LogLevel.Debug)
             {
-                result = Serilog.Events.LogEventLevel.Debug;
+                return Serilog.Events.LogEventLevel.Debug;
             }
             else if (logLevel == LogLevel.Error)
             {
-                result = Serilog.Events.LogEventLevel.Error;
+                return Serilog.Events.LogEventLevel.Error;
             }
             else if (logLevel == LogLevel.Critical)
             {
-                result = Serilog.Events.LogEventLevel.Fatal;
+                return Serilog.Events.LogEventLevel.Fatal;
             }
             else if (logLevel == LogLevel.Warning)
             {
-                result = Serilog.Events.LogEventLevel.Warning;
+                return Serilog.Events.LogEventLevel.Warning;
             }
 
-            return result;
+            return Serilog.Events.LogEventLevel.Information;
         }
     }
 }

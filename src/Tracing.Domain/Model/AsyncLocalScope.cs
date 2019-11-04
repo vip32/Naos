@@ -27,6 +27,7 @@
             scopeManager.Current = this;
             this.loggerScope = logger?.BeginScope(new Dictionary<string, object>()
             {
+                [LogPropertyKeys.TrackTraceId] = span.TraceId, // all log entries will be marked with current traceid
                 [LogPropertyKeys.TrackId] = span.SpanId // all log entries will be marked with current spanid
             });
         }

@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.11.5" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.12.0" />
     <PackageReference Include="coverlet.msbuild" Version="2.7.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
@@ -71,6 +71,7 @@
     <ProjectReference Include="..\..\src\Foundation.Resources\Resources.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Serialization.Csv\Serialization.Csv.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Serialization\Serialization.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Utilities.Xunit\Utilities.Xunit.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Utilities\Utilities.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure.Arm\Infrastructure.Azure.Arm.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure.KeyVault\Infrastructure.Azure.KeyVault.csproj" />

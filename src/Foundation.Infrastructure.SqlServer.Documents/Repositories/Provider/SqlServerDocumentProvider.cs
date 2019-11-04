@@ -15,6 +15,7 @@
 
     public class SqlServerDocumentProvider<T> : IDocumentProvider<T>
     {
+        // cons/cautions of storing serialized objects https://blog.goyello.com/2019/10/08/storing-serialized-objects-in-a-database-good-or-bad/
         private bool isInitialized;
 
         public SqlServerDocumentProvider(SqlServerDocumentProviderOptions<T> options)
@@ -39,17 +40,17 @@
 
         public async Task ResetAsync(bool indexOnly = false)
         {
-            await this.Initialize().AnyContext();
+            await this.InitializeAsync().AnyContext();
 
             if (!indexOnly)
             {
-                await this.DeleteTable(this.Options.DatabaseName, this.Options.GetTableName()).AnyContext();
-                await this.Initialize(true).AnyContext();
+                await this.DeleteTableAsync(this.Options.DatabaseName, this.Options.GetTableName()).AnyContext();
+                await this.InitializeAsync(true).AnyContext();
                 return;
             }
 
             await this.DeleteIndex(this.Options.DatabaseName, this.Options.GetTableName()).AnyContext();
-            await this.Initialize(true).AnyContext();
+            await this.InitializeAsync(true).AnyContext();
         }
 
         public async Task<long> CountAsync(
@@ -63,7 +64,7 @@
         IEnumerable<Expression<Func<T, bool>>> expressions = null,
         IEnumerable<string> tags = null)
         {
-            await this.Initialize().AnyContext();
+            await this.InitializeAsync().AnyContext();
 
             var sql = new StringBuilder($"{this.Options.SqlBuilder.BuildUseDatabase(this.Options.DatabaseName)} SELECT COUNT(*) FROM {this.Options.GetTableName()} WHERE [id]>0");
             foreach (var t in tags.Safe())
@@ -91,7 +92,7 @@
         {
             EnsureArg.IsNotNull(key, nameof(key));
 
-            await this.Initialize().AnyContext();
+            await this.InitializeAsync().AnyContext();
 
             var sql = new StringBuilder($"{this.Options.SqlBuilder.BuildUseDatabase(this.Options.DatabaseName)} SELECT [id] FROM {this.Options.GetTableName()} WHERE [key]='{key}'");
             foreach (var t in tags.Safe())
@@ -129,7 +130,7 @@
             Expression<Func<T, object>> orderExpression = null,
             bool orderDescending = false)
         {
-            await this.Initialize().AnyContext();
+            await this.InitializeAsync().AnyContext();
 
             var sql = new StringBuilder($"{this.Options.SqlBuilder.BuildUseDatabase(this.Options.DatabaseName)} SELECT [key] FROM {this.Options.GetTableName()} WHERE [id]>0");
             foreach (var t in tags.Safe())
@@ -167,7 +168,7 @@
         //    return await this.LoadDataAsync(null, null, tags, skip, take, orderExpression, orderDescending).AnyContext();
         //}
 
-        public async Task<IEnumerable<Stream>> LoadDataAsync(
+        public async IAsyncEnumerable<Stream> LoadDataAsync(
             Expression<Func<T, bool>> expression,
             IEnumerable<string> tags = null,
             int? skip = null,
@@ -175,10 +176,14 @@
             Expression<Func<T, object>> orderExpression = null,
             bool orderDescending = false)
         {
-            return await this.LoadDataAsync(null, new[] { expression }, tags, skip, take, orderExpression, orderDescending).AnyContext();
+            await foreach (var data in
+                this.LoadDataAsync(null, new[] { expression }, tags, skip, take, orderExpression, orderDescending))
+            {
+                yield return data;
+            }
         }
 
-        public async Task<IEnumerable<Stream>> LoadDataAsync(
+        public async IAsyncEnumerable<Stream> LoadDataAsync(
             IEnumerable<Expression<Func<T, bool>>> expressions = null,
             IEnumerable<string> tags = null,
             int? skip = null,
@@ -186,10 +191,14 @@
             Expression<Func<T, object>> orderExpression = null,
             bool orderDescending = false)
         {
-            return await this.LoadDataAsync(null, expressions, tags, skip, take, orderExpression, orderDescending).AnyContext();
+            await foreach (var data in
+                this.LoadDataAsync(null, expressions, tags, skip, take, orderExpression, orderDescending))
+            {
+                yield return data;
+            }
         }
 
-        public async Task<IEnumerable<Stream>> LoadDataAsync(
+        public async IAsyncEnumerable<Stream> LoadDataAsync(
             object key,
             IEnumerable<Expression<Func<T, bool>>> expressions = null,
             IEnumerable<string> tags = null,
@@ -198,7 +207,7 @@
             Expression<Func<T, object>> orderExpression = null,
             bool orderDescending = false)
         {
-            await this.Initialize().AnyContext();
+            await this.InitializeAsync().AnyContext();
 
             var sql = new StringBuilder(this.Options.SqlBuilder.BuildUseDatabase(this.Options.DatabaseName));
             if (key != null)
@@ -231,18 +240,19 @@
                     this.Logger.LogDebug($"sql document query: {sql}");
                 }
 
-                var results = conn.Query<byte[]>(sql.ToString(), new { key }/*, buffered: this.Options.BufferedLoad*/);
-                if (results == null)
+                var datas = conn.Query<byte[]>(sql.ToString(), new { key }, buffered: this.Options.BufferedLoad);
+                if (datas == null)
                 {
-                    return Enumerable.Empty<Stream>(); //TODO: yield break;
+                    //return Enumerable.Empty<Stream>();
+                    yield break;
                 }
 
-                //foreach (var data in results.Where(data => data != null))
-                //{
-                //    yield return new MemoryStream(CompressionHelper.Decompress(data));
-                //}
+                foreach (var data in datas.Where(data => data != null))
+                {
+                    yield return new MemoryStream(CompressionHelper.Decompress(data));
+                }
 
-                return results.Safe().Select(d => new MemoryStream(CompressionHelper.Decompress(d)));
+                //return results.Safe().Select(d => new MemoryStream(CompressionHelper.Decompress(d)));
             }
         }
 
@@ -257,7 +267,7 @@
         //    return await this.LoadValuesAsync(key, null, tags, skip, take, orderExpression, orderDescending).AnyContext();
         //}
 
-        public async Task<IEnumerable<T>> LoadValuesAsync(
+        public async IAsyncEnumerable<T> LoadValuesAsync(
             Expression<Func<T, bool>> expression,
             IEnumerable<string> tags = null,
             int? skip = null,
@@ -265,10 +275,14 @@
             Expression<Func<T, object>> orderExpression = null,
             bool orderDescending = false)
         {
-            return await this.LoadValuesAsync(null, new[] { expression }.AsEnumerable(), tags, skip, take, orderExpression, orderDescending).AnyContext();
+            await foreach (var value in
+                this.LoadValuesAsync(null, new[] { expression }.AsEnumerable(), tags, skip, take, orderExpression, orderDescending))
+            {
+                yield return value;
+            }
         }
 
-        public async Task<IEnumerable<T>> LoadValuesAsync(
+        public async IAsyncEnumerable<T> LoadValuesAsync(
         IEnumerable<Expression<Func<T, bool>>> expressions = null,
         IEnumerable<string> tags = null,
         int? skip = null,
@@ -276,10 +290,14 @@
         Expression<Func<T, object>> orderExpression = null,
         bool orderDescending = false)
         {
-            return await this.LoadValuesAsync(null, expressions.AsEnumerable(), tags, skip, take, orderExpression, orderDescending).AnyContext();
+            await foreach(var value in
+                this.LoadValuesAsync(null, expressions.AsEnumerable(), tags, skip, take, orderExpression, orderDescending))
+            {
+                yield return value;
+            }
         }
 
-        public async Task<IEnumerable<T>> LoadValuesAsync(
+        public async IAsyncEnumerable<T> LoadValuesAsync(
             object key,
             IEnumerable<Expression<Func<T, bool>>> expressions = null,
             IEnumerable<string> tags = null,
@@ -288,7 +306,7 @@
             Expression<Func<T, object>> orderExpression = null,
             bool orderDescending = false)
         {
-            await this.Initialize().AnyContext();
+            await this.InitializeAsync().AnyContext();
 
             var sql = new StringBuilder(this.Options.SqlBuilder.BuildUseDatabase(this.Options.DatabaseName));
             if (key != null)
@@ -321,52 +339,53 @@
                     this.Logger.LogDebug($"sql document query: {sql}");
                 }
 
-                var results = conn.Query<string>(sql.ToString(), new { key }/*, buffered: this.Options.BufferedLoad*/);
-                if (results == null)
+                var values = conn.Query<string>(sql.ToString(), new { key }, buffered: this.Options.BufferedLoad);
+                if (values == null)
                 {
-                    return Enumerable.Empty<T>(); //TODO: yield break;
+                    //return Enumerable.Empty<T>(); //TODO: yield break;
+                    yield break;
                 }
 
-                //foreach (var result in results)
-                //{
-                //    yield return this.Options.Serializer.Deserialize<T>(result);
-                //}
+                foreach (var value in values)
+                {
+                    yield return this.Options.Serializer.Deserialize<T>(value);
+                }
 
-                return results.Select(r => this.Options.Serializer.Deserialize<T>(r));
+                //return results.Select(r => this.Options.Serializer.Deserialize<T>(r));
             }
         }
 
         public async Task<ProviderAction> Upsert(object key, Stream data, IEnumerable<string> tags = null, bool forceInsert = false, DateTime? timestamp = null)
         {
-            await this.Initialize().AnyContext();
+            await this.InitializeAsync().AnyContext();
 
             return await this.UpsertInternalAsync(key, data: data, tags: tags, forceInsert: forceInsert, timestamp: timestamp).AnyContext();
         }
 
         public async Task<ProviderAction> UpsertAsync(object key, T document, IEnumerable<string> tags = null, bool forceInsert = false, DateTime? timestamp = null)
         {
-            await this.Initialize().AnyContext();
+            await this.InitializeAsync().AnyContext();
 
             return await this.UpsertInternalAsync(key, document: document, tags: tags, forceInsert: forceInsert, timestamp: timestamp).AnyContext();
         }
 
         public async Task<ProviderAction> UpsertAsync(object key, T document, Stream data, IEnumerable<string> tags = null, bool forceInsert = false, DateTime? timestamp = null)
         {
-            await this.Initialize().AnyContext();
+            await this.InitializeAsync().AnyContext();
 
             return await this.UpsertInternalAsync(key, document: document, data: data, tags: tags, forceInsert: forceInsert, timestamp: timestamp).AnyContext();
         }
 
         public async Task<ProviderAction> DeleteAsync(object key, IEnumerable<string> tags = null)
         {
-            await this.Initialize().AnyContext();
+            await this.InitializeAsync().AnyContext();
 
             throw new NotImplementedException();
         }
 
         public async Task<ProviderAction> DeleteAsync(IEnumerable<string> tags)
         {
-            await this.Initialize().AnyContext();
+            await this.InitializeAsync().AnyContext();
 
             throw new NotImplementedException();
         }
@@ -382,22 +401,22 @@
             return connection;
         }
 
-        protected async Task Initialize(bool force = false)
+        protected async Task InitializeAsync(bool force = false)
         {
             if (!this.isInitialized || force) // TODO: use lock
             {
                 this.Logger.LogInformation($"initialize sql document provider (type={this.GetType().Name})");
 
-                await this.EnsureDatabase(this.Options.DatabaseName).AnyContext();
-                await this.EnsureSchema(this.Options.SchemaName, this.Options.DatabaseName).AnyContext();
-                await this.EnsureTable(this.Options.DatabaseName, this.Options.GetTableName()).AnyContext();
-                await this.EnsureIndex(this.Options.DatabaseName, this.Options.GetTableName()).AnyContext();
+                await this.EnsureDatabaseAsync(this.Options.DatabaseName).AnyContext();
+                await this.EnsureSchemaAsync(this.Options.SchemaName, this.Options.DatabaseName).AnyContext();
+                await this.EnsureTableAsync(this.Options.DatabaseName, this.Options.GetTableName()).AnyContext();
+                await this.EnsureIndexAsync(this.Options.DatabaseName, this.Options.GetTableName()).AnyContext();
 
                 this.isInitialized = true;
             }
         }
 
-        protected virtual async Task<bool> TableExists(string databaseName, string tableName)
+        protected virtual async Task<bool> TableExistsAsync(string databaseName, string tableName)
         {
             using (var connection = await this.CreateConnectionAsync().AnyContext())
             {
@@ -408,7 +427,7 @@
             }
         }
 
-        protected virtual async Task EnsureDatabase(string databaseName)
+        protected virtual async Task EnsureDatabaseAsync(string databaseName)
         {
             EnsureArg.IsNotNull(databaseName, nameof(databaseName));
 
@@ -438,7 +457,7 @@
             }
         }
 
-        protected virtual async Task EnsureSchema(string schemaName, string databaseName)
+        protected virtual async Task EnsureSchemaAsync(string schemaName, string databaseName)
         {
             EnsureArg.IsNotNull(databaseName, nameof(databaseName));
 
@@ -472,9 +491,9 @@
             }
         }
 
-        protected virtual async Task EnsureTable(string databaseName, string tableName)
+        protected virtual async Task EnsureTableAsync(string databaseName, string tableName)
         {
-            if (await this.TableExists(databaseName, tableName).AnyContext())
+            if (await this.TableExistsAsync(databaseName, tableName).AnyContext())
             {
                 return;
             }
@@ -510,16 +529,16 @@
             }
         }
 
-        protected virtual async Task EnsureIndex(string databaseName, string tableName)
+        protected virtual async Task EnsureIndexAsync(string databaseName, string tableName)
         {
             if (this.Options.IndexMaps.IsNullOrEmpty())
             {
                 return;
             }
 
-            if (!await this.TableExists(databaseName, tableName).AnyContext())
+            if (!await this.TableExistsAsync(databaseName, tableName).AnyContext())
             {
-                await this.EnsureTable(databaseName, tableName).AnyContext();
+                await this.EnsureTableAsync(databaseName, tableName).AnyContext();
             }
 
             var sql = this.Options.IndexMaps.Select(i => string.Format(@"
@@ -549,9 +568,9 @@
             // sqlite alter table https://www.sqlite.org/lang_altertable.html
         }
 
-        protected async Task DeleteTable(string databaseName, string tableName)
+        protected async Task DeleteTableAsync(string databaseName, string tableName)
         {
-            if (!await this.TableExists(databaseName, tableName).AnyContext())
+            if (!await this.TableExistsAsync(databaseName, tableName).AnyContext())
             {
                 return;
             }
@@ -571,7 +590,7 @@
 
         protected async Task DeleteIndex(string databaseName, string tableName)
         {
-            if (!await this.TableExists(databaseName, tableName).AnyContext())
+            if (!await this.TableExistsAsync(databaseName, tableName).AnyContext())
             {
                 return;
             }

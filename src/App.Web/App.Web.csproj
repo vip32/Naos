@@ -18,8 +18,8 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.0.0" />
     <PackageReference Include="MediatR" Version="7.0.0" />
-    <PackageReference Include="NSwag.Annotations" Version="13.1.2" />
-    <PackageReference Include="NSwag.Generation" Version="13.1.2" />
+    <PackageReference Include="NSwag.Annotations" Version="13.1.3" />
+    <PackageReference Include="NSwag.Generation" Version="13.1.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,5 +40,6 @@
     <ProjectReference Include="..\Configuration.App.Web\Configuration.App.Web.csproj" />
     <ProjectReference Include="..\Exceptions.App.Web\Exceptions.App.Web.csproj" />
     <ProjectReference Include="..\Messaging.App.Web\Messaging.App.Web.csproj" />
+    <ProjectReference Include="..\Tracing.App.Web\Tracing.App.Web.csproj" />
   </ItemGroup>
 </Project>

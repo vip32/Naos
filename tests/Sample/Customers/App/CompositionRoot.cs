@@ -22,10 +22,10 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            options.Context.AddTag("Customers");
+            options.Context.AddTag("customers");
             options.Context.AddServiceClient<UserAccountsClient>();
 
-            var cosmosDbConfiguration = options.Context.Configuration?.GetSection($"{section}:cosmosDb").Get<CosmosConfiguration>() ?? new CosmosConfiguration();
+            var configuration = options.Context.Configuration?.GetSection($"{section}:cosmosDb").Get<CosmosConfiguration>() ?? new CosmosConfiguration();
             options.Context.Services.AddScoped<ICustomerRepository>(sp =>
             {
                 return new CustomerRepository(
@@ -52,8 +52,8 @@
             {
                 return new CosmosSqlProviderV3<Customer>(o => o
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
-                    .Account(cosmosDbConfiguration.ServiceEndpointUri, cosmosDbConfiguration.AuthKeyOrResourceToken)
-                    .Database(cosmosDbConfiguration.DatabaseId)
+                    .Account(configuration.ServiceEndpointUri, configuration.AuthKeyOrResourceToken)
+                    .Database(configuration.DatabaseId)
                     .PartitionKey(e => e.Region));
             });
 
@@ -76,8 +76,8 @@
             {
                 return new CosmosSqlProviderV3<DtoOrder>(o => o
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
-                    .Account(cosmosDbConfiguration.ServiceEndpointUri, cosmosDbConfiguration.AuthKeyOrResourceToken)
-                    .Database(cosmosDbConfiguration.DatabaseId)
+                    .Account(configuration.ServiceEndpointUri, configuration.AuthKeyOrResourceToken)
+                    .Database(configuration.DatabaseId)
                     .Container("orders")
                     .PartitionKey(e => e.Location));
             });
@@ -108,8 +108,8 @@
                 .AddHealthChecks()
                     .AddDocumentDb(s =>
                         {
-                            s.UriEndpoint = cosmosDbConfiguration.ServiceEndpointUri;
-                            s.PrimaryKey = cosmosDbConfiguration.AuthKeyOrResourceToken;
+                            s.UriEndpoint = configuration.ServiceEndpointUri;
+                            s.PrimaryKey = configuration.AuthKeyOrResourceToken;
                         },
                         name: "Customers-cosmosdb")
                     .AddServiceDiscoveryClient<UserAccountsClient>();

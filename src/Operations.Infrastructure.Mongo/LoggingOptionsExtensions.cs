@@ -5,12 +5,16 @@
     using global::Serilog;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using Naos.Operations.App;
+    using Naos.Operations;
+    using Naos.Operations.Infrastructure.Mongo;
 
     [ExcludeFromCodeCoverage]
     public static class LoggingOptionsExtensions
     {
-        public static LoggingOptions UseMongo(this LoggingOptions options, LogLevel logLevel = LogLevel.Debug)
+        public static LoggingOptions UseMongo(
+            this LoggingOptions options,
+            bool dashboardEnabled = true,
+            LogLevel logLevel = LogLevel.Debug)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
@@ -22,17 +26,18 @@
                 if (!configuration.CappedMaxDocuments.HasValue && !configuration.CappedMaxSizeMb.HasValue)
                 {
                     options.LoggerConfiguration?.WriteTo.MongoDB(
-                        configuration.ConnectionString,
+                        configuration.ConnectionString?.Replace("[DATABASENAME]", configuration.DatabaseName),
                         collectionName: configuration.CollectionName,
-                        //database:
+                        mongoDBJsonFormatter: new CamelCasedMongoDBJsonFormatter(true, renderMessage: true, formatProvider: null),
                         //outputTemplate: logFileConfiguration.OutputTemplate "{Timestamp:yyyy-MM-dd HH:mm:ss}|{Level} => {CorrelationId} => {Service}::{SourceContext}{NewLine}    {Message}{NewLine}{Exception}",
                         restrictedToMinimumLevel: MapLevel(logLevel));
                 }
                 else
                 {
                     options.LoggerConfiguration?.WriteTo.MongoDBCapped(
-                        configuration.ConnectionString,
+                        configuration.ConnectionString?.Replace("[DATABASENAME]", configuration.DatabaseName),
                         collectionName: configuration.CollectionName,
+                        mongoDBJsonFormatter: new CamelCasedMongoDBJsonFormatter(true, renderMessage: true, formatProvider: null),
                         cappedMaxDocuments: configuration.CappedMaxDocuments,
                         cappedMaxSizeMb: configuration.CappedMaxSizeMb ?? 50,
                         //outputTemplate: logFileConfiguration.OutputTemplate "{Timestamp:yyyy-MM-dd HH:mm:ss}|{Level} => {CorrelationId} => {Service}::{SourceContext}{NewLine}    {Message}{NewLine}{Exception}",
@@ -40,6 +45,13 @@
                 }
 
                 options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: logging mongo sink added (collection={configuration.CollectionName})");
+
+                if (dashboardEnabled) // registers the mongo repo which is used by the dashboard (NaosOperationsLogEventsController)
+                {
+                    // configure the repository for the dashboard (controller)
+                    options.Context.AddMongoLogging();
+                    options.Context.AddMongoTracing();
+                }
             }
 
             return options;
@@ -47,30 +59,28 @@
 
         public static Serilog.Events.LogEventLevel MapLevel(LogLevel logLevel) // TODO: make generally available
         {
-            var result = Serilog.Events.LogEventLevel.Information;
-
             if (logLevel == LogLevel.Trace)
             {
-                result = Serilog.Events.LogEventLevel.Verbose;
+                return Serilog.Events.LogEventLevel.Verbose;
             }
             else if (logLevel == LogLevel.Debug)
             {
-                result = Serilog.Events.LogEventLevel.Debug;
+                return Serilog.Events.LogEventLevel.Debug;
             }
             else if (logLevel == LogLevel.Error)
             {
-                result = Serilog.Events.LogEventLevel.Error;
+                return Serilog.Events.LogEventLevel.Error;
             }
             else if (logLevel == LogLevel.Critical)
             {
-                result = Serilog.Events.LogEventLevel.Fatal;
+                return Serilog.Events.LogEventLevel.Fatal;
             }
             else if (logLevel == LogLevel.Warning)
             {
-                result = Serilog.Events.LogEventLevel.Warning;
+                return Serilog.Events.LogEventLevel.Warning;
             }
 
-            return result;
+            return Serilog.Events.LogEventLevel.Information;
         }
     }
 }

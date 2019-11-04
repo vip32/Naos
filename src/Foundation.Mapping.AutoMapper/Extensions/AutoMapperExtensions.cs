@@ -1,4 +1,4 @@
-﻿namespace Naos.Foundation.Domain
+﻿namespace Naos.Foundation
 {
     using System;
     using global::AutoMapper;

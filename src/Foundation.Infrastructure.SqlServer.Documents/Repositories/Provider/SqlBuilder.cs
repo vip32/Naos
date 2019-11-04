@@ -320,12 +320,12 @@ FROM INFORMATION_SCHEMA.TABLES";
                 return null;
             }
 
-            value = value.Replace("'", string.Empty); // character data string delimiter
-            value = value.Replace(";", string.Empty); // query delimiter
-            value = value.Replace("--", string.Empty); // comment delimiter
-            value = value.Replace("/*", string.Empty); // comment delimiter
-            value = value.Replace("*/", string.Empty); // comment delimiter
-            value = value.Replace("xp_", string.Empty); // comment delimiter
+            value = value.Replace("'", string.Empty, StringComparison.OrdinalIgnoreCase); // character data string delimiter
+            value = value.Replace(";", string.Empty, StringComparison.OrdinalIgnoreCase); // query delimiter
+            value = value.Replace("--", string.Empty, StringComparison.OrdinalIgnoreCase); // comment delimiter
+            value = value.Replace("/*", string.Empty, StringComparison.OrdinalIgnoreCase); // comment delimiter
+            value = value.Replace("*/", string.Empty, StringComparison.OrdinalIgnoreCase); // comment delimiter
+            value = value.Replace("xp_", string.Empty, StringComparison.OrdinalIgnoreCase); // comment delimiter
             return value;
         }
 

@@ -33,12 +33,12 @@
             return this;
         }
 
-        public RabbitMQMessageBrokerOptionsBuilder SubscriptionName(string subscriptionName)
+        public RabbitMQMessageBrokerOptionsBuilder QueueName(string name)
         {
-            this.Target.SubscriptionName = subscriptionName;
+            this.Target.QueueName = name;
             if (this.Target.MessageScope.IsNullOrEmpty())
             {
-                this.Target.MessageScope = subscriptionName;
+                this.Target.MessageScope = name;
             }
 
             return this;

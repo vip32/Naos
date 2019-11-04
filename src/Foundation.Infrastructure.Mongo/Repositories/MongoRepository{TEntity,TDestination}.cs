@@ -8,10 +8,7 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    //using MongoDB.Bson;
-    //using MongoDB.Bson.Serialization;
-    //using MongoDB.Bson.Serialization.IdGenerators;
-    //using MongoDB.Bson.Serialization.Serializers;
+    using MongoDB.Bson.Serialization.Attributes;
     using MongoDB.Driver;
     using Naos.Foundation.Domain;
 
@@ -19,6 +16,8 @@
         where TEntity : class, IEntity, IAggregateRoot
         where TDestination : class, IMongoEntity
     {
+        private readonly bool hasBsonId;
+
         public MongoRepository(
             MongoRepositoryOptions<TEntity> options)
         {
@@ -35,6 +34,7 @@
             this.Collection = options.MongoClient
                 .GetDatabase(options.DatabaseName)
                 .GetCollection<TDestination>(options.CollectionName);
+            this.hasBsonId = Attribute.IsDefined(typeof(TDestination).GetProperty("Id"), typeof(BsonIdAttribute));
 
             this.Logger.LogInformation($"{{LogKey:l}} construct mongo repository (type={typeof(TEntity).PrettyName()})", LogKeys.DomainRepository);
         }
@@ -67,8 +67,17 @@
                 return null;
             }
 
-            return this.Options.Mapper.Map<TEntity>(
-                await this.Collection.Find(e => e.Id.Equals(id)).SingleOrDefaultAsync().AnyContext());
+            if (this.hasBsonId)
+            {
+                return this.Options.Mapper.Map<TEntity>(
+                (await this.Collection.FindAsync(
+                    Builders<TDestination>.Filter.Eq("_id", MongoDB.Bson.ObjectId.Parse(id as string))).AnyContext()).SingleOrDefault());
+            }
+            else
+            {
+                return this.Options.Mapper.Map<TEntity>(
+                    await this.Collection.Find(e => e.Id.Equals(id)).SingleOrDefaultAsync().AnyContext());
+            }
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
@@ -98,9 +107,9 @@
                 {
                     return this.Collection.AsQueryable()
                         .WhereExpressions(expressions)
+                        .OrderByIf(options, this.Options.Mapper)
                         .SkipIf(options?.Skip)
                         .TakeIf(options?.Take)
-                        .OrderByIf(options, this.Options.Mapper)
                         .ToList();
                 }
                 else
@@ -140,7 +149,16 @@
             }
 
             var dEntity = this.Options.Mapper.Map<TDestination>(entity);
-            await this.Collection.ReplaceOneAsync(e => e.Id.Equals(entity.Id), dEntity).AnyContext();
+
+            if (this.hasBsonId)
+            {
+                await this.Collection.ReplaceOneAsync(Builders<TDestination>.Filter.Eq("_id", MongoDB.Bson.ObjectId.Parse(entity.Id as string)), dEntity).AnyContext();
+            }
+            else
+            {
+                await this.Collection.ReplaceOneAsync(e => e.Id == entity.Id, dEntity).AnyContext();
+            }
+
             return entity;
         }
 
@@ -210,7 +228,16 @@
                 return ActionResult.None;
             }
 
-            var result = await this.Collection.DeleteOneAsync(e => e.Id.Equals(id)).AnyContext();
+            DeleteResult result;
+            if (this.hasBsonId)
+            {
+                result = await this.Collection.DeleteOneAsync(Builders<TDestination>.Filter.Eq("_id", MongoDB.Bson.ObjectId.Parse(id as string))).AnyContext();
+            }
+            else
+            {
+                result = await this.Collection.DeleteOneAsync(e => e.Id == id).AnyContext();
+            }
+
             return result.DeletedCount > 0 ? ActionResult.Deleted : ActionResult.None;
         }
 

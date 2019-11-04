@@ -130,14 +130,15 @@
 
         private async Task ExecuteJobsAsync(DateTime moment)
         {
-            var dueJobs = this.Options.Registrations.Where(r => r.Key?.IsDue(moment) == true && r.Key.Enabled).Select(r =>
-            {
-                var cts = new CancellationTokenSource(r.Key.Timeout);
-                return Task.Run(async () =>
+            var dueJobs = this.Options.Registrations
+                .Where(r => r.Key?.IsDue(moment) == true && r.Key.Enabled)
+                .Select(r =>
                 {
-                    await this.ExecuteJobAsync(r.Key, r.Value, cts.Token, r.Key.Args).AnyContext();
-                }, cts.Token);
-            }).ToList();
+                    var cts = new CancellationTokenSource(r.Key.Timeout);
+                    return Task.Run(async () =>
+                        await this.ExecuteJobAsync(r.Key, r.Value, cts.Token, r.Key.Args).AnyContext(),
+                        cts.Token);
+                }).ToList();
 
             if (dueJobs.IsNullOrEmpty())
             {
@@ -167,10 +168,10 @@
                         {
                             // TODO: publish domain event (job started)
                             this.logger.LogJournal(LogKeys.JobScheduling, $"job started (key={{JobKey}}, id={registration.Identifier}, type={job.GetType().PrettyName()}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")})", LogPropertyKeys.TrackStartJob, args: new[] { registration.Key });
-                            using (var scope = this.tracer?.BuildSpan(registration.Key, LogKeys.JobScheduling, SpanKind.Producer).Activate(this.logger))
-                            {
-                                await job.ExecuteAsync(cancellationToken, args).AnyContext();
-                            }
+                            //using (var scope = this.tracer?.BuildSpan($"job run {registration.Key}", LogKeys.JobScheduling, SpanKind.Producer).Activate(this.logger))
+                            //{ // current span is somehow not available in created jobs (ServiceProviderJobFactory)
+                            await job.ExecuteAsync(cancellationToken, args).AnyContext();
+                            //}
 
                             this.logger.LogJournal(LogKeys.JobScheduling, $"job finished (key={{JobKey}}, id={registration.Identifier}, type={job.GetType().PrettyName()})", LogPropertyKeys.TrackFinishJob, args: new[] { LogKeys.JobScheduling, registration.Key });
 

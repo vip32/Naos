@@ -67,7 +67,7 @@
 
             if (options?.HasOrders() == true)
             {
-                return (await this.Options.DbContext.Set<TDestination>()
+                return (await this.Options.DbContext.Set<TDestination>() // .AsAsyncEnumerable()
                     .WhereExpressions(expressions)
                     .SkipIf(options?.Skip)
                     .TakeIf(options?.Take)
@@ -77,7 +77,7 @@
             }
             else
             {
-                return (await this.Options.DbContext.Set<TDestination>()
+                return (await this.Options.DbContext.Set<TDestination>() // .AsAsyncEnumerable()
                     .WhereExpressions(expressions)
                     .SkipIf(options?.Skip)
                     .TakeIf(options?.Take)
@@ -93,14 +93,13 @@
                 return null;
             }
 
-#if NETSTANDARD2_0
-            return this.Options.Mapper.Map<TEntity>(await this.Options.DbContext.Set<TDestination>().FindAsync(this.TryParseGuid(id)).AnyContext());
-#endif
+//#if NETSTANDARD2_0
+//            return this.Options.Mapper.Map<TEntity>(await this.Options.DbContext.Set<TDestination>().FindAsync(this.TryParseGuid(id)).AnyContext());
+//#endif
 
-#if NETSTANDARD2_1
+//#if NETSTANDARD2_1
             return this.Options.Mapper.Map<TEntity>(await this.Options.DbContext.Set<TDestination>().FindAsync(this.TryParseGuid(id)));
-#endif
-
+//#endif
         }
 
         public async Task<bool> ExistsAsync(object id)
@@ -200,13 +199,13 @@
                 return ActionResult.None;
             }
 
-#if NETSTANDARD2_0
-            var dEntity = await this.Options.DbContext.Set<TDestination>().FindAsync(this.TryParseGuid(id)).AnyContext();
-#endif
+//#if NETSTANDARD2_0
+//            var dEntity = await this.Options.DbContext.Set<TDestination>().FindAsync(this.TryParseGuid(id)).AnyContext();
+//#endif
 
-#if NETSTANDARD2_1
+//#if NETSTANDARD2_1
             var dEntity = await this.Options.DbContext.Set<TDestination>().FindAsync(this.TryParseGuid(id));
-#endif
+//#endif
             if (dEntity != null)
             {
                 this.Logger.LogInformation($"{{LogKey:l}} delete entity: {dEntity.GetType().PrettyName()}, id: {id}", LogKeys.DomainRepository);

@@ -15,7 +15,7 @@
 
         public IMessageHandlerFactory HandlerFactory { get; set; }
 
-        public string SubscriptionName { get; set; }
+        public string QueueName { get; set; } //= queue [DESCRIPTOR+MESSAGENAME]
 
         public ISubscriptionMap Subscriptions { get; set; } = new SubscriptionMap();
 

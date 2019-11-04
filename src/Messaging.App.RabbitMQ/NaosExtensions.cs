@@ -34,7 +34,8 @@
                 var broker = new RabbitMQMessageBroker(o => o
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                     .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
-                    .SubscriptionName(subscriptionName)
+                    //.MessageScope(options.Context.Descriptor.Name)
+                    .QueueName(subscriptionName)
                     .Provider(sp.GetRequiredService<IRabbitMQProvider>()));
 
                 brokerAction?.Invoke(broker);

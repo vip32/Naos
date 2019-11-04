@@ -14,7 +14,6 @@
     using Naos.Messaging.Domain;
     using Naos.Tracing.Domain;
     using Polly;
-    using Polly.Retry;
 
     public class RabbitMQMessageBroker : IMessageBroker, IDisposable
     {
@@ -23,25 +22,55 @@
         private readonly ISerializer serializer;
         private IModel consumerChannel;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RabbitMQMessageBroker"/> class.
+        ///
+        /// General dotnet rabbitmw docs: https://www.rabbitmq.com/dotnet-api-guide.html
+        /// <para>
+        ///
+        /// Direct exchange behaving as fanout (pub/sub): https://www.rabbitmq.com/tutorials/tutorial-four-dotnet.html
+        /// Multiple bindings:
+        /// - single exchange
+        /// - multiple bindings with same key names (exchange fan out)
+        /// - unique queue names with single subscriber (no round robing happnes)
+        ///
+        ///                              .-----------.         .------------.
+        ///                     .------->| Queue 1   |-------->| Consumer 1 |
+        ///             key=msg/name     |           |         |            |
+        ///                   /          |           |         |            |
+        ///    .-----------. /           "-----------"         "------------"
+        ///    | Exchange  |/             name=descr+key
+        ///    |           |
+        ///    |           |\
+        ///    "-----------" \           .-----------.         .------------.
+        ///            key=msg\name      | Queue 2   |-------->| Consumer 2 |
+        ///                    "-------->|           |         |            |
+        ///                              |           |         |            |
+        ///                              "-----------"         "------------"
+        ///                               name=descr+key
+        ///
+        /// </para>
+        /// </summary>
+        /// <param name="options"></param>
         public RabbitMQMessageBroker(RabbitMQMessageBrokerOptions options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Provider, nameof(options.Provider));
             EnsureArg.IsNotNull(options.HandlerFactory, nameof(options.HandlerFactory));
-            EnsureArg.IsNotNullOrEmpty(options.SubscriptionName, nameof(options.SubscriptionName));
             EnsureArg.IsNotNullOrEmpty(options.ExchangeName, nameof(options.ExchangeName));
+            EnsureArg.IsNotNullOrEmpty(options.QueueName, nameof(options.QueueName));
 
             this.options = options;
             this.logger = options.CreateLogger<RabbitMQMessageBroker>();
             this.serializer = this.options.Serializer ?? DefaultSerializer.Create;
-            this.consumerChannel = this.CreateConsumerChannel(options.SubscriptionName);
-            this.StartBasicConsume(this.options.SubscriptionName);
+            this.consumerChannel = this.CreateConsumerChannel(options.QueueName);
+
+            this.StartBasicConsume(this.options.QueueName); // TODO: do this after subscribe, see ReceiveLogsDirect.cs https://www.rabbitmq.com/tutorials/tutorial-four-dotnet.html
         }
 
         public RabbitMQMessageBroker(Builder<RabbitMQMessageBrokerOptionsBuilder, RabbitMQMessageBrokerOptions> optionsBuilder)
             : this(optionsBuilder(new RabbitMQMessageBrokerOptionsBuilder()).Build())
         {
-            // https://www.rabbitmq.com/dotnet-api-guide.html
             // TODO: maybe use this client/provider https://github.com/EasyNetQ/EasyNetQ  http://easynetq.com/
         }
 
@@ -61,12 +90,12 @@
                     this.options.Provider.TryConnect();
                 }
 
-                this.logger.LogInformation($"{{LogKey:l}} bind rabbitmq queue (queue={this.options.SubscriptionName}, routingKey={routingKey})", LogKeys.Messaging);
+                this.logger.LogInformation($"{{LogKey:l}} bind rabbitmq queue (queue={this.options.QueueName}, routingKey={routingKey})", LogKeys.Messaging);
                 using (var channel = this.options.Provider.CreateModel())
                 {
                     channel.QueueBind(
-                        queue: this.options.SubscriptionName,
                         exchange: this.options.ExchangeName,
+                        queue: this.options.QueueName,
                         routingKey: routingKey);
                 }
 
@@ -122,12 +151,12 @@
                     this.options.Provider.TryConnect();
                 }
 
-                var policy = RetryPolicy.Handle<BrokerUnreachableException>()
-                .Or<SocketException>()
-                .WaitAndRetry(this.options.RetryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
-                {
-                    this.logger.LogWarning(ex, "{LogKey:l} could not publish message: {MessageId} after {Timeout}s ({ExceptionMessage})", LogKeys.Messaging, message.Id, $"{time.TotalSeconds:n1}", ex.Message);
-                });
+                var policy = Policy.Handle<BrokerUnreachableException>()
+                    .Or<SocketException>()
+                    .WaitAndRetry(this.options.RetryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
+                    {
+                        this.logger.LogWarning(ex, "{LogKey:l} could not publish message: {MessageId} after {Timeout}s ({ExceptionMessage})", LogKeys.Messaging, message.Id, $"{time.TotalSeconds:n1}", ex.Message);
+                    });
 
                 using (var channel = this.options.Provider.CreateModel())
                 {
@@ -180,11 +209,11 @@
 
             using (var channel = this.options.Provider.CreateModel())
             {
-                this.logger.LogInformation($"{{LogKey:l}} unbind rabbitmq queue (queue={this.options.SubscriptionName}, routingKey={routingKey})", LogKeys.Messaging);
+                this.logger.LogInformation($"{{LogKey:l}} unbind rabbitmq queue (queue={this.options.QueueName}, routingKey={routingKey})", LogKeys.Messaging);
 
                 channel.QueueUnbind(
-                    queue: this.options.SubscriptionName,
                     exchange: this.options.ExchangeName,
+                    queue: this.options.QueueName,
                     routingKey: routingKey);
             }
 
@@ -219,6 +248,7 @@
             this.logger.LogInformation($"{{LogKey:l}} declare rabbitmq consumer channel (exchange={this.options.ExchangeName}, queue={queueName})", LogKeys.Messaging);
             var channel = this.options.Provider.CreateModel();
             channel.ExchangeDeclare(exchange: this.options.ExchangeName, type: "direct"); /*durable: true*/
+
             channel.QueueDeclare(
                 queue: queueName,
                 durable: true,

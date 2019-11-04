@@ -744,3 +744,6 @@ development-naos--operations--logging--azureLogAnalytics--workspaceName
 - Console
   - Interactive
   - Commands
+
+
+[![](https://codescene.io/projects/5888/status.svg) Get more details at **codescene.io**.](https://codescene.io/projects/5888/jobs/latest-successful/results)

@@ -19,7 +19,7 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            options.Context.AddTag("Countries");
+            options.Context.AddTag("countries");
 
             options.Context.Services.AddScoped<ICountryRepository>(sp =>
             {

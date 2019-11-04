@@ -9,6 +9,7 @@
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
     using Naos.Foundation.Infrastructure;
+    using Naos.Operations;
     using Naos.Operations.App;
 
     [ExcludeFromCodeCoverage]
@@ -93,7 +94,10 @@
             return options;
         }
 
-        public static LoggingOptions UseAzureLogAnalytics(this LoggingOptions options, bool dashboardEnabled = true, LogLevel logLevel = LogLevel.Debug)
+        public static LoggingOptions UseAzureLogAnalytics(
+            this LoggingOptions options,
+            bool dashboardEnabled = true,
+            LogLevel logLevel = LogLevel.Debug)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
@@ -111,9 +115,9 @@
                     return options;
                 }
 
-                if (configuration.Enabled == true
-                    && configuration.WorkspaceId.IsNullOrEmpty() == false
-                    && configuration.AuthenticationId.IsNullOrEmpty() == false)
+                if (configuration.Enabled
+                    && !configuration.WorkspaceId.IsNullOrEmpty()
+                    && !configuration.AuthenticationId.IsNullOrEmpty())
                 {
                     options.LoggerConfiguration?.WriteTo.AzureAnalytics(
                         configuration.WorkspaceId,
@@ -140,30 +144,28 @@
 
         public static Serilog.Events.LogEventLevel MapLevel(LogLevel logLevel) // TODO: make generally available
         {
-            var result = Serilog.Events.LogEventLevel.Information;
-
             if (logLevel == LogLevel.Trace)
             {
-                result = Serilog.Events.LogEventLevel.Verbose;
+                return Serilog.Events.LogEventLevel.Verbose;
             }
             else if (logLevel == LogLevel.Debug)
             {
-                result = Serilog.Events.LogEventLevel.Debug;
+                return Serilog.Events.LogEventLevel.Debug;
             }
             else if (logLevel == LogLevel.Error)
             {
-                result = Serilog.Events.LogEventLevel.Error;
+                return Serilog.Events.LogEventLevel.Error;
             }
             else if (logLevel == LogLevel.Critical)
             {
-                result = Serilog.Events.LogEventLevel.Fatal;
+                return Serilog.Events.LogEventLevel.Fatal;
             }
             else if (logLevel == LogLevel.Warning)
             {
-                result = Serilog.Events.LogEventLevel.Warning;
+                return Serilog.Events.LogEventLevel.Warning;
             }
 
-            return result;
+            return Serilog.Events.LogEventLevel.Information;
         }
     }
 }

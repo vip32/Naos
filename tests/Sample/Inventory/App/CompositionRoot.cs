@@ -1,5 +1,6 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
+    using System.Linq;
     using EnsureThat;
     using MediatR;
     using Microsoft.Extensions.Configuration;
@@ -21,16 +22,16 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            options.Context.AddTag("Inventory");
+            options.Context.AddTag("inventory");
 
-            var mongoConfiguration = options.Context.Configuration?.GetSection($"{section}:mongo").Get<MongoConfiguration>() ?? new MongoConfiguration();
+            var configuration = options.Context.Configuration?.GetSection($"{section}:mongo").Get<MongoConfiguration>() ?? new MongoConfiguration();
 
             options.Context.Services.AddStartupTask(sp =>
                 new SeederStartupTask(
                     sp.GetRequiredService<ILoggerFactory>(),
                     sp.CreateScope().ServiceProvider.GetService(typeof(IInventoryRepository)) as IInventoryRepository));
 
-            options.Context.Services.AddMongoClient(mongoConfiguration);
+            options.Context.Services.AddMongoClient("inventory", configuration);
             options.Context.Services.AddScoped<IInventoryRepository>(sp =>
             {
                 return new InventoryRepository(
@@ -43,8 +44,9 @@
                                 //.Setup(sp, mongoConfiguration)
                                 .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                                 .Mediator(sp.GetRequiredService<IMediator>())
-                                .MongoClient(sp.GetRequiredService<IMongoClient>())
-                                .DatabaseName(mongoConfiguration.DatabaseName)))));
+                                .MongoClient(sp.GetServices<IMongoClient>()
+                                    .FirstOrDefault(c => c.Settings.ApplicationName == "inventory")) //TODO: make nice extension to get a named mongoclient
+                                .DatabaseName(configuration.DatabaseName)))));
             });
 
             options.Context.Services.AddScoped<IReplenishmentRepository>(sp =>
@@ -59,9 +61,10 @@
                                 //.Setup(sp, mongoConfiguration)
                                 .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                                 .Mediator(sp.GetRequiredService<IMediator>())
-                                .MongoClient(sp.GetRequiredService<IMongoClient>())
+                                .MongoClient(sp.GetServices<IMongoClient>()
+                                    .FirstOrDefault(c => c.Settings.ApplicationName == "inventory"))
                                 .Mapper(new AutoMapperEntityMapper(MapperFactory.Create()))
-                                .DatabaseName(mongoConfiguration.DatabaseName)
+                                .DatabaseName(configuration.DatabaseName)
                                 .CollectionName("ProductReplenishments")))));
             });
 

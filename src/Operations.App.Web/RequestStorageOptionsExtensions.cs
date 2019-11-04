@@ -24,7 +24,7 @@
             var configuration = options.Context.Configuration?.GetSection(section).Get<FileLoggingConfiguration>();
             if (configuration?.Enabled == true)
             {
-                options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: request storage added (type={typeof(FolderFileStorage).Name})");
+                options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: request storage used (type={typeof(FolderFileStorage).Name})");
                 options.Context.Services.AddSingleton(sp =>
                     new RequestStorageMiddlewareOptions
                     {
@@ -48,7 +48,7 @@
             var configuration = options.Context.Configuration?.GetSection(section).Get<BlobStorageConfiguration>();
             if (configuration?.Enabled == true)
             {
-                options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: request storage added (type={typeof(AzureBlobFileStorage).Name})");
+                options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: request storage used (type={typeof(AzureBlobFileStorage).Name})");
                 var connectionString = options.Context.Configuration[$"{section}:connectionString"];
                 options.Context.Services.AddSingleton(sp =>
                     new RequestStorageMiddlewareOptions

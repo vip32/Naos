@@ -66,7 +66,7 @@
 
             if (options?.HasOrders() == true)
             {
-                return await this.Options.DbContext.Set<TEntity>()
+                return await this.Options.DbContext.Set<TEntity>() // .AsAsyncEnumerable()
                     .WhereExpressions(expressions)
                     .SkipIf(options?.Skip)
                     .TakeIf(options?.Take)
@@ -74,7 +74,7 @@
             }
             else
             {
-                return await this.Options.DbContext.Set<TEntity>()
+                return await this.Options.DbContext.Set<TEntity>() // .AsAsyncEnumerable()
                     .WhereExpressions(expressions)
                     .SkipIf(options?.Skip)
                     .TakeIf(options?.Take).ToListAsyncSafe(cancellationToken).AnyContext();
@@ -88,13 +88,13 @@
                 return null;
             }
 
-#if NETSTANDARD2_0
-            return await this.Options.DbContext.Set<TEntity>().FindAsync(this.TryParseGuid(id)).AnyContext();
-#endif
+//#if NETSTANDARD2_0
+//            return await this.Options.DbContext.Set<TEntity>().FindAsync(this.TryParseGuid(id)).AnyContext();
+//#endif
 
-#if NETSTANDARD2_1
+//#if NETSTANDARD2_1
             return await this.Options.DbContext.Set<TEntity>().FindAsync(this.TryParseGuid(id));
-#endif
+//#endif
         }
 
         public async Task<bool> ExistsAsync(object id)
