@@ -29,14 +29,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Application\Application.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Abstractions\Abstractions.csproj" />
-    <ProjectReference Include="..\..\src\App\App.csproj" />
     <ProjectReference Include="..\..\src\Commands.Infrastructure.FileStorage\Commands.Infrastructure.FileStorage.csproj" />
     <ProjectReference Include="..\Sample\Sample.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Countries\Commands.App\Handlers\" />
+    <Folder Include="Countries\Commands.Application\Handlers\" />
     <Folder Include="Countries\App.Web\" />
     <Folder Include="Countries\App\" />
     <Folder Include="Countries\Domain\Model\" />

@@ -44,7 +44,7 @@
     },
     {
       "label": "test sample integrationtests",
-      "command": "dotnet test ./tests/Sample.App.IntegrationTests/Sample.App.IntegrationTests.csproj",
+      "command": "dotnet test ./tests/Sample.Application.IntegrationTests/Sample.Application.IntegrationTests.csproj",
       "type": "shell",
       "group": {
         "kind": "test",

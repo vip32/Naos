@@ -10,7 +10,7 @@
     using Naos.Foundation;
     using Naos.Foundation.Infrastructure;
     using Naos.Operations;
-    using Naos.Operations.App;
+    using Naos.Operations.Application;
 
     [ExcludeFromCodeCoverage]
     public static class LoggingOptionsExtensions

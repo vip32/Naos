@@ -3,7 +3,7 @@
     using System.Threading.Tasks;
     using FluentValidation;
     using FluentValidation.Results;
-    using Naos.Commands.App;
+    using Naos.Commands.Application;
     using Naos.Foundation;
     using Shouldly;
     using Xunit;

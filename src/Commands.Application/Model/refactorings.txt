@@ -1,0 +1,92 @@
+﻿namespace Naos.Commands.Application.Model
+{
+#pragma warning disable SA1649 // File name should match first type name
+#pragma warning disable SA1402 // File may only contain a single type
+    using System;
+    using System.Collections.Generic;
+    using FluentValidation.Results;
+    using Naos.Foundation;
+    using Naos.Foundation.Domain;
+
+    public interface ICommandRequest<out TResponse> : MediatR.IRequest<TResponse>
+        where TResponse : ICommandResponse
+    {
+        string CorrelationId { get; set; }
+
+        DateTimeOffset Created { get; }
+
+        string Id { get; set; }
+
+        string Identifier { get; set; }
+
+        IDictionary<string, object> Properties { get; set; }
+
+        /// <summary>
+        /// Validates this instance.
+        /// </summary>
+        /// <returns><see cref="ValidationResult"/>.</returns>
+        ValidationResult Validate();
+    }
+
+    public interface ICommandResponse
+    {
+        bool Cancelled { get; }
+
+        string CancelledReason { get; }
+
+        void SetCancelled(string reason);
+    }
+
+    public class BaseCommandRequest<TResponse> : ICommandRequest<TResponse>
+        where TResponse : ICommandResponse
+    {
+        public string Id { get; set; }
+
+        public string Identifier { get; set; } // obsolete? just a short identifier
+
+        public string CorrelationId { get; set; }
+
+        public DateTimeOffset Created { get; }
+
+        public IDictionary<string, object> Properties { get; set; } = new DataDictionary();
+
+        /// <summary>
+        /// Validates this instance.
+        /// </summary>
+        /// <returns><see cref="ValidationResult"/>.</returns>
+        public virtual ValidationResult Validate() => new ValidationResult();
+    }
+
+    public class BaseCommandResponse : ICommandResponse
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseCommandResponse"/> class.
+        /// </summary>
+        public BaseCommandResponse()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseCommandResponse"/> class.
+        /// </summary>
+        /// <param name="cancelledReason">The optional cancelled reason.</param>
+        public BaseCommandResponse(string cancelledReason)
+        {
+            if (!cancelledReason.IsNullOrEmpty())
+            {
+                this.Cancelled = true;
+                this.CancelledReason = cancelledReason;
+            }
+        }
+
+        public bool Cancelled { get; private set; }
+
+        public string CancelledReason { get; private set; }
+
+        public void SetCancelled(string reason)
+        {
+            this.Cancelled = true;
+            this.CancelledReason = reason;
+        }
+    }
+}

@@ -16587,8 +16587,8 @@
       <ModuleTime>2018-11-29T02:21:57</ModuleTime>
       <ModuleName>Naos.Sample.App</ModuleName>
       <Files>
-        <File uid="182" fullPath="D:\Dropbox\projects\_github\Naos\tests\Sample.App\AppConfiguration.cs" />
-        <File uid="183" fullPath="D:\Dropbox\projects\_github\Naos\tests\Sample.App\ServiceRegistrations.cs" />
+        <File uid="182" fullPath="D:\Dropbox\projects\_github\Naos\tests\Sample.Application\AppConfiguration.cs" />
+        <File uid="183" fullPath="D:\Dropbox\projects\_github\Naos\tests\Sample.Application\ServiceRegistrations.cs" />
       </Files>
       <Classes>
         <Class>

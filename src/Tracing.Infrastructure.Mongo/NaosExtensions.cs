@@ -1,13 +1,10 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
-    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using EnsureThat;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using MongoDB.Bson;
-    using MongoDB.Bson.Serialization.Conventions;
     using MongoDB.Driver;
     using Naos.Foundation.Domain;
     using Naos.Foundation.Infrastructure;

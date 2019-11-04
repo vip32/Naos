@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp3.0;netstandard2.0</TargetFrameworks>
+    <AssemblyName>Naos.Application.Web</AssemblyName>
+    <RootNamespace>Naos.Application.Web</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.0.0" />
+    <PackageReference Include="MediatR" Version="7.0.0" />
+    <PackageReference Include="NSwag.Annotations" Version="13.1.3" />
+    <PackageReference Include="NSwag.Generation" Version="13.1.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Authentication.Application.Web\Authentication.Application.Web.csproj" />
+    <ProjectReference Include="..\Commands.Application.Web\Commands.Application.Web.csproj" />
+    <ProjectReference Include="..\Configuration.Application.Web\Configuration.Application.Web.csproj" />
+    <ProjectReference Include="..\Correlation.Application\RequestCorrelation.Application.csproj" />
+    <ProjectReference Include="..\Exceptions.Application.Web\Exceptions.Application.Web.csproj" />
+    <ProjectReference Include="..\Filtering.Application\RequestFiltering.Application.csproj" />
+    <ProjectReference Include="..\Foundation.Application.Web.Startup\Application.Web.Startup.csproj" />
+    <ProjectReference Include="..\Foundation.Application.Web\Application.Web.csproj" />
+    <ProjectReference Include="..\Foundation.Domain.Repositories\Domain.Repositories.csproj" />
+    <ProjectReference Include="..\Foundation.Domain.Specifications\Domain.Specifications.csproj" />
+    <ProjectReference Include="..\Foundation.Domain\Domain.csproj" />
+    <ProjectReference Include="..\Foundation.Extensions\Extensions.csproj" />
+    <ProjectReference Include="..\JobScheduling.Application.Web\JobScheduling.Application.Web.csproj" />
+    <ProjectReference Include="..\Messaging.Application.Web\Messaging.Application.Web.csproj" />
+    <ProjectReference Include="..\Operations.Application.Web\Operations.Application.Web.csproj" />
+    <ProjectReference Include="..\Queueing.Application.Web\Queueing.Application.Web.csproj" />
+    <ProjectReference Include="..\ServiceDiscovery.Application.Web.Router\ServiceDiscovery.Application.Web.Router.csproj" />
+    <ProjectReference Include="..\Tracing.Application.Web\Tracing.Application.Web.csproj" />
+  </ItemGroup>
+</Project>
