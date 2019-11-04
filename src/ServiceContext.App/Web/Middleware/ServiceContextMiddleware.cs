@@ -83,34 +83,7 @@
                 else if (context.Request.Path.Equals("/css/naos.css", System.StringComparison.OrdinalIgnoreCase))
                 {
                     context.Response.ContentType = ContentType.CSS.ToValue();
-                    await context.Response.WriteAsync(@"
-body {
-    background-color: black;
-    color: white;
-    font-family: monospace;
-    margin: 1em 0px;
-    font-size: 12px;
-}
-a {
-    text-decoration: none;
-    color: gray;
-}
-a:link {
-}
-a:visited {
-}
-a:hover {
-    color: cyan;
-}
-hr {
-    display: block;
-    height: 1px;
-    border: 0;
-    border-top: 1px solid #222222;
-    margin: 1em 0;
-    padding: 0;
-}
-").AnyContext();
+                    await context.Response.WriteAsync(ResourcesHelper.GetStylesAsString()).AnyContext();
                 }
                 else if (context.Request.Path.Equals("/favicon.ico", System.StringComparison.OrdinalIgnoreCase))
                 {

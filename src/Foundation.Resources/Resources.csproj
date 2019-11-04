@@ -13,11 +13,13 @@
   <ItemGroup>
     <None Remove="favicon.ico" />
     <None Remove="logo.png" />
+    <None Remove="Resources\styles.css" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\favicon.ico" />
     <EmbeddedResource Include="Resources\logo.png" />
+    <EmbeddedResource Include="Resources\styles.css" />
   </ItemGroup>
 
   <ItemGroup>
