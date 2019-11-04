@@ -8,6 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Countries\App.Commands\**" />
+    <Compile Remove="Countries\App.Queries\**" />
+    <EmbeddedResource Remove="Countries\App.Commands\**" />
+    <EmbeddedResource Remove="Countries\App.Queries\**" />
+    <None Remove="Countries\App.Commands\**" />
+    <None Remove="Countries\App.Queries\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>
@@ -16,8 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Countries\App.Commands\" />
-    <Folder Include="Countries\App.Queries\" />
     <Folder Include="Customers\Domain\Repositories\Decorators\" />
     <Folder Include="Customers\App.Queries\" />
     <Folder Include="UserAccounts\App.Commands\" />

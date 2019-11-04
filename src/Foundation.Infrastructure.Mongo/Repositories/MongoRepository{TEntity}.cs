@@ -100,9 +100,9 @@
                 {
                     return this.Collection.AsQueryable()
                         .WhereExpressions(expressions)
+                        .OrderByIf(options)
                         .SkipIf(options?.Skip)
                         .TakeIf(options?.Take)
-                        .OrderByIf(options)
                         .ToList();
                 }
                 else

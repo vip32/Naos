@@ -107,9 +107,9 @@
                 {
                     return this.Collection.AsQueryable()
                         .WhereExpressions(expressions)
+                        .OrderByIf(options, this.Options.Mapper)
                         .SkipIf(options?.Skip)
                         .TakeIf(options?.Take)
-                        .OrderByIf(options, this.Options.Mapper)
                         .ToList();
                 }
                 else

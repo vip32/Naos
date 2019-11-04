@@ -70,7 +70,7 @@
 
                 if (!context.Request.Headers.IsNullOrEmpty())
                 {
-                    this.logger.LogInformation($"{{LogKey:l}} [{requestId}] {LogTraceNames.Http} headers={string.Join("|", context.Request.Headers.Select(h => $"{h.Key}={h.Value}"))}", LogKeys.InboundRequest);
+                    this.logger.LogInformation($"{{LogKey:l}} [{requestId}] {LogTraceNames.Http} headers={string.Join("|", context.Request.Headers.Select(h => $"{h.Key}={h.Value}".Truncate(256)))}", LogKeys.InboundRequest);
                 }
             }).AnyContext();
         }
@@ -91,7 +91,7 @@
 
                 if (!context.Response.Headers.IsNullOrEmpty())
                 {
-                    this.logger.Log(level, $"{{LogKey:l}} [{requestId}] {LogTraceNames.Http} headers={string.Join("|", context.Response.Headers.Select(h => $"{h.Key}={h.Value}"))}", LogKeys.InboundResponse);
+                    this.logger.Log(level, $"{{LogKey:l}} [{requestId}] {LogTraceNames.Http} headers={string.Join("|", context.Response.Headers.Select(h => $"{h.Key}={h.Value}".Truncate(256)))}", LogKeys.InboundResponse);
                 }
 
                 var contentLength = context.Response.ContentLength ?? 0;
