@@ -21,6 +21,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{FCBA001C-2
 		docs\todo.md = docs\todo.md
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "src\Application\Application.csproj", "{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Web", "src\Application.Web\Application.Web.csproj", "{671EC4A8-A4B6-428A-ACBD-85D0A66FEF9F}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Web", "src\Foundation.Application.Web\Application.Web.csproj", "{D2A2D706-F821-4BAC-892F-B5F1FEAB82B5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "src\Foundation.Domain\Domain.csproj", "{635C5135-B567-4DE0-8CCA-76FA97C2F540}"
@@ -29,25 +33,23 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Azure.Cosmos
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Azure.LogAnalytics", "src\Foundation.Infrastructure.Azure.LogAnalytics\Infrastructure.Azure.LogAnalytics.csproj", "{EF1B2EF1-6CC0-492A-AC49-83E27A7697C3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App", "src\App\App.csproj", "{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging", "src\Messaging\Messaging.csproj", "{B86418EA-FEE2-42E1-B03E-CAAA43D3DBA5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.Infrastructure.RabbitMQ", "src\Messaging.Infrastructure.RabbitMQ\Messaging.Infrastructure.RabbitMQ.csproj", "{D409507E-9055-4185-801F-4F66445183BC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "tests\UnitTests\UnitTests.csproj", "{2515C160-1A6A-4E8A-9853-D25A5D08BDCC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commands.App", "src\Commands.App\Commands.App.csproj", "{D199A34D-6FE9-48A7-BDEE-3F01572BF3D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commands.Application", "src\Commands.Application\Commands.Application.csproj", "{D199A34D-6FE9-48A7-BDEE-3F01572BF3D4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.Infrastructure.Azure", "src\Messaging.Infrastructure.Azure\Messaging.Infrastructure.Azure.csproj", "{BD63E3F7-598B-470E-B33D-1EF4D446DF6B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Azure.KeyVault", "src\Foundation.Infrastructure.Azure.KeyVault\Infrastructure.Azure.KeyVault.csproj", "{DBA9758B-BED6-45E3-BB95-D95F4CBADCFB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configuration.App", "src\Configuration.App\Configuration.App.csproj", "{9803F2B8-8EF2-45E1-94CE-23FD16BAD91F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configuration.Application", "src\Configuration.Application\Configuration.Application.csproj", "{9803F2B8-8EF2-45E1-94CE-23FD16BAD91F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Azure.Arm", "src\Foundation.Infrastructure.Azure.Arm\Infrastructure.Azure.Arm.csproj", "{DDFC8D91-9E8B-45DA-8BFC-CC3282100608}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.App.IntegrationTests", "tests\Sample.App.IntegrationTests\Sample.App.IntegrationTests.csproj", "{67FC16FB-7B11-4B17-85B7-607784DC0729}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Application.IntegrationTests", "tests\Sample.Application.IntegrationTests\Sample.Application.IntegrationTests.csproj", "{67FC16FB-7B11-4B17-85B7-607784DC0729}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Repositories", "src\Foundation.Domain.Repositories\Domain.Repositories.csproj", "{31977D83-B6D2-4AEE-B340-8F0C366AD180}"
 EndProject
@@ -75,15 +77,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Messaging", "Messaging", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JobScheduling", "JobScheduling", "{0978CAE5-4C82-4789-9083-4042E7106906}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RequestCorrelation.App", "src\Correlation.App\RequestCorrelation.App.csproj", "{04739965-B30A-464D-A493-4B5BD43584DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RequestCorrelation.Application", "src\Correlation.Application\RequestCorrelation.Application.csproj", "{04739965-B30A-464D-A493-4B5BD43584DD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RequestCorrelation", "RequestCorrelation", "{D4E005A7-0093-422D-B7BE-05204D7C63CC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobScheduling.App.Web", "src\JobScheduling.App.Web\JobScheduling.App.Web.csproj", "{5B5C61A1-952C-461F-9BFD-CDD486D3E187}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobScheduling.Application.Web", "src\JobScheduling.Application.Web\JobScheduling.Application.Web.csproj", "{5B5C61A1-952C-461F-9BFD-CDD486D3E187}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RequestFiltering", "RequestFiltering", "{41BFCC05-8541-4335-8F13-E4E8B702F486}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RequestFiltering.App", "src\Filtering.App\RequestFiltering.App.csproj", "{F0307521-B912-42F4-887D-FBA7D3545B4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RequestFiltering.Application", "src\Filtering.Application\RequestFiltering.Application.csproj", "{F0307521-B912-42F4-887D-FBA7D3545B4A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.Infrastructure.FileStorage", "src\Messaging.Infrastructure.FileSystem\Messaging.Infrastructure.FileStorage.csproj", "{4D3D368A-7701-4966-9371-5D266A5EC139}"
 EndProject
@@ -93,47 +95,45 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ServiceDiscovery", "Service
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ServiceContext", "ServiceContext", "{A483C23A-EC56-44BD-911E-E49353161C01}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceContext.App", "src\ServiceContext.App\ServiceContext.App.csproj", "{0AF81842-7CDF-445B-8E2A-C1BD44ABD3CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceContext.Application", "src\ServiceContext.Application\ServiceContext.Application.csproj", "{0AF81842-7CDF-445B-8E2A-C1BD44ABD3CE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceDiscovery.App.Consul", "src\ServiceDiscovery.App.Consul\ServiceDiscovery.App.Consul.csproj", "{BB0B39B8-2344-4982-AECA-23F6C90BD858}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceDiscovery.Application.Consul", "src\ServiceDiscovery.Application.Consul\ServiceDiscovery.Application.Consul.csproj", "{BB0B39B8-2344-4982-AECA-23F6C90BD858}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceDiscovery.App", "src\ServiceDiscovery.App\ServiceDiscovery.App.csproj", "{AABBA96C-9D6D-4037-91CD-C25EE51F2899}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceDiscovery.Application", "src\ServiceDiscovery.Application\ServiceDiscovery.Application.csproj", "{AABBA96C-9D6D-4037-91CD-C25EE51F2899}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Commands", "Commands", "{9DBFA194-2C87-4C55-994C-AF8136169A7C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Authentication", "Authentication", "{308F0FC7-0C35-4068-AB33-69A8991BFEBB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authentication.App.Web", "src\Authentication.App.Web\Authentication.App.Web.csproj", "{0D98719A-BC1D-4C82-A4D6-98B91FF65AA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authentication.Application.Web", "src\Authentication.Application.Web\Authentication.Application.Web.csproj", "{0D98719A-BC1D-4C82-A4D6-98B91FF65AA6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ServiceExceptions", "ServiceExceptions", "{999ABAB7-EEAC-43C1-B4F9-8AA7A4098E60}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configuration", "{B3E3492F-C362-469F-BF49-20C58714A183}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceDiscovery.App.Web.Router", "src\ServiceDiscovery.App.Web.Router\ServiceDiscovery.App.Web.Router.csproj", "{9C3FD61B-01BC-4C70-944A-CC9356FFF0C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceDiscovery.Application.Web.Router", "src\ServiceDiscovery.Application.Web.Router\ServiceDiscovery.Application.Web.Router.csproj", "{9C3FD61B-01BC-4C70-944A-CC9356FFF0C3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.App.Azure", "src\Messaging.App.Azure\Messaging.App.Azure.csproj", "{B3AEAE64-2184-45C0-8090-AA6922844D06}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.Application.Azure", "src\Messaging.Application.Azure\Messaging.Application.Azure.csproj", "{B3AEAE64-2184-45C0-8090-AA6922844D06}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.App.Azure.SignalR", "src\Messaging.App.Azure.SignalR\Messaging.App.Azure.SignalR.csproj", "{9C6A5765-CA47-4B08-8135-71F3DB028537}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.Application.Azure.SignalR", "src\Messaging.Application.Azure.SignalR\Messaging.Application.Azure.SignalR.csproj", "{9C6A5765-CA47-4B08-8135-71F3DB028537}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.App.FileStorage", "src\Messaging.App.FileSystem\Messaging.App.FileStorage.csproj", "{383B805E-8B16-4C6C-8229-7AF56B281E68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.Application.FileStorage", "src\Messaging.Application.FileSystem\Messaging.Application.FileStorage.csproj", "{383B805E-8B16-4C6C-8229-7AF56B281E68}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "App", "App", "{126FE8D9-ED1F-4122-B0E8-07E13D94795A}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{126FE8D9-ED1F-4122-B0E8-07E13D94795A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.App.RabbitMQ", "src\Messaging.App.RabbitMQ\Messaging.App.RabbitMQ.csproj", "{9963C800-C3B9-45E8-AA7F-A8C0C2C13AC0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.Application.RabbitMQ", "src\Messaging.Application.RabbitMQ\Messaging.Application.RabbitMQ.csproj", "{9963C800-C3B9-45E8-AA7F-A8C0C2C13AC0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.App.Web", "src\Messaging.App.Web\Messaging.App.Web.csproj", "{9573C3B2-C443-473D-AC93-AC8E733EAA9D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.Application.Web", "src\Messaging.Application.Web\Messaging.Application.Web.csproj", "{9573C3B2-C443-473D-AC93-AC8E733EAA9D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobScheduling.App", "src\JobScheduling.App\JobScheduling.App.csproj", "{17639AA7-7DBF-487D-A50C-BE4B88E0192E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobScheduling.Application", "src\JobScheduling.Application\JobScheduling.Application.csproj", "{17639AA7-7DBF-487D-A50C-BE4B88E0192E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Meta", "_Meta", "{78C0A4A4-AF37-4D06-8AD8-4259E464221C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commands.Domain", "src\Commands.Domain\Commands.Domain.csproj", "{BC0B3B29-2902-4599-863D-D433C78BA14E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Operations.App.Web", "src\Operations.App.Web\Operations.App.Web.csproj", "{AD29FE16-E3F5-4DCB-9785-42C7FA0CFCBE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Operations.Application.Web", "src\Operations.Application.Web\Operations.Application.Web.csproj", "{AD29FE16-E3F5-4DCB-9785-42C7FA0CFCBE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Exceptions.App.Web", "src\Exceptions.App.Web\Exceptions.App.Web.csproj", "{70797B7C-6A7C-4955-B0A0-C5E1DEF12EAE}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Web", "src\App.Web\App.Web.csproj", "{671EC4A8-A4B6-428A-ACBD-85D0A66FEF9F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Exceptions.Application.Web", "src\Exceptions.Application.Web\Exceptions.Application.Web.csproj", "{70797B7C-6A7C-4955-B0A0-C5E1DEF12EAE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileStorage", "src\FileStorage\FileStorage.csproj", "{B53085B4-5AEF-4577-879E-AE806C4CCF8E}"
 EndProject
@@ -147,15 +147,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serialization", "src\Founda
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileStorage.Infrastructure.Ssh", "src\FileStorage.Infrastructure.Ssh\FileStorage.Infrastructure.Ssh.csproj", "{5E99E54E-C80C-43C2-8200-EAC38CE4AAA0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.App", "src\Messaging.App\Messaging.App.csproj", "{0252F08C-D6DD-4871-BC7E-D11D0BF5749C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.Application", "src\Messaging.Application\Messaging.Application.csproj", "{0252F08C-D6DD-4871-BC7E-D11D0BF5749C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Operations.App", "src\Operations.App\Operations.App.csproj", "{43426134-C349-424B-8EFB-5B0BE4FB4770}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Operations.Application", "src\Operations.Application\Operations.Application.csproj", "{43426134-C349-424B-8EFB-5B0BE4FB4770}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Operations.Infrastructure.Azure", "src\Operations.Infrastructure.Azure\Operations.Infrastructure.Azure.csproj", "{4A75E6AE-B6FF-4EB2-8ED6-B3FC95D7AFC9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dashboard", "Dashboard", "{E8E0A86B-4320-4769-9CB3-158FCFB567C6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configuration.App.Web", "src\Configuration.App.Web\Configuration.App.Web.csproj", "{5FA2F253-A90C-49DC-8C3C-B3AAEFFB537B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configuration.Application.Web", "src\Configuration.Application.Web\Configuration.Application.Web.csproj", "{5FA2F253-A90C-49DC-8C3C-B3AAEFFB537B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Azure", "src\Foundation.Infrastructure.Azure\Infrastructure.Azure.csproj", "{852128CB-3ED3-4EDE-A868-7DC94B327C6D}"
 EndProject
@@ -167,9 +167,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Queueing", "src\Queueing\Qu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Queueing.Infrastructure.Azure", "src\Queueing.Infrastructure.Azure\Queueing.Infrastructure.Azure.csproj", "{5A436FA3-8BE8-4A3E-BD87-F2600D471207}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Queueing.App", "src\Queueing.App\Queueing.App.csproj", "{55803417-9A11-40DB-9463-3D7765BBDC2F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Queueing.Application", "src\Queueing.Application\Queueing.Application.csproj", "{55803417-9A11-40DB-9463-3D7765BBDC2F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Queueing.App.Web", "src\Queueing.App.Web\Queueing.App.Web.csproj", "{DB906E06-2208-42BC-B61D-AD3062CCD1BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Queueing.Application.Web", "src\Queueing.Application.Web\Queueing.Application.Web.csproj", "{DB906E06-2208-42BC-B61D-AD3062CCD1BE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Console", "src\Foundation.Console\Console.csproj", "{7E7AEAAD-3600-48D2-81AE-5DADF32447C5}"
 EndProject
@@ -219,11 +219,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tracing", "Tracing", "{252D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tracing.Domain", "src\Tracing.Domain\Tracing.Domain.csproj", "{4FFDF411-6C7B-458B-BC06-67B22AEADA5C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tracing.App", "src\Tracing.App\Tracing.App.csproj", "{C1A2EC25-C51A-4080-A276-4676417332DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tracing.Application", "src\Tracing.Application\Tracing.Application.csproj", "{C1A2EC25-C51A-4080-A276-4676417332DE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tracing.Infrastructure.Azure", "src\Tracing.Infrastructure.Azure\Tracing.Infrastructure.Azure.csproj", "{C7BB2750-AF12-4853-9B4E-860B674388E2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commands.App.Web", "src\Commands.App.Web\Commands.App.Web.csproj", "{10DF0C1F-DD31-417A-BBEC-F4DCD47583AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commands.Application.Web", "src\Commands.Application.Web\Commands.Application.Web.csproj", "{10DF0C1F-DD31-417A-BBEC-F4DCD47583AD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities.Web", "src\Foundation.Utilities.Web\Utilities.Web.csproj", "{0C979240-E792-4091-A3CC-358525F6488C}"
 EndProject
@@ -239,15 +239,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Operations.Infrastructure.M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Operations.Abstractions", "src\Operations.Abstractions\Operations.Abstractions.csproj", "{0CED38FB-1DB5-42B0-879F-334132E887FB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Web", "tests\Application.Web\Application.Web.csproj", "{8D761A9D-786F-4EA0-A6E2-C7BED56E6C16}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tracing.Infrastructure.Mongo", "src\Tracing.Infrastructure.Mongo\Tracing.Infrastructure.Mongo.csproj", "{896B1964-6F0A-4A63-B4C7-61E6A5CA3511}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities.Xunit", "src\Foundation.Utilities.Xunit\Utilities.Xunit.csproj", "{6AE4717F-D24A-479D-B266-DAA619F01853}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Web.Startup.EntityFramework", "src\Foundation.Application.Web.Startup.EntityFramework\Application.Web.Startup.EntityFramework.csproj", "{2270FB32-666D-4CD1-8D8F-BB89185312E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tracing.App.Web", "src\Tracing.App.Web\Tracing.App.Web.csproj", "{5E8E9438-278A-48CB-B7BF-131F6E589A97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tracing.Application.Web", "src\Tracing.Application.Web\Tracing.Application.Web.csproj", "{5E8E9438-278A-48CB-B7BF-131F6E589A97}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Application.Web", "tests\Sample.Application.Web\Sample.Application.Web.csproj", "{ABCB37FD-5EF5-48BB-9F3D-BDD69B602AF9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -259,6 +259,30 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}.Debug|x64.Build.0 = Debug|Any CPU
+		{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}.Debug|x86.Build.0 = Debug|Any CPU
+		{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}.Release|x64.ActiveCfg = Release|Any CPU
+		{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}.Release|x64.Build.0 = Release|Any CPU
+		{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}.Release|x86.ActiveCfg = Release|Any CPU
+		{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}.Release|x86.Build.0 = Release|Any CPU
+		{671EC4A8-A4B6-428A-ACBD-85D0A66FEF9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{671EC4A8-A4B6-428A-ACBD-85D0A66FEF9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{671EC4A8-A4B6-428A-ACBD-85D0A66FEF9F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{671EC4A8-A4B6-428A-ACBD-85D0A66FEF9F}.Debug|x64.Build.0 = Debug|Any CPU
+		{671EC4A8-A4B6-428A-ACBD-85D0A66FEF9F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{671EC4A8-A4B6-428A-ACBD-85D0A66FEF9F}.Debug|x86.Build.0 = Debug|Any CPU
+		{671EC4A8-A4B6-428A-ACBD-85D0A66FEF9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{671EC4A8-A4B6-428A-ACBD-85D0A66FEF9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{671EC4A8-A4B6-428A-ACBD-85D0A66FEF9F}.Release|x64.ActiveCfg = Release|Any CPU
+		{671EC4A8-A4B6-428A-ACBD-85D0A66FEF9F}.Release|x64.Build.0 = Release|Any CPU
+		{671EC4A8-A4B6-428A-ACBD-85D0A66FEF9F}.Release|x86.ActiveCfg = Release|Any CPU
+		{671EC4A8-A4B6-428A-ACBD-85D0A66FEF9F}.Release|x86.Build.0 = Release|Any CPU
 		{D2A2D706-F821-4BAC-892F-B5F1FEAB82B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D2A2D706-F821-4BAC-892F-B5F1FEAB82B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2A2D706-F821-4BAC-892F-B5F1FEAB82B5}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -307,18 +331,6 @@ Global
 		{EF1B2EF1-6CC0-492A-AC49-83E27A7697C3}.Release|x64.Build.0 = Release|Any CPU
 		{EF1B2EF1-6CC0-492A-AC49-83E27A7697C3}.Release|x86.ActiveCfg = Release|Any CPU
 		{EF1B2EF1-6CC0-492A-AC49-83E27A7697C3}.Release|x86.Build.0 = Release|Any CPU
-		{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}.Debug|x64.Build.0 = Debug|Any CPU
-		{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}.Debug|x86.Build.0 = Debug|Any CPU
-		{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}.Release|x64.ActiveCfg = Release|Any CPU
-		{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}.Release|x64.Build.0 = Release|Any CPU
-		{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}.Release|x86.ActiveCfg = Release|Any CPU
-		{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC}.Release|x86.Build.0 = Release|Any CPU
 		{B86418EA-FEE2-42E1-B03E-CAAA43D3DBA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B86418EA-FEE2-42E1-B03E-CAAA43D3DBA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B86418EA-FEE2-42E1-B03E-CAAA43D3DBA5}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -763,18 +775,6 @@ Global
 		{70797B7C-6A7C-4955-B0A0-C5E1DEF12EAE}.Release|x64.Build.0 = Release|Any CPU
 		{70797B7C-6A7C-4955-B0A0-C5E1DEF12EAE}.Release|x86.ActiveCfg = Release|Any CPU
 		{70797B7C-6A7C-4955-B0A0-C5E1DEF12EAE}.Release|x86.Build.0 = Release|Any CPU
-		{671EC4A8-A4B6-428A-ACBD-85D0A66FEF9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{671EC4A8-A4B6-428A-ACBD-85D0A66FEF9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{671EC4A8-A4B6-428A-ACBD-85D0A66FEF9F}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{671EC4A8-A4B6-428A-ACBD-85D0A66FEF9F}.Debug|x64.Build.0 = Debug|Any CPU
-		{671EC4A8-A4B6-428A-ACBD-85D0A66FEF9F}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{671EC4A8-A4B6-428A-ACBD-85D0A66FEF9F}.Debug|x86.Build.0 = Debug|Any CPU
-		{671EC4A8-A4B6-428A-ACBD-85D0A66FEF9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{671EC4A8-A4B6-428A-ACBD-85D0A66FEF9F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{671EC4A8-A4B6-428A-ACBD-85D0A66FEF9F}.Release|x64.ActiveCfg = Release|Any CPU
-		{671EC4A8-A4B6-428A-ACBD-85D0A66FEF9F}.Release|x64.Build.0 = Release|Any CPU
-		{671EC4A8-A4B6-428A-ACBD-85D0A66FEF9F}.Release|x86.ActiveCfg = Release|Any CPU
-		{671EC4A8-A4B6-428A-ACBD-85D0A66FEF9F}.Release|x86.Build.0 = Release|Any CPU
 		{B53085B4-5AEF-4577-879E-AE806C4CCF8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B53085B4-5AEF-4577-879E-AE806C4CCF8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B53085B4-5AEF-4577-879E-AE806C4CCF8E}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -1338,18 +1338,6 @@ Global
 		{0CED38FB-1DB5-42B0-879F-334132E887FB}.Release|x64.Build.0 = Release|Any CPU
 		{0CED38FB-1DB5-42B0-879F-334132E887FB}.Release|x86.ActiveCfg = Release|Any CPU
 		{0CED38FB-1DB5-42B0-879F-334132E887FB}.Release|x86.Build.0 = Release|Any CPU
-		{8D761A9D-786F-4EA0-A6E2-C7BED56E6C16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8D761A9D-786F-4EA0-A6E2-C7BED56E6C16}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8D761A9D-786F-4EA0-A6E2-C7BED56E6C16}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{8D761A9D-786F-4EA0-A6E2-C7BED56E6C16}.Debug|x64.Build.0 = Debug|Any CPU
-		{8D761A9D-786F-4EA0-A6E2-C7BED56E6C16}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{8D761A9D-786F-4EA0-A6E2-C7BED56E6C16}.Debug|x86.Build.0 = Debug|Any CPU
-		{8D761A9D-786F-4EA0-A6E2-C7BED56E6C16}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8D761A9D-786F-4EA0-A6E2-C7BED56E6C16}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8D761A9D-786F-4EA0-A6E2-C7BED56E6C16}.Release|x64.ActiveCfg = Release|Any CPU
-		{8D761A9D-786F-4EA0-A6E2-C7BED56E6C16}.Release|x64.Build.0 = Release|Any CPU
-		{8D761A9D-786F-4EA0-A6E2-C7BED56E6C16}.Release|x86.ActiveCfg = Release|Any CPU
-		{8D761A9D-786F-4EA0-A6E2-C7BED56E6C16}.Release|x86.Build.0 = Release|Any CPU
 		{896B1964-6F0A-4A63-B4C7-61E6A5CA3511}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{896B1964-6F0A-4A63-B4C7-61E6A5CA3511}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{896B1964-6F0A-4A63-B4C7-61E6A5CA3511}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -1398,16 +1386,29 @@ Global
 		{5E8E9438-278A-48CB-B7BF-131F6E589A97}.Release|x64.Build.0 = Release|Any CPU
 		{5E8E9438-278A-48CB-B7BF-131F6E589A97}.Release|x86.ActiveCfg = Release|Any CPU
 		{5E8E9438-278A-48CB-B7BF-131F6E589A97}.Release|x86.Build.0 = Release|Any CPU
+		{ABCB37FD-5EF5-48BB-9F3D-BDD69B602AF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABCB37FD-5EF5-48BB-9F3D-BDD69B602AF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABCB37FD-5EF5-48BB-9F3D-BDD69B602AF9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{ABCB37FD-5EF5-48BB-9F3D-BDD69B602AF9}.Debug|x64.Build.0 = Debug|Any CPU
+		{ABCB37FD-5EF5-48BB-9F3D-BDD69B602AF9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{ABCB37FD-5EF5-48BB-9F3D-BDD69B602AF9}.Debug|x86.Build.0 = Debug|Any CPU
+		{ABCB37FD-5EF5-48BB-9F3D-BDD69B602AF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABCB37FD-5EF5-48BB-9F3D-BDD69B602AF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABCB37FD-5EF5-48BB-9F3D-BDD69B602AF9}.Release|x64.ActiveCfg = Release|Any CPU
+		{ABCB37FD-5EF5-48BB-9F3D-BDD69B602AF9}.Release|x64.Build.0 = Release|Any CPU
+		{ABCB37FD-5EF5-48BB-9F3D-BDD69B602AF9}.Release|x86.ActiveCfg = Release|Any CPU
+		{ABCB37FD-5EF5-48BB-9F3D-BDD69B602AF9}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC} = {78C0A4A4-AF37-4D06-8AD8-4259E464221C}
+		{671EC4A8-A4B6-428A-ACBD-85D0A66FEF9F} = {78C0A4A4-AF37-4D06-8AD8-4259E464221C}
 		{D2A2D706-F821-4BAC-892F-B5F1FEAB82B5} = {C441E12D-3F09-4E93-B490-6E77B8FB7CD5}
 		{635C5135-B567-4DE0-8CCA-76FA97C2F540} = {C441E12D-3F09-4E93-B490-6E77B8FB7CD5}
 		{B5FC5E1B-B108-43EF-80FF-99DF8C490F72} = {C441E12D-3F09-4E93-B490-6E77B8FB7CD5}
 		{EF1B2EF1-6CC0-492A-AC49-83E27A7697C3} = {C441E12D-3F09-4E93-B490-6E77B8FB7CD5}
-		{CA7219C0-C600-4ECD-A2A5-B3BEF0DE15FC} = {78C0A4A4-AF37-4D06-8AD8-4259E464221C}
 		{B86418EA-FEE2-42E1-B03E-CAAA43D3DBA5} = {861972F8-CE24-4236-AAA1-FF4AC345740E}
 		{D409507E-9055-4185-801F-4F66445183BC} = {861972F8-CE24-4236-AAA1-FF4AC345740E}
 		{2515C160-1A6A-4E8A-9853-D25A5D08BDCC} = {D54F7975-DC18-481A-824F-DF0FD37370C3}
@@ -1459,7 +1460,6 @@ Global
 		{BC0B3B29-2902-4599-863D-D433C78BA14E} = {9DBFA194-2C87-4C55-994C-AF8136169A7C}
 		{AD29FE16-E3F5-4DCB-9785-42C7FA0CFCBE} = {AF6ABB51-8C80-4AB1-9AE0-82F2C38F4092}
 		{70797B7C-6A7C-4955-B0A0-C5E1DEF12EAE} = {999ABAB7-EEAC-43C1-B4F9-8AA7A4098E60}
-		{671EC4A8-A4B6-428A-ACBD-85D0A66FEF9F} = {78C0A4A4-AF37-4D06-8AD8-4259E464221C}
 		{B53085B4-5AEF-4577-879E-AE806C4CCF8E} = {AFFFA2BF-7B96-438F-B295-C5DF03786CB4}
 		{AFFFA2BF-7B96-438F-B295-C5DF03786CB4} = {09D80029-71E3-4B4D-AA1A-CD153787AED0}
 		{7169B266-8B14-43E5-A42F-53AEFE934849} = {AFFFA2BF-7B96-438F-B295-C5DF03786CB4}
@@ -1512,11 +1512,11 @@ Global
 		{EAA5F0C8-3E6C-4CA2-B279-74FC12B54A78} = {C441E12D-3F09-4E93-B490-6E77B8FB7CD5}
 		{FF2B24EF-BBE6-4C2B-9384-CEA121F0F942} = {AF6ABB51-8C80-4AB1-9AE0-82F2C38F4092}
 		{0CED38FB-1DB5-42B0-879F-334132E887FB} = {AF6ABB51-8C80-4AB1-9AE0-82F2C38F4092}
-		{8D761A9D-786F-4EA0-A6E2-C7BED56E6C16} = {D54F7975-DC18-481A-824F-DF0FD37370C3}
 		{896B1964-6F0A-4A63-B4C7-61E6A5CA3511} = {252D518E-8483-4F75-961A-7224A4F1B32B}
 		{6AE4717F-D24A-479D-B266-DAA619F01853} = {C441E12D-3F09-4E93-B490-6E77B8FB7CD5}
 		{2270FB32-666D-4CD1-8D8F-BB89185312E6} = {C441E12D-3F09-4E93-B490-6E77B8FB7CD5}
 		{5E8E9438-278A-48CB-B7BF-131F6E589A97} = {252D518E-8483-4F75-961A-7224A4F1B32B}
+		{ABCB37FD-5EF5-48BB-9F3D-BDD69B602AF9} = {D54F7975-DC18-481A-824F-DF0FD37370C3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BD699E0F-4BC9-41A9-93D5-E89FDDA8FC17}

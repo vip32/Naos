@@ -1,8 +1,6 @@
 ﻿namespace Naos.Sample.IntegrationTests.Catalogs.Infrastructure
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using Bogus;
     using Microsoft.Extensions.DependencyInjection;

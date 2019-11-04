@@ -1,4 +1,4 @@
-﻿namespace Naos.UnitTests.RequestFiltering.App.Web
+﻿namespace Naos.UnitTests.RequestFiltering.Application.Web
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -6,7 +6,7 @@
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Primitives;
     using Naos.Foundation;
-    using Naos.RequestFiltering.App.Web;
+    using Naos.RequestFiltering.Application.Web;
     using NSubstitute;
     using Shouldly;
     using Xunit;
@@ -55,11 +55,11 @@
 
             var order1 = result.Orders.FirstOrDefault(c => c.Name.SafeEquals("FirstName"));
             order1.ShouldNotBeNull();
-            order1.Direction.ShouldBe(Naos.RequestFiltering.App.OrderDirection.Asc);
+            order1.Direction.ShouldBe(Naos.RequestFiltering.Application.OrderDirection.Asc);
 
             var order2 = result.Orders.FirstOrDefault(c => c.Name.SafeEquals("Age"));
             order2.ShouldNotBeNull();
-            order2.Direction.ShouldBe(Naos.RequestFiltering.App.OrderDirection.Desc);
+            order2.Direction.ShouldBe(Naos.RequestFiltering.Application.OrderDirection.Desc);
 
             result.Skip.ShouldBe(5);
             result.Take.ShouldBe(10);

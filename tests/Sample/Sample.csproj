@@ -26,7 +26,7 @@
 
   <ItemGroup>
     <Folder Include="Customers\Domain\Repositories\Decorators\" />
-    <Folder Include="Customers\App.Queries\" />
+    <Folder Include="Customers\Application.Queries\" />
     <Folder Include="UserAccounts\App.Commands\" />
     <Folder Include="UserAccounts\App.Queries\" />
   </ItemGroup>
@@ -53,16 +53,16 @@
     <ProjectReference Include="..\..\src\Foundation.Infrastructure.Sqlite.Documents\Infrastructure.Sqlite.Documents.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Infrastructure.Mongo\Infrastructure.Mongo.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Infrastructure.SqlServer.Documents\Infrastructure.SqlServer.Documents.csproj" />
-    <ProjectReference Include="..\..\src\App.Web\App.Web.csproj" />
-    <ProjectReference Include="..\..\src\App\App.csproj" />
-    <ProjectReference Include="..\..\src\Commands.App\Commands.App.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Mapping.AutoMapper\Mapping.AutoMapper.csproj" />
+    <ProjectReference Include="..\..\src\Application\Application.csproj" />
+    <ProjectReference Include="..\..\src\Application.Web\Application.Web.csproj" />
+    <ProjectReference Include="..\..\src\Commands.Application\Commands.Application.csproj" />
     <ProjectReference Include="..\..\src\Queueing.Infrastructure.Azure\Queueing.Infrastructure.Azure.csproj" />
-    <ProjectReference Include="..\..\src\ServiceContext.App\ServiceContext.App.csproj" />
+    <ProjectReference Include="..\..\src\ServiceContext.Application\ServiceContext.Application.csproj" />
+    <ProjectReference Include="..\..\src\ServiceDiscovery.Application\ServiceDiscovery.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ServiceDiscovery.App\ServiceDiscovery.App.csproj" />
     <ProjectReference Include="..\..\src\Tracing.Domain\Tracing.Domain.csproj" />
   </ItemGroup>
 

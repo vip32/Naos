@@ -1,7 +1,6 @@
 ﻿namespace Naos.Operations.Infrastructure.Mongo
 {
     using AutoMapper;
-    using Naos.Foundation;
     using Naos.Operations.Domain;
 
     public static class MapperFactory

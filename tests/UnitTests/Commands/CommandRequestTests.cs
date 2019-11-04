@@ -2,7 +2,7 @@
 {
     using System.Threading.Tasks;
     using MediatR;
-    using Naos.Commands.App;
+    using Naos.Commands.Application;
     using Naos.Foundation;
     using NSubstitute;
     using Shouldly;

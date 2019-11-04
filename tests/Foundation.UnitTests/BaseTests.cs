@@ -3,7 +3,7 @@
     using System;
     using System.Diagnostics;
     using Microsoft.Extensions.Configuration;
-    using Naos.Configuration.App;
+    using Naos.Configuration.Application;
     using Naos.Foundation;
     using Xunit.Abstractions;
 

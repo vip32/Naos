@@ -23,11 +23,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Configuration.Application\Configuration.Application.csproj" />
     <ProjectReference Include="..\Foundation.Domain.Repositories\Domain.Repositories.csproj" />
     <ProjectReference Include="..\Foundation.Infrastructure.Azure.LogAnalytics\Infrastructure.Azure.LogAnalytics.csproj" />
     <ProjectReference Include="..\Foundation.Infrastructure.Azure\Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\Foundation.Domain.Repositories\Domain.Repositories.csproj" />
-    <ProjectReference Include="..\Configuration.App\Configuration.App.csproj" />
     <ProjectReference Include="..\Operations.Abstractions\Operations.Abstractions.csproj" />
     <ProjectReference Include="..\Operations.Domain\Operations.Domain.csproj" />
     <ProjectReference Include="..\Tracing.Infrastructure.Azure\Tracing.Infrastructure.Azure.csproj" />

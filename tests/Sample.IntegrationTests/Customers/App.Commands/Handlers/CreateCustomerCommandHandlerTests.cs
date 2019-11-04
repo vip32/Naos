@@ -5,7 +5,7 @@
     using MediatR;
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Foundation;
-    using Naos.Sample.Customers.App;
+    using Naos.Sample.Customers.Application;
     using Naos.Sample.Customers.Domain;
     using Shouldly;
     using Xunit;

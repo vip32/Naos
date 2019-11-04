@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp3.0;netstandard2.0</TargetFrameworks>
+    <AssemblyName>Naos.Commands.Application.Web</AssemblyName>
+    <RootNamespace>Naos.Commands.Application.Web</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="7.0.0" />
+    <PackageReference Include="Humanizer.Core" Version="2.7.9" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="NJsonSchema" Version="10.0.27" />
+    <PackageReference Include="NSwag.Annotations" Version="13.1.3" />
+    <PackageReference Include="NSwag.Generation" Version="13.1.3" />
+    <PackageReference Include="Scrutor" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.0.0" />
+    <PackageReference Include="System.Text.Json" Version="4.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Commands.Application\Commands.Application.csproj" />
+    <ProjectReference Include="..\Foundation.Application.Web\Application.Web.csproj" />
+    <ProjectReference Include="..\Foundation.ContentTypes\ContentTypes.csproj" />
+    <ProjectReference Include="..\Foundation.Application.Web.Startup\Application.Web.Startup.csproj" />
+    <ProjectReference Include="..\Foundation.Utilities.Web\Utilities.Web.csproj" />
+    <ProjectReference Include="..\Queueing.Infrastructure.Azure\Queueing.Infrastructure.Azure.csproj" />
+    <ProjectReference Include="..\Commands.Domain\Commands.Domain.csproj" />
+    <ProjectReference Include="..\Configuration.Application.Web\Configuration.Application.Web.csproj" />
+    <ProjectReference Include="..\Configuration.Application\Configuration.Application.csproj" />
+    <ProjectReference Include="..\FileStorage.Infrastructure.Azure\FileStorage.Infrastructure.Azure.csproj" />
+    <ProjectReference Include="..\FileStorage.Infrastructure.FileSystem\FileStorage.Infrastructure.FileSystem.csproj" />
+    <ProjectReference Include="..\FileStorage\FileStorage.csproj" />
+    <ProjectReference Include="..\Queueing\Queueing.csproj" />
+    <ProjectReference Include="..\Tracing.Domain\Tracing.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

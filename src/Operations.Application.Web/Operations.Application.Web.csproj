@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp3.0;netstandard2.0</TargetFrameworks>
+    <AssemblyName>Naos.Operations.Application.Web</AssemblyName>
+    <RootNamespace>Naos.Operations.Application.Web</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Humanizer.Core" Version="2.7.9" />
+    <PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DiagnosticAdapter" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="3.0.0" />
+    <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="1.3.0" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Configuration.Application.Web\Configuration.Application.Web.csproj" />
+    <ProjectReference Include="..\Foundation.Application.Web\Application.Web.csproj" />
+    <ProjectReference Include="..\Foundation.Infrastructure.Azure\Infrastructure.Azure.csproj" />
+    <ProjectReference Include="..\FileStorage.Infrastructure.Azure\FileStorage.Infrastructure.Azure.csproj" />
+    <ProjectReference Include="..\FileStorage.Infrastructure.FileSystem\FileStorage.Infrastructure.FileSystem.csproj" />
+    <ProjectReference Include="..\FileStorage\FileStorage.csproj" />
+    <ProjectReference Include="..\Filtering.Application\RequestFiltering.Application.csproj" />
+    <ProjectReference Include="..\Foundation.Utilities.Web\Utilities.Web.csproj" />
+    <ProjectReference Include="..\Foundation.Utilities\Utilities.csproj" />
+    <ProjectReference Include="..\Operations.Application\Operations.Application.csproj" />
+    <ProjectReference Include="..\Operations.Domain\Operations.Domain.csproj" />
+    <ProjectReference Include="..\Tracing.Domain\Tracing.Domain.csproj" />
+  </ItemGroup>
+</Project>

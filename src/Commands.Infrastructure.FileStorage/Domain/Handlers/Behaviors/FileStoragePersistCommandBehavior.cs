@@ -2,7 +2,7 @@
 {
     using System.Threading.Tasks;
     using EnsureThat;
-    using Naos.Commands.App;
+    using Naos.Commands.Application;
     using Naos.FileStorage.Domain;
     using Naos.Foundation;
 
