@@ -15,6 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{FCBA001C-2
 		azure-pipelines.yml = azure-pipelines.yml
 		docs\Containerized Workflow.png = docs\Containerized Workflow.png
 		Directory.Build.props = Directory.Build.props
+		gitversion.yml = gitversion.yml
 		docs\Naos - Service Communication Overview.vsdx = docs\Naos - Service Communication Overview.vsdx
 		README.md = README.md
 		SAMPLE.md = SAMPLE.md
