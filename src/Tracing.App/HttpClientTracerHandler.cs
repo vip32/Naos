@@ -1,4 +1,4 @@
-﻿namespace Naos.Foundation.Application
+﻿namespace Naos.Tracing.App
 {
     using System.Net.Http;
     using System.Threading;
@@ -6,6 +6,7 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
+    using Naos.Foundation;
     using Naos.Tracing.Domain;
 
     public class HttpClientTracerHandler : DelegatingHandler
@@ -48,7 +49,7 @@
                 {
                     if (scope?.Span != null)
                     {
-                        this.logger.LogDebug($"{{LogKey:l}} [{request.GetRequestId()}] http added tracing headers", LogKeys.OutboundRequest);
+                        //this.logger.LogDebug($"{{LogKey:l}} [{request.GetRequestId()}] http added tracing headers", LogKeys.OutboundRequest);
 
                         // propagate the span infos as headers
                         request.Headers.Add("x-traceid", scope.Span.TraceId);

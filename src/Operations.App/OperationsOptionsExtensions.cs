@@ -13,7 +13,6 @@
     using Naos.Foundation.Application;
     using Naos.Operations;
     using Naos.Operations.App;
-    using Naos.Tracing.Domain;
 
     [ExcludeFromCodeCoverage]
     public static class OperationsOptionsExtensions
@@ -46,7 +45,6 @@
             options.Context.Services.AddSingleton(typeof(Logging.ILogger), typeof(LoggingAdapter));
 
             options.Context.Services.AddScoped<HttpClientLogHandler>();
-            options.Context.Services.AddScoped<HttpClientTracerHandler>();
             options.Context.Services.Replace(ServiceDescriptor.Singleton<IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>()); // scoped?
 
             return options;

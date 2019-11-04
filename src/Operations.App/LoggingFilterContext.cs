@@ -10,6 +10,14 @@
 
     public static class LoggingFilterContext
     {
+        public static FilterContext Prepare()
+        {
+            var filterContext = new FilterContext();
+            Prepare(filterContext);
+
+            return filterContext;
+        }
+
         public static void Prepare(FilterContext context)
         {
             // environment (default: current environment)

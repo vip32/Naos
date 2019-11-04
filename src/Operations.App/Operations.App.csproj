@@ -23,12 +23,13 @@
  </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Foundation.Console\Console.csproj" />
     <ProjectReference Include="..\Foundation.Application.Web\Application.Web.csproj" />
     <ProjectReference Include="..\Configuration.App\Configuration.App.csproj" />
     <ProjectReference Include="..\Filtering.App\RequestFiltering.App.csproj" />
+    <ProjectReference Include="..\Foundation.Console\Console.csproj" />
     <ProjectReference Include="..\Operations.Abstractions\Operations.Abstractions.csproj" />
     <ProjectReference Include="..\Operations.Domain\Operations.Domain.csproj" />
+    <ProjectReference Include="..\Tracing.Domain\Tracing.Domain.csproj" />
   </ItemGroup>
 
 </Project>

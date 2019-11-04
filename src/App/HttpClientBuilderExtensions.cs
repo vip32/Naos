@@ -7,6 +7,7 @@
     using Naos.Foundation.Application;
     using Naos.RequestCorrelation.App.Web;
     using Naos.ServiceContext.App.Web;
+    using Naos.Tracing.App;
     using Polly;
     using Polly.Extensions.Http;
 

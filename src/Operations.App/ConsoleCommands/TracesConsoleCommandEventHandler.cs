@@ -7,7 +7,6 @@
     using Naos.Foundation;
     using Naos.Foundation.Domain;
     using Naos.Operations.App;
-    using Naos.RequestFiltering.App;
     using Naos.Tracing.Domain;
 
     public class TracesConsoleCommandEventHandler : ConsoleCommandEventHandler<TracesConsoleCommand>
@@ -25,8 +24,7 @@
         {
             if (request.Command.Recent)
             {
-                var filterContext = new FilterContext();
-                LoggingFilterContext.Prepare(filterContext); // add some default criteria
+                var filterContext = LoggingFilterContext.Prepare(); // add some default criteria
 
                 var entities = await this.repository.FindAllAsync(
                     filterContext.GetSpecifications<LogTrace>().Insert(new Specification<LogTrace>(t => t.TrackType == "trace")),

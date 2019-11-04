@@ -27,7 +27,9 @@
                     sp.GetService<ISampler>());
             });
 
-            if(optionsAction == null)
+            options.Context.Services.AddScoped<HttpClientTracerHandler>();
+
+            if (optionsAction == null)
             {
                 options.Context.Services.AddSingleton<ISampler, ConstantSampler>();
             }
