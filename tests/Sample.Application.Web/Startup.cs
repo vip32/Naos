@@ -76,7 +76,7 @@ namespace Naos.Sample.Application.Web
                     c.OperationProcessors.Add(new ApiVersionProcessor());
                     c.PostProcess = document =>
                     {
-                        var descriptor = sp.GetService<Naos.Foundation.ServiceDescriptor>();
+                        var descriptor = sp.GetService<Foundation.ServiceDescriptor>();
                         document.Info.Version = descriptor?.Version.EmptyToNull() ?? "v1";
                         document.Info.Title = descriptor?.Name.EmptyToNull() ?? "Naos";
                         document.Info.Description = descriptor?.Tags.ToString(", ").EmptyToNull() ?? "Naos";
@@ -107,11 +107,11 @@ namespace Naos.Sample.Application.Web
                     .AddNaos(o =>
                     {
                         // Countries repository is exposed with a dedicated controller, no need to register here
-                        o.AddGenericRepositoryController<Naos.Sample.Customers.Domain.Customer, Naos.Sample.Customers.Domain.ICustomerRepository>();
-                        o.AddGenericRepositoryController<Naos.Sample.Inventory.Domain.ProductInventory, Naos.Sample.Inventory.Domain.IInventoryRepository>();
-                        o.AddGenericRepositoryController<Naos.Sample.Inventory.Domain.ProductReplenishment, Naos.Sample.Inventory.Domain.IReplenishmentRepository>();
-                        o.AddGenericRepositoryController<Naos.Sample.UserAccounts.Domain.UserAccount>(); // =implicit IRepository<UserAccount>
-                        o.AddGenericRepositoryController<Naos.Sample.UserAccounts.Domain.UserVisit>(); // =implicit IRepository<UserVisit>
+                        o.AddGenericRepositoryController<Customers.Domain.Customer, Customers.Domain.ICustomerRepository>();
+                        o.AddGenericRepositoryController<Inventory.Domain.ProductInventory, Inventory.Domain.IInventoryRepository>();
+                        o.AddGenericRepositoryController<Inventory.Domain.ProductReplenishment, Inventory.Domain.IReplenishmentRepository>();
+                        o.AddGenericRepositoryController<UserAccounts.Domain.UserAccount>(); // =implicit IRepository<UserAccount>
+                        o.AddGenericRepositoryController<UserAccounts.Domain.UserVisit>(); // =implicit IRepository<UserVisit>
                     });
 
             services
@@ -137,14 +137,14 @@ namespace Naos.Sample.Application.Web
                                 .Folder(Path.Combine(Path.GetTempPath(), "naos_commands", "journal")))))
                         .AddRequests(o => o
                             .Post<CreateCustomerCommand>("api/commands/customers/create", HttpStatusCode.Created, "Customers", onSuccess: (cmd, ctx) => ctx.Response.Location($"api/customers/{cmd.Customer.Id}"))
-                            .Get<GetActiveCustomersQuery, IEnumerable<Naos.Sample.Customers.Domain.Customer>>("api/commands/customers/active", groupName: "Customers")
+                            .Get<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>("api/commands/customers/active", groupName: "Customers")
                             //.UseInMemoryQueue()
                             .UseAzureStorageQueue()
                             //.UseInMemoryStorage()
                             //.UseFolderStorage()
                             .UseAzureBlobStorage()
                             .GetQueued<PingCommand>("api/commands/queue/ping")
-                            .GetQueued<GetActiveCustomersQuery, IEnumerable<Naos.Sample.Customers.Domain.Customer>>("api/commands/queue/customers/active", groupName: "Customers")))
+                            .GetQueued<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>("api/commands/queue/customers/active", groupName: "Customers")))
                     .AddOperations(o => o
                         .AddInteractiveConsole()
                         .AddLogging(o => o
