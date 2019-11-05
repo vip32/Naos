@@ -1,7 +1,11 @@
+mode: Mainline
+next-version: 1.0.0
 branches:
   master:
     regex: master
-    mode: Mainline
     tag: ''
+  develop:
+    regex: develop
+    tag: alpha
 ignore:
   sha: []
