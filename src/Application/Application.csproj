@@ -13,12 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Foundation.Extensions\Extensions.csproj" />
     <ProjectReference Include="..\Commands.Application\Commands.Application.csproj" />
     <ProjectReference Include="..\Configuration.Application\Configuration.Application.csproj" />
     <ProjectReference Include="..\Correlation.Application\RequestCorrelation.Application.csproj" />
     <ProjectReference Include="..\Filtering.Application\RequestFiltering.Application.csproj" />
-    <ProjectReference Include="..\Foundation.Application.Web\Application.Web.csproj" />
-    <ProjectReference Include="..\Foundation.Extensions\Extensions.csproj" />
     <ProjectReference Include="..\JobScheduling.Application\JobScheduling.Application.csproj" />
     <ProjectReference Include="..\Messaging.Application.Azure.SignalR\Messaging.Application.Azure.SignalR.csproj" />
     <ProjectReference Include="..\Messaging.Application.Azure\Messaging.Application.Azure.csproj" />
