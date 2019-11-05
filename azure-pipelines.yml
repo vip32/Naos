@@ -35,7 +35,7 @@ stages:
     pool:
       vmImage: $(vmImage)
     steps:
-    - task: gittools.gitversion.gitversion-task.GitVersion@4 # alternative https://github.com/adamralph/minver
+    - task: GitVersion@4 # alternative https://github.com/adamralph/minver
       displayName: Apply git version
       inputs:
         preferBundledVersion: false
