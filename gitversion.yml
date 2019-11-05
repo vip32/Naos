@@ -1,11 +1,5 @@
 mode: Mainline
-next-version: 1.0.0
-branches:
-  master:
-    regex: master
-    tag: ''
-  develop:
-    regex: develop
-    tag: alpha
+branches: {}
 ignore:
   sha: []
+merge-message-formats: {}
