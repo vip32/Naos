@@ -35,8 +35,10 @@ stages:
     pool:
       vmImage: $(vmImage)
     steps:
-    - task: GitVersion@5 # alternative https://github.com/adamralph/minver
+    - task: gittools.gitversion.gitversion-task.GitVersion@5 # alternative https://github.com/adamralph/minver
       displayName: Apply git version
+      inputs:
+        preferBundledVersion: false
 
     - task: DotNetCoreInstaller@2
       displayName: Install dotnet SDK
