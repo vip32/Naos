@@ -1,4 +1,4 @@
-﻿namespace Naos.ServiceDiscovery.Application.Web.Controllers
+﻿namespace Naos.ServiceDiscovery.Application.Web
 {
     using System.Collections.Generic;
     using System.Net;

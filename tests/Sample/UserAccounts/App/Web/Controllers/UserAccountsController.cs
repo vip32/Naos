@@ -1,6 +1,6 @@
 ﻿//namespace Naos.Sample.UserAccounts.Application.Web
 //{
-//    using Naos.App.Web.Controllers;
+//    using Naos.App.Web;
 //    using Naos.Sample.UserAccounts.Domain;
 
 //    public class UserAccountsController : NaosRepositoryControllerBase<UserAccount, IUserAccountRepository>

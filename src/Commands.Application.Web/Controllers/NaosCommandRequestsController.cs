@@ -1,4 +1,4 @@
-﻿namespace Naos.Commands.Application.Web.Controllers
+﻿namespace Naos.Commands.Application.Web
 {
     using System.IO;
     using System.Net;
