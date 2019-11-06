@@ -13,7 +13,7 @@
                 //c.AddExpressionMapping();
                 //c.IgnoreUnmapped();
                 //c.AllowNullCollections = true;
-                c.CreateMap<ProductReplenishment, DtoProductReplenishment>()
+                c.CreateMap<ProductReplenishment, ProductReplenishmentDocument>()
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
                     .ForMember(d => d.IdentifierHash, o => o.MapFrom(s => s.IdentifierHash))
                     .ForMember(d => d.ProductNumber, o => o.MapFrom(s => s.Number))
@@ -26,7 +26,7 @@
                     .ForMember(d => d.AtLocation, o => o.MapFrom(s => s.ArrivedAtLocation))
                     .ForMember(d => d.State, o => o.Ignore());
 
-                c.CreateMap<DtoProductReplenishment, ProductReplenishment>()
+                c.CreateMap<ProductReplenishmentDocument, ProductReplenishment>()
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
                     .ForMember(d => d.IdentifierHash, o => o.MapFrom(s => s.IdentifierHash))
                     .ForMember(d => d.Number, o => o.MapFrom(s => s.ProductNumber))

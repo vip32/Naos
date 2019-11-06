@@ -14,7 +14,7 @@
 
     public class MongoRepository<TEntity, TDestination> : IGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
-        where TDestination : class, IMongoEntity
+        where TDestination : class, IMongoDocument
     {
         private readonly bool hasBsonId;
 
