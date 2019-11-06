@@ -115,6 +115,8 @@
             }
 
             var messageName = message.GetType().PrettyName();
+            var routingKey = this.GetRoutingKey(messageName);
+
             using (var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Producer).Activate(this.logger))
             using (this.logger.BeginScope(new Dictionary<string, object>
             {
@@ -184,7 +186,7 @@
 
                         channel.BasicPublish(
                             exchange: this.options.ExchangeName,
-                            routingKey: messageName,
+                            routingKey: routingKey,
                             mandatory: true,
                             basicProperties: properties,
                             body: rabbitMQMessage);
