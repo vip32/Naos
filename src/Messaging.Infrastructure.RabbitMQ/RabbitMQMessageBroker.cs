@@ -34,20 +34,20 @@
         /// - multiple bindings with same key names (exchange fan out)
         /// - unique queue names with single subscriber (no round robing happnes)
         ///
-        ///                              .-----------.         .------------.
-        ///                     .------->| Queue 1   |-------->| Consumer 1 |
-        ///             key=msg/name     |           |         |            |
-        ///                   /          |           |         |            |
-        ///    .-----------. /           "-----------"         "------------"
-        ///    | Exchange  |/             name=descr+key
-        ///    |           |
-        ///    |           |\
-        ///    "-----------" \           .-----------.         .------------.
-        ///            key=msg\name      | Queue 2   |-------->| Consumer 2 |
-        ///                    "-------->|           |         |            |
-        ///                              |           |         |            |
-        ///                              "-----------"         "------------"
-        ///                               name=descr+key
+        ///                                       .-----------.         .------------.
+        ///                              .------->| Queue 1   |-------->| Consumer 1 |
+        ///                  bindkey=msg/name     |           |         |            |
+        ///                            /          |           |         |            |
+        ///             .-----------. /           "-----------"         "------------"
+        /// .---.       | Exchange  |/             name=descriptor+msg name
+        /// |msg|---->  |           |
+        /// "---"       |           |\
+        ///  routkey=   "-----------" \           .-----------.         .------------.
+        ///   msg name      bindkey=msg\name      | Queue 2   |-------->| Consumer 2 |
+        ///                             "-------->|           |         |            |
+        ///                                       |           |         |            |
+        ///                                       "-----------"         "------------"
+        ///                                        name=descriptor+msg name
         ///
         /// </para>
         /// </summary>
