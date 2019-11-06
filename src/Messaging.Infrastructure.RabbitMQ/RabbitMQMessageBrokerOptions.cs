@@ -1,4 +1,4 @@
-﻿namespace Naos.Messaging.Infrastructure.RabbitMQ
+namespace Naos.Messaging.Infrastructure.RabbitMQ
 {
     using MediatR;
     using Naos.Foundation;
@@ -15,7 +15,7 @@
 
         public IMessageHandlerFactory HandlerFactory { get; set; }
 
-        public string QueueName { get; set; } //= queue [DESCRIPTOR+MESSAGENAME]
+        public string QueueName { get; set; } //= queue (=ServiceDescriptor)
 
         public ISubscriptionMap Subscriptions { get; set; } = new SubscriptionMap();
 
