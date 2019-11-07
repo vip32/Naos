@@ -25,7 +25,7 @@ namespace Naos.Messaging.Infrastructure.RabbitMQ
 
         public IRabbitMQProvider Provider { get; set; }
 
-        public string ExchangeName { get; set; } = "naos_exchange";
+        public string ExchangeName { get; set; } = "naos_messaging";
 
         public string Host { get; set; }
 
