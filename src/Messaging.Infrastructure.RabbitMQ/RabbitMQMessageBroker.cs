@@ -30,14 +30,14 @@
         ///
         /// Direct exchange behaving as fanout (pub/sub): https://www.rabbitmq.com/tutorials/tutorial-four-dotnet.html
         /// Multiple bindings:
-        /// - single exchange
-        /// - multiple bindings with same key names (exchange fan out)
-        /// - unique queue names with single subscriber (no round robing happnes)
+        /// - single exchange (naos_messaging)
+        /// - multiple bindings with different binding keys, per msg name (exchange fan out)
+        /// - service bound queues (descriptor) with single subscriber (no round robing)
         ///
         ///                                       .-----------.         .------------.
         ///                              .------->| Queue 1   |-------->| Consumer 1 |
         ///                  bindkey=msg/name     |           |         |            |
-        ///                            /  .------>|           |         |            |
+        ///                            /  .------>|           |         |            | single consumer
         ///             .-----------. /  /        "-----------"         "------------"
         /// .---.       | Exchange  |/  /           name=svc descriptor
         /// |msg|---->  |           |--" 
@@ -45,10 +45,11 @@
         ///  routkey=   "-----------" \           .-----------.         .------------.
         ///   msg name      bindkey=msg\name      | Queue 2   |-------->| Consumer 2 |
         ///                             "-------->|           |         |            |
-        ///                                       |           |         |            |
-        ///                                       "-----------"         "------------"
-        ///                                        name=svc descriptor
-        ///
+        ///                                       |           |         |            |--. 
+        ///                                       "-----------"         "------------"  |
+        ///                                        name=svc descriptor     | Consumer 3 | multiple consumers
+        ///                                                                |            | =round-robin
+        ///                                                                "------------"
         /// </para>
         /// </summary>
         /// <param name="options"></param>
