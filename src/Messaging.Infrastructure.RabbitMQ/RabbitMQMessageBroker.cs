@@ -40,12 +40,12 @@
         ///                            /  .------>|           |         |            | single consumer
         ///             .-----------. /  /        "-----------"         "------------"
         /// .---.       | Exchange  |/  /           name=svc descriptor
-        /// |msg|---->  |           |--" 
+        /// |msg|---->  |           |--"
         /// "---"       |           |\
         ///  routkey=   "-----------" \           .-----------.         .------------.
         ///   msg name      bindkey=msg\name      | Queue 2   |-------->| Consumer 2 |
         ///                             "-------->|           |         |            |
-        ///                                       |           |         |            |--. 
+        ///                                       |           |         |            |--.
         ///                                       "-----------"         "------------"  |
         ///                                        name=svc descriptor     | Consumer 3 | multiple consumers
         ///                                                                |            | =round-robin
