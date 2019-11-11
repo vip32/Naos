@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{09D80029-71E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D54F7975-DC18-481A-824F-DF0FD37370C3}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{FCBA001C-2530-41E7-B122-66E996367F10}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "global", "global", "{FCBA001C-2530-41E7-B122-66E996367F10}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		docs\ascii.md = docs\ascii.md
