@@ -27,8 +27,6 @@ namespace Naos.Messaging.Infrastructure.RabbitMQ
 
         public string ExchangeName { get; set; } = "naos_messaging";
 
-        public string Host { get; set; }
-
         public int RetryCount { get; set; } = 3;
     }
 }

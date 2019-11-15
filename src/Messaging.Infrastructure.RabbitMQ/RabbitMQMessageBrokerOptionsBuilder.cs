@@ -35,10 +35,13 @@
 
         public RabbitMQMessageBrokerOptionsBuilder QueueName(string name)
         {
-            this.Target.QueueName = name;
-            if (this.Target.MessageScope.IsNullOrEmpty())
+            if (!name.IsNullOrEmpty())
             {
-                this.Target.MessageScope = name;
+                this.Target.QueueName = name;
+                if (this.Target.MessageScope.IsNullOrEmpty())
+                {
+                    this.Target.MessageScope = name;
+                }
             }
 
             return this;
@@ -70,13 +73,11 @@
 
         public RabbitMQMessageBrokerOptionsBuilder ExchangeName(string value)
         {
-            this.Target.ExchangeName = value;
-            return this;
-        }
+            if (!value.IsNullOrEmpty())
+            {
+                this.Target.ExchangeName = value;
+            }
 
-        public RabbitMQMessageBrokerOptionsBuilder Host(string host)
-        {
-            this.Target.Host = host;
             return this;
         }
 

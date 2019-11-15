@@ -7,6 +7,7 @@
     using EnsureThat;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
+    using Naos.Foundation;
     using Naos.Messaging;
     using Naos.Messaging.Application;
     using Naos.Messaging.Domain;
@@ -19,14 +20,15 @@
         public static MessagingOptions UseRabbitMQBroker(
             this MessagingOptions options,
             Action<IMessageBroker> brokerAction = null,
-            string subscriptionName = null,
+            string exchangeName = null,
+            string queueName = null,
             string section = "naos:messaging:rabbitMQ",
             IEnumerable<Assembly> assemblies = null)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            subscriptionName ??= options.Context.Descriptor.Name;
+            queueName ??= options.Context.Descriptor.Name;
             var rabbitMQConfiguration = options.Context.Configuration.GetSection(section).Get<RabbitMQConfiguration>() ?? new RabbitMQConfiguration();
 
             options.Context.Services.AddSingleton<IMessageBroker>(sp =>
@@ -35,7 +37,8 @@
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                     .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
                     //.MessageScope(options.Context.Descriptor.Name)
-                    .QueueName(subscriptionName)
+                    .ExchangeName(exchangeName)
+                    .QueueName(queueName)
                     .Provider(sp.GetRequiredService<IRabbitMQProvider>()));
 
                 brokerAction?.Invoke(broker);
@@ -46,11 +49,10 @@
             {
                 var factory = new ConnectionFactory()
                 {
-                    // management http://localhost:15672
                     Port = rabbitMQConfiguration.Port == 0 ? 5672 : rabbitMQConfiguration.Port,
-                    HostName = rabbitMQConfiguration.Host,
-                    UserName = rabbitMQConfiguration.UserName,
-                    Password = rabbitMQConfiguration.Password,
+                    HostName = rabbitMQConfiguration.Host.IsNullOrEmpty() ? "localhost" : rabbitMQConfiguration.Host, // or 'rabbitmq' in docker-compose env
+                    UserName = rabbitMQConfiguration.UserName.IsNullOrEmpty() ? "guest" : rabbitMQConfiguration.UserName,
+                    Password = rabbitMQConfiguration.Password.IsNullOrEmpty() ? "guest" : rabbitMQConfiguration.Password,
                     DispatchConsumersAsync = true
                 };
 

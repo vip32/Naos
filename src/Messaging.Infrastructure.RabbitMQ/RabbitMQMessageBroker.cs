@@ -101,7 +101,7 @@
                 }
 
                 this.options.Subscriptions.Add<TMessage, THandler>();
-                //this.StartBasicConsume(this.options.SubscriptionName);
+                //this.StartBasicConsume(this.options.QueueName);
             }
 
             return this;
@@ -238,7 +238,7 @@
                 ruleName += $"-{this.options.FilterScope}";
             }
 
-            return ruleName.Replace("<", "_").Replace(">", "_");
+            return ruleName; //.Replace("<", "_").Replace(">", "_");
         }
 
         private IModel CreateConsumerChannel(string queueName)
