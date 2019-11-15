@@ -5,6 +5,7 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Reflection;
     using EnsureThat;
+    using MediatR;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
@@ -12,6 +13,7 @@
     using Naos.Messaging.Application;
     using Naos.Messaging.Domain;
     using Naos.Messaging.Infrastructure.RabbitMQ;
+    using Naos.Tracing.Domain;
     using RabbitMQ.Client;
 
     [ExcludeFromCodeCoverage]
@@ -35,6 +37,8 @@
             {
                 var broker = new RabbitMQMessageBroker(o => o
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
+                    .Tracer(sp.GetService<ITracer>())
+                    .Mediator(sp.GetService<IMediator>())
                     .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
                     //.MessageScope(options.Context.Descriptor.Name)
                     .ExchangeName(exchangeName)

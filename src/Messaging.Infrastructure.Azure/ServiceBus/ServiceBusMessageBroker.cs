@@ -92,11 +92,11 @@
             }
 
             var messageName = message.GetType().PrettyName();
-            using (var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Producer).Activate(this.logger))
             using (this.logger.BeginScope(new Dictionary<string, object>
             {
                 [LogPropertyKeys.CorrelationId] = message.CorrelationId
             }))
+            using (var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Producer).Activate(this.logger))
             {
                 if (message.Id.IsNullOrEmpty())
                 {
@@ -227,12 +227,12 @@
                         parentSpan = new Span(serviceBusMessage.UserProperties["TraceId"] as string, serviceBusMessage.UserProperties["SpanId"] as string);
                     }
 
-                    using (var scope = tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Consumer, parentSpan).Activate(logger))
                     using (logger.BeginScope(new Dictionary<string, object>
                     {
                         [LogPropertyKeys.CorrelationId] = serviceBusMessage.CorrelationId,
                         //[LogPropertyKeys.TrackId] = scope.Span.SpanId = allready done in Span ScopeManager (activate)
                     }))
+                    using (var scope = tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Consumer, parentSpan).Activate(logger))
                     {
                         // map some message properties to the typed message
                         //var jsonMessage = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(serviceBusMessage.Body), messageType); // TODO: use ISerializer here, compacter messages

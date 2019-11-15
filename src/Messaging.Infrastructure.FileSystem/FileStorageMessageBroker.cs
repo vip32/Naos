@@ -47,11 +47,11 @@
             }
 
             var messageName = /*message.Name*/ message.GetType().PrettyName(false);
-            using (var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Producer).Activate(this.logger))
             using (this.logger.BeginScope(new Dictionary<string, object>
             {
                 [LogPropertyKeys.CorrelationId] = message.CorrelationId,
             }))
+            using (var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Producer).Activate(this.logger))
             {
                 if (message.Id.IsNullOrEmpty())
                 {
@@ -175,12 +175,12 @@
                         parentSpan = new Span(message.Properties["TraceId"] as string, message.Properties["SpanId"] as string);
                     }
 
-                    using (var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Consumer, parentSpan).Activate(this.logger))
                     using (this.logger.BeginScope(new Dictionary<string, object>
                     {
                         [LogPropertyKeys.CorrelationId] = message.CorrelationId,
                         //[LogPropertyKeys.TrackId] = scope.Span.SpanId = allready done in Span ScopeManager (activate)
                     }))
+                    using (var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Consumer, parentSpan).Activate(this.logger))
                     {
                         this.logger.LogJournal(LogKeys.Messaging, "process (name={MessageName}, id={MessageId}, service={Service}, origin={MessageOrigin})", LogPropertyKeys.TrackReceiveMessage, args: new[] { messageType.PrettyName(), message?.Id, this.options.MessageScope, message.Origin });
                         this.logger.LogTrace(LogKeys.Messaging, message?.Id, message.GetType().PrettyName(), LogTraceNames.Message);
