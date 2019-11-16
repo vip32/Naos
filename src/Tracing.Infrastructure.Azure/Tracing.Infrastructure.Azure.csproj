@@ -21,4 +21,8 @@
     <ProjectReference Include="..\Foundation.Domain.Repositories\Domain.Repositories.csproj" />
     <ProjectReference Include="..\Tracing.Domain\Tracing.Domain.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="LogAnalytics\" />
+  </ItemGroup>
 </Project>
