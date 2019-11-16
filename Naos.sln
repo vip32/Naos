@@ -252,7 +252,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Application.Web", "t
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Application.Web2", "tests\Sample.Application.Web2\Sample.Application.Web2.csproj", "{C9E6CC1D-BE60-4C94-91A6-F2BA6ABBFD99}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tracing.Infrastructure.Jaeger", "src\Tracing.Infrastructure.Jaeger\Tracing.Infrastructure.Jaeger.csproj", "{0F664563-4132-4691-A3F1-0B8CE26989EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tracing.Infrastructure.Zipkin", "src\Tracing.Infrastructure.Zipkin\Tracing.Infrastructure.Zipkin.csproj", "{0F664563-4132-4691-A3F1-0B8CE26989EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

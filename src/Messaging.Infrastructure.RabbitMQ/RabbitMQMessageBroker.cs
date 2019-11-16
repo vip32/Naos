@@ -131,12 +131,6 @@
                     this.logger.LogDebug($"{{LogKey:l}} set message (id={message.Id})", LogKeys.Messaging);
                 }
 
-                if (message.CorrelationId.IsNullOrEmpty())
-                {
-                    message.CorrelationId = IdGenerator.Instance.Next;
-                    this.logger.LogDebug($"{{LogKey:l}} set message (correlationId={message.CorrelationId})", LogKeys.Messaging);
-                }
-
                 if (message.Origin.IsNullOrEmpty())
                 {
                     message.Origin = this.options.MessageScope;

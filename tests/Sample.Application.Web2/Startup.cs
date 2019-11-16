@@ -23,6 +23,7 @@ namespace Naos.Sample.Application.Web
     using Naos.Sample.Catalogs.Application;
     using Naos.Sample.Customers.Application;
     using Naos.Tracing.Domain;
+    using Naos.Tracing.Infrastructure.Zipkin;
     using NSwag.Generation.Processors;
 
     public class Startup
@@ -158,7 +159,8 @@ namespace Naos.Sample.Application.Web
                         .AddRequestStorage(o => o
                             .UseAzureBlobStorage())
                         .AddTracing(o => o
-                            .UseSampler<ConstantSampler>()))
+                            .UseSampler<ConstantSampler>()
+                            .UseExporter<ZipkinSpanExporter>()))
                     //.UseSampler(new OperationNamePatternSampler(new[] { "http*" }))))
                     //.AddQueries()
                     //.AddSwaggerDocument() // s.Description = Product.Capability\
