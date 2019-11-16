@@ -165,7 +165,7 @@ namespace Naos.Sample.Application.Web
                     //.AddQueries()
                     //.AddSwaggerDocument() // s.Description = Product.Capability\
                     .AddJobScheduling(o => o
-                        //.SetEnabled(true)
+                        .SetEnabled(true))
                         //.Register<EchoJob>("echojob1", Cron.MinuteInterval(10), (j) => j.EchoAsync("+++ hello from echojob1 +++", CancellationToken.None))
                         //.Register<EchoJob>("manualjob1", Cron.Never(), (j) => j.EchoAsync("+++ hello from manualjob1 +++", CancellationToken.None))
                         //.Register<CountriesImportJob>("countriesimport", Cron.MinuteInterval(1)))
