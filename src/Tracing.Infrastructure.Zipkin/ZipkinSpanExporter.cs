@@ -89,7 +89,7 @@
                 Encoding.UTF8,
                 ContentType.JSON.ToValue());
 
-            // TODO: place a circuit breaker here?
+            // TODO: place a circuit breaker here? see RabbitMQMessageBroker (polly)
             var response = await this.httpClient.SendAsync(request, cancellationToken).AnyContext();
             if (!response.IsSuccessStatusCode)
             {
