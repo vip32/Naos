@@ -89,7 +89,7 @@
                 Encoding.UTF8,
                 ContentType.JSON.ToValue());
 
-            // swagger https://zipkin.io/zipkin-api/#/default/post_spans
+            // TODO: place a circuit breaker here?
             var response = await this.httpClient.SendAsync(request, cancellationToken).AnyContext();
             if (!response.IsSuccessStatusCode)
             {
@@ -99,6 +99,7 @@
 
         private ZipkinSpan Map(ISpan span)
         {
+            // swagger https://zipkin.io/zipkin-api/#/default/post_spans
             return new ZipkinSpan
             {
                 TraceId = span.TraceId,
