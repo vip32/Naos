@@ -1,6 +1,7 @@
 ﻿namespace Naos.Tracing.Application.Web
 {
     using System;
+    using System.Diagnostics;
     using System.Threading.Tasks;
     using Humanizer;
     using Microsoft.AspNetCore.Http;
@@ -47,7 +48,7 @@
 
                 // dehydrate the span infos
                 var parentSpan = new Span(
-                            context.Request.Headers.GetValue("x-traceid").EmptyToNull() ?? context.GetCorrelationId(), // dehydrate the span infos
+                            context.Request.Headers.GetValue("x-traceid").EmptyToNull() ?? ActivityTraceId.CreateRandom().ToString() /*context.GetCorrelationId()*/, // dehydrate the span infos
                             context.Request.Headers.GetValue("x-spanid"));
                 parentSpan.SetSampled(context.Request.Headers.GetValue("x-tracesampled").To<bool>());
 
@@ -59,7 +60,7 @@
 
                     // TODO: get service name as operationname (servicedescriptor?)
                     .IgnoreParentSpan()
-                    .SetSpanId(context.GetRequestId())
+                    //.SetSpanId(context.GetRequestId())
                     .WithTag(SpanTagKey.HttpMethod, context.Request.Method.ToLowerInvariant())
                     .WithTag(SpanTagKey.HttpUrl, context.Request.GetDisplayUrl())
                     .WithTag(SpanTagKey.HttpHost, uri.Port > 0 ? $"{uri.Host}:{uri.Port}" : uri.Host)

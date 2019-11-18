@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
-    <AssemblyName>Naos.Sample.Application.Web</AssemblyName>
-    <RootNamespace>Naos.Sample.Application.Web</RootNamespace>
+    <AssemblyName>Naos.Sample.Application.Web2</AssemblyName>
+    <RootNamespace>Naos.Sample.Application.Web2</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

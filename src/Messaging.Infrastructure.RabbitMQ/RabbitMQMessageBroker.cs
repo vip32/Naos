@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Net.Sockets;
+    using System.Text;
     using System.Threading.Tasks;
     using EnsureThat;
     using global::RabbitMQ.Client;
@@ -101,7 +102,7 @@
                 }
 
                 this.options.Subscriptions.Add<TMessage, THandler>();
-                //this.StartBasicConsume(this.options.SubscriptionName);
+                //this.StartBasicConsume(this.options.QueueName);
             }
 
             return this;
@@ -118,22 +119,16 @@
             var messageName = message.GetType().PrettyName();
             var routingKey = this.GetRoutingKey(messageName);
 
-            using (var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Producer).Activate(this.logger))
             using (this.logger.BeginScope(new Dictionary<string, object>
             {
                 [LogPropertyKeys.CorrelationId] = message.CorrelationId
             }))
+            using (var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Producer).Activate(this.logger))
             {
                 if (message.Id.IsNullOrEmpty())
                 {
                     message.Id = IdGenerator.Instance.Next;
                     this.logger.LogDebug($"{{LogKey:l}} set message (id={message.Id})", LogKeys.Messaging);
-                }
-
-                if (message.CorrelationId.IsNullOrEmpty())
-                {
-                    message.CorrelationId = IdGenerator.Instance.Next;
-                    this.logger.LogDebug($"{{LogKey:l}} set message (correlationId={message.CorrelationId})", LogKeys.Messaging);
                 }
 
                 if (message.Origin.IsNullOrEmpty())
@@ -181,6 +176,7 @@
                         if (scope?.Span != null)
                         {
                             // propagate the span infos
+                            properties.Headers ??= new Dictionary<string, object>();
                             properties.Headers.Add("TraceId", scope.Span.TraceId);
                             properties.Headers.Add("SpanId", scope.Span.SpanId);
                         }
@@ -238,7 +234,7 @@
                 ruleName += $"-{this.options.FilterScope}";
             }
 
-            return ruleName.Replace("<", "_").Replace(">", "_");
+            return ruleName; //.Replace("<", "_").Replace(">", "_");
         }
 
         private IModel CreateConsumerChannel(string queueName)
@@ -329,18 +325,19 @@
 
                     // get parent span infos from message
                     ISpan parentSpan = null;
-                    if (eventArgs.BasicProperties.Headers?.ContainsKey("TraceId") == true && eventArgs.BasicProperties.Headers?.ContainsKey("SpanId") == true)
+                    if (eventArgs.BasicProperties?.Headers?.ContainsKey("TraceId") == true && eventArgs.BasicProperties?.Headers?.ContainsKey("SpanId") == true)
                     {
                         // dehydrate parent span
-                        parentSpan = new Span(eventArgs.BasicProperties.Headers["TraceId"] as string, eventArgs.BasicProperties.Headers["SpanId"] as string);
+                        parentSpan = new Span(
+                            Encoding.UTF8.GetString((byte[]) eventArgs.BasicProperties.Headers["TraceId"]), // headers values are in bytes, convert to string
+                            Encoding.UTF8.GetString((byte[]) eventArgs.BasicProperties.Headers["SpanId"]));
                     }
 
-                    using (var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Consumer, parentSpan).Activate(this.logger))
                     using (this.logger.BeginScope(new Dictionary<string, object>
                     {
                         [LogPropertyKeys.CorrelationId] = eventArgs.BasicProperties.CorrelationId,
-                        //[LogPropertyKeys.TrackId] = scope.Span.SpanId = allready done in Span ScopeManager (activate)
                     }))
+                    using (var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Consumer, parentSpan).Activate(this.logger))
                     {
                         // map some message properties to the typed message
                         if (!(this.serializer.Deserialize(eventArgs.Body, messageType) is Domain.Message message))
@@ -352,7 +349,7 @@
 
                         this.logger.LogJournal(LogKeys.Messaging, $"process (name={{MessageName}}, id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}}, size={eventArgs.Body.Length.Bytes().ToString("#.##")})",
                             LogPropertyKeys.TrackReceiveMessage, args: new[] { eventArgs.BasicProperties.Type, message?.Id, message.Origin, message.Origin });
-                        this.logger.LogTrace(LogKeys.Messaging, message.Id, eventArgs.BasicProperties.Type, LogTraceNames.Message);
+                        //this.logger.LogTrace(LogKeys.Messaging, message.Id, eventArgs.BasicProperties.Type, LogTraceNames.Message);
 
                         // construct the handler by using the DI container
                         var handler = this.options.HandlerFactory.Create(subscription.HandlerType); // should not be null, did you forget to register your generic handler (EntityMessageHandler<T>)

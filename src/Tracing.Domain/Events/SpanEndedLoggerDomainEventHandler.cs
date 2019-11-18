@@ -1,8 +1,10 @@
 ﻿namespace Naos.Tracing.Domain
 {
+    using System;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using Humanizer;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation.Domain;
 
@@ -30,13 +32,19 @@
         {
             if (notification?.Span != null)
             {
+                var duration = TimeSpan.Zero;
+                if(notification.Span.EndTime.HasValue && notification.Span.StartTime.HasValue)
+                {
+                    duration = notification.Span.EndTime.Value - notification.Span.StartTime.Value;
+                }
+
                 if (notification.Span.Status == SpanStatus.Failed)
                 {
-                    this.logger.LogError($"{{LogKey:l}} span ended: {notification.Span.OperationName} (id={notification.Span.SpanId}, parent={notification.Span.ParentSpanId}, kind={notification.Span.Kind}) {notification.Span.StatusDescription}", LogKeys.Tracing);
+                    this.logger.LogError($"{{LogKey:l}} span ended: {notification.Span.OperationName} (id={notification.Span.SpanId}, parent={notification.Span.ParentSpanId}, kind={notification.Span.Kind}) {notification.Span.StatusDescription} -> took {duration.Humanize()}", LogKeys.Tracing);
                 }
                 else
                 {
-                    this.logger.LogInformation($"{{LogKey:l}} span ended: {notification.Span.OperationName} (id={notification.Span.SpanId}, parent={notification.Span.ParentSpanId}, kind={notification.Span.Kind}) {notification.Span.StatusDescription}", LogKeys.Tracing);
+                    this.logger.LogInformation($"{{LogKey:l}} span ended: {notification.Span.OperationName} (id={notification.Span.SpanId}, parent={notification.Span.ParentSpanId}, kind={notification.Span.Kind}) {notification.Span.StatusDescription} -> took {duration.Humanize()}", LogKeys.Tracing);
                 }
             }
 

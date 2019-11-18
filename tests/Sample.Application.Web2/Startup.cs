@@ -116,7 +116,7 @@ namespace Naos.Sample.Application.Web
                     });
 
             services
-                .AddNaos(this.Configuration, "Product", "Capability", new[] { "All" }, n => n
+                .AddNaos(this.Configuration, "Product", "Capability2", new[] { "All" }, n => n
                     .AddModules(m => m
                         .AddCountriesModule()
                         .AddCustomersModule()
@@ -165,10 +165,10 @@ namespace Naos.Sample.Application.Web
                     //.AddQueries()
                     //.AddSwaggerDocument() // s.Description = Product.Capability\
                     .AddJobScheduling(o => o
-                        //.SetEnabled(true)
+                        .SetEnabled(true))
                         //.Register<EchoJob>("echojob1", Cron.MinuteInterval(10), (j) => j.EchoAsync("+++ hello from echojob1 +++", CancellationToken.None))
                         //.Register<EchoJob>("manualjob1", Cron.Never(), (j) => j.EchoAsync("+++ hello from manualjob1 +++", CancellationToken.None))
-                        .Register<CountriesImportJob>("countriesimport", Cron.MinuteInterval(5)))
+                        //.Register<CountriesImportJob>("countriesimport", Cron.MinuteInterval(1)))
                     //.Register("anonymousjob2", Cron.Minutely(), (j) => Console.WriteLine("+++ hello from anonymousjob2 " + j))
                     //.Register("jobevent1", Cron.Minutely(), () => new EchoJobEventData { Text = "+++ hello from jobevent1 +++" }))
                     //.Register<EchoJob>("echojob2", Cron.MinuteInterval(2), j => j.EchoAsync("+++ hello from echojob2 +++", CancellationToken.None, true), enabled: false)

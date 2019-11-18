@@ -1,5 +1,6 @@
 ﻿namespace Naos.Tracing.Domain
 {
+    using System.Diagnostics;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
@@ -32,7 +33,11 @@
 
         public ISpan Build()
         {
-            var span = new Span(this.traceId ?? IdGenerator.Instance.Next, RandomGenerator.GenerateString(5), this.kind, this.parent?.SpanId)
+            var span = new Span(
+                this.traceId ?? ActivityTraceId.CreateRandom().ToString() /*IdGenerator.Instance.Next*/,
+                ActivitySpanId.CreateRandom().ToString() /*RandomGenerator.GenerateString(5)*/,
+                this.kind,
+                this.parent?.SpanId)
                 .WithOperationName(this.operationName)
                 .WithLogKey(this.logKey)
                 .WithTags(this.tags)

@@ -24,13 +24,14 @@
         {
             if (request.Command.Echo)
             {
+                Console.WriteLine("\r\nsubscribe", Color.LimeGreen);
                 this.messageBroker
                     .Subscribe<EchoMessage, EchoMessageHandler>()
                     .Subscribe<EntityMessage<EchoEntity>, EchoEntityMessageHandler>();
 
                 Console.WriteLine("\r\nstart publish", Color.LimeGreen);
 
-                for (var i = 1; i <= 2; i++)
+                for (var i = 1; i <= 1; i++)
                 {
                     //Thread.Sleep(500);
                     this.messageBroker.Publish(new EchoMessage { Text = $"+++ hello from echo message ({i.ToString()}-{RandomGenerator.GenerateString(3, false).ToUpper()}) +++" });

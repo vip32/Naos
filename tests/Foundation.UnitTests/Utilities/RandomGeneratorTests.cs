@@ -15,6 +15,19 @@
         }
 
         [Fact]
+        public void WhenGeneratingMultipleInts()
+        {
+            var val1 = RandomGenerator.GenerateInt(100, 2000);
+            var val2 = RandomGenerator.GenerateInt(100, 2000);
+            var val3 = RandomGenerator.GenerateInt(100, 2000);
+
+            val1.ShouldNotBe(val2);
+            val1.ShouldNotBe(val3);
+            val2.ShouldNotBe(val1);
+            val2.ShouldNotBe(val3);
+        }
+
+        [Fact]
         public void WhenGeneratingAnId()
         {
             var id = RandomGenerator.GenerateComplexString(5);

@@ -36,5 +36,33 @@
 
             return options;
         }
+
+        public static OperationsTracingOptions UseExporter<T>(
+            this OperationsTracingOptions options)
+            where T : class, ISpanExporter
+        {
+            EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.Context, nameof(options.Context));
+
+            options.Context.Services.AddSingleton<ISpanExporter, T>();
+
+            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: tracing exporter used (type={typeof(T).Name})");
+
+            return options;
+        }
+
+        public static OperationsTracingOptions UseExporter(
+            this OperationsTracingOptions options,
+            ISpanExporter exporter)
+        {
+            EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.Context, nameof(options.Context));
+
+            options.Context.Services.AddSingleton(exporter);
+
+            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: tracing exporter used (type={exporter.GetType().Name})");
+
+            return options;
+        }
     }
 }

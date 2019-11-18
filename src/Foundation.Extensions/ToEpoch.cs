@@ -77,7 +77,7 @@
         }
 
         /// <summary>
-        /// Returns the number of seconds that have elapsed since 1970-01-01T00:00:00Z.
+        /// Returns the number of milliseconds that have elapsed since 1970-01-01T00:00:00Z.
         /// </summary>
         /// <param name="source">The datetime source to convert.</param>
         /// <remarks>
@@ -98,6 +98,22 @@
                 source.Minute,
                 source.Second,
                 TimeSpan.Zero).ToUnixTimeMilliseconds();
+        }
+
+        /// <summary>
+        /// Returns the number of microseconds that have elapsed since 1970-01-01T00:00:00Z.
+        /// </summary>
+        /// <param name="source">The datetime source to convert.</param>
+        /// <remarks>
+        ///  Unix time represents the number of seconds that have elapsed since 1970-01-01T00:00:00Z (January 1, 1970, at 12:00 AM UTC).
+        ///  It does not take leap seconds into account.
+        ///  </remarks>
+        /// <returns>
+        /// The Unix timestamp.
+        /// </returns>
+        public static long ToEpochMicroseconds(this DateTimeOffset source)
+        {
+            return source.ToEpochMilliseconds() * 1000;
         }
 
         /// <summary>
