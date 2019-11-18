@@ -4,9 +4,9 @@
 variables:
   solution: '**/*.sln'
   buildConfiguration: 'Release'
-  publishWorkerService: false
-  publishFunctionApp: false
   publishWebApp: true
+  publishFunctionApp: false
+  publishWorkerService: false
   publishArtifacts: true
   nuGetPush: true
   nuGetFeed: '164130b9-cbc9-46a4-85b0-3bd84e74894d/151703fd-0d42-49db-a7a3-d22198435821' # https://vip32.pkgs.visualstudio.com/Naos/_packaging/naos/nuget/v3/index.json
@@ -181,8 +181,8 @@ stages:
   - template: azure-pipelines-deploy.yml
     parameters:
       environment: 'dev'
-      deployFunctionApp: false # $(publishFunctionApp)
       deployWebApp: true # $(publishWebApp)
+      deployFunctionApp: false # $(publishFunctionApp)
       azureSubscription: $(deployAzureSubscription)
       appName: $(deployWebAppName)
       functionAppName: $(deployFunctionAppName)
@@ -199,8 +199,8 @@ stages:
   - template: azure-pipelines-deploy.yml
     parameters:
       environment: 'qas'
-      deployFunctionApp: false # $(publishFunctionApp)
       deployWebApp: true # $(publishWebApp)
+      deployFunctionApp: false # $(publishFunctionApp)
       azureSubscription: $(deployAzureSubscription)
       appName: $(deployWebAppName)
       functionAppName: $(deployFunctionAppName)
@@ -217,8 +217,8 @@ stages:
   - template: azure-pipelines-deploy.yml
     parameters:
       environment: 'pro'
-      deployFunctionApp: false # $(publishFunctionApp)
       deployWebApp: true # $(publishWebApp)
+      deployFunctionApp: false # $(publishFunctionApp)
       azureSubscription: $(deployAzureSubscription)
       appName: $(deployWebAppName)
       functionAppName: $(deployFunctionAppName)

@@ -2,8 +2,8 @@
 parameters:
   environment: 'dev'
   provisionInfrastructure: true
-  deployFunctionApp: false
   deployWebApp: false
+  deployFunctionApp: false
   webAppName: 'unknown'
   functionAppName: 'unknown'
   slotName: 'staging'
