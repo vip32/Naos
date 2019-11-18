@@ -13,7 +13,8 @@ variables:
   nuGetFeedType: 'internal' # 'external'
   deployEnabled: false
   deployAzureSubscription: 'Naos 22463ad3-c6d2-4e7e-911d-c50474250fa0' # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/resources?view=azure-devops#troubleshooting-authorization-for-a-yaml-pipeline
-  deployAppName: 'naos-sample'
+  deployWebAppName: 'unknown'
+  deployFunctionAppName: 'unknown'
   vmImage: 'windows-latest' # https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/hosted?view=azure-devops&tabs=yaml#use-a-microsoft-hosted-agent
   group: vars # azure pipelines variable group https://docs.microsoft.com/en-us/azure/devops/pipelines/library/variable-groups?view=azdevops&tabs=yaml
 
@@ -183,7 +184,8 @@ stages:
       deployFunctionApp: false # $(publishFunctionApp)
       deployWebApp: true # $(publishWebApp)
       azureSubscription: $(deployAzureSubscription)
-      appName: $(deployAppName)
+      appName: $(deployWebAppName)
+      functionAppName: $(deployFunctionAppName)
 
 - stage: DeployQas
   displayName: Deploy stage (qas)
@@ -200,7 +202,8 @@ stages:
       deployFunctionApp: false # $(publishFunctionApp)
       deployWebApp: true # $(publishWebApp)
       azureSubscription: $(deployAzureSubscription)
-      appName: $(deployAppName)
+      appName: $(deployWebAppName)
+      functionAppName: $(deployFunctionAppName)
 
 - stage: DeployPro
   displayName: Deploy stage (pro)
@@ -217,4 +220,5 @@ stages:
       deployFunctionApp: false # $(publishFunctionApp)
       deployWebApp: true # $(publishWebApp)
       azureSubscription: $(deployAzureSubscription)
-      appName: $(deployAppName)
+      appName: $(deployWebAppName)
+      functionAppName: $(deployFunctionAppName)
