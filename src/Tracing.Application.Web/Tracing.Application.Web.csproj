@@ -6,7 +6,7 @@
     <RootNamespace>Naos.Tracing.Application.Web</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <PackageReference Include="MediatR" Version="7.0.0" />
-    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="4.6.0" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>

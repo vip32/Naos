@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>Naos.Foundation.UnitTests</AssemblyName>
     <RootNamespace>Naos.Foundation.UnitTests</RootNamespace>
     <IsPackable>false</IsPackable>
@@ -21,7 +21,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="MediatR" Version="7.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
     <PackageReference Include="NBuilder" Version="6.0.1" />
     <PackageReference Include="NSubstitute" Version="4.2.1" />
     <PackageReference Include="Shouldly" Version="3.0.2" />

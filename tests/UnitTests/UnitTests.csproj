@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>Naos.UnitTests</AssemblyName>
     <RootNamespace>Naos.UnitTests</RootNamespace>
     <IsPackable>false</IsPackable>
@@ -32,7 +32,7 @@
     </PackageReference>
     <PackageReference Include="MediatR" Version="7.0.0" />
     <PackageReference Include="AutoMapper" Version="9.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
     <PackageReference Include="NBuilder" Version="6.0.1" />
     <PackageReference Include="NSubstitute" Version="4.2.1" />
     <PackageReference Include="Shouldly" Version="3.0.2" />

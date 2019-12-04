@@ -21,7 +21,7 @@
         {
             source ??= new Dictionary<TKey, TValue>();
 
-            if (key == default)
+            if (key == null)
             {
                 return source;
             }
