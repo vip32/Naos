@@ -167,7 +167,6 @@ stages:
         nobuild: true
         publishVstsFeed: $(nuGetFeed)
         nuGetFeedType: $(nuGetFeedType)
-        versioningScheme: 'off'
         allowPackageConflicts: true
 
 - stage: DeployDev
