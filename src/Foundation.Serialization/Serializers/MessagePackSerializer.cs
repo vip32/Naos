@@ -2,22 +2,30 @@
 {
     using System;
     using System.IO;
+    using MessagePack;
     using MessagePack.Resolvers;
 
     public class MessagePackSerializer : ISerializer
     {
-        private readonly MessagePack.IFormatterResolver formatterResolver;
-        private readonly bool useCompression;
+        private readonly MessagePackSerializerOptions options;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessagePackSerializer"/> class.
         /// </summary>
-        /// <param name="resolver">The resolver.</param>
         /// <param name="useCompression">if set to <c>true</c> [use compression].</param>
-        public MessagePackSerializer(MessagePack.IFormatterResolver resolver = null, bool useCompression = false)
+        public MessagePackSerializer(bool useCompression = false)
         {
-            this.useCompression = useCompression;
-            this.formatterResolver = resolver ?? ContractlessStandardResolver.Instance;
+            if (useCompression)
+            {
+                this.options = MessagePackSerializerOptions.Standard
+                    .WithCompression(MessagePackCompression.Lz4BlockArray)
+                    .WithResolver(ContractlessStandardResolver.Instance);
+            }
+            else
+            {
+                this.options = MessagePackSerializerOptions.Standard
+                    .WithResolver(ContractlessStandardResolver.Instance);
+            }
         }
 
         /// <summary>
@@ -27,7 +35,7 @@
         /// <param name="output">The output.</param>
         public void Serialize(object value, Stream output)
         {
-            if(value == null)
+            if (value == null)
             {
                 return;
             }
@@ -37,14 +45,7 @@
                 return;
             }
 
-            if (this.useCompression)
-            {
-                MessagePack.LZ4MessagePackSerializer.NonGeneric.Serialize(value.GetType(), output, value, this.formatterResolver);
-            }
-            else
-            {
-                MessagePack.MessagePackSerializer.NonGeneric.Serialize(value.GetType(), output, value, this.formatterResolver);
-            }
+            MessagePack.MessagePackSerializer.Serialize(value.GetType(), output, value, this.options);
         }
 
         /// <summary>
@@ -59,14 +60,7 @@
                 return null;
             }
 
-            if (this.useCompression)
-            {
-                return MessagePack.LZ4MessagePackSerializer.NonGeneric.Deserialize(type, input, this.formatterResolver);
-            }
-            else
-            {
-                return MessagePack.MessagePackSerializer.NonGeneric.Deserialize(type, input, this.formatterResolver);
-            }
+            return MessagePack.MessagePackSerializer.Deserialize(type, input, this.options);
         }
 
         /// <summary>
@@ -81,14 +75,8 @@
                 return default;
             }
 
-            if (this.useCompression)
-            {
-                return MessagePack.LZ4MessagePackSerializer.Deserialize<T>(input, this.formatterResolver);
-            }
-            else
-            {
-                return MessagePack.MessagePackSerializer.Deserialize<T>(input, this.formatterResolver);
-            }
+            input.Position = 0;
+            return MessagePack.MessagePackSerializer.Deserialize<T>(input, this.options);
         }
     }
 }
