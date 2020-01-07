@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NSwag.Annotations" Version="13.1.6" />
+    <PackageReference Include="NSwag.Annotations" Version="13.2.0" />
   </ItemGroup>
 
   <ItemGroup>
