@@ -33,7 +33,7 @@
 
   <ItemGroup>
     <PackageReference Include="Humanizer.Core" Version="2.7.9" />
-    <PackageReference Include="FluentValidation" Version="8.5.1" />
+    <PackageReference Include="FluentValidation" Version="8.6.1" />
     <PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="3.0.1" />
     <PackageReference Include="AspNetCore.HealthChecks.DocumentDb" Version="3.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="3.0.0" />
