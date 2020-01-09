@@ -12,7 +12,7 @@
         {
             // arrange
             var sut = this.GetSerializer();
-            var model = new StubModel()
+            var value = new StubModel()
             {
                 StringProperty = "abc"
             };
@@ -20,14 +20,14 @@
             using (var stream = new MemoryStream())
             {
                 // act
-                sut.Serialize(model, stream);
+                sut.Serialize(value, stream);
                 var newModel = sut.Deserialize<StubModel>(stream);
 
                 // assert
                 stream.ShouldNotBeNull();
                 stream.Length.ShouldBeGreaterThan(0);
                 newModel.ShouldNotBeNull();
-                newModel.StringProperty.ShouldBe(model.StringProperty);
+                newModel.StringProperty.ShouldBe(value.StringProperty);
             }
         }
 
@@ -35,12 +35,12 @@
         {
             // arrange
             var sut = this.GetSerializer();
-            StubModel model = null;
+            StubModel value = null;
 
             using (var stream = new MemoryStream())
             {
                 // act
-                sut.Serialize(model, stream);
+                sut.Serialize(value, stream);
                 var newModel = sut.Deserialize<StubModel>(stream);
 
                 // assert
@@ -58,7 +58,7 @@
                 return;
             }
 
-            var model = new StubModel
+            var value = new StubModel
             {
                 IntProperty = 1,
                 StringProperty = "test",
@@ -66,19 +66,19 @@
                 ObjectProperty = new StubModel { IntProperty = 1 }
             };
 
-            var bytes = serializer.SerializeToBytes(model);
+            var bytes = serializer.SerializeToBytes(value);
             var actual = serializer.Deserialize<StubModel>(bytes);
-            Assert.Equal(model.IntProperty, actual.IntProperty);
-            Assert.Equal(model.StringProperty, actual.StringProperty);
-            Assert.Equal(model.ListProperty, actual.ListProperty);
+            Assert.Equal(value.IntProperty, actual.IntProperty);
+            Assert.Equal(value.StringProperty, actual.StringProperty);
+            Assert.Equal(value.ListProperty, actual.ListProperty);
 
-            var text = serializer.SerializeToString(model);
+            var text = serializer.SerializeToString(value);
             actual = serializer.Deserialize<StubModel>(text);
-            Assert.Equal(model.IntProperty, actual.IntProperty);
-            Assert.Equal(model.StringProperty, actual.StringProperty);
-            Assert.Equal(model.ListProperty, actual.ListProperty);
-            Assert.NotNull(model.ObjectProperty);
-            Assert.Equal(1, ((dynamic)model.ObjectProperty).IntProperty);
+            Assert.Equal(value.IntProperty, actual.IntProperty);
+            Assert.Equal(value.StringProperty, actual.StringProperty);
+            Assert.Equal(value.ListProperty, actual.ListProperty);
+            Assert.NotNull(value.ObjectProperty);
+            Assert.Equal(1, ((dynamic)value.ObjectProperty).IntProperty);
         }
 
         public virtual void CanRoundTripString_Test()
@@ -89,7 +89,7 @@
                 return;
             }
 
-            var model = new StubModel
+            var value = new StubModel
             {
                 IntProperty = 1,
                 StringProperty = "test",
@@ -97,13 +97,13 @@
                 ObjectProperty = new StubModel { IntProperty = 1 }
             };
 
-            var text = serializer.SerializeToString(model);
+            var text = serializer.SerializeToString(value);
             var actual = serializer.Deserialize<StubModel>(text);
-            Assert.Equal(model.IntProperty, actual.IntProperty);
-            Assert.Equal(model.StringProperty, actual.StringProperty);
-            Assert.Equal(model.ListProperty, actual.ListProperty);
-            Assert.NotNull(model.ObjectProperty);
-            Assert.Equal(1, ((dynamic)model.ObjectProperty).IntProperty);
+            Assert.Equal(value.IntProperty, actual.IntProperty);
+            Assert.Equal(value.StringProperty, actual.StringProperty);
+            Assert.Equal(value.ListProperty, actual.ListProperty);
+            Assert.NotNull(value.ObjectProperty);
+            Assert.Equal(1, ((dynamic)value.ObjectProperty).IntProperty);
         }
 
         protected virtual ISerializer GetSerializer()

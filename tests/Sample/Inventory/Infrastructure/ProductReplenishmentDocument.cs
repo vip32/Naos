@@ -5,10 +5,8 @@
     using Naos.Foundation.Infrastructure;
     using Newtonsoft.Json;
 
-    public class DtoProductReplenishment : IMongoEntity<string>
+    public class ProductReplenishmentDocument : IMongoDocument<string>
     {
-        //public string Id { get; set; }
-
         /// <summary>
         /// Gets or sets the entity identifier.
         /// </summary>
@@ -25,7 +23,7 @@
         /// The identifier.
         /// </value>
         //[JsonProperty(PropertyName = "_id")]
-        object IMongoEntity.Id
+        object IMongoDocument.Id
         {
             get { return this.Id; }
             set { this.Id = (string)value; }

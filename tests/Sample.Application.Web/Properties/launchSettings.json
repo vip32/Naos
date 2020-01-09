@@ -26,8 +26,8 @@
         "ASPNETCORE_ISLOCAL": "true",
         "ASPNETCORE_ENVIRONMENT": "Development",
         "console": "true"
-      }
-      //"applicationUrl": "https://localhost:5001;http://localhost:5000"
+      },
+      "applicationUrl": "https://localhost:5001"
     },
     "Kestrel (watch)": {
       "commandName": "Executable",
@@ -40,7 +40,7 @@
         "ASPNETCORE_ISLOCAL": "true",
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      //"applicationUrl": "https://localhost:5001;http://localhost:5000"
+      "applicationUrl": "https://localhost:5001"
     },
     "Docker": {
       "commandName": "Docker",

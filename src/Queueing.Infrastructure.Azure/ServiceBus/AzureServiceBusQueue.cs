@@ -67,21 +67,21 @@
                 using (var stream = new MemoryStream())
                 {
                     this.Serializer.Serialize(data, stream);
-                    var brokeredMessage = new Message(stream.ToArray())
+                    var message = new Message(stream.ToArray())
                     {
                         MessageId = id,
                         CorrelationId = data.As<IHaveCorrelationId>()?.CorrelationId
                     };
-                    await this.queueSender.SendAsync(brokeredMessage).AnyContext();
+                    await this.queueSender.SendAsync(message).AnyContext();
 
-                    using (var item = new QueueItem<TData>(brokeredMessage.MessageId, data, this, DateTime.UtcNow, 0))
+                    using (var item = new QueueItem<TData>(message.MessageId, data, this, DateTime.UtcNow, 0))
                     {
                         this.Logger.LogJournal(LogKeys.Queueing, $"item enqueued (id={item.Id}, queue={this.Options.QueueName}, type={typeof(TData).PrettyName()})", LogPropertyKeys.TrackEnqueue);
                         this.Logger.LogTrace(LogKeys.Messaging, item.Id, typeof(TData).PrettyName(), LogTraceNames.Queue);
                     }
 
                     this.LastEnqueuedDate = DateTime.UtcNow;
-                    return brokeredMessage.MessageId;
+                    return message.MessageId;
                 }
             }
         }

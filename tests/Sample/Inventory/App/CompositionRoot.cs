@@ -57,7 +57,7 @@
                         sp.GetService<ITracer>(),
                         new RepositoryLoggingDecorator<ProductReplenishment>(
                             sp.GetRequiredService<ILogger<ReplenishmentRepository>>(),
-                            new MongoRepository<ProductReplenishment, DtoProductReplenishment>(o => o
+                            new MongoRepository<ProductReplenishment, ProductReplenishmentDocument>(o => o
                                 //.Setup(sp, mongoConfiguration)
                                 .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                                 .Mediator(sp.GetRequiredService<IMediator>())

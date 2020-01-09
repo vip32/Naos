@@ -23,6 +23,7 @@ namespace Naos.Sample.Application.Web
     using Naos.Sample.Catalogs.Application;
     using Naos.Sample.Customers.Application;
     using Naos.Tracing.Domain;
+    using Naos.Tracing.Infrastructure.Zipkin;
     using NSwag.Generation.Processors;
 
     public class Startup
@@ -138,11 +139,11 @@ namespace Naos.Sample.Application.Web
                         .AddRequests(o => o
                             .Post<CreateCustomerCommand>("api/commands/customers/create", HttpStatusCode.Created, "Customers", onSuccess: (cmd, ctx) => ctx.Response.Location($"api/customers/{cmd.Customer.Id}"))
                             .Get<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>("api/commands/customers/active", groupName: "Customers")
-                            //.UseInMemoryQueue()
-                            .UseAzureStorageQueue()
+                            .UseAzureBlobStorage()
                             //.UseInMemoryStorage()
                             //.UseFolderStorage()
-                            .UseAzureBlobStorage()
+                            .UseAzureStorageQueue() // TODO: rabbitmq queue is also needed
+                            //.UseInMemoryQueue()
                             .GetQueued<PingCommand>("api/commands/queue/ping")
                             .GetQueued<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>("api/commands/queue/customers/active", groupName: "Customers")))
                     .AddOperations(o => o
@@ -158,7 +159,8 @@ namespace Naos.Sample.Application.Web
                         .AddRequestStorage(o => o
                             .UseAzureBlobStorage())
                         .AddTracing(o => o
-                            .UseSampler<ConstantSampler>()))
+                            .UseSampler<ConstantSampler>()
+                            .UseExporter<ZipkinSpanExporter>()))
                     //.UseSampler(new OperationNamePatternSampler(new[] { "http*" }))))
                     //.AddQueries()
                     //.AddSwaggerDocument() // s.Description = Product.Capability\
@@ -166,7 +168,7 @@ namespace Naos.Sample.Application.Web
                         //.SetEnabled(true)
                         //.Register<EchoJob>("echojob1", Cron.MinuteInterval(10), (j) => j.EchoAsync("+++ hello from echojob1 +++", CancellationToken.None))
                         //.Register<EchoJob>("manualjob1", Cron.Never(), (j) => j.EchoAsync("+++ hello from manualjob1 +++", CancellationToken.None))
-                        .Register<CountriesImportJob>("countriesimport", Cron.MinuteInterval(1)))
+                        .Register<CountriesImportJob>("countriesimport", Cron.MinuteInterval(5)))
                     //.Register("anonymousjob2", Cron.Minutely(), (j) => Console.WriteLine("+++ hello from anonymousjob2 " + j))
                     //.Register("jobevent1", Cron.Minutely(), () => new EchoJobEventData { Text = "+++ hello from jobevent1 +++" }))
                     //.Register<EchoJob>("echojob2", Cron.MinuteInterval(2), j => j.EchoAsync("+++ hello from echojob2 +++", CancellationToken.None, true), enabled: false)
@@ -176,8 +178,8 @@ namespace Naos.Sample.Application.Web
                     .AddMessaging(o => o
                         //.UseFileSystemBroker(s => s
                         //.UseSignalRBroker(s => s
-                        //.UseRabbitMQBroker(s => s
-                        .UseServiceBusBroker(s => s
+                        .UseRabbitMQBroker(s => s
+                        //.UseServiceBusBroker(s => s
                             .Subscribe<EchoMessage, EchoMessageHandler>()))
                     .AddServiceDiscovery(o => o
                         .UseFileSystemClientRegistry())

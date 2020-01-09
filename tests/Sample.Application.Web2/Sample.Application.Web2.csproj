@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>Naos.Sample.Application.Web2</AssemblyName>
+    <RootNamespace>Naos.Sample.Application.Web2</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="healthchecksdb" />
+    <None Remove="sample.log" />
+    <None Remove="UserAccounts.db" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\..\appsettings.json" Link="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.UI" Version="3.0.9" />
+    <PackageReference Include="AspNetCore.HealthChecks.Uris" Version="3.0.0" />
+    <PackageReference Include="NSwag.AspNetCore" Version="13.2.0" />
+    <PackageReference Include="NSwag.Generation" Version="13.2.0" />
+    <PackageReference Include="NJsonSchema" Version="10.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Foundation.Application.Web\Application.Web.csproj" />
+    <ProjectReference Include="..\..\src\Application\Application.csproj" />
+    <ProjectReference Include="..\..\src\Application.Web\Application.Web.csproj" />
+    <ProjectReference Include="..\..\src\Commands.Infrastructure.FileStorage\Commands.Infrastructure.FileStorage.csproj" />
+    <ProjectReference Include="..\..\src\FileStorage.Infrastructure.Azure\FileStorage.Infrastructure.Azure.csproj" />
+    <ProjectReference Include="..\..\src\Operations.Infrastructure.Azure\Operations.Infrastructure.Azure.csproj" />
+    <ProjectReference Include="..\..\src\Operations.Infrastructure.Mongo\Operations.Infrastructure.Mongo.csproj" />
+    <ProjectReference Include="..\..\src\Tracing.Infrastructure.Zipkin\Tracing.Infrastructure.Zipkin.csproj" />
+    <ProjectReference Include="..\Sample\Sample.csproj" />
+  </ItemGroup>
+
+</Project>

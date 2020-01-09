@@ -1,4 +1,4 @@
-﻿namespace Naos.Messaging.Infrastructure.RabbitMQ
+namespace Naos.Messaging.Infrastructure.RabbitMQ
 {
     using MediatR;
     using Naos.Foundation;
@@ -25,9 +25,7 @@
 
         public IRabbitMQProvider Provider { get; set; }
 
-        public string ExchangeName { get; set; } = "naos_exchange";
-
-        public string Host { get; set; }
+        public string ExchangeName { get; set; } = "naos_messaging";
 
         public int RetryCount { get; set; } = 3;
     }

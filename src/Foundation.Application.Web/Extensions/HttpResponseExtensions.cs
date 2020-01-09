@@ -18,7 +18,7 @@
         {
             response.ContentType = contentType.ToValue();
 
-#if NETCOREAPP3_0
+#if NETCOREAPP3_1
             var writer = new HttpResponseStreamWriter(response.Body, Encoding.UTF8);
             using (var jsonWriter = new JsonTextWriter(writer))
             {

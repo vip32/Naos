@@ -8,7 +8,7 @@
     {
         IApplicationBuilder Application { get; set; }
 
-#if NETCOREAPP3_0
+#if NETCOREAPP3_1
         IWebHostEnvironment Environment { get; set; }
 #endif
 

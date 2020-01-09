@@ -1,11 +1,11 @@
 ﻿namespace Naos.Foundation.Infrastructure
 {
-    public interface IMongoEntity
+    public interface IMongoDocument
     {
         object Id { get; set; } // maps to _id
     }
 
-    public interface IMongoEntity<TId> : IMongoEntity
+    public interface IMongoDocument<TId> : IMongoDocument
     {
         new TId Id { get; set; } // maps to _id
     }

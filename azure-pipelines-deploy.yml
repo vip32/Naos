@@ -2,9 +2,10 @@
 parameters:
   environment: 'dev'
   provisionInfrastructure: true
-  deployFunctionApp: false
   deployWebApp: false
-  appName: 'unknown'
+  deployFunctionApp: false
+  webAppName: 'unknown'
+  functionAppName: 'unknown'
   slotName: 'staging'
   vmImage: 'windows-2019' # https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/hosted?view=azure-devops&tabs=yaml#use-a-microsoft-hosted-agent
   azureSubscription: ''
@@ -37,7 +38,7 @@ jobs:
         inputs:
           azureSubscription: '${{ parameters.azureSubscription }}'
           appType: 'functionApp'
-          appName: '${{ parameters.environment }}-${{ parameters.appName }}'
+          appName: '${{ parameters.environment }}-${{ parameters.functionAppName }}'
           package: '$(System.DefaultWorkingDirectory)/artifacts/**/Application.Functions.zip'
           deploymentMethod: 'auto'
           ${{ if eq(parameters.environment, 'pro') }}:
@@ -51,7 +52,7 @@ jobs:
         inputs:
           azureSubscription: '${{ parameters.azureSubscription }}'
           appType: 'webApp'
-          appName: '${{ parameters.environment }}-${{ parameters.appName }}'
+          appName: '${{ parameters.environment }}-${{ parameters.webAppName }}'
           package: '$(System.DefaultWorkingDirectory)/artifacts/**/Application.Web.zip'
           deploymentMethod: 'auto'
           ${{ if eq(parameters.environment, 'pro') }}:

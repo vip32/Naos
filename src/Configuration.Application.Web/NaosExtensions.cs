@@ -21,7 +21,7 @@
             var context = new NaosApplicationContext
             {
                 Application = app,
-#if NETCOREAPP3_0
+#if NETCOREAPP3_1
                 Environment = app.ApplicationServices.GetRequiredService<IWebHostEnvironment>()
 #endif
 

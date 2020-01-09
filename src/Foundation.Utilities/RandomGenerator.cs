@@ -15,6 +15,16 @@
         private static readonly char[] CharactersNumber = "1234567890".ToArray();
         private static readonly char[] CharactersNonAlpha = "!@#$%^&*_-=+".ToArray();
 
+        public static int GenerateInt()
+        {
+            return Random.Next();
+        }
+
+        public static int GenerateInt(int minValue, int maxValue)
+        {
+            return Random.Next(minValue, maxValue);
+        }
+
         /// <summary>
         /// Generates a random string with letters and numerals.
         /// </summary>

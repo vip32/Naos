@@ -7,7 +7,7 @@
     using Naos.Foundation.Infrastructure;
     using Newtonsoft.Json;
 
-    public class MongoLogEvent : IMongoEntity<object>
+    public class MongoLogEvent : IMongoDocument<object>
     {
         /// <summary>
         /// Gets or sets the entity identifier.
@@ -25,7 +25,7 @@
         /// <value>
         /// The identifier.
         /// </value>
-        object IMongoEntity.Id
+        object IMongoDocument.Id
         {
             get { return this.Id; }
             set { this.Id = value; }
