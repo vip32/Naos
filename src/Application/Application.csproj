@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Naos.Application</AssemblyName>
     <RootNamespace>Naos.Application</RootNamespace>
-    <Description>Meta Package. A mildly opiniated modern cloud service architecture blueprint + reference implementation</Description>
+    <Description>A mildly opiniated modern cloud service architecture blueprint + reference implementation. [Meta Package]</Description>
   </PropertyGroup>
 
   <ItemGroup>
