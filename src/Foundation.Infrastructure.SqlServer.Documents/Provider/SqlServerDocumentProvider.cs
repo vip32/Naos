@@ -61,8 +61,8 @@
         }
 
         public async Task<long> CountAsync(
-        IEnumerable<Expression<Func<T, bool>>> expressions = null,
-        IEnumerable<string> tags = null)
+            IEnumerable<Expression<Func<T, bool>>> expressions = null,
+            IEnumerable<string> tags = null)
         {
             await this.InitializeAsync().AnyContext();
 
@@ -283,12 +283,12 @@
         }
 
         public async IAsyncEnumerable<T> LoadValuesAsync(
-        IEnumerable<Expression<Func<T, bool>>> expressions = null,
-        IEnumerable<string> tags = null,
-        int? skip = null,
-        int? take = null,
-        Expression<Func<T, object>> orderExpression = null,
-        bool orderDescending = false)
+            IEnumerable<Expression<Func<T, bool>>> expressions = null,
+            IEnumerable<string> tags = null,
+            int? skip = null,
+            int? take = null,
+            Expression<Func<T, object>> orderExpression = null,
+            bool orderDescending = false)
         {
             await foreach(var value in
                 this.LoadValuesAsync(null, expressions.AsEnumerable(), tags, skip, take, orderExpression, orderDescending))
