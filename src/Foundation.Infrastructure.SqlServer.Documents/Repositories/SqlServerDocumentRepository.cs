@@ -88,10 +88,26 @@
         {
             return this.options.Provider.LoadValuesAsync(
                 expressions: specifications?.Select(s => s.ToExpression()),
-                skip: options.Skip,
-                take: options.Take,
-                orderExpression: options.Order.Expression,
-                orderDescending: options.Order.Direction == OrderDirection.Descending).ToEnumerable();
+                skip: options?.Skip,
+                take: options?.Take,
+                orderExpression: options?.Order?.Expression,
+                orderDescending: options?.Order?.Direction == OrderDirection.Descending)?.ToEnumerable();
+
+            //var results = new List<TEntity>();
+
+            //var rs = this.options.Provider.LoadValuesAsync(
+            //    expressions: specifications?.Select(s => s.ToExpression()),
+            //    skip: options?.Skip,
+            //    take: options?.Take,
+            //    orderExpression: options?.Order?.Expression,
+            //    orderDescending: options?.Order?.Direction == OrderDirection.Descending);
+
+            //await foreach (var r in rs)
+            //{
+            //    results.Add(r);
+            //}
+
+            //return results;
         }
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously

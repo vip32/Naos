@@ -18,6 +18,6 @@
 
         public IEntityIdGenerator<TEntity> IdGenerator { get; set; } = new EntityGuidIdGenerator<TEntity>();
 
-        public SqlServerDocumentProvider<TEntity> Provider { get; set; }
+        public IDocumentProvider<TEntity> Provider { get; set; }
     }
 }

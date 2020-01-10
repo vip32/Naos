@@ -18,7 +18,7 @@
 
         public SqlServerDocumentProviderTests()
         {
-            this.sut = this.ServiceProvider.GetService<IDocumentProvider<Product>>();
+            this.sut = this.ServiceProvider.GetRequiredService<IDocumentProvider<Product>>();
             this.entityFaker = new Faker<Product>() //https://github.com/bchavez/Bogus
                 .RuleFor(u => u.Id, f => Guid.NewGuid().ToString())
                 .RuleFor(u => u.CategoryId, f => Guid.NewGuid())

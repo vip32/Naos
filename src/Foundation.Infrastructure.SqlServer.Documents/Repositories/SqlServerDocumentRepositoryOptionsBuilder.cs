@@ -7,7 +7,7 @@
         BaseOptionsBuilder<SqlServerDocumentRepositoryOptions<TEntity>, SqlServerDocumentRepositoryOptionsBuilder<TEntity>>
         where TEntity : class, IEntity, IAggregateRoot
     {
-        public SqlServerDocumentRepositoryOptionsBuilder<TEntity> Provider(SqlServerDocumentProvider<TEntity> provider)
+        public SqlServerDocumentRepositoryOptionsBuilder<TEntity> Provider(IDocumentProvider<TEntity> provider)
         {
             this.Target.Provider = provider;
             return this;
