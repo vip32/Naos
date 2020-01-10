@@ -13,6 +13,7 @@
     <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
     <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
     <PackageReference Include="MediatR" Version="8.0.0" />
+    <PackageReference Include="System.Interactive.Async" Version="4.0.0" />
   </ItemGroup>
 
   <ItemGroup>

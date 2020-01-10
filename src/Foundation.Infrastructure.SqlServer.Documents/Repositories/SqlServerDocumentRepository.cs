@@ -39,7 +39,7 @@
             }
 
             var result = await this.options.Provider.DeleteAsync(id).AnyContext();
-            if(result == ProviderAction.Deleted)
+            if (result == ProviderAction.Deleted)
             {
                 return ActionResult.Deleted;
             }
@@ -82,24 +82,28 @@
             return await this.FindAllAsync(new[] { specification }, options, cancellationToken).AnyContext();
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
-            return await this.options.Provider.LoadValuesAsync(
+            return this.options.Provider.LoadValuesAsync(
                 expressions: specifications?.Select(s => s.ToExpression()),
                 skip: options.Skip,
                 take: options.Take,
                 orderExpression: options.Order.Expression,
-                orderDescending: options.Order.Direction == OrderDirection.Descending).ToEnumerable().AnyContext();
+                orderDescending: options.Order.Direction == OrderDirection.Descending).ToEnumerable();
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<TEntity> FindOneAsync(object id)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             if (id.IsDefault())
             {
                 return null;
             }
 
-            return (await this.options.Provider.LoadValuesAsync(id).ToEnumerable().AnyContext()).FirstOrDefault();
+            return this.options.Provider.LoadValuesAsync(id).ToEnumerable().FirstOrDefault();
         }
 
         public async Task<TEntity> InsertAsync(TEntity entity)
