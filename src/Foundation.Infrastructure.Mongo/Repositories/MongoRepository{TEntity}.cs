@@ -83,7 +83,7 @@
         {
             if (specification == null)
             {
-                return await this.FindAllAsync(options, cancellationToken).AnyContext();
+                return await this.FindAllAsync(Enumerable.Empty<ISpecification<TEntity>>(), options, cancellationToken).AnyContext();
             }
 
             return await this.FindAllAsync(new[] { specification }, options, cancellationToken).AnyContext();
