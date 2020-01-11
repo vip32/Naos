@@ -7,28 +7,28 @@
     using EnsureThat;
     using Microsoft.Extensions.Logging;
 
-    public class SqlDocumentRepository<TEntity> : IGenericRepository<TEntity>
+    public class DocumentRepository<TEntity> : IGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
-        private readonly SqlDocumentRepositoryOptions<TEntity> options;
+        private readonly DocumentRepositoryOptions<TEntity> options;
 
-        public SqlDocumentRepository(SqlDocumentRepositoryOptions<TEntity> options)
+        public DocumentRepository(DocumentRepositoryOptions<TEntity> options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Provider, nameof(options.Provider));
 
             this.options = options;
-            this.Logger = options.CreateLogger<SqlDocumentRepository<TEntity>>();
+            this.Logger = options.CreateLogger<DocumentRepository<TEntity>>();
 
             this.Logger.LogInformation($"{{LogKey:l}} construct sql document repository (type={typeof(TEntity).PrettyName()})", LogKeys.DomainRepository);
         }
 
-        public SqlDocumentRepository(Builder<SqlDocumentRepositoryOptionsBuilder<TEntity>, SqlDocumentRepositoryOptions<TEntity>> optionsBuilder)
-            : this(optionsBuilder(new SqlDocumentRepositoryOptionsBuilder<TEntity>()).Build())
+        public DocumentRepository(Builder<DocumentRepositoryOptionsBuilder<TEntity>, DocumentRepositoryOptions<TEntity>> optionsBuilder)
+            : this(optionsBuilder(new DocumentRepositoryOptionsBuilder<TEntity>()).Build())
         {
         }
 
-        public ILogger<SqlDocumentRepository<TEntity>> Logger { get; }
+        public ILogger<DocumentRepository<TEntity>> Logger { get; }
 
         public async Task<ActionResult> DeleteAsync(object id)
         {

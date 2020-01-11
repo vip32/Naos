@@ -43,7 +43,7 @@
                             //    new RepositoryLoggingDecorator<Product>(
                             //        sp.GetRequiredService<ILogger<ProductRepository>>(),
 #pragma warning disable SA1114 // Parameter list should follow declaration
-                            new SqlDocumentRepository<Product>(o => o
+                            new DocumentRepository<Product>(o => o
                                 .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                                 .Provider(sp.GetRequiredService<IDocumentProvider<Product>>())
                                 .Mediator(sp.GetRequiredService<IMediator>())));

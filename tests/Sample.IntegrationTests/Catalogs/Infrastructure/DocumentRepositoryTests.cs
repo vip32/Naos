@@ -11,13 +11,13 @@
     using Shouldly;
     using Xunit;
 
-    public class SqlDocumentRepositoryTests : BaseTest
+    public class DocumentRepositoryTests : BaseTest
     {
         private readonly IProductRepository sut;
         private readonly Faker<Product> entityFaker;
         private readonly string tenantId = "naos_sample_test";
 
-        public SqlDocumentRepositoryTests()
+        public DocumentRepositoryTests()
         {
             this.sut = this.ServiceProvider.GetRequiredService<IProductRepository>();
             this.entityFaker = new Faker<Product>() //https://github.com/bchavez/Bogus
