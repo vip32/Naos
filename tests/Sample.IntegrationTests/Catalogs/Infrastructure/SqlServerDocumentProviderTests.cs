@@ -5,7 +5,7 @@
     using Bogus;
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Foundation;
-    using Naos.Foundation.Infrastructure;
+    using Naos.Foundation.Domain;
     using Naos.Sample.Catalogs.Domain;
     using Shouldly;
     using Xunit;

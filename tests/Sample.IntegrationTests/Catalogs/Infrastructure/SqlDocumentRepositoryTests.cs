@@ -7,18 +7,17 @@
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Foundation;
     using Naos.Foundation.Domain;
-    using Naos.Foundation.Infrastructure;
     using Naos.Sample.Catalogs.Domain;
     using Shouldly;
     using Xunit;
 
-    public class SqlServerDocumentRepositoryTests : BaseTest
+    public class SqlDocumentRepositoryTests : BaseTest
     {
         private readonly IProductRepository sut;
         private readonly Faker<Product> entityFaker;
         private readonly string tenantId = "naos_sample_test";
 
-        public SqlServerDocumentRepositoryTests()
+        public SqlDocumentRepositoryTests()
         {
             this.sut = this.ServiceProvider.GetRequiredService<IProductRepository>();
             this.entityFaker = new Faker<Product>() //https://github.com/bchavez/Bogus
