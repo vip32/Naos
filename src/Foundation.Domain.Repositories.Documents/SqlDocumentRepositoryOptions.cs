@@ -1,9 +1,8 @@
-﻿namespace Naos.Foundation.Infrastructure
+﻿namespace Naos.Foundation.Domain
 {
     using MediatR;
-    using Naos.Foundation.Domain;
 
-    public class SqlServerDocumentRepositoryOptions<TEntity> : BaseOptions
+    public class SqlDocumentRepositoryOptions<TEntity> : BaseOptions
         where TEntity : class, IEntity, IAggregateRoot
     {
         /// <summary>

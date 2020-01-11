@@ -1,4 +1,4 @@
-﻿namespace Naos.Foundation.Infrastructure
+﻿namespace Naos.Foundation.Domain
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -6,30 +6,29 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Foundation.Domain;
 
-    public class SqlServerDocumentRepository<TEntity> : IGenericRepository<TEntity>
+    public class SqlDocumentRepository<TEntity> : IGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
-        private readonly SqlServerDocumentRepositoryOptions<TEntity> options;
+        private readonly SqlDocumentRepositoryOptions<TEntity> options;
 
-        public SqlServerDocumentRepository(SqlServerDocumentRepositoryOptions<TEntity> options)
+        public SqlDocumentRepository(SqlDocumentRepositoryOptions<TEntity> options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Provider, nameof(options.Provider));
 
             this.options = options;
-            this.Logger = options.CreateLogger<SqlServerDocumentRepository<TEntity>>();
+            this.Logger = options.CreateLogger<SqlDocumentRepository<TEntity>>();
 
             this.Logger.LogInformation($"{{LogKey:l}} construct sql document repository (type={typeof(TEntity).PrettyName()})", LogKeys.DomainRepository);
         }
 
-        public SqlServerDocumentRepository(Builder<SqlServerDocumentRepositoryOptionsBuilder<TEntity>, SqlServerDocumentRepositoryOptions<TEntity>> optionsBuilder)
-            : this(optionsBuilder(new SqlServerDocumentRepositoryOptionsBuilder<TEntity>()).Build())
+        public SqlDocumentRepository(Builder<SqlDocumentRepositoryOptionsBuilder<TEntity>, SqlDocumentRepositoryOptions<TEntity>> optionsBuilder)
+            : this(optionsBuilder(new SqlDocumentRepositoryOptionsBuilder<TEntity>()).Build())
         {
         }
 
-        public ILogger<SqlServerDocumentRepository<TEntity>> Logger { get; }
+        public ILogger<SqlDocumentRepository<TEntity>> Logger { get; }
 
         public async Task<ActionResult> DeleteAsync(object id)
         {

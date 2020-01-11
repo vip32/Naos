@@ -228,9 +228,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commands.Application.Web", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities.Web", "src\Foundation.Utilities.Web\Utilities.Web.csproj", "{0C979240-E792-4091-A3CC-358525F6488C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.SqlServer.Documents", "src\Foundation.Infrastructure.SqlServer.Documents\Infrastructure.SqlServer.Documents.csproj", "{06D46C00-0B36-43AD-9162-43817CF03BED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Documents.SqlServer", "src\Foundation.Infrastructure.Documents.SqlServer\Infrastructure.Documents.SqlServer.csproj", "{06D46C00-0B36-43AD-9162-43817CF03BED}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Sqlite.Documents", "src\Foundation.Infrastructure.Sqlite.Documents\Infrastructure.Sqlite.Documents.csproj", "{E73B756E-2874-4F9A-9210-41E418E6616C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Documents.Sqlite", "src\Foundation.Infrastructure.Documents.Sqlite\Infrastructure.Documents.Sqlite.csproj", "{E73B756E-2874-4F9A-9210-41E418E6616C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Foundation", "src\Foundation\Foundation.csproj", "{874B448F-729D-45A7-AECE-7037B60C6ED3}"
 EndProject
@@ -253,6 +253,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Application.Web2", "tests\Sample.Application.Web2\Sample.Application.Web2.csproj", "{C9E6CC1D-BE60-4C94-91A6-F2BA6ABBFD99}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tracing.Infrastructure.Zipkin", "src\Tracing.Infrastructure.Zipkin\Tracing.Infrastructure.Zipkin.csproj", "{0F664563-4132-4691-A3F1-0B8CE26989EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.Repositories.Documents", "src\Foundation.Domain.Repositories.Documents\Domain.Repositories.Documents.csproj", "{5CE7AE14-D737-4B93-9EEB-A30C1ADE601E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1427,6 +1429,18 @@ Global
 		{0F664563-4132-4691-A3F1-0B8CE26989EE}.Release|x64.Build.0 = Release|Any CPU
 		{0F664563-4132-4691-A3F1-0B8CE26989EE}.Release|x86.ActiveCfg = Release|Any CPU
 		{0F664563-4132-4691-A3F1-0B8CE26989EE}.Release|x86.Build.0 = Release|Any CPU
+		{5CE7AE14-D737-4B93-9EEB-A30C1ADE601E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CE7AE14-D737-4B93-9EEB-A30C1ADE601E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CE7AE14-D737-4B93-9EEB-A30C1ADE601E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5CE7AE14-D737-4B93-9EEB-A30C1ADE601E}.Debug|x64.Build.0 = Debug|Any CPU
+		{5CE7AE14-D737-4B93-9EEB-A30C1ADE601E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5CE7AE14-D737-4B93-9EEB-A30C1ADE601E}.Debug|x86.Build.0 = Debug|Any CPU
+		{5CE7AE14-D737-4B93-9EEB-A30C1ADE601E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CE7AE14-D737-4B93-9EEB-A30C1ADE601E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CE7AE14-D737-4B93-9EEB-A30C1ADE601E}.Release|x64.ActiveCfg = Release|Any CPU
+		{5CE7AE14-D737-4B93-9EEB-A30C1ADE601E}.Release|x64.Build.0 = Release|Any CPU
+		{5CE7AE14-D737-4B93-9EEB-A30C1ADE601E}.Release|x86.ActiveCfg = Release|Any CPU
+		{5CE7AE14-D737-4B93-9EEB-A30C1ADE601E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1548,6 +1562,7 @@ Global
 		{ABCB37FD-5EF5-48BB-9F3D-BDD69B602AF9} = {D54F7975-DC18-481A-824F-DF0FD37370C3}
 		{C9E6CC1D-BE60-4C94-91A6-F2BA6ABBFD99} = {D54F7975-DC18-481A-824F-DF0FD37370C3}
 		{0F664563-4132-4691-A3F1-0B8CE26989EE} = {252D518E-8483-4F75-961A-7224A4F1B32B}
+		{5CE7AE14-D737-4B93-9EEB-A30C1ADE601E} = {C441E12D-3F09-4E93-B490-6E77B8FB7CD5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BD699E0F-4BC9-41A9-93D5-E89FDDA8FC17}

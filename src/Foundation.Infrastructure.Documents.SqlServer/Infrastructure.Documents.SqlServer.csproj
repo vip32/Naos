@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <AssemblyName>Naos.Foundation.Infrastructure.SqlServer.Documents</AssemblyName>
+    <AssemblyName>Naos.Foundation.Infrastructure.Documents.SqlServer</AssemblyName>
     <RootNamespace>Naos.Foundation.Infrastructure</RootNamespace>
   </PropertyGroup>
 
@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Foundation.Compression\Compression.csproj" />
+    <ProjectReference Include="..\Foundation.Domain.Repositories.Documents\Domain.Repositories.Documents.csproj" />
     <ProjectReference Include="..\Foundation.Domain\Domain.csproj" />
     <ProjectReference Include="..\Foundation.Domain.Repositories\Domain.Repositories.csproj" />
   </ItemGroup>

@@ -12,6 +12,7 @@
     using Dapper;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
+    using Naos.Foundation.Domain;
 
     public class SqlServerDocumentProvider<T> : IDocumentProvider<T>
     {
