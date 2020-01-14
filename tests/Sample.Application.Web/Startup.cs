@@ -30,12 +30,11 @@ namespace Naos.Sample.Application.Web
     {
         public Startup(IConfiguration configuration)
         {
-            this.Configuration = configuration; //NaosConfigurationFactory.Create();
+            this.Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<ConsoleLifetimeOptions>(opts => opts.SuppressStatusMessages = true); // https://andrewlock.net/new-in-aspnetcore-3-structured-logging-for-startup-messages/
