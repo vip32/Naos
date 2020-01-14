@@ -3,6 +3,7 @@
     using System.Linq;
     using System.Net;
     using EnsureThat;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
@@ -22,6 +23,7 @@
             this.logger = logger;
         }
 
+        [Authorize]
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [OpenApiTag("Naos Echo")]

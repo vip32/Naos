@@ -133,7 +133,7 @@
             naosOptions.Context.Services.AddAuthorization();
 
             naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos services builder: authentication added (type={AspNetCore.Authentication.OpenIdConnect.OpenIdConnectDefaults.AuthenticationScheme})");
-            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Authentication", Description = $"{AspNetCore.Authentication.OpenIdConnect.OpenIdConnectDefaults.AuthenticationScheme}", EchoRoute = "api/echo/authentication" });
+            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Authentication", Description = AspNetCore.Authentication.OpenIdConnect.OpenIdConnectDefaults.AuthenticationScheme, EchoRoute = "api/echo/authentication" });
 
             return naosOptions;
         }
