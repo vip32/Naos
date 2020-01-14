@@ -15,21 +15,26 @@
 #if NETCOREAPP3_1
 
         /// <summary>
-        /// Enables correlation/request ids for the API request/responses.
+        /// Force authentication for all endpoints (mvc + custom middleware)
         /// </summary>
         /// <param name="naosOptions"></param>
         public static NaosApplicationContextOptions UseAuthenticationChallenge(this NaosApplicationContextOptions naosOptions)
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
 
-            return naosOptions.UseAuthenticationChallenge(new AuthenticationChallengeMiddlewareOptions());
+            return naosOptions.UseAuthenticationChallenge(new OidcAuthenticationChallengeMiddlewareOptions());
         }
 
+        /// <summary>
+        /// Force authentication for all endpoints (mvc + custom middleware)
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <returns></returns>
         public static IApplicationBuilder UseAuthenticationChallenge(this IApplicationBuilder builder)
         {
             EnsureArg.IsNotNull(builder, nameof(builder));
 
-            return builder.UseAuthenticationChallenge(new AuthenticationChallengeMiddlewareOptions());
+            return builder.UseAuthenticationChallenge(new OidcAuthenticationChallengeMiddlewareOptions());
         }
 
         /// <summary>
@@ -37,7 +42,7 @@
         /// </summary>
         /// <param name="naosOptions"></param>
         /// <param name="options"></param>
-        public static NaosApplicationContextOptions UseAuthenticationChallenge(this NaosApplicationContextOptions naosOptions, AuthenticationChallengeMiddlewareOptions options)
+        public static NaosApplicationContextOptions UseAuthenticationChallenge(this NaosApplicationContextOptions naosOptions, OidcAuthenticationChallengeMiddlewareOptions options)
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
             EnsureArg.IsNotNull(options, nameof(options));
@@ -47,15 +52,17 @@
             {
                 if(provider.GetDefaultChallengeSchemeAsync().Result.Name == Authentication.OpenIdConnect.OpenIdConnectDefaults.AuthenticationScheme)
                 {
-                    naosOptions.Context.Application.UseMiddleware<AuthenticationChallengeMiddleware>(Options.Create(options));
+                    naosOptions.Context.Application.UseMiddleware<OidcAuthenticationChallengeMiddleware>(Options.Create(options));
                     naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: authentication challenge");
                 }
+
+                // TODO: register other middleware for different authentication schemes (easyauth?)
             }
 
             return naosOptions;
         }
 
-        public static IApplicationBuilder UseAuthenticationChallenge(this IApplicationBuilder builder, AuthenticationChallengeMiddlewareOptions options)
+        public static IApplicationBuilder UseAuthenticationChallenge(this IApplicationBuilder builder, OidcAuthenticationChallengeMiddlewareOptions options)
         {
             EnsureArg.IsNotNull(builder, nameof(builder));
             EnsureArg.IsNotNull(options, nameof(options));
@@ -65,9 +72,11 @@
             {
                 if (provider.GetDefaultChallengeSchemeAsync().Result.Name == Authentication.OpenIdConnect.OpenIdConnectDefaults.AuthenticationScheme)
                 {
-                    builder.UseMiddleware<AuthenticationChallengeMiddleware>(Options.Create(options));
+                    builder.UseMiddleware<OidcAuthenticationChallengeMiddleware>(Options.Create(options));
                     //naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: authentication challenge");
                 }
+
+                // TODO: register other middleware for different authentication schemes (easyauth?)
             }
 
             return builder;

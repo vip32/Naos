@@ -12,30 +12,30 @@
     /// <summary>
     /// Middleware which challenges the authication provider
     /// </summary>
-    public class AuthenticationChallengeMiddleware
+    public class OidcAuthenticationChallengeMiddleware
     {
         private readonly RequestDelegate next;
-        private readonly ILogger<AuthenticationChallengeMiddleware> logger;
-        private readonly AuthenticationChallengeMiddlewareOptions options;
+        private readonly ILogger<OidcAuthenticationChallengeMiddleware> logger;
+        private readonly OidcAuthenticationChallengeMiddlewareOptions options;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AuthenticationChallengeMiddleware"/> class.
+        /// Initializes a new instance of the <see cref="OidcAuthenticationChallengeMiddleware"/> class.
         /// Creates a new instance of the AuthenticationChallengeMiddleware.
         /// </summary>
         /// <param name="next">The next middleware in the pipeline.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="options">The configuration options.</param>
-        public AuthenticationChallengeMiddleware(
+        public OidcAuthenticationChallengeMiddleware(
             RequestDelegate next,
-            ILogger<AuthenticationChallengeMiddleware> logger,
-            IOptions<AuthenticationChallengeMiddlewareOptions> options)
+            ILogger<OidcAuthenticationChallengeMiddleware> logger,
+            IOptions<OidcAuthenticationChallengeMiddlewareOptions> options)
         {
             EnsureArg.IsNotNull(next, nameof(next));
             EnsureArg.IsNotNull(logger, nameof(logger));
 
             this.next = next;
             this.logger = logger;
-            this.options = options.Value ?? new AuthenticationChallengeMiddlewareOptions();
+            this.options = options.Value ?? new OidcAuthenticationChallengeMiddlewareOptions();
         }
 
         /// <summary>

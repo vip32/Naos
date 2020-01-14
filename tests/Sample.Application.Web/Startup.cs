@@ -219,18 +219,7 @@ namespace Naos.Sample.Application.Web
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseAuthenticationChallenge();
-            //app.Use(async (context, next) => // TODO: this works here, but not in middleware UseAuthenticationChallenge(), probably order matters https://stackoverflow.com/questions/53088514/net-core-wsfederation-authentication-login-loop-on-localhost/53100821#comment94254608_53100821
-            //{
-            //    if (!context.User.Identity.IsAuthenticated && context.Request.Path != "/signin-oidc")
-            //    {
-            //        await context.ChallengeAsync("OpenIdConnect").AnyContext();
-            //    }
-            //    else
-            //    {
-            //        await next().AnyContext();
-            //    }
-            //});
+            app.UseAuthenticationChallenge(); // needs to be last in order
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

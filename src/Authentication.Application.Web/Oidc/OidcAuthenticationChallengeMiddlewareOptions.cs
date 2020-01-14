@@ -3,7 +3,7 @@
     /// <summary>
     /// Options for authenctication challenge.
     /// </summary>
-    public class AuthenticationChallengeMiddlewareOptions
+    public class OidcAuthenticationChallengeMiddlewareOptions
     {
     }
 }
