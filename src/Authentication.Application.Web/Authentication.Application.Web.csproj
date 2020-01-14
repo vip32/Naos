@@ -16,11 +16,11 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NSwag.Annotations" Version="13.2.0" />
+    <PackageReference Include="NSwag.Annotations" Version="13.2.1" />
   </ItemGroup>
 
   <ItemGroup>

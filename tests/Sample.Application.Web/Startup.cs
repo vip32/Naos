@@ -215,8 +215,8 @@ namespace Naos.Sample.Application.Web
                 .UseSwaggerUi3();
 
             app.UseRouting();
-            //app.UseAuthentication();
-            //app.UseAuthorization();
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
