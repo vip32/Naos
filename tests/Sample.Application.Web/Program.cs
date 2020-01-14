@@ -19,7 +19,6 @@ namespace Naos.Sample.Application.Web
                 .ConfigureAppConfiguration((ctx, cfg) => cfg.AddNaos(ctx))
                 .ConfigureWebHostDefaults(builder =>
                 {
-                    builder.ConfigureServices(services => services.AddSingleton);
                     builder.UseStartup<Startup>();
                 })
                 .UseDefaultServiceProvider((ctx, opt) => // https://andrewlock.net/new-in-asp-net-core-3-service-provider-validation/

@@ -123,6 +123,7 @@ namespace Naos.Sample.Application.Web
                         .AddCatalogsModule()
                         .AddInventoryModule())
                     .AddServiceContext()
+                    .AddOidcAuthentication()
                     //.AddAuthenticationApiKeyStatic()
                     //.AddEasyAuthentication(/*o => o.Provider = EasyAuthProviders.AzureActiveDirectory*/)
                     .AddRequestCorrelation()
@@ -214,6 +215,7 @@ namespace Naos.Sample.Application.Web
                 .UseSwaggerUi3();
 
             app.UseRouting();
+            //app.UseAuthentication();
             //app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
