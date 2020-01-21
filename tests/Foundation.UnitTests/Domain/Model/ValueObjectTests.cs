@@ -31,9 +31,11 @@
                 City = "New York"
             };
 
+            instance0.Equals(instance1).ShouldBeTrue();
             instance0.ShouldBe(instance1);
             instance1.ShouldBe(instance1);
             instance1.ShouldNotBe(instance2);
+            instance0.Equals(instance2).ShouldBeFalse();
         }
 
         public class StubValueObject : ValueObject
