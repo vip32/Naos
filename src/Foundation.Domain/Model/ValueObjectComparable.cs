@@ -3,23 +3,10 @@
     using System;
     using System.Collections.Generic;
 
+#pragma warning disable CA1036 // Override methods on comparable types
     public abstract class ValueObjectComparable : ValueObject, IComparable
+#pragma warning restore CA1036 // Override methods on comparable types
     {
-        public static bool operator ==(ValueObjectComparable left, ValueObjectComparable right)
-        {
-            if (left is null)
-            {
-                return right is null;
-            }
-
-            return left.Equals(right);
-        }
-
-        public static bool operator !=(ValueObjectComparable left, ValueObjectComparable right)
-        {
-            return !(left == right);
-        }
-
         public static bool operator <(ValueObjectComparable left, ValueObjectComparable right)
         {
             return left is null ? right is object : left.CompareTo(right) < 0;

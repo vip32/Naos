@@ -12,6 +12,21 @@
     /// </summary>
     public abstract class ValueObject : IEquatable<ValueObject>
     {
+        public static bool operator ==(ValueObject left, ValueObject right)
+        {
+            if (left is null)
+            {
+                return right is null;
+            }
+
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(ValueObject left, ValueObject right)
+        {
+            return !(left == right);
+        }
+
         /// <summary>
         /// Indicates whether the current object is equal to another object of the same type.
         /// </summary>
