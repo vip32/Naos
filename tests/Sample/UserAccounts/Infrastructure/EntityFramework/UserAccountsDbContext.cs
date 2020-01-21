@@ -45,7 +45,11 @@
             });
 
             modelBuilder.Entity<UserAccount>().OwnsOne(e => e.AdAccount, od =>
-                od.ToTable("AdAccounts"));
+                od.ToTable("AdAccounts")); // map valueobject to own table
+
+            modelBuilder.Entity<UserAccount>().OwnsOne(e => e.Status)
+                .Property(b => b.Value)
+                .HasColumnName(nameof(UserAccountStatus.Value)); // map valueobject to single column
 
             modelBuilder.Entity<UserVisit>().OwnsOne(e => e.State, od =>
             {

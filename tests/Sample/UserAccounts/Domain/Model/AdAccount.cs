@@ -1,5 +1,6 @@
 ﻿namespace Naos.Sample.UserAccounts.Domain
 {
+    using System;
     using System.Collections.Generic;
     using EnsureThat;
     using Naos.Foundation;
