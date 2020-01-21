@@ -33,7 +33,7 @@
                 City = "New York"
             };
 
-            instance0.Equals(instance1).ShouldBeTrue(); //IEquatable
+            instance0.Equals(instance1).ShouldBeTrue(); //IEquatable (equals)
             instance0.ShouldBe(instance1);
             (instance0 == instance1).ShouldBeTrue(); // operator
             instance1.ShouldBe(instance1);
@@ -79,17 +79,8 @@
                 ZipCode = 1111
             };
 
-            var set = new List<StubValueObjectComparable>
-            {
-                instance0,
-                instance1,
-                instance2,
-                instance3
-            };
-
-            instance0.Equals(instance1).ShouldBeTrue(); //IEquatable
+            instance0.Equals(instance1).ShouldBeTrue(); //IEquatable (equals)
             (instance0 == instance1).ShouldBeTrue(); // operator
-            //instance0.ShouldBe(instance1); // zipcode not used in equatable
             instance1.ShouldBe(instance1);
 #pragma warning disable CS1718 // Comparison made to same variable
             (instance1 == instance1).ShouldBeTrue(); // operator
@@ -97,11 +88,18 @@
             instance1.ShouldNotBe(instance2);
             instance0.Equals(instance2).ShouldBeFalse(); // IEquatable
 
-            set.Sort();
-            set.First().ZipCode.ShouldBe(1111); // 1111
-            set.Skip(1).Take(1).First().ZipCode.ShouldBe(1111); // 1111
-            set.Skip(2).Take(1).First().ZipCode.ShouldBe(2222); // 2222
-            set.Last().ZipCode.ShouldBe(3333); // 3333
+            var values = new List<StubValueObjectComparable>
+            {
+                instance0,
+                instance1,
+                instance2,
+                instance3
+            };
+            values.Sort();
+            values.First().ZipCode.ShouldBe(1111); // 1111
+            values.Skip(1).Take(1).First().ZipCode.ShouldBe(1111); // 1111
+            values.Skip(2).Take(1).First().ZipCode.ShouldBe(2222); // 2222
+            values.Last().ZipCode.ShouldBe(3333); // 3333
 
             (instance0 > instance2).ShouldBeTrue(); // operator
             (instance2 > instance1).ShouldBeFalse(); // operator
