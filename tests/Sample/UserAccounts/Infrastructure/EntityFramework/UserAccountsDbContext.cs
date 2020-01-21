@@ -2,6 +2,7 @@
 {
     using System;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
     using Naos.Sample.UserAccounts.Domain;
 
     public class UserAccountsDbContext : DbContext
@@ -49,7 +50,8 @@
 
             modelBuilder.Entity<UserAccount>().OwnsOne(e => e.Status)
                 .Property(b => b.Value)
-                .HasColumnName(nameof(UserAccount.Status)); // map valueobject to single column
+                .HasColumnName(nameof(UserAccount.Status)) // map valueobject to single column
+                .HasConversion(new EnumToStringConverter<UserAccountStatusType>());
 
             modelBuilder.Entity<UserVisit>().OwnsOne(e => e.State, od =>
             {
