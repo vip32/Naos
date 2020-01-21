@@ -49,7 +49,7 @@
 
             modelBuilder.Entity<UserAccount>().OwnsOne(e => e.Status)
                 .Property(b => b.Value)
-                .HasColumnName(nameof(UserAccountStatus.Value)); // map valueobject to single column
+                .HasColumnName(nameof(UserAccount.Status)); // map valueobject to single column
 
             modelBuilder.Entity<UserVisit>().OwnsOne(e => e.State, od =>
             {
