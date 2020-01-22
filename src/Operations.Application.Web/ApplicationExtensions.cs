@@ -2,6 +2,9 @@
 {
     using System.Diagnostics;
     using EnsureThat;
+#if NETCOREAPP3_1
+    using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+#endif
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
@@ -38,5 +41,26 @@
 
             return naosOptions;
         }
+
+#if NETCOREAPP3_1
+        public static NaosApplicationContextOptions UseOperationsHealth (
+            this NaosApplicationContextOptions naosOptions)
+        {
+            EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
+
+            //naosOptions.Context.Application.UseEndpointRouting(); // needed by middleware to get action/controller https://www.stevejgordon.co.uk/asp-net-core-first-look-at-global-routing-dispatcher
+            naosOptions.Context.Application.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHealthChecks("/health", new HealthCheckOptions
+                {
+                    ResponseWriter = HealthReportResponseWriter.Write
+                });
+            });
+
+            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: operations health added");
+
+            return naosOptions;
+        }
+#endif
     }
 }

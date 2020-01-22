@@ -4,8 +4,8 @@ namespace Naos.Sample.Application.Web
     using System.Collections.Generic;
     using System.IO;
     using System.Net;
-    using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Diagnostics.HealthChecks;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -21,6 +21,7 @@ namespace Naos.Sample.Application.Web
     using Naos.Foundation;
     using Naos.JobScheduling.Domain;
     using Naos.Messaging.Domain;
+    using Naos.Operations.Application.Web;
     using Naos.Sample.Catalogs.Application;
     using Naos.Sample.Customers.Application;
     using Naos.Tracing.Domain;
@@ -150,7 +151,7 @@ namespace Naos.Sample.Application.Web
                             //.UseInMemoryStorage()
                             //.UseFolderStorage()
                             .UseAzureStorageQueue() // TODO: rabbitmq queue is also needed
-                            //.UseInMemoryQueue()
+                                                    //.UseInMemoryQueue()
                             .GetQueued<PingCommand>("api/commands/queue/ping")
                             .GetQueued<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>(
                                 "api/commands/queue/customers/active",
@@ -210,26 +211,33 @@ namespace Naos.Sample.Application.Web
             app.UseHttpsRedirection();
 
             app
-                .UseNaos(s => s
-                    //.UseAuthenticationChallenge()
-                    .UseRequestCorrelation()
-                    .UseServiceContext()
-                    .UseServicePoweredBy()
-                    .UseOperationsLogging()
-                    .UseOperationsTracing()
-                    .UseRequestFiltering()
-                    .UseServiceExceptions()
-                    .UseCommandRequests()
-                    .UseServiceDiscoveryRouter())
-                .UseOpenApi()
-                .UseSwaggerUi3();
+               .UseNaos(s => s
+                   //.UseAuthenticationChallenge()
+                   .UseRequestCorrelation()
+                   .UseServiceContext()
+                   .UseServicePoweredBy()
+                   //.UseOperationsHealth() // useendpoints > MapHealthChecks
+                   .UseOperationsLogging()
+                   .UseOperationsTracing()
+                   .UseRequestFiltering()
+                   .UseServiceExceptions()
+                   .UseCommandRequests()
+                   .UseServiceDiscoveryRouter())
+               .UseOpenApi()
+               .UseSwaggerUi3();
 
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseAuthenticationChallenge(); // needs to be last in order
+            app.UseAuthenticationChallenge(); // needs to be last in order, forces login challenge
             app.UseEndpoints(endpoints =>
             {
+                // https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks?view=aspnetcore-3.1
+                endpoints.MapHealthChecks("/health", new HealthCheckOptions // what about https://github.com/vip32/Naos/blob/8c250b910c54ede5202ceb40d75922fd48ab5cea/src/Operations.Application.Web/ApplicationExtensions.cs#L46
+                {
+                    ResponseWriter = HealthReportResponseWriter.Write
+                });
+
                 endpoints.MapControllers();
             });
         }

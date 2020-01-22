@@ -46,7 +46,8 @@
         {
 #if NETCOREAPP3_1
 
-            if (context.User?.Identity?.IsAuthenticated == false && context.Request.Path != "/signin-oidc")
+            if (context.User?.Identity?.IsAuthenticated == false
+                && !context.Request.Path.ToString().EqualsPatternAny(this.options.PathBlackListPatterns))
             {
                 await context.ChallengeAsync(Microsoft.AspNetCore.Authentication.OpenIdConnect.OpenIdConnectDefaults.AuthenticationScheme).AnyContext();
             }

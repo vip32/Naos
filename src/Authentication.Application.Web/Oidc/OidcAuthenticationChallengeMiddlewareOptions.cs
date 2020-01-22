@@ -5,5 +5,12 @@
     /// </summary>
     public class OidcAuthenticationChallengeMiddlewareOptions
     {
+        public bool Enabled { get; set; } = true;
+
+        /// <summary>
+        /// The path patterns to ignore.
+        /// </summary>
+        public string[] PathBlackListPatterns { get; set; } =
+            new[] { "/*.js", "/*.css", "/*.html", "/swagger*", "/favicon.ico", "/signin-oidc", "/health" };
     }
 }

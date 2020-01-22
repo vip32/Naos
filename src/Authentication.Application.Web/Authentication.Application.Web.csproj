@@ -26,6 +26,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Commands.Application\Commands.Application.csproj" />
     <ProjectReference Include="..\Foundation.Application.Web\Application.Web.csproj" />
+    <ProjectReference Include="..\Foundation.Extensions\Extensions.csproj" />
   </ItemGroup>
 
 </Project>
