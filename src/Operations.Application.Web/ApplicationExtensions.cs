@@ -61,17 +61,17 @@
             naosOptions.Context.Application.UseHealthChecks("/health", new HealthCheckOptions()
             {
                 Predicate = _ => true,
-                ResponseWriter = HealthReportResponseWriter.Write
+                ResponseWriter = HealthReportResponseWriter.Write // or use HealthChecks.UI.Client.UIResponseWriter.WriteHealthCheckUIResponse
             });
             naosOptions.Context.Application.UseHealthChecks("/health/ready", new HealthCheckOptions
             {
                 Predicate = _ => true,
-                ResponseWriter = HealthReportResponseWriter.Write
+                ResponseWriter = HealthReportResponseWriter.Write // or use HealthChecks.UI.Client.UIResponseWriter.WriteHealthCheckUIResponse
             });
             naosOptions.Context.Application.UseHealthChecks("/health/live", new HealthCheckOptions
             {
                 Predicate = r => r.Tags.Contains("live"),
-                ResponseWriter = HealthReportResponseWriter.Write
+                ResponseWriter = HealthReportResponseWriter.Write // or use HealthChecks.UI.Client.UIResponseWriter.WriteHealthCheckUIResponse
             });
 
             naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: operations health added");

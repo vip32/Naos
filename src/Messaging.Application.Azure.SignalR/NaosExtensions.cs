@@ -27,9 +27,9 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
+            var configuration = options.Context.Configuration.GetSection(section).Get<SignalRConfiguration>();
             options.Context.Services.AddSingleton<IMessageBroker>(sp =>
             {
-                var configuration = options.Context.Configuration.GetSection(section).Get<SignalRConfiguration>();
                 var broker = new SignalRServerlessMessageBroker(o => o
                         .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                         .Mediator((IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)))
@@ -45,6 +45,10 @@
                 brokerAction?.Invoke(broker);
                 return broker;
             });
+
+            // TODO: does not work with azure hosted hub
+            //options.Context.Services.AddHealthChecks()
+            //    .AddSignalRHub(configuration.ConnectionString.SliceFrom("Endpoint=").SliceTill(";"), "messaging-broker-signalr", tags: new[] { "naos" });
 
             options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: messaging added (broker={nameof(SignalRServerlessMessageBroker)})");
 

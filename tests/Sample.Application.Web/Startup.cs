@@ -152,7 +152,7 @@ namespace Naos.Sample.Application.Web
                             //.UseInMemoryStorage()
                             //.UseFolderStorage()
                             .UseAzureStorageQueue() // TODO: rabbitmq queue is also needed
-                                                    //.UseInMemoryQueue()
+                            //.UseInMemoryQueue()
                             .GetQueued<PingCommand>("api/commands/queue/ping")
                             .GetQueued<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>(
                                 "api/commands/queue/customers/active",
@@ -166,7 +166,7 @@ namespace Naos.Sample.Application.Web
                             //.UseAzureBlobStorage()
                             //.UseCosmosDb() TODO
                             .UseAzureLogAnalytics(false)
-                            .UseMongo(true))
+                            .UseMongo())
                         .AddSystemHealthChecks()
                         .AddRequestStorage(o => o
                             .UseAzureBlobStorage())
@@ -192,7 +192,7 @@ namespace Naos.Sample.Application.Web
                         //.UseSignalRBroker(s => s
                         .UseRabbitMQBroker(s => s
                         //.UseServiceBusBroker(s => s
-                            .Subscribe<EchoMessage, EchoMessageHandler>()))
+                           .Subscribe<EchoMessage, EchoMessageHandler>()))
                     .AddServiceDiscovery(o => o
                         .UseFileSystemClientRegistry())
                     // TODO: create a cloud based registry (storage)
