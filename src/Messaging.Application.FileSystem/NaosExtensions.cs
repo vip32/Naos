@@ -15,11 +15,12 @@
     using Naos.Messaging.Application;
     using Naos.Messaging.Domain;
     using Naos.Messaging.Infrastructure;
+    using Naos.Tracing.Domain;
 
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions
     {
-        public static MessagingOptions UseFolderFileStorageBroker(
+        public static MessagingOptions UseFileStorageBroker(
             this MessagingOptions options,
             Action<IMessageBroker> brokerAction = null,
             string messageScope = null,
@@ -34,6 +35,7 @@
                 configuration.Folder = configuration.Folder.EmptyToNull() ?? Path.GetTempPath();
                 var broker = new FileStorageMessageBroker(o => o
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
+                    .Tracer(sp.GetService<ITracer>())
                     .Mediator((IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)))
                     .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
                     .Storage(new FileStorageLoggingDecorator(

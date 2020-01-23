@@ -188,8 +188,8 @@ namespace Naos.Sample.Application.Web
                     .AddServiceClient()
                     .AddQueueing()
                     .AddMessaging(o => o
-                        //.UseFileSystemBroker(s => s
-                        //.UseSignalRBroker(s => s
+                        //.UseFileStorageBroker(s => s
+                        //.UseSignalRServerlessBroker(s => s // WARN: has a bug where old messages are multiplied on new subsequent publishes
                         .UseRabbitMQBroker(s => s
                         //.UseServiceBusBroker(s => s
                            .Subscribe<EchoMessage, EchoMessageHandler>()))

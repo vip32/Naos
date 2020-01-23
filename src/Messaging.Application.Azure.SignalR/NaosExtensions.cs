@@ -14,11 +14,12 @@
     using Naos.Messaging.Application;
     using Naos.Messaging.Domain;
     using Naos.Messaging.Infrastructure.Azure;
+    using Naos.Tracing.Domain;
 
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions
     {
-        public static MessagingOptions UseSignalRBroker(
+        public static MessagingOptions UseSignalRServerlessBroker(
             this MessagingOptions options,
             Action<IMessageBroker> brokerAction = null,
             string messageScope = null,
@@ -32,6 +33,7 @@
             {
                 var broker = new SignalRServerlessMessageBroker(o => o
                         .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
+                        .Tracer(sp.GetService<ITracer>())
                         .Mediator((IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)))
                         .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
                         .ConnectionString(configuration.ConnectionString)
