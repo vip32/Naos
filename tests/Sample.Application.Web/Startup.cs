@@ -118,6 +118,7 @@ namespace Naos.Sample.Application.Web
 
             services
                 .AddNaos(this.Configuration, "Product", "Capability", new[] { "All" }, n => n
+                    .AddModule<CustomersModule>()
                     .AddModules(m => m
                         .AddCountriesModule()
                         .AddCustomersModule()
@@ -163,6 +164,7 @@ namespace Naos.Sample.Application.Web
                             .UseFile()
                             //.UseSink(w => w.LiterateConsole())
                             //.UseAzureBlobStorage()
+                            //.UseCosmosDb() TODO
                             .UseAzureLogAnalytics(false)
                             .UseMongo(true))
                         .AddSystemHealthChecks()
@@ -216,7 +218,7 @@ namespace Naos.Sample.Application.Web
                    .UseRequestCorrelation()
                    .UseServiceContext()
                    .UseServicePoweredBy()
-                   //.UseOperationsHealth() // useendpoints > MapHealthChecks
+                   .UseOperationsHealth()
                    .UseOperationsLogging()
                    .UseOperationsTracing()
                    .UseRequestFiltering()
@@ -232,12 +234,6 @@ namespace Naos.Sample.Application.Web
             app.UseAuthenticationChallenge(); // needs to be last in order, forces login challenge
             app.UseEndpoints(endpoints =>
             {
-                // https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks?view=aspnetcore-3.1
-                endpoints.MapHealthChecks("/health", new HealthCheckOptions // what about https://github.com/vip32/Naos/blob/8c250b910c54ede5202ceb40d75922fd48ab5cea/src/Operations.Application.Web/ApplicationExtensions.cs#L46
-                {
-                    ResponseWriter = HealthReportResponseWriter.Write
-                });
-
                 endpoints.MapControllers();
             });
         }

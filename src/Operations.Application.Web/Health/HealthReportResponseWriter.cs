@@ -17,12 +17,14 @@
         {
             return new JObject(
                 new JProperty("status", report.Status.ToString()),
-                new JProperty("results", new JObject(report.Entries.Select(pair =>
+                new JProperty("duration", report.TotalDuration),
+                new JProperty("entries", new JObject(report.Entries.Select(pair =>
                     new JProperty(pair.Key?.ToLower(), new JObject(
                         new JProperty("status", pair.Value.Status.ToString()),
                         new JProperty("description", pair.Value.Description),
-                        new JProperty("data", new JObject(pair.Value.Data.Select(
-                            p => new JProperty(p.Key, p.Value))))))))));
+                        new JProperty("duration", pair.Value.Duration),
+                        new JProperty("error", pair.Value.Exception != null ? $"[{pair.Value.Exception.GetType().Name}] {pair.Value.Exception.Message}" : null),
+                        new JProperty("data", new JObject(pair.Value.Data.Select(p => new JProperty(p.Key, p.Value))))))))));
         }
     }
 }

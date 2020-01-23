@@ -28,8 +28,8 @@
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
             options.Context.Services.AddHealthChecks()
-                .AddCheck<SystemMemoryHealthCheck>("system-memory")
-                .AddCheck<SystemCpuHealthCheck>("system-cpu");
+                .AddCheck<SystemMemoryHealthCheck>("operations-system-memory", tags: new[] { "naos" })
+                .AddCheck<SystemCpuHealthCheck>("operations-system-cpu", tags: new[] { "naos" });
 
             return options;
         }

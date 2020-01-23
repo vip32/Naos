@@ -31,6 +31,7 @@
     <ProjectReference Include="..\Foundation.Abstractions\Abstractions.csproj" />
     <ProjectReference Include="..\Foundation.Infrastructure.Azure.KeyVault\Infrastructure.Azure.KeyVault.csproj" />
     <ProjectReference Include="..\Foundation.Serialization\Serialization.csproj" />
+    <ProjectReference Include="..\Foundation.Utilities\Utilities.csproj" />
   </ItemGroup>
 
 </Project>

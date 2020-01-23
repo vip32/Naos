@@ -96,23 +96,21 @@
                 return queue;
             });
 
-            options.Context.Services
-                .AddHealthChecks()
-                    .AddAzureQueueStorage(
-                        queueStorageConfiguration.ConnectionString,
-                        name: "Customers-queueStorage");
+            options.Context.Services.AddHealthChecks()
+                .AddAzureQueueStorage(
+                    queueStorageConfiguration.ConnectionString,
+                    name: "Customers-queueStorage");
 
             //options.Context.Services.AddSingleton<IValidator<CreateCustomerCommand>>(new CreateCustomerCommandValidator());
 
-            options.Context.Services
-                .AddHealthChecks()
-                    .AddDocumentDb(s =>
-                        {
-                            s.UriEndpoint = configuration.ServiceEndpointUri;
-                            s.PrimaryKey = configuration.AuthKeyOrResourceToken;
-                        },
-                        name: "Customers-cosmosdb")
-                    .AddServiceDiscoveryClient<UserAccountsClient>();
+            options.Context.Services.AddHealthChecks()
+                .AddDocumentDb(s =>
+                    {
+                        s.UriEndpoint = configuration.ServiceEndpointUri;
+                        s.PrimaryKey = configuration.AuthKeyOrResourceToken;
+                    },
+                    name: "Customers-cosmosdb")
+                .AddServiceDiscoveryClient<UserAccountsClient>();
 
             options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: customers service added");
 

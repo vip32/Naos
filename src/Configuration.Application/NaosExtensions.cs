@@ -87,5 +87,27 @@
 
             return naosOptions;
         }
+
+        public static NaosServicesContextOptions AddModule<TModule>(
+            this NaosServicesContextOptions naosOptions,
+            string section = null)
+            where TModule : class
+        {
+            EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
+            EnsureArg.IsNotNull(naosOptions.Context, nameof(naosOptions.Context));
+
+            // TODO: create T instance with Factory.Creat<T>() and call inst.AddModule(options) << see CompositionRoot examples
+            var module = Factory<TModule>.Create();
+            if (section.IsNullOrEmpty())
+            {
+                module.Configure(new ModuleOptions(naosOptions.Context));
+            }
+            else
+            {
+                module.Configure(new ModuleOptions(naosOptions.Context), section);
+            }
+
+            return naosOptions;
+        }
     }
 }
