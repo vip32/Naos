@@ -59,6 +59,9 @@
 
                 if (context.Request.Path == "/" || context.Request.Path.Equals("/index.html", System.StringComparison.OrdinalIgnoreCase))
                 {
+                    //<link href='css/naos/bootstrap.min.css' rel ='stylesheet' />
+                    //<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous'>
+                    //<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js' integrity='sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossorigin='anonymous'></script>
                     await context.Response.WriteAsync(@"
 <!DOCTYPE html>
 <html>
@@ -67,8 +70,8 @@
     <meta name='viewport' content='width=device-width' />
     <title>Naos</title>
     <base href='/' />
-    <link href='css/bootstrap/bootstrap.min.css' rel ='stylesheet' />
-    <link href='css/naos.css' rel ='stylesheet' />
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.0.10/css/all.css' integrity='sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg' crossorigin='anonymous'>
+    <link href='css/naos/styles.css' rel ='stylesheet' />
 </head>
 <body>
     <span style='/*display: inline-block;*/'>
@@ -86,7 +89,7 @@
 </html>
 ").AnyContext();
                 }
-                else if (context.Request.Path.Equals("/css/naos.css", System.StringComparison.OrdinalIgnoreCase))
+                else if (context.Request.Path.Equals("/css/naos/styles.css", System.StringComparison.OrdinalIgnoreCase))
                 {
                     context.Response.ContentType = ContentType.CSS.ToValue();
                     await context.Response.WriteAsync(ResourcesHelper.GetStylesAsString()).AnyContext();
