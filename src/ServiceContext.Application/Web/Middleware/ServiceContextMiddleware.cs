@@ -71,9 +71,11 @@
     <link href='css/naos.css' rel ='stylesheet' />
 </head>
 <body>
-    <pre style='color: cyan;font-size: xx-small;'>
-    " + ResourcesHelper.GetLogoAsString() + @"
-    </pre>
+    <span style='display: inline-block;'>
+        <pre style='color: cyan;font-size: xx-small;'>
+        " + ResourcesHelper.GetLogoAsString() + @"
+        </pre>
+    </span>
     <hr />
     &nbsp;&nbsp;&nbsp;&nbsp;<a href='/api'>infos</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/health'>health</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/logevents/dashboard'>logs</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/logtraces/dashboard'>traces</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/logevents/dashboard?q=TrackType=journal'>journal</a></br>
 </body>

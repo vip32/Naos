@@ -2,7 +2,8 @@
     background-color: black;
     color: white;
     font-family: monospace;
-    margin: 1em 0px;
+    margin: 0px;
+    /*margin: 1em 0px;*/
     font-size: 12px;
 }
 
