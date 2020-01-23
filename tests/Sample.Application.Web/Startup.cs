@@ -118,7 +118,7 @@ namespace Naos.Sample.Application.Web
 
             services
                 .AddNaos(this.Configuration, "Product", "Capability", new[] { "All" }, n => n
-                    .AddModule<CustomersModule>()
+                    //.AddModule<CustomersModule>()
                     .AddModules(m => m
                         .AddCountriesModule()
                         .AddCustomersModule()
