@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net;
+    using System.Net.Http;
     using System.Threading.Tasks;
     using EnsureThat;
     using Humanizer;
@@ -10,32 +11,33 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
+    using Naos.Foundation.Application;
     using Naos.Operations.Domain;
     using Naos.RequestFiltering.Application;
     using NSwag.Annotations;
 
-    [Route("api/operations/logevents")]
+    [Route("api/operations/health")]
     [ApiController]
-    public class NaosOperationsLogEventsController : ControllerBase
+    public class NaosOperationsHealthController : ControllerBase
     {
-        private readonly ILogger<NaosOperationsLogEventsController> logger;
+        private readonly ILogger<NaosOperationsHealthController> logger;
         private readonly FilterContext filterContext;
-        private readonly ILogEventRepository repository;
+        private readonly IHttpClientFactory httpClientFactory;
         private readonly ILogEventService service;
 
-        public NaosOperationsLogEventsController(
+        public NaosOperationsHealthController(
             ILoggerFactory loggerFactory,
-            ILogEventRepository repository,
+            IHttpClientFactory httpClientFactory,
             ILogEventService service,
             IFilterContextAccessor filterContext)
         {
             EnsureArg.IsNotNull(loggerFactory, nameof(loggerFactory));
-            EnsureArg.IsNotNull(repository, nameof(repository));
+            EnsureArg.IsNotNull(httpClientFactory, nameof(httpClientFactory));
             EnsureArg.IsNotNull(service, nameof(service));
 
-            this.logger = loggerFactory.CreateLogger<NaosOperationsLogEventsController>();
+            this.logger = loggerFactory.CreateLogger<NaosOperationsHealthController>();
             this.filterContext = filterContext.Context ?? new FilterContext();
-            this.repository = repository;
+            this.httpClientFactory = httpClientFactory;
             this.service = service;
         }
 
@@ -44,7 +46,7 @@
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         [OpenApiTag("Naos Operations")]
-        public async Task<ActionResult<IEnumerable<LogEvent>>> Get()
+        public async Task<ActionResult<NaosHealthReport>> Get()
         {
             //var acceptHeader = this.HttpContext.Request.Headers.GetValue("Accept");
             //if (acceptHeader.ContainsAny(new[] { ContentType.HTML.ToValue(), ContentType.HTM.ToValue() }))
@@ -53,17 +55,6 @@
             //}
 
             return this.Ok(await this.GetJsonAsync().AnyContext());
-        }
-
-        [HttpGet]
-        [Route("{id}")]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        [OpenApiTag("Naos Operations")]
-        public async Task<ActionResult<LogEvent>> Get(string id)
-        {
-            return this.Ok(await this.repository.FindOneAsync(id).AnyContext());
         }
 
         [HttpGet]
@@ -78,13 +69,18 @@
             return this.GetHtmlAsync();
         }
 
-        private async Task<IEnumerable<LogEvent>> GetJsonAsync()
+        private async Task<NaosHealthReport> GetJsonAsync()
         {
             LoggingFilterContext.Prepare(this.filterContext);
 
-            return await this.repository.FindAllAsync(
-                this.filterContext.GetSpecifications<LogEvent>(),
-                this.filterContext.GetFindOptions<LogEvent>()).AnyContext();
+            var httpClient = this.httpClientFactory.CreateClient("health");
+            var response = await httpClient.GetAsync("https://localhost:5001/health").AnyContext();
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.ReadAsAsync<NaosHealthReport>().AnyContext();
+            }
+
+            return null;
         }
 
         private async Task GetHtmlAsync()

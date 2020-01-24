@@ -5,6 +5,7 @@
     using System.Net;
     using System.Text;
     using System.Threading.Tasks;
+    using EnsureThat;
     using Humanizer;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -32,9 +33,9 @@
             ILogEventService service,
             IFilterContextAccessor filterContext)
         {
-            EnsureThat.EnsureArg.IsNotNull(loggerFactory, nameof(loggerFactory));
-            EnsureThat.EnsureArg.IsNotNull(repository, nameof(repository));
-            EnsureThat.EnsureArg.IsNotNull(service, nameof(service));
+            EnsureArg.IsNotNull(loggerFactory, nameof(loggerFactory));
+            EnsureArg.IsNotNull(repository, nameof(repository));
+            EnsureArg.IsNotNull(service, nameof(service));
 
             this.logger = loggerFactory.CreateLogger<NaosOperationsLogTracesController>();
             this.filterContext = filterContext.Context ?? new FilterContext();
