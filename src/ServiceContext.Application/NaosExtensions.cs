@@ -43,8 +43,7 @@
                     naosOptions.Context.Descriptor.Tags));
 
             naosOptions.Context.Services.AddHealthChecks()
-                .AddCheck($"{naosOptions.Context.Descriptor.Name}-servicecontext", () => HealthCheckResult.Healthy(), tags: new[] { "live", "naos" })
-                .AddCheck($"{naosOptions.Context.Descriptor.Name}-servicecontext2", () => HealthCheckResult.Unhealthy(), tags: new[] { "live", "naos" });
+                .AddCheck($"{naosOptions.Context.Descriptor.Name}-servicecontext", () => HealthCheckResult.Healthy(), tags: new[] { "live", "naos" });
 
             naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos services builder: service context added");
             naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceContext", EchoRoute = "api/echo/servicecontext" });
