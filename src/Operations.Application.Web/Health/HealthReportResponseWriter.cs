@@ -52,7 +52,7 @@
                 Status = report.Status.ToString(),
                 Duration = report.TotalDuration,
                 Took = report.TotalDuration.Humanize(),
-                Timestamp = DateTime.UtcNow.ToString("o"),
+                Timestamp = DateTime.UtcNow,
                 Entries = new Dictionary<string, NaosHealthReportEntry>()
             };
 

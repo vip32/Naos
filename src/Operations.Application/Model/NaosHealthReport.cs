@@ -11,7 +11,9 @@
 
         public string Took { get; set; }
 
-        public string Timestamp { get; set; }
+        public DateTime Timestamp { get; set; }
+
+        public string CorrelationId { get; set; }
 
         public IDictionary<string, NaosHealthReportEntry> Entries { get; set; }
     }

@@ -1,7 +1,6 @@
 ﻿namespace Naos.Operations.Application.Web
 {
-    using System.Collections.Generic;
-    using System.Linq;
+    using System;
     using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
@@ -12,7 +11,6 @@
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
     using Naos.Foundation.Application;
-    using Naos.Operations.Domain;
     using Naos.RequestFiltering.Application;
     using NSwag.Annotations;
 
@@ -77,7 +75,9 @@
             var response = await httpClient.GetAsync("https://localhost:5001/health").AnyContext();
             if (response.IsSuccessStatusCode)
             {
-                return await response.ReadAsAsync<NaosHealthReport>().AnyContext();
+                var result = await response.ReadAsAsync<NaosHealthReport>().AnyContext();
+                result.CorrelationId = response.GetCorrelationIdHeader();
+                return result;
             }
 
             return null;
@@ -102,46 +102,42 @@
     " + ResourcesHelper.GetLogoAsString() + @"
     </pre>
     <hr />
-    &nbsp;&nbsp;&nbsp;&nbsp;<a href='/api'>infos</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/health'>health</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/logevents/dashboard'>logs</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/logtraces/dashboard'>traces</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/logevents/dashboard?q=TrackType=journal'>journal</a>&nbsp;&nbsp;&nbsp;</br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href='/api'>infos</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/health/dashboard'>health</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/logevents/dashboard'>logs</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/logtraces/dashboard'>traces</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/logevents/dashboard?q=TrackType=journal'>journal</a>&nbsp;&nbsp;&nbsp;</br>
 ").AnyContext(); // TODO: reuse from ServiceContextMiddleware.cs
             try
             {
                 LoggingFilterContext.Prepare(this.filterContext);
 
-                var entities = await this.repository.FindAllAsync(
-                    this.filterContext.GetSpecifications<LogEvent>(),
-                    this.filterContext.GetFindOptions<LogEvent>()).AnyContext();
-
-                foreach (var entity in entities
-                    .Where(l => !l.TrackType.EqualsAny(new[] { LogTrackTypes.Trace })))
+                var report = await this.GetJsonAsync().AnyContext();
+                if(report != null)
                 {
-                    var levelColor = "lime";
-                    if (entity.Level.SafeEquals(nameof(LogLevel.Trace)) || entity.Level.SafeEquals(nameof(LogLevel.Debug)) || entity.Level.SafeEquals("Verbose"))
-                    {
-                        levelColor = "#75715E";
-                    }
-                    else if (entity.Level.SafeEquals(nameof(LogLevel.Warning)))
-                    {
-                        levelColor = "#FF8C00";
-                    }
-                    else if (entity.Level.SafeEquals(nameof(LogLevel.Critical)) || entity.Level.SafeEquals(nameof(LogLevel.Error)) || entity.Level.SafeEquals("Fatal"))
-                    {
-                        levelColor = "#FF0000";
-                    }
-
-                    var messageColor = levelColor;
-                    var extraStyles = string.Empty;
-
                     await this.HttpContext.Response.WriteAsync("<div style='white-space: nowrap;'><span style='color: #EB1864; font-size: x-small;'>").AnyContext();
-                    await this.HttpContext.Response.WriteAsync($"{entity.Timestamp.ToUniversalTime():u}").AnyContext();
+                    await this.HttpContext.Response.WriteAsync($"{report.Timestamp.ToUniversalTime():u}").AnyContext();
                     await this.HttpContext.Response.WriteAsync("</span>").AnyContext();
-                    await this.HttpContext.Response.WriteAsync($"&nbsp;[<span style='color: {levelColor}'>").AnyContext();
-                    await this.HttpContext.Response.WriteAsync($"{entity.Level.ToUpper().Truncate(3, string.Empty)}</span>]").AnyContext();
-                    await this.HttpContext.Response.WriteAsync(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logevents/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;").AnyContext();
-                    await this.HttpContext.Response.WriteAsync($"<span style='color: {messageColor}; {extraStyles}'>").AnyContext();
-                    //await this.HttpContext.Response.WriteAsync(logEvent.TrackType.SafeEquals("journal") ? "*" : "&nbsp;"); // journal prefix
-                    await this.HttpContext.Response.WriteAsync($"{entity.Message} <a target=\"blank\" href=\"/api/operations/logevents/{entity.Id}\">*</a>").AnyContext();
+                    await this.HttpContext.Response.WriteAsync($"&nbsp;[<span style='color: {this.GetHealthLevelColor(report.Status)}'>").AnyContext();
+                    await this.HttpContext.Response.WriteAsync($"{report.Status.ToUpper().PadRight(9, '.')/*.Truncate(3, string.Empty)*/}</span>]").AnyContext();
+                    await this.HttpContext.Response.WriteAsync(!report.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logevents/dashboard?q=CorrelationId={report.CorrelationId}\">{report.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;").AnyContext();
+                    await this.HttpContext.Response.WriteAsync($"<span style='color: {this.GetHealthLevelColor(report.Status)}'>").AnyContext();
+                    await this.HttpContext.Response.WriteAsync("overall <a target=\"blank\" href=\"/health\">*</a>").AnyContext();
                     await this.HttpContext.Response.WriteAsync("</span>").AnyContext();
+                    await this.HttpContext.Response.WriteAsync($"<span style=\"color: gray;\">&nbsp;-> took {report.Duration.Humanize()}</span>").AnyContext();
+
+                    foreach (var entry in report.Entries.Safe())
+                    {
+                        await this.HttpContext.Response.WriteAsync("<div style='white-space: nowrap;'><span style='color: #EB1864; font-size: x-small;'>").AnyContext();
+                        await this.HttpContext.Response.WriteAsync($"{report.Timestamp.ToUniversalTime():u}").AnyContext();
+                        await this.HttpContext.Response.WriteAsync("</span>").AnyContext();
+                        await this.HttpContext.Response.WriteAsync($"&nbsp;[<span style='color: {this.GetHealthLevelColor(entry.Value.Status)}'>").AnyContext();
+                        await this.HttpContext.Response.WriteAsync($"{entry.Value.Status.ToUpper().PadRight(9, '.')/*.Truncate(3, string.Empty)*/}</span>]").AnyContext();
+                        await this.HttpContext.Response.WriteAsync(!report.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logevents/dashboard?q=CorrelationId={report.CorrelationId}\">{report.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;").AnyContext();
+                        await this.HttpContext.Response.WriteAsync($"<span style='color: {this.GetHealthLevelColor(entry.Value.Status)}'>").AnyContext();
+                        await this.HttpContext.Response.WriteAsync($"&nbsp;&nbsp;{entry.Key} <a target=\"blank\" href=\"/health\">*</a>").AnyContext();
+                        await this.HttpContext.Response.WriteAsync("</span>").AnyContext();
+                        await this.HttpContext.Response.WriteAsync($"<span style=\"color: gray;\">&nbsp;-> took {report.Duration.Humanize()}</span>").AnyContext();
+
+                        await this.HttpContext.Response.WriteAsync("</div>").AnyContext();
+                    }
+
                     await this.HttpContext.Response.WriteAsync("</div>").AnyContext();
                 }
             }
@@ -151,6 +147,19 @@
             }
         }
 
-        // Application parts? https://docs.microsoft.com/en-us/aspnet/core/mvc/advanced/app-parts?view=aspnetcore-2.1
+        private string GetHealthLevelColor(string status)
+        {
+            var levelColor = "lime";
+            if (status.SafeEquals("Unhealthy"))
+            {
+                levelColor = "#FF0000";
+            }
+            else if (status.SafeEquals("Degraded"))
+            {
+                levelColor = "#FF8C00";
+            }
+
+            return levelColor;
+        }
     }
 }
