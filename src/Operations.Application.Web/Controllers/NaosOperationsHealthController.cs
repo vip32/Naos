@@ -135,6 +135,8 @@
                         await this.HttpContext.Response.WriteAsync("</span>").AnyContext();
                         await this.HttpContext.Response.WriteAsync($"<span style=\"color: gray;\">&nbsp;-> took {report.Duration.Humanize()}</span>").AnyContext();
 
+                        // TODO: if entry has data then render that on next line (+indent)
+
                         await this.HttpContext.Response.WriteAsync("</div>").AnyContext();
                     }
 
