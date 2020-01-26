@@ -55,9 +55,16 @@
                 }
             }.ForEach(async e =>
             {
-                if (!await this.repository.ExistsAsync(e.Id).AnyContext())
+                try
                 {
-                    await this.repository.InsertAsync(e).AnyContext();
+                    if (!await this.repository.ExistsAsync(e.Id).AnyContext())
+                    {
+                        await this.repository.InsertAsync(e).AnyContext();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    this.logger.LogWarning(ex, $"{{LogKey:l}} cannot seed entity (type=ProductInventory) {ex.Message}", LogKeys.Startup);
                 }
             });
 
