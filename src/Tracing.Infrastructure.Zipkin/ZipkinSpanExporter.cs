@@ -9,6 +9,7 @@
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
+    using EnsureThat;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
     using Naos.Tracing.Domain;
@@ -17,21 +18,25 @@
     public class ZipkinSpanExporter : ISpanExporter
     {
         private readonly ILogger<ZipkinSpanExporter> logger;
-        private readonly ServiceDescriptor serviceDescriptor;
-        private readonly ZipkinSpanExporterConfiguration configuration;
+        private readonly string serviceName;
+        private readonly string endpoint;
         private readonly HttpClient httpClient;
         private readonly ZipkinEndpoint localEndpoint;
 
         public ZipkinSpanExporter(
             ILogger<ZipkinSpanExporter> logger,
-            ServiceDescriptor serviceDescriptor,
-            ZipkinSpanExporterConfiguration configuration = null,
-            HttpClient httpClient = null)
+            string host,
+            string serviceName,
+            IHttpClientFactory httpClientFactory)
         {
+            EnsureArg.IsNotNull(logger, nameof(logger));
+            EnsureArg.IsNotNullOrEmpty(serviceName, nameof(serviceName));
+            EnsureArg.IsNotNullOrEmpty(host, nameof(host));
+
             this.logger = logger;
-            this.serviceDescriptor = serviceDescriptor;
-            this.configuration = configuration ?? new ZipkinSpanExporterConfiguration();
-            this.httpClient = httpClient ?? new HttpClient(); // TODO: httpclientfactory + createclient?
+            this.serviceName = serviceName;
+            this.endpoint = $"{host}/api/v2/spans";
+            this.httpClient = httpClientFactory.CreateClient("zipkin");
             this.localEndpoint = this.GetLocalZipkinEndpoint();
         }
 
@@ -47,7 +52,7 @@
                 {
                     if (tag.Key == SpanTagKey.HttpUrl)
                     {
-                        if (tag.Value is string url && url == this.configuration.Endpoint)
+                        if (tag.Value is string url && url == this.endpoint)
                         {
                             shouldExport = false; // do not track calls to zipkin
                         }
@@ -81,7 +86,7 @@
         private async Task SendSpansAsync(IEnumerable<ZipkinSpan> spans, CancellationToken cancellationToken)
         {
 #pragma warning disable CA2000 // Dispose objects before losing scope
-            var request = new HttpRequestMessage(HttpMethod.Post, this.configuration.Endpoint);
+            var request = new HttpRequestMessage(HttpMethod.Post, this.endpoint);
             var content = JsonConvert.SerializeObject(spans);
 #pragma warning restore CA2000 // Dispose objects before losing scope
             request.Content = new StringContent(
@@ -120,7 +125,7 @@
         {
             var result = new ZipkinEndpoint()
             {
-                ServiceName = this.serviceDescriptor.Name //this.options.ServiceName,
+                ServiceName = this.serviceName,
             };
 
             var hostName = this.ResolveHostName();

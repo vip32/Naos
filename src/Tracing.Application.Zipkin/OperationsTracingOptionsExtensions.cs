@@ -5,7 +5,6 @@
     using System.Net.Http;
     using EnsureThat;
     using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.Diagnostics.HealthChecks;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
     using Naos.Tracing.Application;
@@ -22,20 +21,17 @@
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
             var configuration = options.Context.Configuration?.GetSection("naos:operations:tracing:zipkin").Get<ZipkinSpanExporterConfiguration>();
-            if (configuration != null && configuration.Enabled)
+            if (configuration?.Enabled == true && configuration?.Host.IsNullOrEmpty() == false)
             {
                 options.Context.Services.AddSingleton<ISpanExporter>(sp =>
                 new ZipkinSpanExporter(
                     sp.GetRequiredService<ILogger<ZipkinSpanExporter>>(),
-                    sp.GetRequiredService<Naos.Foundation.ServiceDescriptor>(),
-                    configuration,
-                    sp.GetRequiredService<HttpClient>())); // TODO: factory?
+                    configuration.Host.TrimEnd('/'),
+                    sp.GetRequiredService<Naos.Foundation.ServiceDescriptor>().Name,
+                    sp.GetRequiredService<IHttpClientFactory>())); // TODO: factory?
 
-                if (!configuration.Endpoint.IsNullOrEmpty())
-                {
-                    options.Context.Services.AddHealthChecks()
-                        .AddUrlGroup(new Uri(configuration.Endpoint), "tracing-exporter-zipkin", tags: new[] { "naos" });
-                }
+                options.Context.Services.AddHealthChecks()
+                    .AddUrlGroup(new Uri($"{configuration.Host.TrimEnd('/')}/health"), "tracing-exporter-zipkin", tags: new[] { "naos" });
 
                 options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: tracing exporter used (type={typeof(ZipkinSpanExporter).Name})");
             }
