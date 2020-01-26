@@ -58,7 +58,7 @@
 
             try
             {
-                this.connection.Dispose();
+                this.connection?.Dispose();
             }
             catch (IOException ex)
             {
@@ -79,10 +79,14 @@
                         this.logger.LogWarning(ex, "{LogKey:l} connect rabbitmq client failed after {TimeOut}s ({ExceptionMessage})", LogKeys.Messaging, $"{time.TotalSeconds:n1}", ex.Message);
                     });
 
-                policy.Execute(() =>
+                try
                 {
-                    this.connection = this.connectionFactory.CreateConnection();
-                });
+                    policy.Execute(() => this.connection = this.connectionFactory.CreateConnection());
+                }
+                catch(BrokerUnreachableException ex)
+                {
+                    this.logger.LogError(ex, $"{{LogKey:l}} connect rabbitmq client failed: {ex.Message}", LogKeys.Messaging);
+                }
 
                 if (this.IsConnected)
                 {
@@ -96,7 +100,7 @@
                 }
                 else
                 {
-                    this.logger.LogCritical("{LogKey:l} connect rabbitmq could not be created and opened", LogKeys.Messaging);
+                    this.logger.LogError("{LogKey:l} connect rabbitmq could not be created and opened", LogKeys.Messaging);
 
                     return false;
                 }
@@ -111,7 +115,6 @@
             }
 
             this.logger.LogWarning("A RabbitMQ connection is shutdown. Trying to re-connect...");
-
             this.TryConnect();
         }
 
@@ -123,7 +126,6 @@
             }
 
             this.logger.LogWarning("A RabbitMQ connection throw exception. Trying to re-connect...");
-
             this.TryConnect();
         }
 
@@ -135,7 +137,6 @@
             }
 
             this.logger.LogWarning("A RabbitMQ connection is on shutdown. Trying to re-connect...");
-
             this.TryConnect();
         }
     }
