@@ -99,7 +99,7 @@
             options.Context.Services.AddHealthChecks()
                 .AddAzureQueueStorage(
                     queueStorageConfiguration.ConnectionString,
-                    name: "Customers-queueStorage");
+                    name: "Customers-queuestorage");
 
             //options.Context.Services.AddSingleton<IValidator<CreateCustomerCommand>>(new CreateCustomerCommandValidator());
 
