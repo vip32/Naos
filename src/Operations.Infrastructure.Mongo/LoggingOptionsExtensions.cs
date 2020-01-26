@@ -46,7 +46,7 @@
                 }
 
                 options.Context.Services.AddHealthChecks()
-                    .AddMongoDb(connectionString, name: "logging-mongodb", tags: new[] { "naos" });
+                    .AddMongoDb(connectionString, name: "logging-sink-mongodb", tags: new[] { "naos" });
 
                 options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: logging mongo sink added (collection={configuration.CollectionName})");
 
