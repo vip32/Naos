@@ -159,8 +159,8 @@ namespace Naos.Sample.Application.Web
                             .UseAzureBlobStorage())
                         .AddTracing(o => o
                             .UseSampler<ConstantSampler>()
-                            .UseZipkinExporter()
-                            .UseExporter<ZipkinSpanExporter>())) // TODO: UseZipkinExporter + configuration + zipkin url health (options.Endpoint)
+                            .UseZipkinExporter()))
+                            //.UseExporter<ZipkinSpanExporter>())) // TODO: UseZipkinExporter + configuration + zipkin url health (options.Endpoint)
                     //.UseSampler(new OperationNamePatternSampler(new[] { "http*" }))))
                     //.AddQueries()
                     //.AddSwaggerDocument() // s.Description = Product.Capability\
