@@ -1,9 +1,9 @@
-﻿namespace Naos.Tracing.Infrastructure.Mongo
+﻿namespace Naos.Tracing.Infrastructure
 {
     using AutoMapper;
     using Naos.Tracing.Domain;
 
-    public static class MapperFactory
+    public static class MongoMapperFactory
     {
         public static IMapper Create() // automapper based mapper because of the needed expression mapping
         {

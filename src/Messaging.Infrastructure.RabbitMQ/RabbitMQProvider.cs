@@ -62,7 +62,7 @@
             }
             catch (IOException ex)
             {
-                this.logger.LogCritical(ex.ToString());
+                this.logger.LogCritical(ex, $"{{LogKey:l}} ex.Message", LogKeys.Messaging);
             }
         }
 
@@ -76,7 +76,7 @@
                     .Or<BrokerUnreachableException>()
                     .WaitAndRetry(this.retryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
                     {
-                        this.logger.LogWarning(ex, "{LogKey:l} connect rabbitmq client failed after {TimeOut}s ({ExceptionMessage})", LogKeys.Messaging, $"{time.TotalSeconds:n1}", ex.Message);
+                        this.logger.LogError(ex, "{LogKey:l} connect rabbitmq client failed after {TimeOut}s ({ExceptionMessage})", LogKeys.Messaging, $"{time.TotalSeconds:n1}", ex.Message);
                     });
 
                 try

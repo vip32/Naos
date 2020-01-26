@@ -18,12 +18,10 @@ namespace Naos.Sample.Application.Web
     using Naos.Commands.Infrastructure.FileStorage;
     using Naos.FileStorage.Infrastructure;
     using Naos.Foundation;
-    using Naos.JobScheduling.Domain;
     using Naos.Messaging.Domain;
-    using Naos.Sample.Catalogs.Application;
     using Naos.Sample.Customers.Application;
     using Naos.Tracing.Domain;
-    using Naos.Tracing.Infrastructure.Zipkin;
+    using Naos.Tracing.Infrastructure;
     using NSwag.Generation.Processors;
 
     public class Startup
@@ -146,21 +144,23 @@ namespace Naos.Sample.Application.Web
                             //.UseInMemoryQueue()
                             .GetQueued<PingCommand>("api/commands/queue/ping")
                             .GetQueued<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>("api/commands/queue/customers/active", groupName: "Customers")))
-                    .AddOperations(o => o
+                   .AddOperations(o => o
                         .AddInteractiveConsole()
                         .AddLogging(o => o
                             .UseConsole(LogLevel.Debug)
                             .UseFile()
                             //.UseSink(w => w.LiterateConsole())
                             //.UseAzureBlobStorage()
+                            //.UseCosmosDb() TODO
                             .UseAzureLogAnalytics(false)
-                            .UseMongo(true))
+                            .UseMongo())
                         .AddSystemHealthChecks()
                         .AddRequestStorage(o => o
                             .UseAzureBlobStorage())
                         .AddTracing(o => o
                             .UseSampler<ConstantSampler>()
-                            .UseExporter<ZipkinSpanExporter>()))
+                            .UseZipkinExporter()
+                            .UseExporter<ZipkinSpanExporter>())) // TODO: UseZipkinExporter + configuration + zipkin url health (options.Endpoint)
                     //.UseSampler(new OperationNamePatternSampler(new[] { "http*" }))))
                     //.AddQueries()
                     //.AddSwaggerDocument() // s.Description = Product.Capability\

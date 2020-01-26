@@ -30,6 +30,7 @@
     <ProjectReference Include="..\ServiceContext.Application\ServiceContext.Application.csproj" />
     <ProjectReference Include="..\ServiceDiscovery.Application.Consul\ServiceDiscovery.Application.Consul.csproj" />
     <ProjectReference Include="..\ServiceDiscovery.Application\ServiceDiscovery.Application.csproj" />
+    <ProjectReference Include="..\Tracing.Application.Zipkin\Tracing.Application.Zipkin.csproj" />
     <ProjectReference Include="..\Tracing.Application\Tracing.Application.csproj" />
   </ItemGroup>
 

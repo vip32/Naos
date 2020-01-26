@@ -1,4 +1,4 @@
-﻿namespace Naos.Tracing.Infrastructure.Zipkin
+﻿namespace Naos.Tracing.Infrastructure
 {
     using System;
     using System.Collections.Generic;

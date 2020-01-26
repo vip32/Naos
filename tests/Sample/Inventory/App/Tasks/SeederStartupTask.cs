@@ -62,9 +62,9 @@
                         await this.repository.InsertAsync(e).AnyContext();
                     }
                 }
-                catch (Exception ex)
+                catch// (Exception ex)
                 {
-                    this.logger.LogWarning(ex, $"{{LogKey:l}} cannot seed entity (type=ProductInventory) {ex.Message}", LogKeys.Startup);
+                    //this.logger.LogWarning(ex, $"{{LogKey:l}} cannot seed entity (type=ProductInventory) {ex.Message}", LogKeys.Startup);
                 }
             });
 

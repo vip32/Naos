@@ -1,4 +1,4 @@
-﻿namespace Naos.Tracing.Infrastructure.Zipkin
+﻿namespace Naos.Tracing.Infrastructure
 {
     using System;
     using System.Collections.Generic;
@@ -18,20 +18,20 @@
     {
         private readonly ILogger<ZipkinSpanExporter> logger;
         private readonly ServiceDescriptor serviceDescriptor;
-        private readonly ZipkinSpanExporterOptions options;
+        private readonly ZipkinSpanExporterConfiguration configuration;
         private readonly HttpClient httpClient;
         private readonly ZipkinEndpoint localEndpoint;
 
         public ZipkinSpanExporter(
             ILogger<ZipkinSpanExporter> logger,
             ServiceDescriptor serviceDescriptor,
-            ZipkinSpanExporterOptions options = null,
+            ZipkinSpanExporterConfiguration configuration = null,
             HttpClient httpClient = null)
         {
             this.logger = logger;
             this.serviceDescriptor = serviceDescriptor;
-            this.options = options ?? new ZipkinSpanExporterOptions();
-            this.httpClient = httpClient ?? new HttpClient();
+            this.configuration = configuration ?? new ZipkinSpanExporterConfiguration();
+            this.httpClient = httpClient ?? new HttpClient(); // TODO: httpclientfactory + createclient?
             this.localEndpoint = this.GetLocalZipkinEndpoint();
         }
 
@@ -47,9 +47,9 @@
                 {
                     if (tag.Key == SpanTagKey.HttpUrl)
                     {
-                        if (tag.Value is string url && url == this.options.Endpoint)
+                        if (tag.Value is string url && url == this.configuration.Endpoint)
                         {
-                            shouldExport = false; // do not track calls to Zipkin
+                            shouldExport = false; // do not track calls to zipkin
                         }
 
                         break;
@@ -74,14 +74,14 @@
             }
             catch (Exception ex)
             {
-                this.logger.LogWarning(ex, $"zipkin span export failed: {ex.Message}");
+                this.logger.LogWarning(ex, $"{{LogKey:l}} zipkin span export failed: {ex.Message}", LogKeys.Tracing);
             }
         }
 
         private async Task SendSpansAsync(IEnumerable<ZipkinSpan> spans, CancellationToken cancellationToken)
         {
 #pragma warning disable CA2000 // Dispose objects before losing scope
-            var request = new HttpRequestMessage(HttpMethod.Post, this.options.Endpoint);
+            var request = new HttpRequestMessage(HttpMethod.Post, this.configuration.Endpoint);
             var content = JsonConvert.SerializeObject(spans);
 #pragma warning restore CA2000 // Dispose objects before losing scope
             request.Content = new StringContent(
@@ -93,7 +93,7 @@
             var response = await this.httpClient.SendAsync(request, cancellationToken).AnyContext();
             if (!response.IsSuccessStatusCode)
             {
-                this.logger.LogWarning($"ZIPKIN send error: {spans.Dump()}");
+                this.logger.LogWarning($"{{LogKey:l}} zipkin send error: {spans.Dump()}", LogKeys.Tracing);
             }
         }
 

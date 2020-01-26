@@ -9,7 +9,7 @@
     using Naos.Foundation.Domain;
     using Naos.Foundation.Infrastructure;
     using Naos.Tracing.Domain;
-    using Naos.Tracing.Infrastructure.Mongo;
+    using Naos.Tracing.Infrastructure;
 
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions
@@ -34,7 +34,7 @@
                         .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                         .MongoClient(sp.GetServices<IMongoClient>()
                             .FirstOrDefault(c => c.Settings.ApplicationName == "logging")) //TODO: make nice extension to get a named mongoclient
-                        .Mapper(new AutoMapperEntityMapper(MapperFactory.Create()))
+                        .Mapper(new AutoMapperEntityMapper(MongoMapperFactory.Create()))
                         .DatabaseName(configuration.DatabaseName)
                         .CollectionName(configuration.CollectionName));
                 });

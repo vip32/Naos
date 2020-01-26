@@ -5,7 +5,6 @@ namespace Naos.Sample.Application.Web
     using System.IO;
     using System.Net;
     using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Diagnostics.HealthChecks;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -21,11 +20,10 @@ namespace Naos.Sample.Application.Web
     using Naos.Foundation;
     using Naos.JobScheduling.Domain;
     using Naos.Messaging.Domain;
-    using Naos.Operations.Application.Web;
     using Naos.Sample.Catalogs.Application;
     using Naos.Sample.Customers.Application;
     using Naos.Tracing.Domain;
-    using Naos.Tracing.Infrastructure.Zipkin;
+    using Naos.Tracing.Infrastructure;
     using NSwag.Generation.Processors;
 
     public class Startup
@@ -172,7 +170,8 @@ namespace Naos.Sample.Application.Web
                             .UseAzureBlobStorage())
                         .AddTracing(o => o
                             .UseSampler<ConstantSampler>()
-                            .UseExporter<ZipkinSpanExporter>()))
+                            .UseZipkinExporter()
+                            .UseExporter<ZipkinSpanExporter>())) // TODO: UseZipkinExporter + configuration + zipkin url health (options.Endpoint)
                     //.UseSampler(new OperationNamePatternSampler(new[] { "http*" }))))
                     //.AddQueries()
                     //.AddSwaggerDocument() // s.Description = Product.Capability\
