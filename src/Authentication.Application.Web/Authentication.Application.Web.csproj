@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NSwag.Annotations" Version="13.2.1" />
+    <PackageReference Include="NSwag.Annotations" Version="13.2.2" />
   </ItemGroup>
 
   <ItemGroup>
