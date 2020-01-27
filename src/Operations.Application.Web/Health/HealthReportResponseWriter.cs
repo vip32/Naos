@@ -34,6 +34,7 @@
                     new JProperty(pair.Key?.ToLower(), new JObject(
                         new JProperty("status", pair.Value.Status.ToString()),
                         new JProperty("description", pair.Value.Description),
+                        //new JProperty("tags", pair.Value.Tags),
                         new JProperty("duration", pair.Value.Duration),
                         new JProperty("took", pair.Value.Duration.Humanize()),
                         new JProperty("error", pair.Value.Exception != null ? $"[{pair.Value.Exception.GetType().Name}] {pair.Value.Exception.Message}" : null),
@@ -67,6 +68,7 @@
                 {
                     Status = entry.Value.Status.ToString(),
                     Description = entry.Value.Description,
+                    Tags = entry.Value.Tags,
                     Duration = entry.Value.Duration,
                     Took = entry.Value.Duration.Humanize(),
                     Error = entry.Value.Exception != null ? $"[{entry.Value.Exception.GetType().Name}] {entry.Value.Exception.Message}" : null,

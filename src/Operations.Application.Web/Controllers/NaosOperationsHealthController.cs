@@ -107,7 +107,7 @@
                     await this.HttpContext.Response.WriteAsync($"{report.Status.ToUpper().PadRight(9, '.')/*.Truncate(3, string.Empty)*/}</span>]").AnyContext();
                     await this.HttpContext.Response.WriteAsync(!report.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logevents/dashboard?q=CorrelationId={report.CorrelationId}\">{report.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;").AnyContext();
                     await this.HttpContext.Response.WriteAsync($"<span style='color: {this.GetHealthLevelColor(report.Status)}'>").AnyContext();
-                    await this.HttpContext.Response.WriteAsync("overall <a target=\"blank\" href=\"/health\">*</a>").AnyContext();
+                    await this.HttpContext.Response.WriteAsync("service <a target=\"blank\" href=\"/health\">*</a>").AnyContext();
                     await this.HttpContext.Response.WriteAsync("</span>").AnyContext();
                     await this.HttpContext.Response.WriteAsync($"<span style=\"color: gray;\">&nbsp;-> took {report.Took}</span>").AnyContext();
 
@@ -129,7 +129,7 @@
                             await this.HttpContext.Response.WriteAsync("<span style='color: white;'>&nbsp;└─</span>").AnyContext();
                         }
 
-                        await this.HttpContext.Response.WriteAsync($"{entry.Key} <a target=\"blank\" href=\"/health\">*</a>").AnyContext();
+                        await this.HttpContext.Response.WriteAsync($"{entry.Key} [{entry.Value.Tags.ToString("|")}] <a target=\"blank\" href=\"/health\">*</a>").AnyContext();
                         await this.HttpContext.Response.WriteAsync("</span>").AnyContext();
                         await this.HttpContext.Response.WriteAsync($"<span style=\"color: gray;\">&nbsp;-> took {entry.Value.Took}</span>").AnyContext();
 

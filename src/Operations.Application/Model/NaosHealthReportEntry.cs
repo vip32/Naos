@@ -16,5 +16,7 @@
         public string Error { get; set; }
 
         public IReadOnlyDictionary<string, object> Data { get; set; }
+
+        public IEnumerable<string> Tags { get; set; }
     }
 }
