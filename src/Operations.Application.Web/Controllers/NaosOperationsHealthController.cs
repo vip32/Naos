@@ -22,12 +22,14 @@
         private readonly FilterContext filterContext;
         private readonly IHttpClientFactory httpClientFactory;
         private readonly ILogEventService service;
+        private readonly ServiceDescriptor serviceDescriptor;
 
         public NaosOperationsHealthController(
             ILoggerFactory loggerFactory,
             IHttpClientFactory httpClientFactory,
             ILogEventService service,
-            IFilterContextAccessor filterContext)
+            IFilterContextAccessor filterContext,
+            ServiceDescriptor serviceDescriptor = null)
         {
             EnsureArg.IsNotNull(loggerFactory, nameof(loggerFactory));
             EnsureArg.IsNotNull(httpClientFactory, nameof(httpClientFactory));
@@ -37,6 +39,7 @@
             this.filterContext = filterContext.Context ?? new FilterContext();
             this.httpClientFactory = httpClientFactory;
             this.service = service;
+            this.serviceDescriptor = serviceDescriptor;
         }
 
         [HttpGet]
@@ -75,24 +78,7 @@
         private async Task GetHtmlAsync()
         {
             this.HttpContext.Response.ContentType = "text/html";
-            await this.HttpContext.Response.WriteAsync(@"
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset='utf-8' />
-    <meta name='viewport' content='width=device-width' />
-    <title>Naos</title>
-    <base href='/' />
-    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.0.10/css/all.css' integrity='sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg' crossorigin='anonymous'>
-    <link href='css/naos/styles.css' rel ='stylesheet' />
-</head>
-<body>
-    <pre style='color: cyan;font-size: xx-small;'>
-    " + ResourcesHelper.GetLogoAsString() + @"
-    </pre>
-    <hr />
-    &nbsp;&nbsp;&nbsp;&nbsp;<a href='/api'>infos</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/health/dashboard'>health</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/logevents/dashboard'>logs</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/logtraces/dashboard'>traces</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/logevents/dashboard?q=TrackType=journal'>journal</a>&nbsp;&nbsp;&nbsp;</br>
-").AnyContext(); // TODO: reuse from ServiceContextMiddleware.cs
+            await this.HttpContext.Response.WriteAsync(ResourcesHelper.GetHtmlHeaderAsString(title: this.serviceDescriptor?.ToString())).AnyContext();
             try
             {
                 LoggingFilterContext.Prepare(this.filterContext);
@@ -167,7 +153,7 @@
             }
             finally
             {
-                await this.HttpContext.Response.WriteAsync("</body></html>").AnyContext();
+                await this.HttpContext.Response.WriteAsync(ResourcesHelper.GetHtmlFooterAsString()).AnyContext();
             }
         }
 

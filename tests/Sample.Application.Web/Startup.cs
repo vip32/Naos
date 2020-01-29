@@ -194,9 +194,9 @@ namespace Naos.Sample.Application.Web
                            .Subscribe<EchoMessage, EchoMessageHandler>()))
                     .AddServiceDiscovery(o => o
                         .UseFileSystemClientRegistry())
-                    // TODO: create a cloud based registry (storage)
-                    //.UseConsulClientRegistry())
-                    //.UseRouterClientRegistry())
+                        // TODO: create a cloud based registry (storage)
+                        //.UseConsulClientRegistry())
+                        //.UseRouterClientRegistry())
                     .AddServiceDiscoveryRouter(o => o
                         .UseFileSystemRegistry()));
         }
