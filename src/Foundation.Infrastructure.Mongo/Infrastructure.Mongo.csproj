@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Humanizer.Core" Version="2.7.9" />
     <PackageReference Include="MediatR" Version="8.0.0" />
-    <PackageReference Include="MongoDB.Driver" Version="2.10.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.10.1" />
   </ItemGroup>
 
   <ItemGroup>
