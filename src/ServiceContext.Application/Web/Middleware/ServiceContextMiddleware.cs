@@ -1,5 +1,6 @@
 ﻿namespace Naos.ServiceContext.Application.Web
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using EnsureThat;
@@ -57,28 +58,32 @@
 
                 //await this.next(context);
 
-                if (context.Request.Path == "/" || context.Request.Path.Equals("/index.html", System.StringComparison.OrdinalIgnoreCase))
+                if (context.Request.Method.SafeEquals(HttpMethods.Get)
+                    && (context.Request.Path.SafeEquals("/") || context.Request.Path.SafeEquals("/index.html")))
                 {
-                    await context.Response.WriteAsync(ResourcesHelper.GetHtmlHeaderAsString(title: serviceDescriptor.ToString())).AnyContext();
-                    await context.Response.WriteAsync(ResourcesHelper.GetHtmlFooterAsString()).AnyContext();
+                    await context.Response.WriteNaosDashboard(title: $"{serviceDescriptor?.ToString()} [{serviceDescriptor?.Tags.ToString("|")}]").AnyContext();
                 }
-                else if (context.Request.Path.Equals("/css/naos/styles.css", System.StringComparison.OrdinalIgnoreCase))
+                else if (context.Request.Method.SafeEquals(HttpMethods.Get)
+                    && context.Request.Path.SafeEquals("/css/naos/styles.css"))
                 {
                     context.Response.ContentType = ContentType.CSS.ToValue();
                     await context.Response.WriteAsync(ResourcesHelper.GetStylesAsString()).AnyContext();
                 }
-                else if (context.Request.Path.Equals("/css/naos/swagger.css", System.StringComparison.OrdinalIgnoreCase))
+                else if (context.Request.Method.SafeEquals(HttpMethods.Get)
+                    && context.Request.Path.SafeEquals("/css/naos/swagger.css"))
                 {
                     context.Response.ContentType = ContentType.CSS.ToValue();
                     await context.Response.WriteAsync(ResourcesHelper.GetSwaggerStylesAsString()).AnyContext();
                 }
-                else if (context.Request.Path.Equals("/favicon.ico", System.StringComparison.OrdinalIgnoreCase))
+                else if (context.Request.Method.SafeEquals(HttpMethods.Get)
+                    && context.Request.Path.SafeEquals("/favicon.ico"))
                 {
                     context.Response.ContentType = ContentType.ICO.ToValue();
                     var icon = ResourcesHelper.GetIconAsBytes();
                     await context.Response.Body.WriteAsync(icon, 0, icon.Length).AnyContext();
                 }
-                else if (context.Request.Path == "/error")
+                else if (context.Request.Method.SafeEquals(HttpMethods.Get)
+                    && context.Request.Path == "/error")
                 {
                     throw new NaosException("forced exception");
                 }

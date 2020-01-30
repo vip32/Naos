@@ -71,90 +71,113 @@
             var httpClient = this.httpClientFactory.CreateClient("health");
             var response = await httpClient.GetAsync("https://localhost:5001/health").AnyContext();
             var result = await response.ReadAsAsync<NaosHealthReport>().AnyContext();
-            result.CorrelationId = response.GetCorrelationIdHeader();
+            if (result != null)
+            {
+                result.CorrelationId = response.GetCorrelationIdHeader();
+            }
+            else
+            {
+                result = new NaosHealthReport { Status = "Unhealthy", Timestamp = DateTime.UtcNow, CorrelationId = response.GetCorrelationIdHeader() };
+            }
+
             return result;
         }
 
-        private async Task GetHtmlAsync()
+        private Task GetHtmlAsync()
         {
-            this.HttpContext.Response.ContentType = "text/html";
-            await this.HttpContext.Response.WriteAsync(ResourcesHelper.GetHtmlHeaderAsString(title: this.serviceDescriptor?.ToString())).AnyContext();
-            try
-            {
-                LoggingFilterContext.Prepare(this.filterContext);
+            //await this.HttpContext.Response.WriteNaosDashboard(
+            //    title: this.serviceDescriptor?.ToString(),
+            //    action: async r =>
+            //    {
+            //        await r.WriteAsync("HELLO1 " + this.serviceDescriptor?.ToString()).AnyContext();
+            //        LoggingFilterContext.Prepare(this.filterContext);
+            //        await r.WriteAsync("HELLO2 " + this.serviceDescriptor?.ToString()).AnyContext();
+            //        var report = this.GetJsonAsync().Result;
+            //        await r.WriteAsync("HELLO3 " + this.serviceDescriptor?.ToString()).AnyContext();
+            //    }).AnyContext();
 
-                var report = await this.GetJsonAsync().AnyContext();
-                if(report != null)
+            this.HttpContext.Response.WriteNaosDashboard(
+                title: $"{this.serviceDescriptor?.ToString()} [{this.serviceDescriptor?.Tags.ToString("|")}]",
+                action: async r =>
                 {
-                    await this.HttpContext.Response.WriteAsync("<div style='white-space: nowrap;'><span style='color: #EB1864; font-size: x-small;'>").AnyContext();
-                    await this.HttpContext.Response.WriteAsync($"{report.Timestamp.ToUniversalTime():u}").AnyContext();
-                    await this.HttpContext.Response.WriteAsync("</span>").AnyContext();
-                    await this.HttpContext.Response.WriteAsync($"&nbsp;[<span style='color: {this.GetHealthLevelColor(report.Status)}'>").AnyContext();
-                    await this.HttpContext.Response.WriteAsync($"{report.Status.ToUpper().PadRight(9, '.')/*.Truncate(3, string.Empty)*/}</span>]").AnyContext();
-                    await this.HttpContext.Response.WriteAsync(!report.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logevents/dashboard?q=CorrelationId={report.CorrelationId}\">{report.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;").AnyContext();
-                    await this.HttpContext.Response.WriteAsync($"<span style='color: {this.GetHealthLevelColor(report.Status)}'>").AnyContext();
-                    await this.HttpContext.Response.WriteAsync("service <a target=\"blank\" href=\"/health\">*</a>").AnyContext();
-                    await this.HttpContext.Response.WriteAsync("</span>").AnyContext();
-                    await this.HttpContext.Response.WriteAsync($"<span style=\"color: gray;\">&nbsp;-> took {report.Took}</span>").AnyContext();
-
-                    foreach (var entry in report.Entries.Safe())
+                    //var report = await this.GetJsonAsync().AnyContext();
+                    var report = this.GetJsonAsync().Result;
+                    if (report != null)
                     {
-                        await this.HttpContext.Response.WriteAsync("<div style='white-space: nowrap;'><span style='color: #EB1864; font-size: x-small;'>").AnyContext();
-                        await this.HttpContext.Response.WriteAsync($"{report.Timestamp.ToUniversalTime():u}").AnyContext();
-                        await this.HttpContext.Response.WriteAsync("</span>").AnyContext();
-                        await this.HttpContext.Response.WriteAsync($"&nbsp;[<span style='color: {this.GetHealthLevelColor(entry.Value?.Status)}'>").AnyContext();
-                        await this.HttpContext.Response.WriteAsync($"{entry.Value?.Status.ToUpper().PadRight(9, '.')/*.Truncate(3, string.Empty)*/}</span>]").AnyContext();
-                        await this.HttpContext.Response.WriteAsync(!report.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logevents/dashboard?q=CorrelationId={report.CorrelationId}\">{report.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;").AnyContext();
-                        await this.HttpContext.Response.WriteAsync($"<span style='color: {this.GetHealthLevelColor(entry.Value?.Status)}'>").AnyContext();
-                        if (report.Entries.NextOf(entry.Value) != null)
-                        {
-                            await this.HttpContext.Response.WriteAsync("<span style='color: white;'>&nbsp;├─</span>").AnyContext();
-                        }
-                        else
-                        {
-                            await this.HttpContext.Response.WriteAsync("<span style='color: white;'>&nbsp;└─</span>").AnyContext();
-                        }
+                        await r.WriteAsync("<div style='white-space: nowrap;'><span style='color: #EB1864; font-size: x-small;'>").AnyContext();
+                        await r.WriteAsync($"{report.Timestamp.ToUniversalTime():u}").AnyContext();
+                        await r.WriteAsync("</span>").AnyContext();
+                        await r.WriteAsync($"&nbsp;[<span style='color: {this.GetHealthLevelColor(report.Status)}'>").AnyContext();
+                        await r.WriteAsync($"{report.Status.ToUpper().PadRight(9, '.')/*.Truncate(3, string.Empty)*/}</span>]").AnyContext();
+                        await r.WriteAsync(!report.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logevents/dashboard?q=CorrelationId={report.CorrelationId}\">{report.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;").AnyContext();
+                        await r.WriteAsync($"<span style='color: {this.GetHealthLevelColor(report.Status)}'>").AnyContext();
+                        await r.WriteAsync("service <a target=\"blank\" href=\"/health\">*</a>").AnyContext();
+                        await r.WriteAsync("</span>").AnyContext();
+                        await r.WriteAsync($"<span style=\"color: gray;\">&nbsp;-> took {report.Took}</span>").AnyContext();
 
-                        await this.HttpContext.Response.WriteAsync($"{entry.Key} [{entry.Value?.Tags.ToString("|")}] <a target=\"blank\" href=\"/health\">*</a>").AnyContext();
-                        await this.HttpContext.Response.WriteAsync("</span>").AnyContext();
-                        await this.HttpContext.Response.WriteAsync($"<span style=\"color: gray;\">&nbsp;-> took {entry.Value.Took}</span>").AnyContext();
-
-                        if(entry.Value?.Data.IsNullOrEmpty() == false)
+                        foreach (var entry in report.Entries.Safe())
                         {
-                            foreach(var data in entry.Value?.Data)
+                            try
                             {
-                                await this.HttpContext.Response.WriteAsync("<div style='white-space: nowrap;'><span style='color: #EB1864; font-size: x-small;'>").AnyContext();
-                                await this.HttpContext.Response.WriteAsync($"{report.Timestamp.ToUniversalTime():u}").AnyContext();
-                                await this.HttpContext.Response.WriteAsync("</span>").AnyContext();
-                                await this.HttpContext.Response.WriteAsync($"&nbsp;[<span style='color: {this.GetHealthLevelColor(entry.Value.Status)}'>").AnyContext();
-                                await this.HttpContext.Response.WriteAsync($"{entry.Value.Status.ToUpper().PadRight(9, '.')/*.Truncate(3, string.Empty)*/}</span>]").AnyContext();
-                                await this.HttpContext.Response.WriteAsync(!report.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logevents/dashboard?q=CorrelationId={report.CorrelationId}\">{report.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;").AnyContext();
+                                await r.WriteAsync("<div style='white-space: nowrap;'><span style='color: #EB1864; font-size: x-small;'>").AnyContext();
+                                await r.WriteAsync($"{report.Timestamp.ToUniversalTime():u}").AnyContext();
+                                await r.WriteAsync("</span>").AnyContext();
+                                await r.WriteAsync($"&nbsp;[<span style='color: {this.GetHealthLevelColor(entry.Value?.Status)}'>").AnyContext();
+                                await r.WriteAsync($"{entry.Value?.Status.ToUpper().PadRight(9, '.')/*.Truncate(3, string.Empty)*/}</span>]").AnyContext();
+                                await r.WriteAsync(!report.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logevents/dashboard?q=CorrelationId={report.CorrelationId}\">{report.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;").AnyContext();
+                                await r.WriteAsync($"<span style='color: {this.GetHealthLevelColor(entry.Value?.Status)}'>").AnyContext();
                                 if (report.Entries.NextOf(entry.Value) != null)
                                 {
-                                    await this.HttpContext.Response.WriteAsync("<span style='color: white;'>&nbsp;│</span>").AnyContext();
+                                    await r.WriteAsync("<span style='color: white;'>&nbsp;├─</span>").AnyContext();
                                 }
                                 else
                                 {
-                                    await this.HttpContext.Response.WriteAsync("&nbsp;&nbsp;").AnyContext();
+                                    await r.WriteAsync("<span style='color: white;'>&nbsp;└─</span>").AnyContext();
                                 }
 
-                                await this.HttpContext.Response.WriteAsync($"<span style='color: gray'>&nbsp;&nbsp;&nbsp;{data.Key}=</span>").AnyContext();
-                                await this.HttpContext.Response.WriteAsync($"<span style='color: cyan'>{data.Value}</span>").AnyContext();
-                                await this.HttpContext.Response.WriteAsync("</span>").AnyContext();
-                                await this.HttpContext.Response.WriteAsync("</div>").AnyContext();
+                                await r.WriteAsync($"{entry.Key} [{entry.Value?.Tags.ToString("|")}] <a target=\"blank\" href=\"/health\">*</a>").AnyContext();
+                                await r.WriteAsync("</span>").AnyContext();
+                                await r.WriteAsync($"<span style=\"color: gray;\">&nbsp;-> took {entry.Value.Took}</span>").AnyContext();
+
+                                if (entry.Value?.Data.IsNullOrEmpty() == false)
+                                {
+                                    foreach (var data in entry.Value?.Data)
+                                    {
+                                        await r.WriteAsync("<div style='white-space: nowrap;'><span style='color: #EB1864; font-size: x-small;'>").AnyContext();
+                                        await r.WriteAsync($"{report.Timestamp.ToUniversalTime():u}").AnyContext();
+                                        await r.WriteAsync("</span>").AnyContext();
+                                        await r.WriteAsync($"&nbsp;[<span style='color: {this.GetHealthLevelColor(entry.Value.Status)}'>").AnyContext();
+                                        await r.WriteAsync($"{entry.Value.Status.ToUpper().PadRight(9, '.')/*.Truncate(3, string.Empty)*/}</span>]").AnyContext();
+                                        await r.WriteAsync(!report.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logevents/dashboard?q=CorrelationId={report.CorrelationId}\">{report.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;").AnyContext();
+                                        if (report.Entries.NextOf(entry.Value) != null)
+                                        {
+                                            await r.WriteAsync("<span style='color: white;'>&nbsp;│</span>").AnyContext();
+                                        }
+                                        else
+                                        {
+                                            await r.WriteAsync("&nbsp;&nbsp;").AnyContext();
+                                        }
+
+                                        await r.WriteAsync($"<span style='color: gray'>&nbsp;&nbsp;&nbsp;{data.Key}=</span>").AnyContext();
+                                        await r.WriteAsync($"<span style='color: cyan'>{data.Value}</span>").AnyContext();
+                                        await r.WriteAsync("</span>").AnyContext();
+                                        await r.WriteAsync("</div>").AnyContext();
+                                    }
+                                }
+
+                                await r.WriteAsync("</div>").AnyContext();
+                            }
+                            catch
+                            {
+                                // do nothing
                             }
                         }
 
-                        await this.HttpContext.Response.WriteAsync("</div>").AnyContext();
+                        await r.WriteAsync("</div>").AnyContext();
                     }
+                }).Wait();
 
-                    await this.HttpContext.Response.WriteAsync("</div>").AnyContext();
-                }
-            }
-            finally
-            {
-                await this.HttpContext.Response.WriteAsync(ResourcesHelper.GetHtmlFooterAsString()).AnyContext();
-            }
+            return Task.CompletedTask;
         }
 
         private string GetHealthLevelColor(string status)

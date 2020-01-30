@@ -7,11 +7,11 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Humanizer;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.ObjectPool;
     using Naos.Foundation;
+    using Naos.Foundation.Application;
     using Naos.Foundation.Domain;
     using Naos.RequestFiltering.Application;
     using Naos.Tracing.Domain;
@@ -87,42 +87,43 @@
 
         private async Task<IEnumerable<LogTrace>> GetJsonAsync()
         {
-            LoggingFilterContext.Prepare(this.filterContext);
+            LoggingFilterContext.Prepare(this.filterContext); // add some default criteria
 
             return await this.repository.FindAllAsync(
-                this.filterContext.GetSpecifications<LogTrace>(),
+                this.filterContext.GetSpecifications<LogTrace>().Insert(
+                    new Specification<LogTrace>(t => t.TrackType == "trace")),
                 this.filterContext.GetFindOptions<LogTrace>()).AnyContext();
         }
 
-        private async Task GetHtmlAsync()
+        private Task GetHtmlAsync()
         {
-            this.HttpContext.Response.ContentType = "text/html";
-            await this.HttpContext.Response.WriteAsync(ResourcesHelper.GetHtmlHeaderAsString(title: this.serviceDescriptor?.ToString())).AnyContext();
-            try
-            {
-                LoggingFilterContext.Prepare(this.filterContext); // add some default criteria
+            this.HttpContext.Response.WriteNaosDashboard(
+                title: $"{this.serviceDescriptor?.ToString()} [{this.serviceDescriptor?.Tags.ToString("|")}]",
+                action: async r =>
+                {
+                    var entities = this.GetJsonAsync().Result;
+                    var nodes = Node<LogTrace>.ToHierarchy(entities, l => l.SpanId, l => l.ParentSpanId, true).ToList();
 
-                var entities = await this.repository.FindAllAsync(
-                    this.filterContext.GetSpecifications<LogTrace>().Insert(
-                        new Specification<LogTrace>(t => t.TrackType == "trace")),
-                    this.filterContext.GetFindOptions<LogTrace>()).AnyContext();
-                var nodes = Node<LogTrace>.ToHierarchy(entities, l => l.SpanId, l => l.ParentSpanId, true).ToList();
+                    try
+                    {
+                        await nodes.RenderAsync(
+                        t => this.WriteTrace(t),
+                        t => this.WriteTraceHeader(t),
+                        orderBy: t => t.Ticks,
+                        options: new HtmlNodeRenderOptions(r.HttpContext) { ChildNodeBreak = string.Empty }).AnyContext();
+                    }
+                    catch
+                    {
+                        // do nothing
+                    }
 
-                await nodes.RenderAsync(
-                    t => this.WriteTrace(t),
-                    t => this.WriteTraceHeader(t),
-                    orderBy: t => t.Ticks,
-                    options: new HtmlNodeRenderOptions(this.HttpContext) { ChildNodeBreak = string.Empty }).AnyContext();
+                    //foreach (var entity in entities) // .Where(l => !l.TrackType.EqualsAny(new[] { LogTrackTypes.Trace }))
+                    //{
+                    //    await this.WriteTraceAsync(entity).AnyContext();
+                    //}
+                }).Wait();
 
-                //foreach (var entity in entities) // .Where(l => !l.TrackType.EqualsAny(new[] { LogTrackTypes.Trace }))
-                //{
-                //    await this.WriteTraceAsync(entity).AnyContext();
-                //}
-            }
-            finally
-            {
-                await this.HttpContext.Response.WriteAsync(ResourcesHelper.GetHtmlFooterAsString()).AnyContext();
-            }
+            return Task.CompletedTask;
         }
 
         private string WriteTraceHeader(LogTrace entity)
