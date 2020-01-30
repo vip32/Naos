@@ -211,8 +211,7 @@ namespace Naos.Sample.Application.Web
 
             app.UseHttpsRedirection();
 
-            app
-               .UseNaos(s => s
+            app.UseNaos(s => s
                    //.UseAuthenticationChallenge()
                    .UseRequestCorrelation()
                    .UseServiceContext()
