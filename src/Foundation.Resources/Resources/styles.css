@@ -3,6 +3,7 @@
     color: white;
     font-family: monospace;
     margin: 0px;
+    margin-left: 15px;
     /*margin: 1em 0px;*/
     font-size: 12px;
 }
@@ -11,16 +12,19 @@ a {
     text-decoration: none;
     color: gray;
 }
-
-    a:link {
-    }
-
-    a:visited {
-    }
-
-    a:hover {
-        color: cyan;
-    }
+a:link {
+}
+a:visited {
+}
+a:hover {
+    color: darkcyan;
+}
+a:active {
+    color: cyan;
+}
+a.current {
+    color: cyan;
+}
 
 hr {
     display: block;
