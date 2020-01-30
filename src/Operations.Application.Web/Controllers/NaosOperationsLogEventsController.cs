@@ -131,11 +131,11 @@
                             if (entity.Message?.Length > 5 && entity.Message.Take(6).All(char.IsUpper))
                             {
                                 await r.WriteAsync($"<span style='color: cyan;'>{entity.Message.Slice(0, 6)}</span>").AnyContext();
-                                await r.WriteAsync($"{entity.Message.Slice(6)} <a target=\"blank\" href=\"/api/operations/logevents/{entity.Id}\">*</a>").AnyContext();
+                                await r.WriteAsync($"{entity.Message.Slice(6)} <a target=\"blank\" href=\"/api/operations/logevents/{entity.Id}\">*</a>&nbsp;<a target=\"blank\" href=\"/api/operations/logtraces/dashboard?q=CorrelationId={entity.CorrelationId}\">t</a>").AnyContext();
                             }
                             else
                             {
-                                await r.WriteAsync($"{entity.Message} <a target=\"blank\" href=\"/api/operations/logevents/{entity.Id}\">*</a>").AnyContext();
+                                await r.WriteAsync($"{entity.Message} <a target=\"blank\" href=\"/api/operations/logevents/{entity.Id}\">*</a>&nbsp;<a target=\"blank\" href=\"/api/operations/logtraces/dashboard?q=CorrelationId={entity.CorrelationId}\">t</a>").AnyContext();
                             }
 
                             await r.WriteAsync("</span>").AnyContext();
