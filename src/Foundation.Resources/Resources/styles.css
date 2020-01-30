@@ -20,7 +20,7 @@ a {
     }
 
     a:hover {
-        color: darkcyan;
+        color: #E2D46A;
         text-decoration: underline;
     }
 
@@ -29,7 +29,7 @@ a {
     }
 
     a.current {
-        color: #37CAEC;
+        color: #E2D46A;
     }
 
 hr {
