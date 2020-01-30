@@ -25,11 +25,11 @@ a {
     }
 
     a:active {
-        color: cyan;
+        color: #37CAEC;
     }
 
     a.current {
-        color: cyan;
+        color: #37CAEC;
     }
 
 hr {
@@ -39,4 +39,8 @@ hr {
     border-top: 1px solid #222222;
     margin: 1em 0;
     padding: 0;
+}
+
+i {
+    color: #E2D46A;
 }

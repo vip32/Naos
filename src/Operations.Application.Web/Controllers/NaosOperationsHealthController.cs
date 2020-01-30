@@ -148,7 +148,7 @@
                                         }
 
                                         await r.WriteAsync($"<span style='color: gray'>&nbsp;&nbsp;&nbsp;{data.Key}=</span>").AnyContext();
-                                        await r.WriteAsync($"<span style='color: cyan'>{data.Value}</span>").AnyContext();
+                                        await r.WriteAsync($"<span style='color: #37CAEC'>{data.Value}</span>").AnyContext();
                                         await r.WriteAsync("</span>").AnyContext();
                                         await r.WriteAsync("</div>").AnyContext();
                                     }

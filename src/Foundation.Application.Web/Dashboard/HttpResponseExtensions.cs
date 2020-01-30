@@ -21,11 +21,11 @@
             {
                 // TODO: make this more discoverable
                 new DashboardMenuItem("api", "/api"),
-                new DashboardMenuItem("health", "/api/operations/health/dashboard"),
-                new DashboardMenuItem("logevents", "/api/operations/logevents/dashboard"),
-                new DashboardMenuItem("traces", "/api/operations/logtraces/dashboard"),
-                new DashboardMenuItem("journal", "/api/operations/logevents/dashboard?q=TrackType=journal"),
-                new DashboardMenuItem("swagger", "/swagger/index.html"),
+                new DashboardMenuItem("health", "/api/operations/health/dashboard", "fas fa-heartbeat"),
+                new DashboardMenuItem("logevents", "/api/operations/logevents/dashboard", "fas fa-search"),
+                new DashboardMenuItem("traces", "/api/operations/logtraces/dashboard", "far fa-clone"),
+                new DashboardMenuItem("journal", "/api/operations/logevents/dashboard?q=TrackType=journal", "fas fa-clipboard"),
+                new DashboardMenuItem("swagger", "/swagger/index.html", "far fa-file"),
             };
 
             source.ContentType = ContentType.HTML.ToValue();
@@ -42,7 +42,7 @@
 </head>
 <body>
     <span style='/*display: inline-block;*/'>
-        <pre style='color: cyan;font-size: xx-small;margin-left: -15px'>
+        <pre style='color: #37CAEC;font-size: xx-small;margin-left: -15px'>
         {header}
         </pre>
     </span>
@@ -51,7 +51,7 @@
     </span>
     <hr />
     <div style='padding-bottom: 10px;'>
-      {menuItems.Safe().Select(m => $"<a href='{m.Url}'>{m.Name}</a>").ToString("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")}
+      {menuItems.Safe().Select(m => $"<i class='{m.Icon}'></i>&nbsp;<a href='{m.Url}'>{m.Name}</a>").ToString("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")}
     </div>
     <script type='text/javascript'>
         (function(anchors, url, i, a) {{ // highlight current menuitem
