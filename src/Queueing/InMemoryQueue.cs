@@ -250,7 +250,7 @@
         protected override async Task<IQueueItem<TData>> DequeueWithIntervalAsync(CancellationToken cancellationToken)
         {
             await this.EnsureQueueAsync().AnyContext();
-            this.Logger.LogDebug($"queue item dequeue (queue={this.Options.QueueName}, count={this.queue.Count})");
+            this.Logger.LogDebug($"{{LogKey:l}} queue item dequeue (queue={this.Options.QueueName}, count={this.queue.Count})", LogKeys.Queueing);
 
             if (this.queue.Count == 0)
             {

@@ -137,7 +137,7 @@
                 .Append(this.GetTraceLevelColor(entity)).Append("'>")
                 .Append(entity.Kind?.ToUpper().Truncate(6, string.Empty))
                 .Append("</span>]");
-            sb.Append(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logevents/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;");
+            sb.Append(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logevents/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
             //sb.Append(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logtraces/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;");
 
             var result = sb.ToString();
@@ -149,13 +149,22 @@
         {
             var extraStyles = string.Empty;
             var sb = this.stringBuilderPool.Get(); // less allocations
-            sb.Append("<span style='color: ").Append(this.GetTraceLevelColor(entity)).Append("; ").Append(extraStyles).Append("'>")
-                //.Append(logEvent.TrackType.SafeEquals("journal") ? "*" : "&nbsp;"); // journal prefix
-                .Append(entity.Message).Append(" (").Append(entity.SpanId).Append("/").Append(entity.ParentSpanId).Append(")&nbsp;")
-                .Append("<a target=\"blank\" href=\"/api/operations/logtraces/").Append(entity.Id).Append("\">*</a> ")
-                .Append("<span style=\"color: gray;\">-> took ")
-                .Append(entity.Duration.Humanize())
-                .Append("</span>");
+            sb.Append("<span style='color: ").Append(this.GetTraceLevelColor(entity)).Append("; ").Append(extraStyles).Append("'>");
+            //.Append(logEvent.TrackType.SafeEquals("journal") ? "*" : "&nbsp;"); // journal prefix
+            if (entity.Message?.Length > 5 && entity.Message.Take(6).All(char.IsUpper))
+            {
+                sb.Append($"<span style='color: cyan;'>{entity.Message.Slice(0, 6)}</span>");
+                sb.Append(entity.Message.Slice(6)).Append(" (").Append(entity.SpanId).Append("/").Append(entity.ParentSpanId).Append(")&nbsp;");
+            }
+            else
+            {
+                sb.Append(entity.Message).Append(" (").Append(entity.SpanId).Append("/").Append(entity.ParentSpanId).Append(")&nbsp;");
+            }
+
+            sb.Append("<a target=\"blank\" href=\"/api/operations/logtraces/").Append(entity.Id).Append("\">*</a> ");
+            sb.Append("<span style=\"color: gray;\">-> took ");
+            sb.Append(entity.Duration.Humanize());
+            sb.Append("</span>");
             sb.Append("</span>");
             sb.Append("</div>");
 

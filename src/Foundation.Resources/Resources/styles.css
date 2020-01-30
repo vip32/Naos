@@ -12,19 +12,25 @@ a {
     text-decoration: none;
     color: gray;
 }
-a:link {
-}
-a:visited {
-}
-a:hover {
-    color: darkcyan;
-}
-a:active {
-    color: cyan;
-}
-a.current {
-    color: cyan;
-}
+
+    a:link {
+    }
+
+    a:visited {
+    }
+
+    a:hover {
+        color: darkcyan;
+        text-decoration: underline;
+    }
+
+    a:active {
+        color: cyan;
+    }
+
+    a.current {
+        color: cyan;
+    }
 
 hr {
     display: block;

@@ -85,17 +85,6 @@
 
         private Task GetHtmlAsync()
         {
-            //await this.HttpContext.Response.WriteNaosDashboard(
-            //    title: this.serviceDescriptor?.ToString(),
-            //    action: async r =>
-            //    {
-            //        await r.WriteAsync("HELLO1 " + this.serviceDescriptor?.ToString()).AnyContext();
-            //        LoggingFilterContext.Prepare(this.filterContext);
-            //        await r.WriteAsync("HELLO2 " + this.serviceDescriptor?.ToString()).AnyContext();
-            //        var report = this.GetJsonAsync().Result;
-            //        await r.WriteAsync("HELLO3 " + this.serviceDescriptor?.ToString()).AnyContext();
-            //    }).AnyContext();
-
             this.HttpContext.Response.WriteNaosDashboard(
                 title: $"{this.serviceDescriptor?.ToString()} [{this.serviceDescriptor?.Tags.ToString("|")}]",
                 action: async r =>

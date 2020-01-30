@@ -20,12 +20,35 @@
                 return source;
             }
 
+            if (start > end)
+            {
+                return string.Empty;
+            }
+
             if (end < 0)
             {
                 end = source.Length + end;
             }
 
             return source.Substring(start, end - start);
+            //return source[start..end];  // c#8 https://visualstudiomagazine.com/articles/2019/03/08/vs-2019-core-tip.aspx & https://csharp.christiannagel.com/2018/07/24/indexesandranges/77
+        }
+
+        [DebuggerStepThrough]
+        public static string Slice(this string source, int start)
+        {
+            if (source.IsNullOrEmpty())
+            {
+                return source;
+            }
+
+            var end = source.Length;
+            if (start > end)
+            {
+                return string.Empty;
+            }
+
+            return source.Substring(start, source.Length - start);
             //return source[start..end];  // c#8 https://visualstudiomagazine.com/articles/2019/03/08/vs-2019-core-tip.aspx & https://csharp.christiannagel.com/2018/07/24/indexesandranges/77
         }
     }

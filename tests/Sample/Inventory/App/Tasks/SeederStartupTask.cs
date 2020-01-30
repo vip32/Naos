@@ -28,7 +28,7 @@
 
         public Task StartAsync(CancellationToken cancellationToken = default)
         {
-            this.logger.LogInformation("started inventory seeder task");
+            this.logger.LogInformation("{LogKey:l} started inventory seeder task", LogKeys.StartupTask);
 
             new List<ProductInventory>
             {
