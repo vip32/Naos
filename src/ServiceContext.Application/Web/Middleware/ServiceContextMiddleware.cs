@@ -67,6 +67,11 @@
                     context.Response.ContentType = ContentType.CSS.ToValue();
                     await context.Response.WriteAsync(ResourcesHelper.GetStylesAsString()).AnyContext();
                 }
+                else if (context.Request.Path.Equals("/css/naos/swagger.css", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    context.Response.ContentType = ContentType.CSS.ToValue();
+                    await context.Response.WriteAsync(ResourcesHelper.GetSwaggerStylesAsString()).AnyContext();
+                }
                 else if (context.Request.Path.Equals("/favicon.ico", System.StringComparison.OrdinalIgnoreCase))
                 {
                     context.Response.ContentType = ContentType.ICO.ToValue();

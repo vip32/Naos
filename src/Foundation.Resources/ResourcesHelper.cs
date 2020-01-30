@@ -62,6 +62,15 @@
             }
         }
 
+        public static string GetSwaggerStylesAsString()
+        {
+            using (var reader = new StreamReader(
+                System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Naos.Foundation.Resources.swagger.css")))
+            {
+                return reader?.ReadToEnd();
+            }
+        }
+
         public static string GetHtmlHeaderAsString(string logo = null, string title = null, IDictionary<string, string> menuItems = null)
         {
             logo ??= GetLogoAsString();
