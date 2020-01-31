@@ -224,7 +224,7 @@ namespace Naos.Sample.Application.Web
                    .UseCommandRequests()
                    .UseServiceDiscoveryRouter())
                .UseOpenApi()
-               .UseSwaggerUi3(a => a.CustomStylesheetPath = "/css/naos/swagger.css"); // https://cpratt.co/customizing-swagger-ui-in-asp-net-core/
+               .UseSwaggerUi3(a => a.CustomStylesheetPath = "./css/naos/swagger.css"); // https://cpratt.co/customizing-swagger-ui-in-asp-net-core/
 
             app.UseRouting();
             app.UseAuthentication();
