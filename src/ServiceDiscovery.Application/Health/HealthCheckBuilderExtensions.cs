@@ -17,7 +17,7 @@
             IEnumerable<string> tags = null)
             where T : ServiceDiscoveryClient
         {
-            name = name ?? typeof(T).Name;
+            name ??= typeof(T).Name;
             if (name.EndsWith("Client", StringComparison.OrdinalIgnoreCase))
             {
                 name = name.Replace("Client", "-serviceclient", StringComparison.OrdinalIgnoreCase);
