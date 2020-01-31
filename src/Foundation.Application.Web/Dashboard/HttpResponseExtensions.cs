@@ -20,11 +20,11 @@
             menuItems ??= new List<DashboardMenuItem>
             {
                 // TODO: make this more discoverable
-                new DashboardMenuItem("api", "/api"),
-                new DashboardMenuItem("health", "/api/operations/health/dashboard", "fas fa-heartbeat"),
-                new DashboardMenuItem("logevents", "/api/operations/logevents/dashboard", "fas fa-search"),
-                new DashboardMenuItem("traces", "/api/operations/logtraces/dashboard", "far fa-clone"),
-                new DashboardMenuItem("journal", "/api/operations/logevents/dashboard?q=TrackType=journal", "fas fa-clipboard"),
+                new DashboardMenuItem("service", "/naos/servicecontext"),
+                new DashboardMenuItem("health", "/naos/operations/health/dashboard", "fas fa-heartbeat"),
+                new DashboardMenuItem("logevents", "/naos/operations/logevents/dashboard", "fas fa-search"),
+                new DashboardMenuItem("traces", "/naos/operations/logtraces/dashboard", "far fa-clone"),
+                new DashboardMenuItem("journal", "/naos/operations/logevents/dashboard?q=TrackType=journal", "fas fa-clipboard"),
                 new DashboardMenuItem("swagger", "/swagger/index.html", "far fa-file"),
             };
 

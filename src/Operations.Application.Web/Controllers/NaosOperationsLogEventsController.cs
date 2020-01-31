@@ -15,7 +15,7 @@
     using Naos.RequestFiltering.Application;
     using NSwag.Annotations;
 
-    [Route("api/operations/logevents")]
+    [Route("naos/operations/logevents")]
     [ApiController]
     public class NaosOperationsLogEventsController : ControllerBase
     {
@@ -125,22 +125,22 @@
                             await r.WriteAsync("</span>").AnyContext();
                             await r.WriteAsync($"&nbsp;[<span style='color: {levelColor}'>").AnyContext();
                             await r.WriteAsync($"{entity.Level.ToUpper().Truncate(3, string.Empty)}</span>]").AnyContext();
-                            await r.WriteAsync(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logevents/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;").AnyContext();
+                            await r.WriteAsync(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/naos/operations/logevents/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;").AnyContext();
                             await r.WriteAsync($"<span style='color: {messageColor}; {extraStyles}'>").AnyContext();
                             //await r.WriteAsync(logEvent.TrackType.SafeEquals("journal") ? "*" : "&nbsp;"); // journal prefix
                             if (entity.Message?.Length > 5 && entity.Message.Take(6).All(char.IsUpper))
                             {
                                 await r.WriteAsync($"<span style='color: #37CAEC;'>{entity.Message.Slice(0, 6)}</span>").AnyContext();
-                                await r.WriteAsync($"{entity.Message.Slice(6)} <a target=\"blank\" href=\"/api/operations/logevents/{entity.Id}\">*</a>").AnyContext();
+                                await r.WriteAsync($"{entity.Message.Slice(6)} <a target=\"blank\" href=\"/naos/operations/logevents/{entity.Id}\">*</a>").AnyContext();
                             }
                             else
                             {
-                                await r.WriteAsync($"{entity.Message} <a target=\"blank\" href=\"/api/operations/logevents/{entity.Id}\">*</a>").AnyContext();
+                                await r.WriteAsync($"{entity.Message} <a target=\"blank\" href=\"/naos/operations/logevents/{entity.Id}\">*</a>").AnyContext();
                             }
 
                             if (!entity.CorrelationId.IsNullOrEmpty())
                             {
-                                await r.WriteAsync($"&nbsp;<a target=\"blank\" href=\"/api/operations/logtraces/dashboard?q=CorrelationId={entity.CorrelationId}\"><i class='far fa-clone'></i></a>").AnyContext();
+                                await r.WriteAsync($"&nbsp;<a target=\"blank\" href=\"/naos/operations/logtraces/dashboard?q=CorrelationId={entity.CorrelationId}\"><i class='far fa-clone'></i></a>").AnyContext();
                             }
 
                             await r.WriteAsync("</span>").AnyContext();

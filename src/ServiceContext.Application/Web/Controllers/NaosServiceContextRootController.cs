@@ -15,7 +15,7 @@
     using Naos.Foundation.Application;
     using NSwag.Annotations;
 
-    [Route("api")]
+    [Route("naos/servicecontext")]
     [ApiController]
     public class NaosServiceContextRootController : ControllerBase // or use normal middleware?  https://stackoverflow.com/questions/47617994/how-to-use-a-controller-in-another-assembly-in-asp-net-core-mvc-2-0?rq=1
     {
@@ -75,14 +75,14 @@
                 {
                     // TODO: get these endpoints through DI for all active capabilities
                     ["index"] = this.Url.AbsolutePath("index.html"),
-                    ["logevents-ui"] = this.Url.AbsolutePath("api/operations/logevents/dashboard"),
+                    ["logevents-ui"] = this.Url.AbsolutePath("naos/operations/logevents/dashboard"),
                     ["swagger-ui"] = this.Url.AbsolutePath("swagger/index.html"),
                     ["swagger"] = this.Url.AbsolutePath("swagger/v1/swagger.json"),
                     ["health"] = this.Url.AbsolutePath("health"),
                     // TODO: discover below
-                    ["sample-logevents1"] = this.Url.AbsolutePath("api/operations/logevents"),
-                    ["sample-logevents2"] = this.Url.AbsolutePath("api/operations/logevents?q=Ticks=gt:636855734000000000,Environment=Development"),
-                    ["sample-logevents3"] = this.Url.AbsolutePath("api/operations/logevents?q=Epoch=ge:1546347600,Level=Warning"),
+                    ["sample-logevents1"] = this.Url.AbsolutePath("naos/operations/logevents"),
+                    ["sample-logevents2"] = this.Url.AbsolutePath("naos/operations/logevents?q=Ticks=gt:636855734000000000,Environment=Development"),
+                    ["sample-logevents3"] = this.Url.AbsolutePath("naos/operations/logevents?q=Epoch=ge:1546347600,Level=Warning"),
                     ["sample-countries1"] = this.Url.AbsolutePath("api/countries/be"),
                     ["sample-countries2"] = this.Url.AbsolutePath("api/countries?q=name=Belgium&order=name&take=1"),
                     ["sample-countries3"] = this.Url.AbsolutePath("api/countries?q=name=Belgium"),

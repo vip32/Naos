@@ -52,7 +52,7 @@
                     tags: tags ?? naosConfiguration.Tags),
             };
             context.Messages.Add($"{LogKeys.Startup} naos services builder: naos services added");
-            context.Services.AddSingleton(new NaosFeatureInformation { Name = "Naos", EchoRoute = "api/echo" });
+            //context.Services.AddSingleton(new NaosFeatureInformation { Name = "Naos", EchoRoute = "naos/servicecontext/echo" });
 
             // TODO: optional or provide own settings?
             JsonConvert.DefaultSettings = DefaultJsonSerializerSettings.Create;

@@ -28,15 +28,15 @@
 
                 if (request.Command.Logs)
                 {
-                    url += "/api/operations/logevents/dashboard";
+                    url += "/naos/operations/logevents/dashboard";
                 }
                 else if (request.Command.Traces)
                 {
-                    url += "/api/operations/logtraces/dashboard";
+                    url += "/naos/operations/logtraces/dashboard";
                 }
                 else if (request.Command.Journal)
                 {
-                    url += "/api/operations/logevents/dashboard?q=TrackType=journal";
+                    url += "/naos/operations/logevents/dashboard?q=TrackType=journal";
                 }
                 else if (request.Command.Swagger)
                 {

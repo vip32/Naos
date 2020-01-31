@@ -7,7 +7,7 @@
     using Naos.RequestFiltering.Application;
     using NSwag.Annotations;
 
-    [Route("api/echo/requestfiltering")]
+    [Route("naos/requestfiltering/echo")]
     [ApiController]
     public class NaosRequestFilteringEchoController : ControllerBase // or use normal middleware?  https://stackoverflow.com/questions/47617994/how-to-use-a-controller-in-another-assembly-in-asp-net-core-mvc-2-0?rq=1
     {

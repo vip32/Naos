@@ -29,7 +29,7 @@
             naosOptions.Context.Services.AddTransient<HttpClientCorrelationHandler>();
 
             naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos services builder: request correlation added");
-            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "RequestCorrelation", EchoRoute = "api/echo/requestcorrelation" });
+            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "RequestCorrelation", EchoRoute = "naos/requestcorrelation/echo" });
 
             return naosOptions;
         }

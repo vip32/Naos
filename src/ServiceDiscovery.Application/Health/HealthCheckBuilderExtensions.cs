@@ -12,7 +12,7 @@
         public static IHealthChecksBuilder AddServiceDiscoveryClient<T>(
             this IHealthChecksBuilder builder,
             string name = null,
-            string route = "api/echo",
+            string route = "naos/echo",
             HealthStatus? failureStatus = null,
             IEnumerable<string> tags = null)
             where T : ServiceDiscoveryClient

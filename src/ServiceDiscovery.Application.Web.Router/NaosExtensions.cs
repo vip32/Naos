@@ -63,7 +63,7 @@
                             registryConfiguration))));
 
             options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: service discovery router added (registry={nameof(FileSystemServiceRegistry)})");
-            options.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceDiscoveryRouter", EchoRoute = "api/echo/servicediscovery/router" });
+            options.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceDiscoveryRouter", EchoRoute = "naos/servicediscovery/echo/router" });
 
             return options;
         }

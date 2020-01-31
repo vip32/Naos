@@ -22,13 +22,13 @@
             if (addDefaultRequestCommands)
             {
                 options.Context.Services.AddSingleton<CommandRequestRegistration>(sp =>
-                    new CommandRequestRegistration<EchoCommand, EchoCommandResponse> { Route = "api/commands/echo", RequestMethod = "post" });
+                    new CommandRequestRegistration<EchoCommand, EchoCommandResponse> { Route = "naos/commands/echo", RequestMethod = "post" });
                 options.Context.Services.AddSingleton<CommandRequestRegistration>(sp =>
-                    new CommandRequestRegistration<EchoCommand, EchoCommandResponse> { Route = "api/commands/echo", RequestMethod = "get" });
+                    new CommandRequestRegistration<EchoCommand, EchoCommandResponse> { Route = "naos/commands/echo", RequestMethod = "get" });
                 options.Context.Services.AddSingleton<CommandRequestRegistration>(sp =>
-                    new CommandRequestRegistration<EchoCommand, EchoCommandResponse> { Route = "api/commands/echo/{message}", RequestMethod = "get" });
+                    new CommandRequestRegistration<EchoCommand, EchoCommandResponse> { Route = "naos/commands/echo/{message}", RequestMethod = "get" });
                 options.Context.Services.AddSingleton<CommandRequestRegistration>(sp =>
-                    new CommandRequestRegistration<PingCommand> { Route = "api/commands/ping", RequestMethod = "get" });
+                    new CommandRequestRegistration<PingCommand> { Route = "naos/commands/ping", RequestMethod = "get" });
             }
 
             optionsAction?.Invoke(new CommandRequestOptions(options.Context));

@@ -50,7 +50,7 @@
                 new JobSchedulerHostedService(sp.GetRequiredService<ILoggerFactory>(), sp.GetRequiredService<IJobScheduler>()));
 
             naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos services builder: job scheduling added"); // TODO: list available commands/handlers
-            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "JobScheduling", EchoRoute = "api/echo/jobscheduling" });
+            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "JobScheduling", EchoRoute = "naos/jobscheduling/echo" });
 
             return naosOptions;
         }

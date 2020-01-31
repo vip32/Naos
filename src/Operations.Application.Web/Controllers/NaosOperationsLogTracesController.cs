@@ -17,7 +17,7 @@
     using Naos.Tracing.Domain;
     using NSwag.Annotations;
 
-    [Route("api/operations/logtraces")]
+    [Route("naos/operations/logtraces")]
     [ApiController]
     public class NaosOperationsLogTracesController : ControllerBase
     {
@@ -137,8 +137,8 @@
                 .Append(this.GetTraceLevelColor(entity)).Append("'>")
                 .Append(entity.Kind?.ToUpper().Truncate(6, string.Empty))
                 .Append("</span>]");
-            sb.Append(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logevents/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-            //sb.Append(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logtraces/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;");
+            sb.Append(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/naos/operations/logevents/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+            //sb.Append(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/naos/operations/logtraces/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;");
 
             var result = sb.ToString();
             this.stringBuilderPool.Return(sb);
@@ -161,7 +161,7 @@
                 sb.Append(entity.Message).Append(" (").Append(entity.SpanId).Append("/").Append(entity.ParentSpanId).Append(")&nbsp;");
             }
 
-            sb.Append("<a target=\"blank\" href=\"/api/operations/logtraces/").Append(entity.Id).Append("\">*</a> ");
+            sb.Append("<a target=\"blank\" href=\"/naos/operations/logtraces/").Append(entity.Id).Append("\">*</a> ");
             sb.Append("<span style=\"color: gray;\">-> took ");
             sb.Append(entity.Duration.Humanize());
             sb.Append("</span>");

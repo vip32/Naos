@@ -14,7 +14,7 @@
     using Naos.RequestFiltering.Application;
     using NSwag.Annotations;
 
-    [Route("api/operations/health")]
+    [Route("naos/operations/health")]
     [ApiController]
     public class NaosOperationsHealthController : ControllerBase
     {
@@ -98,7 +98,7 @@
                         await r.WriteAsync("</span>").AnyContext();
                         await r.WriteAsync($"&nbsp;[<span style='color: {this.GetHealthLevelColor(report.Status)}'>").AnyContext();
                         await r.WriteAsync($"{report.Status.ToUpper().PadRight(9, '.')/*.Truncate(3, string.Empty)*/}</span>]").AnyContext();
-                        await r.WriteAsync(!report.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logevents/dashboard?q=CorrelationId={report.CorrelationId}\">{report.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;").AnyContext();
+                        await r.WriteAsync(!report.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/naos/operations/logevents/dashboard?q=CorrelationId={report.CorrelationId}\">{report.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;").AnyContext();
                         await r.WriteAsync($"<span style='color: {this.GetHealthLevelColor(report.Status)}'>").AnyContext();
                         await r.WriteAsync("service <a target=\"blank\" href=\"/health\">*</a>").AnyContext();
                         await r.WriteAsync("</span>").AnyContext();
@@ -113,7 +113,7 @@
                                 await r.WriteAsync("</span>").AnyContext();
                                 await r.WriteAsync($"&nbsp;[<span style='color: {this.GetHealthLevelColor(entry.Value?.Status)}'>").AnyContext();
                                 await r.WriteAsync($"{entry.Value?.Status.ToUpper().PadRight(9, '.')/*.Truncate(3, string.Empty)*/}</span>]").AnyContext();
-                                await r.WriteAsync(!report.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logevents/dashboard?q=CorrelationId={report.CorrelationId}\">{report.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;").AnyContext();
+                                await r.WriteAsync(!report.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/naos/operations/logevents/dashboard?q=CorrelationId={report.CorrelationId}\">{report.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;").AnyContext();
                                 await r.WriteAsync($"<span style='color: {this.GetHealthLevelColor(entry.Value?.Status)}'>").AnyContext();
                                 if (report.Entries.NextOf(entry.Value) != null)
                                 {
@@ -137,7 +137,7 @@
                                         await r.WriteAsync("</span>").AnyContext();
                                         await r.WriteAsync($"&nbsp;[<span style='color: {this.GetHealthLevelColor(entry.Value.Status)}'>").AnyContext();
                                         await r.WriteAsync($"{entry.Value.Status.ToUpper().PadRight(9, '.')/*.Truncate(3, string.Empty)*/}</span>]").AnyContext();
-                                        await r.WriteAsync(!report.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logevents/dashboard?q=CorrelationId={report.CorrelationId}\">{report.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;").AnyContext();
+                                        await r.WriteAsync(!report.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/naos/operations/logevents/dashboard?q=CorrelationId={report.CorrelationId}\">{report.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;").AnyContext();
                                         if (report.Entries.NextOf(entry.Value) != null)
                                         {
                                             await r.WriteAsync("<span style='color: white;'>&nbsp;│</span>").AnyContext();
