@@ -4,6 +4,7 @@ namespace Naos.Sample.Application.Web
     using System.Collections.Generic;
     using System.IO;
     using System.Net;
+    using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -14,6 +15,7 @@ namespace Naos.Sample.Application.Web
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Naos.Application.Web;
+    using Naos.Authentication.Application.Web;
     using Naos.Commands.Application;
     using Naos.Commands.Infrastructure.FileStorage;
     using Naos.FileStorage.Infrastructure;
@@ -24,7 +26,9 @@ namespace Naos.Sample.Application.Web
     using Naos.Sample.Customers.Application;
     using Naos.Tracing.Domain;
     using Naos.Tracing.Infrastructure;
+    using NSwag.AspNetCore;
     using NSwag.Generation.Processors;
+    using NSwag.Generation.Processors.Security;
 
     public class Startup
     {
@@ -71,6 +75,15 @@ namespace Naos.Sample.Application.Web
                         c.OperationProcessors.Add(operationProcessor);
                     }
 
+                    //c.DocumentProcessors.Add(
+                    //    new SecurityDefinitionAppender("Bearer", new OpenApiSecurityScheme
+                    //    {
+                    //        Name = "Authorization",
+                    //        Description = "Authorization header using the ApiKey scheme. Example: \"Authorization: ApiKey {value}\"",
+                    //        In = NSwag.OpenApiSecurityApiKeyLocation.Header,
+                    //        Type = NSwag.OpenApiSecuritySchemeType.ApiKey // Oauth2/OIDC?
+                    //    }));
+
                     //c.DocumentProcessors.Add(new RequestCommandRegistrationDocumentProcessor(sp.GetServices<RequestCommandRegistration>()));
                     //c.OperationProcessors.Add(new GenericRepositoryControllerOperationProcessor());
                     c.OperationProcessors.Add(new ApiVersionProcessor());
@@ -88,15 +101,69 @@ namespace Naos.Sample.Application.Web
                             Url = "https://github.com/vip32/Naos"
                         };
                     };
-                    if (true) // option.includeSecurityHeader
+
+                    if (true) // if option.includeSecurityHeader
                     {
-                        c.AddSecurity("Bearer", new NSwag.OpenApiSecurityScheme // TODO: dependent on configured authentication
+                        var provider = sp.GetService<IAuthenticationSchemeProvider>();
+                        if (provider?.GetDefaultChallengeSchemeAsync().Result?.Name == AuthenticationKeys.OidcScheme)
                         {
-                            Description = "Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                            Name = "Authorization",
-                            In = NSwag.OpenApiSecurityApiKeyLocation.Header,
-                            Type = NSwag.OpenApiSecuritySchemeType.ApiKey // Oauth2/OIDC?
-                        });
+                            c.AddSecurity("Oauth2", new NSwag.OpenApiSecurityScheme
+                            {
+                                AuthorizationUrl = "https://global-keycloak.azurewebsites.net/auth/realms/master/protocol/openid-connect/auth",
+                                Description = "Authorization header using the Oauth2 Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                                Name = "Authorization",
+                                Flow = NSwag.OpenApiOAuth2Flow.Implicit,
+                                In = NSwag.OpenApiSecurityApiKeyLocation.Header,
+                                Type = NSwag.OpenApiSecuritySchemeType.OAuth2
+                            });
+                            c.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("Oauth2"));
+
+                            c.AddSecurity("Oidc", new NSwag.OpenApiSecurityScheme
+                            {
+                                Scheme = "Bearer",
+                                OpenIdConnectUrl = "https://global-keycloak.azurewebsites.net/auth/realms/master/.well-known/openid-configuration",
+                                //AuthorizationUrl = "https://global-keycloak.azurewebsites.net/auth/realms/master/protocol/openid-connect/auth",
+                                Description = "Authorization header using the Oidc Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                                Name = "Authorization",
+                                Flow = NSwag.OpenApiOAuth2Flow.Implicit,
+                                In = NSwag.OpenApiSecurityApiKeyLocation.Header,
+                                Type = NSwag.OpenApiSecuritySchemeType.OpenIdConnect // Oauth2/OIDC?,
+                            });
+                            c.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("Oidc"));
+
+                            //c.AddSecurity("JWT", new NSwag.OpenApiSecurityScheme
+                            //{
+                            //    //Schema="Bearer" << has to be added manually in the Auth text box (swaggerui) https://github.com/RicoSuter/NSwag/issues/869
+                            //    Description = "Authorization header using a JWT token. Example: \"Authorization: Bearer {jwt}\"",
+                            //    Name = "Authorization",
+                            //    In = NSwag.OpenApiSecurityApiKeyLocation.Header,
+                            //    Type = NSwag.OpenApiSecuritySchemeType.ApiKey
+                            //});
+                            //c.OperationProcessors.Add(new OperationSecurityScopeProcessor("JWT"));
+                        }
+                        else if (provider?.GetDefaultChallengeSchemeAsync().Result?.Name == AuthenticationKeys.ApiKeyScheme)
+                        {
+                            c.AddSecurity(AuthenticationKeys.ApiKeyScheme, new NSwag.OpenApiSecurityScheme
+                            {
+                                Description = "Authorization header using the ApiKey scheme. Example: \"Authorization: ApiKey {key}\"",
+                                Name = "ApiKey",
+                                In = NSwag.OpenApiSecurityApiKeyLocation.Header, // TODO: also allow the auth header to be sent in the querystring
+                                Type = NSwag.OpenApiSecuritySchemeType.ApiKey
+                            });
+                            c.OperationProcessors.Add(new OperationSecurityScopeProcessor(AuthenticationKeys.ApiKeyScheme));
+                        }
+                        else if (provider?.GetDefaultChallengeSchemeAsync().Result?.Name == AuthenticationKeys.BasicScheme)
+                        {
+                            c.AddSecurity(AuthenticationKeys.BasicScheme, new NSwag.OpenApiSecurityScheme
+                            {
+                                Scheme = "Basic",
+                                Description = "Authorization header using the Basic scheme. Example: \"Basic: {credentials}\"",
+                                Name = "Authorization",
+                                In = NSwag.OpenApiSecurityApiKeyLocation.Header, // TODO: also allow the auth header to be sent in the url https://en.wikipedia.org/wiki/Basic_access_authentication
+                                Type = NSwag.OpenApiSecuritySchemeType.Basic
+                            });
+                            c.OperationProcessors.Add(new OperationSecurityScopeProcessor(AuthenticationKeys.BasicScheme));
+                        }
                     }
                 })
                 .AddMvc(o =>
@@ -150,7 +217,7 @@ namespace Naos.Sample.Application.Web
                             //.UseInMemoryStorage()
                             //.UseFolderStorage()
                             .UseAzureStorageQueue() // TODO: rabbitmq queue is also needed
-                            //.UseInMemoryQueue()
+                                                    //.UseInMemoryQueue()
                             .GetQueued<PingCommand>("api/commands/queue/ping")
                             .GetQueued<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>(
                                 "api/commands/queue/customers/active",
@@ -171,7 +238,7 @@ namespace Naos.Sample.Application.Web
                         .AddTracing(o => o
                             .UseSampler<ConstantSampler>()
                             .UseZipkinExporter()))
-                            //.UseExporter<ZipkinSpanExporter>())) // TODO: UseZipkinExporter + configuration + zipkin url health (options.Endpoint)
+                    //.UseExporter<ZipkinSpanExporter>())) // TODO: UseZipkinExporter + configuration + zipkin url health (options.Endpoint)
                     //.UseSampler(new OperationNamePatternSampler(new[] { "http*" }))))
                     //.AddQueries()
                     //.AddSwaggerDocument() // s.Description = Product.Capability\
@@ -194,9 +261,9 @@ namespace Naos.Sample.Application.Web
                            .Subscribe<EchoMessage, EchoMessageHandler>()))
                     .AddServiceDiscovery(o => o
                         .UseFileSystemClientRegistry())
-                        // TODO: create a cloud based registry (storage)
-                        //.UseConsulClientRegistry())
-                        //.UseRouterClientRegistry())
+                    // TODO: create a cloud based registry (storage)
+                    //.UseConsulClientRegistry())
+                    //.UseRouterClientRegistry())
                     .AddServiceDiscoveryRouter(o => o
                         .UseFileSystemRegistry()));
         }
@@ -224,7 +291,25 @@ namespace Naos.Sample.Application.Web
                    .UseCommandRequests()
                    .UseServiceDiscoveryRouter())
                .UseOpenApi()
-               .UseSwaggerUi3(a => a.CustomStylesheetPath = "./css/naos/swagger.css"); // https://cpratt.co/customizing-swagger-ui-in-asp-net-core/
+               .UseSwaggerUi3(a =>
+               {
+                   a.CustomStylesheetPath = "./css/naos/swagger.css";
+
+                   // Oauth2/Oidc settings
+                   a.OAuth2Client = new OAuth2ClientSettings
+                   {
+                       //AppName = "aspnetcore-keycloak",
+                       //Realm = "master",
+                       ClientId = "aspnetcore-keycloak", // TODO: get from Configuratoin
+                       ClientSecret = "1beb5df9-01dd-46c3-84a8-b65eca50ad57", // TODO: get from Configuratoin
+                       // redirect https://localhost:5001/swagger/oauth2-redirect.html
+                   };
+                   //a.OAuth2Client.AdditionalQueryStringParameters
+                    //.AddOrUpdate("response_type", "token") // code?
+                    //.AddOrUpdate("scope", "openid profile email claims")
+                    //.AddOrUpdate("nonce", "swagger");
+                    //.AddOrUpdate("response_mode", "post");
+               }); // https://cpratt.co/customizing-swagger-ui-in-asp-net-core/
 
             app.UseRouting();
             app.UseAuthentication();

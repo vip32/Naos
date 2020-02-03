@@ -79,7 +79,7 @@
             }
             catch (Exception ex)
             {
-                this.logger.LogWarning(ex, $"{{LogKey:l}} zipkin span export failed: {ex.Message}", LogKeys.Tracing);
+                this.logger.LogWarning(/*ex, */$"{{LogKey:l}} zipkin span export failed: {ex.GetFullMessage()}", LogKeys.Tracing);
             }
         }
 

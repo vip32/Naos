@@ -93,8 +93,8 @@
 
             naosOptions.Context.Services.AddAuthentication(options =>
             {
-                options.DefaultScheme = AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = AspNetCore.Authentication.OpenIdConnect.OpenIdConnectDefaults.AuthenticationScheme;
+                options.DefaultScheme = AuthenticationKeys.CookiesScheme;
+                options.DefaultChallengeScheme = AuthenticationKeys.OidcScheme;
             })
             .AddCookie()
             .AddOpenIdConnect(options =>

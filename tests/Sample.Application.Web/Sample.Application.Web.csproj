@@ -18,11 +18,13 @@
 
   <ItemGroup>
     <PackageReference Include="NSwag.AspNetCore" Version="13.2.2" />
+    <PackageReference Include="NSwag.Core" Version="13.2.2" />
     <PackageReference Include="NSwag.Generation" Version="13.2.2" />
     <PackageReference Include="NJsonSchema" Version="10.1.4" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Authentication.Application.Web\Authentication.Application.Web.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Application.Web\Application.Web.csproj" />
     <ProjectReference Include="..\..\src\Application\Application.csproj" />
     <ProjectReference Include="..\..\src\Application.Web\Application.Web.csproj" />

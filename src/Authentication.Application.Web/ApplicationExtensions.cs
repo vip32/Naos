@@ -70,7 +70,7 @@
             var provider = builder.ApplicationServices.GetService<IAuthenticationSchemeProvider>();
             if (provider != null)
             {
-                if (provider.GetDefaultChallengeSchemeAsync().Result?.Name == Authentication.OpenIdConnect.OpenIdConnectDefaults.AuthenticationScheme)
+                if (provider.GetDefaultChallengeSchemeAsync().Result?.Name == AuthenticationKeys.OidcScheme)
                 {
                     builder.UseMiddleware<OidcAuthenticationChallengeMiddleware>(Options.Create(options));
                     //naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: authentication challenge");
