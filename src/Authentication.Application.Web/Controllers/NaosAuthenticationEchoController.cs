@@ -26,6 +26,7 @@
         [Authorize]
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         [OpenApiTag("Naos Echo")]
         public ActionResult<object> Get()
         {

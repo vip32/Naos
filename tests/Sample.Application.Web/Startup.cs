@@ -314,7 +314,7 @@ namespace Naos.Sample.Application.Web
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseAuthenticationChallenge(); // needs to be last in order, forces login challenge
+            //app.UseAuthenticationChallenge(); // needs to be last in order, forces login challenge
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
