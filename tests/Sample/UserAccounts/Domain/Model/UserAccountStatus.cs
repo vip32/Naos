@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using EnsureThat;
-    using Naos.Foundation;
     using Naos.Foundation.Domain;
 
     public class UserAccountStatus : ValueObject

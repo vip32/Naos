@@ -7,7 +7,6 @@
     using Naos.Foundation.Domain;
     using Naos.Foundation.Infrastructure;
     using Naos.Sample.Catalogs.Domain;
-    using Naos.Tracing.Domain;
 
     public static partial class CompositionRoot
     {

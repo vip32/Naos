@@ -1,9 +1,7 @@
 ﻿namespace Naos.Foundation
 {
-    using System.Collections.Generic;
     using System.Drawing;
     using System.IO;
-    using System.Linq;
 
     public static class ResourcesHelper
     {

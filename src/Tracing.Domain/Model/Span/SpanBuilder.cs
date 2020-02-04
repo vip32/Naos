@@ -3,7 +3,6 @@
     using System.Diagnostics;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Foundation;
     using Naos.Foundation.Domain;
 
     public class SpanBuilder : ISpanBuilder

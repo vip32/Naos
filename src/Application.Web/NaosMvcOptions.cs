@@ -1,6 +1,5 @@
 ﻿namespace Naos.Application.Web
 {
-    using System;
     using System.Collections.Generic;
     using Naos.Foundation.Domain;
     using Newtonsoft.Json;

@@ -25,7 +25,6 @@ namespace Naos.Sample.Application.Web
     using Naos.Sample.Catalogs.Application;
     using Naos.Sample.Customers.Application;
     using Naos.Tracing.Domain;
-    using Naos.Tracing.Infrastructure;
     using NSwag.AspNetCore;
     using NSwag.Generation.Processors;
     using NSwag.Generation.Processors.Security;

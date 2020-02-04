@@ -21,7 +21,6 @@ namespace Naos.Sample.Application.Web
     using Naos.Messaging.Domain;
     using Naos.Sample.Customers.Application;
     using Naos.Tracing.Domain;
-    using Naos.Tracing.Infrastructure;
     using NSwag.Generation.Processors;
 
     public class Startup
