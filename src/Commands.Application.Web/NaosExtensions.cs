@@ -11,7 +11,7 @@
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions
     {
-        public static CommandsOptions AddRequests(
+        public static CommandsOptions AddEnpoints(
             this CommandsOptions options,
             Action<CommandRequestOptions> optionsAction = null,
             bool addDefaultRequestCommands = true)
