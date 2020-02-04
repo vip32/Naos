@@ -125,8 +125,8 @@
                             await r.WriteAsync("</span>").AnyContext();
                             await r.WriteAsync($"&nbsp;[<span style='color: {levelColor}'>").AnyContext();
                             await r.WriteAsync($"{entity.Level.ToUpper().Truncate(3, string.Empty)}</span>]").AnyContext();
-                            await r.WriteAsync(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/naos/operations/logevents/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;").AnyContext();
-                            await r.WriteAsync($"&nbsp;<span style='color: #AE81FF;'>{entity.ServiceName.Truncate(12, string.Empty, TruncateFrom.Left)}</span>&nbsp;").AnyContext();
+                            await r.WriteAsync(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a style='font-size: xx-small;' target=\"blank\" href=\"/naos/operations/logevents/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;").AnyContext();
+                            await r.WriteAsync($"<span style='color: #AE81FF; font-size: xx-small;'>{entity.ServiceName.Truncate(15, string.Empty, TruncateFrom.Left)}</span>&nbsp;").AnyContext();
                             await r.WriteAsync($"<span style='color: {messageColor}; {extraStyles}'>").AnyContext();
                             //await r.WriteAsync(logEvent.TrackType.SafeEquals("journal") ? "*" : "&nbsp;"); // journal prefix
                             if (entity.Message?.Length > 5 && entity.Message.Take(6).All(char.IsUpper))

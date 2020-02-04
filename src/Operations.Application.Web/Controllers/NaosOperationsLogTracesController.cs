@@ -137,8 +137,8 @@
                 .Append(this.GetTraceLevelColor(entity)).Append("'>")
                 .Append(entity.Kind?.ToUpper().Truncate(6, string.Empty))
                 .Append("</span>]");
-            sb.Append(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/naos/operations/logevents/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-            sb.Append($"&nbsp;<span style='color: #AE81FF;'>{entity.ServiceName.Truncate(12, string.Empty, TruncateFrom.Left)}</span>&nbsp;");
+            sb.Append(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a style='font-size: xx-small;' target=\"blank\" href=\"/naos/operations/logevents/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+            sb.Append($"<span style='color: #AE81FF; font-size: xx-small;'>{entity.ServiceName.Truncate(15, string.Empty, TruncateFrom.Left)}</span>&nbsp;");
             //sb.Append(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/naos/operations/logtraces/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;");
 
             var result = sb.ToString();
