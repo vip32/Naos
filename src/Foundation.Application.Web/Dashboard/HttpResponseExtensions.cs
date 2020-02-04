@@ -12,6 +12,7 @@
             this HttpResponse source,
             string header = null,
             string title = null,
+            IEnumerable<string> tags = null,
             IEnumerable<DashboardMenuItem> menuItems = null,
             string styles = "css/naos/styles.css",
             Action<HttpResponse> action = null)
@@ -46,8 +47,11 @@
         {header}
         </pre>
     </span>
-    <span style='color: grey;font-size: xx-small;'>
+    <span style='color: #AE81FF;font-size: xx-small;'>
         {title}
+    </span>
+    <span style='color: grey;font-size: xx-small;'>
+        &nbsp;[{tags.ToString("|")}]
     </span>
     <hr />
     <div style='padding-bottom: 10px;'>

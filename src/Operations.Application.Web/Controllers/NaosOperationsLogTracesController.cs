@@ -98,7 +98,8 @@
         private Task GetHtmlAsync()
         {
             this.HttpContext.Response.WriteNaosDashboard(
-                title: $"{this.serviceDescriptor?.ToString()} [{this.serviceDescriptor?.Tags.ToString("|")}]",
+                title: this.serviceDescriptor?.ToString(),
+                tags: this.serviceDescriptor?.Tags,
                 action: async r =>
                 {
                     var entities = this.GetJsonAsync().Result;

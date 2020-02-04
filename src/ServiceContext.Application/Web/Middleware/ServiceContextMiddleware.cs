@@ -60,7 +60,9 @@
                 if (context.Request.Method.SafeEquals(HttpMethods.Get)
                     && (context.Request.Path.SafeEquals("/") || context.Request.Path.SafeEquals("/index.html")))
                 {
-                    await context.Response.WriteNaosDashboard(title: $"{serviceDescriptor?.ToString()} [{serviceDescriptor?.Tags.ToString("|")}]").AnyContext();
+                    await context.Response.WriteNaosDashboard(
+                        title: serviceDescriptor?.ToString(),
+                        tags: serviceDescriptor?.Tags).AnyContext();
                 }
                 else if (context.Request.Method.SafeEquals(HttpMethods.Get)
                     && context.Request.Path.SafeEquals("/css/naos/styles.css"))
