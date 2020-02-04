@@ -20,7 +20,7 @@
             menuItems ??= new List<DashboardMenuItem>
             {
                 // TODO: make this more discoverable
-                new DashboardMenuItem("service", "/naos/servicecontext"),
+                new DashboardMenuItem("service", "/naos/servicecontext", "fas fa-cog"),
                 new DashboardMenuItem("health", "/naos/operations/health/dashboard", "fas fa-heartbeat"),
                 new DashboardMenuItem("logevents", "/naos/operations/logevents/dashboard", "fas fa-search"),
                 new DashboardMenuItem("traces", "/naos/operations/logtraces/dashboard", "far fa-clone"),
