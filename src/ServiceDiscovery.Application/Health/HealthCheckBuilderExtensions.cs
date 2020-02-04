@@ -9,7 +9,7 @@
 
     public static class HealthCheckBuilderExtensions
     {
-        public static IHealthChecksBuilder AddServiceDiscoveryClient<T>(
+        public static IHealthChecksBuilder AddServiceClient<T>(
             this IHealthChecksBuilder builder,
             string name = null,
             string route = "naos/echo",

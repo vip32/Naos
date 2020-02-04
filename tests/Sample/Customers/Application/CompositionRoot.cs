@@ -1,6 +1,7 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using EnsureThat;
+    using Humanizer;
     using MediatR;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
@@ -22,7 +23,7 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            options.Context.AddTag("customers");
+            options.Context.AddTag("customers"); // TODO: discover (how?) alle aggregates for this module
             options.Context.AddServiceClient<UserAccountsClient>();
 
             var configuration = options.Context.Configuration?.GetSection($"{section}:cosmosDb").Get<CosmosConfiguration>() ?? new CosmosConfiguration();
@@ -40,14 +41,14 @@
                                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                                     .Mediator(sp.GetRequiredService<IMediator>())
                                     .Provider(sp.GetRequiredService<ICosmosSqlProvider<Customer>>())))))); // v3
-                                    //.Provider(new CosmosDbSqlProviderV2<Customer>( // v2
-                                    //    logger: sp.GetRequiredService<ILogger<CosmosDbSqlProviderV2<Customer>>>(),
-                                    //    client: CosmosDbClientV2.Create(cosmosDbConfiguration.ServiceEndpointUri, cosmosDbConfiguration.AuthKeyOrResourceToken),
-                                    //    databaseId: cosmosDbConfiguration.DatabaseId,
-                                    //    collectionIdFactory: () => cosmosDbConfiguration.CollectionId,
-                                    //    partitionKeyPath: cosmosDbConfiguration.CollectionPartitionKey,
-                                    //    throughput: cosmosDbConfiguration.CollectionOfferThroughput,
-                                    //    isMasterCollection: cosmosDbConfiguration.IsMasterCollection)))))));
+                                                                                                           //.Provider(new CosmosDbSqlProviderV2<Customer>( // v2
+                                                                                                           //    logger: sp.GetRequiredService<ILogger<CosmosDbSqlProviderV2<Customer>>>(),
+                                                                                                           //    client: CosmosDbClientV2.Create(cosmosDbConfiguration.ServiceEndpointUri, cosmosDbConfiguration.AuthKeyOrResourceToken),
+                                                                                                           //    databaseId: cosmosDbConfiguration.DatabaseId,
+                                                                                                           //    collectionIdFactory: () => cosmosDbConfiguration.CollectionId,
+                                                                                                           //    partitionKeyPath: cosmosDbConfiguration.CollectionPartitionKey,
+                                                                                                           //    throughput: cosmosDbConfiguration.CollectionOfferThroughput,
+                                                                                                           //    isMasterCollection: cosmosDbConfiguration.IsMasterCollection)))))));
             }).AddScoped<ICosmosSqlProvider<Customer>>(sp =>
             {
                 return new CosmosSqlProviderV3<Customer>(o => o
@@ -55,7 +56,13 @@
                     .Account(configuration.ServiceEndpointUri, configuration.AuthKeyOrResourceToken)
                     .Database(configuration.DatabaseId)
                     .PartitionKey(e => e.Region));
-            });
+            }).AddHealthChecks()
+                .AddDocumentDb(s =>
+                {
+                    s.UriEndpoint = configuration.ServiceEndpointUri;
+                    s.PrimaryKey = configuration.AuthKeyOrResourceToken;
+                },
+                name: $"{typeof(Customer).Name.Pluralize()}-cosmosdb");
 
             options.Context.Services.AddScoped<IOrderRepository>(sp =>
             {
@@ -78,9 +85,15 @@
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                     .Account(configuration.ServiceEndpointUri, configuration.AuthKeyOrResourceToken)
                     .Database(configuration.DatabaseId)
-                    .Container("orders")
+                    .Container(typeof(Order).Name.Pluralize().ToLower())
                     .PartitionKey(e => e.Location));
-            });
+            }).AddHealthChecks()
+                .AddDocumentDb(s =>
+                {
+                    s.UriEndpoint = configuration.ServiceEndpointUri;
+                    s.PrimaryKey = configuration.AuthKeyOrResourceToken;
+                },
+                    name: $"{typeof(Order).Name.Pluralize()}-cosmosdb");
 
             var queueStorageConfiguration = options.Context.Configuration?.GetSection($"{section}:queueStorage").Get<QueueStorageConfiguration>();
             options.Context.Services.AddSingleton<IQueue<Customer>>(sp =>
@@ -94,24 +107,12 @@
                 _ = queue.EnqueueAsync(new Customer()).Result;
                 _ = queue.EnqueueAsync(new Customer()).Result;
                 return queue;
-            });
-
-            options.Context.Services.AddHealthChecks()
+            }).AddHealthChecks()
                 .AddAzureQueueStorage(
                     queueStorageConfiguration.ConnectionString,
                     name: "Customers-queuestorage");
 
             //options.Context.Services.AddSingleton<IValidator<CreateCustomerCommand>>(new CreateCustomerCommandValidator());
-
-            options.Context.Services.AddHealthChecks()
-                .AddDocumentDb(s =>
-                    {
-                        s.UriEndpoint = configuration.ServiceEndpointUri;
-                        s.PrimaryKey = configuration.AuthKeyOrResourceToken;
-                    },
-                    name: "Customers-cosmosdb")
-                .AddServiceDiscoveryClient<UserAccountsClient>();
-
             options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: customers service added");
 
             return options;
