@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.Extensions.Logging;
 
     public static class HttpResponseExtensions
     {
@@ -25,6 +26,9 @@
                 new DashboardMenuItem("health", "/naos/operations/health/dashboard", "fas fa-heartbeat"),
                 new DashboardMenuItem("logevents", "/naos/operations/logevents/dashboard", "fas fa-search"),
                 new DashboardMenuItem("traces", "/naos/operations/logtraces/dashboard", "far fa-clone"),
+                new DashboardMenuItem("requests", $"/naos/operations/logevents/dashboard?q=Key={LogKeys.InboundResponse},Message=ct:took ", "far fa-arrow-alt-circle-right"),
+                new DashboardMenuItem("messages", $"/naos/operations/logevents/dashboard?q=Key={LogKeys.Messaging},Message=ct:] publish", "fas fa-envelope"),
+                new DashboardMenuItem("jobs", $"/naos/operations/logevents/dashboard?q=Key={LogKeys.JobScheduling},Message=ct:job started", "fas fa-tasks"),
                 new DashboardMenuItem("journal", "/naos/operations/logevents/dashboard?q=TrackType=journal", "fas fa-clipboard"),
                 new DashboardMenuItem("swagger", "/swagger/index.html", "far fa-file"),
             };

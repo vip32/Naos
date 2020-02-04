@@ -11,6 +11,6 @@
         /// The path patterns to ignore.
         /// </summary>
         public string[] PathBlackListPatterns { get; set; } =
-            new[] { "/*.js", "/*.css", "/*.html", "/swagger*", "/favicon.ico", "/signin-oidc", "/health" };
+            new[] { "/*.js", "/*.css", "/*.map", "/*.html", "/swagger*", "/favicon.ico", "/signin-oidc", "/health" };
     }
 }
