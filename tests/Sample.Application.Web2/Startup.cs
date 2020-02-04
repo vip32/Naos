@@ -134,7 +134,7 @@ namespace Naos.Sample.Application.Web
                         .AddBehavior(sp => new FileStoragePersistCommandBehavior(
                             new FolderFileStorage(o => o
                                 .Folder(Path.Combine(Path.GetTempPath(), "naos_commands", "journal")))))
-                        .AddEnpoints(o => o
+                        .AddEndpoints(o => o
                             .Post<CreateCustomerCommand>("api/commands/customers/create", HttpStatusCode.Created, "Customers", onSuccess: (cmd, ctx) => ctx.Response.Location($"api/customers/{cmd.Customer.Id}"))
                             .Get<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>("api/commands/customers/active", groupName: "Customers")
                             .UseAzureBlobStorage()

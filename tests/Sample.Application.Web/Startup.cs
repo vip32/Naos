@@ -204,7 +204,7 @@ namespace Naos.Sample.Application.Web
                         .AddBehavior(sp => new FileStoragePersistCommandBehavior(
                             new FolderFileStorage(o => o
                                 .Folder(Path.Combine(Path.GetTempPath(), "naos_commands", "journal")))))
-                        .AddEnpoints(o => o
+                        .AddEndpoints(o => o
                             .Post<CreateCustomerCommand>(
                                 "api/commands/customers/create",
                                 onSuccessStatusCode: HttpStatusCode.Created,
