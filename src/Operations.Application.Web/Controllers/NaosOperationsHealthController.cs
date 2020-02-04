@@ -171,7 +171,7 @@
 
         private string GetHealthLevelColor(string status)
         {
-            var levelColor = "lime";
+            var levelColor = "#96E228";
             if (status.SafeEquals("Unhealthy"))
             {
                 levelColor = "#FF0000";

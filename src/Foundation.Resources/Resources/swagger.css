@@ -1830,7 +1830,7 @@
         }
 
     .swagger-ui .info p {
-        color: lime;
+        color: #96E228;
     }
 
 
@@ -1862,7 +1862,7 @@
     }
 
     .swagger-ui .opblock-tag {
-        color: lime; /*#37CAEC;*/
+        color: #96E228; /*#37CAEC;*/
         font-size: medium;
     }
 

@@ -175,7 +175,7 @@
 
         private string GetTraceLevelColor(LogTrace entity)
         {
-            var levelColor = "lime";
+            var levelColor = "#96E228";
             if (entity.Status.SafeEquals(nameof(SpanStatus.Transient)))
             {
                 levelColor = "#75715E";

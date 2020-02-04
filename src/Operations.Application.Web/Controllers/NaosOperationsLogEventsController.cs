@@ -101,7 +101,7 @@
                     foreach (var entity in entities
                         .Where(l => !l.TrackType.EqualsAny(new[] { LogTrackTypes.Trace })))
                     {
-                        var levelColor = "lime";
+                        var levelColor = "#96E228";
                         if (entity.Level.SafeEquals(nameof(LogLevel.Trace)) || entity.Level.SafeEquals(nameof(LogLevel.Debug)) || entity.Level.SafeEquals("Verbose"))
                         {
                             levelColor = "#75715E";
