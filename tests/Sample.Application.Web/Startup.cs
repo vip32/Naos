@@ -174,11 +174,11 @@ namespace Naos.Sample.Application.Web
                     .AddNaos(o =>
                     {
                         // Countries repository is exposed with a dedicated controller, no need to register here
-                        o.AddGenericRepositoryController<Customers.Domain.Customer, Customers.Domain.ICustomerRepository>();
-                        o.AddGenericRepositoryController<Inventory.Domain.ProductInventory, Inventory.Domain.IInventoryRepository>();
-                        o.AddGenericRepositoryController<Inventory.Domain.ProductReplenishment, Inventory.Domain.IReplenishmentRepository>();
-                        o.AddGenericRepositoryController<UserAccounts.Domain.UserAccount>(); // =implicit IRepository<UserAccount>
-                        o.AddGenericRepositoryController<UserAccounts.Domain.UserVisit>(); // =implicit IRepository<UserVisit>
+                        o.AddEndpoint<Customers.Domain.Customer, Customers.Domain.ICustomerRepository>();
+                        o.AddEndpoint<Inventory.Domain.ProductInventory, Inventory.Domain.IInventoryRepository>();
+                        o.AddEndpoint<Inventory.Domain.ProductReplenishment, Inventory.Domain.IReplenishmentRepository>();
+                        o.AddEndpoint<UserAccounts.Domain.UserAccount>(); // =implicit IRepository<UserAccount>
+                        o.AddEndpoint<UserAccounts.Domain.UserVisit>(); // =implicit IRepository<UserVisit>
                     });
 
             services
