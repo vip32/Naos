@@ -48,18 +48,18 @@
 <body>
     <span style='/*display: inline-block;*/'>
         <pre style='color: #37CAEC;font-size: xx-small;margin-left: -15px'>
-        {header}
+            {header}
         </pre>
     </span>
-    <span style='color: #AE81FF;font-size: xx-small;'>
-        {title}
+    <span style='color: white;font-size: xx-small;'>
+        &nbsp;{title}
     </span>
     <span style='color: grey;font-size: xx-small;'>
         &nbsp;[{tags.ToString("|")}]
     </span>
     <hr />
     <div style='padding-bottom: 10px;'>
-      {menuItems.Safe().Select(m => $"<i class='{m.Icon}'></i>&nbsp;<a href='{m.Url}'>{m.Name}</a>").ToString("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")}
+      &nbsp;{menuItems.Safe().Select(m => $"<i class='{m.Icon}'></i>&nbsp;<a href='{m.Url}'>{m.Name}</a>").ToString("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")}
     </div>
     <script type='text/javascript'>
         (function(anchors, url, i, a) {{ // highlight current menuitem
@@ -85,7 +85,7 @@
                 {
                     await source.WriteAsync($@"
 <hr/>
-{DateTime.UtcNow:o}
+&nbsp;{DateTime.UtcNow:o}
 </body>
 </html>
 ").AnyContext();
