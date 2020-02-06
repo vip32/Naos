@@ -2,14 +2,18 @@
 {
     public struct ConfigurationKeys
     {
-        public const string KeyVaultEnabled = "naos:secrets:vault:enabled";
+        public const string UserSecretsId = "naos:secrets:userSecretsId";
 
-        public const string KeyVaultName = "naos:secrets:vault:name";
+        public const string AzureKeyVaultEnabled = "naos:secrets:vault:enabled";
 
-        public const string KeyVaultClientId = "naos:secrets:vault:clientId";
+        public const string AzureKeyVaultName = "naos:secrets:vault:name";
 
-        public const string KeyVaultClientSecret = "naos:secrets:vault:clientSecret";
+        public const string AzureKeyVaultClientId = "naos:secrets:vault:clientId";
 
-        public const string AppConfigurationUrl = "naos:secrets:azureAppConfiguration:connectionString";
+        public const string AzureKeyVaultClientSecret = "naos:secrets:vault:clientSecret";
+
+        public const string AzureAppConfigurationEnabled = "naos:secrets:azureAppConfiguration:enabled";
+
+        public const string AzureAppConfigurationConnectionString = "naos:secrets:azureAppConfiguration:connectionString";
     }
 }

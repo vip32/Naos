@@ -53,20 +53,20 @@
                 .AddCommandLine(args));
 
             var configuration = builder.Build();
-            builder.AddIf(!configuration["naos:secrets:userSecretsId"].IsNullOrEmpty(), b =>
-                b.AddUserSecrets(configuration["naos:secrets:userSecretsId"])); // https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets
+            builder.AddIf(!configuration[ConfigurationKeys.UserSecretsId].IsNullOrEmpty(), b =>
+                b.AddUserSecrets(configuration[ConfigurationKeys.UserSecretsId])); // https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets
 
             configuration = builder.Build();
-            builder.AddIf(configuration["naos:secrets:azureAppConfiguration:enabled"].ToBool(), b =>
+            builder.AddIf(configuration[ConfigurationKeys.AzureAppConfigurationEnabled].ToBool(), b =>
             {
-                if (configuration["naos:secrets:azureAppConfiguration:connectionString"].IsNullOrEmpty())
+                if (configuration[ConfigurationKeys.AzureAppConfigurationConnectionString].IsNullOrEmpty())
                 {
                     throw new Exception("Naos AzureAppConfiguration configuration provider cannot be used when the connectionstrong is not provided by any of the configuration providers (json/env/args). Please make these configuration settings available or set secrets:azureAppConfiguration:enabled to 'false'.");
                 }
 
                 b.AddAzureAppConfiguration(options =>
                 {
-                    options.Connect(configuration["naos:secrets:azureAppConfiguration:connectionString"])
+                    options.Connect(configuration[ConfigurationKeys.AzureAppConfigurationConnectionString])
                            .UseFeatureFlags();
                 });
 
@@ -76,19 +76,19 @@
             });
 
             configuration = builder.Build();
-            builder.AddIf(configuration[ConfigurationKeys.KeyVaultEnabled].ToBool(), b =>
+            builder.AddIf(configuration[ConfigurationKeys.AzureKeyVaultEnabled].ToBool(), b =>
             {
-                if (configuration[ConfigurationKeys.KeyVaultName].IsNullOrEmpty()
-                    || configuration[ConfigurationKeys.KeyVaultClientId].IsNullOrEmpty()
-                    || configuration[ConfigurationKeys.KeyVaultClientSecret].IsNullOrEmpty())
+                if (configuration[ConfigurationKeys.AzureKeyVaultName].IsNullOrEmpty()
+                    || configuration[ConfigurationKeys.AzureKeyVaultClientId].IsNullOrEmpty()
+                    || configuration[ConfigurationKeys.AzureKeyVaultClientSecret].IsNullOrEmpty())
                 {
                     throw new Exception("Naos Keyvault configuration provider cannot be used when secrets:keyvault:name, secrets:keyvault:clientId or secrets:keyvault:clientSecret are not provided by any of the configuration providers (json/env/args). Please make these configuration settings available or set secrets:keyvault:enabled to 'false'.");
                 }
 
                 b.AddAzureKeyVault(
-                    $"https://{configuration[ConfigurationKeys.KeyVaultName]}.vault.azure.net/",
-                    configuration[ConfigurationKeys.KeyVaultClientId],
-                    configuration[ConfigurationKeys.KeyVaultClientSecret],
+                    $"https://{configuration[ConfigurationKeys.AzureKeyVaultName]}.vault.azure.net/",
+                    configuration[ConfigurationKeys.AzureKeyVaultClientId],
+                    configuration[ConfigurationKeys.AzureKeyVaultClientSecret],
                     // new CachedKeyVaultClient() // howto create new keyvault instance https://github.com/aspnet/Configuration/blob/master/src/Config.AzureKeyVault/AzureKeyVaultConfigurationExtensions.cs
                     new EnvironmentPrefixKeyVaultSecretManager());
 

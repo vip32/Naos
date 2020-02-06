@@ -118,15 +118,15 @@
 
         private static void AddConfigurationHealthChecks(IServiceCollection services, IConfiguration configuration)
         {
-            if (configuration[ConfigurationKeys.KeyVaultEnabled].ToBool()
-                && !configuration[ConfigurationKeys.KeyVaultName].IsNullOrEmpty()
-                && !configuration[ConfigurationKeys.KeyVaultClientId].IsNullOrEmpty()
-                && !configuration[ConfigurationKeys.KeyVaultClientSecret].IsNullOrEmpty())
+            if (configuration[ConfigurationKeys.AzureKeyVaultEnabled].ToBool()
+                && !configuration[ConfigurationKeys.AzureKeyVaultName].IsNullOrEmpty()
+                && !configuration[ConfigurationKeys.AzureKeyVaultClientId].IsNullOrEmpty()
+                && !configuration[ConfigurationKeys.AzureKeyVaultClientSecret].IsNullOrEmpty())
             {
                 services.AddHealthChecks()
                     .AddAzureKeyVault(s => s
-                        .UseClientSecrets(configuration[ConfigurationKeys.KeyVaultClientId], configuration[ConfigurationKeys.KeyVaultClientSecret])
-                        .UseKeyVaultUrl($"https://{configuration[ConfigurationKeys.KeyVaultName]}.vault.azure.net/"), "configuration-keyvault", tags: new[] { "naos" });
+                        .UseClientSecrets(configuration[ConfigurationKeys.AzureKeyVaultClientId], configuration[ConfigurationKeys.AzureKeyVaultClientSecret])
+                        .UseKeyVaultUrl($"https://{configuration[ConfigurationKeys.AzureKeyVaultName]}.vault.azure.net/"), "configuration-keyvault", tags: new[] { "naos" });
             }
 
             // TODO: check other configuration providers here
