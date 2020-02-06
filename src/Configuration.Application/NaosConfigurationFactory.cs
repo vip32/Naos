@@ -76,19 +76,19 @@
             });
 
             configuration = builder.Build();
-            builder.AddIf(configuration["naos:secrets:vault:enabled"].ToBool(), b =>
+            builder.AddIf(configuration[ConfigurationKeys.KeyVaultEnabled].ToBool(), b =>
             {
-                if (configuration["naos:secrets:vault:name"].IsNullOrEmpty()
-                    || configuration["naos:secrets:vault:clientId"].IsNullOrEmpty()
-                    || configuration["naos:secrets:vault:clientSecret"].IsNullOrEmpty())
+                if (configuration[ConfigurationKeys.KeyVaultName].IsNullOrEmpty()
+                    || configuration[ConfigurationKeys.KeyVaultClientId].IsNullOrEmpty()
+                    || configuration[ConfigurationKeys.KeyVaultClientSecret].IsNullOrEmpty())
                 {
                     throw new Exception("Naos Keyvault configuration provider cannot be used when secrets:keyvault:name, secrets:keyvault:clientId or secrets:keyvault:clientSecret are not provided by any of the configuration providers (json/env/args). Please make these configuration settings available or set secrets:keyvault:enabled to 'false'.");
                 }
 
                 b.AddAzureKeyVault(
-                    $"https://{configuration["naos:secrets:vault:name"]}.vault.azure.net/",
-                    configuration["naos:secrets:vault:clientId"],
-                    configuration["naos:secrets:vault:clientSecret"],
+                    $"https://{configuration[ConfigurationKeys.KeyVaultName]}.vault.azure.net/",
+                    configuration[ConfigurationKeys.KeyVaultClientId],
+                    configuration[ConfigurationKeys.KeyVaultClientSecret],
                     // new CachedKeyVaultClient() // howto create new keyvault instance https://github.com/aspnet/Configuration/blob/master/src/Config.AzureKeyVault/AzureKeyVaultConfigurationExtensions.cs
                     new EnvironmentPrefixKeyVaultSecretManager());
 
