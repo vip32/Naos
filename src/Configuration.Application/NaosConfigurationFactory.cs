@@ -67,7 +67,8 @@
                 b.AddAzureAppConfiguration(options =>
                 {
                     options.Connect(configuration[ConfigurationKeys.AzureAppConfigurationConnectionString])
-                           .UseFeatureFlags();
+                           .UseFeatureFlags()
+                           .SetOfflineCache(new OfflineFileCache()); // https://github.com/Azure/AppConfiguration/issues/45
                 });
 
                 // howto use: https://microsoft.github.io/AzureTipsAndTricks/blog/tip222.html
