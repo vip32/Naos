@@ -90,6 +90,7 @@
                     configuration[ConfigurationKeys.AzureKeyVaultClientId],
                     configuration[ConfigurationKeys.AzureKeyVaultClientSecret],
                     // new CachedKeyVaultClient() // howto create new keyvault instance https://github.com/aspnet/Configuration/blob/master/src/Config.AzureKeyVault/AzureKeyVaultConfigurationExtensions.cs
+                    // or just use Azure App Configuration with offlinecache https://github.com/Azure/AppConfiguration/issues/45
                     new EnvironmentPrefixKeyVaultSecretManager());
 
                 return b;
