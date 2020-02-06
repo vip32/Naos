@@ -208,7 +208,7 @@ namespace Naos.Sample.Application.Web
                     .UseOperationsTracing()
                     .UseRequestFiltering()
                     .UseServiceExceptions()
-                    .UseCommandRequests()
+                    .UseCommandEndpoints()
                     .UseServiceDiscoveryRouter())
                 .UseOpenApi()
                 .UseSwaggerUi3();

@@ -62,6 +62,7 @@ namespace Naos.Sample.Application.Web
                 .AddMediatr()
                 .AddSwaggerDocument((c, sp) => // TODO: replace with .AddOpenApiDocument, but currently has issues with example model generation in UI
                 {
+                    // TODO: AddNaos.AddSwaggerDocument() ^^^^
                     c.SerializerSettings = DefaultJsonSerializerSettings.Create();
                     // find all processors which are registerd by various naos features (Command RequestDispatcher/ControllerRegistrations)
                     foreach (var documentProcessor in sp.GetServices<IDocumentProcessor>())
@@ -183,7 +184,7 @@ namespace Naos.Sample.Application.Web
             services
                 .AddNaos(this.Configuration, "Product", "Capability", new[] { "All" }, n => n
                     //.AddModule<CustomersModule>()>> INaosModule
-                    //.AddModule(m => m { m.Context.Services.AddScoped})
+                    //.AddModule(m => m { m.Context.Services.AddScoped<....>()}, "customers")
                     //.AddModules() >> discover INaosModule!
                     .AddModules(m => m
                         .AddCountriesModule()
@@ -191,13 +192,13 @@ namespace Naos.Sample.Application.Web
                         .AddUserAccountsModule()
                         .AddCatalogsModule()
                         .AddInventoryModule())
-                    .AddServiceContext()
+                    .AddServiceContext() // do IMPLICIT! XXXX
                     .AddOidcAuthentication()
                     //.AddAuthenticationApiKeyStatic()
                     //.AddEasyAuthentication(/*o => o.Provider = EasyAuthProviders.AzureActiveDirectory*/)
-                    .AddRequestCorrelation()
-                    .AddRequestFiltering()
-                    .AddServiceExceptions()
+                    .AddRequestCorrelation() // do IMPLICIT!
+                    .AddRequestFiltering() // do IMPLICIT! XXXX
+                    .AddServiceExceptions() // do IMPLICIT! XXXX
                     .AddCommands(o => o
                         .AddBehavior<TracerCommandBehavior>()
                         .AddBehavior<ValidateCommandBehavior>()
@@ -228,12 +229,12 @@ namespace Naos.Sample.Application.Web
                         .AddLogging(o => o
                             .UseConsole(LogLevel.Debug)
                             .UseFile()
+                            .UseMongo())
                             //.UseSink(w => w.LiterateConsole())
                             //.UseAzureBlobStorage()
                             //.UseCosmosDb() TODO
-                            .UseAzureLogAnalytics(false)
-                            .UseMongo())
-                        .AddSystemHealthChecks()
+                            //.UseAzureLogAnalytics())
+                        .AddSystemHealthChecks() // do IMPLICIT! XXXXX
                         .AddRequestStorage(o => o
                             .UseAzureBlobStorage())
                         .AddTracing(o => o
@@ -252,7 +253,7 @@ namespace Naos.Sample.Application.Web
                     //.Register("jobevent1", Cron.Minutely(), () => new EchoJobEventData { Text = "+++ hello from jobevent1 +++" }))
                     //.Register<EchoJob>("echojob2", Cron.MinuteInterval(2), j => j.EchoAsync("+++ hello from echojob2 +++", CancellationToken.None, true), enabled: false)
                     //.Register<EchoJob>("testlongjob4", Cron.Minutely(), j => j.EchoLongAsync("+++ hello from testlongjob4 +++", CancellationToken.None)))
-                    .AddServiceClient()
+                    .AddServiceClient() // do IMPLICIT! XXXXX
                     .AddQueueing()
                     .AddMessaging(o => o
                         //.UseFileStorageBroker(s => s
@@ -281,18 +282,18 @@ namespace Naos.Sample.Application.Web
 
             app.UseNaos(s => s
                    //.UseAuthenticationChallenge()
-                   .UseRequestCorrelation()
-                   .UseServiceContext()
-                   .UseServicePoweredBy()
-                   .UseOperationsHealth()
-                   .UseOperationsLogging()
-                   .UseOperationsTracing()
-                   .UseRequestFiltering()
-                   .UseServiceExceptions()
-                   .UseCommandRequests()
+                   .UseRequestCorrelation() // do IMPLICIT! XXXXX
+                   .UseServiceContext() // do IMPLICIT! XXXXX
+                   .UseServicePoweredBy() // do IMPLICIT! XXXXX
+                   .UseOperationsHealth() // do IMPLICIT! XXXXX
+                   .UseOperationsLogging() // do IMPLICIT! XXXXX
+                   .UseOperationsTracing() // do IMPLICIT! XXXXX
+                   .UseRequestFiltering() // do IMPLICIT! XXXXX
+                   .UseServiceExceptions() // do IMPLICIT! XXXXX
+                   .UseCommandEndpoints() // do IMPLICIT! XXXXX
                    .UseServiceDiscoveryRouter())
-               .UseOpenApi()
-               .UseSwaggerUi3(a =>
+               .UseOpenApi() // TODO: UseNaos.UseSwaggerDocument()
+               .UseSwaggerUi3(a => // TODO: UseNaos.UseSwaggerDocument()
                {
                    a.CustomStylesheetPath = "./css/naos/swagger.css";
 
