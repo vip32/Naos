@@ -22,8 +22,6 @@ namespace Naos.Sample.Application.Web
     using Naos.Foundation;
     using Naos.JobScheduling.Domain;
     using Naos.Messaging.Domain;
-    using Naos.Sample.Catalogs.Application;
-    using Naos.Sample.Customers.Application;
     using Naos.Tracing.Domain;
     using NSwag.AspNetCore;
     using NSwag.Generation.Processors;
@@ -207,12 +205,12 @@ namespace Naos.Sample.Application.Web
                             new FolderFileStorage(o => o
                                 .Folder(Path.Combine(Path.GetTempPath(), "naos_commands", "journal")))))
                         .AddEndpoints(o => o
-                            .Post<CreateCustomerCommand>(
+                            .Post<Customers.Application.CreateCustomerCommand>(
                                 "api/commands/customers/create",
                                 onSuccessStatusCode: HttpStatusCode.Created,
                                 groupName: "Customers",
                                 onSuccess: (cmd, ctx) => ctx.Response.Location($"api/customers/{cmd.Customer.Id}"))
-                            .Get<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>(
+                            .Get<Customers.Application.GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>(
                                 "api/commands/customers/active",
                                 groupName: "Customers")
                             .UseAzureBlobStorage()
@@ -221,7 +219,7 @@ namespace Naos.Sample.Application.Web
                             .UseAzureStorageQueue() // TODO: rabbitmq queue is also needed
                                                     //.UseInMemoryQueue()
                             .GetQueued<PingCommand>("api/commands/queue/ping")
-                            .GetQueued<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>(
+                            .GetQueued<Customers.Application.GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>(
                                 "api/commands/queue/customers/active",
                                 groupName: "Customers")))
                     .AddOperations(o => o
@@ -248,7 +246,7 @@ namespace Naos.Sample.Application.Web
                         //.SetEnabled(true)
                         //.Register<EchoJob>("echojob1", Cron.MinuteInterval(10), (j) => j.EchoAsync("+++ hello from echojob1 +++", CancellationToken.None))
                         //.Register<EchoJob>("manualjob1", Cron.Never(), (j) => j.EchoAsync("+++ hello from manualjob1 +++", CancellationToken.None))
-                        .Register<CountriesImportJob>("countriesimport", Cron.MinuteInterval(5)))
+                        .Register<Catalogs.Application.CountriesImportJob>("countriesimport", Cron.MinuteInterval(5)))
                     //.Register("anonymousjob2", Cron.Minutely(), (j) => Console.WriteLine("+++ hello from anonymousjob2 " + j))
                     //.Register("jobevent1", Cron.Minutely(), () => new EchoJobEventData { Text = "+++ hello from jobevent1 +++" }))
                     //.Register<EchoJob>("echojob2", Cron.MinuteInterval(2), j => j.EchoAsync("+++ hello from echojob2 +++", CancellationToken.None, true), enabled: false)
