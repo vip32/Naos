@@ -59,19 +59,8 @@
 
             optionsAction?.Invoke(new NaosServicesContextOptions(context));
 
-            try
-            {
-                var logger = services.BuildServiceProvider().GetRequiredService<ILoggerFactory>().CreateLogger("Naos");
-                foreach (var message in context.Messages.Safe())
-                {
-                    logger.LogDebug(message);
-                }
-            }
-            catch (InvalidOperationException)
-            {
-                // no loggerfactory registered
-                services.AddScoped<ILoggerFactory>(sp => new LoggerFactory());
-            }
+            AddConfigurationHealthChecks(services, configuration);
+            LogStartupMessages(services, context);
 
             return context;
         }
@@ -108,6 +97,39 @@
             //}
 
             return naosOptions;
+        }
+
+        private static void LogStartupMessages(IServiceCollection services, NaosBuilderContext context)
+        {
+            try
+            {
+                var logger = services.BuildServiceProvider().GetRequiredService<ILoggerFactory>().CreateLogger("Naos");
+                foreach (var message in context.Messages.Safe())
+                {
+                    logger.LogDebug(message);
+                }
+            }
+            catch (InvalidOperationException)
+            {
+                // no loggerfactory registered
+                services.AddScoped((Func<IServiceProvider, ILoggerFactory>)(sp => new LoggerFactory()));
+            }
+        }
+
+        private static void AddConfigurationHealthChecks(IServiceCollection services, IConfiguration configuration)
+        {
+            if (configuration["naos:secrets:vault:enabled"].ToBool()
+                && !configuration["naos:secrets:vault:name"].IsNullOrEmpty()
+                && !configuration["naos:secrets:vault:clientId"].IsNullOrEmpty()
+                && !configuration["naos:secrets:vault:clientSecret"].IsNullOrEmpty())
+            {
+                services.AddHealthChecks()
+                    .AddAzureKeyVault(s => s
+                        .UseClientSecrets(configuration["naos:secrets:vault:clientId"], configuration["naos:secrets:vault:clientSecret"])
+                        .UseKeyVaultUrl($"https://{configuration["naos:secrets:vault:name"]}.vault.azure.net/"), "configuration-keyvault", tags: new[] { "naos" });
+            }
+
+            // TODO: check other configuration providers here
         }
     }
 }
