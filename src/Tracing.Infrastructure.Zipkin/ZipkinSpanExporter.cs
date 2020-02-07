@@ -98,7 +98,7 @@
             var response = await this.httpClient.SendAsync(request, cancellationToken).AnyContext();
             if (!response.IsSuccessStatusCode)
             {
-                this.logger.LogWarning($"{{LogKey:l}} zipkin send error: {spans.Dump()}", LogKeys.Tracing);
+                this.logger.LogWarning($"{{LogKey:l}} zipkin http send error (statuscode={(int)response.StatusCode})", LogKeys.Tracing);
             }
         }
 
