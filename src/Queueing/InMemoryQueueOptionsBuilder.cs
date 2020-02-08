@@ -3,10 +3,17 @@
     using System;
     using MediatR;
     using Naos.Foundation;
+    using Naos.Tracing.Domain;
 
     public class InMemoryQueueOptionsBuilder :
         BaseOptionsBuilder<InMemoryQueueOptions, InMemoryQueueOptionsBuilder>
     {
+        public InMemoryQueueOptionsBuilder Tracer(ITracer tracer)
+        {
+            this.Target.Tracer = tracer;
+            return this;
+        }
+
         public InMemoryQueueOptionsBuilder Mediator(IMediator mediator)
         {
             this.Target.Mediator = mediator;

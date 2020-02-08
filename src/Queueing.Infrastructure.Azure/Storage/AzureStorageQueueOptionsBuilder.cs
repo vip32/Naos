@@ -4,10 +4,17 @@
     using MediatR;
     using Microsoft.WindowsAzure.Storage.RetryPolicies;
     using Naos.Foundation;
+    using Naos.Tracing.Domain;
 
     public class AzureStorageQueueOptionsBuilder :
        BaseOptionsBuilder<AzureStorageQueueOptions, AzureStorageQueueOptionsBuilder>
     {
+        public AzureStorageQueueOptionsBuilder Tracer(ITracer tracer)
+        {
+            this.Target.Tracer = tracer;
+            return this;
+        }
+
         public AzureStorageQueueOptionsBuilder Mediator(IMediator mediator)
         {
             this.Target.Mediator = mediator;

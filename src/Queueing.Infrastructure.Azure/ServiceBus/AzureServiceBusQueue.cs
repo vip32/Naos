@@ -70,8 +70,11 @@
                     var message = new Message(stream.ToArray())
                     {
                         MessageId = id,
-                        CorrelationId = data.As<IHaveCorrelationId>()?.CorrelationId
+                        CorrelationId = data.As<IHaveCorrelationId>()?.CorrelationId,
                     };
+                    //message.UserProperties.Add("TraceId", );
+                    //message.UserProperties.Add("SpanId", );
+
                     await this.queueSender.SendAsync(message).AnyContext();
 
                     using (var item = new QueueItem<TData>(message.MessageId, data, this, DateTime.UtcNow, 0))
@@ -324,6 +327,9 @@
                 this,
                 message.SystemProperties.EnqueuedTimeUtc,
                 message.SystemProperties.DeliveryCount);
+
+            //var traceId = message.UserProperties["TraceId"];
+            //var spanId = message.UserProperties["SpanId"];
 
             using (this.Logger.BeginScope(new Dictionary<string, object>
             {

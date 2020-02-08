@@ -53,7 +53,7 @@
             {
                 await this.EnsureQueueAsync().AnyContext();
 
-                var item = new QueueItem<TData>(IdGenerator.Instance.Next, data/*.Clone()*/, this, DateTime.UtcNow, 0);
+                var item = new QueueItem<TData>(IdGenerator.Instance.Next, data/*.Clone()*/, this);
                 this.Logger.LogDebug($"{{LogKey:l}} queue item enqueue (id={item.Id}, queue={this.Options.QueueName}, type={this.GetType().PrettyName()})", LogKeys.Queueing);
                 this.queue.Enqueue(item);
 
