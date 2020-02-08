@@ -54,7 +54,7 @@
                 await this.EnsureQueueAsync().AnyContext();
 
                 var item = new QueueItem<TData>(IdGenerator.Instance.Next, data/*.Clone()*/, this, DateTime.UtcNow, 0);
-                this.Logger.LogDebug($"queue item enqueue (id={item.Id}, queue={this.Options.QueueName})");
+                this.Logger.LogDebug($"{{LogKey:l}} queue item enqueue (id={item.Id}, queue={this.Options.QueueName})", LogKeys.Queueing);
                 this.queue.Enqueue(item);
 
                 Interlocked.Increment(ref this.enqueuedCount);
@@ -70,7 +70,7 @@
         {
             EnsureArg.IsNotNull(item, nameof(item));
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
-            this.Logger.LogDebug($"queue item renew (id={item.Id}, queue={this.Options.QueueName})");
+            this.Logger.LogDebug($"{{LogKey:l}} queue item renew (id={item.Id}, queue={this.Options.QueueName})", LogKeys.Queueing);
 
             var addItem = item as QueueItem<TData>;
             this.dequeued.AddOrUpdate(item.Id, addItem, (key, value) =>
@@ -92,7 +92,7 @@
         {
             EnsureArg.IsNotNull(item, nameof(item));
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
-            this.Logger.LogDebug($"queue item complete (id={item.Id}, queue={this.Options.QueueName})");
+            this.Logger.LogDebug($"{{LogKey:l}} queue item complete (id={item.Id}, queue={this.Options.QueueName})", LogKeys.Queueing);
 
             if (item.IsAbandoned || item.IsCompleted)
             {
@@ -120,7 +120,7 @@
         {
             EnsureArg.IsNotNull(item, nameof(item));
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
-            this.Logger.LogDebug($"queue item abandon (id={item.Id}, queue={this.Options.QueueName})");
+            this.Logger.LogDebug($"{{LogKey:l}} queue item abandon (id={item.Id}, queue={this.Options.QueueName})", LogKeys.Queueing);
 
             if (item.IsAbandoned || item.IsCompleted)
             {
@@ -140,7 +140,7 @@
             {
                 if (this.Options.RetryDelay > TimeSpan.Zero)
                 {
-                    this.Logger.LogDebug($"add item to wait list, for future retry (id={item.Id})");
+                    this.Logger.LogDebug($"{{LogKey:l}} add item to wait list, for future retry (id={item.Id})", LogKeys.Queueing);
                     var unawaited = Run.DelayedAsync(
                         this.GetRetryDelay(dequeuedItem.Attempts), () =>
                         {
@@ -150,7 +150,7 @@
                 }
                 else
                 {
-                    this.Logger.LogDebug($"add item back to queue, for retry (id={item.Id})");
+                    this.Logger.LogDebug($"{{LogKey:l}} add item back to queue, for retry (id={item.Id})", LogKeys.Queueing);
                     var unawaited = Task.Run(() => this.queue.Enqueue(dequeuedItem));
                 }
             }
@@ -254,7 +254,7 @@
 
             if (this.queue.Count == 0)
             {
-                this.Logger.LogDebug($"no queue items, waiting (name={this.Options.QueueName})");
+                this.Logger.LogDebug($"{{LogKey:l}} no queue items, waiting (name={this.Options.QueueName})", LogKeys.Queueing);
 
                 while (this.queue.Count == 0
                     && !cancellationToken.IsCancellationRequested)
@@ -351,7 +351,7 @@
                     }
                 }
 
-                this.Logger.LogDebug($"queue processing exiting (name={this.Options.QueueName}, cancellation={linkedCancellationToken.IsCancellationRequested})");
+                this.Logger.LogDebug($"{{LogKey:l}} queue processing exiting (name={this.Options.QueueName}, cancellation={linkedCancellationToken.IsCancellationRequested})", LogKeys.Queueing);
             }, linkedCancellationToken.Token).ContinueWith(t => linkedCancellationToken.Dispose());
         }
 

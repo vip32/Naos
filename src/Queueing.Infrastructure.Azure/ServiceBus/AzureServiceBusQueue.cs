@@ -61,7 +61,7 @@
                 await this.EnsureQueueAsync().AnyContext();
 
                 var id = IdGenerator.Instance.Next;
-                this.Logger.LogDebug($"queue item enqueue (id={id}, queue={this.Options.QueueName})");
+                this.Logger.LogDebug($"{{LogKey:l}} queue item enqueue (id={id}, queue={this.Options.QueueName})", LogKeys.Queueing);
 
                 Interlocked.Increment(ref this.enqueuedCount);
                 using (var stream = new MemoryStream())
@@ -89,7 +89,7 @@
         public override async Task<IQueueItem<TData>> DequeueAsync(TimeSpan? timeout = null)
         {
             await this.EnsureQueueAsync().AnyContext();
-            this.Logger.LogDebug($"queue item dequeue (queue={this.Options.QueueName})");
+            this.Logger.LogDebug($"{{LogKey:l}} queue item dequeue (queue={this.Options.QueueName})", LogKeys.Queueing);
 
             // TODO: ReceiveBatchAsync?
             Message message;
@@ -114,7 +114,7 @@
         {
             EnsureArg.IsNotNull(item, nameof(item));
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
-            this.Logger.LogDebug($"queue item renew (id={item.Id}, queue={this.Options.QueueName})");
+            this.Logger.LogDebug($"{{LogKey:l}} queue item renew (id={item.Id}, queue={this.Options.QueueName})", LogKeys.Queueing);
 
             await this.queueReceiver.RenewLockAsync(item.Id).AnyContext();
 
@@ -126,7 +126,7 @@
         {
             EnsureArg.IsNotNull(item, nameof(item));
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
-            this.Logger.LogDebug($"queue item complete (id={item.Id}, queue={this.Options.QueueName})");
+            this.Logger.LogDebug($"{{LogKey:l}} queue item complete (id={item.Id}, queue={this.Options.QueueName})", LogKeys.Queueing);
 
             if (item.IsAbandoned || item.IsCompleted)
             {
@@ -145,7 +145,7 @@
         {
             EnsureArg.IsNotNull(item, nameof(item));
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
-            this.Logger.LogDebug($"queue item abandon (id={item.Id}, queue={this.Options.QueueName})");
+            this.Logger.LogDebug($"{{LogKey:l}} queue item abandon (id={item.Id}, queue={this.Options.QueueName})", LogKeys.Queueing);
 
             if (item.IsAbandoned || item.IsCompleted)
             {
