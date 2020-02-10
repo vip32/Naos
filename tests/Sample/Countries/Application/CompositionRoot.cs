@@ -1,11 +1,18 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using System.Threading;
     using EnsureThat;
     using MediatR;
     using Microsoft.Extensions.Logging;
+    using Naos.Foundation;
     using Naos.Foundation.Domain;
+    using Naos.Messaging.Application.Web;
+    using Naos.Queueing;
+    using Naos.Queueing.Domain;
+    using Naos.Sample.Countries.Application;
     using Naos.Sample.Countries.Domain;
     using Naos.Sample.Countries.Infrastructure;
     using Naos.Tracing.Domain;
@@ -20,6 +27,16 @@
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
             options.Context.AddTag("countries");
+
+            options.Context.Services.AddSingleton<IQueue<CountriesExportData>>(sp =>
+            {
+                return new InMemoryQueue<CountriesExportData>(o => o
+                    .Mediator(sp.GetService<IMediator>())
+                    .Tracer(sp.GetService<ITracer>())
+                    .LoggerFactory(sp.GetService<ILoggerFactory>())
+                    .NoRetries());
+            });
+            options.Context.Services.AddStartupTask<QueueProcessingStartupTask<CountriesExportData>>(new TimeSpan(0, 0, 30)); // TODO: simplify options.Context.Services.AddQueueProcessing<T>
 
             options.Context.Services.AddScoped<ICountryRepository>(sp =>
             {

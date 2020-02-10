@@ -7,24 +7,28 @@
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
     using Naos.JobScheduling.Domain;
+    using Naos.Queueing.Domain;
     using Naos.Sample.Countries.Domain;
     using Naos.Tracing.Domain;
 
-    public class CountriesImportJob : Job
+    public class CountriesExportJob : Job
     {
         private readonly ILogger<CountriesImportJob> logger;
         private readonly ICountryRepository repository;
+        private readonly IQueue<CountriesExportData> queue;
         private readonly ITracer tracer;
 
-        public CountriesImportJob(ILogger<CountriesImportJob> logger, ITracer tracer, ICountryRepository repository)
+        public CountriesExportJob(ILogger<CountriesImportJob> logger, ITracer tracer, ICountryRepository repository, IQueue<CountriesExportData> queue)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(tracer, nameof(tracer));
             EnsureArg.IsNotNull(repository, nameof(repository));
+            EnsureArg.IsNotNull(queue, nameof(queue));
 
             this.logger = logger;
             this.tracer = tracer;
             this.repository = repository;
+            this.queue = queue;
         }
 
         public async override Task ExecuteAsync(string correlationId, CancellationToken cancellationToken, string[] args = null)
@@ -33,23 +37,21 @@
 
             using (var scope = this.tracer.BuildSpan(this.GetType().Name.ToLower(), LogKeys.JobScheduling, SpanKind.Consumer).Activate(this.logger))
             {
-                this.logger.LogInformation("{LogKey:l} countries import", LogKeys.JobScheduling);
+                this.logger.LogInformation("{LogKey:l} countries export", LogKeys.JobScheduling);
                 var countries = await this.repository.FindAllAsync().AnyContext();
-
-                using (var scope2 = this.tracer.BuildSpan("read data", LogKeys.JobScheduling).Activate(this.logger))
+                var data = new CountriesExportData { CorrelationId = correlationId };
+                using (var scope2 = this.tracer.BuildSpan("write data", LogKeys.JobScheduling).Activate(this.logger))
                 {
-                    this.logger.LogInformation("{LogKey:l} countries read data", LogKeys.JobScheduling);
-                    // TODO: use storage to read file
+                    this.logger.LogInformation("{LogKey:l} countries write data", LogKeys.JobScheduling);
+                    // TODO: use storage to write file
 
-                    // TODO: foreach country in csv
-                    var code = RandomGenerator.GenerateString(2, false, true);
-                    var country = new Country { Code = code, LanguageCodes = new[] { $"{code}-{code}" }, Name = code, TenantId = "naos_sample_test", Id = code };
-                    await this.repository.UpsertAsync(country).AnyContext();
+                    data.Timestamp = DateTime.UtcNow;
+                    data.Items = countries;
 
-                    code = RandomGenerator.GenerateString(2, false, true);
-                    country = new Country { Code = code, LanguageCodes = new[] { $"{code}-{code}" }, Name = code, TenantId = "naos_sample_test", Id = code };
-                    await this.repository.UpsertAsync(country).AnyContext();
+                    Thread.Sleep(new TimeSpan(0, 0, 3));
                 }
+
+                await this.queue.EnqueueAsync(data).AnyContext();
             }
         }
     }

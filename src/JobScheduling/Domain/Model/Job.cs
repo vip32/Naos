@@ -59,15 +59,25 @@
         {
         }
 
+        public virtual async Task ExecuteAsync(string[] args = null)
+        {
+            await this.ExecuteAsync(null, CancellationToken.None, args).AnyContext();
+        }
+
         // TODO: Other things to schedule
         // Schedule - Command
         // Schedule - Message
-        public virtual async Task ExecuteAsync(string[] args = null)
+        public virtual async Task ExecuteAsync(string correlationId, string[] args = null)
         {
-            await this.ExecuteAsync(CancellationToken.None, args).AnyContext();
+            await this.ExecuteAsync(correlationId, CancellationToken.None, args).AnyContext();
         }
 
-        public virtual async Task ExecuteAsync(CancellationToken cancellationToken = default, string[] args = null)
+        public virtual async Task ExecuteAsync(CancellationToken cancellationToken, string[] args = null)
+        {
+            await this.ExecuteAsync(null, cancellationToken, args).AnyContext();
+        }
+
+        public virtual async Task ExecuteAsync(string correlationId, CancellationToken cancellationToken = default, string[] args = null)
         {
             if (this.task != null)
             {

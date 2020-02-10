@@ -9,6 +9,12 @@
     {
         string Id { get; }
 
+        public string CorrelationId { get; set; }
+
+        public string TraceId { get; set; }
+
+        public string SpanId { get; set; }
+
         TData Data { get; }
 
         bool IsCompleted { get; }

@@ -106,7 +106,7 @@
                         throw new NaosException($"Cannot create job instance for type {typeof(T).PrettyName()}.");
                     }
 
-                    await job.ExecuteAsync(t, a).AnyContext();
+                    await job.ExecuteAsync(IdGenerator.Instance.Next, t, a).AnyContext();
                 }));
         }
 

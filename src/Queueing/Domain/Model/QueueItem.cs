@@ -26,6 +26,12 @@
 
         public string Id { get; }
 
+        public string CorrelationId { get; set; }
+
+        public string TraceId { get; set; }
+
+        public string SpanId { get; set; }
+
         public bool IsCompleted { get; private set; }
 
         public bool IsAbandoned { get; private set; }

@@ -32,6 +32,12 @@
             return this;
         }
 
+        public InMemoryQueueOptionsBuilder NoRetries()
+        {
+            this.Target.Retries = 0;
+            return this;
+        }
+
         public InMemoryQueueOptionsBuilder ProcessInterval(TimeSpan timeout)
         {
             this.Target.ProcessInterval = timeout;

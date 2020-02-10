@@ -11,6 +11,7 @@
     using Naos.Foundation;
     using Naos.Foundation.Domain;
     using Naos.Queueing.Domain;
+    using Naos.Tracing.Domain;
 
     public class AzureStorageQueue<TData> : BaseQueue<TData, AzureStorageQueueOptions>
         where TData : class
@@ -57,10 +58,12 @@
             EnsureArg.IsNotNull(data, nameof(data));
             this.EnsureMetaData(data);
 
+            var correlationId = data.As<IHaveCorrelationId>()?.CorrelationId;
             using (this.Logger.BeginScope(new Dictionary<string, object>
             {
-                [LogPropertyKeys.CorrelationId] = data.As<IHaveCorrelationId>()?.CorrelationId,
+                [LogPropertyKeys.CorrelationId] = correlationId,
             }))
+            using (var scope = this.Options.Tracer?.BuildSpan($"queue {this.Options.QueueName}", LogKeys.Queueing, SpanKind.Producer).Activate(this.Logger))
             {
                 await this.EnsureQueueAsync().AnyContext();
 
@@ -68,7 +71,20 @@
 
                 Interlocked.Increment(ref this.enqueuedCount);
                 var message = CloudQueueMessage.CreateCloudQueueMessageFromByteArray(this.Serializer.SerializeToBytes(data));
+
                 // TODO: store correlationid + traceid/spanid >> QUEUEITEM > data
+                //using (var item = new QueueItem<TData>(IdGenerator.Instance.Next, data, this))
+                //{
+                //    item.Properties.Add("TraceId", );
+                //    item.Properties.Add("SpanId", );
+                //    var message = CloudQueueMessage.CreateCloudQueueMessageFromByteArray(this.Serializer.SerializeToBytes(item));
+                //    await this.queue.AddMessageAsync(message).AnyContext();
+
+                //    this.Logger.LogJournal(LogKeys.Queueing, $"item enqueued (id={message.Id}, queue={this.Options.QueueName}, data={typeof(TData).PrettyName()})", LogPropertyKeys.TrackEnqueue);
+                //    this.Logger.LogTrace(LogKeys.Queueing, message.Id, typeof(TData).PrettyName(), LogTraceNames.Queue);
+                //    this.LastEnqueuedDate = DateTime.UtcNow;
+                //    return message.Id;
+                //}
 
                 await this.queue.AddMessageAsync(message).AnyContext();
 
@@ -186,7 +202,17 @@
             if (!this.isProcessing)
             {
                 this.ProcessItems(
-                    async (i, ct) => await this.Options.Mediator.Send(new QueueEvent<TData>(i), ct).AnyContext(),
+                    async (i, ct) =>
+                    {
+                        using (this.Logger.BeginScope(new Dictionary<string, object>
+                        {
+                            [LogPropertyKeys.CorrelationId] = i.CorrelationId,
+                        }))
+                        using (var scope = this.Options.Tracer?.BuildSpan($"dequeue {this.Options.QueueName}", LogKeys.Queueing, SpanKind.Consumer, new Span(i.TraceId, i.SpanId)).Activate(this.Logger))
+                        {
+                            await this.Options.Mediator.Send(new QueueEvent<TData>(i), ct).AnyContext();
+                        }
+                    },
                     autoComplete, cancellationToken);
                 this.isProcessing = true;
             }
@@ -283,8 +309,9 @@
 
                     using (this.Logger.BeginScope(new Dictionary<string, object>
                     {
-                        [LogPropertyKeys.CorrelationId] = item.Data.As<IHaveCorrelationId>()?.CorrelationId,
+                        [LogPropertyKeys.CorrelationId] = item.CorrelationId,
                     }))
+                    using (var scope = this.Options.Tracer?.BuildSpan($"dequeue {this.Options.QueueName}", LogKeys.Queueing, SpanKind.Consumer, new Span(item.TraceId, item.SpanId)).Activate(this.Logger))
                     {
                         try
                         {

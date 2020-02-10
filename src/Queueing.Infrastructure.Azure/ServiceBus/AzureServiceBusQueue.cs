@@ -13,6 +13,7 @@
     using Naos.Foundation;
     using Naos.Foundation.Domain;
     using Naos.Queueing.Domain;
+    using Naos.Tracing.Domain;
 
     public class AzureServiceBusQueue<TData> : BaseQueue<TData, AzureServiceBusQueueOptions>
          where TData : class
@@ -53,10 +54,12 @@
             EnsureArg.IsNotNull(data, nameof(data));
             this.EnsureMetaData(data);
 
+            var correlationId = data.As<IHaveCorrelationId>()?.CorrelationId;
             using (this.Logger.BeginScope(new Dictionary<string, object>
             {
-                [LogPropertyKeys.CorrelationId] = data.As<IHaveCorrelationId>()?.CorrelationId,
+                [LogPropertyKeys.CorrelationId] = correlationId,
             }))
+            using (var scope = this.Options.Tracer?.BuildSpan($"queue {this.Options.QueueName}", LogKeys.Queueing, SpanKind.Producer).Activate(this.Logger))
             {
                 await this.EnsureQueueAsync().AnyContext();
 
@@ -70,17 +73,18 @@
                     var message = new Message(stream.ToArray())
                     {
                         MessageId = id,
-                        CorrelationId = data.As<IHaveCorrelationId>()?.CorrelationId,
+                        CorrelationId = correlationId,
                     };
-                    //message.UserProperties.Add("TraceId", );
-                    //message.UserProperties.Add("SpanId", );
+                    //message.UserProperties.AddOrUpdate("CorrelationId", scope.Span.TraceId);
+                    message.UserProperties.AddOrUpdate("TraceId", scope.Span.TraceId);
+                    message.UserProperties.AddOrUpdate("SpanId", scope.Span.SpanId);
 
                     await this.queueSender.SendAsync(message).AnyContext();
 
                     using (var item = new QueueItem<TData>(message.MessageId, data, this, DateTime.UtcNow, 0))
                     {
                         this.Logger.LogJournal(LogKeys.Queueing, $"item enqueued (id={item.Id}, queue={this.Options.QueueName}, data={typeof(TData).PrettyName()})", LogPropertyKeys.TrackEnqueue);
-                        this.Logger.LogTrace(LogKeys.Messaging, item.Id, typeof(TData).PrettyName(), LogTraceNames.Queue);
+                        this.Logger.LogTrace(LogKeys.Queueing, item.Id, typeof(TData).PrettyName(), LogTraceNames.Queue);
                     }
 
                     this.LastEnqueuedDate = DateTime.UtcNow;
@@ -194,8 +198,9 @@
 
                 using (this.Logger.BeginScope(new Dictionary<string, object>
                 {
-                    [LogPropertyKeys.CorrelationId] = item.Data.As<IHaveCorrelationId>()?.CorrelationId,
+                    [LogPropertyKeys.CorrelationId] = item.CorrelationId
                 }))
+                using (var scope = this.Options.Tracer?.BuildSpan($"dequeue {this.Options.QueueName}", LogKeys.Queueing, SpanKind.Consumer, new Span(item.TraceId, item.SpanId)).Activate(this.Logger))
                 {
                     try
                     {
@@ -237,8 +242,9 @@
                 {
                     using (this.Logger.BeginScope(new Dictionary<string, object>
                     {
-                        [LogPropertyKeys.CorrelationId] = i.Data.As<IHaveCorrelationId>()?.CorrelationId,
+                        [LogPropertyKeys.CorrelationId] = i.CorrelationId,
                     }))
+                    using (var scope = this.Options.Tracer?.BuildSpan($"dequeue {this.Options.QueueName}", LogKeys.Queueing, SpanKind.Consumer, new Span(i.TraceId, i.SpanId)).Activate(this.Logger))
                     {
                         await this.Options.Mediator.Send(new QueueEvent<TData>(i), ct).AnyContext();
                     }
@@ -326,10 +332,12 @@
                 this.Serializer.Deserialize<TData>(message.Body),
                 this,
                 message.SystemProperties.EnqueuedTimeUtc,
-                message.SystemProperties.DeliveryCount);
-
-            //var traceId = message.UserProperties["TraceId"];
-            //var spanId = message.UserProperties["SpanId"];
+                message.SystemProperties.DeliveryCount)
+            {
+                CorrelationId = message.UserProperties.TryGetValue("CorrelationId")?.ToString(),
+                TraceId = message.UserProperties.TryGetValue("TraceId")?.ToString(),
+                SpanId = message.UserProperties.TryGetValue("TraceId")?.ToString()
+            };
 
             using (this.Logger.BeginScope(new Dictionary<string, object>
             {

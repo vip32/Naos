@@ -78,7 +78,7 @@
                 try
                 {
                     cts.CancelAfter(TimeSpan.FromMilliseconds(10));
-                    await sut.ExecuteAsync(cts.Token, new[] { "a" }).AnyContext();
+                    await sut.ExecuteAsync("token", cts.Token, new[] { "a" }).AnyContext();
                 }
                 catch (OperationCanceledException)
                 {

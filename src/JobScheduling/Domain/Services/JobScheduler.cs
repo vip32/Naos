@@ -160,17 +160,18 @@
                 {
                     async Task ExecuteAsync()
                     {
+                        var correlationId = IdGenerator.Instance.Next;
                         using (var timer = new Foundation.Timer())
                         using (this.logger.BeginScope(new Dictionary<string, object>
                         {
-                            [LogPropertyKeys.CorrelationId] = IdGenerator.Instance.Next
+                            [LogPropertyKeys.CorrelationId] = correlationId
                         }))
                         {
                             // TODO: publish domain event (job started)
                             this.logger.LogJournal(LogKeys.JobScheduling, $"job started (key={{JobKey}}, id={registration.Identifier}, type={job.GetType().PrettyName()}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")})", LogPropertyKeys.TrackStartJob, args: new[] { registration.Key });
                             //using (var scope = this.tracer?.BuildSpan($"job run {registration.Key}", LogKeys.JobScheduling, SpanKind.Producer).Activate(this.logger))
                             //{ // current span is somehow not available in created jobs (ServiceProviderJobFactory)
-                            await job.ExecuteAsync(cancellationToken, args).AnyContext();
+                            await job.ExecuteAsync(correlationId, cancellationToken, args).AnyContext();
                             //}
 
                             this.logger.LogJournal(LogKeys.JobScheduling, $"job finished (key={{JobKey}}, id={registration.Identifier}, type={job.GetType().PrettyName()})", LogPropertyKeys.TrackFinishJob, args: new[] { LogKeys.JobScheduling, registration.Key });

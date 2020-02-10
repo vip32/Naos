@@ -11,6 +11,7 @@
     using Naos.Foundation;
     using Naos.Foundation.Domain;
     using Naos.Queueing.Domain;
+    using Naos.Tracing.Domain;
 
     public class InMemoryQueue<TData> : BaseQueue<TData, InMemoryQueueOptions>
         where TData : class
@@ -46,14 +47,22 @@
             EnsureArg.IsNotNull(data, nameof(data));
             this.EnsureMetaData(data);
 
+            var correlationId = data.As<IHaveCorrelationId>()?.CorrelationId;
             using (this.Logger.BeginScope(new Dictionary<string, object>
             {
-                [LogPropertyKeys.CorrelationId] = data.As<IHaveCorrelationId>()?.CorrelationId,
+                [LogPropertyKeys.CorrelationId] = correlationId
             }))
+            using (var scope = this.Options.Tracer?.BuildSpan($"queue {this.Options.QueueName}", LogKeys.Queueing, SpanKind.Producer).Activate(this.Logger))
             {
                 await this.EnsureQueueAsync().AnyContext();
 
-                var item = new QueueItem<TData>(IdGenerator.Instance.Next, data/*.Clone()*/, this);
+                var item = new QueueItem<TData>(IdGenerator.Instance.Next, data/*.Clone()*/, this)
+                {
+                    CorrelationId = correlationId,
+                    TraceId = scope.Span.TraceId,
+                    SpanId = scope.Span.SpanId
+                };
+
                 this.Logger.LogDebug($"{{LogKey:l}} queue item enqueue (id={item.Id}, queue={this.Options.QueueName}, type={this.GetType().PrettyName()})", LogKeys.Queueing);
                 this.queue.Enqueue(item);
 
@@ -210,8 +219,9 @@
                     {
                         using (this.Logger.BeginScope(new Dictionary<string, object>
                         {
-                            [LogPropertyKeys.CorrelationId] = i.Data.As<IHaveCorrelationId>()?.CorrelationId,
+                            [LogPropertyKeys.CorrelationId] = i.CorrelationId,
                         }))
+                        using (var scope = this.Options.Tracer?.BuildSpan($"dequeue {this.Options.QueueName}", LogKeys.Queueing, SpanKind.Consumer, new Span(i.TraceId, i.SpanId)).Activate(this.Logger))
                         {
                             await this.Options.Mediator.Send(new QueueEvent<TData>(i), ct).AnyContext();
                         }
@@ -270,20 +280,20 @@
 
 #pragma warning disable CA2000 // Dispose objects before losing scope
 #pragma warning disable IDE0067 // Dispose objects before losing scope
-            if (!this.queue.TryDequeue(out var dequeuedItem) || dequeuedItem == null)
+            if (!this.queue.TryDequeue(out var item) || item == null)
             {
                 return null;
             }
 
-            dequeuedItem.Attempts++;
-            dequeuedItem.DequeuedDate = DateTime.UtcNow;
+            item.Attempts++;
+            item.DequeuedDate = DateTime.UtcNow;
 
             Interlocked.Increment(ref this.dequeuedCount);
-            var item = new QueueItem<TData>(dequeuedItem.Id, dequeuedItem.Data/*.Clone()*/, this, dequeuedItem.EnqueuedDate, dequeuedItem.Attempts); // clone item
+            //var item = new QueueItem<TData>(dequeuedItem.Id, dequeuedItem.Data/*.Clone()*/, this, dequeuedItem.EnqueuedDate, dequeuedItem.Attempts); // clone item
 
             using (this.Logger.BeginScope(new Dictionary<string, object>
             {
-                [LogPropertyKeys.CorrelationId] = item.Data.As<IHaveCorrelationId>()?.CorrelationId,
+                [LogPropertyKeys.CorrelationId] = item.CorrelationId,
             }))
             {
                 await item.RenewLockAsync().AnyContext();
@@ -316,7 +326,7 @@
                     }
                     catch (Exception ex)
                     {
-                        this.Logger.LogError(ex, $"{{LogKey:l}} processing error: {ex.Message}", args: new[] { LogKeys.Queueing });
+                        this.Logger.LogError(ex, $"{{LogKey:l}} queue processing error: {ex.Message}", args: new[] { LogKeys.Queueing });
                     }
 
                     if (linkedCancellationToken.IsCancellationRequested || item == null)
@@ -327,8 +337,9 @@
 
                     using (this.Logger.BeginScope(new Dictionary<string, object>
                     {
-                        [LogPropertyKeys.CorrelationId] = item.Data.As<IHaveCorrelationId>()?.CorrelationId,
+                        [LogPropertyKeys.CorrelationId] = item.CorrelationId,
                     }))
+                    using (var scope = this.Options.Tracer?.BuildSpan($"dequeue {this.Options.QueueName}", LogKeys.Queueing, SpanKind.Consumer, new Span(item.TraceId, item.SpanId)).Activate(this.Logger))
                     {
                         try
                         {
@@ -341,7 +352,7 @@
                         catch (Exception ex)
                         {
                             Interlocked.Increment(ref this.workerErrorCount);
-                            this.Logger.LogError(ex, $"{{LogKey:l}} processing error: {ex.Message}", args: new[] { LogKeys.Queueing });
+                            this.Logger.LogError(ex, $"{{LogKey:l}} queue processing error: {ex.Message}", args: new[] { LogKeys.Queueing });
 
                             if (!item.IsAbandoned && !item.IsCompleted)
                             {
