@@ -154,5 +154,11 @@
             this.Target.Retries = retries;
             return this;
         }
+
+        public AzureServiceBusQueueOptionsBuilder NoRetries()
+        {
+            this.Target.Retries = 0;
+            return this;
+        }
     }
 }

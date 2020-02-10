@@ -299,7 +299,7 @@
                 this.Options.ConnectionString,
                 this.Options.QueueName,
                 ReceiveMode.PeekLock, // = slow, fast = ReceiveAndDelete?
-                this.Options.RetryPolicy);
+                this.Options.Retries == 0 ? new NoRetry() : this.Options.RetryPolicy);
         }
 
         protected override Task<IQueueItem<TData>> DequeueWithIntervalAsync(CancellationToken cancellationToken)

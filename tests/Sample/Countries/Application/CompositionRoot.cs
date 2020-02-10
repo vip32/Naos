@@ -30,22 +30,23 @@
             options.Context.AddTag("countries");
 
             // enqueue data and do nothing
-            //options.Context.Services.AddSingleton<IQueue<CountriesExportData>>(sp => // AddQueue<T>(sp => ....)
-            //{
-            //    return new InMemoryQueue<CountriesExportData>(o => o
-            //        .Mediator(sp.GetService<IMediator>())
-            //        .Tracer(sp.GetService<ITracer>())
-            //        .LoggerFactory(sp.GetService<ILoggerFactory>())
-            //        .NoRetries());
-            //});
             options.Context.Services.AddSingleton<IQueue<CountriesExportData>>(sp => // AddQueue<T>(sp => ....)
             {
-                return new AzureServiceBusQueue<CountriesExportData>(o => o
+                return new InMemoryQueue<CountriesExportData>(o => o
                     .Mediator(sp.GetService<IMediator>())
                     .Tracer(sp.GetService<ITracer>())
                     .LoggerFactory(sp.GetService<ILoggerFactory>())
-                    .ConnectionString("Endpoint=sb://glb-naos.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=EtpP81Kih/fCkYQzFnSXQ0NM8Mm5KbgMKfYw/9VGenI="));
+                    .NoRetries());
             });
+            //options.Context.Services.AddSingleton<IQueue<CountriesExportData>>(sp => // AddQueue<T>(sp => ....)
+            //{
+            //    return new AzureServiceBusQueue<CountriesExportData>(o => o
+            //        .Mediator(sp.GetService<IMediator>())
+            //        .Tracer(sp.GetService<ITracer>())
+            //        .LoggerFactory(sp.GetService<ILoggerFactory>())
+            //        .ConnectionString(............)
+            //        .NoRetries());
+            //});
             // dequeue and process data
             options.Context.Services.AddQueueProcessingStartupTask<CountriesExportData>(new TimeSpan(0, 0, 30));
 

@@ -102,7 +102,7 @@
             var result = new QueueDescription(this.QueueName)
             {
                 LockDuration = this.ProcessInterval,
-                MaxDeliveryCount = this.Retries + 1
+                MaxDeliveryCount = this.Retries
             };
 
             if (this.AutoDeleteOnIdle.HasValue)
