@@ -58,6 +58,20 @@
                         return task;
                     });
 
+        public static IServiceCollection AddStartupTask(this IServiceCollection services, Type type, TimeSpan? delay)
+                => services
+                    .AddStartupTaskServerDecorator()
+                    .AddTransient<IStartupTask>(sp =>
+                    {
+                        var task = ActivatorUtilities.GetServiceOrCreateInstance(sp, type) as IStartupTask;
+                        if (task != null && delay.HasValue)
+                        {
+                            task.Delay = delay.Value;
+                        }
+
+                        return task;
+                    });
+
         private static IServiceCollection AddStartupTaskServerDecorator(this IServiceCollection services)
         {
             if (isDecorated)

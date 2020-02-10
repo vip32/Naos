@@ -221,7 +221,7 @@
                         {
                             [LogPropertyKeys.CorrelationId] = i.CorrelationId,
                         }))
-                        using (var scope = this.Options.Tracer?.BuildSpan($"dequeue {this.Options.QueueName}", LogKeys.Queueing, SpanKind.Consumer, new Span(i.TraceId, i.SpanId)).Activate(this.Logger))
+                        //using (var scope = this.Options.Tracer?.BuildSpan($"dequeue2 {this.Options.QueueName}", LogKeys.Queueing, SpanKind.Consumer, new Span(i.TraceId, i.SpanId)).Activate(this.Logger))
                         {
                             await this.Options.Mediator.Send(new QueueEvent<TData>(i), ct).AnyContext();
                         }

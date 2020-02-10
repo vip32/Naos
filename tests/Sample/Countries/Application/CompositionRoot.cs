@@ -28,7 +28,8 @@
 
             options.Context.AddTag("countries");
 
-            options.Context.Services.AddSingleton<IQueue<CountriesExportData>>(sp =>
+            // enqueue data and do nothing
+            options.Context.Services.AddSingleton<IQueue<CountriesExportData>>(sp => // AddQueue<T>(sp => ....)
             {
                 return new InMemoryQueue<CountriesExportData>(o => o
                     .Mediator(sp.GetService<IMediator>())
@@ -36,7 +37,8 @@
                     .LoggerFactory(sp.GetService<ILoggerFactory>())
                     .NoRetries());
             });
-            options.Context.Services.AddStartupTask<QueueProcessingStartupTask<CountriesExportData>>(new TimeSpan(0, 0, 30)); // TODO: simplify options.Context.Services.AddQueueProcessing<T>
+            // dequeue and process data
+            options.Context.Services.AddQueueProcessingStartupTask<CountriesExportData>(new TimeSpan(0, 0, 30));
 
             options.Context.Services.AddScoped<ICountryRepository>(sp =>
             {
