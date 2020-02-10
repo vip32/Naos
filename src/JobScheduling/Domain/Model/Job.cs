@@ -9,7 +9,7 @@
     public class Job : IJob
     {
         private readonly Func<string[], Task> task;
-        private readonly Func<CancellationToken, string[], Task> task2;
+        private readonly Func<string, CancellationToken, string[], Task> task2;
         private readonly Action<string[]> action;
         private readonly Action action2;
 
@@ -44,7 +44,7 @@
             this.task = task;
         }
 
-        public Job(Func<CancellationToken, string[], Task> task)
+        public Job(Func<string, CancellationToken, string[], Task> task)
         {
             EnsureArg.IsNotNull(task, nameof(task));
 
@@ -85,7 +85,7 @@
             }
             else if (this.task2 != null)
             {
-                await this.task2(cancellationToken, args).AnyContext();
+                await this.task2(correlationId, cancellationToken, args).AnyContext();
             }
             else if (this.action2 != null)
             {
