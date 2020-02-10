@@ -35,7 +35,7 @@
         {
             Thread.Sleep(new TimeSpan(0, 0, 3));
 
-            using (var scope = this.tracer.BuildSpan($"{this.GetType().Name.ToLower()} {correlationId}", LogKeys.JobScheduling, SpanKind.Consumer).Activate(this.logger))
+            using (var scope = this.tracer.BuildSpan(this.GetType().Name.ToLower(), LogKeys.JobScheduling, SpanKind.Consumer).Activate(this.logger))
             {
                 this.logger.LogInformation("{LogKey:l} countries export", LogKeys.JobScheduling);
                 var countries = await this.repository.FindAllAsync().AnyContext();

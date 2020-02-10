@@ -81,12 +81,8 @@
 
                     await this.queueSender.SendAsync(message).AnyContext();
 
-                    using (var item = new QueueItem<TData>(message.MessageId, data, this, DateTime.UtcNow, 0))
-                    {
-                        this.Logger.LogJournal(LogKeys.Queueing, $"item enqueued (id={item.Id}, queue={this.Options.QueueName}, data={typeof(TData).PrettyName()})", LogPropertyKeys.TrackEnqueue);
-                        this.Logger.LogTrace(LogKeys.Queueing, item.Id, typeof(TData).PrettyName(), LogTraceNames.Queue);
-                    }
-
+                    this.Logger.LogJournal(LogKeys.Queueing, $"item enqueued (id={message.MessageId}, queue={this.Options.QueueName}, data={typeof(TData).PrettyName()})", LogPropertyKeys.TrackEnqueue);
+                    this.Logger.LogTrace(LogKeys.Queueing, message.MessageId, typeof(TData).PrettyName(), LogTraceNames.Queue);
                     this.LastEnqueuedDate = DateTime.UtcNow;
                     return message.MessageId;
                 }
@@ -244,7 +240,7 @@
                     {
                         [LogPropertyKeys.CorrelationId] = i.CorrelationId,
                     }))
-                    using (var scope = this.Options.Tracer?.BuildSpan($"dequeue {this.Options.QueueName}", LogKeys.Queueing, SpanKind.Consumer, new Span(i.TraceId, i.SpanId)).Activate(this.Logger))
+                    //using (var scope = this.Options.Tracer?.BuildSpan($"dequeue {this.Options.QueueName}", LogKeys.Queueing, SpanKind.Consumer, new Span(i.TraceId, i.SpanId)).Activate(this.Logger))
                     {
                         await this.Options.Mediator.Send(new QueueEvent<TData>(i), ct).AnyContext();
                     }
@@ -314,7 +310,11 @@
 
         private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs e)
         {
-            this.Logger.LogError(e.Exception, $"{{LogKey:l}} processing error:  {e.ExceptionReceivedContext.EntityPath} {e.Exception.Message}", args: new[] { LogKeys.Queueing });
+            if (!(e.Exception is MessageLockLostException))
+            {
+                this.Logger.LogError(e.Exception, $"{{LogKey:l}} processing error:  {e.ExceptionReceivedContext.EntityPath} {e.Exception.Message}", args: new[] { LogKeys.Queueing });
+            }
+
             return Task.CompletedTask;
         }
 
@@ -334,9 +334,9 @@
                 message.SystemProperties.EnqueuedTimeUtc,
                 message.SystemProperties.DeliveryCount)
             {
-                CorrelationId = message.UserProperties.TryGetValue("CorrelationId")?.ToString(),
+                CorrelationId = message.CorrelationId, //message.UserProperties.TryGetValue("CorrelationId")?.ToString(),
                 TraceId = message.UserProperties.TryGetValue("TraceId")?.ToString(),
-                SpanId = message.UserProperties.TryGetValue("TraceId")?.ToString()
+                SpanId = message.UserProperties.TryGetValue("SpanId")?.ToString()
             };
 
             using (this.Logger.BeginScope(new Dictionary<string, object>

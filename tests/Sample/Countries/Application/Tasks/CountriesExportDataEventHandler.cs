@@ -20,9 +20,9 @@
 
         public override async Task<bool> Handle(QueueEvent<CountriesExportData> request, CancellationToken cancellationToken)
         {
-            using (var scope = this.tracer?.BuildSpan("process countries export", LogKeys.QueuQueueingEventHandler, SpanKind.Internal).Activate(this.logger))
+            using (var scope = this.tracer?.BuildSpan("process countries export", LogKeys.QueueingEventHandler, SpanKind.Internal).Activate(this.logger))
             {
-                await Task.Run(() => this.logger.LogInformation($"{{LogKey:l}} countries data {request.Item.Data.Timestamp:o} (id={request.Item.Id}, type={this.GetType().PrettyName()})", LogKeys.Queueing)).AnyContext();
+                await Task.Run(() => this.logger.LogInformation($"{{LogKey:l}} countries data {request.Item.Data.Timestamp:o} (id={request.Item.Id}, type={this.GetType().PrettyName()})", LogKeys.QueueingEventHandler)).AnyContext();
                 //throw new System.Exception("TEST");
                 return true;
             }

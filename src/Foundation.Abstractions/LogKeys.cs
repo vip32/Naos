@@ -20,7 +20,7 @@
         public const string Authentication = "AUTHNT";
         public const string FileStorage = "FILSTR";
         public const string Queueing = "QUEUNG";
-        public const string QueuQueueingEventHandler = "QUEEVT";
+        public const string QueueingEventHandler = "QUEEVT";
         public const string KeyValueStorage = "KVLSTR";
         public const string Tracing = "TRACNG";
     }
