@@ -22,5 +22,6 @@
         public const string Queueing = "QUEUNG";
         public const string KeyValueStorage = "KVLSTR";
         public const string Tracing = "TRACNG";
+        public const string EventHandler = "EVENTH";
     }
 }

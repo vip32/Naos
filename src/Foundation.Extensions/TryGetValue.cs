@@ -4,7 +4,7 @@
 
     public static partial class Extensions
     {
-        //public static object TryGetValue(this Dictionary<string, object> source, string key, object @default = null)
+        //public static object TryGetValue(this IDictionary<string, object> source, string key, object @default = null)
         //{
         //    if (source.IsNullOrEmpty() || key.IsNullOrEmpty())
         //    {
@@ -19,7 +19,7 @@
         //    return @default;
         //}
 
-        public static T TryGetValue<T>(this Dictionary<string, T> source, string key, T @default = default)
+        public static T TryGetValue<T>(this IDictionary<string, T> source, string key, T @default = default)
         {
             if (source.IsNullOrEmpty() || key.IsNullOrEmpty())
             {
