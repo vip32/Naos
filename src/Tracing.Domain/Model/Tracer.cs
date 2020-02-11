@@ -79,7 +79,7 @@
             return new SpanBuilder(
                 this,
                 operationName,
-                logKey ?? LogKeys.Tracing,
+                logKey ?? this.CurrentSpan.LogKey ?? LogKeys.Tracing,
                 kind,
                 parent == null && ignoreCurrentSpan ? null : parent ?? this.CurrentSpan)
                 .WithTag(SpanTagKey.SpanKind, kind.ToString()); // pass correlationid as traceid

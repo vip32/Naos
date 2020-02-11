@@ -50,6 +50,8 @@
                             throw new NaosException("Oops, the import randomly failed");
                         }
 
+                        // TODO: send a message or so... CountriesImportedMessage
+
                         // TODO: foreach country in csv
                         //var code = RandomGenerator.GenerateString(2, false, true);
                         //var country = new Country { Code = code, LanguageCodes = new[] { $"{code}-{code}" }, Name = code, TenantId = "naos_sample_test", Id = code };

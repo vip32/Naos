@@ -13,12 +13,13 @@
 
     public class CountriesExportJob : Job
     {
-        private readonly ILogger<CountriesImportJob> logger;
+        private const string LogKey = "EXPORT";
+        private readonly ILogger<CountriesExportJob> logger;
         private readonly ICountryRepository repository;
         private readonly IQueue<CountriesExportData> queue;
         private readonly ITracer tracer;
 
-        public CountriesExportJob(ILogger<CountriesImportJob> logger, ITracer tracer, ICountryRepository repository, IQueue<CountriesExportData> queue)
+        public CountriesExportJob(ILogger<CountriesExportJob> logger, ITracer tracer, ICountryRepository repository, IQueue<CountriesExportData> queue)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(tracer, nameof(tracer));
@@ -35,23 +36,37 @@
         {
             Thread.Sleep(new TimeSpan(0, 0, 3));
 
-            using (var scope = this.tracer.BuildSpan(this.GetType().Name.ToLower(), LogKeys.JobScheduling, SpanKind.Consumer).Activate(this.logger))
-            {
-                this.logger.LogInformation("{LogKey:l} countries export", LogKeys.JobScheduling);
-                var countries = await this.repository.FindAllAsync().AnyContext();
-                var data = new CountriesExportData { CorrelationId = correlationId };
-                using (var scope2 = this.tracer.BuildSpan("write data", LogKeys.JobScheduling).Activate(this.logger))
+            // TODO: make this scope setup more generic > move to base Job
+            using (var scope = this.tracer.BuildSpan(this.GetType().Name.ToLower(), LogKey, SpanKind.Consumer).Activate(this.logger))
+            { // new scope needs to be created here as the jobscheduler span is not available here (scoping?)
+                try
                 {
-                    this.logger.LogInformation("{LogKey:l} countries write data", LogKeys.JobScheduling);
-                    // TODO: use storage to write file
+                    this.logger.LogInformation("{LogKey:l} countries export", LogKey);
+                    var countries = await this.repository.FindAllAsync().AnyContext();
+                    var data = new CountriesExportData { CorrelationId = correlationId };
+                    using (var scope2 = this.tracer.BuildSpan("generate export").Activate(this.logger))
+                    {
+                        this.logger.LogInformation("{LogKey:l} countries write data", LogKey);
+                        // TODO: use storage to write file
 
-                    data.Timestamp = DateTime.UtcNow;
-                    data.Items = countries;
+                        if (RandomGenerator.GenerateInt(0, 100) % 3 == 0) // divides by 3 and checks for the remainder. A number that is divisable by 3 has no remainder (and thus ==0 and the exception will be thrown)
+                        {
+                            throw new NaosException("Oops, the export generation randomly failed");
+                        }
 
-                    Thread.Sleep(new TimeSpan(0, 0, 3));
+                        data.Timestamp = DateTime.UtcNow;
+                        data.Items = countries;
+
+                        Thread.Sleep(new TimeSpan(0, 0, 3));
+                    }
+
+                    await this.queue.EnqueueAsync(data).AnyContext();
                 }
-
-                await this.queue.EnqueueAsync(data).AnyContext();
+                catch (Exception ex)
+                {
+                    scope.Span.SetStatus(SpanStatus.Failed, ex.GetFullMessage());
+                    throw;
+                }
             }
         }
     }
