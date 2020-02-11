@@ -41,7 +41,7 @@
             { // new scope needs to be created here as the jobscheduler span is not available here (scoping?)
                 try
                 {
-                    this.logger.LogInformation("{LogKey:l} countries export", LogKey);
+                    this.logger.LogInformation("{LogKey:l} countries export prepare", LogKey);
                     var countries = await this.repository.FindAllAsync().AnyContext();
                     var data = new CountriesExportData { CorrelationId = correlationId };
                     using (var scope2 = this.tracer.BuildSpan("generate export").Activate(this.logger))

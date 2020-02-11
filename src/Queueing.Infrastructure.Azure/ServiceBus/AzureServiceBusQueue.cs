@@ -81,7 +81,7 @@
 
                     await this.queueSender.SendAsync(message).AnyContext();
 
-                    this.Logger.LogJournal(LogKeys.Queueing, $"item enqueued (id={message.MessageId}, queue={this.Options.QueueName}, data={typeof(TData).PrettyName()})", LogPropertyKeys.TrackEnqueue);
+                    this.Logger.LogJournal(LogKeys.Queueing, $"queue item enqueued (id={message.MessageId}, queue={this.Options.QueueName}, data={typeof(TData).PrettyName()})", LogPropertyKeys.TrackEnqueue);
                     this.Logger.LogTrace(LogKeys.Queueing, message.MessageId, typeof(TData).PrettyName(), LogTraceNames.Queue);
                     this.LastEnqueuedDate = DateTime.UtcNow;
                     return message.MessageId;
@@ -129,7 +129,6 @@
         {
             EnsureArg.IsNotNull(item, nameof(item));
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
-            this.Logger.LogDebug($"{{LogKey:l}} queue item complete (id={item.Id}, queue={this.Options.QueueName})", LogKeys.Queueing);
 
             if (item.IsAbandoned || item.IsCompleted)
             {
@@ -140,7 +139,7 @@
             Interlocked.Increment(ref this.completedCount);
             item.MarkCompleted();
 
-            this.Logger.LogJournal(LogKeys.Queueing, $"item completed (id={item.Id}, queue={this.Options.QueueName}, data={typeof(TData).PrettyName()})", LogPropertyKeys.TrackDequeue);
+            this.Logger.LogJournal(LogKeys.Queueing, $"queue item completed (id={item.Id}, queue={this.Options.QueueName}, data={typeof(TData).PrettyName()})", LogPropertyKeys.TrackDequeue);
             this.LastDequeuedDate = DateTime.UtcNow;
         }
 
