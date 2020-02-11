@@ -9,6 +9,7 @@
 
     public class CountriesExportDataEventHandler : QueueEventHandler<CountriesExportData>
     {
+        private const string LogKey = "EXPORT";
         private readonly ILogger<CountriesExportDataEventHandler> logger;
         private readonly ITracer tracer;
 
@@ -20,11 +21,16 @@
 
         public override async Task<bool> Handle(QueueEvent<CountriesExportData> request, CancellationToken cancellationToken)
         {
-            using (var scope = this.tracer?.BuildSpan("process countries export", LogKeys.QueueingEventHandler, SpanKind.Internal).Activate(this.logger))
+            using (var scope = this.tracer?.BuildSpan("process countries export", LogKey, SpanKind.Internal).Activate(this.logger))
             {
-                await Task.Run(() => this.logger.LogInformation($"{{LogKey:l}} countries data {request.Item.Data.Timestamp:o} (id={request.Item.Id}, type={this.GetType().PrettyName()})", LogKeys.QueueingEventHandler)).AnyContext();
-                throw new System.Exception("TEST");
-                //return true;
+                await Task.Run(() => this.logger.LogInformation($"{{LogKey:l}} countries data {request.Item.Data.Timestamp:o} (id={request.Item.Id}, type={this.GetType().PrettyName()})", LogKey)).AnyContext();
+
+                if (RandomGenerator.GenerateInt(0, 100) % 3 == 0) // divides by 3 and checks for the remainder. A number that is divisable by 3 has no remainder (and thus ==0 and the exception will be thrown)
+                {
+                    throw new NaosException("Oops, the export randomly failed");
+                }
+
+                return true;
             }
         }
     }

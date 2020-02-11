@@ -171,7 +171,15 @@
                             this.logger.LogJournal(LogKeys.JobScheduling, $"job started (key={{JobKey}}, id={registration.Identifier}, type={job.GetType().PrettyName()}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")})", LogPropertyKeys.TrackStartJob, args: new[] { registration.Key });
                             //using (var scope = this.tracer?.BuildSpan($"job run {registration.Key}", LogKeys.JobScheduling, SpanKind.Producer).Activate(this.logger))
                             //{ // current span is somehow not available in created jobs (ServiceProviderJobFactory)
-                            await job.ExecuteAsync(correlationId, cancellationToken, args).AnyContext();
+                            try
+                            {
+                                await job.ExecuteAsync(correlationId, cancellationToken, args).AnyContext();
+                            }
+                            catch (Exception ex)
+                            {
+                                this.logger.LogError(ex, $"{{LogKey:l}} job error: {ex.Message}", args: new[] { LogKeys.JobScheduling });
+                            }
+
                             //}
 
                             this.logger.LogJournal(LogKeys.JobScheduling, $"job finished (key={{JobKey}}, id={registration.Identifier}, type={job.GetType().PrettyName()})", LogPropertyKeys.TrackFinishJob, args: new[] { LogKeys.JobScheduling, registration.Key });
