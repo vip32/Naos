@@ -352,6 +352,7 @@
                         catch (Exception ex)
                         {
                             Interlocked.Increment(ref this.workerErrorCount);
+                            scope.Span.SetStatus(SpanStatus.Failed, ex.GetFullMessage());
                             this.Logger.LogError(ex, $"{{LogKey:l}} queue processing error: {ex.Message}", args: new[] { LogKeys.Queueing });
 
                             if (!item.IsAbandoned && !item.IsCompleted)
