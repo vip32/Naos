@@ -168,7 +168,7 @@
                         }))
                         {
                             // TODO: publish domain event (job started)
-                            this.logger.LogJournal(LogKeys.JobScheduling, $"job started (key={{JobKey}}, id={registration.Identifier}, type={job.GetType().PrettyName()}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")})", LogPropertyKeys.TrackStartJob, args: new[] { registration.Key });
+                            this.logger.LogJournal(LogKeys.JobScheduling, $"job started: {{JobKey}} (id={registration.Identifier}, type={job.GetType().PrettyName()}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")})", LogPropertyKeys.TrackStartJob, args: new[] { registration.Key });
                             //using (var scope = this.tracer?.BuildSpan($"job run {registration.Key}", LogKeys.JobScheduling, SpanKind.Producer).Activate(this.logger))
                             //{ // current span is somehow not available in created jobs (ServiceProviderJobFactory)
                             try
@@ -177,12 +177,12 @@
                             }
                             catch (Exception ex)
                             {
-                                this.logger.LogError(ex, $"{{LogKey:l}} job error: {ex.GetFullMessage()}", args: new[] { LogKeys.JobScheduling });
+                                this.logger.LogError(ex, $"{{LogKey:l}} job failed: {{JobKey}} (id={registration.Identifier}, type={job.GetType().PrettyName()}) {ex.GetFullMessage()}", args: new[] { LogKeys.JobScheduling, registration.Key });
                             }
 
                             //}
 
-                            this.logger.LogJournal(LogKeys.JobScheduling, $"job finished (key={{JobKey}}, id={registration.Identifier}, type={job.GetType().PrettyName()})", LogPropertyKeys.TrackFinishJob, args: new[] { LogKeys.JobScheduling, registration.Key });
+                            this.logger.LogJournal(LogKeys.JobScheduling, $"job finished: {{JobKey}} (id={registration.Identifier}, type={job.GetType().PrettyName()})", LogPropertyKeys.TrackFinishJob, args: new[] { LogKeys.JobScheduling, registration.Key });
 
                             // TODO: publish domain event (job finished)
                         }

@@ -214,7 +214,7 @@
                     {
                         Interlocked.Increment(ref this.workerErrorCount);
                         scope.Span.SetStatus(SpanStatus.Failed, ex.GetFullMessage());
-                        this.Logger.LogError(ex, $"{{LogKey:l}} queue processing error: {ex.GetFullMessage()}", args: new[] { LogKeys.Queueing });
+                        this.Logger.LogError(ex, $"{{LogKey:l}} queue processing failed: {ex.GetFullMessage()}", args: new[] { LogKeys.Queueing });
 
                         if (!item.IsAbandoned && !item.IsCompleted)
                         {
@@ -231,7 +231,7 @@
 
             if (this.Options.Mediator == null)
             {
-                throw new NaosException("queue processing error: no mediator instance provided");
+                throw new NaosException("queue processing failed: no mediator instance provided");
             }
 
             await this.ProcessItemsAsync(

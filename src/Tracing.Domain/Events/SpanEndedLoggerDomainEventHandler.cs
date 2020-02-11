@@ -40,11 +40,11 @@
 
                 if (notification.Span.Status == SpanStatus.Failed)
                 {
-                    this.logger.LogError($"{{LogKey:l}} span ended: {notification.Span.OperationName} (id={notification.Span.SpanId}, parent={notification.Span.ParentSpanId}, kind={notification.Span.Kind}) {notification.Span.StatusDescription} -> took {duration.Humanize()}", LogKeys.Tracing);
+                    this.logger.LogError($"{{LogKey:l}} span failed: {notification.Span.OperationName} (id={notification.Span.SpanId}, parent={notification.Span.ParentSpanId}, kind={notification.Span.Kind}) {notification.Span.StatusDescription} -> took {duration.Humanize()}", LogKeys.Tracing);
                 }
                 else
                 {
-                    this.logger.LogInformation($"{{LogKey:l}} span ended: {notification.Span.OperationName} (id={notification.Span.SpanId}, parent={notification.Span.ParentSpanId}, kind={notification.Span.Kind}) {notification.Span.StatusDescription} -> took {duration.Humanize()}", LogKeys.Tracing);
+                    this.logger.LogInformation($"{{LogKey:l}} span finished: {notification.Span.OperationName} (id={notification.Span.SpanId}, parent={notification.Span.ParentSpanId}, kind={notification.Span.Kind}) {notification.Span.StatusDescription} -> took {duration.Humanize()}", LogKeys.Tracing);
                 }
             }
 
