@@ -25,8 +25,8 @@
                 new SqlServerDocumentProvider<Product>(o => o
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                     .EnableSqlLogging()
-                    //.ConnectionString("Server=.;Database=naos_sample;User=sa;Password=Abcd1234!;Trusted_Connection=False;MultipleActiveResultSets=True;") // docker
-                    .ConnectionString(configuration.ConnectionString ?? "Server=(localdb)\\mssqllocaldb;Database=naos_sample;Trusted_Connection=True;MultipleActiveResultSets=True;")
+                    .ConnectionString("Server=127.0.0.1;Database=naos_sample;User=sa;Password=Abcd1234!;Trusted_Connection=False;MultipleActiveResultSets=True;") // docker
+                    //.ConnectionString(configuration.ConnectionString ?? "Server=(localdb)\\mssqllocaldb;Database=naos_sample;Trusted_Connection=True;MultipleActiveResultSets=True;")
                     .Schema(configuration.SchemaName ?? "catalogs")
                     .AddIndex(p => p.Name)
                     .AddIndex(p => p.Region)

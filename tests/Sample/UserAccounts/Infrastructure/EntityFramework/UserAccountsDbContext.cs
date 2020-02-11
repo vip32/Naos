@@ -32,6 +32,7 @@
             //modelBuilder.HasDefaultSchema("Development"); // TODO: this is too static, as the migration contains the environment (fixed)
             //modelBuilder.Entity<UserAccount>().Ignore(e => e.State); // TODO: map the state
 
+            modelBuilder.HasDefaultSchema("useraccounts");
             modelBuilder.Entity<UserAccount>().OwnsOne(e => e.State, od =>
             {
                 od.Property(p => p.DeactivatedReasons)

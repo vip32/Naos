@@ -74,8 +74,9 @@
             });
 
             options.Context.Services.AddDbContext<UserAccountsDbContext>(o => o
-                //.UseSqlServer("Server=.;Database=naos_sample;User=sa;Password=Abcd1234!;Trusted_Connection=False;MultipleActiveResultSets=True;", o => o // docker
-                .UseSqlServer(connectionString.EmptyToNull() ?? configuration.ConnectionString.EmptyToNull() ?? $"Server=(localdb)\\mssqllocaldb;Database={nameof(UserAccountsDbContext)};Trusted_Connection=True;MultipleActiveResultSets=True;", o => o
+                .UseSqlServer("Server=127.0.0.1;Database=naos_sample;User=sa;Password=Abcd1234!;Trusted_Connection=False;MultipleActiveResultSets=True;", o => o // docker
+                //.UseSqlServer(connectionString.EmptyToNull() ?? configuration.ConnectionString.EmptyToNull() ?? $"Server=(localdb)\\mssqllocaldb;Database={nameof(UserAccountsDbContext)};Trusted_Connection=True;MultipleActiveResultSets=True;", o => o
+                    .MigrationsHistoryTable("__MigrationsHistory", "useraccounts")
                     .EnableRetryOnFailure())
                 .UseLoggerFactory(options.Context.Services.BuildServiceProvider().GetRequiredService<ILoggerFactory>())
                 //.ConfigureWarnings(w => w.Throw(RelationalEventId.QueryClientEvaluationWarning))

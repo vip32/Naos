@@ -3,21 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Naos.Sample.UserAccounts.Infrastructure;
 
 namespace Naos.Sample.UserAccounts.Infrastructure.EntityFramework.Migrations
 {
     [DbContext(typeof(UserAccountsDbContext))]
-    [Migration("20200121220442_UserAccountStatus")]
-    partial class UserAccountStatus
+    partial class UserAccountsDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.0")
+                .HasDefaultSchema("useraccounts")
+                .HasAnnotation("ProductVersion", "3.1.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -184,9 +183,10 @@ namespace Naos.Sample.UserAccounts.Infrastructure.EntityFramework.Migrations
                             b1.Property<Guid>("UserAccountId")
                                 .HasColumnType("uniqueidentifier");
 
-                            b1.Property<int>("Value")
+                            b1.Property<string>("Value")
+                                .IsRequired()
                                 .HasColumnName("Status")
-                                .HasColumnType("int");
+                                .HasColumnType("nvarchar(max)");
 
                             b1.HasKey("UserAccountId");
 
