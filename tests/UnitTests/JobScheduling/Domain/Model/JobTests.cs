@@ -136,7 +136,7 @@
                 {
                     this.probe.Count++;
                     probe.Count++;
-                    System.Diagnostics.Trace.WriteLine($"+++ hello from custom job {DateTime.UtcNow.ToString("o")} " + arg1);
+                    System.Diagnostics.Trace.WriteLine($"+++ hello from custom job {DateTime.UtcNow:o} " + arg1);
                 }).AnyContext();
             }
         }

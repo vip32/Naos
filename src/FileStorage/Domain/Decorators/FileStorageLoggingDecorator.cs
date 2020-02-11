@@ -56,7 +56,7 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
             EnsureArg.IsNotNull(stream, nameof(stream));
 
-            this.logger.LogInformation($"{{LogKey:l}} save {this.name} file: {path} (size={(await ReadBytesAsync(stream).AnyContext()).Length.Bytes().ToString("#.##")})", LogKeys.FileStorage);
+            this.logger.LogInformation($"{{LogKey:l}} save {this.name} file: {path} (size={(await ReadBytesAsync(stream).AnyContext()).Length.Bytes():#.##})", LogKeys.FileStorage);
             return await this.Decoratee.SaveFileAsync(path, stream, cancellationToken).AnyContext();
         }
 

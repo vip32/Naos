@@ -257,12 +257,12 @@
             var result = string.Empty;
             if (timestampFrom.HasValue)
             {
-                result = $"{result} AND [timestamp] >= '{timestampFrom.Value.ToString("s")}'";
+                result = $"{result} AND [timestamp] >= '{timestampFrom.Value:s}'";
             }
 
             if (timestampTill.HasValue)
             {
-                result = $"{result} AND [timestamp] < '{timestampTill.Value.ToString("s")}'";
+                result = $"{result} AND [timestamp] < '{timestampTill.Value:s}'";
             }
 
             return result;

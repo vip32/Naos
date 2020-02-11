@@ -12,7 +12,7 @@
 
         public override string ToString()
         {
-            return $"{this.Timestamp.ToString("o")} [{this.Key}] {this.Message}";
+            return $"{this.Timestamp:o} [{this.Key}] {this.Message}";
         }
     }
 }

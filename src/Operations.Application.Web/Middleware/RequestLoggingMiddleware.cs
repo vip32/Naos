@@ -61,7 +61,7 @@
                 context.GetRouteData()?.Values.TryGetValue("Action", out action);
                 context.GetRouteData()?.Values.TryGetValue("Controller", out controller);
 
-                this.logger.LogJournal(LogKeys.InboundRequest, $"[{requestId}] {LogTraceNames.Http} {context.Request.Method.ToLowerInvariant()} {{Url:l}} (endpoint={$"{action ?? context.Request.Method.ToLowerInvariant()} {(controller != null ? controller.ToString().Singularize() ?? controller : context.Request.Uri().AbsolutePath)}"}, size={contentLength.Bytes().ToString("#.##")})", LogPropertyKeys.TrackInboundRequest, args: new object[] { new Uri(context.Request.GetDisplayUrl()) });
+                this.logger.LogJournal(LogKeys.InboundRequest, $"[{requestId}] {LogTraceNames.Http} {context.Request.Method.ToLowerInvariant()} {{Url:l}} (endpoint={$"{action ?? context.Request.Method.ToLowerInvariant()} {(controller != null ? controller.ToString().Singularize() ?? controller : context.Request.Uri().AbsolutePath)}"}, size={contentLength.Bytes():#.##})", LogPropertyKeys.TrackInboundRequest, args: new object[] { new Uri(context.Request.GetDisplayUrl()) });
                 //this.logger.LogTrace(LogKeys.InboundRequest, requestId, context.Request.Path, LogTraceNames.Http); // TODO: obsolete
                 //if (context.HasServiceName())
                 //{
@@ -95,7 +95,7 @@
                 }
 
                 var contentLength = context.Response.ContentLength ?? 0;
-                this.logger.LogJournal(LogKeys.InboundResponse, $"[{requestId}] {LogTraceNames.Http} {context.Request.Method.ToLowerInvariant()} {{Url:l}} {{StatusCode}} ({ReasonPhrases.GetReasonPhrase(context.Response.StatusCode)}) -> took {duration.Humanize()} (size={contentLength.Bytes().ToString("#.##")})", LogPropertyKeys.TrackInboundResponse, duration, level, args: new object[] { new Uri(context.Request.GetDisplayUrl()), context.Response.StatusCode });
+                this.logger.LogJournal(LogKeys.InboundResponse, $"[{requestId}] {LogTraceNames.Http} {context.Request.Method.ToLowerInvariant()} {{Url:l}} {{StatusCode}} ({ReasonPhrases.GetReasonPhrase(context.Response.StatusCode)}) -> took {duration.Humanize()} (size={contentLength.Bytes():#.##})", LogPropertyKeys.TrackInboundResponse, duration, level, args: new object[] { new Uri(context.Request.GetDisplayUrl()), context.Response.StatusCode });
                 //this.logger.LogTrace(LogKeys.InboundResponse, requestId, context.Request.Path, LogTraceNames.Http, duration); // TODO: obsolete
             }).AnyContext();
         }

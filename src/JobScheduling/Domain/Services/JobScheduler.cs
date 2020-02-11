@@ -46,7 +46,7 @@
             EnsureArg.IsNotNull(job, nameof(job));
 
             registration.Key ??= HashAlgorithm.ComputeHash(job);
-            this.logger.LogInformation($"{{LogKey:l}} registration (key={{JobKey}}, id={registration.Identifier}, cron={registration.Cron}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")}, enabled={registration.Enabled})", LogKeys.JobScheduling, registration.Key);
+            this.logger.LogInformation($"{{LogKey:l}} registration (key={{JobKey}}, id={registration.Identifier}, cron={registration.Cron}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout:c}, enabled={registration.Enabled})", LogKeys.JobScheduling, registration.Key);
 
             var item = this.Options.Registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(registration.Key));
             if (item.Key != null)
@@ -142,11 +142,11 @@
 
             if (dueJobs.IsNullOrEmpty())
             {
-                this.logger.LogDebug($"{{LogKey:l}} run has no due jobs, not starting (activeCount=#{this.activeCount}, moment={moment.ToString("o")})", LogKeys.JobScheduling);
+                this.logger.LogDebug($"{{LogKey:l}} run has no due jobs, not starting (activeCount=#{this.activeCount}, moment={moment:o})", LogKeys.JobScheduling);
             }
             else
             {
-                this.logger.LogInformation($"{{LogKey:l}} run started (activeCount=#{this.activeCount}, moment={moment.ToString("o")})", LogKeys.JobScheduling);
+                this.logger.LogInformation($"{{LogKey:l}} run started (activeCount=#{this.activeCount}, moment={moment:o})", LogKeys.JobScheduling);
                 await Task.WhenAll(dueJobs).AnyContext(); // really wait for completion (await)?
                 this.logger.LogInformation($"{{LogKey:l}} run finished (activeCount=#{this.activeCount})", LogKeys.JobScheduling);
             }
@@ -168,7 +168,7 @@
                         }))
                         {
                             // TODO: publish domain event (job started)
-                            this.logger.LogJournal(LogKeys.JobScheduling, $"job started: {{JobKey}} (id={registration.Identifier}, type={job.GetType().PrettyName()}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")})", LogPropertyKeys.TrackStartJob, args: new[] { registration.Key });
+                            this.logger.LogJournal(LogKeys.JobScheduling, $"job started: {{JobKey}} (id={registration.Identifier}, type={job.GetType().PrettyName()}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout:c})", LogPropertyKeys.TrackStartJob, args: new[] { registration.Key });
                             //using (var scope = this.tracer?.BuildSpan($"job run {registration.Key}", LogKeys.JobScheduling, SpanKind.Producer).Activate(this.logger))
                             //{ // current span is somehow not available in created jobs (ServiceProviderJobFactory)
                             try
