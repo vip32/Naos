@@ -26,11 +26,6 @@
 
             var configuration = options.Context.Configuration?.GetSection($"{section}:mongo").Get<MongoConfiguration>() ?? new MongoConfiguration();
 
-            options.Context.Services.AddStartupTask(sp =>
-                new SeederStartupTask(
-                    sp.GetRequiredService<ILoggerFactory>(),
-                    sp.CreateScope().ServiceProvider.GetService(typeof(IInventoryRepository)) as IInventoryRepository));
-
             options.Context.Services.AddMongoClient("inventory", configuration);
             options.Context.Services.AddScoped<IInventoryRepository>(sp =>
             {
@@ -67,6 +62,11 @@
                                 .DatabaseName(configuration.DatabaseName)
                                 .CollectionName("ProductReplenishments")))));
             });
+
+            options.Context.Services.AddStartupTask(sp =>
+                new SeederStartupTask(
+                    sp.GetRequiredService<ILoggerFactory>(),
+                    sp.CreateScope().ServiceProvider.GetService(typeof(IInventoryRepository)) as IInventoryRepository));
 
             options.Context.Services.AddHealthChecks()
                 .AddMongoDb(configuration.ConnectionString, name: "Inventory-mongodb");

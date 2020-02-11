@@ -38,7 +38,7 @@
                 }
                 catch (Exception ex) // was SqlException
                 {
-                    this.logger.LogError(ex, $"{{LogKey:l}} database migration failed: {ex.Message}", LogKeys.StartupTask);
+                    this.logger.LogError(ex, $"{{LogKey:l}} database migration failed: {ex.GetFullMessage()}", LogKeys.StartupTask);
                 }
             }
         }

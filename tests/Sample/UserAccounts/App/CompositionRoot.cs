@@ -11,6 +11,7 @@
     using Naos.Foundation.Application.Web.Startup.EntityFramework;
     using Naos.Foundation.Domain;
     using Naos.Foundation.Infrastructure;
+    using Naos.Sample.UserAccounts.Application;
     using Naos.Sample.UserAccounts.Domain;
     using Naos.Sample.UserAccounts.Infrastructure;
     using Naos.Tracing.Domain;
@@ -85,6 +86,10 @@
 
             options.Context.Services.AddStartupTask<ApplyPendingMigrationsTask<UserAccountsDbContext>>();
             options.Context.Services.AddStartupTask<EchoStartupTask>(new TimeSpan(0, 0, 3));
+            options.Context.Services.AddStartupTask(sp =>
+                new SeederStartupTask(
+                    sp.GetRequiredService<ILoggerFactory>(),
+                    sp.CreateScope().ServiceProvider.GetService(typeof(IGenericRepository<UserAccount>)) as IGenericRepository<UserAccount>));
 
             options.Context.Services.AddHealthChecks()
                 .AddSqlServer(configuration.ConnectionString, name: "UserAccounts-sqlserver");

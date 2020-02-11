@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.Inventory.Application
+﻿namespace Naos.Sample.UserAccounts.Application
 {
     using System;
     using System.Collections.Generic;
@@ -8,14 +8,16 @@
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
     using Naos.Foundation.Application;
+    using Naos.Foundation.Domain;
     using Naos.Sample.Inventory.Domain;
+    using Naos.Sample.UserAccounts.Domain;
 
     public class SeederStartupTask : IStartupTask
     {
         private readonly ILogger<SeederStartupTask> logger;
-        private readonly IInventoryRepository repository;
+        private readonly IGenericRepository<UserAccount> repository;
 
-        public SeederStartupTask(ILoggerFactory loggerFactory, IInventoryRepository repository)
+        public SeederStartupTask(ILoggerFactory loggerFactory, IGenericRepository<UserAccount> repository)
         {
             EnsureArg.IsNotNull(loggerFactory, nameof(loggerFactory));
             EnsureArg.IsNotNull(repository, nameof(repository));
@@ -28,31 +30,31 @@
 
         public Task StartAsync(CancellationToken cancellationToken = default)
         {
-            //this.logger.LogInformation("{LogKey:l} task started: inventory seeder", LogKeys.StartupTask);
+            //this.logger.LogInformation("{LogKey:l} task started: useraccounts seeder", LogKeys.StartupTask);
 
-            new List<ProductInventory>
+            new List<UserAccount>
             {
-                new ProductInventory
-                {
-                    Id = "548fb10e-2ad4-4bd1-9b33-6414a5ce7b28",
-                    Number = "AA1234",
-                    Quantity = 99,
-                    Region = "East"
-                },
-                new ProductInventory
-                {
-                    Id = "558fb10e-2ad4-4bd1-9b33-6414a5ce7b28",
-                    Number = "AA1234",
-                    Quantity = 88,
-                    Region = "West"
-                },
-                new ProductInventory
-                {
-                    Id = "558fb10f-2ad4-4bd1-9b33-6414a5ce7b28",
-                    Number = "BB1234",
-                    Quantity = 77,
-                    Region = "East"
-                }
+                //new ProductInvUserAccountentory
+                //{
+                //    Id = "548fb10e-2ad4-4bd1-9b33-6414a5ce7b28",
+                //    Number = "AA1234",
+                //    Quantity = 99,
+                //    Region = "East"
+                //},
+                //new UserAccount
+                //{
+                //    Id = "558fb10e-2ad4-4bd1-9b33-6414a5ce7b28",
+                //    Number = "AA1234",
+                //    Quantity = 88,
+                //    Region = "West"
+                //},
+                //new UserAccount
+                //{
+                //    Id = "558fb10f-2ad4-4bd1-9b33-6414a5ce7b28",
+                //    Number = "BB1234",
+                //    Quantity = 77,
+                //    Region = "East"
+                //}
             }.ForEach(async e =>
             {
                 try
