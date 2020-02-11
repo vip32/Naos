@@ -326,7 +326,7 @@
                     }
                     catch (Exception ex)
                     {
-                        this.Logger.LogError(ex, $"{{LogKey:l}} queue processing error: {ex.Message}", args: new[] { LogKeys.Queueing });
+                        this.Logger.LogError(ex, $"{{LogKey:l}} queue processing error: {ex.GetFullMessage()}", args: new[] { LogKeys.Queueing });
                     }
 
                     if (linkedCancellationToken.IsCancellationRequested || item == null)
@@ -353,7 +353,7 @@
                         {
                             Interlocked.Increment(ref this.workerErrorCount);
                             scope.Span.SetStatus(SpanStatus.Failed, ex.GetFullMessage());
-                            this.Logger.LogError(ex, $"{{LogKey:l}} queue processing error: {ex.Message}", args: new[] { LogKeys.Queueing });
+                            this.Logger.LogError(ex, $"{{LogKey:l}} queue processing error: {ex.GetFullMessage()}", args: new[] { LogKeys.Queueing });
 
                             if (!item.IsAbandoned && !item.IsCompleted)
                             {

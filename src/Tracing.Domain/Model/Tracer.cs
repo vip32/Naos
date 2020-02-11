@@ -98,10 +98,10 @@
             scope?.Span?
                 .WithTag(SpanTagKey.Error, true)
                 .AddLog(SpanLogKey.ErrorKind, "exception")
-                .AddLog(SpanLogKey.Message, $"[{exception.GetType().Name}] {exception.GetFullMessage()}")
+                .AddLog(SpanLogKey.Message, exception.GetFullMessage())
                 .AddLog(SpanLogKey.StackTrace, exception.StackTrace);
 
-            scope?.Span?.End(SpanStatus.Failed, exception?.GetFullMessage());
+            scope?.Span?.End(SpanStatus.Failed, exception.GetFullMessage());
             this.ScopeManager.Deactivate(scope);
         }
     }

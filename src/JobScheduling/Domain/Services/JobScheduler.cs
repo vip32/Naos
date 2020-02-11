@@ -177,7 +177,7 @@
                             }
                             catch (Exception ex)
                             {
-                                this.logger.LogError(ex, $"{{LogKey:l}} job error: {ex.Message}", args: new[] { LogKeys.JobScheduling });
+                                this.logger.LogError(ex, $"{{LogKey:l}} job error: {ex.GetFullMessage()}", args: new[] { LogKeys.JobScheduling });
                             }
 
                             //}
