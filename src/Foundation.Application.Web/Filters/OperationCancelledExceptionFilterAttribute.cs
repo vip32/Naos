@@ -8,16 +8,16 @@
     /// <summary>
     /// Return a 499 Client Closed Request HTTP status code when the client application closes the TCP connection.
     /// </summary>
-    public class OperationCancelledExceptionFilter : ExceptionFilterAttribute
+    public class OperationCancelledExceptionFilterAttribute : ExceptionFilterAttribute
     {
         private const int ClientClosedRequestHttpStatusCode = 499;
-        private readonly ILogger<OperationCancelledExceptionFilter> logger;
+        private readonly ILogger<OperationCancelledExceptionFilterAttribute> logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OperationCancelledExceptionFilter"/> class.
+        /// Initializes a new instance of the <see cref="OperationCancelledExceptionFilterAttribute"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        public OperationCancelledExceptionFilter(ILogger<OperationCancelledExceptionFilter> logger) =>
+        public OperationCancelledExceptionFilterAttribute(ILogger<OperationCancelledExceptionFilterAttribute> logger) =>
             this.logger = logger;
 
         /// <summary>

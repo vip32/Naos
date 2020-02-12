@@ -3,7 +3,7 @@
     using System;
 
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
-    public class CriteriaOperatorMetadata : Attribute
+    public class CriteriaOperatorMetadataAttribute : Attribute
     {
         public string Value { get; set; }
 

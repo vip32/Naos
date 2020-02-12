@@ -5,55 +5,55 @@
         /// <summary>
         /// Equal to
         /// </summary>
-        [CriteriaOperatorMetadata(Value = "==", Abbreviation = "eq")]
+        [CriteriaOperatorMetadataAttribute(Value = "==", Abbreviation = "eq")]
         Equal = 10,
 
         /// <summary>
         /// Equal to
         /// </summary>
-        [CriteriaOperatorMetadata(Value = "!=", Abbreviation = "ne")]
+        [CriteriaOperatorMetadataAttribute(Value = "!=", Abbreviation = "ne")]
         NotEqual = 11,
 
         /// <summary>
         /// Greater than
         /// </summary>
-        [CriteriaOperatorMetadata(Value = ">", Abbreviation = "gt")]
+        [CriteriaOperatorMetadataAttribute(Value = ">", Abbreviation = "gt")]
         GreaterThan = 20,
 
         /// <summary>
         /// Greater than or equal to
         /// </summary>
-        [CriteriaOperatorMetadata(Value = ">=", Abbreviation = "ge")]
+        [CriteriaOperatorMetadataAttribute(Value = ">=", Abbreviation = "ge")]
         GreaterThanOrEqual = 21,
 
         /// <summary>
         /// Less than
         /// </summary>
-        [CriteriaOperatorMetadata(Value = "<", Abbreviation = "lt")]
+        [CriteriaOperatorMetadataAttribute(Value = "<", Abbreviation = "lt")]
         LessThan = 30,
 
         /// <summary>
         /// Less than or equal to
         /// </summary>
-        [CriteriaOperatorMetadata(Value = "<=", Abbreviation = "le")]
+        [CriteriaOperatorMetadataAttribute(Value = "<=", Abbreviation = "le")]
         LessThanOrEqual = 31,
 
         /// <summary>
         /// Contains
         /// </summary>
-        [CriteriaOperatorMetadata(Value = "Contains", IsFunction = true, Abbreviation = "ct")]
+        [CriteriaOperatorMetadataAttribute(Value = "Contains", IsFunction = true, Abbreviation = "ct")]
         Contains = 40,
 
         /// <summary>
         /// StartsWith
         /// </summary>
-        [CriteriaOperatorMetadata(Value = "StartsWith", IsFunction = true, Abbreviation = "sw")]
+        [CriteriaOperatorMetadataAttribute(Value = "StartsWith", IsFunction = true, Abbreviation = "sw")]
         StartsWith = 41,
 
         /// <summary>
         /// EndsWith
         /// </summary>
-        [CriteriaOperatorMetadata(Value = "EndsWith", IsFunction = true, Abbreviation = "ew")]
+        [CriteriaOperatorMetadataAttribute(Value = "EndsWith", IsFunction = true, Abbreviation = "ew")]
         EndsWith = 42,
 
         ///// <summary>

@@ -23,7 +23,7 @@
                 mvcBuilder
                     .AddMvcOptions(o =>
                     {
-                        o.Filters.Add<OperationCancelledExceptionFilter>();
+                        o.Filters.Add<OperationCancelledExceptionFilterAttribute>();
                         o.Conventions.Add(new GeneratedControllerRouteConvention());
                     })
                     .ConfigureApplicationPartManager(o => o

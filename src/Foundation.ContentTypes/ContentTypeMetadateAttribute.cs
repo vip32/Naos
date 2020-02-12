@@ -3,9 +3,9 @@
     using System;
 
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
-    public class ContentTypeMetadata : Attribute
+    public class ContentTypeMetadateAttribute : Attribute
     {
-        public ContentTypeMetadata()
+        public ContentTypeMetadateAttribute()
         {
             this.Value = "text/plain";
             this.IsText = true;

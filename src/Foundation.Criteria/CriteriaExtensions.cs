@@ -7,19 +7,19 @@
         public static string ToValue(this CriteriaOperator @operator)
         {
             var metadata = GetMetadata(@operator);
-            return (metadata != null) ? ((CriteriaOperatorMetadata)metadata).Value : @operator.ToString();
+            return (metadata != null) ? ((CriteriaOperatorMetadataAttribute)metadata).Value : @operator.ToString();
         }
 
         public static string ToAbbreviation(this CriteriaOperator @operator)
         {
             var metadata = GetMetadata(@operator);
-            return (metadata != null) ? ((CriteriaOperatorMetadata)metadata).Abbreviation : @operator.ToString();
+            return (metadata != null) ? ((CriteriaOperatorMetadataAttribute)metadata).Abbreviation : @operator.ToString();
         }
 
         public static bool IsFunction(this CriteriaOperator @operator)
         {
             var metadata = GetMetadata(@operator);
-            return (metadata != null) ? ((CriteriaOperatorMetadata)metadata).IsFunction : false;
+            return (metadata != null) ? ((CriteriaOperatorMetadataAttribute)metadata).IsFunction : false;
         }
 
         public static CriteriaOperator FromValue(string value, CriteriaOperator @default = CriteriaOperator.Equal)
@@ -32,7 +32,7 @@
             foreach (var enumValue in Enum.GetValues(typeof(CriteriaOperator)))
             {
                 Enum.TryParse(enumValue.ToString(), true, out CriteriaOperator @operator);
-                var metaDataValue = @operator.GetAttributeValue<CriteriaOperatorMetadata, string>(x => x.Value);
+                var metaDataValue = @operator.GetAttributeValue<CriteriaOperatorMetadataAttribute, string>(x => x.Value);
                 if (metaDataValue != null && metaDataValue.Equals(value, StringComparison.OrdinalIgnoreCase))
                 {
                     return @operator;
@@ -52,7 +52,7 @@
             foreach (var enumValue in Enum.GetValues(typeof(CriteriaOperator)))
             {
                 Enum.TryParse(enumValue.ToString(), true, out CriteriaOperator @operator);
-                var metaDataValue = @operator.GetAttributeValue<CriteriaOperatorMetadata, string>(x => x.Abbreviation);
+                var metaDataValue = @operator.GetAttributeValue<CriteriaOperatorMetadataAttribute, string>(x => x.Abbreviation);
                 if (metaDataValue != null && metaDataValue.Equals(value, StringComparison.OrdinalIgnoreCase))
                 {
                     return @operator;
@@ -68,7 +68,7 @@
             var info = type.GetMember(@operator.ToString());
             if ((info != null) && (info.Length > 0))
             {
-                var attrs = info[0].GetCustomAttributes(typeof(CriteriaOperatorMetadata), false);
+                var attrs = info[0].GetCustomAttributes(typeof(CriteriaOperatorMetadataAttribute), false);
                 if ((attrs != null) && (attrs.Length > 0))
                 {
                     return attrs[0];
