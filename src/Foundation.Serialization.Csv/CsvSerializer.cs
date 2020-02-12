@@ -51,7 +51,7 @@
 
             if (!this.DateTimeFormat.IsNullOrEmpty())
             {
-                ServiceStack.Text.JsConfig<DateTime>.SerializeFn = dt => new DateTime(dt.Ticks, DateTimeKind.Utc).ToString(this.DateTimeFormat);
+                ServiceStack.Text.JsConfig<DateTime>.SerializeFn = dt => new DateTime(dt.Ticks, DateTimeKind.Utc).ToString(this.DateTimeFormat, CultureInfo.InvariantCulture);
             }
 
             ServiceStack.Text.CsvSerializer.SerializeToStream(value, output);

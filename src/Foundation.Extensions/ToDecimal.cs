@@ -1,6 +1,7 @@
 ﻿namespace Naos.Foundation
 {
     using System.Diagnostics;
+    using System.Globalization;
 
     public static partial class Extensions
     {
@@ -12,7 +13,7 @@
                 return @default;
             }
 
-            var result = decimal.TryParse(source, out var parsedValue);
+            var result = decimal.TryParse(source, NumberStyles.Any, CultureInfo.InvariantCulture, out var parsedValue);
 
             if (!result)
             {
@@ -30,7 +31,7 @@
                 return @default;
             }
 
-            var result = decimal.TryParse(source, out var parsedValue);
+            var result = decimal.TryParse(source, NumberStyles.Any, CultureInfo.InvariantCulture, out var parsedValue);
 
             if (!result)
             {

@@ -1056,7 +1056,7 @@ select new {
 // varies linearly from 1 hour for a method with 7 parameters,
 // up to 6 hours for a methods with 40 or more parameters.
 //</HowToFix>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Avoid methods with too many overloads</Name>
+      <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Avoid methods with too many overloads</Name>
 // <Id>ND1005:AvoidMethodsWithTooManyOverloads</Id>
 warnif count > 0 
 let max = 6
@@ -1133,7 +1133,7 @@ select new {
 // The estimated Debt, which means the effort to fix such issue,
 // is of 3 minutes per method overload.
 //</HowToFix>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Avoid methods potentially poorly commented</Name>
+      <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Avoid methods potentially poorly commented</Name>
 // <Id>ND1006:AvoidMethodsPotentiallyPoorlyCommented</Id>
 warnif count > 0 from t in JustMyCode.Types where
    // Entity Framework ModelSnapshot and DbContext and Migration have large uncommented methods.
@@ -4599,7 +4599,7 @@ select new {
 //</HowToFix>]]></Query>
     </Group>
     <Group Name="API Breaking Changes" Active="True" ShownInReport="True">
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="True"><![CDATA[// <Name>API Breaking Changes: Types</Name>
+      <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="True"><![CDATA[// <Name>API Breaking Changes: Types</Name>
 // <Id>ND1500:APIBreakingChangesTypes</Id>
 
 warnif count > 0 from t in codeBase.OlderVersion().Application.Types
@@ -4645,7 +4645,7 @@ select new {
 // because an API Breaking change can provoque significant
 // friction with consumers of the API.
 //</HowToFix>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="True"><![CDATA[// <Name>API Breaking Changes: Methods</Name>
+      <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="True"><![CDATA[// <Name>API Breaking Changes: Methods</Name>
 // <Id>ND1501:APIBreakingChangesMethods</Id>
 
 warnif count > 0 from m in codeBase.OlderVersion().Application.Methods
@@ -8708,7 +8708,7 @@ select new {
 // By default issues of this rule have a **Low** severity
 // because they reflect more an advice than a problem.
 //</HowToFix>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Avoid duplicating a type definition across assemblies</Name>
+      <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Avoid duplicating a type definition across assemblies</Name>
 // <Id>ND2101:AvoidDuplicatingATypeDefinitionAcrossAssemblies</Id>
 
 warnif count > 0
@@ -8757,7 +8757,7 @@ select new {
 //<HowToFix>
 // To fix a violation of this rule, prefer sharing types through DLLs.
 //</HowToFix>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Avoid defining multiple types in a source file</Name>
+      <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Avoid defining multiple types in a source file</Name>
 // <Id>ND2102:AvoidDefiningMultipleTypesInASourceFile</Id>
 
 warnif count > 0 
@@ -8811,7 +8811,7 @@ select new {
 // By default issues of this rule have a **Low** severity
 // because they reflect more an advice than a problem.
 //</HowToFix>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Namespace name should correspond to file location</Name>
+      <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Namespace name should correspond to file location</Name>
 // <Id>ND2103:NamespaceNameShouldCorrespondToFileLocation</Id>
 
 warnif count > 0
@@ -8896,7 +8896,7 @@ select new {
 // the issue is easier to fix.
 //</HowToFix>
 ]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Types with source files stored in the same directory, should be declared in the same namespace</Name>
+      <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Types with source files stored in the same directory, should be declared in the same namespace</Name>
 // <Id>ND2104:TypesWithSourceFilesStoredInTheSameDirectoryShouldBeDeclaredInTheSameNamespace</Id>
 
 warnif count > 0 
@@ -8986,7 +8986,7 @@ select new {
 // The estimated Debt, which means the effort to fix such issue,
 // is equal to 2 minutes plus 5 minutes per type in *typesOutOfMainNamespace*.
 //</HowToFix>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Types declared in the same namespace, should have their source files stored in the same directory</Name>
+      <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Types declared in the same namespace, should have their source files stored in the same directory</Name>
 // <Id>ND2105:TypesDeclaredInTheSameNamespaceShouldHaveTheirSourceFilesStoredInTheSameDirectory</Id>
 
 warnif count > 0 
@@ -9245,7 +9245,7 @@ select new {
 // To fix a violation of this rule, specify targets for the attribute by using 
 // *AttributeUsageAttribute* with the proper *AttributeTargets* values.
 //</HowToFix>]]></Query>
-        <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Remove calls to GC.Collect()</Name>
+        <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Remove calls to GC.Collect()</Name>
 // <Id>ND2204:RemoveCallsToGCCollect</Id>
 
 warnif count > 0 
@@ -9359,7 +9359,7 @@ select new {
 // use *Int64*. If backward compatibility requires a smaller data type, use 
 // *Byte* or *Int16*.
 //</HowToFix>]]></Query>
-        <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Do not raise too general exception types</Name>
+        <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Do not raise too general exception types</Name>
 // <Id>ND2207:DoNotRaiseTooGeneralExceptionTypes</Id>
        
 warnif count > 0 

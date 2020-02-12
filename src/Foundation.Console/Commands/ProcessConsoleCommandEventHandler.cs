@@ -33,6 +33,7 @@
             {
                 Console.WriteLine("GC collect", Color.Gray);
                 GC.Collect();
+                GC.WaitForPendingFinalizers();
             }
 
             //"PhysicalPath", HostingEnvironment.ApplicationPhysicalPath);

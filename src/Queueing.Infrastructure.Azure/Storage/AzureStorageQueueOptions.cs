@@ -5,7 +5,7 @@
     using Microsoft.WindowsAzure.Storage.RetryPolicies;
     using Naos.Queueing.Domain;
 
-    public class AzureStorageQueueOptions : BaseQueueOptions
+    public class AzureStorageQueueOptions : QueueOptionsBase
     {
         public IMediator Mediator { get; set; }
 

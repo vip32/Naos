@@ -15,7 +15,7 @@
     using Naos.Queueing.Domain;
     using Naos.Tracing.Domain;
 
-    public class AzureServiceBusQueue<TData> : BaseQueue<TData, AzureServiceBusQueueOptions>
+    public class AzureServiceBusQueue<TData> : QueueBase<TData, AzureServiceBusQueueOptions>
          where TData : class
     {
         private readonly ManagementClient managementClient;
@@ -76,8 +76,8 @@
                         CorrelationId = correlationId,
                     };
                     //message.UserProperties.AddOrUpdate("CorrelationId", scope.Span.TraceId);
-                    message.UserProperties.AddOrUpdate("TraceId", scope.Span.TraceId);
-                    message.UserProperties.AddOrUpdate("SpanId", scope.Span.SpanId);
+                    message.UserProperties.AddOrUpdate("TraceId", scope?.Span?.TraceId);
+                    message.UserProperties.AddOrUpdate("SpanId", scope?.Span?.SpanId);
 
                     await this.queueSender.SendAsync(message).AnyContext();
 

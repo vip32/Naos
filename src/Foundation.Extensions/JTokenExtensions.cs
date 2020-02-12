@@ -241,42 +241,10 @@
                 return source;
             }
 
-            var pathParts = path.Split('.');
-
-            // make sure all tokens exist
-            var tokenPointer = source;
-            foreach (var pathPart in pathParts)
-            {
-                if (tokenPointer.SelectToken(pathPart) == null)
-                {
-                    var obj = (JObject)tokenPointer;
-                    if (pathPart.Contains('['))
-                    {
-                        var replacer = pathPart.Substring(pathPart.IndexOf('['));
-                        var arrayPropName = pathPart.Replace(replacer, string.Empty);
-
-                        if (obj.SelectToken(arrayPropName) == null)
-                        {
-                            obj.Add(arrayPropName, new JArray(new JObject()));
-                        }
-                        else
-                        {
-                            var arr = (JArray)obj.SelectToken(arrayPropName);
-                            arr.Add(new JObject());
-                        }
-                    }
-                    else
-                    {
-                        obj.Add(pathPart, new JObject());
-                    }
-                }
-
-                tokenPointer = tokenPointer.SelectToken(pathPart);
-            }
-
-            // add or update tokens
+            EnsureToken(source, path);
             foreach (var value in source.SelectTokens(path).ToList())
             {
+                // add or update tokens
                 var token = !newValue.IsDefault() ? JToken.FromObject(newValue) : null;
                 if (value == source)
                 {
@@ -349,6 +317,40 @@
             }
 
             return source;
+        }
+
+        private static void EnsureToken(JToken source, string path)
+        {
+            // make sure all tokens exist
+            var tokenPointer = source;
+            foreach (var pathPart in path.Split('.'))
+            {
+                if (tokenPointer.SelectToken(pathPart) == null)
+                {
+                    var obj = (JObject)tokenPointer;
+                    if (pathPart.Contains('['))
+                    {
+                        var replacer = pathPart.Substring(pathPart.IndexOf('['));
+                        var arrayPropName = pathPart.Replace(replacer, string.Empty);
+
+                        if (obj.SelectToken(arrayPropName) == null)
+                        {
+                            obj.Add(arrayPropName, new JArray(new JObject()));
+                        }
+                        else
+                        {
+                            var arr = (JArray)obj.SelectToken(arrayPropName);
+                            arr.Add(new JObject());
+                        }
+                    }
+                    else
+                    {
+                        obj.Add(pathPart, new JObject());
+                    }
+                }
+
+                tokenPointer = tokenPointer.SelectToken(pathPart);
+            }
         }
 
         private static void SetNewValueByToken(JToken source, string path, JToken value)

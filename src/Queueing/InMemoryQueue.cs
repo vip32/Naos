@@ -13,7 +13,7 @@
     using Naos.Queueing.Domain;
     using Naos.Tracing.Domain;
 
-    public class InMemoryQueue<TData> : BaseQueue<TData, InMemoryQueueOptions>
+    public class InMemoryQueue<TData> : QueueBase<TData, InMemoryQueueOptions>
         where TData : class
     {
         private readonly ConcurrentQueue<QueueItem<TData>> queue = new ConcurrentQueue<QueueItem<TData>>();
@@ -59,8 +59,8 @@
                 var item = new QueueItem<TData>(IdGenerator.Instance.Next, data/*.Clone()*/, this)
                 {
                     CorrelationId = correlationId,
-                    TraceId = scope.Span.TraceId,
-                    SpanId = scope.Span.SpanId
+                    TraceId = scope?.Span?.TraceId,
+                    SpanId = scope?.Span?.SpanId
                 };
 
                 this.Logger.LogDebug($"{{LogKey:l}} queue item enqueue (id={item.Id}, queue={this.Options.QueueName}, type={this.GetType().PrettyName()})", LogKeys.Queueing);

@@ -106,9 +106,11 @@
             doc.SetValueByPath("myCats[1].newint", 12);
             doc.AddOrUpdateByPath<string>("myCats[1].name", null);
             doc.AddOrUpdateByPath<int?>("myCats[1].age", null);
+            doc.AddOrUpdateByPath("myCats[2].name", "test");
 
             Assert.Equal("NewHero", doc.GetValueByPath<string>("myCats[0].name"));
             Assert.Equal(10, doc.GetValueByPath<int>("myCats[0].age"));
+            Assert.Equal("dddd", doc.GetValueByPath<string>("myCats[0].a.b.d"));
             Assert.Equal("test1", doc.GetValueByPath<string>("myCats[0].newprop"));
             Assert.Equal("testroot", doc.GetValueByPath<string>("newrootprop"));
             Assert.Equal("testroot", doc.GetValueByPath<string>(".newrootprop"));
@@ -117,6 +119,7 @@
             Assert.Equal(12, doc.GetValueByPath<int>("myCats[1].newint"));
             Assert.Null(doc.GetValueByPath<string>("myCats[1].name"));
             Assert.Null(doc.GetValueByPath<int?>("myCats[1].age"));
+            Assert.Equal("test", doc.GetValueByPath<string>("myCats[2].name"));
 
             //System.Diagnostics.Trace.WriteLine(doc);
         }

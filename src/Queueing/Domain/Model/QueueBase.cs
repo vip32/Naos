@@ -8,13 +8,13 @@
     using Naos.Foundation;
     using Naos.Foundation.Domain;
 
-    public abstract class BaseQueue<TData, TOptions> : IQueue<TData>
+    public abstract class QueueBase<TData, TOptions> : IQueue<TData>
         where TData : class
-        where TOptions : BaseQueueOptions, new()
+        where TOptions : QueueOptionsBase, new()
     {
         private bool isDisposed;
 
-        protected BaseQueue(TOptions options)
+        protected QueueBase(TOptions options)
         {
             this.Options = options ?? Factory<TOptions>.Create();
             this.Logger = options.CreateLogger<TData>();
@@ -77,7 +77,7 @@
         {
             if (!this.isDisposed)
             {
-                this.Logger.LogDebug($"dispose queue {this.Name}");
+                this.Logger?.LogDebug($"{{LogKey:l}} dispose queue {this.Name}", LogKeys.Queueing);
                 this.isDisposed = true;
                 this.DisposedCancellationTokenSource?.Cancel();
                 this.DisposedCancellationTokenSource?.Dispose();

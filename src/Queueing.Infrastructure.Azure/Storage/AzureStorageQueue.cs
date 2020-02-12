@@ -13,7 +13,7 @@
     using Naos.Queueing.Domain;
     using Naos.Tracing.Domain;
 
-    public class AzureStorageQueue<TData> : BaseQueue<TData, AzureStorageQueueOptions>
+    public class AzureStorageQueue<TData> : QueueBase<TData, AzureStorageQueueOptions>
         where TData : class
     {
         private readonly CloudQueue queue;
@@ -75,8 +75,8 @@
                 // TODO: store correlationid + traceid/spanid >> QUEUEITEM > data
                 //using (var item = new QueueItem<TData>(IdGenerator.Instance.Next, data, this))
                 //{
-                //    item.Properties.Add("TraceId", );
-                //    item.Properties.Add("SpanId", );
+                //    item.Properties.Add("TraceId", scope?.Span?.TraceId);
+                //    item.Properties.Add("SpanId", scope?.Span?.SpanId);
                 //    var message = CloudQueueMessage.CreateCloudQueueMessageFromByteArray(this.Serializer.SerializeToBytes(item));
                 //    await this.queue.AddMessageAsync(message).AnyContext();
 

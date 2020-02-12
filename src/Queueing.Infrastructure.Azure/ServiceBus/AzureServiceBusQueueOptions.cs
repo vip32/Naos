@@ -6,7 +6,7 @@
     using Microsoft.Azure.ServiceBus.Management;
     using Naos.Queueing.Domain;
 
-    public class AzureServiceBusQueueOptions : BaseQueueOptions
+    public class AzureServiceBusQueueOptions : QueueOptionsBase
     {
         public IMediator Mediator { get; set; }
 
