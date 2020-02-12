@@ -4,7 +4,7 @@
     using Naos.Foundation;
     using Renci.SshNet;
 
-    public class SshNetFileStorageOptions : BaseOptions
+    public class SshNetFileStorageOptions : OptionsBase
     {
         public string ConnectionString { get; set; }
 

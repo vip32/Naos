@@ -5,7 +5,7 @@
     using MongoDB.Driver;
     using Naos.Foundation.Domain;
 
-    public class MongoRepositoryOptions<TEntity> : BaseOptions
+    public class MongoRepositoryOptions<TEntity> : OptionsBase
         where TEntity : class, IEntity, IAggregateRoot
     {
         /// <summary>

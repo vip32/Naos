@@ -3,7 +3,7 @@
     using Microsoft.Extensions.Logging;
 
     public class BaseOptionsBuilder<TOption, TBuilder> : OptionsBuilder<TOption>
-        where TOption : BaseOptions, new()
+        where TOption : OptionsBase, new()
         where TBuilder : BaseOptionsBuilder<TOption, TBuilder>
     {
         /// <summary>

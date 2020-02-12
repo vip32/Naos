@@ -2,7 +2,7 @@
 {
     using MediatR;
 
-    public class InMemoryRepositoryOptions<TEntity> : BaseOptions
+    public class InMemoryRepositoryOptions<TEntity> : OptionsBase
         where TEntity : class, IEntity, IAggregateRoot
     {
         public IMediator Mediator { get; set; }

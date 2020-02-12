@@ -2,7 +2,7 @@
 {
     using MediatR;
 
-    public class DocumentRepositoryOptions<TEntity> : BaseOptions
+    public class DocumentRepositoryOptions<TEntity> : OptionsBase
         where TEntity : class, IEntity, IAggregateRoot
     {
         /// <summary>

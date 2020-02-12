@@ -4,7 +4,7 @@
     using Microsoft.EntityFrameworkCore;
     using Naos.Foundation.Domain;
 
-    public class EntityFrameworkRepositoryOptions : BaseOptions
+    public class EntityFrameworkRepositoryOptions : OptionsBase
     {
         /// <summary>
         /// Gets or sets the mediator.

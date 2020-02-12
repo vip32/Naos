@@ -1,7 +1,6 @@
 ﻿namespace Naos.Foundation
 {
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -24,7 +23,7 @@
     /// </summary>
     /// <typeparam name="TPipeIn"></typeparam>
     /// <typeparam name="TPipeOut"></typeparam>
-    public class Pipeline<TPipeIn, TPipeOut>
+    public partial class Pipeline<TPipeIn, TPipeOut>
     {
         private readonly List<object> pipelineSteps = new List<object>();
 
@@ -87,32 +86,6 @@
 
             this.pipelineSteps.Add(pipelineStep);
             return pipelineStep;
-        }
-
-#pragma warning disable SA1201 // Elements should appear in the correct order
-        public interface IPipelineStep<TStepIn>
-#pragma warning restore SA1201 // Elements should appear in the correct order
-        {
-            BlockingCollection<InputItem<TStepIn>> Buffer { get; set; }
-        }
-
-        public class PipelineStep<TStepIn, TStepOut> : IPipelineStep<TStepIn>, IDisposable
-        {
-            public BlockingCollection<InputItem<TStepIn>> Buffer { get; set; } = new BlockingCollection<InputItem<TStepIn>>();
-
-            public Func<TStepIn, TStepOut> StepAction { get; set; }
-
-            public void Dispose()
-            {
-                this.Buffer?.Dispose();
-            }
-        }
-
-        public class InputItem<T>
-        {
-            public T Value { get; set; }
-
-            public TaskCompletionSource<TPipeOut> TaskCompletionSource { get; set; }
         }
     }
 }

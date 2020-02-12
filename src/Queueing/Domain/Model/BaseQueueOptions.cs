@@ -4,7 +4,7 @@
     using Naos.Foundation;
     using Naos.Tracing.Domain;
 
-    public class BaseQueueOptions : BaseOptions
+    public class BaseQueueOptions : OptionsBase
     {
         public ITracer Tracer { get; set; }
 

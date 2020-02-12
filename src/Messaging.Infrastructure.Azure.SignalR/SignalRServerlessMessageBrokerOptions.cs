@@ -6,7 +6,7 @@
     using Naos.Messaging.Domain;
     using Naos.Tracing.Domain;
 
-    public class SignalRServerlessMessageBrokerOptions : BaseOptions
+    public class SignalRServerlessMessageBrokerOptions : OptionsBase
     {
         public ITracer Tracer { get; set; }
 

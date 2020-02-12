@@ -2,7 +2,7 @@
 {
     using Naos.Foundation;
 
-    public class AzureBlobFileStorageOptions : BaseOptions
+    public class AzureBlobFileStorageOptions : OptionsBase
     {
         public string ConnectionString { get; set; }
 

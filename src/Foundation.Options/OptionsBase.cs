@@ -4,7 +4,7 @@
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
 
-    public abstract class BaseOptions
+    public abstract class OptionsBase
     {
         /// <summary>
         /// Gets or sets the logger factory.

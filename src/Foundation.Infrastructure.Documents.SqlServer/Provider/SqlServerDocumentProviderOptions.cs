@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using Humanizer;
 
-    public class SqlServerDocumentProviderOptions<T> : BaseOptions
+    public class SqlServerDocumentProviderOptions<T> : OptionsBase
     {
         private string calculatedTableName;
 

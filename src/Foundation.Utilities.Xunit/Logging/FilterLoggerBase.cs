@@ -5,10 +5,10 @@
     using Microsoft.Extensions.Logging;
 
     /// <summary>
-    /// The <see cref="FilterLogger" />  class provides common filtering logic to ensure log records
+    /// The <see cref="FilterLoggerBase" />  class provides common filtering logic to ensure log records
     /// are only written for enabled loggers where there is a formatted message and/or exception to log.
     /// </summary>
-    public abstract class FilterLogger : ILogger
+    public abstract class FilterLoggerBase : ILogger
     {
         private readonly string nullFormatted = "[null]";
 

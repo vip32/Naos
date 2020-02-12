@@ -2,7 +2,7 @@
 {
     using Naos.Foundation;
 
-    public class TableKeyValueStorageOptions : BaseOptions
+    public class TableKeyValueStorageOptions : OptionsBase
     {
         public string ConnectionString { get; set; }
 

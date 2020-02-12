@@ -3,7 +3,7 @@
     using MediatR;
     using Naos.Foundation.Domain;
 
-    public class CosmosSqlRepositoryOptions<TEntity> : BaseOptions
+    public class CosmosSqlRepositoryOptions<TEntity> : OptionsBase
         where TEntity : class, IEntity, IAggregateRoot
     {
         public IMediator Mediator { get; set; }
@@ -16,7 +16,7 @@
     }
 
 #pragma warning disable SA1402 // File may only contain a single type
-    public class CosmosSqlRepositoryOptions<TEntity, TDestination> : BaseOptions
+    public class CosmosSqlRepositoryOptions<TEntity, TDestination> : OptionsBase
         where TEntity : class, IEntity, IAggregateRoot
         where TDestination : class, ICosmosEntity
     {

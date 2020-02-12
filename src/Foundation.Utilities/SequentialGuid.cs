@@ -287,11 +287,11 @@
             return sequenceBytes.Concat(new byte[numberOfBytesOfLong - sequenceBytes.Length]);
         }
 
-        private static DateTime Round(DateTime dateTime, TimeSpan interval)
-        {
-            var ticks = (interval.Ticks + 1) >> 1;
+        //private static DateTime Round(DateTime dateTime, TimeSpan interval)
+        //{
+        //    var ticks = (interval.Ticks + 1) >> 1;
 
-            return dateTime.AddTicks(ticks - ((dateTime.Ticks + ticks) % interval.Ticks));
-        }
+        //    return dateTime.AddTicks(ticks - ((dateTime.Ticks + ticks) % interval.Ticks));
+        //}
     }
 }
