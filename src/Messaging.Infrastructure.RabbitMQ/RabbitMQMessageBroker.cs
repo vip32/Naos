@@ -169,7 +169,7 @@
                     {
                         var rabbitMQMessage = this.serializer.SerializeToBytes(message);
 
-                        this.logger.LogJournal(LogKeys.Messaging, $"publish (name={{MessageName}}, id={{MessageId}}, origin={{MessageOrigin}}, size={rabbitMQMessage.Length.Bytes():#.##})", LogPropertyKeys.TrackPublishMessage, args: new[] { messageName, message.Id, message.Origin });
+                        this.logger.LogJournal(LogKeys.Messaging, $"publish (id={{MessageId}}, name={{MessageName}}, origin={{MessageOrigin}}, size={rabbitMQMessage.Length.Bytes():#.##})", LogPropertyKeys.TrackPublishMessage, args: new[] { messageName, message.Id, message.Origin });
                         this.logger.LogTrace(LogKeys.Messaging, message.Id, messageName, LogTraceNames.Message);
 
                         channel.ExchangeDeclare(exchange: this.options.ExchangeName, type: "direct");
@@ -375,8 +375,8 @@
 
                         message.Origin ??= eventArgs.BasicProperties.AppId;
 
-                        this.logger.LogJournal(LogKeys.Messaging, $"process (name={{MessageName}}, id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}}, size={eventArgs.Body.Length.Bytes():#.##})",
-                            LogPropertyKeys.TrackReceiveMessage, args: new[] { eventArgs.BasicProperties.Type, message?.Id, message.Origin, message.Origin });
+                        this.logger.LogJournal(LogKeys.Messaging, $"message processed: {eventArgs.BasicProperties.Type} (id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}}, size={eventArgs.Body.Length.Bytes():#.##})",
+                            LogPropertyKeys.TrackReceiveMessage, args: new[] { message?.Id, message.Origin, message.Origin });
                         //this.logger.LogTrace(LogKeys.Messaging, message.Id, eventArgs.BasicProperties.Type, LogTraceNames.Message);
 
                         // construct the handler by using the DI container

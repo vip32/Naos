@@ -66,7 +66,7 @@
                 }
 
                 // store message in specific (Message) folder
-                this.logger.LogJournal(LogKeys.Messaging, "publish (name={MessageName}, id={MessageId}, origin={MessageOrigin})", LogPropertyKeys.TrackPublishMessage, args: new[] { message.GetType().PrettyName(), message.Id, message.Origin });
+                this.logger.LogJournal(LogKeys.Messaging, "publish (id={MessageId}, name={MessageName}, origin={MessageOrigin})", LogPropertyKeys.TrackPublishMessage, args: new[] { message.GetType().PrettyName(), message.Id, message.Origin });
                 this.logger.LogTrace(LogKeys.Messaging, message.Id, message.GetType().PrettyName(), LogTraceNames.Message);
 
                 if (scope?.Span != null)
@@ -182,7 +182,7 @@
                     }))
                     using (var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Consumer, parentSpan).Activate(this.logger))
                     {
-                        this.logger.LogJournal(LogKeys.Messaging, "process (name={MessageName}, id={MessageId}, service={Service}, origin={MessageOrigin})", LogPropertyKeys.TrackReceiveMessage, args: new[] { messageType.PrettyName(), message?.Id, this.options.MessageScope, message.Origin });
+                        this.logger.LogJournal(LogKeys.Messaging, $"message processed: {messageType.PrettyName()} (id={{MessageId}}, name={{MessageName}}, service={{Service}}, origin={{MessageOrigin}})", LogPropertyKeys.TrackReceiveMessage, args: new[] { message?.Id, this.options.MessageScope, message.Origin });
                         this.logger.LogTrace(LogKeys.Messaging, message?.Id, message.GetType().PrettyName(), LogTraceNames.Message);
 
                         if (scope?.Span != null)

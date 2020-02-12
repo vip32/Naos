@@ -209,8 +209,8 @@
                     }))
                     using (var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Consumer, parentSpan).Activate(this.logger))
                     {
-                        this.logger.LogJournal(LogKeys.Messaging, "process (name={MessageName}, id={MessageId}, service={Service}, origin={MessageOrigin})", LogPropertyKeys.TrackReceiveMessage, args: new[] { messageType.PrettyName(), message?.Id, this.options.MessageScope, message?.Origin });
-                        this.logger.LogTrace(LogKeys.Messaging, message.Id, messageType.PrettyName(), LogTraceNames.Message);
+                        this.logger.LogJournal(LogKeys.Messaging, $"message processed: {messageType.PrettyName()} (id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}})", LogPropertyKeys.TrackReceiveMessage, args: new[] { message?.Id, messageType.PrettyName(), this.options.MessageScope, message?.Origin });
+                        this.logger.LogTrace(LogKeys.Messaging, message.Id, LogTraceNames.Message);
 
                         // construct the handler by using the DI container
                         var handler = this.options.HandlerFactory.Create(subscription.HandlerType); // should not be null, did you forget to register your generic handler (EntityMessageHandler<T>)
