@@ -52,6 +52,48 @@
             this.connection?.DisposeAsync().GetAwaiter().GetResult();
         }
 
+        public IMessageBroker Subscribe<TMessage, THandler>()
+    where TMessage : Message
+    where THandler : IMessageHandler<TMessage>
+        {
+            var messageName = typeof(TMessage).PrettyName();
+
+            if (!this.options.Map.Exists<TMessage>())
+            {
+                this.logger.LogJournal(LogKeys.Messaging, $"message subscribe: {typeof(TMessage).PrettyName()} (service={{Service}}, filterScope={{FilterScope}}, handler={{MessageHandlerType}}, endpoint={this.serviceUtils.Endpoint}, hub={this.HubName})", LogPropertyKeys.TrackSubscribeMessage,
+                    args: new[] { this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name });
+
+                this.options.Map.Add<TMessage, THandler>();
+            }
+
+            if (this.connection == null)
+            {
+                var url = $"{this.serviceUtils.Endpoint}/client/?hub={this.HubName}";
+                this.connection = new HubConnectionBuilder()
+                    .WithUrl(url, option =>
+                    {
+                        option.AccessTokenProvider = () =>
+                        {
+                            return Task.FromResult(this.serviceUtils.GenerateAccessToken(url, "userId"));
+                        };
+                    }).Build();
+
+                this.logger.LogDebug($"{{LogKey:l}} signalr connection started (url={url})", LogKeys.Messaging);
+                this.connection.StartAsync().GetAwaiter().GetResult();
+            }
+
+            // add listener for the specific messageName
+            this.connection.On(
+                messageName,
+                async (string n, object m) =>
+                {
+                    await this.ProcessMessage(n, m).AnyContext();
+                });
+            this.logger.LogDebug($"{{LogKey:l}} signalr connection onmessage handler registered (name={messageName})", LogKeys.Messaging);
+
+            return this;
+        }
+
         public void Publish(Message message)
         {
             EnsureArg.IsNotNull(message, nameof(message));
@@ -86,7 +128,7 @@
                     this.options.Mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.AnyContext();*/
                 }
 
-                this.logger.LogJournal(LogKeys.Messaging, "publish (name={MessageName}, id={MessageId}, origin={MessageOrigin})", LogPropertyKeys.TrackPublishMessage, args: new[] { message.GetType().PrettyName(), message.Id, message.Origin });
+                this.logger.LogJournal(LogKeys.Messaging, $"message publish: {message.GetType().PrettyName()} (id={{MessageId}}, origin={{MessageOrigin}})", LogPropertyKeys.TrackPublishMessage, args: new[] { message.Id, message.Origin });
                 this.logger.LogTrace(LogKeys.Messaging, message.Id, messageName, LogTraceNames.Message);
 
                 if (scope?.Span != null)
@@ -119,48 +161,6 @@
                         LogKeys.Messaging, response.StatusCode, message.GetType().PrettyName(), message.Id, message.Origin);
                 }
             }
-        }
-
-        public IMessageBroker Subscribe<TMessage, THandler>()
-            where TMessage : Message
-            where THandler : IMessageHandler<TMessage>
-        {
-            var messageName = typeof(TMessage).PrettyName();
-
-            if (!this.options.Map.Exists<TMessage>())
-            {
-                this.logger.LogJournal(LogKeys.Messaging, "subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, endpoint={Endpoint}, hub={Hub})", LogPropertyKeys.TrackSubscribeMessage,
-                    args: new[] { typeof(TMessage).PrettyName(), this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name, this.serviceUtils.Endpoint, this.HubName });
-
-                this.options.Map.Add<TMessage, THandler>();
-            }
-
-            if (this.connection == null)
-            {
-                var url = $"{this.serviceUtils.Endpoint}/client/?hub={this.HubName}";
-                this.connection = new HubConnectionBuilder()
-                    .WithUrl(url, option =>
-                    {
-                        option.AccessTokenProvider = () =>
-                        {
-                            return Task.FromResult(this.serviceUtils.GenerateAccessToken(url, "userId"));
-                        };
-                    }).Build();
-
-                this.logger.LogDebug($"{{LogKey:l}} signalr connection started (url={url})", LogKeys.Messaging);
-                this.connection.StartAsync().GetAwaiter().GetResult();
-            }
-
-            // add listener for the specific messageName
-            this.connection.On(
-                messageName,
-                async (string n, object m) =>
-                {
-                    await this.ProcessMessage(n, m).AnyContext();
-                });
-            this.logger.LogDebug($"{{LogKey:l}} signalr connection onmessage handler registered (name={messageName})", LogKeys.Messaging);
-
-            return this;
         }
 
         public void Unsubscribe<TMessage, THandler>()

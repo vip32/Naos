@@ -57,11 +57,11 @@
 
             if (!this.options.Subscriptions.Exists<TMessage>())
             {
-                this.logger.LogJournal(LogKeys.Messaging, "subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, entityPath={EntityPath})", LogPropertyKeys.TrackSubscribeMessage, args: new[] { messageName, this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name, this.options.Provider.EntityPath });
+                this.logger.LogJournal(LogKeys.Messaging, $"message subscribe: {messageName} (service={{Service}}, filterScope={{FilterScope}}, handler={{MessageHandlerType}}, entityPath={this.options.Provider.EntityPath})", LogPropertyKeys.TrackSubscribeMessage, args: new[] { this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name });
 
                 try
                 {
-                    this.logger.LogInformation($"{{LogKey:l}} add servicebus subscription rule: {ruleName} (name={messageName}, type={typeof(TMessage).Name})", LogKeys.Messaging);
+                    this.logger.LogDebug($"{{LogKey:l}} add servicebus subscription rule: {ruleName} (name={messageName}, type={typeof(TMessage).Name})", LogKeys.Messaging);
                     this.options.Client.AddRuleAsync(new RuleDescription
                     {
                         Filter = new CorrelationFilter { Label = messageName, To = this.options.FilterScope }, // filterscope ist used to lock the rule for a specific machine
@@ -135,7 +135,7 @@
                     serviceBusMessage.UserProperties.AddOrUpdate("SpanId", scope.Span.SpanId);
                 }
 
-                this.logger.LogJournal(LogKeys.Messaging, $"publish (id={{MessageId}}, name={{MessageName}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes():#.##})", LogPropertyKeys.TrackPublishMessage, args: new[] { messageName, message.Id, message.Origin });
+                this.logger.LogJournal(LogKeys.Messaging, $"message publish: {messageName} (id={{MessageId}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes():#.##})", LogPropertyKeys.TrackPublishMessage, args: new[] { message.Id, message.Origin });
                 this.logger.LogTrace(LogKeys.Messaging, message.Id, messageName, LogTraceNames.Message);
 
                 this.options.Provider.TopicClientFactory().SendAsync(serviceBusMessage).GetAwaiter().GetResult();

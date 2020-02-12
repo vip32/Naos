@@ -85,14 +85,14 @@
 
             if (!this.options.Subscriptions.Exists<TMessage>())
             {
-                this.logger.LogJournal(LogKeys.Messaging, "subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType})", LogPropertyKeys.TrackSubscribeMessage, args: new[] { messageName, this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name });
+                this.logger.LogJournal(LogKeys.Messaging, $"message subscribe: {messageName} (service={{Service}}, filterScope={{FilterScope}}, handler={{MessageHandlerType}})", LogPropertyKeys.TrackSubscribeMessage, args: new[] { this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name });
 
                 if (!this.options.Provider.IsConnected)
                 {
                     this.options.Provider.TryConnect();
                 }
 
-                this.logger.LogInformation($"{{LogKey:l}} bind rabbitmq queue (queue={this.options.QueueName}, routingKey={routingKey})", LogKeys.Messaging);
+                this.logger.LogDebug($"{{LogKey:l}} bind rabbitmq queue (queue={this.options.QueueName}, routingKey={routingKey})", LogKeys.Messaging);
                 try
                 {
                     using (var channel = this.options.Provider.CreateModel())
@@ -169,7 +169,7 @@
                     {
                         var rabbitMQMessage = this.serializer.SerializeToBytes(message);
 
-                        this.logger.LogJournal(LogKeys.Messaging, $"publish (id={{MessageId}}, name={{MessageName}}, origin={{MessageOrigin}}, size={rabbitMQMessage.Length.Bytes():#.##})", LogPropertyKeys.TrackPublishMessage, args: new[] { messageName, message.Id, message.Origin });
+                        this.logger.LogJournal(LogKeys.Messaging, $"message publish: {messageName} (id={{MessageId}}, origin={{MessageOrigin}}, size={rabbitMQMessage.Length.Bytes():#.##})", LogPropertyKeys.TrackPublishMessage, args: new[] { message.Id, message.Origin });
                         this.logger.LogTrace(LogKeys.Messaging, message.Id, messageName, LogTraceNames.Message);
 
                         channel.ExchangeDeclare(exchange: this.options.ExchangeName, type: "direct");

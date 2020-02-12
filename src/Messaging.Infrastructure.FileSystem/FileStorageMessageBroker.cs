@@ -37,6 +37,42 @@
         {
         }
 
+        public IMessageBroker Subscribe<TMessage, THandler>()
+            where TMessage : Message
+            where THandler : IMessageHandler<TMessage>
+        {
+            var messageName = typeof(TMessage).PrettyName(false);
+
+            if (!this.options.Map.Exists<TMessage>())
+            {
+                if (!this.watchers.ContainsKey(messageName))
+                {
+                    var path = this.GetDirectory(messageName, this.options.FilterScope);
+                    this.logger.LogJournal(LogKeys.Messaging, $"message subscribe: {typeof(TMessage).PrettyName()} (service={{Service}}, filterScope={{FilterScope}}, handler={{MessageHandlerType}}, watch={path})", LogPropertyKeys.TrackSubscribeMessage, args: new[] { this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name });
+                    this.EnsureDirectory(path);
+
+                    var watcher = new FileSystemWatcher(path)
+                    {
+                        NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite,
+                        EnableRaisingEvents = true,
+                        Filter = "*.json"
+                    };
+
+                    watcher.Renamed += (sender, e) =>
+                    {
+                        this.ProcessMessage(e.FullPath).GetAwaiter().GetResult(); // TODO: async!
+                    };
+
+                    this.watchers.Add(messageName, watcher);
+                    this.logger.LogDebug("{LogKey:l} filesystem onrenamed handler registered (name={messageName})", LogKeys.Messaging, typeof(TMessage).PrettyName());
+
+                    this.options.Map.Add<TMessage, THandler>(messageName);
+                }
+            }
+
+            return this;
+        }
+
         public void Publish(Message message)
         {
             EnsureArg.IsNotNull(message, nameof(message));
@@ -66,7 +102,7 @@
                 }
 
                 // store message in specific (Message) folder
-                this.logger.LogJournal(LogKeys.Messaging, "publish (id={MessageId}, name={MessageName}, origin={MessageOrigin})", LogPropertyKeys.TrackPublishMessage, args: new[] { message.GetType().PrettyName(), message.Id, message.Origin });
+                this.logger.LogJournal(LogKeys.Messaging, $"message publish: {message.GetType().PrettyName()} (id={{MessageId}}, origin={{MessageOrigin}})", LogPropertyKeys.TrackPublishMessage, args: new[] { message.Id, message.Origin });
                 this.logger.LogTrace(LogKeys.Messaging, message.Id, message.GetType().PrettyName(), LogTraceNames.Message);
 
                 if (scope?.Span != null)
@@ -89,42 +125,6 @@
                     this.options.Mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.AnyContext();*/
                 }
             }
-        }
-
-        public IMessageBroker Subscribe<TMessage, THandler>()
-            where TMessage : Message
-            where THandler : IMessageHandler<TMessage>
-        {
-            var messageName = typeof(TMessage).PrettyName(false);
-
-            if (!this.options.Map.Exists<TMessage>())
-            {
-                if (!this.watchers.ContainsKey(messageName))
-                {
-                    var path = this.GetDirectory(messageName, this.options.FilterScope);
-                    this.logger.LogJournal(LogKeys.Messaging, "subscribe (name={MessageName}, service={Service}, filterScope={FilterScope}, handler={MessageHandlerType}, watch={Directory})", LogPropertyKeys.TrackSubscribeMessage, args: new[] { typeof(TMessage).PrettyName(), this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name, path });
-                    this.EnsureDirectory(path);
-
-                    var watcher = new FileSystemWatcher(path)
-                    {
-                        NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite,
-                        EnableRaisingEvents = true,
-                        Filter = "*.json"
-                    };
-
-                    watcher.Renamed += (sender, e) =>
-                    {
-                        this.ProcessMessage(e.FullPath).GetAwaiter().GetResult(); // TODO: async!
-                    };
-
-                    this.watchers.Add(messageName, watcher);
-                    this.logger.LogDebug("{LogKey:l} filesystem onrenamed handler registered (name={messageName})", LogKeys.Messaging, typeof(TMessage).PrettyName());
-
-                    this.options.Map.Add<TMessage, THandler>(messageName);
-                }
-            }
-
-            return this;
         }
 
         public void Unsubscribe<TMessage, THandler>()
