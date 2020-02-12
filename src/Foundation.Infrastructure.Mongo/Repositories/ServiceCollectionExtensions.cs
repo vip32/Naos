@@ -83,7 +83,7 @@
             return services;
         }
 
-        private class DefaultMongoConventions : IConventionPack
+        private sealed class DefaultMongoConventions : IConventionPack
         {
             public IEnumerable<IConvention> Conventions => new List<IConvention>
             {
@@ -93,7 +93,7 @@
             };
         }
 
-        private class NoCasingMongoConventions : IConventionPack
+        private sealed class NoCasingMongoConventions : IConventionPack
         {
             public IEnumerable<IConvention> Conventions => new List<IConvention>
             {

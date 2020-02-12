@@ -9,7 +9,9 @@
     using Naos.Foundation;
     using Newtonsoft.Json;
 
+#pragma warning disable CA1001 // Types that own disposable fields should be disposable (=watcher)
     public class FileStorageServiceRegistry : IServiceRegistry
+#pragma warning restore CA1001 // Types that own disposable fields should be disposable (=watcher)
     {
         private readonly ILogger<FileStorageServiceRegistry> logger;
         private readonly IFileStorage fileStorage;

@@ -163,8 +163,8 @@
                 sb.Append(entity.Message).Append(" (").Append(entity.SpanId).Append("/").Append(entity.ParentSpanId).Append(")&nbsp;");
             }
 
-            sb.Append("<a target=\"blank\" href=\"/naos/operations/logtraces/").Append(entity.Id).Append("\">*</a> ");
-            sb.Append("<span style=\"color: gray;\">-> took ");
+            sb.Append("<a target='blank' href='/naos/operations/logtraces/").Append(entity.Id).Append("'>*</a> ");
+            sb.Append("<span style='color: gray;font-size: xx-small'>-> took ");
             sb.Append(entity.Duration.Humanize());
             sb.Append("</span>");
             sb.Append("</span>");

@@ -8,7 +8,7 @@
     /// <summary>
     /// Return a 499 Client Closed Request HTTP status code when the client application closes the TCP connection.
     /// </summary>
-    public class OperationCancelledExceptionFilterAttribute : ExceptionFilterAttribute
+    public sealed class OperationCancelledExceptionFilterAttribute : ExceptionFilterAttribute
     {
         private const int ClientClosedRequestHttpStatusCode = 499;
         private readonly ILogger<OperationCancelledExceptionFilterAttribute> logger;

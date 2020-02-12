@@ -71,7 +71,7 @@
 
         public ISpanBuilder BuildSpan(
             string operationName,
-            string logKey = LogKeys.Tracing,
+            string logKey = null,
             SpanKind kind = SpanKind.Internal,
             ISpan parent = null,
             bool ignoreCurrentSpan = false)

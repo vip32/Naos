@@ -96,11 +96,16 @@
             BlockingCollection<InputItem<TStepIn>> Buffer { get; set; }
         }
 
-        public class PipelineStep<TStepIn, TStepOut> : IPipelineStep<TStepIn>
+        public class PipelineStep<TStepIn, TStepOut> : IPipelineStep<TStepIn>, IDisposable
         {
             public BlockingCollection<InputItem<TStepIn>> Buffer { get; set; } = new BlockingCollection<InputItem<TStepIn>>();
 
             public Func<TStepIn, TStepOut> StepAction { get; set; }
+
+            public void Dispose()
+            {
+                this.Buffer?.Dispose();
+            }
         }
 
         public class InputItem<T>

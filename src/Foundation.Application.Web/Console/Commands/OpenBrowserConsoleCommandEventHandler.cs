@@ -1,5 +1,6 @@
 ﻿namespace Naos.Foundation.Application
 {
+    using System;
     using System.Diagnostics;
     using System.Drawing;
     using System.Linq;
@@ -11,13 +12,18 @@
     using static System.Runtime.InteropServices.RuntimeInformation;
     using Console = Colorful.Console;
 
-    public class OpenBrowserConsoleCommandEventHandler : ConsoleCommandEventHandler<OpenBrowserConsoleCommand>
+    public class OpenBrowserConsoleCommandEventHandler : ConsoleCommandEventHandler<OpenBrowserConsoleCommand>, IDisposable
     {
         private readonly IServer server;
 
         public OpenBrowserConsoleCommandEventHandler(IServer server)
         {
             this.server = server;
+        }
+
+        public void Dispose()
+        {
+            this.server?.Dispose();
         }
 
         public override Task<bool> Handle(ConsoleCommandEvent<OpenBrowserConsoleCommand> request, CancellationToken cancellationToken)

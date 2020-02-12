@@ -1,12 +1,12 @@
 ﻿namespace Microsoft.Extensions.Logging
 {
-    public struct LogTraceNames
+    public static class LogTraceNames
     {
-        public const string Http = "http";
-        public const string Rpc = "rpc";
-        public const string Job = "job";
-        public const string Message = "message";
-        public const string Queue = "queue";
-        public const string Command = "command";
+        public static readonly string Http = "http";
+        public static readonly string Rpc = "rpc";
+        public static readonly string Job = "job";
+        public static readonly string Message = "message";
+        public static readonly string Queue = "queue";
+        public static readonly string Command = "command";
     }
 }
