@@ -19,7 +19,7 @@
             return (Expression<T>)new ExpressionExpander().Visit(expression);
         }
 
-        private class ExpressionExpander : ExpressionVisitor
+        private sealed class ExpressionExpander : ExpressionVisitor
         {
             private readonly Dictionary<ParameterExpression, Expression> replacementParams = null;
 
@@ -162,7 +162,7 @@
                 return base.VisitMemberAccess(expression);
             }
 
-            protected Expression TransformExpression(MemberExpression input)
+            private Expression TransformExpression(MemberExpression input)
             {
                 // Collapse captured outer variables
                 if (input == null

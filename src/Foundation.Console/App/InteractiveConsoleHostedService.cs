@@ -133,7 +133,7 @@
             }
         }
 
-        private class AutoCompletionHandler : IAutoCompleteHandler // TODO: let all ConsoleCommands fill this (via reflection/helptext?)
+        private sealed class AutoCompletionHandler : IAutoCompleteHandler // TODO: let all ConsoleCommands fill this (via reflection/helptext?)
         {
             // characters to start completion from
             public char[] Separators { get; set; } = new char[] { ' ', '.', '/' };
