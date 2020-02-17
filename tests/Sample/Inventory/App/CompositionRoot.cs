@@ -1,14 +1,14 @@
-﻿namespace Microsoft.Extensions.DependencyInjection
+﻿namespace Naos.Sample.Inventory.Application
 {
     using System.Linq;
     using EnsureThat;
     using MediatR;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using MongoDB.Driver;
     using Naos.Foundation.Domain;
     using Naos.Foundation.Infrastructure;
-    using Naos.Sample.Inventory.Application;
     using Naos.Sample.Inventory.Domain;
     using Naos.Sample.Inventory.Infrastructure;
     using Naos.Tracing.Domain;

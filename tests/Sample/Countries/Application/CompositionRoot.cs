@@ -1,18 +1,15 @@
-﻿namespace Microsoft.Extensions.DependencyInjection
+﻿namespace Naos.Sample.Customers.Application
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using System.Threading;
     using EnsureThat;
     using MediatR;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    using Naos.Foundation;
     using Naos.Foundation.Domain;
-    using Naos.Messaging.Application.Web;
     using Naos.Queueing;
     using Naos.Queueing.Domain;
-    using Naos.Queueing.Infrastructure.Azure;
     using Naos.Sample.Countries.Application;
     using Naos.Sample.Countries.Domain;
     using Naos.Sample.Countries.Infrastructure;

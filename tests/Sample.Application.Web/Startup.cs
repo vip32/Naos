@@ -22,6 +22,10 @@ namespace Naos.Sample.Application.Web
     using Naos.Foundation;
     using Naos.JobScheduling.Domain;
     using Naos.Messaging.Domain;
+    using Naos.Sample.Catalogs.Application;
+    using Naos.Sample.Customers.Application;
+    using Naos.Sample.Inventory.Application;
+    using Naos.Sample.UserAccounts.Application;
     using Naos.Tracing.Domain;
     using NSwag.AspNetCore;
     using NSwag.Generation.Processors;

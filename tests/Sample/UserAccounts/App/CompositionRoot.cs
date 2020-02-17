@@ -1,17 +1,16 @@
-﻿namespace Microsoft.Extensions.DependencyInjection
+﻿namespace Naos.Sample.UserAccounts.Application
 {
     using System;
     using EnsureThat;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    using Naos.Foundation;
     using Naos.Foundation.Application;
     using Naos.Foundation.Application.Web.Startup.EntityFramework;
     using Naos.Foundation.Domain;
     using Naos.Foundation.Infrastructure;
-    using Naos.Sample.UserAccounts.Application;
     using Naos.Sample.UserAccounts.Domain;
     using Naos.Sample.UserAccounts.Infrastructure;
     using Naos.Tracing.Domain;

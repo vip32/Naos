@@ -1,8 +1,9 @@
-﻿namespace Microsoft.Extensions.DependencyInjection
+﻿namespace Naos.Sample.Catalogs.Application
 {
     using EnsureThat;
     using MediatR;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation.Domain;
     using Naos.Foundation.Infrastructure;

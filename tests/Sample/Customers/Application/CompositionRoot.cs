@@ -1,9 +1,10 @@
-﻿namespace Microsoft.Extensions.DependencyInjection
+﻿namespace Naos.Sample.Customers.Application
 {
     using EnsureThat;
     using Humanizer;
     using MediatR;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation.Domain;
     using Naos.Foundation.Infrastructure;
