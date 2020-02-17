@@ -18,6 +18,8 @@
             this.output = output;
         }
 
+        // TODO: move rules to policy and write report to output
+
         [Fact]
         public void Fitness_Messages_Should_Exist_In_Application_Only()
         {
