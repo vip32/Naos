@@ -6,10 +6,17 @@
     using NetArchTest.Rules;
     using Shouldly;
     using Xunit;
+    using Xunit.Abstractions;
 
     public class ArchitectureFitnessTests
     {
-        private string baseNamespace = "Naos.Sample.Customers";
+        private readonly ITestOutputHelper output;
+        private readonly string baseNamespace = "Naos.Sample.Customers";
+
+        public ArchitectureFitnessTests(ITestOutputHelper output)
+        {
+            this.output = output;
+        }
 
         [Fact]
         public void Fitness_Messages_Should_Exist_In_Application_Only()
@@ -41,23 +48,19 @@
         [Fact]
         public void Fitness_Commands_Should_Exist_In_Application_Only()
         {
-            var result = Types.InNamespace(this.baseNamespace)
+            Types.InNamespace(this.baseNamespace)
                .That()/*.Inherit(typeof(Command)).Or()*/.Inherit(typeof(Command<>))
                .Should().ResideInNamespace($"{this.baseNamespace}.Application")
-               .GetResult();
-
-            result.IsSuccessful.ShouldBeTrue();
+               .GetResult().IsSuccessful.ShouldBeTrue();
         }
 
         [Fact]
         public void Fitness_Commands_Should_Be_Named_Correctly()
         {
-            var result = Types.InNamespace(this.baseNamespace)
+            Types.InNamespace(this.baseNamespace)
                .That()/*.Inherit(typeof(Command)).Or()*/.Inherit(typeof(Command<>))
                .Should().HaveNameEndingWith("Command").Or().HaveNameEndingWith("Query")
-               .GetResult();
-
-            result.IsSuccessful.ShouldBeTrue();
+               .GetResult().IsSuccessful.ShouldBeTrue();
         }
 
         [Fact]
