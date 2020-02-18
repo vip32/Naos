@@ -60,7 +60,7 @@
 
             if (!this.options.Map.Exists<TMessage>())
             {
-                this.logger.LogJournal(LogKeys.Messaging, $"message subscribe: {typeof(TMessage).PrettyName()} (service={{Service}}, filterScope={{FilterScope}}, handler={{MessageHandlerType}}, endpoint={this.serviceUtils.Endpoint}, hub={this.HubName})", LogPropertyKeys.TrackSubscribeMessage,
+                this.logger.LogJournal(LogKeys.AppMessaging, $"message subscribe: {typeof(TMessage).PrettyName()} (service={{Service}}, filterScope={{FilterScope}}, handler={{MessageHandlerType}}, endpoint={this.serviceUtils.Endpoint}, hub={this.HubName})", LogPropertyKeys.TrackSubscribeMessage,
                     args: new[] { this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name });
 
                 this.options.Map.Add<TMessage, THandler>();
@@ -78,7 +78,7 @@
                         };
                     }).Build();
 
-                this.logger.LogDebug($"{{LogKey:l}} signalr connection started (url={url})", LogKeys.Messaging);
+                this.logger.LogDebug($"{{LogKey:l}} signalr connection started (url={url})", LogKeys.AppMessaging);
                 this.connection.StartAsync().GetAwaiter().GetResult();
             }
 
@@ -89,7 +89,7 @@
                 {
                     await this.ProcessMessage(n, m).AnyContext();
                 });
-            this.logger.LogDebug($"{{LogKey:l}} signalr connection onmessage handler registered (name={messageName})", LogKeys.Messaging);
+            this.logger.LogDebug($"{{LogKey:l}} signalr connection onmessage handler registered (name={messageName})", LogKeys.AppMessaging);
 
             return this;
         }
@@ -107,18 +107,18 @@
             {
                 [LogPropertyKeys.CorrelationId] = message.CorrelationId,
             }))
-            using (var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Producer).Activate(this.logger))
+            using (var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.AppMessaging, SpanKind.Producer).Activate(this.logger))
             {
                 if (message.Id.IsNullOrEmpty())
                 {
                     message.Id = IdGenerator.Instance.Next;
-                    this.logger.LogDebug($"{{LogKey:l}} set message (id={message.Id})", LogKeys.Messaging);
+                    this.logger.LogDebug($"{{LogKey:l}} set message (id={message.Id})", LogKeys.AppMessaging);
                 }
 
                 if (message.Origin.IsNullOrEmpty())
                 {
                     message.Origin = this.options.MessageScope;
-                    this.logger.LogDebug($"{{LogKey:l}} set message (origin={message.Origin})", LogKeys.Messaging);
+                    this.logger.LogDebug($"{{LogKey:l}} set message (origin={message.Origin})", LogKeys.AppMessaging);
                 }
 
                 // TODO: async publish!
@@ -128,8 +128,8 @@
                     this.options.Mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.AnyContext();*/
                 }
 
-                this.logger.LogJournal(LogKeys.Messaging, $"message publish: {message.GetType().PrettyName()} (id={{MessageId}}, origin={{MessageOrigin}})", LogPropertyKeys.TrackPublishMessage, args: new[] { message.Id, message.Origin });
-                this.logger.LogTrace(LogKeys.Messaging, message.Id, messageName, LogTraceNames.Message);
+                this.logger.LogJournal(LogKeys.AppMessaging, $"message publish: {message.GetType().PrettyName()} (id={{MessageId}}, origin={{MessageOrigin}})", LogPropertyKeys.TrackPublishMessage, args: new[] { message.Id, message.Origin });
+                this.logger.LogTrace(LogKeys.AppMessaging, message.Id, messageName, LogTraceNames.Message);
 
                 if (scope?.Span != null)
                 {
@@ -158,7 +158,7 @@
                 if (response.StatusCode != HttpStatusCode.Accepted)
                 {
                     this.logger.LogError("{LogKey:l} publish failed: HTTP statuscode {StatusCode} (name={MessageName}, id={MessageId}, origin={MessageOrigin})",
-                        LogKeys.Messaging, response.StatusCode, message.GetType().PrettyName(), message.Id, message.Origin);
+                        LogKeys.AppMessaging, response.StatusCode, message.GetType().PrettyName(), message.Id, message.Origin);
                 }
             }
         }
@@ -207,10 +207,10 @@
                     {
                         [LogPropertyKeys.CorrelationId] = message.CorrelationId,
                     }))
-                    using (var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Consumer, parentSpan).Activate(this.logger))
+                    using (var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.AppMessaging, SpanKind.Consumer, parentSpan).Activate(this.logger))
                     {
-                        this.logger.LogJournal(LogKeys.Messaging, $"message processed: {messageType.PrettyName()} (id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}})", LogPropertyKeys.TrackReceiveMessage, args: new[] { message?.Id, messageType.PrettyName(), this.options.MessageScope, message?.Origin });
-                        this.logger.LogTrace(LogKeys.Messaging, message.Id, LogTraceNames.Message);
+                        this.logger.LogJournal(LogKeys.AppMessaging, $"message processed: {messageType.PrettyName()} (id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}})", LogPropertyKeys.TrackReceiveMessage, args: new[] { message?.Id, messageType.PrettyName(), this.options.MessageScope, message?.Origin });
+                        this.logger.LogTrace(LogKeys.AppMessaging, message.Id, LogTraceNames.Message);
 
                         // construct the handler by using the DI container
                         var handler = this.options.HandlerFactory.Create(subscription.HandlerType); // should not be null, did you forget to register your generic handler (EntityMessageHandler<T>)
@@ -229,7 +229,7 @@
                         else
                         {
                             this.logger.LogWarning("{LogKey:l} process failed, message handler could not be created. is the handler registered in the service provider? (name={MessageName}, service={Service}, id={MessageId}, origin={MessageOrigin})",
-                                LogKeys.Messaging, messageType.PrettyName(), this.options.MessageScope, message?.Id, message?.Origin);
+                                LogKeys.AppMessaging, messageType.PrettyName(), this.options.MessageScope, message?.Id, message?.Origin);
                         }
                     }
                 }
@@ -238,7 +238,7 @@
             }
             else
             {
-                this.logger.LogDebug($"{{LogKey:l}} unprocessed: {messageName}", LogKeys.Messaging);
+                this.logger.LogDebug($"{{LogKey:l}} unprocessed: {messageName}", LogKeys.AppMessaging);
             }
 
             return processed;

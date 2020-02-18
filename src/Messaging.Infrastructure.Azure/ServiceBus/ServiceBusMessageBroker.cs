@@ -57,11 +57,11 @@
 
             if (!this.options.Subscriptions.Exists<TMessage>())
             {
-                this.logger.LogJournal(LogKeys.Messaging, $"message subscribe: {messageName} (service={{Service}}, filterScope={{FilterScope}}, handler={{MessageHandlerType}}, entityPath={this.options.Provider.EntityPath})", LogPropertyKeys.TrackSubscribeMessage, args: new[] { this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name });
+                this.logger.LogJournal(LogKeys.AppMessaging, $"message subscribe: {messageName} (service={{Service}}, filterScope={{FilterScope}}, handler={{MessageHandlerType}}, entityPath={this.options.Provider.EntityPath})", LogPropertyKeys.TrackSubscribeMessage, args: new[] { this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name });
 
                 try
                 {
-                    this.logger.LogDebug($"{{LogKey:l}} add servicebus subscription rule: {ruleName} (name={messageName}, type={typeof(TMessage).Name})", LogKeys.Messaging);
+                    this.logger.LogDebug($"{{LogKey:l}} add servicebus subscription rule: {ruleName} (name={messageName}, type={typeof(TMessage).Name})", LogKeys.AppMessaging);
                     this.options.Client.AddRuleAsync(new RuleDescription
                     {
                         Filter = new CorrelationFilter { Label = messageName, To = this.options.FilterScope }, // filterscope ist used to lock the rule for a specific machine
@@ -70,7 +70,7 @@
                 }
                 catch (ServiceBusException)
                 {
-                    this.logger.LogDebug($"{{LogKey:l}} servicebus found subscription rule: {ruleName}", LogKeys.Messaging);
+                    this.logger.LogDebug($"{{LogKey:l}} servicebus found subscription rule: {ruleName}", LogKeys.AppMessaging);
                 }
 
                 this.options.Subscriptions.Add<TMessage, THandler>();
@@ -96,18 +96,18 @@
             {
                 [LogPropertyKeys.CorrelationId] = message.CorrelationId
             }))
-            using (var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Producer).Activate(this.logger))
+            using (var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.AppMessaging, SpanKind.Producer).Activate(this.logger))
             {
                 if (message.Id.IsNullOrEmpty())
                 {
                     message.Id = IdGenerator.Instance.Next;
-                    this.logger.LogDebug($"{{LogKey:l}} set message (id={message.Id})", LogKeys.Messaging);
+                    this.logger.LogDebug($"{{LogKey:l}} set message (id={message.Id})", LogKeys.AppMessaging);
                 }
 
                 if (message.Origin.IsNullOrEmpty())
                 {
                     message.Origin = this.options.MessageScope;
-                    this.logger.LogDebug($"{{LogKey:l}} set message (origin={message.Origin})", LogKeys.Messaging);
+                    this.logger.LogDebug($"{{LogKey:l}} set message (origin={message.Origin})", LogKeys.AppMessaging);
                 }
 
                 // TODO: async publish!
@@ -135,8 +135,8 @@
                     serviceBusMessage.UserProperties.AddOrUpdate("SpanId", scope.Span.SpanId);
                 }
 
-                this.logger.LogJournal(LogKeys.Messaging, $"message publish: {messageName} (id={{MessageId}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes():#.##})", LogPropertyKeys.TrackPublishMessage, args: new[] { message.Id, message.Origin });
-                this.logger.LogTrace(LogKeys.Messaging, message.Id, messageName, LogTraceNames.Message);
+                this.logger.LogJournal(LogKeys.AppMessaging, $"message publish: {messageName} (id={{MessageId}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes():#.##})", LogPropertyKeys.TrackPublishMessage, args: new[] { message.Id, message.Origin });
+                this.logger.LogTrace(LogKeys.AppMessaging, message.Id, messageName, LogTraceNames.Message);
 
                 this.options.Provider.TopicClientFactory().SendAsync(serviceBusMessage).GetAwaiter().GetResult();
             }
@@ -154,11 +154,11 @@
             var messageName = typeof(TMessage).PrettyName();
             var ruleName = this.GetRuleName(messageName);
 
-            this.logger.LogInformation("{LogKey:l} (name={MessageName}, orgin={MessageOrigin}, filterScope={FilterScope}, handler={MessageHandlerType})", LogKeys.Messaging, messageName, this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name);
+            this.logger.LogInformation("{LogKey:l} (name={MessageName}, orgin={MessageOrigin}, filterScope={FilterScope}, handler={MessageHandlerType})", LogKeys.AppMessaging, messageName, this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name);
 
             try
             {
-                this.logger.LogInformation($"{{LogKey:l}} remove servicebus subscription rule: {ruleName}", LogKeys.Messaging);
+                this.logger.LogInformation($"{{LogKey:l}} remove servicebus subscription rule: {ruleName}", LogKeys.AppMessaging);
                 this.options.Client
                  .RemoveRuleAsync(ruleName)
                  .GetAwaiter()
@@ -166,7 +166,7 @@
             }
             catch (MessagingEntityNotFoundException)
             {
-                this.logger.LogDebug($"{{LogKey:l}} servicebus subscription rule not found: {ruleName}", LogKeys.Messaging);
+                this.logger.LogDebug($"{{LogKey:l}} servicebus subscription rule not found: {ruleName}", LogKeys.AppMessaging);
             }
 
             this.options.Subscriptions.Remove<TMessage, THandler>();
@@ -232,7 +232,7 @@
                         [LogPropertyKeys.CorrelationId] = serviceBusMessage.CorrelationId,
                         //[LogPropertyKeys.TrackId] = scope.Span.SpanId = allready done in Span ScopeManager (activate)
                     }))
-                    using (var scope = tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Consumer, parentSpan).Activate(logger))
+                    using (var scope = tracer?.BuildSpan(messageName, LogKeys.AppMessaging, SpanKind.Consumer, parentSpan).Activate(logger))
                     {
                         // map some message properties to the typed message
                         //var jsonMessage = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(serviceBusMessage.Body), messageType); // TODO: use ISerializer here, compacter messages
@@ -249,9 +249,9 @@
                             message.Origin = serviceBusMessage.UserProperties.ContainsKey("Origin") ? serviceBusMessage.UserProperties["Origin"] as string : string.Empty;
                         }
 
-                        logger.LogJournal(LogKeys.Messaging, $"message processed: {serviceBusMessage.Label} (id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes():#.##})",
+                        logger.LogJournal(LogKeys.AppMessaging, $"message processed: {serviceBusMessage.Label} (id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes():#.##})",
                             LogPropertyKeys.TrackReceiveMessage, args: new[] { message?.Id, messageScope, message.Origin });
-                        logger.LogTrace(LogKeys.Messaging, message.Id, serviceBusMessage.Label, LogTraceNames.Message);
+                        logger.LogTrace(LogKeys.AppMessaging, message.Id, serviceBusMessage.Label, LogTraceNames.Message);
 
                         // construct the handler by using the DI container
                         var handler = handlerFactory.Create(subscription.HandlerType); // should not be null, did you forget to register your generic handler (EntityMessageHandler<T>)
@@ -270,7 +270,7 @@
                         else
                         {
                             logger.LogWarning("{LogKey:l} process failed, message handler could not be created. is the handler registered in the service provider? (name={MessageName}, service={Service}, id={MessageId}, origin={MessageOrigin})",
-                                LogKeys.Messaging, serviceBusMessage.Label, messageScope, message.Id, message.Origin);
+                                LogKeys.AppMessaging, serviceBusMessage.Label, messageScope, message.Id, message.Origin);
                         }
                     }
                 }
@@ -279,7 +279,7 @@
             }
             else
             {
-                logger.LogDebug($"{{LogKey:l}} unprocessed: {messageName}", LogKeys.Messaging);
+                logger.LogDebug($"{{LogKey:l}} unprocessed: {messageName}", LogKeys.AppMessaging);
             }
 
             return processed;

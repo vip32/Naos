@@ -48,7 +48,7 @@
                 if (!this.watchers.ContainsKey(messageName))
                 {
                     var path = this.GetDirectory(messageName, this.options.FilterScope);
-                    this.logger.LogJournal(LogKeys.Messaging, $"message subscribe: {typeof(TMessage).PrettyName()} (service={{Service}}, filterScope={{FilterScope}}, handler={{MessageHandlerType}}, watch={path})", LogPropertyKeys.TrackSubscribeMessage, args: new[] { this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name });
+                    this.logger.LogJournal(LogKeys.AppMessaging, $"message subscribe: {typeof(TMessage).PrettyName()} (service={{Service}}, filterScope={{FilterScope}}, handler={{MessageHandlerType}}, watch={path})", LogPropertyKeys.TrackSubscribeMessage, args: new[] { this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name });
                     this.EnsureDirectory(path);
 
                     var watcher = new FileSystemWatcher(path)
@@ -64,7 +64,7 @@
                     };
 
                     this.watchers.Add(messageName, watcher);
-                    this.logger.LogDebug("{LogKey:l} filesystem onrenamed handler registered (name={messageName})", LogKeys.Messaging, typeof(TMessage).PrettyName());
+                    this.logger.LogDebug("{LogKey:l} filesystem onrenamed handler registered (name={messageName})", LogKeys.AppMessaging, typeof(TMessage).PrettyName());
 
                     this.options.Map.Add<TMessage, THandler>(messageName);
                 }
@@ -87,23 +87,23 @@
             {
                 [LogPropertyKeys.CorrelationId] = message.CorrelationId,
             }))
-            using (var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Producer).Activate(this.logger))
+            using (var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.AppMessaging, SpanKind.Producer).Activate(this.logger))
             {
                 if (message.Id.IsNullOrEmpty())
                 {
                     message.Id = IdGenerator.Instance.Next;
-                    this.logger.LogDebug($"{{LogKey:l}} set message (id={message.Id})", LogKeys.Messaging);
+                    this.logger.LogDebug($"{{LogKey:l}} set message (id={message.Id})", LogKeys.AppMessaging);
                 }
 
                 if (message.Origin.IsNullOrEmpty())
                 {
                     message.Origin = this.options.MessageScope;
-                    this.logger.LogDebug($"{{LogKey:l}} set message (origin={message.Origin})", LogKeys.Messaging);
+                    this.logger.LogDebug($"{{LogKey:l}} set message (origin={message.Origin})", LogKeys.AppMessaging);
                 }
 
                 // store message in specific (Message) folder
-                this.logger.LogJournal(LogKeys.Messaging, $"message publish: {message.GetType().PrettyName()} (id={{MessageId}}, origin={{MessageOrigin}})", LogPropertyKeys.TrackPublishMessage, args: new[] { message.Id, message.Origin });
-                this.logger.LogTrace(LogKeys.Messaging, message.Id, message.GetType().PrettyName(), LogTraceNames.Message);
+                this.logger.LogJournal(LogKeys.AppMessaging, $"message publish: {message.GetType().PrettyName()} (id={{MessageId}}, origin={{MessageOrigin}})", LogPropertyKeys.TrackPublishMessage, args: new[] { message.Id, message.Origin });
+                this.logger.LogTrace(LogKeys.AppMessaging, message.Id, message.GetType().PrettyName(), LogTraceNames.Message);
 
                 if (scope?.Span != null)
                 {
@@ -180,10 +180,10 @@
                         [LogPropertyKeys.CorrelationId] = message.CorrelationId,
                         //[LogPropertyKeys.TrackId] = scope.Span.SpanId = allready done in Span ScopeManager (activate)
                     }))
-                    using (var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Consumer, parentSpan).Activate(this.logger))
+                    using (var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.AppMessaging, SpanKind.Consumer, parentSpan).Activate(this.logger))
                     {
-                        this.logger.LogJournal(LogKeys.Messaging, $"message processed: {messageType.PrettyName()} (id={{MessageId}}, name={{MessageName}}, service={{Service}}, origin={{MessageOrigin}})", LogPropertyKeys.TrackReceiveMessage, args: new[] { message?.Id, this.options.MessageScope, message.Origin });
-                        this.logger.LogTrace(LogKeys.Messaging, message?.Id, message.GetType().PrettyName(), LogTraceNames.Message);
+                        this.logger.LogJournal(LogKeys.AppMessaging, $"message processed: {messageType.PrettyName()} (id={{MessageId}}, name={{MessageName}}, service={{Service}}, origin={{MessageOrigin}})", LogPropertyKeys.TrackReceiveMessage, args: new[] { message?.Id, this.options.MessageScope, message.Origin });
+                        this.logger.LogTrace(LogKeys.AppMessaging, message?.Id, message.GetType().PrettyName(), LogTraceNames.Message);
 
                         if (scope?.Span != null)
                         {
@@ -210,7 +210,7 @@
                         else
                         {
                             this.logger.LogWarning("{LogKey:l} process failed, message handler could not be created. is the handler registered in the service provider? (name={MessageName}, service={Service}, id={MessageId}, origin={MessageOrigin})",
-                                LogKeys.Messaging, messageType.PrettyName(), this.options.MessageScope, message?.Id, message.Origin);
+                                LogKeys.AppMessaging, messageType.PrettyName(), this.options.MessageScope, message?.Id, message.Origin);
                         }
                     }
                 }
@@ -219,7 +219,7 @@
             }
             else
             {
-                this.logger.LogDebug($"{{LogKey:l}} unprocessed: {messageName}", LogKeys.Messaging);
+                this.logger.LogDebug($"{{LogKey:l}} unprocessed: {messageName}", LogKeys.AppMessaging);
             }
 
             return processed;

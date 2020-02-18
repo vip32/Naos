@@ -9,11 +9,14 @@
         public static readonly string InboundResponse = "INBRES";
         public static readonly string OutboundRequest = "OUTREQ";
         public static readonly string OutboundResponse = "OUTRES";
+        public static readonly string Application = "APPLTN";
+        public static readonly string Domain = "DOMAIN";
+        public static readonly string Infrastructure = "INFRST";
         public static readonly string AppCommand = "APPCMD";
         public static readonly string DomainRepository = "DOMREP";
-        public static readonly string Infrastructure = "INFRST";
         public static readonly string DomainEvent = "DOMEVT";
-        public static readonly string Messaging = "MESSAG";
+        public static readonly string DomainSpecification = "DOMSPEC";
+        public static readonly string AppMessaging = "APPMSG";
         public static readonly string JobScheduling = "JOBSCH";
         public static readonly string ServiceDiscovery = "SVCDSC";
         public static readonly string Operations = "OPRTNS";

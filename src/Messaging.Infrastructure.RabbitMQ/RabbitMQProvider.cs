@@ -62,13 +62,13 @@
             }
             catch (IOException ex)
             {
-                this.logger.LogCritical(ex, $"{{LogKey:l}} ex.Message", LogKeys.Messaging);
+                this.logger.LogCritical(ex, $"{{LogKey:l}} ex.Message", LogKeys.AppMessaging);
             }
         }
 
         public bool TryConnect()
         {
-            this.logger.LogInformation("{LogKey:l} connect rabbitmq client", LogKeys.Messaging);
+            this.logger.LogInformation("{LogKey:l} connect rabbitmq client", LogKeys.AppMessaging);
 
             lock (this.syncRoot)
             {
@@ -76,7 +76,7 @@
                     .Or<BrokerUnreachableException>()
                     .WaitAndRetry(this.retryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
                     {
-                        this.logger.LogError(ex, "{LogKey:l} connect rabbitmq client failed after {TimeOut}s ({ExceptionMessage})", LogKeys.Messaging, $"{time.TotalSeconds:n1}", ex.Message);
+                        this.logger.LogError(ex, "{LogKey:l} connect rabbitmq client failed after {TimeOut}s ({ExceptionMessage})", LogKeys.AppMessaging, $"{time.TotalSeconds:n1}", ex.Message);
                     });
 
                 try
@@ -85,7 +85,7 @@
                 }
                 catch(BrokerUnreachableException ex)
                 {
-                    this.logger.LogError(ex, $"{{LogKey:l}} connect rabbitmq client failed: {ex.Message}", LogKeys.Messaging);
+                    this.logger.LogError(ex, $"{{LogKey:l}} connect rabbitmq client failed: {ex.Message}", LogKeys.AppMessaging);
                 }
 
                 if (this.IsConnected)
@@ -94,13 +94,13 @@
                     this.connection.CallbackException += this.OnCallbackException;
                     this.connection.ConnectionBlocked += this.OnConnectionBlocked;
 
-                    this.logger.LogInformation($"{{LogKey:l}} connect rabbitmq client succeeded (host={this.connection.Endpoint.HostName})", LogKeys.Messaging);
+                    this.logger.LogInformation($"{{LogKey:l}} connect rabbitmq client succeeded (host={this.connection.Endpoint.HostName})", LogKeys.AppMessaging);
 
                     return true;
                 }
                 else
                 {
-                    this.logger.LogError("{LogKey:l} connect rabbitmq could not be created and opened", LogKeys.Messaging);
+                    this.logger.LogError("{LogKey:l} connect rabbitmq could not be created and opened", LogKeys.AppMessaging);
 
                     return false;
                 }

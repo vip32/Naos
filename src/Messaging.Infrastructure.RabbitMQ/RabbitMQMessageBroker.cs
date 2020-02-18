@@ -85,14 +85,14 @@
 
             if (!this.options.Subscriptions.Exists<TMessage>())
             {
-                this.logger.LogJournal(LogKeys.Messaging, $"message subscribe: {messageName} (service={{Service}}, filterScope={{FilterScope}}, handler={{MessageHandlerType}})", LogPropertyKeys.TrackSubscribeMessage, args: new[] { this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name });
+                this.logger.LogJournal(LogKeys.AppMessaging, $"message subscribe: {messageName} (service={{Service}}, filterScope={{FilterScope}}, handler={{MessageHandlerType}})", LogPropertyKeys.TrackSubscribeMessage, args: new[] { this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name });
 
                 if (!this.options.Provider.IsConnected)
                 {
                     this.options.Provider.TryConnect();
                 }
 
-                this.logger.LogDebug($"{{LogKey:l}} bind rabbitmq queue (queue={this.options.QueueName}, routingKey={routingKey})", LogKeys.Messaging);
+                this.logger.LogDebug($"{{LogKey:l}} bind rabbitmq queue (queue={this.options.QueueName}, routingKey={routingKey})", LogKeys.AppMessaging);
                 try
                 {
                     using (var channel = this.options.Provider.CreateModel())
@@ -108,7 +108,7 @@
                 }
                 catch (Exception ex)
                 {
-                    this.logger.LogError(ex, $"{{LogKey:l}} subscribe failed (queue={this.options.QueueName}, routingKey={routingKey}) {ex.Message}", LogKeys.Messaging);
+                    this.logger.LogError(ex, $"{{LogKey:l}} subscribe failed (queue={this.options.QueueName}, routingKey={routingKey}) {ex.Message}", LogKeys.AppMessaging);
                 }
             }
 
@@ -130,18 +130,18 @@
             {
                 [LogPropertyKeys.CorrelationId] = message.CorrelationId
             }))
-            using (var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Producer).Activate(this.logger))
+            using (var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.AppMessaging, SpanKind.Producer).Activate(this.logger))
             {
                 if (message.Id.IsNullOrEmpty())
                 {
                     message.Id = IdGenerator.Instance.Next;
-                    this.logger.LogDebug($"{{LogKey:l}} set message (id={message.Id})", LogKeys.Messaging);
+                    this.logger.LogDebug($"{{LogKey:l}} set message (id={message.Id})", LogKeys.AppMessaging);
                 }
 
                 if (message.Origin.IsNullOrEmpty())
                 {
                     message.Origin = this.options.MessageScope;
-                    this.logger.LogDebug($"{{LogKey:l}} set message (origin={message.Origin})", LogKeys.Messaging);
+                    this.logger.LogDebug($"{{LogKey:l}} set message (origin={message.Origin})", LogKeys.AppMessaging);
                 }
 
                 // TODO: async publish!
@@ -160,7 +160,7 @@
                     .Or<SocketException>()
                     .WaitAndRetry(this.options.RetryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
                     {
-                        this.logger.LogWarning(ex, "{LogKey:l} could not publish message: {MessageId} after {Timeout}s ({ExceptionMessage})", LogKeys.Messaging, message.Id, $"{time.TotalSeconds:n1}", ex.Message);
+                        this.logger.LogWarning(ex, "{LogKey:l} could not publish message: {MessageId} after {Timeout}s ({ExceptionMessage})", LogKeys.AppMessaging, message.Id, $"{time.TotalSeconds:n1}", ex.Message);
                     });
 
                 try
@@ -169,8 +169,8 @@
                     {
                         var rabbitMQMessage = this.serializer.SerializeToBytes(message);
 
-                        this.logger.LogJournal(LogKeys.Messaging, $"message publish: {messageName} (id={{MessageId}}, origin={{MessageOrigin}}, size={rabbitMQMessage.Length.Bytes():#.##})", LogPropertyKeys.TrackPublishMessage, args: new[] { message.Id, message.Origin });
-                        this.logger.LogTrace(LogKeys.Messaging, message.Id, messageName, LogTraceNames.Message);
+                        this.logger.LogJournal(LogKeys.AppMessaging, $"message publish: {messageName} (id={{MessageId}}, origin={{MessageOrigin}}, size={rabbitMQMessage.Length.Bytes():#.##})", LogPropertyKeys.TrackPublishMessage, args: new[] { message.Id, message.Origin });
+                        this.logger.LogTrace(LogKeys.AppMessaging, message.Id, messageName, LogTraceNames.Message);
 
                         channel.ExchangeDeclare(exchange: this.options.ExchangeName, type: "direct");
                         policy.Execute(() =>
@@ -201,7 +201,7 @@
                 }
                 catch (Exception ex)
                 {
-                    this.logger.LogError(ex, $"{{LogKey:l}} publish failed (queue={this.options.QueueName}, routingKey={routingKey}) {ex.Message}", LogKeys.Messaging);
+                    this.logger.LogError(ex, $"{{LogKey:l}} publish failed (queue={this.options.QueueName}, routingKey={routingKey}) {ex.Message}", LogKeys.AppMessaging);
                 }
             }
         }
@@ -213,7 +213,7 @@
             var messageName = typeof(TMessage).PrettyName();
             var routingKey = this.GetRoutingKey(messageName);
 
-            this.logger.LogInformation("{LogKey:l} (name={MessageName}, orgin={MessageOrigin}, filterScope={FilterScope}, handler={MessageHandlerType})", LogKeys.Messaging, messageName, this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name);
+            this.logger.LogInformation("{LogKey:l} (name={MessageName}, orgin={MessageOrigin}, filterScope={FilterScope}, handler={MessageHandlerType})", LogKeys.AppMessaging, messageName, this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name);
 
             if (!this.options.Provider.IsConnected)
             {
@@ -224,7 +224,7 @@
             {
                 using (var channel = this.options.Provider.CreateModel())
                 {
-                    this.logger.LogInformation($"{{LogKey:l}} unbind rabbitmq queue (queue={this.options.QueueName}, routingKey={routingKey})", LogKeys.Messaging);
+                    this.logger.LogInformation($"{{LogKey:l}} unbind rabbitmq queue (queue={this.options.QueueName}, routingKey={routingKey})", LogKeys.AppMessaging);
 
                     channel.QueueUnbind(
                         exchange: this.options.ExchangeName,
@@ -236,7 +236,7 @@
             }
             catch (Exception ex)
             {
-                this.logger.LogError(ex, $"{{LogKey:l}} unsubscribe failed (queue={this.options.QueueName}, routingKey={routingKey}) {ex.Message}", LogKeys.Messaging);
+                this.logger.LogError(ex, $"{{LogKey:l}} unsubscribe failed (queue={this.options.QueueName}, routingKey={routingKey}) {ex.Message}", LogKeys.AppMessaging);
             }
         }
 
@@ -265,7 +265,7 @@
                 this.options.Provider.TryConnect();
             }
 
-            this.logger.LogInformation($"{{LogKey:l}} declare rabbitmq consumer channel (exchange={this.options.ExchangeName}, queue={queueName})", LogKeys.Messaging);
+            this.logger.LogInformation($"{{LogKey:l}} declare rabbitmq consumer channel (exchange={this.options.ExchangeName}, queue={queueName})", LogKeys.AppMessaging);
 
             try
             {
@@ -279,7 +279,7 @@
                     arguments: null);
                 channel.CallbackException += (sender, ea) =>
                 {
-                    this.logger.LogWarning($"{{LogKey:l}} recreate rabbitmq consumer channel (queue={queueName})", LogKeys.Messaging);
+                    this.logger.LogWarning($"{{LogKey:l}} recreate rabbitmq consumer channel (queue={queueName})", LogKeys.AppMessaging);
 
                     this.channel.Dispose();
                     this.channel = this.CreateChannel(queueName);
@@ -290,14 +290,14 @@
             }
             catch (Exception ex)
             {
-                this.logger.LogError(ex, $"{{LogKey:l}} rabbitmq channel cannot be created (exchange={this.options.ExchangeName}, queue={queueName})", LogKeys.Messaging);
+                this.logger.LogError(ex, $"{{LogKey:l}} rabbitmq channel cannot be created (exchange={this.options.ExchangeName}, queue={queueName})", LogKeys.AppMessaging);
                 return null;
             }
         }
 
         private void StartBasicConsume(string queueName)
         {
-            this.logger.LogInformation($"{{LogKey:l}} start rabbitmq consume (exchange={this.options.ExchangeName}, queue={queueName})", LogKeys.Messaging);
+            this.logger.LogInformation($"{{LogKey:l}} start rabbitmq consume (exchange={this.options.ExchangeName}, queue={queueName})", LogKeys.AppMessaging);
 
             if (this.channel != null)
             {
@@ -311,7 +311,7 @@
             }
             else
             {
-                this.logger.LogError($"{{LogKey:l}} start rabbitmq consume cannot operate on empty channel (exchange={this.options.ExchangeName}, queue={queueName})", LogKeys.Messaging);
+                this.logger.LogError($"{{LogKey:l}} start rabbitmq consume cannot operate on empty channel (exchange={this.options.ExchangeName}, queue={queueName})", LogKeys.AppMessaging);
             }
         }
 
@@ -332,13 +332,13 @@
             }
             catch (Exception ex)
             {
-                this.logger.LogError(ex, $"{{LogKey:l}} error processing rabbitmq message (name={messageName}, id={eventArgs.BasicProperties.MessageId})", LogKeys.Messaging);
+                this.logger.LogError(ex, $"{{LogKey:l}} error processing rabbitmq message (name={messageName}, id={eventArgs.BasicProperties.MessageId})", LogKeys.AppMessaging);
             }
         }
 
         private async Task<bool> ProcessMessage(string messageName, BasicDeliverEventArgs eventArgs)
         {
-            this.logger.LogDebug($"{{LogKey:l}} processing rabbitmq message (name={messageName}, id={eventArgs.BasicProperties.MessageId})", LogKeys.Messaging);
+            this.logger.LogDebug($"{{LogKey:l}} processing rabbitmq message (name={messageName}, id={eventArgs.BasicProperties.MessageId})", LogKeys.AppMessaging);
             var processed = false;
 
             if (this.options.Subscriptions.Exists(messageName))
@@ -365,7 +365,7 @@
                     {
                         [LogPropertyKeys.CorrelationId] = eventArgs.BasicProperties.CorrelationId,
                     }))
-                    using (var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.Messaging, SpanKind.Consumer, parentSpan).Activate(this.logger))
+                    using (var scope = this.options.Tracer?.BuildSpan(messageName, LogKeys.AppMessaging, SpanKind.Consumer, parentSpan).Activate(this.logger))
                     {
                         // map some message properties to the typed message
                         if (!(this.serializer.Deserialize(eventArgs.Body, messageType) is Domain.Message message))
@@ -375,7 +375,7 @@
 
                         message.Origin ??= eventArgs.BasicProperties.AppId;
 
-                        this.logger.LogJournal(LogKeys.Messaging, $"message processed: {eventArgs.BasicProperties.Type} (id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}}, size={eventArgs.Body.Length.Bytes():#.##})",
+                        this.logger.LogJournal(LogKeys.AppMessaging, $"message processed: {eventArgs.BasicProperties.Type} (id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}}, size={eventArgs.Body.Length.Bytes():#.##})",
                             LogPropertyKeys.TrackReceiveMessage, args: new[] { message?.Id, message.Origin, message.Origin });
                         //this.logger.LogTrace(LogKeys.Messaging, message.Id, eventArgs.BasicProperties.Type, LogTraceNames.Message);
 
@@ -396,7 +396,7 @@
                         else
                         {
                             this.logger.LogWarning("{LogKey:l} process failed, message handler could not be created. is the handler registered in the service provider? (name={MessageName}, service={Service}, id={MessageId}, origin={MessageOrigin})",
-                                LogKeys.Messaging, eventArgs.BasicProperties.Type, message.Origin, message.Id, message.Origin);
+                                LogKeys.AppMessaging, eventArgs.BasicProperties.Type, message.Origin, message.Id, message.Origin);
                         }
                     }
                 }
@@ -405,7 +405,7 @@
             }
             else
             {
-                this.logger.LogWarning($"{{LogKey:l}} could not process rabbitmq message, no subscription exists (name={messageName}, id={eventArgs.BasicProperties.MessageId})", LogKeys.Messaging);
+                this.logger.LogWarning($"{{LogKey:l}} could not process rabbitmq message, no subscription exists (name={messageName}, id={eventArgs.BasicProperties.MessageId})", LogKeys.AppMessaging);
             }
 
             return processed;

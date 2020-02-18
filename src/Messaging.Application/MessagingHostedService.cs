@@ -26,13 +26,13 @@
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            this.logger.LogInformation("{LogKey:l} hosted service started", LogKeys.Messaging);
+            this.logger.LogInformation("{LogKey:l} hosted service started", LogKeys.AppMessaging);
             return Task.CompletedTask;
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            this.logger.LogInformation("{LogKey:l} hosted service stopped", LogKeys.Messaging);
+            this.logger.LogInformation("{LogKey:l} hosted service stopped", LogKeys.AppMessaging);
 
             return Task.CompletedTask;
         }

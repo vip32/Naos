@@ -31,7 +31,7 @@
 
             using (this.Logger.BeginScope(loggerState))
             {
-                this.Logger.LogInformation($"{{LogKey:l}} {message.Text} (name={{MessageName}}, id={{MessageId}}, origin={{MessageOrigin}}) ", LogKeys.Messaging, message.GetType().PrettyName(), message.Id, message.Origin);
+                this.Logger.LogInformation($"{{LogKey:l}} {message.Text} (name={{MessageName}}, id={{MessageId}}, origin={{MessageOrigin}}) ", LogKeys.AppMessaging, message.GetType().PrettyName(), message.Id, message.Origin);
                 Thread.Sleep(RandomGenerator.GenerateInt(500, 3500));
                 return Task.CompletedTask;
             }

@@ -33,6 +33,7 @@
     <ProjectReference Include="..\..\src\Application\Application.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Abstractions\Abstractions.csproj" />
     <ProjectReference Include="..\..\src\Commands.Infrastructure.FileStorage\Commands.Infrastructure.FileStorage.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Utilities.Xunit\Utilities.Xunit.csproj" />
     <ProjectReference Include="..\Sample\Sample.csproj" />
   </ItemGroup>
 
