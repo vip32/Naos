@@ -7,6 +7,7 @@
     using MediatR;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
+    using Naos.Foundation.Application;
     using Naos.Foundation.Domain;
     using Naos.Queueing;
     using Naos.Queueing.Domain;
@@ -73,6 +74,10 @@
                 new Country { Code = "nl", LanguageCodes = new[] {"nl-nl" }, Name = "Netherlands", TenantId = "naos_sample_test", Id = "nl" },
                 new Country { Code = "be", LanguageCodes = new[] {"fr-be", "nl-be" }, Name = "Belgium", TenantId = "naos_sample_test", Id = "be" },
             }.ToList()));
+            options.Context.Services.AddSeederStartupTask<ICountryRepository, Country>(new[]
+            {
+                new Country { Code = "us", LanguageCodes = new[] {"en-us" }, Name = "United States", TenantId = "naos_sample_test", Id = "us" },
+            }, delay: new TimeSpan(0, 0, 3));
 
             options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: countries service added");
 

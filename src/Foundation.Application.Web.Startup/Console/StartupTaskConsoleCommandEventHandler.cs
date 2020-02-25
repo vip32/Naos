@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Drawing;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
@@ -24,7 +25,8 @@
 
             if (request.Command.List)
             {
-                foreach (var task in this.tasks.Safe())
+                foreach (var task in this.tasks.Safe()
+                    .OrderBy(t => t.GetType().PrettyName()))
                 {
                     Console.WriteLine($"- {task.GetType().PrettyName()}", Color.Gray);
                 }
