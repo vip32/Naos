@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using Microsoft.EntityFrameworkCore;
     using Naos.Foundation;
     using Naos.Foundation.Application;
     using Naos.Foundation.Domain;
@@ -31,14 +30,14 @@
         /// <typeparam name="TStartupTask">An <see cref="IStartupTask"/> to register.</typeparam>
         /// <param name="services">The <see cref="IServiceCollection"/> to register with.</param>
         /// <returns>The original <see cref="IServiceCollection"/>.</returns>
-        public static IServiceCollection AddSeederStartupTask<TDbContext, TEntity>(this IServiceCollection services, IEnumerable<TEntity> entities, TimeSpan? delay = null)
-            where TDbContext : DbContext
+        public static IServiceCollection AddSeederStartupTask<TRepository, TEntity>(this IServiceCollection services, IEnumerable<TEntity> entities, TimeSpan? delay = null)
+            where TRepository : IGenericRepository<TEntity>
             where TEntity : class, IEntity, IAggregateRoot
                 => services
                     .AddStartupTaskServerDecorator()
                     .AddTransient<IStartupTask>(sp =>
                     {
-                        var task = ActivatorUtilities.GetServiceOrCreateInstance<SeederStartupTask<TDbContext, TEntity>>(sp);
+                        var task = ActivatorUtilities.GetServiceOrCreateInstance<SeederStartupTask<TRepository, TEntity>>(sp);
                         if (task != null && delay.HasValue)
                         {
                             task.Delay = delay;

@@ -1,5 +1,6 @@
 ﻿namespace Naos.Sample.Inventory.Application
 {
+    using System;
     using System.Linq;
     using EnsureThat;
     using MediatR;
@@ -7,6 +8,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using MongoDB.Driver;
+    using Naos.Foundation.Application;
     using Naos.Foundation.Domain;
     using Naos.Foundation.Infrastructure;
     using Naos.Sample.Inventory.Domain;
@@ -63,10 +65,25 @@
                                 .CollectionName("ProductReplenishments")))));
             });
 
-            options.Context.Services.AddStartupTask(sp =>
-                new SeederStartupTask(
-                    sp.GetRequiredService<ILoggerFactory>(),
-                    sp.CreateScope().ServiceProvider.GetService(typeof(IInventoryRepository)) as IInventoryRepository));
+            options.Context.Services.AddSeederStartupTask<IInventoryRepository, ProductInventory>(new[]
+            {
+                new ProductInventory
+                {
+                    Id = "548fb10e-2ad4-4bd1-9b33-6414a5ce7b10", Number = "AA1234", Quantity = 199, Region = "East"
+                },
+                new ProductInventory
+                {
+                    Id = "558fb10e-2ad4-4bd1-9b33-6414a5ce7b11", Number = "AA1234", Quantity = 188, Region = "West"
+                },
+                new ProductInventory
+                {
+                    Id = "558fb10f-2ad4-4bd1-9b33-6414a5ce7b12", Number = "BB1234", Quantity = 177, Region = "East"
+                }
+            }, delay: new TimeSpan(0, 0, 15));
+            //options.Context.Services.AddStartupTask(sp =>
+            //    new SeederStartupTask(
+            //        sp.GetRequiredService<ILoggerFactory>(),
+            //        sp.CreateScope().ServiceProvider.GetService(typeof(IInventoryRepository)) as IInventoryRepository));
 
             options.Context.Services.AddHealthChecks()
                 .AddMongoDb(configuration.ConnectionString, name: "Inventory-mongodb");

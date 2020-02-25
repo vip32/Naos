@@ -9,6 +9,7 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="..\Foundation.Application.Web.Startup.EntityFramework\Application.Web.Startup.EntityFramework.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
@@ -30,6 +31,7 @@
     <ProjectReference Include="..\Correlation.Application\RequestCorrelation.Application.csproj" />
     <ProjectReference Include="..\Exceptions.Application.Web\Exceptions.Application.Web.csproj" />
     <ProjectReference Include="..\Filtering.Application\RequestFiltering.Application.csproj" />
+    <ProjectReference Include="..\Foundation.Application.Web.Startup.Repositories\Application.Web.Startup.Repositories.csproj" />
     <ProjectReference Include="..\Foundation.Application.Web.Startup\Application.Web.Startup.csproj" />
     <ProjectReference Include="..\Foundation.Application.Web\Application.Web.csproj" />
     <ProjectReference Include="..\Foundation.Domain.Repositories\Domain.Repositories.csproj" />
