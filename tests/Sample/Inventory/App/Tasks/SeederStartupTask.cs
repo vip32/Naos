@@ -7,7 +7,6 @@
     using EnsureThat;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
-    using Naos.Foundation.Application;
     using Naos.Sample.Inventory.Domain;
 
     public class SeederStartupTask : IStartupTask
