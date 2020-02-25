@@ -29,7 +29,7 @@
             var results = policy.Evaluate();
 
             // assert
-            PolicyResultsHelper.Report(results, this.output);
+            PolicyResultsReporter.Write(results, this.output);
             results.HasViolations.ShouldBeFalse();
         }
     }

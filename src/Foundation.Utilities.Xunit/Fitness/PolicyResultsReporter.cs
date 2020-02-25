@@ -3,14 +3,14 @@
     using global::Xunit.Abstractions;
     using NetArchTest.Rules.Policies;
 
-    public static class PolicyResultsHelper
+    public static class PolicyResultsReporter
     {
         /// <summary>
         /// Outputs a friendly display of the policy execution results;
         /// </summary>
         /// <param name="results"><see cref="PolicyResults"/> the policy results</param>
         /// <param name="output"><see cref="ITestOutputHelper"/> for outputs</param>
-        public static void Report(PolicyResults results, ITestOutputHelper output)
+        public static void Write(PolicyResults results, ITestOutputHelper output)
         {
             if (results.HasViolations)
             {
