@@ -1,10 +1,13 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Microsoft.AspNetCore.Hosting.Server;
+    using Microsoft.EntityFrameworkCore;
     using Naos.Foundation;
     using Naos.Foundation.Application;
+    using Naos.Foundation.Domain;
 
     public static class ServiceCollectionExtensions
     {
@@ -32,42 +35,22 @@
         /// <typeparam name="TStartupTask">An <see cref="IStartupTask"/> to register.</typeparam>
         /// <param name="services">The <see cref="IServiceCollection"/> to register with.</param>
         /// <returns>The original <see cref="IServiceCollection"/>.</returns>
-        public static IServiceCollection AddStartupTask<TStartupTask>(this IServiceCollection services)
-            where TStartupTask : class, IStartupTask
-                => services
-                    .AddStartupTaskServerDecorator()
-                    .AddTransient<IStartupTask, TStartupTask>();
-
-        public static IServiceCollection AddStartupTask<TStartupTask>(this IServiceCollection services, Func<IServiceProvider, TStartupTask> implementationFactory)
-            where TStartupTask : class, IStartupTask
-                => services
-                    .AddStartupTaskServerDecorator()
-                    .AddTransient<IStartupTask>(sp => implementationFactory(sp));
-
-        public static IServiceCollection AddStartupTask<TStartupTask>(this IServiceCollection services, TimeSpan delay)
-            where TStartupTask : class, IStartupTask
+        public static IServiceCollection AddSeederTask<TDbContext, TEntity>(this IServiceCollection services, IEnumerable<TEntity> entities, TimeSpan? delay = null)
+            where TDbContext : DbContext
+            where TEntity : class, IEntity, IAggregateRoot
                 => services
                     .AddStartupTaskServerDecorator()
                     .AddTransient<IStartupTask>(sp =>
                     {
-                        var task = ActivatorUtilities.GetServiceOrCreateInstance<TStartupTask>(sp);
-                        if (task != null)
+                        var task = ActivatorUtilities.GetServiceOrCreateInstance<SeederStartupTask<TDbContext, TEntity>>(sp);
+                        if (task != null && delay.HasValue)
                         {
                             task.Delay = delay;
                         }
 
-                        return task;
-                    });
-
-        public static IServiceCollection AddStartupTask(this IServiceCollection services, Type type, TimeSpan? delay = null)
-                => services
-                    .AddStartupTaskServerDecorator()
-                    .AddTransient<IStartupTask>(sp =>
-                    {
-                        var task = ActivatorUtilities.GetServiceOrCreateInstance(sp, type) as IStartupTask;
-                        if (task != null && delay.HasValue)
+                        if (task != null)
                         {
-                            task.Delay = delay.Value;
+                            task.Entities = entities;
                         }
 
                         return task;

@@ -84,10 +84,16 @@
 
             options.Context.Services.AddStartupTask<ApplyPendingMigrationsTask<UserAccountsDbContext>>();
             options.Context.Services.AddStartupTask<EchoStartupTask>(new TimeSpan(0, 0, 3));
-            options.Context.Services.AddStartupTask(sp =>
-                new SeederStartupTask(
-                    sp.GetRequiredService<ILoggerFactory>(),
-                    sp.CreateScope().ServiceProvider.GetService(typeof(IGenericRepository<UserAccount>)) as IGenericRepository<UserAccount>));
+            options.Context.Services.AddSeederTask<UserAccountsDbContext, UserAccount>(new[]
+            {
+                new UserAccount() { Id = Guid.Parse("100fb10f-2ad4-4bd1-9b33-6410a5ce7b25"), Email = "admin@naos.com", TenantId = "naos_sample_test", Status = UserAccountStatus.Active },
+                new UserAccount() { Id = Guid.Parse("100fb10f-2ad4-4bd1-9b33-6410a5ce7b26"), Email = "test26@unknown.com", TenantId = "naos_sample_test", Status = UserAccountStatus.Active },
+                new UserAccount() { Id = Guid.Parse("100fb10f-2ad4-4bd1-9b33-6410a5ce7b27"), Email = "test27@unknown.com", TenantId = "naos_sample_test", Status = UserAccountStatus.Active },
+            }, delay: new TimeSpan(0, 0, 10));
+            //options.Context.Services.AddStartupTask(sp =>
+            //    new SeederStartupTask(
+            //        sp.GetRequiredService<ILoggerFactory>(),
+            //        sp.CreateScope().ServiceProvider.GetService(typeof(IGenericRepository<UserAccount>)) as IGenericRepository<UserAccount>));
 
             options.Context.Services.AddHealthChecks()
                 .AddSqlServer(configuration.ConnectionString, name: "UserAccounts-sqlserver");
