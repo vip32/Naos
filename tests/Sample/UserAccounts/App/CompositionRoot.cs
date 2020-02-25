@@ -8,7 +8,6 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation.Application;
-    using Naos.Foundation.Application.Web.Startup.EntityFramework;
     using Naos.Foundation.Domain;
     using Naos.Foundation.Infrastructure;
     using Naos.Sample.UserAccounts.Domain;

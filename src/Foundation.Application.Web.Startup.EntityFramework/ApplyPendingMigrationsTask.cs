@@ -1,4 +1,4 @@
-﻿namespace Naos.Foundation.Application.Web.Startup.EntityFramework
+﻿namespace Naos.Foundation.Application
 {
     using System;
     using System.Threading;
@@ -9,7 +9,7 @@
     using Microsoft.Extensions.Logging;
 
     public class ApplyPendingMigrationsTask<TDbContext> : IStartupTask
-    where TDbContext : DbContext
+        where TDbContext : DbContext
     {
         private readonly IServiceProvider serviceProvider;
         private readonly ILogger<ApplyPendingMigrationsTask<TDbContext>> logger;

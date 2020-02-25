@@ -2,6 +2,7 @@
 {
     using Microsoft.Extensions.Logging;
     using Naos.Commands.Application;
+    using Naos.Foundation;
     using Naos.Foundation.Domain;
     using Naos.Messaging.Domain;
     using NetArchTest.Rules;
@@ -43,6 +44,18 @@
                    .Inherit(typeof(CommandHandler<,>))
                    .Should().HaveNameEndingWith("CommandHandler").Or().HaveNameEndingWith("QueryHandler"),
                    $"{LogKeys.AppCommand}:Layering", "CommandHandlers should only exist in the Application layer")
+               .Add(t => t.That()
+                   .HaveNameEndingWith("Controller")
+                   .Should().ResideInNamespace($"{baseNamespace}.Application.Web"),
+                   $"{LogKeys.DomainEvent}:Layering", "Controllers should only exist in the Application.Web layer")
+               .Add(t => t.That()
+                   .HaveNameEndingWith("ConsoleCommand")
+                   .Should().ResideInNamespace($"{baseNamespace}.Application"),
+                   $"{LogKeys.DomainEvent}:Layering", "ConsoleCommands should only exist in the Application layer")
+               .Add(t => t.That()
+                   .ImplementInterface(typeof(IStartupTask))
+                   .Should().ResideInNamespace($"{baseNamespace}.Application"),
+                   $"{LogKeys.DomainEvent}:Layering", "ConsoleCommands should only exist in the Application layer")
                // domain event rules
                .Add(t => t.That()
                    .ImplementInterface(typeof(IDomainEvent))

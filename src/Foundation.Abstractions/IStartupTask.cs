@@ -1,4 +1,4 @@
-﻿namespace Naos.Foundation.Application
+﻿namespace Naos.Foundation
 {
     using System;
     using System.Threading;

@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using Microsoft.AspNetCore.Hosting.Server;
+    using Naos.Foundation;
     using Naos.Foundation.Application;
 
     public static class ServiceCollectionExtensions

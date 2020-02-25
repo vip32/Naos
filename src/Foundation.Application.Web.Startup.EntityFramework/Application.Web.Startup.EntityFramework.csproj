@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <AssemblyName>Naos.Foundation.Application.Web.Startup.EntityFramework</AssemblyName>
-    <RootNamespace>Naos.Foundation.Application.EntityFramework</RootNamespace>
+    <RootNamespace>Naos.Foundation.Application</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
