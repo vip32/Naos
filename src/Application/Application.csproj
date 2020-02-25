@@ -11,6 +11,7 @@
     <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.1" />
     <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="3.1.1" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="NetArchTest.Rules" Version="1.2.4" />
   </ItemGroup>
 
   <ItemGroup>
