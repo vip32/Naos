@@ -32,27 +32,9 @@
 
             new List<UserAccount>
             {
-                //new ProductInvUserAccountentory
-                //{
-                //    Id = "548fb10e-2ad4-4bd1-9b33-6414a5ce7b28",
-                //    Number = "AA1234",
-                //    Quantity = 99,
-                //    Region = "East"
-                //},
-                //new UserAccount
-                //{
-                //    Id = "558fb10e-2ad4-4bd1-9b33-6414a5ce7b28",
-                //    Number = "AA1234",
-                //    Quantity = 88,
-                //    Region = "West"
-                //},
-                //new UserAccount
-                //{
-                //    Id = "558fb10f-2ad4-4bd1-9b33-6414a5ce7b28",
-                //    Number = "BB1234",
-                //    Quantity = 77,
-                //    Region = "East"
-                //}
+                //new UserAccount() { Id = Guid.Parse("100fb10f-2ad4-4bd1-9b33-6410a5ce7b25"), Email = "admin@naos.com", TenantId = "naos_sample_test", Status = UserAccountStatus.Active },
+                //new UserAccount() { Id = Guid.Parse("100fb10f-2ad4-4bd1-9b33-6410a5ce7b26"), Email = "test26@unknown.com", TenantId = "naos_sample_test", Status = UserAccountStatus.Active },
+                //new UserAccount() { Id = Guid.Parse("100fb10f-2ad4-4bd1-9b33-6410a5ce7b27"), Email = "test27@unknown.com", TenantId = "naos_sample_test", Status = UserAccountStatus.Active },
             }.ForEach(async e =>
             {
                 try
