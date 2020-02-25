@@ -18,10 +18,12 @@
         }
 
         [Fact]
+        [FitnessTest]
+        [Trait("Category", "Fitness")]
         protected virtual void ArchitectureFitnessPolicyTest()
         {
             // arrange
-            var policy = ArchitectureFitnessPolicy.Create("Naos.Sample.UserAccounts");
+            var policy = ArchitectureFitnessPolicy.Create(this.baseNamespace);
 
             // act
             var results = policy.Evaluate();
