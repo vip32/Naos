@@ -62,5 +62,17 @@
             this.Target.RetryCount = value;
             return this;
         }
+
+        public RabbitMQQueueOptionsBuilder Expiration(int value)
+        {
+            this.Target.MessageExpiration = value;
+            return this;
+        }
+
+        public RabbitMQQueueOptionsBuilder FilterScope(string filterScope)
+        {
+            this.Target.FilterScope = filterScope;
+            return this;
+        }
     }
 }

@@ -12,7 +12,7 @@
     using Naos.Messaging;
     using Naos.Messaging.Application;
     using Naos.Messaging.Domain;
-    using Naos.Messaging.Infrastructure.RabbitMQ;
+    using Naos.Messaging.Infrastructure;
     using Naos.Tracing.Domain;
     using RabbitMQ.Client;
 

@@ -65,9 +65,9 @@
             this.options = options;
             this.logger = options.CreateLogger<RabbitMQMessageBroker>();
             this.serializer = this.options.Serializer ?? DefaultSerializer.Create;
-            this.channel = this.CreateChannel(options.QueueName);
 
-            this.StartBasicConsume(this.options.QueueName); // TODO: do this after subscribe, see ReceiveLogsDirect.cs https://www.rabbitmq.com/tutorials/tutorial-four-dotnet.html
+            this.channel = this.CreateChannel(options.QueueName);
+            this.StartBasicConsume(this.options.QueueName); // TODO: do this inside subscribe(), see ReceiveLogsDirect.cs https://www.rabbitmq.com/tutorials/tutorial-four-dotnet.html
         }
 
         public RabbitMQMessageBroker(Builder<RabbitMQMessageBrokerOptionsBuilder, RabbitMQMessageBrokerOptions> optionsBuilder)
@@ -163,45 +163,39 @@
                         this.logger.LogWarning(ex, "{LogKey:l} could not publish message: {MessageId} after {Timeout}s ({ExceptionMessage})", LogKeys.AppMessaging, message.Id, $"{time.TotalSeconds:n1}", ex.Message);
                     });
 
-                try
+                using (var channel = this.options.Provider.CreateModel())
                 {
-                    using (var channel = this.options.Provider.CreateModel())
+                    var rabbitMQMessage = this.serializer.SerializeToBytes(message);
+
+                    this.logger.LogJournal(LogKeys.AppMessaging, $"message publish: {messageName} (id={{MessageId}}, origin={{MessageOrigin}}, size={rabbitMQMessage.Length.Bytes():#.##})", LogPropertyKeys.TrackPublishMessage, args: new[] { message.Id, message.Origin });
+                    this.logger.LogTrace(LogKeys.AppMessaging, message.Id, messageName, LogTraceNames.Message);
+
+                    channel.ExchangeDeclare(exchange: this.options.ExchangeName, type: "direct");
+                    policy.Execute(() =>
                     {
-                        var rabbitMQMessage = this.serializer.SerializeToBytes(message);
+                        var properties = channel.CreateBasicProperties();
+                        properties.DeliveryMode = 2; // persistent
+                        properties.Persistent = true;
+                        properties.AppId = message.Origin;
+                        properties.Type = messageName;
+                        properties.MessageId = message.Id;
+                        properties.CorrelationId = message.CorrelationId;
 
-                        this.logger.LogJournal(LogKeys.AppMessaging, $"message publish: {messageName} (id={{MessageId}}, origin={{MessageOrigin}}, size={rabbitMQMessage.Length.Bytes():#.##})", LogPropertyKeys.TrackPublishMessage, args: new[] { message.Id, message.Origin });
-                        this.logger.LogTrace(LogKeys.AppMessaging, message.Id, messageName, LogTraceNames.Message);
-
-                        channel.ExchangeDeclare(exchange: this.options.ExchangeName, type: "direct");
-                        policy.Execute(() =>
+                        if (scope?.Span != null)
                         {
-                            var properties = channel.CreateBasicProperties();
-                            properties.DeliveryMode = 2; // persistent
-                            properties.AppId = message.Origin;
-                            properties.Type = messageName;
-                            properties.MessageId = message.CorrelationId;
-                            properties.CorrelationId = message.CorrelationId;
+                            // propagate the span infos
+                            properties.Headers ??= new Dictionary<string, object>();
+                            properties.Headers.Add("TraceId", scope.Span.TraceId);
+                            properties.Headers.Add("SpanId", scope.Span.SpanId);
+                        }
 
-                            if (scope?.Span != null)
-                            {
-                                // propagate the span infos
-                                properties.Headers ??= new Dictionary<string, object>();
-                                properties.Headers.Add("TraceId", scope.Span.TraceId);
-                                properties.Headers.Add("SpanId", scope.Span.SpanId);
-                            }
-
-                            channel.BasicPublish(
-                                exchange: this.options.ExchangeName,
-                                routingKey: routingKey,
-                                mandatory: true,
-                                basicProperties: properties,
-                                body: rabbitMQMessage);
-                        });
-                    }
-                }
-                catch (Exception ex)
-                {
-                    this.logger.LogError(ex, $"{{LogKey:l}} publish failed (queue={this.options.QueueName}, routingKey={routingKey}) {ex.Message}", LogKeys.AppMessaging);
+                        channel.BasicPublish(
+                            exchange: this.options.ExchangeName,
+                            routingKey: routingKey,
+                            mandatory: true,
+                            basicProperties: properties,
+                            body: rabbitMQMessage);
+                    });
                 }
             }
         }
@@ -220,24 +214,17 @@
                 this.options.Provider.TryConnect();
             }
 
-            try
+            using (var channel = this.options.Provider.CreateModel())
             {
-                using (var channel = this.options.Provider.CreateModel())
-                {
-                    this.logger.LogInformation($"{{LogKey:l}} unbind rabbitmq queue (queue={this.options.QueueName}, routingKey={routingKey})", LogKeys.AppMessaging);
+                this.logger.LogInformation($"{{LogKey:l}} unbind rabbitmq queue (queue={this.options.QueueName}, routingKey={routingKey})", LogKeys.AppMessaging);
 
-                    channel.QueueUnbind(
-                        exchange: this.options.ExchangeName,
-                        queue: this.options.QueueName,
-                        routingKey: routingKey);
-                }
+                channel.QueueUnbind(
+                    exchange: this.options.ExchangeName,
+                    queue: this.options.QueueName,
+                    routingKey: routingKey);
+            }
 
-                this.options.Subscriptions.Remove<TMessage, THandler>();
-            }
-            catch (Exception ex)
-            {
-                this.logger.LogError(ex, $"{{LogKey:l}} unsubscribe failed (queue={this.options.QueueName}, routingKey={routingKey}) {ex.Message}", LogKeys.AppMessaging);
-            }
+            this.options.Subscriptions.Remove<TMessage, THandler>();
         }
 
         public void Dispose()

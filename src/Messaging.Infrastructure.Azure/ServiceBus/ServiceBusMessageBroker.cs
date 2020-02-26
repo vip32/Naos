@@ -67,13 +67,13 @@
                         Filter = new CorrelationFilter { Label = messageName, To = this.options.FilterScope }, // filterscope ist used to lock the rule for a specific machine
                         Name = ruleName
                     }).GetAwaiter().GetResult();
-                }
-                catch (ServiceBusException)
-                {
-                    this.logger.LogDebug($"{{LogKey:l}} servicebus found subscription rule: {ruleName}", LogKeys.AppMessaging);
-                }
 
-                this.options.Subscriptions.Add<TMessage, THandler>();
+                    this.options.Subscriptions.Add<TMessage, THandler>();
+                }
+                catch (Exception ex)
+                {
+                    this.logger.LogError(ex, $"{{LogKey:l}} subscribe failed (name={messageName}, type={typeof(TMessage).Name}) {ex.Message}", LogKeys.AppMessaging);
+                }
             }
 
             return this;
@@ -160,9 +160,9 @@
             {
                 this.logger.LogInformation($"{{LogKey:l}} remove servicebus subscription rule: {ruleName}", LogKeys.AppMessaging);
                 this.options.Client
-                 .RemoveRuleAsync(ruleName)
-                 .GetAwaiter()
-                 .GetResult();
+                    .RemoveRuleAsync(ruleName)
+                    .GetAwaiter()
+                    .GetResult();
             }
             catch (MessagingEntityNotFoundException)
             {
