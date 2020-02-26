@@ -1,4 +1,5 @@
 [![Build Status](https://vip32.visualstudio.com/Naos/_apis/build/status/vip32.Naos?branchName=master)](https://vip32.visualstudio.com/Naos/_build/latest?definitionId=4&branchName=master)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=vip32_Naos&metric=alert_status)](https://sonarcloud.io/dashboard?id=vip32_Naos)
 [![CodeFactor](https://www.codefactor.io/repository/github/vip32/Naos/badge)](https://www.codefactor.io/repository/github/vip32/Naos)
 [![codecov](https://codecov.io/gh/vip32/Naos/branch/master/graph/badge.svg)](https://codecov.io/gh/vip32/Naos)
 [![GitHub issues](https://img.shields.io/github/issues/vip32/Naos.svg)](https://github.com/vip32/Naos/issues)
@@ -747,3 +748,4 @@ development-naos--operations--logging--azureLogAnalytics--workspaceName
 
 
 [![](https://codescene.io/projects/5888/status.svg) Get more details at **codescene.io**.](https://codescene.io/projects/5888/jobs/latest-successful/results)
+
