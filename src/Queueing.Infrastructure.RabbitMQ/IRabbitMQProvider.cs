@@ -1,4 +1,4 @@
-﻿namespace Naos.Messaging.Infrastructure
+﻿namespace Naos.Queueing.Infrastructure
 {
     using System;
     using global::RabbitMQ.Client;

@@ -1,4 +1,4 @@
-﻿namespace Naos.Messaging.Infrastructure
+﻿namespace Naos.Queueing.Infrastructure
 {
     using System;
     using System.IO;
@@ -10,7 +10,7 @@
     using Polly;
     using Polly.Retry;
 
-    public class RabbitMQProvider : IRabbitMQProvider
+    public class RabbitMQProvider : IRabbitMQProvider // RabbitMQQueueingProvider?
     {
         private readonly IConnectionFactory connectionFactory;
         private readonly ILogger<RabbitMQProvider> logger;
@@ -62,13 +62,13 @@
             }
             catch (IOException ex)
             {
-                this.logger.LogCritical(ex, $"{{LogKey:l}} ex.Message", LogKeys.AppMessaging);
+                this.logger.LogCritical(ex, $"{{LogKey:l}} ex.Message", LogKeys.Queueing);
             }
         }
 
         public bool TryConnect()
         {
-            this.logger.LogInformation("{LogKey:l} connect rabbitmq client", LogKeys.AppMessaging);
+            this.logger.LogInformation("{LogKey:l} connect rabbitmq client", LogKeys.Queueing);
 
             lock (this.syncRoot)
             {
@@ -76,7 +76,7 @@
                     .Or<BrokerUnreachableException>()
                     .WaitAndRetry(this.retryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
                     {
-                        this.logger.LogError(ex, "{LogKey:l} connect rabbitmq client failed after {TimeOut}s ({ExceptionMessage})", LogKeys.AppMessaging, $"{time.TotalSeconds:n1}", ex.Message);
+                        this.logger.LogError(ex, "{LogKey:l} connect rabbitmq client failed after {TimeOut}s ({ExceptionMessage})", LogKeys.Queueing, $"{time.TotalSeconds:n1}", ex.Message);
                     });
 
                 try
@@ -85,7 +85,7 @@
                 }
                 catch(BrokerUnreachableException ex)
                 {
-                    this.logger.LogError(ex, $"{{LogKey:l}} connect rabbitmq client failed: {ex.Message}", LogKeys.AppMessaging);
+                    this.logger.LogError(ex, $"{{LogKey:l}} connect rabbitmq client failed: {ex.Message}", LogKeys.Queueing);
                 }
 
                 if (this.IsConnected)
@@ -94,13 +94,13 @@
                     this.connection.CallbackException += this.OnCallbackException;
                     this.connection.ConnectionBlocked += this.OnConnectionBlocked;
 
-                    this.logger.LogInformation($"{{LogKey:l}} connect rabbitmq client succeeded (host={this.connection.Endpoint.HostName})", LogKeys.AppMessaging);
+                    this.logger.LogInformation($"{{LogKey:l}} connect rabbitmq client succeeded (host={this.connection.Endpoint.HostName})", LogKeys.Queueing);
 
                     return true;
                 }
                 else
                 {
-                    this.logger.LogError("{LogKey:l} connect rabbitmq could not be created and opened", LogKeys.AppMessaging);
+                    this.logger.LogError("{LogKey:l} connect rabbitmq could not be created and opened", LogKeys.Queueing);
 
                     return false;
                 }

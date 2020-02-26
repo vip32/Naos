@@ -1,4 +1,4 @@
-namespace Naos.Messaging.Infrastructure.RabbitMQ
+namespace Naos.Messaging.Infrastructure
 {
     using MediatR;
     using Naos.Foundation;

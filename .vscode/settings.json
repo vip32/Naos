@@ -28,5 +28,11 @@
     "statusBarItem.hoverBackground": "#2f7c47",
     "statusBar.foreground": "#e7e7e7"
   },
-  "peacock.color": "#215732"
+  "peacock.color": "#215732",
+  "cSpell.ignoreWords": [
+    "i",
+    "mq",
+    "provider",
+    "rabbit"
+  ]
 }
