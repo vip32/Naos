@@ -2,7 +2,7 @@
 {
     using Naos.Foundation;
 
-    public class AzureFileShareStorageOptions : BaseOptions
+    public class AzureFileShareStorageOptions : OptionsBase
     {
         public string ConnectionString { get; set; }
 

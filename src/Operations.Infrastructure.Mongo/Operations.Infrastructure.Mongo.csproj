@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.MongoDb" Version="3.0.1" />
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="Serilog.Sinks.MongoDB" Version="4.0.0" />
   </ItemGroup>

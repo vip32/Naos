@@ -23,10 +23,11 @@
             if (configuration?.Enabled == true)
             {
                 // https://github.com/serilog/serilog-sinks-mongodb
+                var connectionString = configuration.ConnectionString?.Replace("[DATABASENAME]", configuration.DatabaseName);
                 if (!configuration.CappedMaxDocuments.HasValue && !configuration.CappedMaxSizeMb.HasValue)
                 {
                     options.LoggerConfiguration?.WriteTo.MongoDB(
-                        configuration.ConnectionString?.Replace("[DATABASENAME]", configuration.DatabaseName),
+                        connectionString,
                         collectionName: configuration.CollectionName,
                         mongoDBJsonFormatter: new CamelCasedMongoDBJsonFormatter(true, renderMessage: true, formatProvider: null),
                         //outputTemplate: logFileConfiguration.OutputTemplate "{Timestamp:yyyy-MM-dd HH:mm:ss}|{Level} => {CorrelationId} => {Service}::{SourceContext}{NewLine}    {Message}{NewLine}{Exception}",
@@ -43,6 +44,9 @@
                         //outputTemplate: logFileConfiguration.OutputTemplate "{Timestamp:yyyy-MM-dd HH:mm:ss}|{Level} => {CorrelationId} => {Service}::{SourceContext}{NewLine}    {Message}{NewLine}{Exception}",
                         restrictedToMinimumLevel: MapLevel(logLevel));
                 }
+
+                options.Context.Services.AddHealthChecks()
+                    .AddMongoDb(connectionString, name: "logging-sink-mongodb", tags: new[] { "naos" });
 
                 options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: logging mongo sink added (collection={configuration.CollectionName})");
 

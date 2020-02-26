@@ -7,7 +7,7 @@
     using Microsoft.Extensions.Logging;
     using NSwag.Annotations;
 
-    [Route("api/echo/commands")]
+    [Route("naos/commands/echo")]
     [ApiController]
     public class NaosCommandsEchoController : ControllerBase
     {

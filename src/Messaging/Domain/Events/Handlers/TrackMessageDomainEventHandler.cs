@@ -38,7 +38,7 @@
                     return;
                 }
 
-                this.logger.LogJournal(LogKeys.Messaging, $"[{notification.Message?.Identifier}] publish (type={notification.Message?.GetType().PrettyName()}, id={notification.Message?.Id}, origin={notification.Message?.Origin})", LogPropertyKeys.TrackPublishMessage);
+                this.logger.LogJournal(LogKeys.AppMessaging, $"[{notification.Message?.Identifier}] message published: {notification.Message?.GetType().PrettyName()} (id={notification.Message?.Id}, origin={notification.Message?.Origin})", LogPropertyKeys.TrackPublishMessage);
             }).AnyContext();
         }
 
@@ -51,7 +51,7 @@
                     return;
                 }
 
-                this.logger.LogJournal(LogKeys.Messaging, $"[{notification.Message?.Identifier}] handle (type={notification.Message?.GetType().PrettyName()}, id={notification.Message?.Id}, service={notification.MessageScope}, origin={notification.Message?.Origin})", LogPropertyKeys.TrackReceiveMessage);
+                this.logger.LogJournal(LogKeys.AppMessaging, $"[{notification.Message?.Identifier}] message handled : {notification.Message?.GetType().PrettyName()} (id={notification.Message?.Id}, service={notification.MessageScope}, origin={notification.Message?.Origin})", LogPropertyKeys.TrackReceiveMessage);
             }).AnyContext();
         }
     }

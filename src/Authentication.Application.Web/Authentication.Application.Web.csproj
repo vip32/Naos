@@ -15,13 +15,22 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.1" />
+  </ItemGroup>
+
   <ItemGroup>
-    <PackageReference Include="NSwag.Annotations" Version="13.2.0" />
+    <PackageReference Include="NSwag.Annotations" Version="13.2.2" />
+    <PackageReference Include="NSwag.AspNetCore" Version="13.2.2" />
+    <PackageReference Include="NSwag.Core" Version="13.2.2" />
+    <PackageReference Include="NSwag.Generation" Version="13.2.2" />
+    <PackageReference Include="NJsonSchema" Version="10.1.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Commands.Application\Commands.Application.csproj" />
     <ProjectReference Include="..\Foundation.Application.Web\Application.Web.csproj" />
+    <ProjectReference Include="..\Foundation.Extensions\Extensions.csproj" />
   </ItemGroup>
 
 </Project>

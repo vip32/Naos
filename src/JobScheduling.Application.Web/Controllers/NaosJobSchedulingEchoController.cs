@@ -8,7 +8,7 @@
     using Naos.JobScheduling.Domain;
     using NSwag.Annotations;
 
-    [Route("api/echo/jobscheduling")]
+    [Route("naos/jobscheduling/echo")]
     [ApiController]
     public class NaosJobSchedulingEchoController : ControllerBase
     {

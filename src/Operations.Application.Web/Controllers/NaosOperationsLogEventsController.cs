@@ -4,16 +4,18 @@
     using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
+    using EnsureThat;
     using Humanizer;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
+    using Naos.Foundation.Application;
     using Naos.Operations.Domain;
     using Naos.RequestFiltering.Application;
     using NSwag.Annotations;
 
-    [Route("api/operations/logevents")]
+    [Route("naos/operations/logevents")]
     [ApiController]
     public class NaosOperationsLogEventsController : ControllerBase
     {
@@ -21,21 +23,24 @@
         private readonly FilterContext filterContext;
         private readonly ILogEventRepository repository;
         private readonly ILogEventService service;
+        private readonly ServiceDescriptor serviceDescriptor;
 
         public NaosOperationsLogEventsController(
             ILoggerFactory loggerFactory,
             ILogEventRepository repository,
             ILogEventService service,
-            IFilterContextAccessor filterContext)
+            IFilterContextAccessor filterContext,
+            ServiceDescriptor serviceDescriptor = null)
         {
-            EnsureThat.EnsureArg.IsNotNull(loggerFactory, nameof(loggerFactory));
-            EnsureThat.EnsureArg.IsNotNull(repository, nameof(repository));
-            EnsureThat.EnsureArg.IsNotNull(service, nameof(service));
+            EnsureArg.IsNotNull(loggerFactory, nameof(loggerFactory));
+            EnsureArg.IsNotNull(repository, nameof(repository));
+            EnsureArg.IsNotNull(service, nameof(service));
 
             this.logger = loggerFactory.CreateLogger<NaosOperationsLogEventsController>();
             this.filterContext = filterContext.Context ?? new FilterContext();
             this.repository = repository;
             this.service = service;
+            this.serviceDescriptor = serviceDescriptor;
         }
 
         [HttpGet]
@@ -86,72 +91,71 @@
                 this.filterContext.GetFindOptions<LogEvent>()).AnyContext();
         }
 
-        private async Task GetHtmlAsync()
+        private Task GetHtmlAsync()
         {
-            this.HttpContext.Response.ContentType = "text/html";
-            await this.HttpContext.Response.WriteAsync(@"
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset='utf-8' />
-    <meta name='viewport' content='width=device-width' />
-    <title>Naos</title>
-    <base href='/' />
-    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.0.10/css/all.css' integrity='sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg' crossorigin='anonymous'>
-    <link href='css/naos.css' rel ='stylesheet' />
-</head>
-<body>
-    <pre style='color: cyan;font-size: xx-small;'>
-    " + ResourcesHelper.GetLogoAsString() + @"
-    </pre>
-    <hr />
-    &nbsp;&nbsp;&nbsp;&nbsp;<a href='/api'>infos</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/healthcheck'>health</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/logevents/dashboard'>logs</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/logtraces/dashboard'>traces</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/logevents/dashboard?q=TrackType=journal'>journal</a>&nbsp;&nbsp;&nbsp;</br>
-").AnyContext(); // TODO: reuse from ServiceContextMiddleware.cs
-            try
-            {
-                LoggingFilterContext.Prepare(this.filterContext);
-
-                var entities = await this.repository.FindAllAsync(
-                    this.filterContext.GetSpecifications<LogEvent>(),
-                    this.filterContext.GetFindOptions<LogEvent>()).AnyContext();
-
-                foreach (var entity in entities
-                    .Where(l => !l.TrackType.EqualsAny(new[] { LogTrackTypes.Trace })))
+            this.HttpContext.Response.WriteNaosDashboard(
+                title: this.serviceDescriptor?.ToString(),
+                tags: this.serviceDescriptor?.Tags,
+                action: async r =>
                 {
-                    var levelColor = "lime";
-                    if (entity.Level.SafeEquals(nameof(LogLevel.Trace)) || entity.Level.SafeEquals(nameof(LogLevel.Debug)) || entity.Level.SafeEquals("Verbose"))
+                    var entities = this.GetJsonAsync().Result;
+                    foreach (var entity in entities
+                        .Where(l => !l.TrackType.EqualsAny(new[] { LogTrackTypes.Trace })))
                     {
-                        levelColor = "#75715E";
-                    }
-                    else if (entity.Level.SafeEquals(nameof(LogLevel.Warning)))
-                    {
-                        levelColor = "#FF8C00";
-                    }
-                    else if (entity.Level.SafeEquals(nameof(LogLevel.Critical)) || entity.Level.SafeEquals(nameof(LogLevel.Error)) || entity.Level.SafeEquals("Fatal"))
-                    {
-                        levelColor = "#FF0000";
-                    }
+                        var levelColor = "#96E228";
+                        if (entity.Level.SafeEquals(nameof(LogLevel.Trace)) || entity.Level.SafeEquals(nameof(LogLevel.Debug)) || entity.Level.SafeEquals("Verbose"))
+                        {
+                            levelColor = "#75715E";
+                        }
+                        else if (entity.Level.SafeEquals(nameof(LogLevel.Warning)))
+                        {
+                            levelColor = "#FF8C00";
+                        }
+                        else if (entity.Level.SafeEquals(nameof(LogLevel.Critical)) || entity.Level.SafeEquals(nameof(LogLevel.Error)) || entity.Level.SafeEquals("Fatal"))
+                        {
+                            levelColor = "#FF0000";
+                        }
 
-                    var messageColor = levelColor;
-                    var extraStyles = string.Empty;
+                        var messageColor = levelColor;
+                        var extraStyles = string.Empty;
 
-                    await this.HttpContext.Response.WriteAsync("<div style='white-space: nowrap;'><span style='color: #EB1864; font-size: x-small;'>").AnyContext();
-                    await this.HttpContext.Response.WriteAsync($"{entity.Timestamp.ToUniversalTime():u}").AnyContext();
-                    await this.HttpContext.Response.WriteAsync("</span>").AnyContext();
-                    await this.HttpContext.Response.WriteAsync($"&nbsp;[<span style='color: {levelColor}'>").AnyContext();
-                    await this.HttpContext.Response.WriteAsync($"{entity.Level.ToUpper().Truncate(3, string.Empty)}</span>]").AnyContext();
-                    await this.HttpContext.Response.WriteAsync(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logevents/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;").AnyContext();
-                    await this.HttpContext.Response.WriteAsync($"<span style='color: {messageColor}; {extraStyles}'>").AnyContext();
-                    //await this.HttpContext.Response.WriteAsync(logEvent.TrackType.SafeEquals("journal") ? "*" : "&nbsp;"); // journal prefix
-                    await this.HttpContext.Response.WriteAsync($"{entity.Message} <a target=\"blank\" href=\"/api/operations/logevents/{entity.Id}\">*</a>").AnyContext();
-                    await this.HttpContext.Response.WriteAsync("</span>").AnyContext();
-                    await this.HttpContext.Response.WriteAsync("</div>").AnyContext();
-                }
-            }
-            finally
-            {
-                await this.HttpContext.Response.WriteAsync("</body></html>").AnyContext();
-            }
+                        try
+                        {
+                            await r.WriteAsync("<div style='white-space: nowrap;'><span style='color: #EB1864; font-size: x-small;'>").AnyContext();
+                            await r.WriteAsync($"{entity.Timestamp.ToUniversalTime():u}").AnyContext();
+                            await r.WriteAsync("</span>").AnyContext();
+                            await r.WriteAsync($"&nbsp;[<span style='color: {levelColor}'>").AnyContext();
+                            await r.WriteAsync($"{entity.Level.ToUpper().Truncate(3, string.Empty)}</span>]").AnyContext();
+                            await r.WriteAsync(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a style='font-size: xx-small;' target='blank' href='/naos/operations/logevents/dashboard?q=CorrelationId={entity.CorrelationId}'>{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;").AnyContext();
+                            await r.WriteAsync($"<span style='color: #AE81FF; font-size: xx-small;'>{entity.ServiceName.Truncate(15, string.Empty, TruncateFrom.Left)}</span>&nbsp;").AnyContext();
+                            await r.WriteAsync($"<span style='color: {messageColor}; {extraStyles}'>").AnyContext();
+                            //await r.WriteAsync(logEvent.TrackType.SafeEquals("journal") ? "*" : "&nbsp;"); // journal prefix
+                            if (entity.Message?.Length > 5 && entity.Message.Take(6).All(char.IsUpper))
+                            {
+                                await r.WriteAsync($"<span style='color: #37CAEC;'>{entity.Message.Slice(0, 6)}</span>").AnyContext();
+                                await r.WriteAsync($"{entity.Message.Slice(6)} <a target='blank' href='/naos/operations/logevents/{entity.Id}'>*</a>").AnyContext();
+                            }
+                            else
+                            {
+                                await r.WriteAsync($"{entity.Message} <a target='blank' href='/naos/operations/logevents/{entity.Id}'>*</a>").AnyContext();
+                            }
+
+                            if (!entity.CorrelationId.IsNullOrEmpty())
+                            {
+                                await r.WriteAsync($"&nbsp;<a target='blank' href='/naos/operations/logtraces/dashboard?q=CorrelationId={entity.CorrelationId}'><i class='far fa-clone'></i></a>").AnyContext();
+                            }
+
+                            await r.WriteAsync("</span>").AnyContext();
+                            await r.WriteAsync("</div>").AnyContext();
+                        }
+                        catch
+                        {
+                            // do nothing
+                        }
+                    }
+                }).Wait();
+
+            return Task.CompletedTask;
         }
 
         // Application parts? https://docs.microsoft.com/en-us/aspnet/core/mvc/advanced/app-parts?view=aspnetcore-2.1

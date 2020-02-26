@@ -2,6 +2,7 @@
 {
     using System;
     using System.Net.Http;
+    using Humanizer;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
     using Naos.Foundation.Application;
@@ -50,7 +51,7 @@
                                 onRetry: (outcome, timespan, retryAttempt, context) =>
                                 {
                                     sp.GetService<ILogger<HttpClient>>()
-                                        .LogWarning($"delaying for {timespan.TotalMilliseconds} milliseconds, then making retry {retryAttempt}");
+                                        .LogWarning($"{{LogKey:l}} delaying for {timespan.Humanize()}, then making retry #{retryAttempt}: {outcome.Exception.GetFullMessage()}", LogKeys.OutboundRequest);
                                 }))
                     .AddPolicyHandler((sp, req) =>
                         HttpPolicyExtensions.HandleTransientHttpError()
@@ -59,11 +60,11 @@
                                 durationOfBreak: TimeSpan.FromSeconds(30),
                                 onBreak: (response, state) =>
                                 {
-                                    sp.GetService<ILogger<HttpClient>>().LogWarning($"break circuit ({state}): {response.Exception.GetFullMessage()}");
+                                    sp.GetService<ILogger<HttpClient>>().LogWarning($"{{LogKey:l}} break circuit ({state.Humanize()}): {response.Exception.GetFullMessage()}", LogKeys.OutboundRequest);
                                 },
                                 onReset: () =>
                                 {
-                                    sp.GetService<ILogger<HttpClient>>().LogInformation("reset circuit");
+                                    sp.GetService<ILogger<HttpClient>>().LogInformation("{LogKey:l} reset circuit", LogKeys.OutboundRequest);
                                 }));
             }
         }

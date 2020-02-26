@@ -53,21 +53,22 @@
                 .AddCommandLine(args));
 
             var configuration = builder.Build();
-            builder.AddIf(!configuration["naos:secrets:userSecretsId"].IsNullOrEmpty(), b =>
-                b.AddUserSecrets(configuration["naos:secrets:userSecretsId"])); // https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets
+            builder.AddIf(!configuration[ConfigurationKeys.UserSecretsId].IsNullOrEmpty(), b =>
+                b.AddUserSecrets(configuration[ConfigurationKeys.UserSecretsId])); // https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets
 
             configuration = builder.Build();
-            builder.AddIf(configuration["naos:secrets:azureAppConfiguration:enabled"].ToBool(), b =>
+            builder.AddIf(configuration[ConfigurationKeys.AzureAppConfigurationEnabled].ToBool(), b =>
             {
-                if (configuration["naos:secrets:azureAppConfiguration:connectionString"].IsNullOrEmpty())
+                if (configuration[ConfigurationKeys.AzureAppConfigurationConnectionString].IsNullOrEmpty())
                 {
                     throw new Exception("Naos AzureAppConfiguration configuration provider cannot be used when the connectionstrong is not provided by any of the configuration providers (json/env/args). Please make these configuration settings available or set secrets:azureAppConfiguration:enabled to 'false'.");
                 }
 
                 b.AddAzureAppConfiguration(options =>
                 {
-                    options.Connect(configuration["naos:secrets:azureAppConfiguration:connectionString"])
+                    options.Connect(configuration[ConfigurationKeys.AzureAppConfigurationConnectionString])
                            .UseFeatureFlags();
+                           //.SetOfflineCache(new OfflineFileCache()); // https://github.com/Azure/AppConfiguration/issues/137
                 });
 
                 // howto use: https://microsoft.github.io/AzureTipsAndTricks/blog/tip222.html
@@ -76,20 +77,21 @@
             });
 
             configuration = builder.Build();
-            builder.AddIf(configuration["naos:secrets:vault:enabled"].ToBool(), b =>
+            builder.AddIf(configuration[ConfigurationKeys.AzureKeyVaultEnabled].ToBool(), b =>
             {
-                if (configuration["naos:secrets:vault:name"].IsNullOrEmpty()
-                    || configuration["naos:secrets:vault:clientId"].IsNullOrEmpty()
-                    || configuration["naos:secrets:vault:clientSecret"].IsNullOrEmpty())
+                if (configuration[ConfigurationKeys.AzureKeyVaultName].IsNullOrEmpty()
+                    || configuration[ConfigurationKeys.AzureKeyVaultClientId].IsNullOrEmpty()
+                    || configuration[ConfigurationKeys.AzureKeyVaultClientSecret].IsNullOrEmpty())
                 {
                     throw new Exception("Naos Keyvault configuration provider cannot be used when secrets:keyvault:name, secrets:keyvault:clientId or secrets:keyvault:clientSecret are not provided by any of the configuration providers (json/env/args). Please make these configuration settings available or set secrets:keyvault:enabled to 'false'.");
                 }
 
                 b.AddAzureKeyVault(
-                    $"https://{configuration["naos:secrets:vault:name"]}.vault.azure.net/",
-                    configuration["naos:secrets:vault:clientId"],
-                    configuration["naos:secrets:vault:clientSecret"],
+                    $"https://{configuration[ConfigurationKeys.AzureKeyVaultName]}.vault.azure.net/",
+                    configuration[ConfigurationKeys.AzureKeyVaultClientId],
+                    configuration[ConfigurationKeys.AzureKeyVaultClientSecret],
                     // new CachedKeyVaultClient() // howto create new keyvault instance https://github.com/aspnet/Configuration/blob/master/src/Config.AzureKeyVault/AzureKeyVaultConfigurationExtensions.cs
+                    // or just use Azure App Configuration with offlinecache https://github.com/Azure/AppConfiguration/issues/45
                     new EnvironmentPrefixKeyVaultSecretManager());
 
                 return b;

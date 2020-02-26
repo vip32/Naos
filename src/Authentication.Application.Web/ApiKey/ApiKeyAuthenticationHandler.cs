@@ -45,7 +45,7 @@
                         .DistinctBy(c => c.Type),
                         this.Scheme.Name);
                     var ticket = new AuthenticationTicket(new ClaimsPrincipal(identity), this.Scheme.Name);
-                    this.Logger.LogInformation($"{{LogKey:l}} apikey authenticated (name={identity.Name})", LogKeys.Authentication);
+                    this.Logger.LogInformation($"{{LogKey:l}} apikey authenticated (name={identity.Name}, reason=localhost)", LogKeys.Authentication);
 
                     return AuthenticateResult.Success(ticket);
                 }
@@ -100,7 +100,7 @@
                             .Insert(new Claim(ClaimTypes.AuthenticationMethod, AuthenticationKeys.ApiKeyScheme)).DistinctBy(c => c.Type),
                         this.Scheme.Name);
                     var ticket = new AuthenticationTicket(new ClaimsPrincipal(identity), this.Scheme.Name);
-                    this.Logger.LogInformation($"{{LogKey:l}} apikey authenticated (name={identity.Name})", LogKeys.Authentication);
+                    this.Logger.LogInformation($"{{LogKey:l}} apikey authenticated (name={identity.Name}, reason=validated)", LogKeys.Authentication);
 
                     return AuthenticateResult.Success(ticket);
                 }

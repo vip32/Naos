@@ -40,11 +40,11 @@
 
                 if (notification.Span.Status == SpanStatus.Failed)
                 {
-                    this.logger.LogError($"{{LogKey:l}} span ended: {notification.Span.OperationName} (id={notification.Span.SpanId}, parent={notification.Span.ParentSpanId}, kind={notification.Span.Kind}) {notification.Span.StatusDescription} -> took {duration.Humanize()}", LogKeys.Tracing);
+                    this.logger.LogError($"{{LogKey:l}} span failed: {notification.Span.OperationName} (id={notification.Span.SpanId}, parent={notification.Span.ParentSpanId}, kind={notification.Span.Kind}) {notification.Span.StatusDescription} -> took {duration.Humanize()}", LogKeys.Tracing);
                 }
                 else
                 {
-                    this.logger.LogInformation($"{{LogKey:l}} span ended: {notification.Span.OperationName} (id={notification.Span.SpanId}, parent={notification.Span.ParentSpanId}, kind={notification.Span.Kind}) {notification.Span.StatusDescription} -> took {duration.Humanize()}", LogKeys.Tracing);
+                    this.logger.LogDebug($"{{LogKey:l}} span finished: {notification.Span.OperationName} (id={notification.Span.SpanId}, parent={notification.Span.ParentSpanId}, kind={notification.Span.Kind}) {notification.Span.StatusDescription} -> took {duration.Humanize()}", LogKeys.Tracing);
                 }
             }
 
@@ -55,7 +55,7 @@
         {
             if (notification?.Span != null)
             {
-                this.logger.LogInformation($"{{LogKey:l}} span started: {notification.Span.OperationName} (id={notification.Span.SpanId}, parent={notification.Span.ParentSpanId}, kind={notification.Span.Kind}, tags={string.Join("|", notification.Span.Tags.Select(t => $"{t.Key}={t.Value}"))})", LogKeys.Tracing);
+                this.logger.LogDebug($"{{LogKey:l}} span started: {notification.Span.OperationName} (id={notification.Span.SpanId}, parent={notification.Span.ParentSpanId}, kind={notification.Span.Kind}, tags={string.Join("|", notification.Span.Tags.Select(t => $"{t.Key}={t.Value}"))})", LogKeys.Tracing);
             }
 
             return Task.CompletedTask;

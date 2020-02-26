@@ -68,7 +68,7 @@
                     registryConfiguration));
 
             options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: service discovery registry added (type={nameof(FileSystemServiceRegistry)}, folder={registryConfiguration.Folder})");
-            options.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceDiscovery", Description = "FileSystemClientRegistry", EchoRoute = "api/echo/servicediscovery" });
+            options.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceDiscovery", Description = "FileSystemClientRegistry", EchoRoute = "naos/servicediscovery/echo" });
 
             return options;
         }
@@ -99,13 +99,13 @@
                 {
                     var configuration = options.Context.Configuration?.GetSection(section).Get<ServiceDiscoveryConfiguration>();
                     configuration.RouterAddress = registryConfiguration.Address;
-                    configuration.RouterPath = "api/servicediscovery/router/proxy";
+                    configuration.RouterPath = "naos/servicediscovery/router/proxy";
                     configuration.RouterEnabled = true;
                     return configuration;
                 });
 
             options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: service discovery registry added (type={nameof(RouterServiceRegistry)})");
-            options.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceDiscovery", Description = "RouterClientRegistry", EchoRoute = "api/echo/servicediscovery" });
+            options.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceDiscovery", Description = "RouterClientRegistry", EchoRoute = "naos/servicediscovery/echo" });
 
             return options;
         }

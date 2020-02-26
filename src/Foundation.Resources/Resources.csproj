@@ -14,12 +14,14 @@
     <None Remove="favicon.ico" />
     <None Remove="logo.png" />
     <None Remove="Resources\styles.css" />
+    <None Remove="Resources\swagger.css" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\favicon.ico" />
     <EmbeddedResource Include="Resources\logo.png" />
     <EmbeddedResource Include="Resources\styles.css" />
+    <EmbeddedResource Include="Resources\swagger.css" />
   </ItemGroup>
 
   <ItemGroup>

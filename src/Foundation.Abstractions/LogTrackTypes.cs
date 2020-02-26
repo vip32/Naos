@@ -1,8 +1,8 @@
 ﻿namespace Microsoft.Extensions.Logging
 {
-    public struct LogTrackTypes
+    public static class LogTrackTypes
     {
-        public const string Journal = "journal";
-        public const string Trace = "trace";
+        public static readonly string Journal = "journal";
+        public static readonly string Trace = "trace";
     }
 }

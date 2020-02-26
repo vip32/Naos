@@ -13,8 +13,9 @@
     using Naos.Foundation;
     using Naos.Foundation.Domain;
     using Naos.Queueing.Domain;
+    using Naos.Tracing.Domain;
 
-    public class AzureServiceBusQueue<TData> : BaseQueue<TData, AzureServiceBusQueueOptions>
+    public class AzureServiceBusQueue<TData> : QueueBase<TData, AzureServiceBusQueueOptions>
          where TData : class
     {
         private readonly ManagementClient managementClient;
@@ -53,15 +54,17 @@
             EnsureArg.IsNotNull(data, nameof(data));
             this.EnsureMetaData(data);
 
+            var correlationId = data.As<IHaveCorrelationId>()?.CorrelationId ?? IdGenerator.Instance.Next;
             using (this.Logger.BeginScope(new Dictionary<string, object>
             {
-                [LogPropertyKeys.CorrelationId] = data.As<IHaveCorrelationId>()?.CorrelationId,
+                [LogPropertyKeys.CorrelationId] = correlationId,
             }))
+            using (var scope = this.Options.Tracer?.BuildSpan($"enqueue {this.Options.QueueName}", LogKeys.Queueing, SpanKind.Producer).Activate(this.Logger))
             {
                 await this.EnsureQueueAsync().AnyContext();
 
                 var id = IdGenerator.Instance.Next;
-                this.Logger.LogDebug($"queue item enqueue (id={id}, queue={this.Options.QueueName})");
+                this.Logger.LogDebug($"{{LogKey:l}} queue item enqueue (id={id}, queue={this.Options.QueueName}, type={this.GetType().PrettyName()})", LogKeys.Queueing);
 
                 Interlocked.Increment(ref this.enqueuedCount);
                 using (var stream = new MemoryStream())
@@ -70,16 +73,16 @@
                     var message = new Message(stream.ToArray())
                     {
                         MessageId = id,
-                        CorrelationId = data.As<IHaveCorrelationId>()?.CorrelationId
+                        CorrelationId = correlationId,
                     };
+                    //message.UserProperties.AddOrUpdate("CorrelationId", scope.Span.TraceId);
+                    message.UserProperties.AddOrUpdate("TraceId", scope?.Span?.TraceId);
+                    message.UserProperties.AddOrUpdate("SpanId", scope?.Span?.SpanId);
+
                     await this.queueSender.SendAsync(message).AnyContext();
 
-                    using (var item = new QueueItem<TData>(message.MessageId, data, this, DateTime.UtcNow, 0))
-                    {
-                        this.Logger.LogJournal(LogKeys.Queueing, $"item enqueued (id={item.Id}, queue={this.Options.QueueName}, type={typeof(TData).PrettyName()})", LogPropertyKeys.TrackEnqueue);
-                        this.Logger.LogTrace(LogKeys.Messaging, item.Id, typeof(TData).PrettyName(), LogTraceNames.Queue);
-                    }
-
+                    this.Logger.LogJournal(LogKeys.Queueing, $"queue item enqueued: {typeof(TData).PrettyName()} (id={message.MessageId}, queue={this.Options.QueueName})", LogPropertyKeys.TrackEnqueue);
+                    this.Logger.LogTrace(LogKeys.Queueing, message.MessageId, typeof(TData).PrettyName(), LogTraceNames.Queue);
                     this.LastEnqueuedDate = DateTime.UtcNow;
                     return message.MessageId;
                 }
@@ -89,7 +92,7 @@
         public override async Task<IQueueItem<TData>> DequeueAsync(TimeSpan? timeout = null)
         {
             await this.EnsureQueueAsync().AnyContext();
-            this.Logger.LogDebug($"queue item dequeue (queue={this.Options.QueueName})");
+            this.Logger.LogDebug($"{{LogKey:l}} queue item dequeue (queue={this.Options.QueueName})", LogKeys.Queueing);
 
             // TODO: ReceiveBatchAsync?
             Message message;
@@ -114,11 +117,11 @@
         {
             EnsureArg.IsNotNull(item, nameof(item));
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
-            this.Logger.LogDebug($"queue item renew (id={item.Id}, queue={this.Options.QueueName})");
+            this.Logger.LogDebug($"{{LogKey:l}} queue item renew (id={item.Id}, queue={this.Options.QueueName})", LogKeys.Queueing);
 
             await this.queueReceiver.RenewLockAsync(item.Id).AnyContext();
 
-            this.Logger.LogJournal(LogKeys.Queueing, $"item lock renewed (id={item.Id}, queue={this.Options.QueueName}, type={typeof(TData).PrettyName()})", LogPropertyKeys.TrackDequeue);
+            this.Logger.LogJournal(LogKeys.Queueing, $"queue item lock renewed: {typeof(TData).PrettyName()} (id={item.Id}, queue={this.Options.QueueName})", LogPropertyKeys.TrackDequeue);
             this.LastDequeuedDate = DateTime.UtcNow;
         }
 
@@ -126,7 +129,6 @@
         {
             EnsureArg.IsNotNull(item, nameof(item));
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
-            this.Logger.LogDebug($"queue item complete (id={item.Id}, queue={this.Options.QueueName})");
 
             if (item.IsAbandoned || item.IsCompleted)
             {
@@ -137,7 +139,7 @@
             Interlocked.Increment(ref this.completedCount);
             item.MarkCompleted();
 
-            this.Logger.LogJournal(LogKeys.Queueing, $"item completed (id={item.Id}, queue={this.Options.QueueName}, type={typeof(TData).PrettyName()})", LogPropertyKeys.TrackDequeue);
+            this.Logger.LogJournal(LogKeys.Queueing, $"queue item completed: {typeof(TData).PrettyName()} (id={item.Id}, queue={this.Options.QueueName})", LogPropertyKeys.TrackDequeue);
             this.LastDequeuedDate = DateTime.UtcNow;
         }
 
@@ -145,7 +147,7 @@
         {
             EnsureArg.IsNotNull(item, nameof(item));
             EnsureArg.IsNotNullOrEmpty(item.Id, nameof(item.Id));
-            this.Logger.LogDebug($"queue item abandon (id={item.Id}, queue={this.Options.QueueName})");
+            this.Logger.LogDebug($"{{LogKey:l}} queue item abandon (id={item.Id}, queue={this.Options.QueueName})", LogKeys.Queueing);
 
             if (item.IsAbandoned || item.IsCompleted)
             {
@@ -156,7 +158,7 @@
             Interlocked.Increment(ref this.abandonedCount);
             item.MarkAbandoned();
 
-            this.Logger.LogJournal(LogKeys.Queueing, $"item abandoned (id={item.Id}, queue={this.Options.QueueName}, type={typeof(TData).PrettyName()})", LogPropertyKeys.TrackDequeue);
+            this.Logger.LogJournal(LogKeys.Queueing, $"queue item abandoned: {typeof(TData).PrettyName()} (id={item.Id}, queue={this.Options.QueueName})", LogPropertyKeys.TrackDequeue);
             this.LastDequeuedDate = DateTime.UtcNow;
         }
 
@@ -191,8 +193,9 @@
 
                 using (this.Logger.BeginScope(new Dictionary<string, object>
                 {
-                    [LogPropertyKeys.CorrelationId] = item.Data.As<IHaveCorrelationId>()?.CorrelationId,
+                    [LogPropertyKeys.CorrelationId] = item.CorrelationId
                 }))
+                using (var scope = this.Options.Tracer?.BuildSpan($"dequeue {this.Options.QueueName}", LogKeys.Queueing, SpanKind.Consumer, new Span(item.TraceId, item.SpanId)).Activate(this.Logger))
                 {
                     try
                     {
@@ -209,7 +212,8 @@
                     catch (Exception ex)
                     {
                         Interlocked.Increment(ref this.workerErrorCount);
-                        this.Logger.LogError(ex, $"{{LogKey:l}} processing error: {ex.Message}", args: new[] { LogKeys.Queueing });
+                        scope.Span.SetStatus(SpanStatus.Failed, ex.GetFullMessage());
+                        this.Logger.LogError(ex, $"{{LogKey:l}} queue processing failed: {ex.GetFullMessage()}", args: new[] { LogKeys.Queueing });
 
                         if (!item.IsAbandoned && !item.IsCompleted)
                         {
@@ -226,7 +230,7 @@
 
             if (this.Options.Mediator == null)
             {
-                throw new NaosException("queue processing error: no mediator instance provided");
+                throw new NaosException("queue processing failed: no mediator instance provided");
             }
 
             await this.ProcessItemsAsync(
@@ -234,8 +238,9 @@
                 {
                     using (this.Logger.BeginScope(new Dictionary<string, object>
                     {
-                        [LogPropertyKeys.CorrelationId] = i.Data.As<IHaveCorrelationId>()?.CorrelationId,
+                        [LogPropertyKeys.CorrelationId] = i.CorrelationId,
                     }))
+                    //using (var scope = this.Options.Tracer?.BuildSpan($"dequeue {this.Options.QueueName}", LogKeys.Queueing, SpanKind.Consumer, new Span(i.TraceId, i.SpanId)).Activate(this.Logger))
                     {
                         await this.Options.Mediator.Send(new QueueEvent<TData>(i), ct).AnyContext();
                     }
@@ -294,7 +299,7 @@
                 this.Options.ConnectionString,
                 this.Options.QueueName,
                 ReceiveMode.PeekLock, // = slow, fast = ReceiveAndDelete?
-                this.Options.RetryPolicy);
+                this.Options.Retries == 0 ? new NoRetry() : this.Options.RetryPolicy);
         }
 
         protected override Task<IQueueItem<TData>> DequeueWithIntervalAsync(CancellationToken cancellationToken)
@@ -305,7 +310,11 @@
 
         private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs e)
         {
-            this.Logger.LogError(e.Exception, $"{{LogKey:l}} processing error:  {e.ExceptionReceivedContext.EntityPath} {e.Exception.Message}", args: new[] { LogKeys.Queueing });
+            if (!(e.Exception is MessageLockLostException))
+            {
+                this.Logger.LogError(e.Exception, $"{{LogKey:l}} processing error:  {e.ExceptionReceivedContext.EntityPath} {e.Exception.Message}", args: new[] { LogKeys.Queueing });
+            }
+
             return Task.CompletedTask;
         }
 
@@ -323,14 +332,19 @@
                 this.Serializer.Deserialize<TData>(message.Body),
                 this,
                 message.SystemProperties.EnqueuedTimeUtc,
-                message.SystemProperties.DeliveryCount);
+                message.SystemProperties.DeliveryCount)
+            {
+                CorrelationId = message.CorrelationId, //message.UserProperties.TryGetValue("CorrelationId")?.ToString(),
+                TraceId = message.UserProperties.TryGetValue("TraceId")?.ToString(),
+                SpanId = message.UserProperties.TryGetValue("SpanId")?.ToString()
+            };
 
             using (this.Logger.BeginScope(new Dictionary<string, object>
             {
                 [LogPropertyKeys.CorrelationId] = item.Data.As<IHaveCorrelationId>()?.CorrelationId,
             }))
             {
-                this.Logger.LogJournal(LogKeys.Queueing, $"item dequeued (id={item.Id}, queue={this.Options.QueueName}, type={typeof(TData).PrettyName()})", LogPropertyKeys.TrackDequeue);
+                this.Logger.LogJournal(LogKeys.Queueing, $"queue item dequeued: {typeof(TData).PrettyName()} (id={item.Id}, queue={this.Options.QueueName})", LogPropertyKeys.TrackDequeue);
                 this.Logger.LogTrace(LogKeys.Queueing, item.Id, typeof(TData).PrettyName(), LogTraceNames.Queue, DateTime.UtcNow - item.EnqueuedDate);
                 this.LastDequeuedDate = DateTime.UtcNow;
 

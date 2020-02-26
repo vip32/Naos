@@ -31,7 +31,7 @@
             optionsAction?.Invoke(new MessagingOptions(naosOptions.Context));
 
             //context.Messages.Add($"{LogEventKeys.General} naos services builder: messaging added");
-            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Messaging", EchoRoute = "api/echo/messaging" });
+            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Messaging", EchoRoute = "naos/messaging/echo" });
 
             return naosOptions;
         }

@@ -3,7 +3,7 @@
     using Naos.FileStorage.Domain;
     using Naos.Foundation;
 
-    public class FileStorageKeyValueStorageOptions : BaseOptions
+    public class FileStorageKeyValueStorageOptions : OptionsBase
     {
         public IFileStorage FileStorage { get; set; }
     }

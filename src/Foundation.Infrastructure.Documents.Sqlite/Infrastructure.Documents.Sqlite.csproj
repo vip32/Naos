@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>Naos.Foundation.Infrastructure.Documents.Sqlite</AssemblyName>
+    <RootNamespace>Naos.Foundation.Infrastructure</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Repositories\**" />
+    <EmbeddedResource Remove="Repositories\**" />
+    <None Remove="Repositories\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Data.SQLite" Version="1.0.112" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.112" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.1" />
+    <PackageReference Include="Dapper" Version="2.0.30" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Foundation.Domain.Repositories.Documents\Domain.Repositories.Documents.csproj" />
+    <ProjectReference Include="..\Foundation.Domain\Domain.csproj" />
+    <ProjectReference Include="..\Foundation.Domain.Repositories\Domain.Repositories.csproj" />
+    <ProjectReference Include="..\Foundation.Infrastructure.Documents.SqlServer\Infrastructure.Documents.SqlServer.csproj" />
+  </ItemGroup>
+
+</Project>

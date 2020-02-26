@@ -209,7 +209,7 @@
                         }
 
                         this.probe.Count++;
-                        System.Diagnostics.Trace.WriteLine($"+++ hello from job {DateTime.UtcNow.ToString("o")}");
+                        System.Diagnostics.Trace.WriteLine($"+++ hello from job {DateTime.UtcNow:o}");
 
                         Thread.Sleep(200);
                     }
@@ -229,7 +229,7 @@
             public Task MyExecuteAsync(string arg1, CancellationToken cancellationToken)
             {
                 this.probe.Count++;
-                System.Diagnostics.Trace.WriteLine($"+++ hello from custom job {DateTime.UtcNow.ToString("o")} " + arg1);
+                System.Diagnostics.Trace.WriteLine($"+++ hello from custom job {DateTime.UtcNow:o} " + arg1);
                 return Task.CompletedTask;
             }
         }

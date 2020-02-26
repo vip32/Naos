@@ -29,7 +29,7 @@
                 .AddApiKey(options);
 
             naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos services builder: authentication added (type={AuthenticationKeys.ApiKeyScheme})");
-            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Authentication", Description = "ApiKeyStatic", EchoRoute = "api/echo/authentication" });
+            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Authentication", Description = "ApiKeyStatic", EchoRoute = "naos/authentication/echo" });
 
             return naosOptions;
         }
@@ -49,7 +49,7 @@
                 .AddBasic(options);
 
             naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos services builder: authentication added (type={AuthenticationKeys.BasicScheme})");
-            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Authentication", Description = "BasicStatic", EchoRoute = "api/echo/authentication" });
+            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Authentication", Description = "BasicStatic", EchoRoute = "naos/authentication/echo" });
 
             return naosOptions;
         }
@@ -74,9 +74,69 @@
                 .AddEasyAuth(options);
 
             naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos services builder: authentication added (type={AuthenticationKeys.EasyAuthScheme})");
-            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Authentication", Description = "EasyAuth", EchoRoute = "api/echo/authentication" });
+            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Authentication", Description = "EasyAuth", EchoRoute = "naos/authentication/echo" });
 
             return naosOptions;
         }
+
+#if NETCOREAPP3_1
+        public static NaosServicesContextOptions AddOidcAuthentication(
+            this NaosServicesContextOptions naosOptions,
+            Action<AuthenticationHandlerOptions> options = null,
+            string section = "naos:authentication:oidc")
+        {
+            EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
+
+            var configuration = naosOptions.Context.Configuration.GetSection(section).Get<OidcConfiguration>();
+            var handlerOptions = new AuthenticationHandlerOptions();
+            options?.Invoke(handlerOptions);
+
+            naosOptions.Context.Services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = AuthenticationKeys.CookiesScheme;
+                options.DefaultChallengeScheme = AuthenticationKeys.OidcScheme;
+            })
+            .AddCookie()
+            .AddOpenIdConnect(options =>
+            {
+                options.Authority = configuration.Authority;
+                options.ClientId = configuration.ClientId;
+                options.ClientSecret = configuration.ClientSecret;
+                options.SaveTokens = true;
+                options.ResponseType = IdentityModel.Protocols.OpenIdConnect.OpenIdConnectResponseType.Code; // configuration.ResponseType;
+                options.RequireHttpsMetadata = false; // dev only
+                options.GetClaimsFromUserInfoEndpoint = true;
+                options.Scope.Add("openid");
+                options.Scope.Add("profile");
+                options.Scope.Add("email");
+                options.Scope.Add("claims");
+                options.SaveTokens = true;
+                //options.Events = new OpenIdConnectEvents
+                //{
+                //    OnTokenResponseReceived = async ctx =>
+                //    {
+                //        var a = ctx.Principal;
+                //    },
+                //    OnAuthorizationCodeReceived = async ctx =>
+                //    {
+                //        var a = ctx.Principal;
+                //    }
+                //};
+
+                options.TokenValidationParameters = new IdentityModel.Tokens.TokenValidationParameters
+                {
+                    NameClaimType = "name",
+                    RoleClaimType = "groups",
+                    ValidateIssuer = true
+                };
+            });
+            naosOptions.Context.Services.AddAuthorization();
+
+            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos services builder: authentication added (type={AspNetCore.Authentication.OpenIdConnect.OpenIdConnectDefaults.AuthenticationScheme})");
+            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Authentication", Description = AspNetCore.Authentication.OpenIdConnect.OpenIdConnectDefaults.AuthenticationScheme, EchoRoute = "naos/authentication/echo" });
+
+            return naosOptions;
+        }
+#endif
     }
 }

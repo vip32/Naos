@@ -46,13 +46,13 @@
                 {
                     _ = Run.DelayedAsync(task.Delay.Value, async () =>
                       {
-                          this.logger.LogInformation($"{{LogKey:l}} start task delayed (name={task.GetType().PrettyName()})", LogKeys.StartupTask);
+                          this.logger.LogInformation($"{{LogKey:l}} task started: {task.GetType().PrettyName()} (delay={task.Delay.Value})", LogKeys.StartupTask);
                           await task.StartAsync(cancellationToken).AnyContext();
                       });
                 }
                 else
                 {
-                    this.logger.LogInformation($"{{LogKey:l}} start task (name={task.GetType().PrettyName()})", LogKeys.StartupTask);
+                    this.logger.LogInformation($"{{LogKey:l}} task started: {task.GetType().PrettyName()}", LogKeys.StartupTask);
                     await task.StartAsync(cancellationToken).AnyContext();
                 }
             }
@@ -70,7 +70,7 @@
 
             foreach (var task in this.tasks)
             {
-                this.logger.LogInformation($"{{LogKey:l}} stop task (name={task.GetType().PrettyName()})", LogKeys.StartupTask);
+                this.logger.LogInformation($"{{LogKey:l}} task stopped: {task.GetType().PrettyName()}", LogKeys.StartupTask);
                 await task.ShutdownAsync(cancellationToken).AnyContext();
             }
         }

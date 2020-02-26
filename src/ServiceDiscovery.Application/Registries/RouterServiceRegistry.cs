@@ -33,7 +33,7 @@
         {
             EnsureArg.IsNotNullOrEmpty(id, nameof(id));
 
-            await this.httpClient.DeleteAsync($"api/servicediscovery/router/registrations/{id}").AnyContext();
+            await this.httpClient.DeleteAsync($"naos/servicediscovery/router/registrations/{id}").AnyContext();
         }
 
         public async Task RegisterAsync(ServiceRegistration registration)
@@ -42,7 +42,7 @@
 
             using (var content = new JsonContent(registration))
             {
-                await this.httpClient.PostAsync("api/servicediscovery/router/registrations", content).AnyContext();
+                await this.httpClient.PostAsync("naos/servicediscovery/router/registrations", content).AnyContext();
             }
         }
 

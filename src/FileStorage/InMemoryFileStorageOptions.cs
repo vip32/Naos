@@ -2,7 +2,7 @@
 {
     using Naos.Foundation;
 
-    public class InMemoryFileStorageOptions : BaseOptions
+    public class InMemoryFileStorageOptions : OptionsBase
     {
         public long MaxFileSize { get; set; } = 1024 * 1024 * 256;
 

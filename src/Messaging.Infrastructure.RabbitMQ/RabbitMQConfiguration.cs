@@ -10,6 +10,6 @@
 
         public string Password { get; set; } = "guest";
 
-        public int RetryCount { get; set; } = 5;
+        public int RetryCount { get; set; } = 3;
     }
 }

@@ -13,6 +13,10 @@
     using Naos.FileStorage.Infrastructure;
     using Naos.Foundation;
     using Naos.Foundation.Infrastructure;
+    using Naos.Sample.Catalogs.Application;
+    using Naos.Sample.Customers.Application;
+    using Naos.Sample.Inventory.Application;
+    using Naos.Sample.UserAccounts.Application;
     using Naos.Sample.UserAccounts.Infrastructure;
     using Xunit.Abstractions;
 

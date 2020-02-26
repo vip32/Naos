@@ -93,7 +93,7 @@
 //#endif
 
 //#if NETSTANDARD2_1
-            return await this.Options.DbContext.Set<TEntity>().FindAsync(this.TryParseGuid(id));
+            return await this.Options.DbContext.Set<TEntity>().FindAsync(this.ParseGuid(id));
 //#endif
         }
 
@@ -228,7 +228,7 @@
             return await this.DeleteAsync(entity.Id).AnyContext();
         }
 
-        private object TryParseGuid(object value)
+        private object ParseGuid(object value)
         {
             try
             {

@@ -84,7 +84,7 @@
                     });
             }
 
-            this.logger?.LogDebug($"{{LogKey:l}} lock created (key={key}, timeout({new TimeSpan(0, timeoutMinutes, 0).ToString("c")}))", LogKeys.JobScheduling);
+            this.logger?.LogDebug($"{{LogKey:l}} lock created (key={key}, timeout({new TimeSpan(0, timeoutMinutes, 0):c}))", LogKeys.JobScheduling);
 
             return true;
         }

@@ -5,18 +5,19 @@
     using System.Net;
     using System.Text;
     using System.Threading.Tasks;
+    using EnsureThat;
     using Humanizer;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.ObjectPool;
     using Naos.Foundation;
+    using Naos.Foundation.Application;
     using Naos.Foundation.Domain;
     using Naos.RequestFiltering.Application;
     using Naos.Tracing.Domain;
     using NSwag.Annotations;
 
-    [Route("api/operations/logtraces")]
+    [Route("naos/operations/logtraces")]
     [ApiController]
     public class NaosOperationsLogTracesController : ControllerBase
     {
@@ -24,22 +25,25 @@
         private readonly FilterContext filterContext;
         private readonly ILogTraceRepository repository;
         private readonly ILogEventService service;
+        private readonly ServiceDescriptor serviceDescriptor;
         private readonly ObjectPool<StringBuilder> stringBuilderPool = new DefaultObjectPoolProvider().CreateStringBuilderPool();
 
         public NaosOperationsLogTracesController(
             ILoggerFactory loggerFactory,
             ILogTraceRepository repository,
             ILogEventService service,
-            IFilterContextAccessor filterContext)
+            IFilterContextAccessor filterContext,
+            ServiceDescriptor serviceDescriptor = null)
         {
-            EnsureThat.EnsureArg.IsNotNull(loggerFactory, nameof(loggerFactory));
-            EnsureThat.EnsureArg.IsNotNull(repository, nameof(repository));
-            EnsureThat.EnsureArg.IsNotNull(service, nameof(service));
+            EnsureArg.IsNotNull(loggerFactory, nameof(loggerFactory));
+            EnsureArg.IsNotNull(repository, nameof(repository));
+            EnsureArg.IsNotNull(service, nameof(service));
 
             this.logger = loggerFactory.CreateLogger<NaosOperationsLogTracesController>();
             this.filterContext = filterContext.Context ?? new FilterContext();
             this.repository = repository;
             this.service = service;
+            this.serviceDescriptor = serviceDescriptor;
         }
 
         [HttpGet]
@@ -83,59 +87,44 @@
 
         private async Task<IEnumerable<LogTrace>> GetJsonAsync()
         {
-            LoggingFilterContext.Prepare(this.filterContext);
+            LoggingFilterContext.Prepare(this.filterContext); // add some default criteria
 
             return await this.repository.FindAllAsync(
-                this.filterContext.GetSpecifications<LogTrace>(),
+                this.filterContext.GetSpecifications<LogTrace>().Insert(
+                    new Specification<LogTrace>(t => t.TrackType == "trace")),
                 this.filterContext.GetFindOptions<LogTrace>()).AnyContext();
         }
 
-        private async Task GetHtmlAsync()
+        private Task GetHtmlAsync()
         {
-            this.HttpContext.Response.ContentType = "text/html";
-            await this.HttpContext.Response.WriteAsync(@"
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset='utf-8' />
-    <meta name='viewport' content='width=device-width' />
-    <title>Naos</title>
-    <base href='/' />
-    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.0.10/css/all.css' integrity='sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg' crossorigin='anonymous'>
-    <link href='css/naos.css' rel ='stylesheet' />
-</head>
-<body>
-    <pre style='color: cyan;font-size: xx-small;'>
-    " + ResourcesHelper.GetLogoAsString() + @"
-    </pre>
-    <hr />
-    &nbsp;&nbsp;&nbsp;&nbsp;<a href='/api'>infos</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/healthcheck'>health</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/logevents/dashboard'>logs</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/logtraces/dashboard'>traces</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/logevents/dashboard?q=TrackType=journal'>journal</a>&nbsp;&nbsp;&nbsp;</br>
-").AnyContext(); // TODO: reuse from ServiceContextMiddleware.cs
-            try
-            {
-                LoggingFilterContext.Prepare(this.filterContext); // add some default criteria
+            this.HttpContext.Response.WriteNaosDashboard(
+                title: this.serviceDescriptor?.ToString(),
+                tags: this.serviceDescriptor?.Tags,
+                action: async r =>
+                {
+                    var entities = this.GetJsonAsync().Result;
+                    var nodes = Node<LogTrace>.ToHierarchy(entities, l => l.SpanId, l => l.ParentSpanId, true).ToList();
 
-                var entities = await this.repository.FindAllAsync(
-                    this.filterContext.GetSpecifications<LogTrace>().Insert(
-                        new Specification<LogTrace>(t => t.TrackType == "trace")),
-                    this.filterContext.GetFindOptions<LogTrace>()).AnyContext();
-                var nodes = Node<LogTrace>.ToHierarchy(entities, l => l.SpanId, l => l.ParentSpanId, true).ToList();
+                    try
+                    {
+                        await nodes.RenderAsync(
+                        t => this.WriteTrace(t),
+                        t => this.WriteTraceHeader(t),
+                        orderBy: t => t.Ticks,
+                        options: new HtmlNodeRenderOptions(r.HttpContext) { ChildNodeBreak = string.Empty }).AnyContext();
+                    }
+                    catch
+                    {
+                        // do nothing
+                    }
 
-                await nodes.RenderAsync(
-                    t => this.WriteTrace(t),
-                    t => this.WriteTraceHeader(t),
-                    orderBy: t => t.Ticks,
-                    options: new HtmlNodeRenderOptions(this.HttpContext) { ChildNodeBreak = string.Empty }).AnyContext();
+                    //foreach (var entity in entities) // .Where(l => !l.TrackType.EqualsAny(new[] { LogTrackTypes.Trace }))
+                    //{
+                    //    await this.WriteTraceAsync(entity).AnyContext();
+                    //}
+                }).Wait();
 
-                //foreach (var entity in entities) // .Where(l => !l.TrackType.EqualsAny(new[] { LogTrackTypes.Trace }))
-                //{
-                //    await this.WriteTraceAsync(entity).AnyContext();
-                //}
-            }
-            finally
-            {
-                await this.HttpContext.Response.WriteAsync("</body></html>").AnyContext();
-            }
+            return Task.CompletedTask;
         }
 
         private string WriteTraceHeader(LogTrace entity)
@@ -149,8 +138,9 @@
                 .Append(this.GetTraceLevelColor(entity)).Append("'>")
                 .Append(entity.Kind?.ToUpper().Truncate(6, string.Empty))
                 .Append("</span>]");
-            sb.Append(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logevents/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;");
-            //sb.Append(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/api/operations/logtraces/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;");
+            sb.Append(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a style='font-size: xx-small;' target=\"blank\" href=\"/naos/operations/logevents/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+            sb.Append($"<span style='color: #AE81FF; font-size: xx-small;'>{entity.ServiceName.Truncate(15, string.Empty, TruncateFrom.Left)}</span>&nbsp;");
+            //sb.Append(!entity.CorrelationId.IsNullOrEmpty() ? $"&nbsp;<a target=\"blank\" href=\"/naos/operations/logtraces/dashboard?q=CorrelationId={entity.CorrelationId}\">{entity.CorrelationId.Truncate(12, string.Empty, Truncator.FixedLength, TruncateFrom.Left)}</a>&nbsp;" : "&nbsp;");
 
             var result = sb.ToString();
             this.stringBuilderPool.Return(sb);
@@ -160,15 +150,23 @@
         private string WriteTrace(LogTrace entity)
         {
             var extraStyles = string.Empty;
-
             var sb = this.stringBuilderPool.Get(); // less allocations
-            sb.Append("<span style='color: ").Append(this.GetTraceLevelColor(entity)).Append("; ").Append(extraStyles).Append("'>")
-                //.Append(logEvent.TrackType.SafeEquals("journal") ? "*" : "&nbsp;"); // journal prefix
-                .Append(entity.Message).Append(" (").Append(entity.SpanId).Append("/").Append(entity.ParentSpanId).Append(")&nbsp;")
-                .Append("<a target=\"blank\" href=\"/api/operations/logtraces/").Append(entity.Id).Append("\">*</a> ")
-                .Append("<span style=\"color: gray;\">-> took ")
-                .Append(entity.Duration.Humanize())
-                .Append("</span>");
+            sb.Append("<span style='color: ").Append(this.GetTraceLevelColor(entity)).Append("; ").Append(extraStyles).Append("'>");
+            //.Append(logEvent.TrackType.SafeEquals("journal") ? "*" : "&nbsp;"); // journal prefix
+            if (entity.Message?.Length > 5 && entity.Message.Take(6).All(char.IsUpper))
+            {
+                sb.Append($"<span style='color: #37CAEC;'>{entity.Message.Slice(0, 6)}</span>");
+                sb.Append(entity.Message.Slice(6)).Append(" (").Append(entity.SpanId).Append("/").Append(entity.ParentSpanId).Append(")&nbsp;");
+            }
+            else
+            {
+                sb.Append(entity.Message).Append(" (").Append(entity.SpanId).Append("/").Append(entity.ParentSpanId).Append(")&nbsp;");
+            }
+
+            sb.Append("<a target='blank' href='/naos/operations/logtraces/").Append(entity.Id).Append("'>*</a> ");
+            sb.Append("<span style='color: gray;font-size: xx-small'>-> took ");
+            sb.Append(entity.Duration.Humanize());
+            sb.Append("</span>");
             sb.Append("</span>");
             sb.Append("</div>");
 
@@ -179,7 +177,7 @@
 
         private string GetTraceLevelColor(LogTrace entity)
         {
-            var levelColor = "lime";
+            var levelColor = "#96E228";
             if (entity.Status.SafeEquals(nameof(SpanStatus.Transient)))
             {
                 levelColor = "#75715E";

@@ -52,26 +52,15 @@
                     tags: tags ?? naosConfiguration.Tags),
             };
             context.Messages.Add($"{LogKeys.Startup} naos services builder: naos services added");
-            context.Services.AddSingleton(new NaosFeatureInformation { Name = "Naos", EchoRoute = "api/echo" });
+            //context.Services.AddSingleton(new NaosFeatureInformation { Name = "Naos", EchoRoute = "naos/servicecontext/echo" });
 
             // TODO: optional or provide own settings?
             JsonConvert.DefaultSettings = DefaultJsonSerializerSettings.Create;
 
             optionsAction?.Invoke(new NaosServicesContextOptions(context));
 
-            try
-            {
-                var logger = services.BuildServiceProvider().GetRequiredService<ILoggerFactory>().CreateLogger("Naos");
-                foreach (var message in context.Messages.Safe())
-                {
-                    logger.LogDebug(message);
-                }
-            }
-            catch (InvalidOperationException)
-            {
-                // no loggerfactory registered
-                services.AddScoped<ILoggerFactory>(sp => new LoggerFactory());
-            }
+            AddConfigurationHealthChecks(services, configuration);
+            LogStartupMessages(services, context);
 
             return context;
         }
@@ -86,6 +75,61 @@
             optionsAction?.Invoke(new ModuleOptions(naosOptions.Context));
 
             return naosOptions;
+        }
+
+        public static NaosServicesContextOptions AddModule<TModule>(
+            this NaosServicesContextOptions naosOptions,
+            string section = null)
+            where TModule : class
+        {
+            EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
+            EnsureArg.IsNotNull(naosOptions.Context, nameof(naosOptions.Context));
+
+            // TODO: create T instance with Factory.Creat<T>() and call inst.AddModule(options) << see CompositionRoot examples
+            var module = Factory<TModule>.Create();
+            //if (section.IsNullOrEmpty())
+            //{
+            //    module.Configure(new ModuleOptions(naosOptions.Context));
+            //}
+            //else
+            //{
+            //    module.Configure(new ModuleOptions(naosOptions.Context), section);
+            //}
+
+            return naosOptions;
+        }
+
+        private static void LogStartupMessages(IServiceCollection services, NaosBuilderContext context)
+        {
+            try
+            {
+                var logger = services.BuildServiceProvider().GetRequiredService<ILoggerFactory>().CreateLogger("Naos");
+                foreach (var message in context.Messages.Safe())
+                {
+                    logger.LogDebug(message);
+                }
+            }
+            catch (InvalidOperationException)
+            {
+                // no loggerfactory registered
+                services.AddScoped((Func<IServiceProvider, ILoggerFactory>)(sp => new LoggerFactory()));
+            }
+        }
+
+        private static void AddConfigurationHealthChecks(IServiceCollection services, IConfiguration configuration)
+        {
+            if (configuration[ConfigurationKeys.AzureKeyVaultEnabled].ToBool()
+                && !configuration[ConfigurationKeys.AzureKeyVaultName].IsNullOrEmpty()
+                && !configuration[ConfigurationKeys.AzureKeyVaultClientId].IsNullOrEmpty()
+                && !configuration[ConfigurationKeys.AzureKeyVaultClientSecret].IsNullOrEmpty())
+            {
+                services.AddHealthChecks()
+                    .AddAzureKeyVault(s => s
+                        .UseClientSecrets(configuration[ConfigurationKeys.AzureKeyVaultClientId], configuration[ConfigurationKeys.AzureKeyVaultClientSecret])
+                        .UseKeyVaultUrl($"https://{configuration[ConfigurationKeys.AzureKeyVaultName]}.vault.azure.net/"), "configuration-keyvault", tags: new[] { "naos" });
+            }
+
+            // TODO: check other configuration providers here
         }
     }
 }

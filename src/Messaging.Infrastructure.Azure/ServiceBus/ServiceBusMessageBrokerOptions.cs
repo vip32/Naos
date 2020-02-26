@@ -7,7 +7,7 @@
     using Naos.Messaging.Domain;
     using Naos.Tracing.Domain;
 
-    public class ServiceBusMessageBrokerOptions : BaseOptions
+    public class ServiceBusMessageBrokerOptions : OptionsBase
     {
         public ITracer Tracer { get; set; }
 

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Diagnostics;
+    using System.Globalization;
     using System.Linq;
     using System.Runtime.InteropServices;
 
@@ -37,8 +38,8 @@
 
             var metrics = new SystemMemoryMetrics
             {
-                Total = Math.Round(double.Parse(totalMemoryParts.Last()) / 1024, 0),
-                Free = Math.Round(double.Parse(freeMemoryParts.Last()) / 1024, 0)
+                Total = Math.Round(double.Parse(totalMemoryParts.Last(), CultureInfo.InvariantCulture) / 1024, 0),
+                Free = Math.Round(double.Parse(freeMemoryParts.Last(), CultureInfo.InvariantCulture) / 1024, 0)
             };
             metrics.Used = metrics.Total - metrics.Free;
 
@@ -65,7 +66,7 @@
 
             return new SystemCpuMetrics
             {
-                LoadPercentage = Math.Round(double.Parse(loadPercentageParts.Last()), 0),
+                LoadPercentage = Math.Round(double.Parse(loadPercentageParts.Last(), CultureInfo.InvariantCulture), 0),
             };
         }
 
@@ -91,9 +92,9 @@
 
             return new SystemMemoryMetrics
             {
-                Total = double.Parse(memory[1]),
-                Used = double.Parse(memory[2]),
-                Free = double.Parse(memory[3])
+                Total = double.Parse(memory[1], CultureInfo.InvariantCulture),
+                Used = double.Parse(memory[2], CultureInfo.InvariantCulture),
+                Free = double.Parse(memory[3], CultureInfo.InvariantCulture)
             };
         }
 

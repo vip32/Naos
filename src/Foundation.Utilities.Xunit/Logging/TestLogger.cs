@@ -9,7 +9,7 @@
     /// <summary>
     /// The <see cref="TestLogger" /> class is used to provide a logging implementation for Xunit.
     /// </summary>
-    public class TestLogger : FilterLogger
+    public class TestLogger : FilterLoggerBase
     {
         private readonly LoggingSettings settings;
         private readonly ILogFormatter formatter;

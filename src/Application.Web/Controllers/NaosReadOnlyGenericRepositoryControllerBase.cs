@@ -75,15 +75,5 @@
 
             return this.Ok(model);
         }
-
-        [HttpGet]
-        [Route("echo")]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        [OpenApiTag("Naos Echo")]
-        [Description("TODO description")]
-        public ActionResult<object> Echo()
-        {
-            return this.Ok();
-        }
     }
 }

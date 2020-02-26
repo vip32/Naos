@@ -71,7 +71,7 @@
 
         public ISpanBuilder BuildSpan(
             string operationName,
-            string logKey = LogKeys.Tracing,
+            string logKey = null,
             SpanKind kind = SpanKind.Internal,
             ISpan parent = null,
             bool ignoreCurrentSpan = false)
@@ -79,7 +79,7 @@
             return new SpanBuilder(
                 this,
                 operationName,
-                logKey ?? LogKeys.Tracing,
+                logKey ?? this.CurrentSpan.LogKey ?? LogKeys.Tracing,
                 kind,
                 parent == null && ignoreCurrentSpan ? null : parent ?? this.CurrentSpan)
                 .WithTag(SpanTagKey.SpanKind, kind.ToString()); // pass correlationid as traceid
@@ -98,10 +98,10 @@
             scope?.Span?
                 .WithTag(SpanTagKey.Error, true)
                 .AddLog(SpanLogKey.ErrorKind, "exception")
-                .AddLog(SpanLogKey.Message, $"[{exception.GetType().Name}] {exception.GetFullMessage()}")
+                .AddLog(SpanLogKey.Message, exception.GetFullMessage())
                 .AddLog(SpanLogKey.StackTrace, exception.StackTrace);
 
-            scope?.Span?.End(SpanStatus.Failed, exception?.GetFullMessage());
+            scope?.Span?.End(SpanStatus.Failed, exception.GetFullMessage());
             this.ScopeManager.Deactivate(scope);
         }
     }

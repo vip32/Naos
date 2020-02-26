@@ -1,5 +1,6 @@
 ﻿namespace Naos.Foundation.Domain
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -9,24 +10,37 @@
     /// distinct even if its properties are otherwise identical, two Value Objects with the
     /// exact same properties can be considered equal.
     /// </summary>
-    public abstract class ValueObject
+    public abstract class ValueObject : IEquatable<ValueObject>
     {
-        /// <summary>
-        /// Determines whether the specified <see cref="object" />, is equal to this instance.
-        /// </summary>
-        /// <param name="obj">The <see cref="object" /> to compare with this instance.</param>
-        /// <returns>
-        ///   <c>true</c> if the specified <see cref="object" /> is equal to this instance; otherwise, <c>false</c>.
-        /// </returns>
-        public override bool Equals(object obj)
+        public static bool operator ==(ValueObject left, ValueObject right)
         {
-            // Source: https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/implement-value-objects
-            if (obj == null || obj.GetType() != this.GetType())
+            if (left is null)
+            {
+                return right is null;
+            }
+
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(ValueObject left, ValueObject right)
+        {
+            return !(left == right);
+        }
+
+        /// <summary>
+        /// Indicates whether the current object is equal to another object of the same type.
+        /// </summary>
+        /// <param name="other">An object to compare with this object.</param>
+        /// <returns>
+        ///   <c>true</c>  if the current object is equal to the other parameter; otherwise, false.
+        /// </returns>
+        public bool Equals(ValueObject other)
+        {
+            if (other == null)
             {
                 return false;
             }
 
-            var other = (ValueObject)obj;
             var thisValues = this.GetAtomicValues().GetEnumerator();
             var otherValues = other.GetAtomicValues().GetEnumerator();
 
@@ -44,6 +58,24 @@
             }
 
             return !thisValues.MoveNext() && !otherValues.MoveNext();
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="object" />, is equal to this instance.
+        /// </summary>
+        /// <param name="obj">The <see cref="object" /> to compare with this instance.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified <see cref="object" /> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public override bool Equals(object obj)
+        {
+            // Source: https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/implement-value-objects
+            if (obj == null || obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((ValueObject)obj);
         }
 
         /// <summary>

@@ -9,7 +9,7 @@
     public class Job : IJob
     {
         private readonly Func<string[], Task> task;
-        private readonly Func<CancellationToken, string[], Task> task2;
+        private readonly Func<string, CancellationToken, string[], Task> task2;
         private readonly Action<string[]> action;
         private readonly Action action2;
 
@@ -44,7 +44,7 @@
             this.task = task;
         }
 
-        public Job(Func<CancellationToken, string[], Task> task)
+        public Job(Func<string, CancellationToken, string[], Task> task)
         {
             EnsureArg.IsNotNull(task, nameof(task));
 
@@ -59,15 +59,25 @@
         {
         }
 
+        public virtual async Task ExecuteAsync(string[] args = null)
+        {
+            await this.ExecuteAsync(null, CancellationToken.None, args).AnyContext();
+        }
+
         // TODO: Other things to schedule
         // Schedule - Command
         // Schedule - Message
-        public virtual async Task ExecuteAsync(string[] args = null)
+        public virtual async Task ExecuteAsync(string correlationId, string[] args = null)
         {
-            await this.ExecuteAsync(CancellationToken.None, args).AnyContext();
+            await this.ExecuteAsync(correlationId, CancellationToken.None, args).AnyContext();
         }
 
-        public virtual async Task ExecuteAsync(CancellationToken cancellationToken = default, string[] args = null)
+        public virtual async Task ExecuteAsync(CancellationToken cancellationToken, string[] args = null)
+        {
+            await this.ExecuteAsync(null, cancellationToken, args).AnyContext();
+        }
+
+        public virtual async Task ExecuteAsync(string correlationId, CancellationToken cancellationToken = default, string[] args = null)
         {
             if (this.task != null)
             {
@@ -75,7 +85,7 @@
             }
             else if (this.task2 != null)
             {
-                await this.task2(cancellationToken, args).AnyContext();
+                await this.task2(correlationId, cancellationToken, args).AnyContext();
             }
             else if (this.action2 != null)
             {

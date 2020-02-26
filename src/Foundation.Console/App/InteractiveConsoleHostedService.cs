@@ -49,7 +49,9 @@
 
         private async Task Run()
         {
-            Thread.Sleep(500);
+            //Thread.Sleep(500);
+            await Task.Delay(500).AnyContext();
+
             foreach (var command in this.commands)
             {
                 Console.WriteLine($"found command: {command.GetType().GetAttributeValue<VerbAttribute, string>(a => a.Name) ?? "?NAME?"} ({command.GetType()})", Color.Gray);
@@ -68,7 +70,8 @@
                 var originalColor = System.Console.ForegroundColor;
                 while (true)
                 {
-                    Thread.Sleep(500);
+                    //Thread.Sleep(500);
+                    await Task.Delay(500).AnyContext();
                     System.Console.ForegroundColor = ConsoleColor.Cyan;
                     var inputLine = ReadLine.Read("naos> ").Trim();
                     System.Console.ForegroundColor = originalColor;
@@ -130,7 +133,7 @@
             }
         }
 
-        public class AutoCompletionHandler : IAutoCompleteHandler // TODO: let all ConsoleCommands fill this (via reflection/helptext?)
+        private sealed class AutoCompletionHandler : IAutoCompleteHandler // TODO: let all ConsoleCommands fill this (via reflection/helptext?)
         {
             // characters to start completion from
             public char[] Separators { get; set; } = new char[] { ' ', '.', '/' };

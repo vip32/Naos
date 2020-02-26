@@ -17,8 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.0">
+    <PackageReference Include="AspNetCore.HealthChecks.MongoDb" Version="3.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -37,22 +38,25 @@
     <PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="3.0.1" />
     <PackageReference Include="AspNetCore.HealthChecks.DocumentDb" Version="3.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="3.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="3.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="3.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="3.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Foundation.Application.Web.Startup.EntityFramework\Application.Web.Startup.EntityFramework.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Application.Web.Startup.Repositories\Application.Web.Startup.Repositories.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Console\Console.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Application.Web.Startup\Application.Web.Startup.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Domain.Repositories.AutoMapper\Domain.Repositories.AutoMapper.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Domain.Repositories.Documents\Domain.Repositories.Documents.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Domain.Repositories\Domain.Repositories.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure.Cosmos\Infrastructure.Azure.Cosmos.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Infrastructure.EntityFramework\Infrastructure.EntityFramework.csproj" />
-    <ProjectReference Include="..\..\src\Foundation.Infrastructure.Sqlite.Documents\Infrastructure.Sqlite.Documents.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Infrastructure.Mongo\Infrastructure.Mongo.csproj" />
-    <ProjectReference Include="..\..\src\Foundation.Infrastructure.SqlServer.Documents\Infrastructure.SqlServer.Documents.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Infrastructure.Documents.Sqlite\Infrastructure.Documents.Sqlite.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Infrastructure.Documents.SqlServer\Infrastructure.Documents.SqlServer.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Mapping.AutoMapper\Mapping.AutoMapper.csproj" />
     <ProjectReference Include="..\..\src\Application\Application.csproj" />
     <ProjectReference Include="..\..\src\Application.Web\Application.Web.csproj" />

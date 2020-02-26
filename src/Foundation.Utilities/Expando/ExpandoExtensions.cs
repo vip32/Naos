@@ -7,9 +7,9 @@
     {
         public static dynamic ToExpando<T>(this T instance)
         {
-            if(instance == default)
+            if(instance == null)
             {
-                return default;
+                return null;
             }
 
             if (!typeof(T).GetInterfaces().Contains(typeof(IDynamicMetaObjectProvider)))

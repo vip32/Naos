@@ -7,7 +7,7 @@
     using Naos.Messaging.Domain;
     using Naos.Tracing.Domain;
 
-    public class FileStorageMessageBrokerOptions : BaseOptions
+    public class FileStorageMessageBrokerOptions : OptionsBase
     {
         public ITracer Tracer { get; set; }
 

@@ -18,12 +18,12 @@ namespace Naos.Sample.Application.Web
     using Naos.Commands.Infrastructure.FileStorage;
     using Naos.FileStorage.Infrastructure;
     using Naos.Foundation;
-    using Naos.JobScheduling.Domain;
     using Naos.Messaging.Domain;
     using Naos.Sample.Catalogs.Application;
     using Naos.Sample.Customers.Application;
+    using Naos.Sample.Inventory.Application;
+    using Naos.Sample.UserAccounts.Application;
     using Naos.Tracing.Domain;
-    using Naos.Tracing.Infrastructure.Zipkin;
     using NSwag.Generation.Processors;
 
     public class Startup
@@ -108,11 +108,11 @@ namespace Naos.Sample.Application.Web
                     .AddNaos(o =>
                     {
                         // Countries repository is exposed with a dedicated controller, no need to register here
-                        o.AddGenericRepositoryController<Customers.Domain.Customer, Customers.Domain.ICustomerRepository>();
-                        o.AddGenericRepositoryController<Inventory.Domain.ProductInventory, Inventory.Domain.IInventoryRepository>();
-                        o.AddGenericRepositoryController<Inventory.Domain.ProductReplenishment, Inventory.Domain.IReplenishmentRepository>();
-                        o.AddGenericRepositoryController<UserAccounts.Domain.UserAccount>(); // =implicit IRepository<UserAccount>
-                        o.AddGenericRepositoryController<UserAccounts.Domain.UserVisit>(); // =implicit IRepository<UserVisit>
+                        o.AddEndpoint<Customers.Domain.Customer, Customers.Domain.ICustomerRepository>();
+                        o.AddEndpoint<Inventory.Domain.ProductInventory, Inventory.Domain.IInventoryRepository>();
+                        o.AddEndpoint<Inventory.Domain.ProductReplenishment, Inventory.Domain.IReplenishmentRepository>();
+                        o.AddEndpoint<UserAccounts.Domain.UserAccount>(); // =implicit IRepository<UserAccount>
+                        o.AddEndpoint<UserAccounts.Domain.UserVisit>(); // =implicit IRepository<UserVisit>
                     });
 
             services
@@ -136,7 +136,7 @@ namespace Naos.Sample.Application.Web
                         .AddBehavior(sp => new FileStoragePersistCommandBehavior(
                             new FolderFileStorage(o => o
                                 .Folder(Path.Combine(Path.GetTempPath(), "naos_commands", "journal")))))
-                        .AddRequests(o => o
+                        .AddEndpoints(o => o
                             .Post<CreateCustomerCommand>("api/commands/customers/create", HttpStatusCode.Created, "Customers", onSuccess: (cmd, ctx) => ctx.Response.Location($"api/customers/{cmd.Customer.Id}"))
                             .Get<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>("api/commands/customers/active", groupName: "Customers")
                             .UseAzureBlobStorage()
@@ -146,21 +146,23 @@ namespace Naos.Sample.Application.Web
                             //.UseInMemoryQueue()
                             .GetQueued<PingCommand>("api/commands/queue/ping")
                             .GetQueued<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>("api/commands/queue/customers/active", groupName: "Customers")))
-                    .AddOperations(o => o
+                   .AddOperations(o => o
                         .AddInteractiveConsole()
                         .AddLogging(o => o
                             .UseConsole(LogLevel.Debug)
                             .UseFile()
                             //.UseSink(w => w.LiterateConsole())
                             //.UseAzureBlobStorage()
+                            //.UseCosmosDb() TODO
                             .UseAzureLogAnalytics(false)
-                            .UseMongo(true))
+                            .UseMongo())
                         .AddSystemHealthChecks()
                         .AddRequestStorage(o => o
                             .UseAzureBlobStorage())
                         .AddTracing(o => o
                             .UseSampler<ConstantSampler>()
-                            .UseExporter<ZipkinSpanExporter>()))
+                            .UseZipkinExporter()))
+                            //.UseExporter<ZipkinSpanExporter>())) // TODO: UseZipkinExporter + configuration + zipkin url health (options.Endpoint)
                     //.UseSampler(new OperationNamePatternSampler(new[] { "http*" }))))
                     //.AddQueries()
                     //.AddSwaggerDocument() // s.Description = Product.Capability\
@@ -209,7 +211,7 @@ namespace Naos.Sample.Application.Web
                     .UseOperationsTracing()
                     .UseRequestFiltering()
                     .UseServiceExceptions()
-                    .UseCommandRequests()
+                    .UseCommandEndpoints()
                     .UseServiceDiscoveryRouter())
                 .UseOpenApi()
                 .UseSwaggerUi3();

@@ -32,6 +32,8 @@
                 .RuleFor(u => u.RegisterDate, (f, u) => DateTime.UtcNow.AddDays(-14))
                 .RuleFor(u => u.TenantId, (f, u) => this.tenantId)
                 .RuleFor(u => u.AdAccount, (f, u) => AdAccount.For(f.PickRandom(new[] { "East", "West" }) + $"\\{f.System.Random.AlphaNumeric(5)}"))
+                //.RuleFor(u => u.Status, (f, u) => f.PickRandom(new[] { UserAccountStatus.Active, UserAccountStatus.Inactive }))
+                .RuleFor(u => u.Status, (f, u) => f.PickRandom(new[] { UserAccountStatus.For("Active"), UserAccountStatus.For("Inactive") }))
                 .RuleFor(u => u.VisitCount, (f, u) => 1);
         }
 

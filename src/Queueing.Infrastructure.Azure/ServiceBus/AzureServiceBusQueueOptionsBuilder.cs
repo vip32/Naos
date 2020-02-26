@@ -5,10 +5,17 @@
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Azure.ServiceBus.Management;
     using Naos.Foundation;
+    using Naos.Tracing.Domain;
 
     public class AzureServiceBusQueueOptionsBuilder :
        BaseOptionsBuilder<AzureServiceBusQueueOptions, AzureServiceBusQueueOptionsBuilder>
     {
+        public AzureServiceBusQueueOptionsBuilder Tracer(ITracer tracer)
+        {
+            this.Target.Tracer = tracer;
+            return this;
+        }
+
         public AzureServiceBusQueueOptionsBuilder Mediator(IMediator mediator)
         {
             this.Target.Mediator = mediator;
@@ -145,6 +152,12 @@
         public AzureServiceBusQueueOptionsBuilder Retries(int retries)
         {
             this.Target.Retries = retries;
+            return this;
+        }
+
+        public AzureServiceBusQueueOptionsBuilder NoRetries()
+        {
+            this.Target.Retries = 0;
             return this;
         }
     }

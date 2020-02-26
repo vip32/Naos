@@ -17,7 +17,7 @@
         /// Enables correlation/request ids for the API request/responses.
         /// </summary>
         /// <param name="naosOptions"></param>
-        public static NaosApplicationContextOptions UseCommandRequests(this NaosApplicationContextOptions naosOptions)
+        public static NaosApplicationContextOptions UseCommandEndpoints(this NaosApplicationContextOptions naosOptions)
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
 

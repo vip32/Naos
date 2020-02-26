@@ -57,41 +57,34 @@
 
                 //await this.next(context);
 
-                if (context.Request.Path == "/" || context.Request.Path.Equals("/index.html", System.StringComparison.OrdinalIgnoreCase))
+                if (context.Request.Method.SafeEquals(HttpMethods.Get)
+                    && (context.Request.Path.SafeEquals("/") || context.Request.Path.SafeEquals("/index.html")))
                 {
-                    await context.Response.WriteAsync(@"
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset='utf-8' />
-    <meta name='viewport' content='width=device-width' />
-    <title>Naos</title>
-    <base href='/' />
-    <link href='css/bootstrap/bootstrap.min.css' rel ='stylesheet' />
-    <link href='css/naos.css' rel ='stylesheet' />
-</head>
-<body>
-    <pre style='color: cyan;font-size: xx-small;'>
-    " + ResourcesHelper.GetLogoAsString() + @"
-    </pre>
-    <hr />
-    &nbsp;&nbsp;&nbsp;&nbsp;<a href='/api'>infos</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/healthcheck'>health</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/logevents/dashboard'>logs</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/logtraces/dashboard'>traces</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/api/operations/logevents/dashboard?q=TrackType=journal'>journal</a></br>
-</body>
-</html>
-").AnyContext();
+                    await context.Response.WriteNaosDashboard(
+                        title: serviceDescriptor?.ToString(),
+                        tags: serviceDescriptor?.Tags).AnyContext();
                 }
-                else if (context.Request.Path.Equals("/css/naos.css", System.StringComparison.OrdinalIgnoreCase))
+                else if (context.Request.Method.SafeEquals(HttpMethods.Get)
+                    && context.Request.Path.SafeEquals("/css/naos/styles.css"))
                 {
                     context.Response.ContentType = ContentType.CSS.ToValue();
                     await context.Response.WriteAsync(ResourcesHelper.GetStylesAsString()).AnyContext();
                 }
-                else if (context.Request.Path.Equals("/favicon.ico", System.StringComparison.OrdinalIgnoreCase))
+                else if (context.Request.Method.SafeEquals(HttpMethods.Get)
+                    && context.Request.Path.SafeEquals("/css/naos/swagger.css"))
+                {
+                    context.Response.ContentType = ContentType.CSS.ToValue();
+                    await context.Response.WriteAsync(ResourcesHelper.GetSwaggerStylesAsString()).AnyContext();
+                }
+                else if (context.Request.Method.SafeEquals(HttpMethods.Get)
+                    && context.Request.Path.SafeEquals("/favicon.ico"))
                 {
                     context.Response.ContentType = ContentType.ICO.ToValue();
                     var icon = ResourcesHelper.GetIconAsBytes();
                     await context.Response.Body.WriteAsync(icon, 0, icon.Length).AnyContext();
                 }
-                else if (context.Request.Path == "/error")
+                else if (context.Request.Method.SafeEquals(HttpMethods.Get)
+                    && context.Request.Path == "/error")
                 {
                     throw new NaosException("forced exception");
                 }

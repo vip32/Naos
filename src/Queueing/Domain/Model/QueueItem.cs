@@ -11,7 +11,7 @@
     {
         private readonly IQueue<TData> queue;
 
-        public QueueItem(string id, TData value, IQueue<TData> queue, DateTime enqueued, int attempts)
+        public QueueItem(string id, TData value, IQueue<TData> queue, DateTime? enqueued = null, int attempts = 0)
         {
             EnsureThat.EnsureArg.IsNotNullOrEmpty(id, nameof(id));
             EnsureThat.EnsureArg.IsNotNull(queue, nameof(queue));
@@ -19,12 +19,18 @@
             this.Id = id;
             this.Data = value;
             this.queue = queue;
-            this.EnqueuedDate = enqueued;
+            this.EnqueuedDate = enqueued ?? DateTime.UtcNow;
             this.Attempts = attempts;
             this.DequeuedDate = this.RenewedDate = DateTime.UtcNow;
         }
 
         public string Id { get; }
+
+        public string CorrelationId { get; set; }
+
+        public string TraceId { get; set; }
+
+        public string SpanId { get; set; }
 
         public bool IsCompleted { get; private set; }
 

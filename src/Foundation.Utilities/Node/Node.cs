@@ -27,7 +27,7 @@
                     return Enumerable.Empty<Node<T>>();
                 }
 
-                return this.Parent.ToEnumarable().Concat(this.Parent.Ancestors);
+                return this.Parent.ToEnumerable().Concat(this.Parent.Ancestors);
             }
         }
 
@@ -59,7 +59,7 @@
         {
             get
             {
-                return this.ToEnumarable().Concat(this.Children);
+                return this.ToEnumerable().Concat(this.Children);
             }
         }
 
@@ -67,7 +67,7 @@
         {
             get
             {
-                return this.ToEnumarable().Concat(this.Ancestors);
+                return this.ToEnumerable().Concat(this.Ancestors);
             }
         }
 
@@ -75,7 +75,7 @@
         {
             get
             {
-                return this.ToEnumarable().Concat(this.Children.SelectMany(c => c.SelfAndDescendants));
+                return this.ToEnumerable().Concat(this.Children.SelectMany(c => c.SelfAndDescendants));
             }
         }
 
@@ -85,7 +85,7 @@
             {
                 if (this.IsRoot)
                 {
-                    return this.ToEnumarable();
+                    return this.ToEnumerable();
                 }
 
                 return this.Parent.Children;
@@ -404,7 +404,7 @@
         {
             if (level == this.Level)
             {
-                return this.ToEnumarable();
+                return this.ToEnumerable();
             }
 
             return this.Children.SelectMany(c => c.GetNodesAtLevelInternal(level));

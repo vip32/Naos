@@ -2,6 +2,7 @@
 {
     using System;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
     using Naos.Sample.UserAccounts.Domain;
 
     public class UserAccountsDbContext : DbContext
@@ -31,6 +32,7 @@
             //modelBuilder.HasDefaultSchema("Development"); // TODO: this is too static, as the migration contains the environment (fixed)
             //modelBuilder.Entity<UserAccount>().Ignore(e => e.State); // TODO: map the state
 
+            modelBuilder.HasDefaultSchema("useraccounts");
             modelBuilder.Entity<UserAccount>().OwnsOne(e => e.State, od =>
             {
                 od.Property(p => p.DeactivatedReasons)
@@ -45,7 +47,12 @@
             });
 
             modelBuilder.Entity<UserAccount>().OwnsOne(e => e.AdAccount, od =>
-                od.ToTable("AdAccounts"));
+                od.ToTable("AdAccounts")); // map valueobject to own table
+
+            modelBuilder.Entity<UserAccount>().OwnsOne(e => e.Status)
+                .Property(b => b.Value)
+                .HasColumnName(nameof(UserAccount.Status)) // map valueobject to single column
+                .HasConversion(new EnumToStringConverter<UserAccountStatusType>());
 
             modelBuilder.Entity<UserVisit>().OwnsOne(e => e.State, od =>
             {

@@ -1,11 +1,17 @@
-﻿namespace Microsoft.Extensions.DependencyInjection
+﻿namespace Naos.Sample.Customers.Application
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using EnsureThat;
     using MediatR;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
+    using Naos.Foundation.Application;
     using Naos.Foundation.Domain;
+    using Naos.Queueing;
+    using Naos.Queueing.Domain;
+    using Naos.Sample.Countries.Application;
     using Naos.Sample.Countries.Domain;
     using Naos.Sample.Countries.Infrastructure;
     using Naos.Tracing.Domain;
@@ -20,6 +26,27 @@
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
             options.Context.AddTag("countries");
+
+            // enqueue data and do nothing
+            options.Context.Services.AddSingleton<IQueue<CountriesExportData>>(sp => // AddQueue<T>(sp => ....)
+            {
+                return new InMemoryQueue<CountriesExportData>(o => o
+                    .Mediator(sp.GetService<IMediator>())
+                    .Tracer(sp.GetService<ITracer>())
+                    .LoggerFactory(sp.GetService<ILoggerFactory>())
+                    .NoRetries());
+            });
+            //options.Context.Services.AddSingleton<IQueue<CountriesExportData>>(sp => // AddQueue<T>(sp => ....)
+            //{
+            //    return new AzureServiceBusQueue<CountriesExportData>(o => o
+            //        .Mediator(sp.GetService<IMediator>())
+            //        .Tracer(sp.GetService<ITracer>())
+            //        .LoggerFactory(sp.GetService<ILoggerFactory>())
+            //        .ConnectionString(............)
+            //        .NoRetries());
+            //});
+            // dequeue and process data
+            options.Context.Services.AddQueueProcessingStartupTask<CountriesExportData>(new TimeSpan(0, 0, 30));
 
             options.Context.Services.AddScoped<ICountryRepository>(sp =>
             {
@@ -47,6 +74,10 @@
                 new Country { Code = "nl", LanguageCodes = new[] {"nl-nl" }, Name = "Netherlands", TenantId = "naos_sample_test", Id = "nl" },
                 new Country { Code = "be", LanguageCodes = new[] {"fr-be", "nl-be" }, Name = "Belgium", TenantId = "naos_sample_test", Id = "be" },
             }.ToList()));
+            options.Context.Services.AddSeederStartupTask<ICountryRepository, Country>(new[]
+            {
+                new Country { Code = "us", LanguageCodes = new[] {"en-us" }, Name = "United States", TenantId = "naos_sample_test", Id = "us" },
+            }, delay: new TimeSpan(0, 0, 3));
 
             options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: countries service added");
 

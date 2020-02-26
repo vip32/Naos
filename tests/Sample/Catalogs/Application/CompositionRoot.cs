@@ -1,8 +1,11 @@
-﻿namespace Microsoft.Extensions.DependencyInjection
+﻿namespace Naos.Sample.Catalogs.Application
 {
     using EnsureThat;
+    using MediatR;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
+    using Naos.Foundation.Domain;
     using Naos.Foundation.Infrastructure;
     using Naos.Sample.Catalogs.Domain;
 
@@ -23,13 +26,29 @@
                 new SqlServerDocumentProvider<Product>(o => o
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                     .EnableSqlLogging()
-                    //.ConnectionString("Server=.;Database=naos_sample;User=sa;Password=Abcd1234!;Trusted_Connection=False;MultipleActiveResultSets=True;") // docker
-                    .ConnectionString(configuration.ConnectionString ?? "Server=(localdb)\\mssqllocaldb;Database=naos_sample;Trusted_Connection=True;MultipleActiveResultSets=True;")
+                    .ConnectionString("Server=127.0.0.1;Database=naos_sample;User=sa;Password=Abcd1234!;Trusted_Connection=False;MultipleActiveResultSets=True;") // docker
+                    //.ConnectionString(configuration.ConnectionString ?? "Server=(localdb)\\mssqllocaldb;Database=naos_sample;Trusted_Connection=True;MultipleActiveResultSets=True;")
                     .Schema(configuration.SchemaName ?? "catalogs")
                     .AddIndex(p => p.Name)
                     .AddIndex(p => p.Region)
                     .AddIndex(p => p.Price)
                     .AddIndex(p => p.HasStock)));
+
+            options.Context.Services.AddScoped<IProductRepository>(sp =>
+            {
+                return new ProductRepository(
+                            //new RepositoryTracingDecorator<Product>(
+                            //    sp.GetService<ILogger<ProductRepository>>(),
+                            //    sp.GetService<ITracer>(),
+                            //    new RepositoryLoggingDecorator<Product>(
+                            //        sp.GetRequiredService<ILogger<ProductRepository>>(),
+#pragma warning disable SA1114 // Parameter list should follow declaration
+                            new DocumentRepository<Product>(o => o
+                                .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
+                                .Provider(sp.GetRequiredService<IDocumentProvider<Product>>())
+                                .Mediator(sp.GetRequiredService<IMediator>())));
+#pragma warning restore SA1114 // Parameter list should follow declaration
+            });
 
             //options.Context.Services.AddSingleton<IDocumentProvider<Product>>(sp =>
             //    new SqliteDocumentProvider<Product>(new SqliteDocumentProviderOptionsBuilder<Product>()

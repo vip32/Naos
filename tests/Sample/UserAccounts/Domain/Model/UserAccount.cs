@@ -16,5 +16,7 @@
         public string TenantId { get; set; }
 
         public AdAccount AdAccount { get; set; }
+
+        public UserAccountStatus Status { get; set; }
     }
 }

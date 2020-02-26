@@ -5,7 +5,7 @@ namespace Naos.Messaging.Infrastructure.RabbitMQ
     using Naos.Messaging.Domain;
     using Naos.Tracing.Domain;
 
-    public class RabbitMQMessageBrokerOptions : BaseOptions
+    public class RabbitMQMessageBrokerOptions : OptionsBase
     {
         public ITracer Tracer { get; set; }
 

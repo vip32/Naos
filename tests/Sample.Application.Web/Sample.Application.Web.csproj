@@ -13,20 +13,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="..\..\appsettings.json" Link="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="..\..\appsettings.json" Link="appsettings.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AspNetCore.HealthChecks.UI" Version="3.0.9" />
-    <PackageReference Include="AspNetCore.HealthChecks.Uris" Version="3.0.0" />
-    <PackageReference Include="NSwag.AspNetCore" Version="13.2.0" />
-    <PackageReference Include="NSwag.Generation" Version="13.2.0" />
-    <PackageReference Include="NJsonSchema" Version="10.1.2" />
+    <PackageReference Include="NSwag.AspNetCore" Version="13.2.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.1"> <!--needed for ef migrations-->
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Authentication.Application.Web\Authentication.Application.Web.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Application.Web\Application.Web.csproj" />
     <ProjectReference Include="..\..\src\Application\Application.csproj" />
     <ProjectReference Include="..\..\src\Application.Web\Application.Web.csproj" />

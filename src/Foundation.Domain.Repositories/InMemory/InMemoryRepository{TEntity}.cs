@@ -13,7 +13,7 @@
     /// </summary>
     /// <typeparam name="TEntity">The type of the domain entity.</typeparam>
     /// <seealso cref="Domain.IRepository{T, TId}" />
-    public class InMemoryRepository<TEntity> : IGenericRepository<TEntity>
+    public class InMemoryRepository<TEntity> : IGenericRepository<TEntity>, IDisposable
         where TEntity : class, IEntity, IAggregateRoot
     {
         private readonly ReaderWriterLockSlim @lock = new ReaderWriterLockSlim();
@@ -282,6 +282,11 @@
             }
 
             return await this.DeleteAsync(entity.Id).AnyContext();
+        }
+
+        public void Dispose()
+        {
+            this.@lock?.Dispose();
         }
 
         protected virtual Func<TEntity, bool> EnsurePredicate(ISpecification<TEntity> specification)

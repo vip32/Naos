@@ -1,5 +1,6 @@
 ﻿namespace Naos.Foundation.Application
 {
+    using System;
     using System.Diagnostics;
     using System.Drawing;
     using System.Linq;
@@ -11,13 +12,18 @@
     using static System.Runtime.InteropServices.RuntimeInformation;
     using Console = Colorful.Console;
 
-    public class OpenBrowserConsoleCommandEventHandler : ConsoleCommandEventHandler<OpenBrowserConsoleCommand>
+    public class OpenBrowserConsoleCommandEventHandler : ConsoleCommandEventHandler<OpenBrowserConsoleCommand>, IDisposable
     {
         private readonly IServer server;
 
         public OpenBrowserConsoleCommandEventHandler(IServer server)
         {
             this.server = server;
+        }
+
+        public void Dispose()
+        {
+            this.server?.Dispose();
         }
 
         public override Task<bool> Handle(ConsoleCommandEvent<OpenBrowserConsoleCommand> request, CancellationToken cancellationToken)
@@ -28,15 +34,15 @@
 
                 if (request.Command.Logs)
                 {
-                    url += "/api/operations/logevents/dashboard";
+                    url += "/naos/operations/logevents/dashboard";
                 }
                 else if (request.Command.Traces)
                 {
-                    url += "/api/operations/logtraces/dashboard";
+                    url += "/naos/operations/logtraces/dashboard";
                 }
                 else if (request.Command.Journal)
                 {
-                    url += "/api/operations/logevents/dashboard?q=TrackType=journal";
+                    url += "/naos/operations/logevents/dashboard?q=TrackType=journal";
                 }
                 else if (request.Command.Swagger)
                 {

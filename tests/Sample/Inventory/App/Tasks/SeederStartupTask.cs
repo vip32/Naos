@@ -7,7 +7,6 @@
     using EnsureThat;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
-    using Naos.Foundation.Application;
     using Naos.Sample.Inventory.Domain;
 
     public class SeederStartupTask : IStartupTask
@@ -28,7 +27,7 @@
 
         public Task StartAsync(CancellationToken cancellationToken = default)
         {
-            this.logger.LogInformation("started inventory seeder task");
+            //this.logger.LogInformation("{LogKey:l} task started: inventory seeder", LogKeys.StartupTask);
 
             new List<ProductInventory>
             {
@@ -55,9 +54,16 @@
                 }
             }.ForEach(async e =>
             {
-                if (!await this.repository.ExistsAsync(e.Id).AnyContext())
+                try
                 {
-                    await this.repository.InsertAsync(e).AnyContext();
+                    if (!await this.repository.ExistsAsync(e.Id).AnyContext())
+                    {
+                        await this.repository.InsertAsync(e).AnyContext();
+                    }
+                }
+                catch// (Exception ex)
+                {
+                    //this.logger.LogWarning(ex, $"{{LogKey:l}} cannot seed entity (type=ProductInventory) {ex.Message}", LogKeys.Startup);
                 }
             });
 

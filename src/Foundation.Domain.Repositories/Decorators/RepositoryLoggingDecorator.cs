@@ -76,7 +76,7 @@
 
             if (specification != null)
             {
-                this.logger.LogDebug($"{LogKeys.DomainRepository} specification: {specification.ToString()}");
+                this.logger.LogDebug($"{LogKeys.DomainRepository} specification: {specification}");
             }
 
             foreach (var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
@@ -93,7 +93,7 @@
 
             foreach (var specification in specifications.Safe())
             {
-                this.logger.LogDebug($"{LogKeys.DomainRepository} specification: {specification.ToString()}");
+                this.logger.LogDebug($"{LogKeys.DomainRepository} specification: {specification}");
             }
 
             foreach (var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))

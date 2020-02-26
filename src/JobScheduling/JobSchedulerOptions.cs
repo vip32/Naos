@@ -74,7 +74,7 @@
         {
             return this.Register(
                new JobRegistration(key, cron, null, isReentrant, timeout, enabled),
-               new Job(async (t, a) => // send mediator request for data
+               new Job(async (c, t, a) => // send mediator request for data
                 {
                     this.logger.LogInformation("{LogKey:l} send jobevent", LogKeys.JobScheduling);
                     if (@event != null)
@@ -98,7 +98,7 @@
 
             return this.Register(
                 new JobRegistration(key, cron, args, isReentrant, timeout, enabled),
-                new Job(async (t, a) => // defer job creation
+                new Job(async (c, t, a) => // defer job creation
                 {
                     var job = this.jobFactory.CreateJob(typeof(T));
                     if (job == null)
@@ -106,7 +106,7 @@
                         throw new NaosException($"Cannot create job instance for type {typeof(T).PrettyName()}.");
                     }
 
-                    await job.ExecuteAsync(t, a).AnyContext();
+                    await job.ExecuteAsync(c, t, a).AnyContext();
                 }));
         }
 
@@ -117,7 +117,7 @@
 
             return this.Register(
                 new JobRegistration(key, cron, null, isReentrant, timeout, enabled),
-                new Job(async (t, a) => // defer job creation
+                new Job(async (c, t, a) => // defer job creation
                 {
                     await Task.Run(() =>
                     {
@@ -141,7 +141,7 @@
             EnsureArg.IsNotNull(job, nameof(job));
 
             registration.Key ??= HashAlgorithm.ComputeHash(job);
-            this.logger.LogInformation($"{{LogKey:l}} registration (key={{JobKey}}, cron={registration.Cron}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout.ToString("c")}, enabled={registration.Enabled})", LogKeys.JobScheduling, registration.Key);
+            this.logger.LogInformation($"{{LogKey:l}} registration (key={{JobKey}}, cron={registration.Cron}, isReentrant={registration.IsReentrant}, timeout={registration.Timeout:c}, enabled={registration.Enabled})", LogKeys.JobScheduling, registration.Key);
 
             var item = this.Registrations.FirstOrDefault(r => r.Key.Key.SafeEquals(registration.Key));
             if (item.Key != null)

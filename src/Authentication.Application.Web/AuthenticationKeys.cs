@@ -14,6 +14,10 @@
 
         public const string EasyAuthScheme = "EasyAuth";
 
+        public const string OidcScheme = "OpenIdConnect";
+
+        public const string CookiesScheme = "Cookies";
+
         public const string AuthorizationHeaderName = "Authorization";
     }
 }

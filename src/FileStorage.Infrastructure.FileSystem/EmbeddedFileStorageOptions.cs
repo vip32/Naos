@@ -4,7 +4,7 @@
     using System.Reflection;
     using Naos.Foundation;
 
-    public class EmbeddedFileStorageOptions : BaseOptions
+    public class EmbeddedFileStorageOptions : OptionsBase
     {
         public IEnumerable<Assembly> Assemblies { get; set; }
 

@@ -13,17 +13,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="..\..\appsettings.json" Link="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="..\..\appsettings.json" Link="appsettings.json" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.UI" Version="3.0.9" />
     <PackageReference Include="AspNetCore.HealthChecks.Uris" Version="3.0.0" />
-    <PackageReference Include="NSwag.AspNetCore" Version="13.2.0" />
-    <PackageReference Include="NSwag.Generation" Version="13.2.0" />
-    <PackageReference Include="NJsonSchema" Version="10.1.2" />
+    <PackageReference Include="NSwag.AspNetCore" Version="13.2.2" />
+    <PackageReference Include="NSwag.Generation" Version="13.2.2" />
+    <PackageReference Include="NJsonSchema" Version="10.1.4" />
   </ItemGroup>
 
   <ItemGroup>

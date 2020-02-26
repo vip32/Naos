@@ -404,7 +404,7 @@
 #pragma warning restore SA1402 // File may only contain a single class
     {
         public RetryException(int retryCount, Exception innerException)
-            : base($"retry failed after #{retryCount.ToString()} attempts", innerException)
+            : base($"retry failed after #{retryCount} attempts", innerException)
                 => this.RetryCount = retryCount;
 
         public RetryException()

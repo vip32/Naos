@@ -4,7 +4,7 @@
     using MediatR;
     using Naos.Queueing.Domain;
 
-    public class InMemoryQueueOptions : BaseQueueOptions
+    public class InMemoryQueueOptions : QueueOptionsBase
     {
         public IMediator Mediator { get; set; }
 

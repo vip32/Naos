@@ -56,5 +56,11 @@
             this.Target.Mapper = mapper;
             return this;
         }
+
+        public MongoRepositoryOptionsBuilder<TEntity> IdGenerator(IEntityIdGenerator<TEntity> idGenerator)
+        {
+            this.Target.IdGenerator = idGenerator;
+            return this;
+        }
     }
 }

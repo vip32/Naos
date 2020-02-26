@@ -3,7 +3,6 @@
     using System.Diagnostics;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.Foundation;
     using Naos.Foundation.Domain;
 
     public class SpanBuilder : ISpanBuilder
@@ -17,7 +16,7 @@
         private ISpan parent;
         private string spanId;
 
-        public SpanBuilder(ITracer tracer, string operationName, string logKey = LogKeys.Tracing, SpanKind kind = SpanKind.Internal, ISpan parent = null)
+        public SpanBuilder(ITracer tracer, string operationName, string logKey = null, SpanKind kind = SpanKind.Internal, ISpan parent = null)
         {
             EnsureArg.IsNotNull(tracer, nameof(tracer));
             EnsureArg.IsNotNullOrEmpty(operationName, nameof(operationName));
@@ -25,7 +24,7 @@
             this.tracer = tracer;
             this.traceId = parent?.TraceId;
             this.operationName = operationName;
-            this.logKey = logKey;
+            this.logKey = logKey ?? LogKeys.Tracing;
             this.kind = kind;
             this.parent = parent;
             // TODO: copy baggage items from parent

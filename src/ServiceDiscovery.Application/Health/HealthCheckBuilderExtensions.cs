@@ -9,15 +9,15 @@
 
     public static class HealthCheckBuilderExtensions
     {
-        public static IHealthChecksBuilder AddServiceDiscoveryClient<T>(
+        public static IHealthChecksBuilder AddServiceClient<T>(
             this IHealthChecksBuilder builder,
             string name = null,
-            string route = "api/echo",
+            string route = "naos/echo",
             HealthStatus? failureStatus = null,
             IEnumerable<string> tags = null)
             where T : ServiceDiscoveryClient
         {
-            name = name ?? typeof(T).Name;
+            name ??= typeof(T).Name;
             if (name.EndsWith("Client", StringComparison.OrdinalIgnoreCase))
             {
                 name = name.Replace("Client", "-serviceclient", StringComparison.OrdinalIgnoreCase);

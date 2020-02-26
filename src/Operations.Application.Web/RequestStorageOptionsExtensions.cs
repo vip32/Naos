@@ -50,6 +50,7 @@
             {
                 options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: request storage used (type={typeof(AzureBlobFileStorage).Name})");
                 var connectionString = options.Context.Configuration[$"{section}:connectionString"];
+                var containerName = $"{options.Context.Environment.ToLower()}-operations";
                 options.Context.Services.AddSingleton(sp =>
                     new RequestStorageMiddlewareOptions
                     {
@@ -57,13 +58,13 @@
                             new FileStorageLoggingDecorator(
                                 sp.GetRequiredService<ILoggerFactory>(),
                                 new AzureBlobFileStorage(f => f
-                                    .ContainerName($"{options.Context.Environment.ToLower()}-operations")
+                                    .ContainerName(containerName)
                                     .ConnectionString(connectionString))))
                     });
 
                 options.Context.Services
                     .AddHealthChecks()
-                        .AddAzureBlobStorage(connectionString, "operations-requeststorage-blobstorage");
+                        .AddAzureBlobStorage(connectionString, containerName, "operations-requeststorage-blobstorage", tags: new[] { "naos"});
             }
 
             return options;

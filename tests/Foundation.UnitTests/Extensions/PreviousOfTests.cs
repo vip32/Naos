@@ -19,6 +19,23 @@
         }
 
         [Fact]
+        public void TestDictionaryVariousStringsReturnPrevious()
+        {
+            var sut = new Dictionary<string, string>
+            {
+                {"a", "aaa"},
+                {"b", "bbb"},
+                {"c", "ccc"},
+                {"d", "ddd"}
+            };
+
+            sut.PreviousOf(null).ShouldBe("ddd");
+            sut.PreviousOf("bbb").ShouldBe("aaa");
+            sut.PreviousOf("ccc").ShouldBe("bbb");
+            sut.PreviousOf("ddd").ShouldBe("ccc");
+        }
+
+        [Fact]
         public void TestEmptyStringsReturnNull()
         {
             var sut = new List<string>();

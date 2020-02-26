@@ -2,7 +2,7 @@
 {
     using Naos.Foundation;
 
-    public class FolderFileStorageOptions : BaseOptions
+    public class FolderFileStorageOptions : OptionsBase
     {
         public string Folder { get; set; }
 

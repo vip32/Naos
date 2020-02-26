@@ -3,12 +3,13 @@
     using System.Linq;
     using System.Net;
     using EnsureThat;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
     using NSwag.Annotations;
 
-    [Route("api/echo/authentication")]
+    [Route("naos/authentication/echo")]
     [ApiController]
     public class NaosAuthenticationEchoController : ControllerBase // or use normal middleware?  https://stackoverflow.com/questions/47617994/how-to-use-a-controller-in-another-assembly-in-asp-net-core-mvc-2-0?rq=1
     {
@@ -22,8 +23,10 @@
             this.logger = logger;
         }
 
+        [Authorize]
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         [OpenApiTag("Naos Echo")]
         public ActionResult<object> Get()
         {

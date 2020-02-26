@@ -3,7 +3,7 @@
     using System;
     using Microsoft.Azure.Cosmos;
 
-    public class CosmosSqlProviderV3Options<T> : BaseOptions
+    public class CosmosSqlProviderV3Options<T> : OptionsBase
     {
         public CosmosClient Client { get; set; }
 

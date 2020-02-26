@@ -2,7 +2,7 @@
 {
     using Naos.Foundation;
 
-    public class InMemoryKeyValueStorageOptions : BaseOptions
+    public class InMemoryKeyValueStorageOptions : OptionsBase
     {
     }
 }

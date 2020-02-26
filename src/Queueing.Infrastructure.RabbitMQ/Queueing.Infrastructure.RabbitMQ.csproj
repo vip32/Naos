@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Naos.Queueing.Infrastructure.RabbitMQ</AssemblyName>
+    <RootNamespace>Naos.Queueing.Infrastructure.RabbitMQ</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="8.0.0" />
+    <PackageReference Include="RabbitMQ.Client" Version="5.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Foundation.Extensions\Extensions.csproj" />
+    <ProjectReference Include="..\Queueing\Queueing.csproj" />
+  </ItemGroup>
+
+</Project>

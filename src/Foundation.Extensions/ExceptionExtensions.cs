@@ -8,9 +8,14 @@
         [DebuggerStepThrough]
         public static string GetFullMessage(this Exception source)
         {
-            return source.InnerException == null
-                 ? source.Message.Replace(Environment.NewLine, Environment.NewLine + " ")
-                 : $"{source.Message}  --> {source.InnerException.GetFullMessage()}".Replace(Environment.NewLine, Environment.NewLine + " ");
+            if(source == null)
+            {
+                return null;
+            }
+
+            return source?.InnerException == null
+                 ? $"[{source.GetType().Name}] {source?.Message}".Replace(Environment.NewLine, Environment.NewLine + " ")
+                 : $"[{source.GetType().Name}] {source.Message}  --> {source.InnerException.GetFullMessage()}".Replace(Environment.NewLine, Environment.NewLine + " ");
         }
 
         /// <summary>

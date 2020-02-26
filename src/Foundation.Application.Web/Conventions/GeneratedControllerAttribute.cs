@@ -3,7 +3,7 @@
     using System;
 
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class GeneratedControllerAttribute : Attribute
+    public sealed class GeneratedControllerAttribute : Attribute
     {
         public GeneratedControllerAttribute(string route)
         {

@@ -29,23 +29,22 @@
             {
                 if (currentQuote == char.MinValue)
                 {
-                    if (c == ' ')
+                    switch (c)
                     {
-                        Reset();
-                    }
-                    else if (c == '\'')
-                    {
-                        Reset();
-                        currentQuote = '\'';
-                    }
-                    else if (c == '"')
-                    {
-                        Reset();
-                        currentQuote = '"';
-                    }
-                    else
-                    {
-                        currentArgument.Append(c);
+                        case ' ':
+                            Reset();
+                            break;
+                        case '\'':
+                            Reset();
+                            currentQuote = '\'';
+                            break;
+                        case '"':
+                            Reset();
+                            currentQuote = '"';
+                            break;
+                        default:
+                            currentArgument.Append(c);
+                            break;
                     }
                 }
                 else

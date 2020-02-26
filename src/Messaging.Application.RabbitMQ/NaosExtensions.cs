@@ -31,7 +31,7 @@
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
             queueName ??= options.Context.Descriptor.Name;
-            var rabbitMQConfiguration = options.Context.Configuration.GetSection(section).Get<RabbitMQConfiguration>() ?? new RabbitMQConfiguration();
+            var configuration = options.Context.Configuration.GetSection(section).Get<RabbitMQConfiguration>() ?? new RabbitMQConfiguration();
 
             options.Context.Services.AddSingleton<IMessageBroker>(sp =>
             {
@@ -49,25 +49,28 @@
                 return broker;
             });
 
-            options.Context.Services.AddSingleton<IRabbitMQProvider>(sp =>
-            {
-                var factory = new ConnectionFactory()
+            options.Context.Services
+                .AddSingleton<IConnectionFactory>(sp =>
                 {
-                    Port = rabbitMQConfiguration.Port == 0 ? 5672 : rabbitMQConfiguration.Port,
-                    HostName = rabbitMQConfiguration.Host.IsNullOrEmpty() ? "localhost" : rabbitMQConfiguration.Host, // or 'rabbitmq' in docker-compose env
-                    UserName = rabbitMQConfiguration.UserName.IsNullOrEmpty() ? "guest" : rabbitMQConfiguration.UserName,
-                    Password = rabbitMQConfiguration.Password.IsNullOrEmpty() ? "guest" : rabbitMQConfiguration.Password,
-                    DispatchConsumersAsync = true
-                };
+                    return new ConnectionFactory
+                    {
+                        Port = configuration.Port == 0 ? 5672 : configuration.Port,
+                        HostName = configuration.Host.IsNullOrEmpty() ? "localhost" : configuration.Host, // or 'rabbitmq' in docker-compose env
+                        UserName = configuration.UserName.IsNullOrEmpty() ? "guest" : configuration.UserName,
+                        Password = configuration.Password.IsNullOrEmpty() ? "guest" : configuration.Password,
+                        DispatchConsumersAsync = true
+                    };
+                })
+                .AddSingleton<IRabbitMQProvider>(sp =>
+                {
+                    return new RabbitMQProvider(
+                        sp.GetRequiredService<ILogger<RabbitMQProvider>>(),
+                        sp.GetRequiredService<IConnectionFactory>(),
+                        configuration.RetryCount);
+                });
 
-                return new RabbitMQProvider(
-                    sp.GetRequiredService<ILogger<RabbitMQProvider>>(),
-                    factory,
-                    rabbitMQConfiguration.RetryCount);
-            });
-
-            //options.Context.Services.AddHealthChecks()
-            //    .AddAzureServiceBusTopic(configuration.ConnectionString, configuration.EntityPath, "messaging-broker-servicebus");
+            options.Context.Services.AddHealthChecks()
+                .AddRabbitMQ(sp => sp.GetRequiredService<IConnectionFactory>(), "messaging-broker-rabbitmq", tags: new[] { "naos"});
 
             options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: messaging added (broker={nameof(RabbitMQMessageBroker)})");
 

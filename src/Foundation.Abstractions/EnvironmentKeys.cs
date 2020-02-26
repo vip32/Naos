@@ -1,8 +1,8 @@
 ﻿namespace Naos.Foundation
 {
-    public struct EnvironmentKeys
+    public static class EnvironmentKeys
     {
-        public const string Environment = "ASPNETCORE_ENVIRONMENT";
-        public const string IsLocal = "ASPNETCORE_ISLOCAL";
+        public static readonly string Environment = "ASPNETCORE_ENVIRONMENT";
+        public static readonly string IsLocal = "ASPNETCORE_ISLOCAL";
     }
 }

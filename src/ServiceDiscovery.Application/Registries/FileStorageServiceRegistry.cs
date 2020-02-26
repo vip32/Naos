@@ -9,7 +9,9 @@
     using Naos.Foundation;
     using Newtonsoft.Json;
 
+#pragma warning disable CA1001 // Types that own disposable fields should be disposable (=watcher)
     public class FileStorageServiceRegistry : IServiceRegistry
+#pragma warning restore CA1001 // Types that own disposable fields should be disposable (=watcher)
     {
         private readonly ILogger<FileStorageServiceRegistry> logger;
         private readonly IFileStorage fileStorage;
@@ -59,31 +61,22 @@
             this.logger.LogInformation($"{{LogKey:l}} register filesystem (name={{RegistrationName}}, tags={string.Join("|", registration.Tags.Safe())}, id={{RegistrationId}}, address={registration.FullAddress}, file={path.SliceFromLast(@"\")})",
                 LogKeys.ServiceDiscovery, registration.Name, registration.Id);
 
-            this.logger.LogInformation($"RegisterAsync #0 {pathTemp}");
             if (File.Exists(pathTemp))
             {
-                this.logger.LogInformation($"RegisterAsync #1");
                 File.Delete(pathTemp);
             }
 
-            this.logger.LogInformation($"RegisterAsync #2 {path}");
-
             if (File.Exists(path))
             {
-                this.logger.LogInformation($"RegisterAsync #3");
                 File.Delete(path);
             }
 
-            this.logger.LogInformation($"RegisterAsync #4");
-
             using (var streamWriter = File.CreateText(pathTemp))
             {
-                this.logger.LogInformation($"RegisterAsync #5");
                 streamWriter.Write(SerializationHelper.JsonSerialize(registration));
                 streamWriter.Flush();
             }
 
-            this.logger.LogInformation("RegisterAsync #6");
             File.Move(pathTemp, path); // rename file
 
             return Task.CompletedTask;
@@ -130,22 +123,16 @@
 
         private void EnsureDirectory(string fullPath)
         {
-            this.logger.LogInformation($"EnsureDirectory #1 {Directory.Exists(fullPath)} {fullPath}");
             if (!Directory.Exists(fullPath))
             {
-                this.logger.LogInformation("EnsureDirectory #2");
                 var directory = Directory.CreateDirectory(fullPath);
-                this.logger.LogInformation("EnsureDirectory #3");
                 this.logger.LogWarning($"{{LogKey:l}} filesystem folder created (folder={fullPath}, exists={directory.Exists})", LogKeys.ServiceDiscovery);
             }
 
-            this.logger.LogInformation("EnsureDirectory #4");
             if (!Directory.Exists(fullPath))
             {
                 this.logger.LogWarning($"{{LogKey:l}} filesystem folder could not be created (folder={fullPath})", LogKeys.ServiceDiscovery);
             }
-
-            this.logger.LogInformation("EnsureDirectory #5");
         }
 
         private string GetFileContents(string fullPath)

@@ -37,7 +37,7 @@
                     null,
                     new DateTime(moment.Year, moment.Month, moment.Day, moment.Hour, moment.Minute, 59, 999, DateTimeKind.Utc) - moment, // trigger on the minute start
                     TimeSpan.FromMinutes(1));
-                this.logger.LogInformation($"{{LogKey:l}} hosted service started (moment={moment.ToString("o")})", LogKeys.JobScheduling);
+                this.logger.LogInformation($"{{LogKey:l}} hosted service started (moment={moment:o})", LogKeys.JobScheduling);
             }
 
             return Task.CompletedTask;

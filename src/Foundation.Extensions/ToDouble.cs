@@ -11,7 +11,7 @@
                 return @default;
             }
 
-            var result = double.TryParse(source, out var parsedValue);
+            var result = double.TryParse(source, NumberStyles.Any, CultureInfo.InvariantCulture, out var parsedValue);
 
             if (!result)
             {

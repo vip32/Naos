@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>Naos.Foundation.Infrastructure.Documents.SqlServer</AssemblyName>
+    <RootNamespace>Naos.Foundation.Infrastructure</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.30" />
+    <PackageReference Include="Humanizer.Core" Version="2.7.9" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.1" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
+    <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
+    <PackageReference Include="MediatR" Version="8.0.0" />
+    <PackageReference Include="System.Interactive.Async" Version="4.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Foundation.Compression\Compression.csproj" />
+    <ProjectReference Include="..\Foundation.Domain.Repositories.Documents\Domain.Repositories.Documents.csproj" />
+    <ProjectReference Include="..\Foundation.Domain\Domain.csproj" />
+    <ProjectReference Include="..\Foundation.Domain.Repositories\Domain.Repositories.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -315,7 +315,7 @@ Startup.cs configuration:
         ...
         .AddRequestDispatcher(o => o
             .Post<CreateCustomerCommand>("/api/commands/customers/create", 201)
-            .Get<GetActiveCustomersQuery, IEnumerable<Customer>>("/api/commands/customers/active", 200)))
+            .Get<GetActiveCustomersQuery, IEnumerable<Customer>>("/naos/commands/customers/active", 200)))
 ```
 
 

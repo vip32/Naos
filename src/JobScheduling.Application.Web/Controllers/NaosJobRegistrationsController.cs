@@ -11,7 +11,7 @@
     using Naos.JobScheduling.Domain;
     using NSwag.Annotations;
 
-    [Route("api/jobregistrations")]
+    [Route("naos/jobregistrations")]
     [ApiController]
     public class NaosJobRegistrationsController : ControllerBase
     {

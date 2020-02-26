@@ -60,6 +60,15 @@
             }
         }
 
+        public static string GetSwaggerStylesAsString()
+        {
+            using (var reader = new StreamReader(
+                System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Naos.Foundation.Resources.swagger.css")))
+            {
+                return reader?.ReadToEnd();
+            }
+        }
+
         public static string GetLogoAsString()
         {
             // generated: https://www.text-image.com/convert/pic2ascii.cgi

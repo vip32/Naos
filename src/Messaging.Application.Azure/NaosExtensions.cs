@@ -87,7 +87,7 @@
                     new MessageHandlerOptions(args =>
                     {
                         var context = args.ExceptionReceivedContext;
-                        logger.LogWarning($"{{LogKey:l}} servicebus handler error: topic={context?.EntityPath}, action={context?.Action}, endpoint={context?.Endpoint}, {args.Exception?.Message}, {args.Exception?.StackTrace}", LogKeys.Messaging);
+                        logger.LogWarning($"{{LogKey:l}} servicebus handler error: topic={context?.EntityPath}, action={context?.Action}, endpoint={context?.Endpoint}, {args.Exception?.Message}, {args.Exception?.StackTrace}", LogKeys.AppMessaging);
                         return Task.CompletedTask;
                     })
                     {

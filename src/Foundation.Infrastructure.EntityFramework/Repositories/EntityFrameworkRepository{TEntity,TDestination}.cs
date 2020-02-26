@@ -98,7 +98,7 @@
 //#endif
 
 //#if NETSTANDARD2_1
-            return this.Options.Mapper.Map<TEntity>(await this.Options.DbContext.Set<TDestination>().FindAsync(this.TryParseGuid(id)));
+            return this.Options.Mapper.Map<TEntity>(await this.Options.DbContext.Set<TDestination>().FindAsync(this.ParseGuid(id)));
 //#endif
         }
 
@@ -204,7 +204,7 @@
 //#endif
 
 //#if NETSTANDARD2_1
-            var dEntity = await this.Options.DbContext.Set<TDestination>().FindAsync(this.TryParseGuid(id));
+            var dEntity = await this.Options.DbContext.Set<TDestination>().FindAsync(this.ParseGuid(id));
 //#endif
             if (dEntity != null)
             {
@@ -239,7 +239,7 @@
             return await this.DeleteAsync(entity.Id).AnyContext();
         }
 
-        private object TryParseGuid(object value)
+        private object ParseGuid(object value)
         {
             try
             {

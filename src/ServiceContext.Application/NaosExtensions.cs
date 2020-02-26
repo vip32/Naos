@@ -2,6 +2,7 @@
 {
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
+    using Microsoft.Extensions.Diagnostics.HealthChecks;
     using Microsoft.Extensions.Logging;
     using Naos.Configuration.Application;
     using Naos.Foundation;
@@ -41,8 +42,12 @@
                     naosOptions.Context.Descriptor.Version,
                     naosOptions.Context.Descriptor.Tags));
 
+            naosOptions.Context.Services.AddHealthChecks()
+                .AddCheck($"{naosOptions.Context.Descriptor.Name}-servicecontext", () => HealthCheckResult.Healthy(), tags: new[] { "live", "naos" });
+            // TODO: add some strategy to control the healtyness of the service (for testing purposes)
+
             naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos services builder: service context added");
-            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceContext", EchoRoute = "api/echo/servicecontext" });
+            naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceContext", EchoRoute = "naos/servicecontext/echo" });
 
             return naosOptions;
         }
