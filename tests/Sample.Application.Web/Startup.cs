@@ -20,6 +20,7 @@ namespace Naos.Sample.Application.Web
     using Naos.JobScheduling.Domain;
     using Naos.Messaging.Domain;
     using Naos.Sample.Catalogs.Application;
+    using Naos.Sample.Countries.Application;
     using Naos.Sample.Customers.Application;
     using Naos.Sample.Inventory.Application;
     using Naos.Sample.UserAccounts.Application;
@@ -99,21 +100,21 @@ namespace Naos.Sample.Application.Web
                             new FolderFileStorage(o => o
                                 .Folder(Path.Combine(Path.GetTempPath(), "naos_commands", "journal")))))
                         .AddEndpoints(o => o
-                            .Post<Customers.Application.CreateCustomerCommand>(
+                            .Post<CreateCustomerCommand>(
                                 "api/commands/customers/create",
                                 onSuccessStatusCode: HttpStatusCode.Created,
                                 groupName: "Customers",
                                 onSuccess: (cmd, ctx) => ctx.Response.Location($"api/customers/{cmd.Customer.Id}"))
-                            .Get<Customers.Application.GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>(
+                            .Get<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>(
                                 "api/commands/customers/active",
                                 groupName: "Customers")
                             .UseAzureBlobStorage()
                             //.UseInMemoryStorage()
                             //.UseFolderStorage()
                             .UseAzureStorageQueue() // TODO: rabbitmq queue is also needed
-                            //.UseInMemoryQueue()
+                                                    //.UseInMemoryQueue()
                             .GetQueued<PingCommand>("api/commands/queue/ping")
-                            .GetQueued<Customers.Application.GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>(
+                            .GetQueued<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>(
                                 "api/commands/queue/customers/active",
                                 groupName: "Customers")))
                     .AddOperations(o => o
@@ -122,10 +123,10 @@ namespace Naos.Sample.Application.Web
                             .UseConsole(LogLevel.Debug)
                             .UseFile()
                             .UseMongo())
-                            //.UseSink(w => w.LiterateConsole())
-                            //.UseAzureBlobStorage()
-                            //.UseCosmosDb() TODO
-                            //.UseAzureLogAnalytics())
+                        //.UseSink(w => w.LiterateConsole())
+                        //.UseAzureBlobStorage()
+                        //.UseCosmosDb() TODO
+                        //.UseAzureLogAnalytics())
                         .AddSystemHealthChecks() // do IMPLICIT! XXXXX
                         .AddRequestStorage(o => o
                             .UseAzureBlobStorage())
@@ -140,14 +141,18 @@ namespace Naos.Sample.Application.Web
                         //.SetEnabled(true)
                         //.Register<EchoJob>("echojob1", Cron.MinuteInterval(10), (j) => j.EchoAsync("+++ hello from echojob1 +++", CancellationToken.None))
                         //.Register<EchoJob>("manualjob1", Cron.Never(), (j) => j.EchoAsync("+++ hello from manualjob1 +++", CancellationToken.None))
-                        .Register<Countries.Application.CountriesImportJob>("countriesimport", Cron.MinuteInterval(5))
-                        .Register<Countries.Application.CountriesExportJob>("countriesexport", Cron.MinuteInterval(2)))
-                    //.Register("anonymousjob2", Cron.Minutely(), (j) => Console.WriteLine("+++ hello from anonymousjob2 " + j))
-                    //.Register("jobevent1", Cron.Minutely(), () => new EchoJobEventData { Text = "+++ hello from jobevent1 +++" }))
-                    //.Register<EchoJob>("echojob2", Cron.MinuteInterval(2), j => j.EchoAsync("+++ hello from echojob2 +++", CancellationToken.None, true), enabled: false)
-                    //.Register<EchoJob>("testlongjob4", Cron.Minutely(), j => j.EchoLongAsync("+++ hello from testlongjob4 +++", CancellationToken.None)))
+                        .Register<CountriesImportJob>("countriesimport", Cron.MinuteInterval(5))
+                        .Register<CountriesExportJob>("countriesexport", Cron.MinuteInterval(2))) // Enqueue
+                        //.Register("anonymousjob2", Cron.Minutely(), (j) => Console.WriteLine("+++ hello from anonymousjob2 " + j))
+                        //.Register("jobevent1", Cron.Minutely(), () => new EchoJobEventData { Text = "+++ hello from jobevent1 +++" }))
+                        //.Register<EchoJob>("echojob2", Cron.MinuteInterval(2), j => j.EchoAsync("+++ hello from echojob2 +++", CancellationToken.None, true), enabled: false)
+                        //.Register<EchoJob>("testlongjob4", Cron.Minutely(), j => j.EchoLongAsync("+++ hello from testlongjob4 +++", CancellationToken.None)))
                     .AddServiceClient() // do IMPLICIT! XXXXX
-                    .AddQueueing()
+                    .AddQueueing(o => o
+                        .UseInMemoryQueue<CountriesExportData>(o => o
+                        //.UseRabbitMQQueue<CountriesExportData>(o => o
+                        //.UseServiceBusQueue<CountriesExportData>(o => o
+                            .ProcessItems()))
                     .AddMessaging(o => o
                         //.UseFileStorageBroker(s => s
                         //.UseSignalRServerlessBroker(s => s // WARN: has a bug where old messages are multiplied on new subsequent publishes

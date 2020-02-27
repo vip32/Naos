@@ -27,6 +27,8 @@
     <ProjectReference Include="..\Messaging.Application.RabbitMQ\Messaging.Application.RabbitMQ.csproj" />
     <ProjectReference Include="..\Messaging.Application\Messaging.Application.csproj" />
     <ProjectReference Include="..\Operations.Application\Operations.Application.csproj" />
+    <ProjectReference Include="..\Queueing.Application.Azure\Queueing.Application.Azure.csproj" />
+    <ProjectReference Include="..\Queueing.Application.RabbitMQ\Queueing.Application.RabbitMQ.csproj" />
     <ProjectReference Include="..\Queueing.Application\Queueing.Application.csproj" />
     <ProjectReference Include="..\ServiceContext.Application\ServiceContext.Application.csproj" />
     <ProjectReference Include="..\ServiceDiscovery.Application.Consul\ServiceDiscovery.Application.Consul.csproj" />

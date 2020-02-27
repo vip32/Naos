@@ -74,5 +74,11 @@
             this.Target.FilterScope = filterScope;
             return this;
         }
+
+        public RabbitMQQueueOptionsBuilder NoRetries()
+        {
+            this.Target.Retries = 0;
+            return this;
+        }
     }
 }

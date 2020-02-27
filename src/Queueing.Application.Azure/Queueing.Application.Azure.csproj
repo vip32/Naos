@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Naos.Queueing.Application.Azure</AssemblyName>
+    <RootNamespace>Naos.Queueing.Application</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Foundation.Infrastructure.Azure.ServiceBus\Infrastructure.Azure.ServiceBus.csproj" />
+    <ProjectReference Include="..\Queueing.Application\Queueing.Application.csproj" />
+    <ProjectReference Include="..\Queueing.Infrastructure.Azure\Queueing.Infrastructure.Azure.csproj" />
+  </ItemGroup>
+
+</Project>

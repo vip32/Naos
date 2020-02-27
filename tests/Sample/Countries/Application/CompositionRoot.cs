@@ -11,6 +11,7 @@
     using Naos.Foundation.Domain;
     using Naos.Queueing;
     using Naos.Queueing.Domain;
+    using Naos.Queueing.Infrastructure.Azure;
     using Naos.Sample.Countries.Application;
     using Naos.Sample.Countries.Domain;
     using Naos.Sample.Countries.Infrastructure;
@@ -27,15 +28,15 @@
 
             options.Context.AddTag("countries");
 
-            // enqueue data and do nothing
-            options.Context.Services.AddSingleton<IQueue<CountriesExportData>>(sp => // AddQueue<T>(sp => ....)
-            {
-                return new InMemoryQueue<CountriesExportData>(o => o
-                    .Mediator(sp.GetService<IMediator>())
-                    .Tracer(sp.GetService<ITracer>())
-                    .LoggerFactory(sp.GetService<ILoggerFactory>())
-                    .NoRetries());
-            });
+            // enqueue data and do nothing === MOVED TO STARTUP ===
+            //options.Context.Services.AddSingleton<IQueue<CountriesExportData>>(sp => // AddQueue<T>(sp => ....)
+            //{
+            //    return new InMemoryQueue<CountriesExportData>(o => o
+            //        .Mediator(sp.GetService<IMediator>())
+            //        .Tracer(sp.GetService<ITracer>())
+            //        .LoggerFactory(sp.GetService<ILoggerFactory>())
+            //        .NoRetries());
+            //});
             //options.Context.Services.AddSingleton<IQueue<CountriesExportData>>(sp => // AddQueue<T>(sp => ....)
             //{
             //    return new AzureServiceBusQueue<CountriesExportData>(o => o
@@ -46,7 +47,7 @@
             //        .NoRetries());
             //});
             // dequeue and process data
-            options.Context.Services.AddQueueProcessingStartupTask<CountriesExportData>(new TimeSpan(0, 0, 30));
+            //options.Context.Services.AddQueueProcessItemsStartupTask<CountriesExportData>(new TimeSpan(0, 0, 30));
 
             options.Context.Services.AddScoped<ICountryRepository>(sp =>
             {

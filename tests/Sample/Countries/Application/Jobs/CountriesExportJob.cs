@@ -19,7 +19,11 @@
         private readonly IQueue<CountriesExportData> queue;
         private readonly ITracer tracer;
 
-        public CountriesExportJob(ILogger<CountriesExportJob> logger, ITracer tracer, ICountryRepository repository, IQueue<CountriesExportData> queue)
+        public CountriesExportJob(
+            ILogger<CountriesExportJob> logger,
+            ITracer tracer,
+            ICountryRepository repository,
+            IQueue<CountriesExportData> queue)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(tracer, nameof(tracer));

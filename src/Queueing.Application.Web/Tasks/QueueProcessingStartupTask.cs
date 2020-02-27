@@ -6,7 +6,6 @@
     using EnsureThat;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
-    using Naos.Foundation.Application;
     using Naos.Queueing.Domain;
 
     public class QueueProcessingStartupTask<T> : IStartupTask

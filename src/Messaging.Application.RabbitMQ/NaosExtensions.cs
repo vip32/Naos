@@ -9,6 +9,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
+    using Naos.Foundation.Infrastructure;
     using Naos.Messaging;
     using Naos.Messaging.Application;
     using Naos.Messaging.Domain;
@@ -43,31 +44,48 @@
                     //.MessageScope(options.Context.Descriptor.Name)
                     .ExchangeName(exchangeName)
                     .QueueName(queueName)
-                    .Provider(sp.GetRequiredService<IRabbitMQProvider>()));
+                    .Provider(new RabbitMQProvider(
+                        sp.GetRequiredService<ILogger<RabbitMQProvider>>(),
+                        new ConnectionFactory
+                        {
+                            Port = configuration.Port == 0 ? 5672 : configuration.Port,
+                            HostName = configuration.Host.IsNullOrEmpty() ? "localhost" : configuration.Host, // or 'rabbitmq' in docker-compose env
+                            UserName = configuration.UserName.IsNullOrEmpty() ? "guest" : configuration.UserName,
+                            Password = configuration.Password.IsNullOrEmpty() ? "guest" : configuration.Password,
+                            DispatchConsumersAsync = true
+                        },
+                        configuration.RetryCount)));
 
                 brokerAction?.Invoke(broker);
                 return broker;
             });
 
-            options.Context.Services
-                .AddSingleton<IConnectionFactory>(sp =>
-                {
-                    return new ConnectionFactory
-                    {
-                        Port = configuration.Port == 0 ? 5672 : configuration.Port,
-                        HostName = configuration.Host.IsNullOrEmpty() ? "localhost" : configuration.Host, // or 'rabbitmq' in docker-compose env
-                        UserName = configuration.UserName.IsNullOrEmpty() ? "guest" : configuration.UserName,
-                        Password = configuration.Password.IsNullOrEmpty() ? "guest" : configuration.Password,
-                        DispatchConsumersAsync = true
-                    };
-                })
-                .AddSingleton<IRabbitMQProvider>(sp =>
-                {
-                    return new RabbitMQProvider(
-                        sp.GetRequiredService<ILogger<RabbitMQProvider>>(),
-                        sp.GetRequiredService<IConnectionFactory>(),
-                        configuration.RetryCount);
-                });
+            //options.Context.Services
+            //    .AddSingleton<IConnectionFactory>(sp =>
+            //    {
+            //        return new ConnectionFactory
+            //        {
+            //            Port = configuration.Port == 0 ? 5672 : configuration.Port,
+            //            HostName = configuration.Host.IsNullOrEmpty() ? "localhost" : configuration.Host, // or 'rabbitmq' in docker-compose env
+            //            UserName = configuration.UserName.IsNullOrEmpty() ? "guest" : configuration.UserName,
+            //            Password = configuration.Password.IsNullOrEmpty() ? "guest" : configuration.Password,
+            //            DispatchConsumersAsync = true
+            //        };
+            //    })
+            //    .AddSingleton<IRabbitMQProvider>(sp =>
+            //    {
+            //        return new RabbitMQProvider(
+            //            sp.GetRequiredService<ILogger<RabbitMQProvider>>(),
+            //            new ConnectionFactory
+            //            {
+            //                Port = configuration.Port == 0 ? 5672 : configuration.Port,
+            //                HostName = configuration.Host.IsNullOrEmpty() ? "localhost" : configuration.Host, // or 'rabbitmq' in docker-compose env
+            //                UserName = configuration.UserName.IsNullOrEmpty() ? "guest" : configuration.UserName,
+            //                Password = configuration.Password.IsNullOrEmpty() ? "guest" : configuration.Password,
+            //                DispatchConsumersAsync = true
+            //            },
+            //            configuration.RetryCount);
+            //    });
 
             options.Context.Services.AddHealthChecks()
                 .AddRabbitMQ(sp => sp.GetRequiredService<IConnectionFactory>(), "messaging-broker-rabbitmq", tags: new[] { "naos"});

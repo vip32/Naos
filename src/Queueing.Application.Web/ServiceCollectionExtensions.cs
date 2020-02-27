@@ -5,15 +5,15 @@
 
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddQueueProcessingStartupTask<T>(this IServiceCollection services)
-            where T : class
-                => services.AddStartupTask<QueueProcessingStartupTask<T>>();
+        public static IServiceCollection AddQueueProcessItemsStartupTask<TData>(this IServiceCollection services)
+            where TData : class
+                => services.AddStartupTask<QueueProcessingStartupTask<TData>>();
 
-        public static IServiceCollection AddQueueProcessingStartupTask<T>(this IServiceCollection services, TimeSpan delay)
-            where T : class
-                => services.AddStartupTask<QueueProcessingStartupTask<T>>(delay);
+        public static IServiceCollection AddQueueProcessItemsStartupTask<TData>(this IServiceCollection services, TimeSpan delay)
+            where TData : class
+                => services.AddStartupTask<QueueProcessingStartupTask<TData>>(delay);
 
-        public static IServiceCollection AddQueueProcessingStartupTask(this IServiceCollection services, Type type, TimeSpan? delay)
+        public static IServiceCollection AddQueueProcessItemsStartupTask(this IServiceCollection services, Type type, TimeSpan? delay)
                 => services.AddStartupTask(type, delay);
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Naos.Queueing.Application
+﻿namespace Naos.Queueing.Application.Web
 {
     using System;
     using System.Threading;
@@ -9,22 +9,22 @@
     using Naos.Foundation;
     using Naos.Queueing.Domain;
 
-    public class QueueProcessHostedService<T> : IHostedService, IDisposable
-        where T : class
+    public class QueueProcessItemsHostedService<TData> : IHostedService, IDisposable
+        where TData : class
     {
-        private readonly ILogger<QueueProcessHostedService<T>> logger;
-        private readonly IQueue<T> queue;
-        private readonly Func<IQueueItem<T>, Task> handler;
+        private readonly ILogger<QueueProcessItemsHostedService<TData>> logger;
+        private readonly IQueue<TData> queue;
+        private readonly Func<IQueueItem<TData>, Task> handler;
 
-        public QueueProcessHostedService(
+        public QueueProcessItemsHostedService(
             ILoggerFactory loggerFactory,
-            IQueue<T> queue,
-            Func<IQueueItem<T>, Task> handler = null)
+            IQueue<TData> queue,
+            Func<IQueueItem<TData>, Task> handler = null)
         {
             EnsureArg.IsNotNull(loggerFactory, nameof(loggerFactory));
             EnsureArg.IsNotNull(queue, nameof(queue));
 
-            this.logger = loggerFactory.CreateLogger<QueueProcessHostedService<T>>();
+            this.logger = loggerFactory.CreateLogger<QueueProcessItemsHostedService<TData>>();
             this.queue = queue;
             this.handler = handler;
             //handler = i => { i.CompleteAsync()};
@@ -40,11 +40,7 @@
             }
             else
             {
-                await this.queue.ProcessItemsAsync(async i =>
-                {
-                    this.logger.LogInformation($"+++ process item +++ {i.Id}");
-                    await i.CompleteAsync().AnyContext();
-                }).AnyContext();
+                await this.queue.ProcessItemsAsync(true, CancellationToken.None).AnyContext();
             }
         }
 

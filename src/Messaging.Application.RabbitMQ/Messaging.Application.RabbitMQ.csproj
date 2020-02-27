@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Configuration.Application\Configuration.Application.csproj" />
+    <ProjectReference Include="..\Foundation.Infrastructure.RabbitMQ\Infrastructure.RabbitMQ.csproj" />
     <ProjectReference Include="..\Messaging.Application.Web\Messaging.Application.Web.csproj" />
     <ProjectReference Include="..\Messaging.Application\Messaging.Application.csproj" />
     <ProjectReference Include="..\Messaging.Infrastructure.RabbitMQ\Messaging.Infrastructure.RabbitMQ.csproj" />

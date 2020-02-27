@@ -17,7 +17,10 @@
         private readonly ICountryRepository repository;
         private readonly ITracer tracer;
 
-        public CountriesImportJob(ILogger<CountriesImportJob> logger, ITracer tracer, ICountryRepository repository)
+        public CountriesImportJob(
+            ILogger<CountriesImportJob> logger,
+            ITracer tracer,
+            ICountryRepository repository)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(tracer, nameof(tracer));
