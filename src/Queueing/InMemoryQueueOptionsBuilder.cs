@@ -20,7 +20,7 @@
             return this;
         }
 
-        public InMemoryQueueOptionsBuilder Name(string name)
+        public InMemoryQueueOptionsBuilder QueueName(string name)
         {
             this.Target.QueueName = name;
             return this;

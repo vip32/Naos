@@ -33,6 +33,14 @@
 
             queueName ??= options.Context.Descriptor.Name;
             var configuration = options.Context.Configuration.GetSection(section).Get<RabbitMQConfiguration>() ?? new RabbitMQConfiguration();
+            var connectionFactory = new ConnectionFactory
+            {
+                Port = configuration.Port == 0 ? 5672 : configuration.Port,
+                HostName = configuration.Host.IsNullOrEmpty() ? "localhost" : configuration.Host, // or 'rabbitmq' in docker-compose env
+                UserName = configuration.UserName.IsNullOrEmpty() ? "guest" : configuration.UserName,
+                Password = configuration.Password.IsNullOrEmpty() ? "guest" : configuration.Password,
+                DispatchConsumersAsync = true
+            };
 
             options.Context.Services.AddSingleton<IMessageBroker>(sp =>
             {
@@ -46,14 +54,7 @@
                     .QueueName(queueName)
                     .Provider(new RabbitMQProvider(
                         sp.GetRequiredService<ILogger<RabbitMQProvider>>(),
-                        new ConnectionFactory
-                        {
-                            Port = configuration.Port == 0 ? 5672 : configuration.Port,
-                            HostName = configuration.Host.IsNullOrEmpty() ? "localhost" : configuration.Host, // or 'rabbitmq' in docker-compose env
-                            UserName = configuration.UserName.IsNullOrEmpty() ? "guest" : configuration.UserName,
-                            Password = configuration.Password.IsNullOrEmpty() ? "guest" : configuration.Password,
-                            DispatchConsumersAsync = true
-                        },
+                        connectionFactory,
                         configuration.RetryCount)));
 
                 brokerAction?.Invoke(broker);
@@ -88,7 +89,7 @@
             //    });
 
             options.Context.Services.AddHealthChecks()
-                .AddRabbitMQ(sp => sp.GetRequiredService<IConnectionFactory>(), "messaging-broker-rabbitmq", tags: new[] { "naos"});
+                .AddRabbitMQ(sp => connectionFactory, "messaging-broker-rabbitmq", tags: new[] { "naos"});
 
             options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: messaging added (broker={nameof(RabbitMQMessageBroker)})");
 

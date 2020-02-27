@@ -31,7 +31,7 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            subscriptionName ??= options.Context.Descriptor.Name;
+            subscriptionName ??= options.Context.Descriptor.Name.ToLower();
             var configuration = options.Context.Configuration.GetSection(section).Get<ServiceBusConfiguration>();
             configuration.EntityPath = topicName ?? $"{Environment.GetEnvironmentVariable(EnvironmentKeys.Environment) ?? "Production"}-Naos.Messaging";
             options.Context.Services.AddSingleton<IServiceBusProvider>(sp =>

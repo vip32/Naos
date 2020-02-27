@@ -1,11 +1,13 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
+    using System.Collections;
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
     using MediatR;
     using Microsoft.Extensions.Logging;
     using Naos.Configuration.Application;
+    using Naos.Foundation;
     using Naos.Queueing;
     //using Microsoft.Extensions.Hosting;
     using Naos.Queueing.Application;
@@ -49,22 +51,21 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
+            var queueName = typeof(TData).PrettyName().ToLower();
             options.Context.Services.AddSingleton<IQueue<TData>>(sp =>
             {
                 return new InMemoryQueue<TData>(o => o
                     .Mediator(sp.GetService<IMediator>())
                     .Tracer(sp.GetService<ITracer>())
                     .LoggerFactory(sp.GetService<ILoggerFactory>())
+                    .QueueName(queueName)
                     .NoRetries());
             });
 
             optionsAction?.Invoke(
                 new QueueingProviderOptions<TData>(options.Context));
 
-            //options.Context.Services.AddHealthChecks()
-            //    .AddAzureServiceBusTopic(configuration.ConnectionString, configuration.EntityPath, "messaging-broker-servicebus");
-
-            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: queueing provider added (provider={nameof(InMemoryQueue<TData>)})");
+            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: queueing provider added (provider={nameof(InMemoryQueue<TData>)}, queue={queueName})");
 
             return options;
         }

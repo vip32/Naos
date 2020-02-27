@@ -27,24 +27,24 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            var queueName = typeof(TData).PrettyName().ToLower();
+            var queueName = typeof(TData).PrettyName();
             var configuration = options.Context.Configuration.GetSection(section).Get<RabbitMQConfiguration>();
+            var connectionFactory = new ConnectionFactory
+            {
+                Port = configuration.Port == 0 ? 5672 : configuration.Port,
+                HostName = configuration.Host.IsNullOrEmpty() ? "localhost" : configuration.Host, // or 'rabbitmq' in docker-compose env
+                UserName = configuration.UserName.IsNullOrEmpty() ? "guest" : configuration.UserName,
+                Password = configuration.Password.IsNullOrEmpty() ? "guest" : configuration.Password,
+                DispatchConsumersAsync = true
+            };
+
             options.Context.Services.AddSingleton<IQueue<TData>>(sp =>
             {
                 if (configuration?.Enabled == true)
                 {
-                    var connectionFactory = new ConnectionFactory
-                    {
-                        Port = configuration.Port == 0 ? 5672 : configuration.Port,
-                        HostName = configuration.Host.IsNullOrEmpty() ? "localhost" : configuration.Host, // or 'rabbitmq' in docker-compose env
-                        UserName = configuration.UserName.IsNullOrEmpty() ? "guest" : configuration.UserName,
-                        Password = configuration.Password.IsNullOrEmpty() ? "guest" : configuration.Password,
-                        DispatchConsumersAsync = true
-                    };
-
                     var provider = new RabbitMQProvider(
                         sp.GetRequiredService<ILogger<RabbitMQProvider>>(),
-                        sp.GetRequiredService<IConnectionFactory>(),
+                        connectionFactory,
                         configuration.RetryCount);
 
                     return new RabbitMQQueue<TData>(o => o
@@ -63,7 +63,7 @@
                 new QueueingProviderOptions<TData>(options.Context));
 
             options.Context.Services.AddHealthChecks()
-                .AddRabbitMQ(sp => sp.GetRequiredService<IConnectionFactory>(), "queueing-provider-rabbitmq", tags: new[] { "naos" });
+                .AddRabbitMQ(sp => connectionFactory, "queueing-provider-rabbitmq", tags: new[] { "naos" });
 
             options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: queueing provider added (provider={nameof(RabbitMQQueue<TData>)}, queue={queueName})");
 

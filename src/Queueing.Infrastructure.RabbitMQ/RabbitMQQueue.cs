@@ -388,6 +388,13 @@
                     this.consumer = new AsyncEventingBasicConsumer(this.channel);
                 }
 
+                var messageName = typeof(TData).PrettyName();
+                var routingKey = this.GetRoutingKey(messageName);
+                this.channel.QueueBind(
+                    exchange: this.Options.ExchangeName,
+                    queue: queueName,
+                    routingKey: routingKey);
+
                 this.channel.BasicConsume(
                     queue: queueName,
                     autoAck: false,

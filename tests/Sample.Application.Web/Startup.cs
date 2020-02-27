@@ -150,8 +150,8 @@ namespace Naos.Sample.Application.Web
                     .AddServiceClient() // do IMPLICIT! XXXXX
                     .AddQueueing(o => o
                         //.UseInMemoryQueue<CountriesExportData>(o => o
-                        //.UseRabbitMQQueue<CountriesExportData>(o => o
-                        .UseServiceBusQueue<CountriesExportData>(o => o
+                        .UseRabbitMQQueue<CountriesExportData>(o => o
+                        //.UseServiceBusQueue<CountriesExportData>(o => o
                             .ProcessItems()))
                     .AddMessaging(o => o
                         //.UseFileStorageBroker(s => s
