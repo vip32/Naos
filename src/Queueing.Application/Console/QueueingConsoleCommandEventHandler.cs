@@ -1,5 +1,6 @@
 ﻿namespace Naos.Queueing.Application
 {
+    using System;
     using System.Drawing;
     using System.Threading;
     using System.Threading.Tasks;
@@ -9,13 +10,13 @@
     using Naos.Queueing.Domain;
     using Console = Colorful.Console;
 
-    public class QueueingConsoleCommandEventHandler : ConsoleCommandEventHandler<QueueingConsoleCommand>
+    public class QueueingConsoleCommandEventHandler : ConsoleCommandEventHandler<QueueingConsoleCommand>, IDisposable
     {
-        private static IQueue<EchoQueueEventData> queue;
+        private readonly IQueue<EchoQueueEventData> queue;
         private readonly ILogger<QueueingConsoleCommandEventHandler> logger;
         private readonly IMediator mediator;
 
-        public QueueingConsoleCommandEventHandler(ILoggerFactory loggerFactory, IMediator mediator)
+        public QueueingConsoleCommandEventHandler(ILoggerFactory loggerFactory, IMediator mediator, IQueue<EchoQueueEventData> queue)
         {
             this.logger = loggerFactory.CreateLogger<QueueingConsoleCommandEventHandler>();
             this.mediator = mediator;
@@ -23,10 +24,22 @@
             if (queue == null)
             {
                 Console.WriteLine("\r\ncreate new inmemory queue", Color.LimeGreen);
-                queue = new InMemoryQueue<EchoQueueEventData>(o => o
+                this.queue = new InMemoryQueue<EchoQueueEventData>(o => o
                     .Mediator(this.mediator)
                     .LoggerFactory(loggerFactory));
                 //await Queue.ProcessItemsAsync(true).AnyContext();
+            }
+            else
+            {
+                this.queue = queue;
+            }
+        }
+
+        public void Dispose()
+        {
+            if(this.queue?.GetType() == typeof(InMemoryQueue<EchoQueueEventData>))
+            {
+                this.queue.Dispose();
             }
         }
 
@@ -34,13 +47,13 @@
         {
             if (request.Command.Echo)
             {
-                await queue.ProcessItemsAsync(true).AnyContext();
+                await this.queue.ProcessItemsAsync(true).AnyContext();
 
-                for (var i = 1; i <= 2; i++)
+                for (var i = 1; i <= 5; i++)
                 {
-                    await queue.EnqueueAsync(new EchoQueueEventData { Text = $"+++ hello from queue item {i} +++" }).AnyContext();
-                    var metrics = queue.GetMetricsAsync().Result;
-                    Console.WriteLine(metrics.Dump());
+                    await this.queue.EnqueueAsync(new EchoQueueEventData { Text = $"+++ hello from queue item {i} +++" }).AnyContext();
+                    //var metrics = this.queue.GetMetricsAsync().Result;
+                    //Console.WriteLine(metrics.Dump());
                 }
             }
 

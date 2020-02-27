@@ -21,6 +21,7 @@
          where TData : class
     {
         private IModel channel;
+        private bool consumeStarted;
         private long enqueuedCount;
         private long dequeuedCount;
         private long completedCount;
@@ -42,6 +43,7 @@
             EnsureArg.IsNotNullOrEmpty(options.QueueName, nameof(options.QueueName));
 
             this.channel = this.CreateChannel(options.QueueName);
+            this.Logger.LogInformation("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         }
 
         public RabbitMQQueue(Builder<RabbitMQQueueOptionsBuilder, RabbitMQQueueOptions> optionsBuilder)
@@ -379,30 +381,36 @@
 
         private void StartBasicConsume(string queueName)
         {
-            this.Logger.LogInformation($"{{LogKey:l}} start rabbitmq consume (exchange={this.Options.ExchangeName}, queue={queueName})", LogKeys.Queueing);
-
-            if (this.channel != null)
+            if (!this.consumeStarted) // TODO: lock!
             {
-                if(this.consumer == null)
-                {
-                    this.consumer = new AsyncEventingBasicConsumer(this.channel);
-                }
+                this.Logger.LogInformation($"{{LogKey:l}} start rabbitmq consume (exchange={this.Options.ExchangeName}, queue={queueName})", LogKeys.Queueing);
 
-                var messageName = typeof(TData).PrettyName();
-                var routingKey = this.GetRoutingKey(messageName);
-                this.channel.QueueBind(
+                if (this.channel != null)
+                {
+                    if (this.consumer == null)
+                    {
+                        this.consumer = new AsyncEventingBasicConsumer(this.channel);
+                    }
+
+                    var messageName = typeof(TData).PrettyName();
+                    var routingKey = this.GetRoutingKey(messageName);
+
+                    this.channel.QueueBind(
                     exchange: this.Options.ExchangeName,
                     queue: queueName,
                     routingKey: routingKey);
 
-                this.channel.BasicConsume(
-                    queue: queueName,
-                    autoAck: false,
-                    consumer: this.consumer);
-            }
-            else
-            {
-                this.Logger.LogError($"{{LogKey:l}} start rabbitmq consume cannot operate on empty channel (exchange={this.Options.ExchangeName}, queue={queueName})", LogKeys.Queueing);
+                    this.channel.BasicConsume(
+                        queue: queueName,
+                        autoAck: false,
+                        consumer: this.consumer);
+
+                    this.consumeStarted = true;
+                }
+                else
+                {
+                    this.Logger.LogError($"{{LogKey:l}} start rabbitmq consume cannot operate on empty channel (exchange={this.Options.ExchangeName}, queue={queueName})", LogKeys.Queueing);
+                }
             }
         }
 

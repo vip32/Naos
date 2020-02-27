@@ -21,7 +21,7 @@
         public static QueueingOptions UseRabbitMQQueue<TData>(
             this QueueingOptions options,
             Action<QueueingProviderOptions<TData>> optionsAction = null,
-            string section = "naos:queueing:serviceBus")
+            string section = "naos:queueing:rabbitMQ")
             where TData : class
         {
             EnsureArg.IsNotNull(options, nameof(options));
@@ -62,8 +62,8 @@
             optionsAction?.Invoke(
                 new QueueingProviderOptions<TData>(options.Context));
 
-            options.Context.Services.AddHealthChecks()
-                .AddRabbitMQ(sp => connectionFactory, "queueing-provider-rabbitmq", tags: new[] { "naos" });
+            //options.Context.Services.AddHealthChecks()
+            //    .AddRabbitMQ(sp => connectionFactory, "queueing-provider-rabbitmq", tags: new[] { "naos" });
 
             options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: queueing provider added (provider={nameof(RabbitMQQueue<TData>)}, queue={queueName})");
 

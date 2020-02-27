@@ -19,6 +19,7 @@ namespace Naos.Sample.Application.Web
     using Naos.FileStorage.Infrastructure;
     using Naos.JobScheduling.Domain;
     using Naos.Messaging.Domain;
+    using Naos.Queueing.Domain;
     using Naos.Sample.Catalogs.Application;
     using Naos.Sample.Countries.Application;
     using Naos.Sample.Customers.Application;
@@ -149,6 +150,8 @@ namespace Naos.Sample.Application.Web
                         //.Register<EchoJob>("testlongjob4", Cron.Minutely(), j => j.EchoLongAsync("+++ hello from testlongjob4 +++", CancellationToken.None)))
                     .AddServiceClient() // do IMPLICIT! XXXXX
                     .AddQueueing(o => o
+                        .UseRabbitMQQueue<EchoQueueEventData>(o => o
+                            .ProcessItems())
                         //.UseInMemoryQueue<CountriesExportData>(o => o
                         .UseRabbitMQQueue<CountriesExportData>(o => o
                         //.UseServiceBusQueue<CountriesExportData>(o => o
