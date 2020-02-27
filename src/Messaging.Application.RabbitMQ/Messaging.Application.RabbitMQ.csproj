@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AspNetCore.HealthChecks.RabbitMQ" Version="3.0.4" />
+    <PackageReference Include="AspNetCore.HealthChecks.RabbitMQ" Version="3.0.5" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.1" />
-    <PackageReference Include="Scrutor" Version="3.1.0" />
+    <PackageReference Include="Scrutor" Version="3.2.0" />
     <PackageReference Include="RabbitMQ.Client" Version="5.1.2" />
     <PackageReference Include="MediatR" Version="8.0.0" />
   </ItemGroup>

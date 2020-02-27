@@ -47,13 +47,13 @@
                 throw new NotImplementedException("no messaging servicebus is enabled");
             });
 
-            options.Context.Services.AddSingleton<Azure.ServiceBus.ISubscriptionClient>(sp =>
+            options.Context.Services.AddSingleton<Microsoft.Azure.ServiceBus.ISubscriptionClient>(sp =>
             {
                 var logger = sp.GetRequiredService<ILogger<ServiceBusMessageBroker>>();
                 var provider = sp.GetRequiredService<IServiceBusProvider>();
                 provider.EnsureTopicSubscription(provider.ConnectionStringBuilder.EntityPath, subscriptionName);
 
-                var client = new Azure.ServiceBus.SubscriptionClient(provider.ConnectionStringBuilder, subscriptionName);
+                var client = new Microsoft.Azure.ServiceBus.SubscriptionClient(provider.ConnectionStringBuilder, subscriptionName);
                 try
                 {
                     client
@@ -106,7 +106,7 @@
                     .Tracer(sp.GetService<ITracer>())
                     .Mediator(sp.GetService<IMediator>())
                     .Provider(sp.GetRequiredService<IServiceBusProvider>()) // singleton
-                    .Client(sp.GetRequiredService<Azure.ServiceBus.ISubscriptionClient>()) // singleton
+                    .Client(sp.GetRequiredService<Microsoft.Azure.ServiceBus.ISubscriptionClient>()) // singleton
                     .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
                     .Subscriptions(sp.GetRequiredService<ISubscriptionMap>()) // singleton
                     .SubscriptionName(subscriptionName) //AppDomain.CurrentDomain.FriendlyName, // PRODUCT.CAPABILITY

@@ -67,13 +67,13 @@
                         Filter = new CorrelationFilter { Label = messageName, To = this.options.FilterScope }, // filterscope ist used to lock the rule for a specific machine
                         Name = ruleName
                     }).GetAwaiter().GetResult();
-
-                    this.options.Subscriptions.Add<TMessage, THandler>();
                 }
-                catch (Exception ex)
+                catch (ServiceBusException)
                 {
-                    this.logger.LogError(ex, $"{{LogKey:l}} subscribe failed (name={messageName}, type={typeof(TMessage).Name}) {ex.Message}", LogKeys.AppMessaging);
+                    this.logger.LogDebug($"{{LogKey:l}} servicebus found subscription rule: {ruleName}", LogKeys.AppMessaging);
                 }
+
+                this.options.Subscriptions.Add<TMessage, THandler>();
             }
 
             return this;

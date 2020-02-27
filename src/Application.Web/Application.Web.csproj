@@ -20,8 +20,8 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.1" />
     <PackageReference Include="MediatR" Version="8.0.0" />
-    <PackageReference Include="NSwag.Annotations" Version="13.2.2" />
-    <PackageReference Include="NSwag.Generation" Version="13.2.2" />
+    <PackageReference Include="NSwag.Annotations" Version="13.2.3" />
+    <PackageReference Include="NSwag.Generation" Version="13.2.3" />
   </ItemGroup>
 
   <ItemGroup>
