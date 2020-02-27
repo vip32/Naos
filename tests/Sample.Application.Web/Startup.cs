@@ -151,8 +151,8 @@ namespace Naos.Sample.Application.Web
                     .AddMessaging(o => o
                         //.UseFileStorageBroker(s => s
                         //.UseSignalRServerlessBroker(s => s // WARN: has a bug where old messages are multiplied on new subsequent publishes
-                        //.UseRabbitMQBroker(s => s
-                        .UseServiceBusBroker(s => s
+                        .UseRabbitMQBroker(s => s
+                        //.UseServiceBusBroker(s => s
                            .Subscribe<EchoMessage, EchoMessageHandler>()))
                     .AddServiceDiscovery(o => o
                         .UseFileSystemClientRegistry())
