@@ -11,12 +11,5 @@
         }
 
         public INaosBuilderContext Context { get; }
-
-        //public QueueingProviderOptions QueueProcess(bool autoComplete = true)
-        //{
-        //    // TODO
-
-        //    return this;
-        //}
     }
 }

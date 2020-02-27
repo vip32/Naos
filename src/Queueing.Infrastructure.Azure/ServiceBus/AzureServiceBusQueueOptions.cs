@@ -35,7 +35,7 @@
         /// <summary>
         /// The default message time to live.
         /// </summary>
-        public TimeSpan? DefaultMessageTimeToLive { get; set; }
+        public TimeSpan? MessageTimeToLive { get; set; }
 
         /// <summary>
         /// Returns true if the queue has dead letter support when a message expires.
@@ -102,7 +102,7 @@
             var result = new QueueDescription(this.QueueName)
             {
                 LockDuration = this.ProcessInterval,
-                MaxDeliveryCount = this.Retries
+                MaxDeliveryCount = this.Retries <= 0 ? 1 : this.Retries
             };
 
             if (this.AutoDeleteOnIdle.HasValue)
@@ -110,9 +110,9 @@
                 result.AutoDeleteOnIdle = this.AutoDeleteOnIdle.Value;
             }
 
-            if (this.DefaultMessageTimeToLive.HasValue)
+            if (this.MessageTimeToLive.HasValue)
             {
-                result.DefaultMessageTimeToLive = this.DefaultMessageTimeToLive.Value;
+                result.DefaultMessageTimeToLive = this.MessageTimeToLive.Value;
             }
 
             if (this.DuplicateDetectionHistoryTimeWindow.HasValue)

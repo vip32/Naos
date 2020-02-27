@@ -133,7 +133,7 @@
                         .Mediator(Substitute.For<IMediator>())
                         .LoggerFactory(Substitute.For<ILoggerFactory>())
                         .ConnectionString(connectionString)
-                        .Name(name)
+                        .QueueName(name)
                         .AutoDeleteOnIdle(TimeSpan.FromMinutes(5))
                         .EnableBatchedOperations(true)
                         .EnableExpress(true)

@@ -35,7 +35,7 @@
             return this;
         }
 
-        public AzureServiceBusQueueOptionsBuilder Name(string name)
+        public AzureServiceBusQueueOptionsBuilder QueueName(string name)
         {
             this.Target.QueueName = name ?? throw new ArgumentNullException(nameof(name));
             return this;
@@ -67,7 +67,7 @@
 
         public AzureServiceBusQueueOptionsBuilder DefaultMessageTimeToLive(TimeSpan defaultMessageTimeToLive)
         {
-            this.Target.DefaultMessageTimeToLive = defaultMessageTimeToLive;
+            this.Target.MessageTimeToLive = defaultMessageTimeToLive;
             return this;
         }
 

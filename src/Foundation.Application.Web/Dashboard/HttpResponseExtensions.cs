@@ -24,12 +24,12 @@
                 // TODO: make this more discoverable
                 new DashboardMenuItem("service", "/naos/servicecontext", "fas fa-cog"),
                 new DashboardMenuItem("health", "/naos/operations/health/dashboard", "fas fa-heartbeat"),
-                new DashboardMenuItem("logevents", "/naos/operations/logevents/dashboard", "fas fa-search"),
-                new DashboardMenuItem("traces", "/naos/operations/logtraces/dashboard", "far fa-clone"),
+                new DashboardMenuItem("logging", "/naos/operations/logevents/dashboard", "fas fa-search"),
+                new DashboardMenuItem("tracing", "/naos/operations/logtraces/dashboard", "far fa-clone"),
                 new DashboardMenuItem("requests", $"/naos/operations/logevents/dashboard?q=Key={LogKeys.InboundResponse},Message=ct:took ", "far fa-arrow-alt-circle-right"),
-                new DashboardMenuItem("messages", $"/naos/operations/logevents/dashboard?q=Key={LogKeys.AppMessaging},Message=ct:message published", "fas fa-envelope"),
-                new DashboardMenuItem("queues", $"/naos/operations/logevents/dashboard?q=Key={LogKeys.Queueing},Message=ct:queue item enqueued", "fas fa-columns"),
-                new DashboardMenuItem("jobs", $"/naos/operations/logevents/dashboard?q=Key={LogKeys.JobScheduling},Message=ct:job started", "fas fa-tasks"),
+                new DashboardMenuItem("messaging", $"/naos/operations/logevents/dashboard?q=Key={LogKeys.AppMessaging},Message=ct:message published", "fas fa-envelope"),
+                new DashboardMenuItem("queueing", $"/naos/operations/logevents/dashboard?q=Key={LogKeys.Queueing},Message=ct:queue item enqueued", "fas fa-columns"),
+                new DashboardMenuItem("jobscheduling", $"/naos/operations/logevents/dashboard?q=Key={LogKeys.JobScheduling},Message=ct:job started", "fas fa-tasks"),
                 new DashboardMenuItem("journal", "/naos/operations/logevents/dashboard?q=TrackType=journal", "fas fa-clipboard"),
                 new DashboardMenuItem("swagger", "/swagger/index.html", "far fa-file"),
             };

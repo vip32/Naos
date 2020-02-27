@@ -31,8 +31,7 @@
                 //.AddClasses()
                 .AsImplementedInterfaces());
 
-            //naosOptions.Context.Services.AddSingleton<IHostedService>(sp =>
-            //    new QueueProcessHostedService<T>(sp.GetRequiredService<ILoggerFactory>(), null));
+            optionsAction?.Invoke(new QueueingOptions(naosOptions.Context));
 
             naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos services builder: queueing added"); // TODO: list available commands/handlers
             naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Queueing", EchoRoute = "naos/queueing/echo" });
@@ -59,12 +58,13 @@
                     .NoRetries());
             });
 
-            //optionsAction?.Invoke(broker);
+            optionsAction?.Invoke(
+                new QueueingProviderOptions<TData>(options.Context));
 
             //options.Context.Services.AddHealthChecks()
             //    .AddAzureServiceBusTopic(configuration.ConnectionString, configuration.EntityPath, "messaging-broker-servicebus");
 
-            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: queueing added (provider={nameof(InMemoryQueue<TData>)})");
+            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: queueing provider added (provider={nameof(InMemoryQueue<TData>)})");
 
             return options;
         }

@@ -36,6 +36,7 @@
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNullOrEmpty(options.ConnectionString, nameof(options.ConnectionString));
+            EnsureArg.IsNotNullOrEmpty(options.QueueName, nameof(options.QueueName));
 
             var account = CloudStorageAccount.Parse(options.ConnectionString);
             var client = account.CreateCloudQueueClient();

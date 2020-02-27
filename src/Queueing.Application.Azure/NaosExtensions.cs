@@ -6,6 +6,7 @@
     using MediatR;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
+    using Naos.Foundation;
     using Naos.Foundation.Infrastructure;
     using Naos.Queueing.Application;
     using Naos.Queueing.Domain;
@@ -24,6 +25,7 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
+            var queueName = typeof(TData).PrettyName().ToLower();
             var configuration = options.Context.Configuration.GetSection(section).Get<ServiceBusConfiguration>();
             options.Context.Services.AddSingleton<IQueue<TData>>(sp =>
             {
@@ -34,18 +36,20 @@
                         .Tracer(sp.GetService<ITracer>())
                         .LoggerFactory(sp.GetService<ILoggerFactory>())
                         .ConnectionString(configuration.ConnectionString)
+                        .QueueName(queueName)
                         .NoRetries());
                 }
 
                 throw new NotImplementedException("no messaging servicebus is enabled");
             });
 
-            //optionsAction?.Invoke(broker);
+            optionsAction?.Invoke(
+                new QueueingProviderOptions<TData>(options.Context));
 
-            //options.Context.Services.AddHealthChecks()
-            //    .AddAzureServiceBusTopic(configuration.ConnectionString, configuration.EntityPath, "messaging-broker-servicebus");
+            options.Context.Services.AddHealthChecks()
+                .AddAzureServiceBusQueue(configuration.ConnectionString, queueName, "queueing-provider-servicebus");
 
-            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: queueing added (provider={nameof(AzureServiceBusQueue<TData>)})");
+            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: queueing provider added (provider={nameof(AzureServiceBusQueue<TData>)}, queue={queueName})");
 
             return options;
         }

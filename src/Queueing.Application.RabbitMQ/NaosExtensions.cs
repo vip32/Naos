@@ -27,6 +27,7 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
+            var queueName = typeof(TData).PrettyName().ToLower();
             var configuration = options.Context.Configuration.GetSection(section).Get<RabbitMQConfiguration>();
             options.Context.Services.AddSingleton<IQueue<TData>>(sp =>
             {
@@ -51,18 +52,20 @@
                         .Tracer(sp.GetService<ITracer>())
                         .LoggerFactory(sp.GetService<ILoggerFactory>())
                         .Provider(provider)
+                        .QueueName(queueName)
                         .NoRetries());
                 }
 
                 throw new NotImplementedException("no queueing rabbitmq is enabled");
             });
 
-            //optionsAction?.Invoke(broker);
+            optionsAction?.Invoke(
+                new QueueingProviderOptions<TData>(options.Context));
 
-            //options.Context.Services.AddHealthChecks()
-            //    .AddAzureServiceBusTopic(configuration.ConnectionString, configuration.EntityPath, "messaging-broker-servicebus");
+            options.Context.Services.AddHealthChecks()
+                .AddRabbitMQ(sp => sp.GetRequiredService<IConnectionFactory>(), "queueing-provider-rabbitmq", tags: new[] { "naos" });
 
-            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: queueing added (provider={nameof(RabbitMQQueue<TData>)})");
+            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: queueing provider added (provider={nameof(RabbitMQQueue<TData>)}, queue={queueName})");
 
             return options;
         }

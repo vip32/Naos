@@ -22,7 +22,7 @@
             TimeSpan? delay = null)
             where TData : class
         {
-            options.Context.Services.AddQueueProcessItemsStartupTask<TData>(delay ?? new TimeSpan(0, 0, 30));
+            options.Context.Services.AddQueueProcessItemsStartupTask<TData>(delay ?? new TimeSpan(0, 0, 15));
 
             return options;
         }

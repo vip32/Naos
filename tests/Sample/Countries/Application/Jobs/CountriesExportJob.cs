@@ -53,10 +53,10 @@
                         this.logger.LogInformation("{LogKey:l} countries write data", LogKey);
                         // TODO: use storage to write file
 
-                        if (RandomGenerator.GenerateInt(0, 100) % 3 == 0) // divides by 3 and checks for the remainder. A number that is divisable by 3 has no remainder (and thus ==0 and the exception will be thrown)
-                        {
-                            throw new NaosException("Oops, the export generation randomly failed");
-                        }
+                        //if (RandomGenerator.GenerateInt(0, 100) % 3 == 0) // divides by 3 and checks for the remainder. A number that is divisable by 3 has no remainder (and thus ==0 and the exception will be thrown)
+                        //{
+                        //    throw new NaosException("Oops, the export generation randomly failed");
+                        //}
 
                         data.Timestamp = DateTime.UtcNow;
                         data.Items = countries;

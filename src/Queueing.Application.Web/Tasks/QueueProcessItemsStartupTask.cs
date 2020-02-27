@@ -8,24 +8,24 @@
     using Naos.Foundation;
     using Naos.Queueing.Domain;
 
-    public class QueueProcessingStartupTask<T> : IStartupTask
+    public class QueueProcessItemsStartupTask<T> : IStartupTask
         where T : class
     {
-        private readonly ILogger<QueueProcessingStartupTask<T>> logger;
+        private readonly ILogger<QueueProcessItemsStartupTask<T>> logger;
         private readonly IQueue<T> queue;
 
-        public QueueProcessingStartupTask(ILoggerFactory loggerFactory, IQueue<T> queue)
+        public QueueProcessItemsStartupTask(ILoggerFactory loggerFactory, IQueue<T> queue)
         {
             EnsureArg.IsNotNull(loggerFactory, nameof(loggerFactory));
             EnsureArg.IsNotNull(queue, nameof(queue));
 
-            this.logger = loggerFactory.CreateLogger<QueueProcessingStartupTask<T>>();
+            this.logger = loggerFactory.CreateLogger<QueueProcessItemsStartupTask<T>>();
             this.queue = queue;
         }
 
         public TimeSpan? Delay { get; set; }
 
-        public bool AutoComplete { get; set; } = true;
+        public bool AutoComplete { get; set; } = true; // TODO: set from outside
 
         public async Task StartAsync(CancellationToken cancellationToken = default)
         {
@@ -34,7 +34,7 @@
 
         public Task ShutdownAsync(CancellationToken cancellationToken = default)
         {
-            this.queue.Dispose();
+            this.queue?.Dispose();
             return Task.CompletedTask;
         }
     }
