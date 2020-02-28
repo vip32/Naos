@@ -29,7 +29,7 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            options.Context.Services.AddSingleton<IMessageBroker>(sp =>
+            options.Context.Services.AddScoped<IMessageBroker>(sp =>
             {
                 var configuration = options.Context.Configuration.GetSection(section).Get<FileStorageConfiguration>();
                 configuration.Folder = configuration.Folder.EmptyToNull() ?? Path.GetTempPath();

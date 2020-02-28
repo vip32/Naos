@@ -104,6 +104,7 @@
             try
             {
                 var logger = services.BuildServiceProvider().GetRequiredService<ILoggerFactory>().CreateLogger("Naos");
+                logger.LogInformation($"{{LogKey:l}} service descriptor: {context.Descriptor} [{context.Descriptor.Tags.ToString("|")}]", LogKeys.Startup);
                 foreach (var message in context.Messages.Safe())
                 {
                     logger.LogDebug(message);

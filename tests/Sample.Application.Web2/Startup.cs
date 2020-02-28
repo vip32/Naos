@@ -17,25 +17,26 @@ namespace Naos.Sample.Application.Web
     using Naos.Commands.Application;
     using Naos.Commands.Infrastructure.FileStorage;
     using Naos.FileStorage.Infrastructure;
-    using Naos.Foundation;
+    using Naos.JobScheduling.Domain;
     using Naos.Messaging.Domain;
+    using Naos.Queueing.Domain;
     using Naos.Sample.Catalogs.Application;
+    using Naos.Sample.Countries.Application;
     using Naos.Sample.Customers.Application;
     using Naos.Sample.Inventory.Application;
     using Naos.Sample.UserAccounts.Application;
     using Naos.Tracing.Domain;
-    using NSwag.Generation.Processors;
+    using NSwag.AspNetCore;
 
     public class Startup
     {
         public Startup(IConfiguration configuration)
         {
-            this.Configuration = configuration; //NaosConfigurationFactory.Create();
+            this.Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<ConsoleLifetimeOptions>(opts => opts.SuppressStatusMessages = true); // https://andrewlock.net/new-in-aspnetcore-3-structured-logging-for-startup-messages/
@@ -58,48 +59,6 @@ namespace Naos.Sample.Application.Web
                     return factory?.GetUrlHelper(actionContext);
                 })
                 .AddMediatr()
-                .AddSwaggerDocument((c, sp) => // TODO: replace with .AddOpenApiDocument, but currently has issues with example model generation in UI
-                {
-                    c.SerializerSettings = DefaultJsonSerializerSettings.Create();
-                    // find all processors which are registerd by various naos features (Command RequestDispatcher/ControllerRegistrations)
-                    foreach (var documentProcessor in sp.GetServices<IDocumentProcessor>())
-                    {
-                        c.DocumentProcessors.Add(documentProcessor);
-                    }
-
-                    foreach (var operationProcessor in sp.GetServices<IOperationProcessor>())
-                    {
-                        c.OperationProcessors.Add(operationProcessor);
-                    }
-
-                    //c.DocumentProcessors.Add(new RequestCommandRegistrationDocumentProcessor(sp.GetServices<RequestCommandRegistration>()));
-                    //c.OperationProcessors.Add(new GenericRepositoryControllerOperationProcessor());
-                    c.OperationProcessors.Add(new ApiVersionProcessor());
-                    c.PostProcess = document =>
-                    {
-                        var descriptor = sp.GetService<Foundation.ServiceDescriptor>();
-                        document.Info.Version = descriptor?.Version.EmptyToNull() ?? "v1";
-                        document.Info.Title = descriptor?.Name.EmptyToNull() ?? "Naos";
-                        document.Info.Description = descriptor?.Tags.ToString(", ").EmptyToNull() ?? "Naos";
-                        document.Info.TermsOfService = "None";
-                        document.Info.Contact = new NSwag.OpenApiContact
-                        {
-                            Name = "Naos",
-                            Email = string.Empty,
-                            Url = "https://github.com/vip32/Naos"
-                        };
-                    };
-                    if (true) // option.includeSecurityHeader
-                    {
-                        c.AddSecurity("Bearer", new NSwag.OpenApiSecurityScheme // TODO: dependent on configured authentication
-                        {
-                            Description = "Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                            Name = "Authorization",
-                            In = NSwag.OpenApiSecurityApiKeyLocation.Header,
-                            Type = NSwag.OpenApiSecuritySchemeType.ApiKey // Oauth2/OIDC?
-                        });
-                    }
-                })
                 .AddMvc(o =>
                 {
                     //o.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build())); // https://tahirnaushad.com/2017/08/28/asp-net-core-2-0-mvc-filters/ or use controller attribute (Authorize)
@@ -117,18 +76,23 @@ namespace Naos.Sample.Application.Web
 
             services
                 .AddNaos(this.Configuration, "Product", "Capability2", new[] { "All" }, n => n
+                    //.AddModule<CustomersModule>()>> INaosModule
+                    //.AddModule(m => m { m.Context.Services.AddScoped<....>()}, "customers")
+                    //.AddModules() >> discover INaosModule!
                     .AddModules(m => m
                         .AddCountriesModule()
                         .AddCustomersModule()
                         .AddUserAccountsModule()
                         .AddCatalogsModule()
                         .AddInventoryModule())
-                    .AddServiceContext()
+                    .AddSwaggerDocumentation() // do IMPLICIT! XXXX
+                    .AddServiceContext() // do IMPLICIT! XXXX
+                    .AddOidcAuthentication()
                     //.AddAuthenticationApiKeyStatic()
                     //.AddEasyAuthentication(/*o => o.Provider = EasyAuthProviders.AzureActiveDirectory*/)
-                    .AddRequestCorrelation()
-                    .AddRequestFiltering()
-                    .AddServiceExceptions()
+                    .AddRequestCorrelation() // do IMPLICIT!
+                    .AddRequestFiltering() // do IMPLICIT! XXXX
+                    .AddServiceExceptions() // do IMPLICIT! XXXX
                     .AddCommands(o => o
                         .AddBehavior<TracerCommandBehavior>()
                         .AddBehavior<ValidateCommandBehavior>()
@@ -137,52 +101,67 @@ namespace Naos.Sample.Application.Web
                             new FolderFileStorage(o => o
                                 .Folder(Path.Combine(Path.GetTempPath(), "naos_commands", "journal")))))
                         .AddEndpoints(o => o
-                            .Post<CreateCustomerCommand>("api/commands/customers/create", HttpStatusCode.Created, "Customers", onSuccess: (cmd, ctx) => ctx.Response.Location($"api/customers/{cmd.Customer.Id}"))
-                            .Get<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>("api/commands/customers/active", groupName: "Customers")
+                            .Post<CreateCustomerCommand>(
+                                "api/commands/customers/create",
+                                onSuccessStatusCode: HttpStatusCode.Created,
+                                groupName: "Customers",
+                                onSuccess: (cmd, ctx) => ctx.Response.Location($"api/customers/{cmd.Customer.Id}"))
+                            .Get<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>(
+                                "api/commands/customers/active",
+                                groupName: "Customers")
                             .UseAzureBlobStorage()
                             //.UseInMemoryStorage()
                             //.UseFolderStorage()
                             .UseAzureStorageQueue() // TODO: rabbitmq queue is also needed
-                            //.UseInMemoryQueue()
+                                                    //.UseInMemoryQueue()
                             .GetQueued<PingCommand>("api/commands/queue/ping")
-                            .GetQueued<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>("api/commands/queue/customers/active", groupName: "Customers")))
-                   .AddOperations(o => o
+                            .GetQueued<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>(
+                                "api/commands/queue/customers/active",
+                                groupName: "Customers")))
+                    .AddOperations(o => o
                         .AddInteractiveConsole()
                         .AddLogging(o => o
                             .UseConsole(LogLevel.Debug)
                             .UseFile()
-                            //.UseSink(w => w.LiterateConsole())
-                            //.UseAzureBlobStorage()
-                            //.UseCosmosDb() TODO
-                            .UseAzureLogAnalytics(false)
                             .UseMongo())
-                        .AddSystemHealthChecks()
+                        //.UseSink(w => w.LiterateConsole())
+                        //.UseAzureBlobStorage()
+                        //.UseCosmosDb() TODO
+                        //.UseAzureLogAnalytics())
+                        .AddSystemHealthChecks() // do IMPLICIT! XXXXX
                         .AddRequestStorage(o => o
                             .UseAzureBlobStorage())
                         .AddTracing(o => o
                             .UseSampler<ConstantSampler>()
                             .UseZipkinExporter()))
-                            //.UseExporter<ZipkinSpanExporter>())) // TODO: UseZipkinExporter + configuration + zipkin url health (options.Endpoint)
+                    //.UseExporter<ZipkinSpanExporter>())) // TODO: UseZipkinExporter + configuration + zipkin url health (options.Endpoint)
                     //.UseSampler(new OperationNamePatternSampler(new[] { "http*" }))))
                     //.AddQueries()
                     //.AddSwaggerDocument() // s.Description = Product.Capability\
-                    .AddJobScheduling(o => o
-                        .SetEnabled(true))
+                    //.AddJobScheduling(o => o
+                        //.SetEnabled(true)
                         //.Register<EchoJob>("echojob1", Cron.MinuteInterval(10), (j) => j.EchoAsync("+++ hello from echojob1 +++", CancellationToken.None))
                         //.Register<EchoJob>("manualjob1", Cron.Never(), (j) => j.EchoAsync("+++ hello from manualjob1 +++", CancellationToken.None))
-                        //.Register<CountriesImportJob>("countriesimport", Cron.MinuteInterval(1)))
-                    //.Register("anonymousjob2", Cron.Minutely(), (j) => Console.WriteLine("+++ hello from anonymousjob2 " + j))
-                    //.Register("jobevent1", Cron.Minutely(), () => new EchoJobEventData { Text = "+++ hello from jobevent1 +++" }))
-                    //.Register<EchoJob>("echojob2", Cron.MinuteInterval(2), j => j.EchoAsync("+++ hello from echojob2 +++", CancellationToken.None, true), enabled: false)
-                    //.Register<EchoJob>("testlongjob4", Cron.Minutely(), j => j.EchoLongAsync("+++ hello from testlongjob4 +++", CancellationToken.None)))
-                    .AddServiceClient()
-                    .AddQueueing()
+                        //.Register<CountriesImportJob>("countriesimport", Cron.MinuteInterval(5))
+                        //.Register<CountriesExportJob>("countriesexport", Cron.MinuteInterval(2))) // Enqueue
+                                                                                                  //.Register("anonymousjob2", Cron.Minutely(), (j) => Console.WriteLine("+++ hello from anonymousjob2 " + j))
+                                                                                                  //.Register("jobevent1", Cron.Minutely(), () => new EchoJobEventData { Text = "+++ hello from jobevent1 +++" }))
+                                                                                                  //.Register<EchoJob>("echojob2", Cron.MinuteInterval(2), j => j.EchoAsync("+++ hello from echojob2 +++", CancellationToken.None, true), enabled: false)
+                                                                                                  //.Register<EchoJob>("testlongjob4", Cron.Minutely(), j => j.EchoLongAsync("+++ hello from testlongjob4 +++", CancellationToken.None)))
+                    .AddServiceClient() // do IMPLICIT! XXXXX
+                    .AddQueueing(o => o
+                        .UseRabbitMQQueue<EchoQueueEventData>(o => o
+                            .ProcessItems())
+                        //.UseInMemoryQueue<CountriesExportData>(o => o
+                        .UseRabbitMQQueue<CountriesExportData>(o => o
+                        //.UseServiceBusQueue<CountriesExportData>(o => o
+                            .ProcessItems()))
                     .AddMessaging(o => o
-                        //.UseFileSystemBroker(s => s
-                        //.UseSignalRBroker(s => s
+                        //.UseFileStorageBroker(s => s
+                        //.UseSignalRServerlessBroker(s => s // WARN: has a bug where old messages are multiplied on new subsequent publishes
                         .UseRabbitMQBroker(s => s
                         //.UseServiceBusBroker(s => s
-                            .Subscribe<EchoMessage, EchoMessageHandler>()))
+                           .Subscribe<EchoMessage, EchoMessageHandler>()))
                     .AddServiceDiscovery(o => o
                         .UseFileSystemClientRegistry())
                     // TODO: create a cloud based registry (storage)
@@ -202,22 +181,43 @@ namespace Naos.Sample.Application.Web
 
             app.UseHttpsRedirection();
 
-            app
-                .UseNaos(s => s
-                    .UseRequestCorrelation()
-                    .UseServiceContext()
-                    .UseServicePoweredBy()
-                    .UseOperationsLogging()
-                    .UseOperationsTracing()
-                    .UseRequestFiltering()
-                    .UseServiceExceptions()
-                    .UseCommandEndpoints()
-                    .UseServiceDiscoveryRouter())
-                .UseOpenApi()
-                .UseSwaggerUi3();
+            app.UseNaos(s => s
+                   //.UseAuthenticationChallenge()
+                   .UseRequestCorrelation() // do IMPLICIT! XXXXX
+                   .UseServiceContext() // do IMPLICIT! XXXXX
+                   .UseServicePoweredBy() // do IMPLICIT! XXXXX
+                   .UseOperationsHealth() // do IMPLICIT! XXXXX
+                   .UseOperationsLogging() // do IMPLICIT! XXXXX
+                   .UseOperationsTracing() // do IMPLICIT! XXXXX
+                   .UseRequestFiltering() // do IMPLICIT! XXXXX
+                   .UseServiceExceptions() // do IMPLICIT! XXXXX
+                   .UseCommandEndpoints() // do IMPLICIT! XXXXX
+                   .UseServiceDiscoveryRouter())
+               .UseOpenApi() // TODO: UseNaos.UseSwaggerDocument()
+               .UseSwaggerUi3(a => // TODO: UseNaos.UseSwaggerDocument()
+               {
+                   a.CustomStylesheetPath = "./css/naos/swagger.css";
+
+                   // Oauth2/Oidc settings
+                   a.OAuth2Client = new OAuth2ClientSettings
+                   {
+                       //AppName = "aspnetcore-keycloak",
+                       //Realm = "master",
+                       ClientId = "aspnetcore-keycloak", // TODO: get from Configuratoin
+                       ClientSecret = "1beb5df9-01dd-46c3-84a8-b65eca50ad57", // TODO: get from Configuratoin
+                       // redirect https://localhost:5001/swagger/oauth2-redirect.html
+                   };
+                   //a.OAuth2Client.AdditionalQueryStringParameters
+                   //.AddOrUpdate("response_type", "token") // code?
+                   //.AddOrUpdate("scope", "openid profile email claims")
+                   //.AddOrUpdate("nonce", "swagger");
+                   //.AddOrUpdate("response_mode", "post");
+               }); // https://cpratt.co/customizing-swagger-ui-in-asp-net-core/
 
             app.UseRouting();
-            //app.UseAuthorization();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            //app.UseAuthenticationChallenge(); // needs to be last in order, forces login challenge
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

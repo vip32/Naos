@@ -35,17 +35,18 @@
                 HostName = configuration.Host.IsNullOrEmpty() ? "localhost" : configuration.Host, // or 'rabbitmq' in docker-compose env
                 UserName = configuration.UserName.IsNullOrEmpty() ? "guest" : configuration.UserName,
                 Password = configuration.Password.IsNullOrEmpty() ? "guest" : configuration.Password,
-                DispatchConsumersAsync = true
+                DispatchConsumersAsync = true,
             };
 
-            options.Context.Services.AddSingleton<IQueue<TData>>(sp =>
+            options.Context.Services.AddScoped<IQueue<TData>>(sp =>
             {
                 if (configuration?.Enabled == true)
                 {
                     var provider = new RabbitMQProvider(
                         sp.GetRequiredService<ILogger<RabbitMQProvider>>(),
                         connectionFactory,
-                        configuration.RetryCount);
+                        configuration.RetryCount,
+                        $"{sp.GetRequiredService<Naos.Foundation.ServiceDescriptor>()?.Name} (queueing:{queueName})");
 
                     return new RabbitMQQueue<TData>(o => o
                         .Mediator(sp.GetService<IMediator>())

@@ -3,11 +3,17 @@
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
+    using Microsoft.ApplicationInsights;
     using Naos.Tracing.Domain;
 
     public class ApplicationInsightsExporter : ISpanExporter
     {
-        // TODO: need telemetryclient
+        private readonly TelemetryClient telemetryClient;
+
+        public ApplicationInsightsExporter(TelemetryClient telemetryClient)
+        {
+            this.telemetryClient = telemetryClient;
+        }
 
         public Task ExportAsync(IEnumerable<ISpan> spans, CancellationToken cancellationToken)
         {

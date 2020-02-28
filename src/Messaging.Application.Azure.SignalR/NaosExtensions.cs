@@ -29,7 +29,7 @@
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
             var configuration = options.Context.Configuration.GetSection(section).Get<SignalRConfiguration>();
-            options.Context.Services.AddSingleton<IMessageBroker>(sp =>
+            options.Context.Services.AddScoped<IMessageBroker>(sp =>
             {
                 var broker = new SignalRServerlessMessageBroker(o => o
                         .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())

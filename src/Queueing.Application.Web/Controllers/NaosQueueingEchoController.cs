@@ -7,6 +7,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
+    using Naos.Foundation.Application;
     using Naos.Queueing.Domain;
     using NSwag.Annotations;
 
@@ -16,15 +17,18 @@
     {
         private readonly ILogger<NaosQueueingEchoController> logger;
         private readonly IEnumerable<IQueue> queues;
+        private readonly IQueue<EchoQueueEventData> echoQueue;
 
         public NaosQueueingEchoController(
             ILogger<NaosQueueingEchoController> logger,
-            IEnumerable<IQueue> queues)
+            IEnumerable<IQueue> queues,
+            IQueue<EchoQueueEventData> echoQueue = null)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
 
             this.logger = logger;
             this.queues = queues;
+            this.echoQueue = echoQueue;
         }
 
         [HttpGet]
@@ -33,6 +37,19 @@
         public async Task<ActionResult<Dictionary<string, QueueMetrics>>> Get()
         {
             var result = new List<object>();
+
+            if(this.echoQueue != null)
+            {
+                for (var i = 1; i <= 1; i++)
+                {
+                    await this.echoQueue.EnqueueAsync(
+                        new EchoQueueEventData
+                        {
+                            CorrelationId = this.HttpContext.GetCorrelationId(),
+                            Text = $"+++ hello from queue item {i} +++"
+                        }).AnyContext();
+                }
+            }
 
             foreach (var queue in this.queues.Safe())
             {

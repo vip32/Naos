@@ -27,7 +27,7 @@
 
             var queueName = typeof(TData).PrettyName().ToLower();
             var configuration = options.Context.Configuration.GetSection(section).Get<ServiceBusConfiguration>();
-            options.Context.Services.AddSingleton<IQueue<TData>>(sp =>
+            options.Context.Services.AddScoped<IQueue<TData>>(sp =>
             {
                 if (configuration?.Enabled == true)
                 {

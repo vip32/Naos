@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Net.Sockets;
+    using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
@@ -441,9 +442,9 @@
                 this,
                 Foundation.Extensions.FromEpoch(properties.Timestamp.UnixTime))
             {
-                CorrelationId = properties.CorrelationId, //message.UserProperties.TryGetValue("CorrelationId")?.ToString(),
-                TraceId = properties.Headers.TryGetValue("TraceId")?.ToString(),
-                SpanId = properties.Headers.TryGetValue("SpanId")?.ToString()
+                CorrelationId = properties.CorrelationId,
+                TraceId = Encoding.UTF8.GetString((byte[])properties.Headers["TraceId"]),
+                SpanId = Encoding.UTF8.GetString((byte[])properties.Headers["SpanId"])
             };
             item.Properties.Add("DeliveryTag", deliveryTag);
 
