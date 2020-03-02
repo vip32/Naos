@@ -15,11 +15,12 @@
         private readonly IConnectionFactory connectionFactory;
         private readonly ILogger<RabbitMQProvider> logger;
         private readonly int retryCount;
+        private readonly string clientName;
         private readonly object syncRoot = new object();
         private IConnection connection;
         private bool disposed;
 
-        public RabbitMQProvider(ILogger<RabbitMQProvider> logger, IConnectionFactory connectionFactory, int retryCount = 5)
+        public RabbitMQProvider(ILogger<RabbitMQProvider> logger, IConnectionFactory connectionFactory, int retryCount = 5, string clientName = null)
         {
             EnsureThat.EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureThat.EnsureArg.IsNotNull(connectionFactory, nameof(connectionFactory));
@@ -27,6 +28,7 @@
             this.connectionFactory = connectionFactory;
             this.logger = logger;
             this.retryCount = retryCount;
+            this.clientName = clientName;
         }
 
         public bool IsConnected
@@ -81,7 +83,7 @@
 
                 try
                 {
-                    policy.Execute(() => this.connection = this.connectionFactory.CreateConnection());
+                    policy.Execute(() => this.connection = this.connectionFactory.CreateConnection(this.clientName));
                 }
                 catch(BrokerUnreachableException ex)
                 {

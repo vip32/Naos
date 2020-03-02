@@ -42,7 +42,7 @@
                 DispatchConsumersAsync = true
             };
 
-            options.Context.Services.AddSingleton<IMessageBroker>(sp =>
+            options.Context.Services.AddScoped<IMessageBroker>(sp =>
             {
                 var broker = new RabbitMQMessageBroker(o => o
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
@@ -55,7 +55,8 @@
                     .Provider(new RabbitMQProvider(
                         sp.GetRequiredService<ILogger<RabbitMQProvider>>(),
                         connectionFactory,
-                        configuration.RetryCount)));
+                        configuration.RetryCount,
+                        $"{sp.GetService<Naos.Foundation.ServiceDescriptor>()?.Name} (messaging:{queueName})")));
 
                 brokerAction?.Invoke(broker);
                 return broker;

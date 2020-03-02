@@ -67,7 +67,6 @@
             this.serializer = this.options.Serializer ?? DefaultSerializer.Create;
 
             this.channel = this.CreateChannel(options.QueueName);
-            this.StartBasicConsume(this.options.QueueName); // TODO: do this inside subscribe(), see ReceiveLogsDirect.cs https://www.rabbitmq.com/tutorials/tutorial-four-dotnet.html
         }
 
         public RabbitMQMessageBroker(Builder<RabbitMQMessageBrokerOptionsBuilder, RabbitMQMessageBrokerOptions> optionsBuilder)
@@ -104,7 +103,7 @@
                     }
 
                     this.options.Subscriptions.Add<TMessage, THandler>();
-                    //this.StartBasicConsume(this.options.QueueName);
+                    this.StartBasicConsume(this.options.QueueName);
                 }
                 catch (Exception ex)
                 {
