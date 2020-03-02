@@ -59,7 +59,7 @@
 
         public RabbitMQQueueOptionsBuilder RetryCount(int value)
         {
-            this.Target.RetryCount = value;
+            this.Target.Retries = value;
             return this;
         }
 

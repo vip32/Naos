@@ -74,7 +74,7 @@
                 Interlocked.Increment(ref this.enqueuedCount);
                 var policy = Policy.Handle<BrokerUnreachableException>()
                     .Or<SocketException>()
-                    .WaitAndRetry(this.Options.RetryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
+                    .WaitAndRetry(this.Options.Retries, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
                     {
                         this.Logger.LogWarning(ex, "{LogKey:l} could not enqueue item: {MessageId} after {Timeout}s ({ExceptionMessage})", LogKeys.AppMessaging, id, $"{time.TotalSeconds:n1}", ex.Message);
                     });
@@ -84,29 +84,29 @@
                     var rabbitMQMessage = this.Serializer.SerializeToBytes(data);
 
                     channel.ExchangeDeclare(exchange: this.Options.ExchangeName, type: "direct");
+                    var properties = channel.CreateBasicProperties();
+                    properties.DeliveryMode = 2; // persistent
+                    properties.Persistent = true;
+                    //properties.AppId = message.Origin; // TODO: get from descriptor
+                    properties.Type = messageName;
+                    properties.MessageId = id;
+                    properties.CorrelationId = correlationId;
+                    if(this.Options.MessageExpiration > 0)
+                    {
+                        properties.Expiration = this.Options.MessageExpiration.ToString();
+                    }
+
+                    //properties.Headers.Add("EnqueuedDate", DateTime.UtcNow);
+                    if (scope?.Span != null)
+                    {
+                        properties.Headers ??= new Dictionary<string, object>();
+                        // propagate the span infos
+                        properties.Headers.Add("TraceId", scope.Span.TraceId);
+                        properties.Headers.Add("SpanId", scope.Span.SpanId);
+                    }
+
                     policy.Execute(() =>
                     {
-                        var properties = channel.CreateBasicProperties();
-                        properties.DeliveryMode = 2; // persistent
-                        properties.Persistent = true;
-                        //properties.AppId = message.Origin; // TODO: get from descriptor
-                        properties.Type = messageName;
-                        properties.MessageId = id;
-                        properties.CorrelationId = correlationId;
-                        if(this.Options.MessageExpiration > 0)
-                        {
-                            properties.Expiration = this.Options.MessageExpiration.ToString();
-                        }
-
-                        //properties.Headers.Add("EnqueuedDate", DateTime.UtcNow);
-                        if (scope?.Span != null)
-                        {
-                            properties.Headers ??= new Dictionary<string, object>();
-                            // propagate the span infos
-                            properties.Headers.Add("TraceId", scope.Span.TraceId);
-                            properties.Headers.Add("SpanId", scope.Span.SpanId);
-                        }
-
                         channel.BasicPublish(
                             exchange: this.Options.ExchangeName,
                             routingKey: routingKey,

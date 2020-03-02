@@ -8,10 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.AzureServiceBus" Version="3.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="3.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Foundation.Infrastructure.Azure.ServiceBus\Infrastructure.Azure.ServiceBus.csproj" />
+    <ProjectReference Include="..\Foundation.Infrastructure.Azure\Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\Queueing.Application\Queueing.Application.csproj" />
     <ProjectReference Include="..\Queueing.Infrastructure.Azure\Queueing.Infrastructure.Azure.csproj" />
   </ItemGroup>

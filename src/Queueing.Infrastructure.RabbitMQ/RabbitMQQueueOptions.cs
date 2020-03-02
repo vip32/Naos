@@ -14,8 +14,6 @@
 
         public string FilterScope { get; set; } // for machine scope
 
-        public int RetryCount { get; set; } = 3;
-
         public long MessageExpiration { get; set; } // in milliseconds
 
         public TimeSpan DequeueInterval { get; set; } = TimeSpan.FromSeconds(2);

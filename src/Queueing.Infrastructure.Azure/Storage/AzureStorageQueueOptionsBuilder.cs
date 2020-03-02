@@ -45,6 +45,12 @@
             return this;
         }
 
+        public AzureStorageQueueOptionsBuilder NoRetries()
+        {
+            this.Target.Retries = 0;
+            return this;
+        }
+
         public AzureStorageQueueOptionsBuilder ProcessInterval(TimeSpan interval)
         {
             this.Target.ProcessInterval = interval;

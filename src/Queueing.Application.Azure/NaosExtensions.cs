@@ -55,5 +55,45 @@
 
             return options;
         }
+
+        public static QueueingOptions UseAzureStorageQueue<TData>(
+            this QueueingOptions options,
+            Action<QueueingProviderOptions<TData>> optionsAction = null,
+            string section = "naos:queueing:azureStorageQueue")
+            where TData : class
+        {
+            EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.Context, nameof(options.Context));
+
+            var queueName = typeof(TData).PrettyName().ToLower();
+            var configuration = options.Context.Configuration.GetSection(section).Get<QueueStorageConfiguration>();
+            if (configuration?.Enabled == true)
+            {
+                options.Context.Services.AddScoped<IQueue<TData>>(sp =>
+                {
+                    return new AzureStorageQueue<TData>(o => o
+                        .Mediator(sp.GetService<IMediator>())
+                        .Tracer(sp.GetService<ITracer>())
+                        .LoggerFactory(sp.GetService<ILoggerFactory>())
+                        .ConnectionString(configuration.ConnectionString)
+                        .QueueName(queueName)
+                        .NoRetries());
+                });
+
+                optionsAction?.Invoke(
+                    new QueueingProviderOptions<TData>(options.Context));
+
+                options.Context.Services.AddHealthChecks()
+                    .AddAzureQueueStorage(configuration.ConnectionString, queueName, "queueing-provider-azurequeuestorage");
+
+                options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: queueing provider added (provider={nameof(AzureStorageQueue<TData>)}, queue={queueName})");
+            }
+            else
+            {
+                throw new NotImplementedException("no messaging servicebus is enabled");
+            }
+
+            return options;
+        }
     }
 }

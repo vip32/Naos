@@ -14,6 +14,7 @@
     using Naos.Foundation.Domain;
     using Naos.Queueing.Domain;
     using Naos.Tracing.Domain;
+    using Polly;
 
     public class AzureServiceBusQueue<TData> : QueueBase<TData, AzureServiceBusQueueOptions>
          where TData : class
@@ -79,7 +80,16 @@
                     message.UserProperties.AddOrUpdate("TraceId", scope?.Span?.TraceId);
                     message.UserProperties.AddOrUpdate("SpanId", scope?.Span?.SpanId);
 
-                    await this.queueSender.SendAsync(message).AnyContext();
+                    var policy = Policy.Handle<Exception>()
+                    .WaitAndRetry(this.Options.Retries, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
+                    {
+                        this.Logger.LogWarning(ex, "{LogKey:l} could not enqueue item: {MessageId} after {Timeout}s ({ExceptionMessage})", LogKeys.AppMessaging, id, $"{time.TotalSeconds:n1}", ex.Message);
+                    });
+
+                    await policy.Execute(async () =>
+                    {
+                        await this.queueSender.SendAsync(message).AnyContext();
+                    }).AnyContext();
 
                     this.Logger.LogJournal(LogKeys.Queueing, $"queue item enqueued: {typeof(TData).PrettyName()} (id={message.MessageId}, queue={this.Options.QueueName})", LogPropertyKeys.TrackEnqueue);
                     this.Logger.LogTrace(LogKeys.Queueing, message.MessageId, typeof(TData).PrettyName(), LogTraceNames.Queue);

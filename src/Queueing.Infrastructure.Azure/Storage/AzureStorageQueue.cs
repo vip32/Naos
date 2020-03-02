@@ -5,6 +5,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
+    using Microsoft.Azure.Amqp.Framing;
     using Microsoft.Extensions.Logging;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Queue;
@@ -12,6 +13,7 @@
     using Naos.Foundation.Domain;
     using Naos.Queueing.Domain;
     using Naos.Tracing.Domain;
+    using Polly;
 
     public class AzureStorageQueue<TData> : QueueBase<TData, AzureStorageQueueOptions>
         where TData : class
@@ -71,6 +73,7 @@
                 this.Logger.LogDebug($"{{LogKey:l}} queue item enqueue (queue={this.Options.QueueName}, type={this.GetType().PrettyName()})", LogKeys.Queueing);
 
                 Interlocked.Increment(ref this.enqueuedCount);
+
                 var message = CloudQueueMessage.CreateCloudQueueMessageFromByteArray(this.Serializer.SerializeToBytes(data));
 
                 // TODO: store correlationid + traceid/spanid >> QUEUEITEM > data
@@ -87,7 +90,16 @@
                 //    return message.Id;
                 //}
 
-                await this.queue.AddMessageAsync(message).AnyContext();
+                var policy = Policy.Handle<Exception>()
+                    .WaitAndRetry(this.Options.Retries, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
+                    {
+                        this.Logger.LogWarning(ex, "{LogKey:l} could not enqueue item: {MessageId} after {Timeout}s ({ExceptionMessage})", LogKeys.AppMessaging, message.Id, $"{time.TotalSeconds:n1}", ex.Message);
+                    });
+
+                await policy.Execute(async () =>
+                {
+                    await this.queue.AddMessageAsync(message).AnyContext();
+                }).AnyContext();
 
                 this.Logger.LogJournal(LogKeys.Queueing, $"queue item enqueued: {typeof(TData).PrettyName()} (id={message.Id}, queue={this.Options.QueueName})", LogPropertyKeys.TrackEnqueue);
                 this.Logger.LogTrace(LogKeys.Queueing, message.Id, typeof(TData).PrettyName(), LogTraceNames.Queue);
