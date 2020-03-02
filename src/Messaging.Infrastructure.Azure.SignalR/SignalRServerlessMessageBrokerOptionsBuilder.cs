@@ -46,9 +46,9 @@
             return this;
         }
 
-        public SignalRServerlessMessageBrokerOptionsBuilder Map(ISubscriptionMap map)
+        public SignalRServerlessMessageBrokerOptionsBuilder Subscriptions(ISubscriptionMap subscriptions)
         {
-            this.Target.Map = map;
+            this.Target.Subscriptions = subscriptions;
             return this;
         }
 

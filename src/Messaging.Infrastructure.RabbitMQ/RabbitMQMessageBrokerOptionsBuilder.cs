@@ -47,9 +47,9 @@
             return this;
         }
 
-        public RabbitMQMessageBrokerOptionsBuilder Subscriptions(ISubscriptionMap map)
+        public RabbitMQMessageBrokerOptionsBuilder Subscriptions(ISubscriptionMap subscriptions)
         {
-            this.Target.Subscriptions = map;
+            this.Target.Subscriptions = subscriptions;
             return this;
         }
 

@@ -52,6 +52,7 @@
                         .Tracer(sp.GetService<ITracer>())
                         .Mediator(sp.GetService<IMediator>())
                         .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
+                        .Subscriptions(sp.GetRequiredService<ISubscriptionMap>()) // singleton
                         //.MessageScope(options.Context.Descriptor.Name)
                         .ExchangeName(exchangeName)
                         .QueueName(queueName)

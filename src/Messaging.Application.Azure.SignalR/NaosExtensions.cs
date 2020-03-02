@@ -41,7 +41,7 @@
                             .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
                             .ConnectionString(configuration.ConnectionString)
                             .HttpClient(sp.GetRequiredService<IHttpClientFactory>())
-                            .Map(sp.GetRequiredService<ISubscriptionMap>())
+                            .Subscriptions(sp.GetRequiredService<ISubscriptionMap>())
                             .FilterScope(Environment.GetEnvironmentVariable(EnvironmentKeys.IsLocal).ToBool()
                                 ? Environment.MachineName.Humanize().Dehumanize().ToLower()
                                 : string.Empty)

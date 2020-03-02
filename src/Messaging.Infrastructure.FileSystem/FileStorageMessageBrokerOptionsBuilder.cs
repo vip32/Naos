@@ -33,9 +33,9 @@
             return this;
         }
 
-        public FileStorageMessageBrokerOptionsBuilder Map(ISubscriptionMap map)
+        public FileStorageMessageBrokerOptionsBuilder Subscriptions(ISubscriptionMap subscriptions)
         {
-            this.Target.Map = map;
+            this.Target.Subscriptions = subscriptions;
             return this;
         }
 

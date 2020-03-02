@@ -27,7 +27,7 @@
 
             this.options = options;
             this.options.Folder = options.Folder.EmptyToNull() ?? Path.GetTempPath();
-            this.options.Map = options.Map ?? new SubscriptionMap();
+            this.options.Subscriptions = options.Subscriptions ?? new SubscriptionMap();
             this.options.MessageScope = options.MessageScope ?? AppDomain.CurrentDomain.FriendlyName;
             this.logger = options.CreateLogger<FileStorageMessageBroker>();
         }
@@ -43,7 +43,7 @@
         {
             var messageName = typeof(TMessage).PrettyName(false);
 
-            if (!this.options.Map.Exists<TMessage>())
+            if (!this.options.Subscriptions.Exists<TMessage>())
             {
                 if (!this.watchers.ContainsKey(messageName))
                 {
@@ -66,7 +66,7 @@
                     this.watchers.Add(messageName, watcher);
                     this.logger.LogDebug("{LogKey:l} filesystem onrenamed handler registered (name={messageName})", LogKeys.AppMessaging, typeof(TMessage).PrettyName());
 
-                    this.options.Map.Add<TMessage, THandler>(messageName);
+                    this.options.Subscriptions.Add<TMessage, THandler>(messageName);
                 }
             }
 
@@ -145,11 +145,11 @@
             var messageName = path.SliceTillLast(@"\").SliceFromLast(@"\");
             var messageBody = this.GetFileContents(path);
 
-            if (this.options.Map.Exists(messageName))
+            if (this.options.Subscriptions.Exists(messageName))
             {
-                foreach (var subscription in this.options.Map.GetAll(messageName))
+                foreach (var subscription in this.options.Subscriptions.GetAll(messageName))
                 {
-                    var messageType = this.options.Map.GetByName(messageName);
+                    var messageType = this.options.Subscriptions.GetByName(messageName);
                     if (messageType == null)
                     {
                         continue;

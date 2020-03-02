@@ -58,9 +58,9 @@
             return this;
         }
 
-        public ServiceBusMessageBrokerOptionsBuilder Subscriptions(ISubscriptionMap map)
+        public ServiceBusMessageBrokerOptionsBuilder Subscriptions(ISubscriptionMap subscriptions)
         {
-            this.Target.Subscriptions = map;
+            this.Target.Subscriptions = subscriptions;
             return this;
         }
 

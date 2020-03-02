@@ -20,7 +20,7 @@
 
         public IHttpClientFactory HttpClient { get; set; }
 
-        public ISubscriptionMap Map { get; set; }
+        public ISubscriptionMap Subscriptions { get; set; }
 
         public string FilterScope { get; set; }
 

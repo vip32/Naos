@@ -31,7 +31,7 @@
             EnsureArg.IsNotNull(options.HttpClient, nameof(options.HttpClient));
 
             this.options = options;
-            this.options.Map = options.Map ?? new SubscriptionMap();
+            this.options.Subscriptions = options.Subscriptions ?? new SubscriptionMap();
             this.options.MessageScope = options.MessageScope ?? AppDomain.CurrentDomain.FriendlyName;
             this.logger = options.CreateLogger<SignalRServerlessMessageBroker>();
             this.serializer = this.options.Serializer ?? DefaultSerializer.Create;
@@ -58,12 +58,12 @@
         {
             var messageName = typeof(TMessage).PrettyName();
 
-            if (!this.options.Map.Exists<TMessage>())
+            if (!this.options.Subscriptions.Exists<TMessage>())
             {
                 this.logger.LogJournal(LogKeys.AppMessaging, $"message subscribe: {typeof(TMessage).PrettyName()} (service={{Service}}, filterScope={{FilterScope}}, handler={{MessageHandlerType}}, endpoint={this.serviceUtils.Endpoint}, hub={this.HubName})", LogPropertyKeys.TrackSubscribeMessage,
                     args: new[] { this.options.MessageScope, this.options.FilterScope, typeof(THandler).Name });
 
-                this.options.Map.Add<TMessage, THandler>();
+                this.options.Subscriptions.Add<TMessage, THandler>();
             }
 
             if (this.connection == null)
@@ -179,11 +179,11 @@
         {
             var processed = false;
 
-            if (this.options.Map.Exists(messageName))
+            if (this.options.Subscriptions.Exists(messageName))
             {
-                foreach (var subscription in this.options.Map.GetAll(messageName))
+                foreach (var subscription in this.options.Subscriptions.GetAll(messageName))
                 {
-                    var messageType = this.options.Map.GetByName(messageName);
+                    var messageType = this.options.Subscriptions.GetByName(messageName);
                     if (messageType == null)
                     {
                         continue;

@@ -150,17 +150,18 @@ namespace Naos.Sample.Application.Web
                         //.Register<EchoJob>("testlongjob4", Cron.Minutely(), j => j.EchoLongAsync("+++ hello from testlongjob4 +++", CancellationToken.None)))
                     .AddServiceClient() // do IMPLICIT! XXXXX
                     .AddQueueing(o => o
-                        //.UseAzureStorageQueue<EchoQueueEventData>(o => o
+                        //.UseAzureStorageQueue<EchoQueueEventData>(o => o // WARN: does not propagate tracing spanid (parent is lost when dequeueing)
                         .UseRabbitMQQueue<EchoQueueEventData>(o => o
                             .ProcessItems())
                         //.UseInMemoryQueue<CountriesExportData>(o => o
+                        //.UseAzureStorageQueue<CountriesExportData>(o => o
                         .UseRabbitMQQueue<CountriesExportData>(o => o
                         //.UseServiceBusQueue<CountriesExportData>(o => o
                             .ProcessItems()))
                     .AddMessaging(o => o
                         //.UseFileStorageBroker(s => s
                         //.UseSignalRServerlessBroker(s => s // WARN: has a bug where old messages are multiplied on new subsequent publishes
-                        .UseRabbitMQBroker(s => s
+                        .UseRabbitMQBroker(s => s // WARN: has a bug where sometimes during processing the handler is not found
                         //.UseServiceBusBroker(s => s
                            .Subscribe<EchoMessage, EchoMessageHandler>()))
                     .AddServiceDiscovery(o => o

@@ -47,7 +47,7 @@
                                 .Folder(configuration.Folder)
                                 .Serializer(new JsonNetSerializer()))))
                         .ProcessDelay(configuration.ProcessDelay)
-                        .Map(sp.GetRequiredService<ISubscriptionMap>())
+                        .Subscriptions(sp.GetRequiredService<ISubscriptionMap>())
                         .FilterScope(Environment.GetEnvironmentVariable(EnvironmentKeys.IsLocal).ToBool()
                                 ? Environment.MachineName.Humanize().Dehumanize().ToLower()
                                 : string.Empty)
