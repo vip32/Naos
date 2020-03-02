@@ -60,7 +60,7 @@
                             sp.GetRequiredService<ILogger<RabbitMQProvider>>(),
                             connectionFactory,
                             configuration.RetryCount,
-                            $"{sp.GetService<Naos.Foundation.ServiceDescriptor>()?.Name} (messaging:{queueName})")));
+                            $"{LogKeys.AppMessaging} {queueName} ({sp.GetService<Naos.Foundation.ServiceDescriptor>()?.Name})")));
 
                     brokerAction?.Invoke(broker);
                     return broker;

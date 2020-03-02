@@ -47,7 +47,7 @@
                         sp.GetRequiredService<ILogger<RabbitMQProvider>>(),
                         connectionFactory,
                         configuration.RetryCount,
-                        $"{sp.GetRequiredService<Naos.Foundation.ServiceDescriptor>()?.Name} (queueing:{queueName})");
+                        $"{LogKeys.AppMessaging} {queueName} ({sp.GetService<Naos.Foundation.ServiceDescriptor>()?.Name})");
 
                     return new RabbitMQQueue<TData>(o => o
                         .Mediator(sp.GetService<IMediator>())
