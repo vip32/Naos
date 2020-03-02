@@ -44,7 +44,7 @@
                     new QueueingProviderOptions<TData>(options.Context));
 
                 options.Context.Services.AddHealthChecks()
-                    .AddAzureServiceBusQueue(configuration.ConnectionString, queueName, "queueing-provider-servicebus");
+                    .AddAzureServiceBusQueue(configuration.ConnectionString, queueName, $"queueing-provider-servicebus-{queueName}");
 
                 options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: queueing provider added (provider={nameof(AzureServiceBusQueue<TData>)}, queue={queueName})");
             }
@@ -84,7 +84,7 @@
                     new QueueingProviderOptions<TData>(options.Context));
 
                 options.Context.Services.AddHealthChecks()
-                    .AddAzureQueueStorage(configuration.ConnectionString, queueName, "queueing-provider-azurequeuestorage");
+                    .AddAzureQueueStorage(configuration.ConnectionString, queueName, $"queueing-provider-azurequeuestorage-{queueName}");
 
                 options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: queueing provider added (provider={nameof(AzureStorageQueue<TData>)}, queue={queueName})");
             }
