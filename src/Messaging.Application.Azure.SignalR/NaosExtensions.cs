@@ -59,7 +59,7 @@
             }
             else
             {
-                throw new NotImplementedException("no messaging signalr is enabled");
+                throw new NaosException("no messaging signalr is enabled");
             }
 
             return options;

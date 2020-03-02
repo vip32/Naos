@@ -61,7 +61,7 @@
             }
             else
             {
-                throw new NotImplementedException("no messaging filestorage is enabled");
+                throw new NaosException("no messaging filestorage is enabled");
             }
 
             return options;

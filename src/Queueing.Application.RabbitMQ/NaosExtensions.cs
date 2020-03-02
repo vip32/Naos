@@ -47,7 +47,7 @@
                         sp.GetRequiredService<ILogger<RabbitMQProvider>>(),
                         connectionFactory,
                         configuration.RetryCount,
-                        $"{LogKeys.AppMessaging} {queueName} ({sp.GetService<Naos.Foundation.ServiceDescriptor>()?.Name})");
+                        $"{LogKeys.Queueing} {queueName} ({sp.GetService<Naos.Foundation.ServiceDescriptor>()?.Name})");
 
                     return new RabbitMQQueue<TData>(o => o
                         .Mediator(sp.GetService<IMediator>())
@@ -68,7 +68,7 @@
             }
             else
             {
-                throw new NotImplementedException("no queueing rabbitmq is enabled");
+                throw new NaosException("no queueing rabbitmq is enabled");
             }
 
             return options;

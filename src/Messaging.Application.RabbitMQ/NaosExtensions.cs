@@ -100,7 +100,7 @@
             }
             else
             {
-                throw new NotImplementedException("no messaging rabbitmq is enabled");
+                throw new NaosException("no messaging rabbitmq is enabled");
             }
 
             return options;

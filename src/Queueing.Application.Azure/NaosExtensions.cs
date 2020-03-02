@@ -50,7 +50,7 @@
             }
             else
             {
-                throw new NotImplementedException("no messaging servicebus is enabled");
+                throw new NaosException("no messaging servicebus is enabled");
             }
 
             return options;
@@ -90,7 +90,7 @@
             }
             else
             {
-                throw new NotImplementedException("no messaging servicebus is enabled");
+                throw new NaosException("no messaging servicebus is enabled");
             }
 
             return options;
