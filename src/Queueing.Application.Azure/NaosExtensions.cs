@@ -27,9 +27,9 @@
 
             var queueName = typeof(TData).PrettyName().ToLower();
             var configuration = options.Context.Configuration.GetSection(section).Get<ServiceBusConfiguration>();
-            options.Context.Services.AddScoped<IQueue<TData>>(sp =>
+            if (configuration?.Enabled == true)
             {
-                if (configuration?.Enabled == true)
+                options.Context.Services.AddScoped<IQueue<TData>>(sp =>
                 {
                     return new AzureServiceBusQueue<TData>(o => o
                         .Mediator(sp.GetService<IMediator>())
@@ -38,18 +38,20 @@
                         .ConnectionString(configuration.ConnectionString)
                         .QueueName(queueName)
                         .NoRetries());
-                }
+                });
 
+                optionsAction?.Invoke(
+                    new QueueingProviderOptions<TData>(options.Context));
+
+                options.Context.Services.AddHealthChecks()
+                    .AddAzureServiceBusQueue(configuration.ConnectionString, queueName, "queueing-provider-servicebus");
+
+                options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: queueing provider added (provider={nameof(AzureServiceBusQueue<TData>)}, queue={queueName})");
+            }
+            else
+            {
                 throw new NotImplementedException("no messaging servicebus is enabled");
-            });
-
-            optionsAction?.Invoke(
-                new QueueingProviderOptions<TData>(options.Context));
-
-            options.Context.Services.AddHealthChecks()
-                .AddAzureServiceBusQueue(configuration.ConnectionString, queueName, "queueing-provider-servicebus");
-
-            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: queueing provider added (provider={nameof(AzureServiceBusQueue<TData>)}, queue={queueName})");
+            }
 
             return options;
         }

@@ -44,7 +44,6 @@
             EnsureArg.IsNotNullOrEmpty(options.QueueName, nameof(options.QueueName));
 
             this.channel = this.CreateChannel(options.QueueName);
-            this.Logger.LogInformation("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         }
 
         public RabbitMQQueue(Builder<RabbitMQQueueOptionsBuilder, RabbitMQQueueOptions> optionsBuilder)
