@@ -29,30 +29,38 @@
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
             var configuration = options.Context.Configuration.GetSection(section).Get<SignalRConfiguration>();
-            options.Context.Services.AddScoped<IMessageBroker>(sp =>
+
+            if (configuration?.Enabled == true)
             {
-                var broker = new SignalRServerlessMessageBroker(o => o
-                        .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
-                        .Tracer(sp.GetService<ITracer>())
-                        .Mediator((IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)))
-                        .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
-                        .ConnectionString(configuration.ConnectionString)
-                        .HttpClient(sp.GetRequiredService<IHttpClientFactory>())
-                        .Map(sp.GetRequiredService<ISubscriptionMap>())
-                        .FilterScope(Environment.GetEnvironmentVariable(EnvironmentKeys.IsLocal).ToBool()
-                            ? Environment.MachineName.Humanize().Dehumanize().ToLower()
-                            : string.Empty)
-                        .MessageScope(messageScope));
+                options.Context.Services.AddScoped<IMessageBroker>(sp =>
+                {
+                    var broker = new SignalRServerlessMessageBroker(o => o
+                            .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
+                            .Tracer(sp.GetService<ITracer>())
+                            .Mediator((IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)))
+                            .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
+                            .ConnectionString(configuration.ConnectionString)
+                            .HttpClient(sp.GetRequiredService<IHttpClientFactory>())
+                            .Map(sp.GetRequiredService<ISubscriptionMap>())
+                            .FilterScope(Environment.GetEnvironmentVariable(EnvironmentKeys.IsLocal).ToBool()
+                                ? Environment.MachineName.Humanize().Dehumanize().ToLower()
+                                : string.Empty)
+                            .MessageScope(messageScope));
 
-                brokerAction?.Invoke(broker);
-                return broker;
-            });
+                    brokerAction?.Invoke(broker);
+                    return broker;
+                });
 
-            // TODO: does not work with azure hosted hub
-            //options.Context.Services.AddHealthChecks()
-            //    .AddSignalRHub(configuration.ConnectionString.SliceFrom("Endpoint=").SliceTill(";"), "messaging-broker-signalr", tags: new[] { "naos" });
+                // TODO: does not work with azure hosted hub
+                //options.Context.Services.AddHealthChecks()
+                //    .AddSignalRHub(configuration.ConnectionString.SliceFrom("Endpoint=").SliceTill(";"), "messaging-broker-signalr", tags: new[] { "naos" });
 
-            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: messaging added (broker={nameof(SignalRServerlessMessageBroker)})");
+                options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: messaging added (broker={nameof(SignalRServerlessMessageBroker)})");
+            }
+            else
+            {
+                throw new NotImplementedException("no messaging signalr is enabled");
+            }
 
             return options;
         }

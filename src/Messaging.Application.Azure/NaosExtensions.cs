@@ -33,96 +33,99 @@
 
             subscriptionName ??= options.Context.Descriptor.Name.ToLower();
             var configuration = options.Context.Configuration.GetSection(section).Get<ServiceBusConfiguration>();
-            configuration.EntityPath = topicName ?? $"{Environment.GetEnvironmentVariable(EnvironmentKeys.Environment) ?? "Production"}-Naos.Messaging";
-            options.Context.Services.AddSingleton<IServiceBusProvider>(sp =>
+
+            if (configuration?.Enabled == true)
             {
-                if (configuration?.Enabled == true)
+                configuration.EntityPath = topicName ?? $"{Environment.GetEnvironmentVariable(EnvironmentKeys.Environment) ?? "Production"}-Naos.Messaging";
+                options.Context.Services.AddSingleton<IServiceBusProvider>(sp =>
                 {
                     return new ServiceBusProvider(
-                        sp.GetRequiredService<ILogger<ServiceBusProvider>>(),
-                        SdkContext.AzureCredentialsFactory.FromServicePrincipal(configuration.ClientId, configuration.ClientSecret, configuration.TenantId, AzureEnvironment.AzureGlobalCloud),
-                        configuration);
-                }
+                    sp.GetRequiredService<ILogger<ServiceBusProvider>>(),
+                    SdkContext.AzureCredentialsFactory.FromServicePrincipal(configuration.ClientId, configuration.ClientSecret, configuration.TenantId, AzureEnvironment.AzureGlobalCloud),
+                    configuration);
+                });
 
-                throw new NotImplementedException("no messaging servicebus is enabled");
-            });
-
-            options.Context.Services.AddSingleton<Microsoft.Azure.ServiceBus.ISubscriptionClient>(sp =>
-            {
-                var logger = sp.GetRequiredService<ILogger<ServiceBusMessageBroker>>();
-                var provider = sp.GetRequiredService<IServiceBusProvider>();
-                provider.EnsureTopicSubscription(provider.ConnectionStringBuilder.EntityPath, subscriptionName);
-
-                var client = new Microsoft.Azure.ServiceBus.SubscriptionClient(provider.ConnectionStringBuilder, subscriptionName);
-                try
+                options.Context.Services.AddSingleton<Microsoft.Azure.ServiceBus.ISubscriptionClient>(sp =>
                 {
-                    client
-                     .RemoveRuleAsync(RuleDescription.DefaultRuleName)
-                     .GetAwaiter()
-                     .GetResult();
-                }
-                catch (MessagingEntityNotFoundException)
-                {
+                    var logger = sp.GetRequiredService<ILogger<ServiceBusMessageBroker>>();
+                    var provider = sp.GetRequiredService<IServiceBusProvider>();
+                    provider.EnsureTopicSubscription(provider.ConnectionStringBuilder.EntityPath, subscriptionName);
+
+                    var client = new Microsoft.Azure.ServiceBus.SubscriptionClient(provider.ConnectionStringBuilder, subscriptionName);
+                    try
+                    {
+                        client
+                         .RemoveRuleAsync(RuleDescription.DefaultRuleName)
+                         .GetAwaiter()
+                         .GetResult();
+                    }
+                    catch (MessagingEntityNotFoundException)
+                    {
                     // do nothing, default rule not found
                 }
 
-                client.RegisterMessageHandler(
-                    async (m, t) =>
-                    {
+                    client.RegisterMessageHandler(
+                        async (m, t) =>
+                        {
                         //this.logger.LogInformation("message received (id={MessageId}, name={MessageName})", message.MessageId, message.Label);
                         if (await ServiceBusMessageBroker.ProcessMessage(
-                            logger,
-                            (ITracer)sp.CreateScope().ServiceProvider.GetService(typeof(ITracer)),
-                            sp.GetRequiredService<ISubscriptionMap>(),
-                            new ServiceProviderMessageHandlerFactory(sp),
-                            DefaultSerializer.Create,
-                            subscriptionName,
-                            (IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)),
-                            m).AnyContext())
-                        {
+                                logger,
+                                (ITracer)sp.CreateScope().ServiceProvider.GetService(typeof(ITracer)),
+                                sp.GetRequiredService<ISubscriptionMap>(),
+                                new ServiceProviderMessageHandlerFactory(sp),
+                                DefaultSerializer.Create,
+                                subscriptionName,
+                                (IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)),
+                                m).AnyContext())
+                            {
                             // complete message so it is not received again
                             await client.CompleteAsync(m.SystemProperties.LockToken).AnyContext();
-                        }
-                    },
-                    new MessageHandlerOptions(args =>
-                    {
-                        var context = args.ExceptionReceivedContext;
-                        logger.LogWarning($"{{LogKey:l}} servicebus handler error: topic={context?.EntityPath}, action={context?.Action}, endpoint={context?.Endpoint}, {args.Exception?.Message}, {args.Exception?.StackTrace}", LogKeys.AppMessaging);
-                        return Task.CompletedTask;
-                    })
-                    {
-                        MaxConcurrentCalls = 10,
-                        AutoComplete = false,
-                        MaxAutoRenewDuration = new TimeSpan(0, 5, 0)
-                    });
+                            }
+                        },
+                        new MessageHandlerOptions(args =>
+                        {
+                            var context = args.ExceptionReceivedContext;
+                            logger.LogWarning($"{{LogKey:l}} servicebus handler error: topic={context?.EntityPath}, action={context?.Action}, endpoint={context?.Endpoint}, {args.Exception?.Message}, {args.Exception?.StackTrace}", LogKeys.AppMessaging);
+                            return Task.CompletedTask;
+                        })
+                        {
+                            MaxConcurrentCalls = 10,
+                            AutoComplete = false,
+                            MaxAutoRenewDuration = new TimeSpan(0, 5, 0)
+                        });
 
-                return client;
-            });
+                    return client;
+                });
 
-            options.Context.Services.AddScoped<IMessageBroker>(sp => // TODO: scoped with ITracer injected
+                options.Context.Services.AddScoped<IMessageBroker>(sp => // TODO: scoped with ITracer injected
+                {
+                    var broker = new ServiceBusMessageBroker(o => o
+                        .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
+                        .Tracer(sp.GetService<ITracer>())
+                        .Mediator(sp.GetService<IMediator>())
+                        .Provider(sp.GetRequiredService<IServiceBusProvider>()) // singleton
+                        .Client(sp.GetRequiredService<Microsoft.Azure.ServiceBus.ISubscriptionClient>()) // singleton
+                        .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
+                        .Subscriptions(sp.GetRequiredService<ISubscriptionMap>()) // singleton
+                        .SubscriptionName(subscriptionName) //AppDomain.CurrentDomain.FriendlyName, // PRODUCT.CAPABILITY
+                                                            //.MessageScope(options.Context.Descriptor.Name)
+                        .FilterScope(Environment.GetEnvironmentVariable(EnvironmentKeys.IsLocal).ToBool()
+                                ? Environment.MachineName.Humanize().Dehumanize().ToLower()
+                                : string.Empty));
+
+                    brokerAction?.Invoke(broker);
+                    return broker;
+                }); // scope the messagebus messages to the local machine, so local events are handled locally
+
+                options.Context.Services.AddHealthChecks()
+                    .AddAzureServiceBusTopic(configuration.ConnectionString, configuration.EntityPath, "messaging-broker-servicebus");
+
+                options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: messaging added (broker={nameof(ServiceBusMessageBroker)})");
+            }
+            else
             {
-                var broker = new ServiceBusMessageBroker(o => o
-                    .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
-                    .Tracer(sp.GetService<ITracer>())
-                    .Mediator(sp.GetService<IMediator>())
-                    .Provider(sp.GetRequiredService<IServiceBusProvider>()) // singleton
-                    .Client(sp.GetRequiredService<Microsoft.Azure.ServiceBus.ISubscriptionClient>()) // singleton
-                    .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
-                    .Subscriptions(sp.GetRequiredService<ISubscriptionMap>()) // singleton
-                    .SubscriptionName(subscriptionName) //AppDomain.CurrentDomain.FriendlyName, // PRODUCT.CAPABILITY
-                                                        //.MessageScope(options.Context.Descriptor.Name)
-                    .FilterScope(Environment.GetEnvironmentVariable(EnvironmentKeys.IsLocal).ToBool()
-                            ? Environment.MachineName.Humanize().Dehumanize().ToLower()
-                            : string.Empty));
-
-                brokerAction?.Invoke(broker);
-                return broker;
-            }); // scope the messagebus messages to the local machine, so local events are handled locally
-
-            options.Context.Services.AddHealthChecks()
-                .AddAzureServiceBusTopic(configuration.ConnectionString, configuration.EntityPath, "messaging-broker-servicebus");
-
-            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: messaging added (broker={nameof(ServiceBusMessageBroker)})");
+                throw new NotImplementedException("no messaging servicebus is enabled");
+            }
 
             return options;
         }

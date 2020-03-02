@@ -33,66 +33,74 @@
 
             queueName ??= options.Context.Descriptor.Name;
             var configuration = options.Context.Configuration.GetSection(section).Get<RabbitMQConfiguration>() ?? new RabbitMQConfiguration();
-            var connectionFactory = new ConnectionFactory
+
+            if (configuration?.Enabled == true)
             {
-                Port = configuration.Port == 0 ? 5672 : configuration.Port,
-                HostName = configuration.Host.IsNullOrEmpty() ? "localhost" : configuration.Host, // or 'rabbitmq' in docker-compose env
-                UserName = configuration.UserName.IsNullOrEmpty() ? "guest" : configuration.UserName,
-                Password = configuration.Password.IsNullOrEmpty() ? "guest" : configuration.Password,
-                DispatchConsumersAsync = true
-            };
+                var connectionFactory = new ConnectionFactory
+                {
+                    Port = configuration.Port == 0 ? 5672 : configuration.Port,
+                    HostName = configuration.Host.IsNullOrEmpty() ? "localhost" : configuration.Host, // or 'rabbitmq' in docker-compose env
+                    UserName = configuration.UserName.IsNullOrEmpty() ? "guest" : configuration.UserName,
+                    Password = configuration.Password.IsNullOrEmpty() ? "guest" : configuration.Password,
+                    DispatchConsumersAsync = true
+                };
 
-            options.Context.Services.AddScoped<IMessageBroker>(sp =>
+                options.Context.Services.AddScoped<IMessageBroker>(sp =>
+                {
+                    var broker = new RabbitMQMessageBroker(o => o
+                        .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
+                        .Tracer(sp.GetService<ITracer>())
+                        .Mediator(sp.GetService<IMediator>())
+                        .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
+                        //.MessageScope(options.Context.Descriptor.Name)
+                        .ExchangeName(exchangeName)
+                        .QueueName(queueName)
+                        .Provider(new RabbitMQProvider(
+                            sp.GetRequiredService<ILogger<RabbitMQProvider>>(),
+                            connectionFactory,
+                            configuration.RetryCount,
+                            $"{sp.GetService<Naos.Foundation.ServiceDescriptor>()?.Name} (messaging:{queueName})")));
+
+                    brokerAction?.Invoke(broker);
+                    return broker;
+                });
+
+                //options.Context.Services
+                //    .AddSingleton<IConnectionFactory>(sp =>
+                //    {
+                //        return new ConnectionFactory
+                //        {
+                //            Port = configuration.Port == 0 ? 5672 : configuration.Port,
+                //            HostName = configuration.Host.IsNullOrEmpty() ? "localhost" : configuration.Host, // or 'rabbitmq' in docker-compose env
+                //            UserName = configuration.UserName.IsNullOrEmpty() ? "guest" : configuration.UserName,
+                //            Password = configuration.Password.IsNullOrEmpty() ? "guest" : configuration.Password,
+                //            DispatchConsumersAsync = true
+                //        };
+                //    })
+                //    .AddSingleton<IRabbitMQProvider>(sp =>
+                //    {
+                //        return new RabbitMQProvider(
+                //            sp.GetRequiredService<ILogger<RabbitMQProvider>>(),
+                //            new ConnectionFactory
+                //            {
+                //                Port = configuration.Port == 0 ? 5672 : configuration.Port,
+                //                HostName = configuration.Host.IsNullOrEmpty() ? "localhost" : configuration.Host, // or 'rabbitmq' in docker-compose env
+                //                UserName = configuration.UserName.IsNullOrEmpty() ? "guest" : configuration.UserName,
+                //                Password = configuration.Password.IsNullOrEmpty() ? "guest" : configuration.Password,
+                //                DispatchConsumersAsync = true
+                //            },
+                //            configuration.RetryCount);
+                //    });
+
+                options.Context.Services.AddHealthChecks()
+                    .AddRabbitMQ(sp => connectionFactory, "messaging-broker-rabbitmq", tags: new[] { "naos" });
+
+                options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: messaging added (broker={nameof(RabbitMQMessageBroker)})");
+            }
+            else
             {
-                var broker = new RabbitMQMessageBroker(o => o
-                    .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
-                    .Tracer(sp.GetService<ITracer>())
-                    .Mediator(sp.GetService<IMediator>())
-                    .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
-                    //.MessageScope(options.Context.Descriptor.Name)
-                    .ExchangeName(exchangeName)
-                    .QueueName(queueName)
-                    .Provider(new RabbitMQProvider(
-                        sp.GetRequiredService<ILogger<RabbitMQProvider>>(),
-                        connectionFactory,
-                        configuration.RetryCount,
-                        $"{sp.GetService<Naos.Foundation.ServiceDescriptor>()?.Name} (messaging:{queueName})")));
-
-                brokerAction?.Invoke(broker);
-                return broker;
-            });
-
-            //options.Context.Services
-            //    .AddSingleton<IConnectionFactory>(sp =>
-            //    {
-            //        return new ConnectionFactory
-            //        {
-            //            Port = configuration.Port == 0 ? 5672 : configuration.Port,
-            //            HostName = configuration.Host.IsNullOrEmpty() ? "localhost" : configuration.Host, // or 'rabbitmq' in docker-compose env
-            //            UserName = configuration.UserName.IsNullOrEmpty() ? "guest" : configuration.UserName,
-            //            Password = configuration.Password.IsNullOrEmpty() ? "guest" : configuration.Password,
-            //            DispatchConsumersAsync = true
-            //        };
-            //    })
-            //    .AddSingleton<IRabbitMQProvider>(sp =>
-            //    {
-            //        return new RabbitMQProvider(
-            //            sp.GetRequiredService<ILogger<RabbitMQProvider>>(),
-            //            new ConnectionFactory
-            //            {
-            //                Port = configuration.Port == 0 ? 5672 : configuration.Port,
-            //                HostName = configuration.Host.IsNullOrEmpty() ? "localhost" : configuration.Host, // or 'rabbitmq' in docker-compose env
-            //                UserName = configuration.UserName.IsNullOrEmpty() ? "guest" : configuration.UserName,
-            //                Password = configuration.Password.IsNullOrEmpty() ? "guest" : configuration.Password,
-            //                DispatchConsumersAsync = true
-            //            },
-            //            configuration.RetryCount);
-            //    });
-
-            options.Context.Services.AddHealthChecks()
-                .AddRabbitMQ(sp => connectionFactory, "messaging-broker-rabbitmq", tags: new[] { "naos"});
-
-            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: messaging added (broker={nameof(RabbitMQMessageBroker)})");
+                throw new NotImplementedException("no messaging rabbitmq is enabled");
+            }
 
             return options;
         }
