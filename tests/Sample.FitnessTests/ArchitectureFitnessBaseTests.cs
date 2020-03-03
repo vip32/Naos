@@ -166,7 +166,7 @@
         [Fact]
         [FitnessTest]
         [Trait("Category", "Fitness")]
-        public virtual void Domain_Entity_Or_AggregateRoot_Cannot_Have_Reference_To_Other_AggregateRoot() // use a reference id instead https://enterprisecraftsmanship.com/posts/link-to-an-aggregate-reference-or-id/
+        public virtual void Domain_Entity_Or_AggregateRoot_Cannot_Have_Reference_To_Other_AggregateRoot() // use a reference id instead https://www.informit.com/articles/article.aspx?p=2020371&seqNum=4
         {
             var entityTypes = Types.InNamespace(this.baseNamespace)
                 .That()
