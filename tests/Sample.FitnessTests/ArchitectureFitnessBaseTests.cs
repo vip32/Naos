@@ -98,7 +98,8 @@
         {
             var types = Types.InNamespace(this.baseNamespace)
               .That()
-              .Inherit(typeof(Entity<>)).GetTypes();
+              .Inherit(typeof(Entity<>)).And()
+              .DoNotInherit(typeof(Command<>)).GetTypes(); // ???? somehow Commands are selected as Entities
 
             var results = new List<Type>();
             foreach (var type in types)
