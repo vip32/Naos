@@ -91,9 +91,9 @@
                     properties.Type = messageName;
                     properties.MessageId = id;
                     properties.CorrelationId = correlationId;
-                    if(this.Options.MessageExpiration > 0)
+                    if(this.Options.Expiration.HasValue && this.Options.Expiration.Value.Milliseconds > 0)
                     {
-                        properties.Expiration = this.Options.MessageExpiration.ToString();
+                        properties.Expiration = this.Options.Expiration.Value.Milliseconds.ToString(); // https://www.rabbitmq.com/ttl.html
                     }
 
                     //properties.Headers.Add("EnqueuedDate", DateTime.UtcNow);

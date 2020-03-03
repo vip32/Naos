@@ -63,9 +63,9 @@
             return this;
         }
 
-        public RabbitMQQueueOptionsBuilder Expiration(int value)
+        public RabbitMQQueueOptionsBuilder Expiration(TimeSpan expiration)
         {
-            this.Target.MessageExpiration = value;
+            this.Target.Expiration = expiration;
             return this;
         }
 

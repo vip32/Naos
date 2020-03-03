@@ -12,7 +12,12 @@
 
         public int Retries { get; set; } = 3;
 
-        public TimeSpan ProcessInterval { get; set; } = TimeSpan.FromSeconds(10);
+        public TimeSpan ProcessInterval { get; set; } = TimeSpan.FromSeconds(30);
+
+        /// <summary>
+        /// The default message time to live.
+        /// </summary>
+        public TimeSpan? Expiration { get; set; }
 
         public ISerializer Serializer { get; set; }
     }

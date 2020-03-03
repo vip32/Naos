@@ -65,9 +65,9 @@
             return this;
         }
 
-        public AzureServiceBusQueueOptionsBuilder DefaultMessageTimeToLive(TimeSpan defaultMessageTimeToLive)
+        public AzureServiceBusQueueOptionsBuilder Expiration(TimeSpan expiration)
         {
-            this.Target.MessageTimeToLive = defaultMessageTimeToLive;
+            this.Target.Expiration = expiration;
             return this;
         }
 

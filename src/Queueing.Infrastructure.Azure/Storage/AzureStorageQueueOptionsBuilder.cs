@@ -57,6 +57,12 @@
             return this;
         }
 
+        public AzureStorageQueueOptionsBuilder Expiration(TimeSpan expiration)
+        {
+            this.Target.Expiration = expiration;
+            return this;
+        }
+
         public AzureStorageQueueOptionsBuilder Serializer(ISerializer serializer)
         {
             this.Target.Serializer = serializer;

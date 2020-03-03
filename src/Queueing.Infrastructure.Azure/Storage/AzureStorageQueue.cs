@@ -75,7 +75,6 @@
                 Interlocked.Increment(ref this.enqueuedCount);
 
                 var message = CloudQueueMessage.CreateCloudQueueMessageFromByteArray(this.Serializer.SerializeToBytes(data));
-
                 // TODO: store correlationid + traceid/spanid >> QUEUEITEM > data
                 //using (var item = new QueueItem<TData>(IdGenerator.Instance.Next, data, this))
                 //{
@@ -98,7 +97,7 @@
 
                 await policy.Execute(async () =>
                 {
-                    await this.queue.AddMessageAsync(message).AnyContext();
+                    await this.queue.AddMessageAsync(message, this.Options.Expiration, TimeSpan.Zero, new QueueRequestOptions(), new OperationContext()).AnyContext();
                 }).AnyContext();
 
                 this.Logger.LogJournal(LogKeys.Queueing, $"queue item enqueued: {typeof(TData).PrettyName()} (id={message.Id}, queue={this.Options.QueueName})", LogPropertyKeys.TrackEnqueue);

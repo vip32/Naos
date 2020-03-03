@@ -55,6 +55,7 @@
                         .LoggerFactory(sp.GetService<ILoggerFactory>())
                         .Provider(provider)
                         .QueueName(queueName)
+                        .Expiration(new TimeSpan(24, 0, 0))
                         .NoRetries());
                 });
 

@@ -37,6 +37,7 @@
                         .LoggerFactory(sp.GetService<ILoggerFactory>())
                         .ConnectionString(configuration.ConnectionString)
                         .QueueName(queueName)
+                        .Expiration(new TimeSpan(24, 0, 0))
                         .NoRetries());
                 });
 
@@ -77,6 +78,7 @@
                         .LoggerFactory(sp.GetService<ILoggerFactory>())
                         .ConnectionString(configuration.ConnectionString)
                         .QueueName(queueName)
+                        .Expiration(new TimeSpan(24, 0, 0))
                         .NoRetries());
                 });
 

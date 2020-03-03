@@ -4,6 +4,7 @@
     using MediatR;
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Azure.ServiceBus.Management;
+    using Naos.Foundation;
     using Naos.Queueing.Domain;
 
     public class AzureServiceBusQueueOptions : QueueOptionsBase
@@ -31,11 +32,6 @@
         /// Set to true if queue supports the concept of sessions.
         /// </summary>
         public bool? RequiresSession { get; set; }
-
-        /// <summary>
-        /// The default message time to live.
-        /// </summary>
-        public TimeSpan? MessageTimeToLive { get; set; }
 
         /// <summary>
         /// Returns true if the queue has dead letter support when a message expires.
@@ -110,9 +106,9 @@
                 result.AutoDeleteOnIdle = this.AutoDeleteOnIdle.Value;
             }
 
-            if (this.MessageTimeToLive.HasValue)
+            if (this.Expiration.HasValue)
             {
-                result.DefaultMessageTimeToLive = this.MessageTimeToLive.Value;
+                result.DefaultMessageTimeToLive = this.Expiration.Value;
             }
 
             if (this.DuplicateDetectionHistoryTimeWindow.HasValue)
