@@ -30,11 +30,11 @@
                // application command rules
                .Add(t => t.That()
                    /*.Inherit(typeof(Command)).Or()*/.Inherit(typeof(Command<>))
-               .Should().ResideInNamespace($"{baseNamespace}.Application"),
+                   .Should().ResideInNamespace($"{baseNamespace}.Application"),
                    $"{LogKeys.AppCommand}:Layering", "Commands should only exist in the Application layer")
                .Add(t => t.That()
                    /*.Inherit(typeof(Command)).Or()*/.Inherit(typeof(Command<>))
-               .Should().HaveNameEndingWith("Command").Or().HaveNameEndingWith("Query"),
+                   .Should().HaveNameEndingWith("Command").Or().HaveNameEndingWith("Query"),
                    $"{LogKeys.AppCommand}:Naming", "Commands or Queries should be named correctly")
                .Add(t => t.That()
                    .Inherit(typeof(CommandHandler<,>))
@@ -57,6 +57,15 @@
                    .Should().ResideInNamespace($"{baseNamespace}.Application"),
                    $"{LogKeys.DomainEvent}:Layering", "ConsoleCommands should only exist in the Application layer")
                // domain event rules
+               .Add(t => t.That()
+                   .Inherit(typeof(Entity<>))
+                   .And().DoNotInherit(typeof(Command<>)) // ???? somehow Commands are selected as Entities
+                   .Should().ResideInNamespace($"{baseNamespace}.Domain"),
+                   $"{LogKeys.DomainEvent}:Layering", "Domain Entities should only exist in the Domain layer")
+               .Add(t => t.That()
+                   .Inherit(typeof(AggregateRoot<>))
+                   .Should().ResideInNamespace($"{baseNamespace}.Domain"),
+                   $"{LogKeys.DomainEvent}:Layering", "Domain Aggregates should only exist in the Domain layer")
                .Add(t => t.That()
                    .ImplementInterface(typeof(IDomainEvent))
                    .Should().ResideInNamespace($"{baseNamespace}.Domain"),

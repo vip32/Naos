@@ -1,5 +1,6 @@
 namespace Naos.Messaging.Infrastructure
 {
+    using System;
     using MediatR;
     using Naos.Foundation;
     using Naos.Messaging.Domain;
@@ -27,6 +28,11 @@ namespace Naos.Messaging.Infrastructure
 
         public string ExchangeName { get; set; } = "naos_messaging";
 
-        public int RetryCount { get; set; } = 3;
+        public int Retries { get; set; } = 3;
+
+        /// <summary>
+        /// The default message time to live.
+        /// </summary>
+        public TimeSpan? Expiration { get; set; }
     }
 }

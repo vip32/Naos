@@ -58,25 +58,6 @@
             this.decoratee = decoratee;
         }
 
-        public async Task<ActionResult> DeleteAsync(object id)
-        {
-            return await this.decoratee.DeleteAsync(id).AnyContext();
-        }
-
-        public async Task<ActionResult> DeleteAsync(TEntity entity)
-        {
-            // publish all domain events before transaction ends
-            foreach (var @event in entity?.DomainEvents.GetAll())
-            {
-                this.logger.LogInformation($"{{LogKey:l}} publish (type={@event.GetType().Name.Replace("DomainEvent", string.Empty)})", LogKeys.DomainEvent);
-                await this.mediator.Publish(@event).AnyContext();
-            }
-
-            entity?.DomainEvents.Clear();
-
-            return await this.decoratee.DeleteAsync(entity).AnyContext();
-        }
-
         public async Task<bool> ExistsAsync(object id)
         {
             return await this.decoratee.ExistsAsync(id).AnyContext();
@@ -105,7 +86,7 @@
         public async Task<TEntity> InsertAsync(TEntity entity)
         {
             // publish all domain events before transaction ends
-            foreach (var @event in entity?.DomainEvents.GetAll())
+            foreach (var @event in entity?.DomainEvents.GetAll()) // or use entity?.DomainEvents.DispatchAsync
             {
                 this.logger.LogInformation($"{{LogKey:l}} publish (type={@event.GetType().Name.Replace("DomainEvent", string.Empty)})", LogKeys.DomainEvent);
                 await this.mediator.Publish(@event).AnyContext();
@@ -118,7 +99,7 @@
         public async Task<TEntity> UpdateAsync(TEntity entity)
         {
             // publish all domain events before transaction ends
-            foreach (var @event in entity?.DomainEvents.GetAll())
+            foreach (var @event in entity?.DomainEvents.GetAll()) // or use entity?.DomainEvents.DispatchAsync
             {
                 this.logger.LogInformation($"{{LogKey:l}} publish (type={@event.GetType().Name.Replace("DomainEvent", string.Empty)})", LogKeys.DomainEvent);
                 await this.mediator.Publish(@event).AnyContext();
@@ -131,7 +112,7 @@
         public async Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
         {
             // publish all domain events before transaction ends
-            foreach (var @event in entity?.DomainEvents.GetAll())
+            foreach (var @event in entity?.DomainEvents.GetAll()) // or use entity?.DomainEvents.DispatchAsync
             {
                 this.logger.LogInformation($"{{LogKey:l}} publish (type={@event.GetType().Name.Replace("DomainEvent", string.Empty)})", LogKeys.DomainEvent);
                 await this.mediator.Publish(@event).AnyContext();
@@ -139,6 +120,25 @@
 
             entity?.DomainEvents.Clear();
             return await this.decoratee.UpsertAsync(entity).AnyContext();
+        }
+
+        public async Task<ActionResult> DeleteAsync(object id)
+        {
+            return await this.decoratee.DeleteAsync(id).AnyContext();
+        }
+
+        public async Task<ActionResult> DeleteAsync(TEntity entity)
+        {
+            // publish all domain events before transaction ends
+            foreach (var @event in entity?.DomainEvents.GetAll()) // or use entity?.DomainEvents.DispatchAsync
+            {
+                this.logger.LogInformation($"{{LogKey:l}} publish (type={@event.GetType().Name.Replace("DomainEvent", string.Empty)})", LogKeys.DomainEvent);
+                await this.mediator.Publish(@event).AnyContext();
+            }
+
+            entity?.DomainEvents.Clear();
+
+            return await this.decoratee.DeleteAsync(entity).AnyContext();
         }
     }
 }

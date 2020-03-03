@@ -1,6 +1,7 @@
 ﻿namespace Naos.Foundation.Domain
 {
     using System.Diagnostics;
+    using EnsureThat;
     using Newtonsoft.Json;
 
     /// <summary>

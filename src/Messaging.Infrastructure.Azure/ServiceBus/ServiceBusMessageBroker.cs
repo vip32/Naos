@@ -11,6 +11,7 @@
     using Naos.Foundation;
     using Naos.Messaging.Domain;
     using Naos.Tracing.Domain;
+    using Polly;
 
     public class ServiceBusMessageBroker : IMessageBroker, IDisposable
     {
@@ -110,13 +111,6 @@
                     this.logger.LogDebug($"{{LogKey:l}} set message (origin={message.Origin})", LogKeys.AppMessaging);
                 }
 
-                // TODO: async publish!
-                if (this.options.Mediator != null)
-                {
-                    /*await */
-                    this.options.Mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.AnyContext();*/
-                }
-
                 // TODO: really need non-async Result?
                 var serviceBusMessage = new Microsoft.Azure.ServiceBus.Message
                 {
@@ -127,6 +121,12 @@
                     Body = this.serializer.SerializeToBytes(message),
                     To = this.options.FilterScope
                 };
+
+                if (this.options.Expiration.HasValue)
+                {
+                    serviceBusMessage.TimeToLive = this.options.Expiration.Value;
+                }
+
                 serviceBusMessage.UserProperties.AddOrUpdate("Origin", message.Origin);
                 if (scope?.Span != null)
                 {
@@ -138,7 +138,23 @@
                 this.logger.LogJournal(LogKeys.AppMessaging, $"message publish: {messageName} (id={{MessageId}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes():#.##})", LogPropertyKeys.TrackPublishMessage, args: new[] { message.Id, message.Origin });
                 this.logger.LogTrace(LogKeys.AppMessaging, message.Id, messageName, LogTraceNames.Message);
 
-                this.options.Provider.TopicClientFactory().SendAsync(serviceBusMessage).GetAwaiter().GetResult();
+                var policy = Policy.Handle<Exception>()
+                    .WaitAndRetry(this.options.Retries, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
+                    {
+                        this.logger.LogWarning(ex, "{LogKey:l} could not publish message: {MessageId} after {Timeout}s ({ExceptionMessage})", LogKeys.AppMessaging, message.Id, $"{time.TotalSeconds:n1}", ex.Message);
+                    });
+
+                policy.Execute(() =>
+                {
+                    this.options.Provider.TopicClientFactory().SendAsync(serviceBusMessage).GetAwaiter().GetResult();
+                });
+
+                // TODO: async publish!
+                if (this.options.Mediator != null)
+                {
+                    /*await */
+                    this.options.Mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.AnyContext();*/
+                }
             }
         }
 

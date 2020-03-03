@@ -17,7 +17,7 @@ namespace Naos.Foundation.UnitTests.Domain
 #pragma warning restore SA1649 // File name must match first type name
     {
         private readonly string tenantId = "TestTenant";
-        private readonly IEnumerable<StubEntity> entities;
+        private readonly IEnumerable<StubPerson> entities;
 
         public InMemoryRepositoryDbTests()
         {
@@ -28,22 +28,22 @@ namespace Naos.Foundation.UnitTests.Domain
             //    .With(x => x.Country, "USA").Build()
             //    .Concat(new List<DbStub> { new DbStub { Identifier = "Id99", FullName = "John Doe", YearOfBirth = 1980, Country = "USA" } });
 
-            this.entities = Builder<StubEntity>
+            this.entities = Builder<StubPerson>
                 .CreateListOfSize(20).All()
                 .With(x => x.FirstName, "John")
                 .With(x => x.LastName, Foundation.RandomGenerator.GenerateString(5, false))
                 .With(x => x.TenantId, this.tenantId)
                 .With(x => x.Country, "USA").Build()
-                .Concat(new[] { new StubEntity { Id = "Id99", FirstName = "John", LastName = "Doe", Age = 38, Country = "USA", TenantId = this.tenantId } });
+                .Concat(new[] { new StubPerson { Id = "Id99", FirstName = "John", LastName = "Doe", Age = 38, Country = "USA", TenantId = this.tenantId } });
         }
 
         [Fact]
         public async Task FindOneEntity_Test()
         {
             // arrange
-            var sut = new InMemoryRepository<StubEntity, StubDb>(o => o
+            var sut = new InMemoryRepository<StubPerson, StubDb>(o => o
                 .Mediator(Substitute.For<IMediator>())
-                .Context(new InMemoryContext<StubEntity>(this.entities))
+                .Context(new InMemoryContext<StubPerson>(this.entities))
                 .Mapper(new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
                 e => e.Identifier);
 
@@ -59,11 +59,11 @@ namespace Naos.Foundation.UnitTests.Domain
         public async Task FindOneTenantEntity_Test()
         {
             // arrange
-            var sut = new RepositorySpecificationDecorator<StubEntity>(
-                new Specification<StubEntity>(t => t.TenantId == this.tenantId),
-                new InMemoryRepository<StubEntity, StubDb>(o => o
+            var sut = new RepositorySpecificationDecorator<StubPerson>(
+                new Specification<StubPerson>(t => t.TenantId == this.tenantId),
+                new InMemoryRepository<StubPerson, StubDb>(o => o
                     .Mediator(Substitute.For<IMediator>())
-                    .Context(new InMemoryContext<StubEntity>(this.entities))
+                    .Context(new InMemoryContext<StubPerson>(this.entities))
                     .Mapper(new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
                     e => e.Identifier));
 
@@ -79,9 +79,9 @@ namespace Naos.Foundation.UnitTests.Domain
         public async Task FindAllEntities_Test()
         {
             // arrange
-            var sut = new InMemoryRepository<StubEntity, StubDb>(o => o
+            var sut = new InMemoryRepository<StubPerson, StubDb>(o => o
                 .Mediator(Substitute.For<IMediator>())
-                .Context(new InMemoryContext<StubEntity>(this.entities))
+                .Context(new InMemoryContext<StubPerson>(this.entities))
                 .Mapper(new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
                 e => e.Identifier);
 
@@ -98,11 +98,11 @@ namespace Naos.Foundation.UnitTests.Domain
         public async Task FindAllTenantEntities_Test() // TODO: move to own test class + mocks
         {
             // arrange
-            var sut = new RepositorySpecificationDecorator<StubEntity>(
-                new Specification<StubEntity>(t => t.TenantId == this.tenantId),
-                new InMemoryRepository<StubEntity, StubDb>(o => o
+            var sut = new RepositorySpecificationDecorator<StubPerson>(
+                new Specification<StubPerson>(t => t.TenantId == this.tenantId),
+                new InMemoryRepository<StubPerson, StubDb>(o => o
                     .Mediator(Substitute.For<IMediator>())
-                    .Context(new InMemoryContext<StubEntity>(this.entities))
+                    .Context(new InMemoryContext<StubPerson>(this.entities))
                     .Mapper(new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
                     e => e.Identifier));
 
@@ -119,11 +119,11 @@ namespace Naos.Foundation.UnitTests.Domain
         public async Task FindAllTenantEntities2_Test() // TODO: move to own test class + mocks
         {
             // arrange
-            var sut = new RepositorySpecificationDecorator<StubEntity>(
-                new Specification<StubEntity>(t => t.TenantId == this.tenantId),
-                new InMemoryRepository<StubEntity, StubDb>(o => o
+            var sut = new RepositorySpecificationDecorator<StubPerson>(
+                new Specification<StubPerson>(t => t.TenantId == this.tenantId),
+                new InMemoryRepository<StubPerson, StubDb>(o => o
                     .Mediator(Substitute.For<IMediator>())
-                    .Context(new InMemoryContext<StubEntity>(this.entities))
+                    .Context(new InMemoryContext<StubPerson>(this.entities))
                     .Mapper(new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
                     e => e.Identifier));
 
@@ -162,16 +162,16 @@ namespace Naos.Foundation.UnitTests.Domain
         public async Task FindMappedEntitiesWithSpecification_Test()
         {
             // arrange
-            var sut = new InMemoryRepository<StubEntity, StubDb>(o => o
+            var sut = new InMemoryRepository<StubPerson, StubDb>(o => o
                 .Mediator(Substitute.For<IMediator>())
-                .Context(new InMemoryContext<StubEntity>(this.entities))
+                .Context(new InMemoryContext<StubPerson>(this.entities))
                 .Mapper(new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
                 e => e.Identifier);
 
             // act
             var result = await sut.FindAllAsync(
                 new StubHasNameSpecification("John", "Doe"),
-                new FindOptions<StubEntity>(orderExpression: e => e.Country)).AnyContext(); // domain layer
+                new FindOptions<StubPerson>(orderExpression: e => e.Country)).AnyContext(); // domain layer
             //var result = await sut.FindAllAsync(
             //    new StubHasIdSpecification("Id99")).AnyContext(); // domain layer
 
@@ -211,9 +211,9 @@ namespace Naos.Foundation.UnitTests.Domain
         public async Task FindMappedEntityOne_Test()
         {
             // arrange
-            var sut = new InMemoryRepository<StubEntity, StubDb>(o => o
+            var sut = new InMemoryRepository<StubPerson, StubDb>(o => o
                 .Mediator(Substitute.For<IMediator>())
-                .Context(new InMemoryContext<StubEntity>(this.entities))
+                .Context(new InMemoryContext<StubPerson>(this.entities))
                 .Mapper(new AutoMapperEntityMapper(StubEntityMapperConfiguration.Create())),
                 e => e.Identifier);
 

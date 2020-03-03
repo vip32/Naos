@@ -26,9 +26,13 @@
             return this;
         }
 
-        public InMemoryQueueOptionsBuilder Retries(int retries)
+        public InMemoryQueueOptionsBuilder Retries(int? retries)
         {
-            this.Target.Retries = retries;
+            if (retries.HasValue)
+            {
+                this.Target.Retries = retries.Value;
+            }
+
             return this;
         }
 

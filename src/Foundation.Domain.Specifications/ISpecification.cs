@@ -8,6 +8,8 @@
     {
         string Name { get; set; }
 
+        string Description { get; set; }
+
         Expression<Func<T, bool>> ToExpression();
 
         Func<T, bool> ToPredicate();

@@ -7,28 +7,26 @@
 
     public class AdAccount : ValueObject
     {
-        private AdAccount()
+        private AdAccount(string domain, string name)
         {
+            this.Domain = domain;
+            this.Name = name;
         }
 
-        public string Domain { get; private set; }
+        public string Domain { get; }
 
-        public string Name { get; private set; }
+        public string Name { get; }
 
-        public static implicit operator string(AdAccount value) => value.ToString();
+        //public static implicit operator string(AdAccount value) => value.ToString();
 
-        public static explicit operator AdAccount(string value) => For(value);
+        //public static explicit operator AdAccount(string value) => For(value);
 
         public static AdAccount For(string value)
         {
             EnsureArg.IsNotNullOrEmpty(value, nameof(value));
             EnsureArg.IsTrue(value.Contains("\\", System.StringComparison.OrdinalIgnoreCase), nameof(value));
 
-            return new AdAccount
-            {
-                Domain = value.SliceTill("\\"),
-                Name = value.SliceFrom("\\")
-            };
+            return new AdAccount(value.SliceTill("\\"), value.SliceFrom("\\"));
         }
 
         public override string ToString() => $"{this.Domain}\\{this.Name}";

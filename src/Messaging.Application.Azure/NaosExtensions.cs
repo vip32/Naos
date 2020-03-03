@@ -26,6 +26,8 @@
             Action<IMessageBroker> brokerAction = null,
             string topicName = null,
             string subscriptionName = null,
+            int? retries = null,
+            TimeSpan? expiration = null,
             string section = "naos:messaging:serviceBus")
         {
             EnsureArg.IsNotNull(options, nameof(options));
@@ -108,7 +110,9 @@
                         .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
                         .Subscriptions(sp.GetRequiredService<ISubscriptionMap>()) // singleton
                         .SubscriptionName(subscriptionName) //AppDomain.CurrentDomain.FriendlyName, // PRODUCT.CAPABILITY
-                                                            //.MessageScope(options.Context.Descriptor.Name)
+                        //.MessageScope(options.Context.Descriptor.Name)
+                        .Retries(retries)
+                        .Expiration(expiration)
                         .FilterScope(Environment.GetEnvironmentVariable(EnvironmentKeys.IsLocal).ToBool()
                                 ? Environment.MachineName.Humanize().Dehumanize().ToLower()
                                 : string.Empty));

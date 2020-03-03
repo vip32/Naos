@@ -39,9 +39,13 @@
             return this;
         }
 
-        public AzureStorageQueueOptionsBuilder Retries(int retries)
+        public AzureStorageQueueOptionsBuilder Retries(int? retries)
         {
-            this.Target.Retries = retries;
+            if (retries.HasValue)
+            {
+                this.Target.Retries = retries.Value;
+            }
+
             return this;
         }
 
@@ -57,9 +61,13 @@
             return this;
         }
 
-        public AzureStorageQueueOptionsBuilder Expiration(TimeSpan expiration)
+        public AzureStorageQueueOptionsBuilder Expiration(TimeSpan? expiration)
         {
-            this.Target.Expiration = expiration;
+            if (expiration.HasValue)
+            {
+                this.Target.Expiration = expiration;
+            }
+
             return this;
         }
 

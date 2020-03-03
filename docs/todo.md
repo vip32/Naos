@@ -37,16 +37,16 @@ Marketing
 
 TODO:
 
-Drop .Core from the namespace (net5!)
+[DONE] Drop .Core from the namespace (net5!)
   - Naos.Foundation + Naos.XYZ
 
-Server > Client tracing like zipkin (https://zipkin.io/pages/data_model.html), based on serilog logevents (journal)
+[DONE] Server > Client tracing like zipkin (https://zipkin.io/pages/data_model.html), based on serilog logevents (journal)
 4 journal types are relevant (web): TrackOutboundRequest/Response + TrackInboundRequest/Response 
 2 journal types are relevant (messaging): TrackPublishMessage/TrackReceiveMessage
 req/res are correlated by TrackId
 logevent contains timestamp, duration, overall correlationid, (track)id , servicename/product/capability
 
-NetCore 3.0 upgrade (preview)
+[DONE] NetCore 3.0 upgrade (preview)
 https://asp.net-hacker.rocks/2019/08/05/aspnetcore30-generic-hosting-environment.html
 https://www.talkingdotnet.com/asp-net-core-3-0-app-with-net-core-3-preview-2-and-visual-studio-2019/
 https://wildermuth.com/2019/08/19/My-First-Look-at-ASP-NET-Core-3-0
@@ -65,7 +65,7 @@ Test Coverage https://gunnarpeipman.com/aspnet/azure-devops-code-coverage
 
 OptionsBuilder instead of large ctors (for all non configration things like MessageBrokers/Repositories)
 
-Cosmos Repo
+[DONE] Cosmos Repo
 skip/take https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-sql-query#OffsetLimitClause
 
 Inmemory Repo
@@ -74,17 +74,18 @@ use concurrentdict instead of list https://github.com/SharpRepository/SharpRepos
 Better Guard (+snippets)
 https://github.com/safakgur/guard/tree/master
 
-Operations
+[DONE] Operations
 Dashboard for journal logevents (domainevents/commands/....)
 
 Operations
-Logevents filtering (correlationId, since, till) API > LAna query
+- Logevents filtering (correlationId, since, till) API > LAna query
+- DGML graph of all traces (dependency map) https://github.com/ParticularLabs/RoutingVisualization
 
 Commands
 - CommandHandler should support Decorators (besides the Behaviors) > https://app.pluralsight.com/player?course=cqrs-in-practice&author=vladimir-khorikov&name=22d61509-b7ab-4268-96f1-258bc8a95b99&clip=6&mode=live
 - create retrydecorator for commandhandler
-- http request commands [DONE]
-- http request commands + queueing (behavior), only works for commands without a response (=async)
+- [DONE] http request commands
+- [DONE] http request commands + queueing (behavior), only works for commands without a response (=async)
 
 Repositories
 Decorator setup with scrutor Decorators (services.Decorate) https://github.com/khellang/Scrutor

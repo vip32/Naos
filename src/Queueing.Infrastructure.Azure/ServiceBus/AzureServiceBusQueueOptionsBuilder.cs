@@ -65,9 +65,13 @@
             return this;
         }
 
-        public AzureServiceBusQueueOptionsBuilder Expiration(TimeSpan expiration)
+        public AzureServiceBusQueueOptionsBuilder Expiration(TimeSpan? expiration)
         {
-            this.Target.Expiration = expiration;
+            if (expiration.HasValue)
+            {
+                this.Target.Expiration = expiration;
+            }
+
             return this;
         }
 
@@ -149,9 +153,13 @@
             return this;
         }
 
-        public AzureServiceBusQueueOptionsBuilder Retries(int retries)
+        public AzureServiceBusQueueOptionsBuilder Retries(int? retries)
         {
-            this.Target.Retries = retries;
+            if (retries.HasValue)
+            {
+                this.Target.Retries = retries.Value;
+            }
+
             return this;
         }
 

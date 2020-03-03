@@ -25,6 +25,8 @@
             Action<IMessageBroker> brokerAction = null,
             string exchangeName = null,
             string queueName = null,
+            TimeSpan? expiration = null,
+            int? retries = null,
             string section = "naos:messaging:rabbitMQ",
             IEnumerable<Assembly> assemblies = null)
         {
@@ -56,6 +58,8 @@
                         //.MessageScope(options.Context.Descriptor.Name)
                         .ExchangeName(exchangeName)
                         .QueueName(queueName)
+                        .Expiration(expiration)
+                        .Retries(retries)
                         .Provider(new RabbitMQProvider(
                             sp.GetRequiredService<ILogger<RabbitMQProvider>>(),
                             connectionFactory,

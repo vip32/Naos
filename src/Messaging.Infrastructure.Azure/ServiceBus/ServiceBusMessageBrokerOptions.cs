@@ -1,5 +1,6 @@
 ﻿namespace Naos.Messaging.Infrastructure.Azure
 {
+    using System;
     using MediatR;
     using Microsoft.Azure.ServiceBus;
     using Naos.Foundation;
@@ -28,5 +29,12 @@
         public string FilterScope { get; set; } // for machine scope
 
         public string MessageScope { get; set; } // message origin service name
+
+        public int Retries { get; set; } = 3;
+
+        /// <summary>
+        /// The default message time to live.
+        /// </summary>
+        public TimeSpan? Expiration { get; set; }
     }
 }

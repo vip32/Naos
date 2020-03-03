@@ -71,30 +71,36 @@
                 using (var stream = new MemoryStream())
                 {
                     this.Serializer.Serialize(data, stream);
-                    var message = new Message(stream.ToArray())
+                    var serviceBusMessage = new Message(stream.ToArray())
                     {
                         MessageId = id,
                         CorrelationId = correlationId,
                     };
                     //message.UserProperties.AddOrUpdate("CorrelationId", scope.Span.TraceId);
-                    message.UserProperties.AddOrUpdate("TraceId", scope?.Span?.TraceId);
-                    message.UserProperties.AddOrUpdate("SpanId", scope?.Span?.SpanId);
+                    serviceBusMessage.UserProperties.AddOrUpdate("TraceId", scope?.Span?.TraceId);
+                    serviceBusMessage.UserProperties.AddOrUpdate("SpanId", scope?.Span?.SpanId);
 
-                    var policy = Policy.Handle<Exception>()
-                    .WaitAndRetry(this.Options.Retries, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
+                    if (this.Options.Expiration.HasValue)
                     {
-                        this.Logger.LogWarning(ex, "{LogKey:l} could not enqueue item: {MessageId} after {Timeout}s ({ExceptionMessage})", LogKeys.AppMessaging, id, $"{time.TotalSeconds:n1}", ex.Message);
-                    });
+                        serviceBusMessage.TimeToLive = this.Options.Expiration.Value;
+                    }
 
-                    await policy.Execute(async () =>
-                    {
-                        await this.queueSender.SendAsync(message).AnyContext();
-                    }).AnyContext();
+                    // queueSender is using a retrypolicy of its own
+                    //var policy = Policy.Handle<Exception>()
+                    //.WaitAndRetry(this.Options.Retries, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
+                    //{
+                    //    this.Logger.LogWarning(ex, "{LogKey:l} could not enqueue item: {MessageId} after {Timeout}s ({ExceptionMessage})", LogKeys.AppMessaging, id, $"{time.TotalSeconds:n1}", ex.Message);
+                    //});
 
-                    this.Logger.LogJournal(LogKeys.Queueing, $"queue item enqueued: {typeof(TData).PrettyName()} (id={message.MessageId}, queue={this.Options.QueueName})", LogPropertyKeys.TrackEnqueue);
-                    this.Logger.LogTrace(LogKeys.Queueing, message.MessageId, typeof(TData).PrettyName(), LogTraceNames.Queue);
+                    //await policy.Execute(async () =>
+                    //{
+                    await this.queueSender.SendAsync(serviceBusMessage).AnyContext();
+                    //}).AnyContext();
+
+                    this.Logger.LogJournal(LogKeys.Queueing, $"queue item enqueued: {typeof(TData).PrettyName()} (id={serviceBusMessage.MessageId}, queue={this.Options.QueueName})", LogPropertyKeys.TrackEnqueue);
+                    this.Logger.LogTrace(LogKeys.Queueing, serviceBusMessage.MessageId, typeof(TData).PrettyName(), LogTraceNames.Queue);
                     this.LastEnqueuedDate = DateTime.UtcNow;
-                    return message.MessageId;
+                    return serviceBusMessage.MessageId;
                 }
             }
         }
@@ -300,16 +306,22 @@
                 // log?
             }
 
+            var retryPolicy = this.Options.RetryPolicy ?? new NoRetry();
+            if (this.Options.Retries > 0)
+            {
+                retryPolicy = new RetryExponential(TimeSpan.Zero, TimeSpan.FromSeconds(30), this.Options.Retries);
+            }
+
             this.queueSender = new MessageSender(
                 this.Options.ConnectionString,
                 this.Options.QueueName,
-                this.Options.RetryPolicy);
+                retryPolicy);
 
             this.queueReceiver = new MessageReceiver(
                 this.Options.ConnectionString,
                 this.Options.QueueName,
                 ReceiveMode.PeekLock, // = slow, fast = ReceiveAndDelete?
-                this.Options.Retries == 0 ? new NoRetry() : this.Options.RetryPolicy);
+                retryPolicy);
         }
 
         protected override Task<IQueueItem<TData>> DequeueWithIntervalAsync(CancellationToken cancellationToken)

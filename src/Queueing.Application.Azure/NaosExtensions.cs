@@ -19,6 +19,8 @@
         public static QueueingOptions UseServiceBusQueue<TData>(
             this QueueingOptions options,
             Action<QueueingProviderOptions<TData>> optionsAction = null,
+            TimeSpan? expiration = null,
+            int? retries = null,
             string section = "naos:queueing:serviceBus")
             where TData : class
         {
@@ -37,8 +39,8 @@
                         .LoggerFactory(sp.GetService<ILoggerFactory>())
                         .ConnectionString(configuration.ConnectionString)
                         .QueueName(queueName)
-                        .Expiration(new TimeSpan(24, 0, 0))
-                        .NoRetries());
+                        .Expiration(expiration)
+                        .Retries(retries));
                 });
 
                 optionsAction?.Invoke(
@@ -60,6 +62,8 @@
         public static QueueingOptions UseAzureStorageQueue<TData>(
             this QueueingOptions options,
             Action<QueueingProviderOptions<TData>> optionsAction = null,
+            TimeSpan? expiration = null,
+            int? retries = null,
             string section = "naos:queueing:azureStorageQueue")
             where TData : class
         {
@@ -78,8 +82,8 @@
                         .LoggerFactory(sp.GetService<ILoggerFactory>())
                         .ConnectionString(configuration.ConnectionString)
                         .QueueName(queueName)
-                        .Expiration(new TimeSpan(24, 0, 0))
-                        .NoRetries());
+                        .Expiration(expiration)
+                        .Retries(retries));
                 });
 
                 optionsAction?.Invoke(

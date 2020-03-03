@@ -1,5 +1,6 @@
 ﻿namespace Naos.Messaging.Infrastructure.Azure
 {
+    using System;
     using MediatR;
     using Microsoft.Azure.ServiceBus;
     using Naos.Foundation;
@@ -73,6 +74,26 @@
         public ServiceBusMessageBrokerOptionsBuilder MessageScope(string messageScope)
         {
             this.Target.MessageScope = messageScope;
+            return this;
+        }
+
+        public ServiceBusMessageBrokerOptionsBuilder Retries(int? value)
+        {
+            if (value.HasValue)
+            {
+                this.Target.Retries = value.Value;
+            }
+
+            return this;
+        }
+
+        public ServiceBusMessageBrokerOptionsBuilder Expiration(TimeSpan? expiration)
+        {
+            if (expiration.HasValue)
+            {
+                this.Target.Expiration = expiration;
+            }
+
             return this;
         }
     }

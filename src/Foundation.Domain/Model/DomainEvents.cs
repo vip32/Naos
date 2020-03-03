@@ -29,7 +29,7 @@
             this.registrations.Add(@event);
         }
 
-        public async Task DispatchAsync(IMediator mediator)
+        public async Task DispatchAsync(IMediator mediator) // NOT USED at the moment
         {
             EnsureArg.IsNotNull(mediator, nameof(mediator));
 

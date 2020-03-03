@@ -63,15 +63,29 @@
             return this;
         }
 
-        public RabbitMQQueueOptionsBuilder Expiration(TimeSpan expiration)
+        public RabbitMQQueueOptionsBuilder Expiration(TimeSpan? expiration)
         {
-            this.Target.Expiration = expiration;
+            if (expiration.HasValue)
+            {
+                this.Target.Expiration = expiration;
+            }
+
             return this;
         }
 
         public RabbitMQQueueOptionsBuilder FilterScope(string filterScope)
         {
             this.Target.FilterScope = filterScope;
+            return this;
+        }
+
+        public RabbitMQQueueOptionsBuilder Retries(int? retries)
+        {
+            if (retries.HasValue)
+            {
+                this.Target.Retries = retries.Value;
+            }
+
             return this;
         }
 

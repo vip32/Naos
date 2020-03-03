@@ -121,13 +121,6 @@
                     this.logger.LogDebug($"{{LogKey:l}} set message (origin={message.Origin})", LogKeys.AppMessaging);
                 }
 
-                // TODO: async publish!
-                if (this.options.Mediator != null)
-                {
-                    /*await */
-                    this.options.Mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.AnyContext();*/
-                }
-
                 this.logger.LogJournal(LogKeys.AppMessaging, $"message publish: {message.GetType().PrettyName()} (id={{MessageId}}, origin={{MessageOrigin}})", LogPropertyKeys.TrackPublishMessage, args: new[] { message.Id, message.Origin });
                 this.logger.LogTrace(LogKeys.AppMessaging, message.Id, messageName, LogTraceNames.Message);
 
@@ -159,6 +152,15 @@
                 {
                     this.logger.LogError("{LogKey:l} publish failed: HTTP statuscode {StatusCode} (name={MessageName}, id={MessageId}, origin={MessageOrigin})",
                         LogKeys.AppMessaging, response.StatusCode, message.GetType().PrettyName(), message.Id, message.Origin);
+                }
+                else
+                {
+                    // TODO: async publish!
+                    if (this.options.Mediator != null)
+                    {
+                        /*await */
+                        this.options.Mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.AnyContext();*/
+                    }
                 }
             }
         }

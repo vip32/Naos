@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Net;
     using System.Reflection;
+    using System.Runtime.InteropServices;
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
@@ -69,7 +70,11 @@
                     //["versionFile"] = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>().Version,
                     ["versionInformation"] = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion,
                     ["buildDate"] = Assembly.GetEntryAssembly().GetBuildDate().ToString("o"),
-                    ["processName"] = Process.GetCurrentProcess().ProcessName.SafeEquals("dotnet") ? $"{Process.GetCurrentProcess().ProcessName} (kestrel)" : Process.GetCurrentProcess().ProcessName
+                    ["processName"] = Process.GetCurrentProcess().ProcessName.SafeEquals("dotnet") ? $"{Process.GetCurrentProcess().ProcessName} (kestrel)" : Process.GetCurrentProcess().ProcessName,
+                    ["framework"] = RuntimeInformation.FrameworkDescription.ToString(),
+                    ["osDescription"] = RuntimeInformation.OSDescription,
+                    ["osArchitecture"] = RuntimeInformation.OSArchitecture.ToString(),
+                    ["processorCount"] = Environment.ProcessorCount.ToString(),
                 },
                 Actions = new Dictionary<string, string>
                 {

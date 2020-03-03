@@ -159,9 +159,9 @@ namespace Naos.Sample.Application.Web
                         //.UseServiceBusQueue<CountriesExportData>(o => o
                             .ProcessItems()))
                     .AddMessaging(o => o
-                        //.UseFileStorageBroker(s => s
+                        //.UseFileStorageBroker(o => o
                         //.UseSignalRServerlessBroker(s => s // WARN: has a bug where old messages are multiplied on new subsequent publishes
-                        .UseRabbitMQBroker(s => s
+                        .UseRabbitMQBroker(o => o
                         //.UseServiceBusBroker(s => s
                            .Subscribe<EchoMessage, EchoMessageHandler>()))
                     .AddServiceDiscovery(o => o

@@ -1,5 +1,6 @@
 ﻿namespace Naos.Messaging.Infrastructure
 {
+    using System;
     using MediatR;
     using Naos.Foundation;
     using Naos.Messaging.Domain;
@@ -81,9 +82,23 @@
             return this;
         }
 
-        public RabbitMQMessageBrokerOptionsBuilder RetryCount(int value)
+        public RabbitMQMessageBrokerOptionsBuilder Retries(int? value)
         {
-            this.Target.RetryCount = value;
+            if (value.HasValue)
+            {
+                this.Target.Retries = value.Value;
+            }
+
+            return this;
+        }
+
+        public RabbitMQMessageBrokerOptionsBuilder Expiration(TimeSpan? expiration)
+        {
+            if (expiration.HasValue)
+            {
+                this.Target.Expiration = expiration;
+            }
+
             return this;
         }
     }

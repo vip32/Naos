@@ -21,6 +21,8 @@
         public static QueueingOptions UseRabbitMQQueue<TData>(
             this QueueingOptions options,
             Action<QueueingProviderOptions<TData>> optionsAction = null,
+            TimeSpan? expiration = null,
+            int? retries = null,
             string section = "naos:queueing:rabbitMQ")
             where TData : class
         {
@@ -55,8 +57,8 @@
                         .LoggerFactory(sp.GetService<ILoggerFactory>())
                         .Provider(provider)
                         .QueueName(queueName)
-                        .Expiration(new TimeSpan(24, 0, 0))
-                        .NoRetries());
+                        .Expiration(expiration)
+                        .Retries(retries));
                 });
 
                 optionsAction?.Invoke(

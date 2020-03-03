@@ -45,6 +45,7 @@
         public static QueueingOptions UseInMemoryQueue<TData>(
                 this QueueingOptions options,
                 Action<QueueingProviderOptions<TData>> optionsAction = null,
+                int? retries = null,
                 string section = "naos:queueing:serviceBus")
                 where TData : class
         {
@@ -59,7 +60,7 @@
                     .Tracer(sp.GetService<ITracer>())
                     .LoggerFactory(sp.GetService<ILoggerFactory>())
                     .QueueName(queueName)
-                    .NoRetries());
+                    .Retries(retries));
             });
 
             optionsAction?.Invoke(

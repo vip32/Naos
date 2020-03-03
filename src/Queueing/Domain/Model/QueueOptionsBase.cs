@@ -14,11 +14,11 @@
 
         public TimeSpan ProcessInterval { get; set; } = TimeSpan.FromSeconds(30);
 
+        public ISerializer Serializer { get; set; }
+
         /// <summary>
         /// The default message time to live.
         /// </summary>
         public TimeSpan? Expiration { get; set; }
-
-        public ISerializer Serializer { get; set; }
     }
 }

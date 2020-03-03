@@ -31,7 +31,9 @@
             this.Name = ExpressionHelper.GetPropertyName(this.expression);
         }
 
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
+
+        public virtual string Description { get; set; }
 
         public virtual Expression<Func<T, bool>> ToExpression()
         {

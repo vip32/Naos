@@ -143,13 +143,6 @@
                     this.logger.LogDebug($"{{LogKey:l}} set message (origin={message.Origin})", LogKeys.AppMessaging);
                 }
 
-                // TODO: async publish!
-                if (this.options.Mediator != null)
-                {
-                    /*await */
-                    this.options.Mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.AnyContext();*/
-                }
-
                 if (!this.options.Provider.IsConnected)
                 {
                     this.options.Provider.TryConnect();
@@ -157,7 +150,7 @@
 
                 var policy = Policy.Handle<BrokerUnreachableException>()
                     .Or<SocketException>()
-                    .WaitAndRetry(this.options.RetryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
+                    .WaitAndRetry(this.options.Retries, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
                     {
                         this.logger.LogWarning(ex, "{LogKey:l} could not publish message: {MessageId} after {Timeout}s ({ExceptionMessage})", LogKeys.AppMessaging, message.Id, $"{time.TotalSeconds:n1}", ex.Message);
                     });
@@ -179,6 +172,10 @@
                         properties.Type = messageName;
                         properties.MessageId = message.Id;
                         properties.CorrelationId = message.CorrelationId;
+                        if (this.options.Expiration.HasValue && this.options.Expiration.Value.Milliseconds > 0)
+                        {
+                            properties.Expiration = this.options.Expiration.Value.Milliseconds.ToString(); // https://www.rabbitmq.com/ttl.html
+                        }
 
                         if (scope?.Span != null)
                         {
@@ -195,6 +192,13 @@
                             basicProperties: properties,
                             body: rabbitMQMessage);
                     });
+                }
+
+                // TODO: async publish!
+                if (this.options.Mediator != null)
+                {
+                    /*await */
+                    this.options.Mediator.Publish(new MessagePublishedDomainEvent(message)).GetAwaiter().GetResult(); /*.AnyContext();*/
                 }
             }
         }

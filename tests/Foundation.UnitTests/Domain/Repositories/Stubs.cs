@@ -1,6 +1,7 @@
 ﻿namespace Naos.Foundation.UnitTests.Domain
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
     using EnsureThat;
@@ -8,8 +9,10 @@
 
 #pragma warning disable SA1649 // File name should match first type name
 #pragma warning disable SA1402 // File may only contain a single type
-    public class StubEntity : TenantAggregateRoot<string>
+    public class StubPerson : TenantAggregateRoot<string>
     {
+        private readonly List<string> groups = new List<string>();
+
         public string Country { get; set; }
 
         public string FirstName { get; set; }
@@ -17,6 +20,31 @@
         public string LastName { get; set; }
 
         public int Age { get; set; }
+
+        public bool Expired { get; set; }
+
+        public IEnumerable<string> Groups
+        {
+            get { return this.groups; }
+        }
+
+        public void JoinGroup(string groupName)
+        {
+            // business rule examples
+            this.CheckAndThrow(new PersonShouldNotBePartOfGroupSpecification(groupName));
+            this.CheckAndThrow(new PersonCannotBeExpiredSpecification());
+
+            this.groups.Add(groupName);
+        }
+
+        public void LeaveGroup(string groupName)
+        {
+            // business rule examples
+            if (this.Check(new PersonCannotBeExpiredSpecification()))
+            {
+                this.groups.Remove(groupName);
+            }
+        }
     }
 
     public class StubDb
@@ -34,7 +62,27 @@
         public int YearOfBirth { get; set; }
     }
 
-    public class StubHasNameSpecification : Specification<StubEntity> // TODO: this should be mocked
+    public class PersonShouldNotBePartOfGroupSpecification : Specification<StubPerson> // // business rule example
+    {
+        public PersonShouldNotBePartOfGroupSpecification(string groupName)
+            : base(t => !t.Groups.Contains(groupName, StringComparison.OrdinalIgnoreCase)) // does not contain
+        {
+        }
+
+        public override string Description => "Same group operation cannot be done more than once";
+    }
+
+    public class PersonCannotBeExpiredSpecification : Specification<StubPerson> // business rule example
+    {
+        public PersonCannotBeExpiredSpecification()
+            : base(t => !t.Expired) // is not expired
+        {
+        }
+
+        public override string Description => "Group operations cannot be done for expired entities";
+    }
+
+    public class StubHasNameSpecification : Specification<StubPerson> // TODO: this should be mocked
     {
         public StubHasNameSpecification(string firstName, string lastName)
         {
@@ -49,13 +97,13 @@
 
         public string LastName { get; }
 
-        public override Expression<Func<StubEntity, bool>> ToExpression()
+        public override Expression<Func<StubPerson, bool>> ToExpression()
         {
             return p => p.FirstName == this.FirstName && p.LastName == this.LastName;
         }
     }
 
-    public class StubHasTenantSpecification2 : HasTenantSpecification<StubEntity> // TODO: this should be mocked
+    public class StubHasTenantSpecification2 : HasTenantSpecification<StubPerson> // TODO: this should be mocked
     {
         public StubHasTenantSpecification2(string tenantId)
             : base(tenantId)
@@ -63,7 +111,7 @@
         }
     }
 
-    public class StubHasTenantSpecification : Specification<StubEntity> // TODO: this should be mocked
+    public class StubHasTenantSpecification : Specification<StubPerson> // TODO: this should be mocked
     {
         public StubHasTenantSpecification(string tenantId)
             : base(t => t.TenantId == tenantId)
@@ -71,7 +119,7 @@
         }
     }
 
-    public class StubHasIdSpecification : Specification<StubEntity> // TODO: this should be mocked
+    public class StubHasIdSpecification : Specification<StubPerson> // TODO: this should be mocked
     {
         public StubHasIdSpecification(string id)
         {
@@ -82,7 +130,7 @@
 
         public string Id { get; }
 
-        public override Expression<Func<StubEntity, bool>> ToExpression()
+        public override Expression<Func<StubPerson, bool>> ToExpression()
         {
             return p => p.Id == this.Id;
         }
@@ -114,7 +162,7 @@
                 //c.AddExpressionMapping();
                 //c.IgnoreUnmapped();
                 //c.AllowNullCollections = true;
-                c.CreateMap<StubEntity, StubDb>()
+                c.CreateMap<StubPerson, StubDb>()
                     .ForMember(d => d.ExtTenantId, o => o.MapFrom(s => s.TenantId))
                     .ForMember(d => d.Identifier, o => o.MapFrom(s => s.Id))
                     .ForMember(d => d.ETag, o => o.MapFrom(s => s.IdentifierHash))
@@ -123,7 +171,7 @@
                     .ForMember(d => d.FullName, o => o.MapFrom(s => $"{s.FirstName} {s.LastName}"))
                     .ForMember(d => d.YearOfBirth, o => o.MapFrom(new YearOfBirthResolver()));
 
-                c.CreateMap<StubDb, StubEntity>()
+                c.CreateMap<StubDb, StubPerson>()
                     .ForMember(d => d.TenantId, o => o.MapFrom(s => s.ExtTenantId))
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.Identifier))
                     .ForMember(d => d.IdentifierHash, o => o.MapFrom(s => s.ETag))
@@ -151,9 +199,9 @@
         //    }
         //}
 
-        private class YearOfBirthResolver : AutoMapper.IValueResolver<StubEntity, StubDb, int>
+        private class YearOfBirthResolver : AutoMapper.IValueResolver<StubPerson, StubDb, int>
         {
-            public int Resolve(StubEntity source, StubDb destination, int destMember, AutoMapper.ResolutionContext context)
+            public int Resolve(StubPerson source, StubDb destination, int destMember, AutoMapper.ResolutionContext context)
             {
                 return DateTime.UtcNow.Year - source.Age;
             }
@@ -175,9 +223,9 @@
         //    }
         //}
 
-        private class AgeResolver : AutoMapper.IValueResolver<StubDb, StubEntity, int>
+        private class AgeResolver : AutoMapper.IValueResolver<StubDb, StubPerson, int>
         {
-            public int Resolve(StubDb source, StubEntity destination, int destMember, AutoMapper.ResolutionContext context)
+            public int Resolve(StubDb source, StubPerson destination, int destMember, AutoMapper.ResolutionContext context)
             {
                 return DateTime.UtcNow.Year - source.YearOfBirth;
             }
