@@ -57,7 +57,7 @@
         [Fact]
         [FitnessTest]
         [Trait("Category", "Fitness")]
-        public void Domain_ValueObjects_Should_Be_Immutable()
+        public void Domain_Value_Objects_Should_Be_Immutable()
         {
             var types = Types.InNamespace(this.baseNamespace)
                 .That()
@@ -125,7 +125,7 @@
         [Fact]
         [FitnessTest]
         [Trait("Category", "Fitness")]
-        public void Domain_ValueObject_Should_Have_Private_Constructor_With_Parameters_For_His_State()
+        public void Domain_Value_Object_Should_Have_Private_Constructor_With_Parameters_For_His_State()
         {
             var valueObjects = Types.InNamespace(this.baseNamespace)
                 .That()
