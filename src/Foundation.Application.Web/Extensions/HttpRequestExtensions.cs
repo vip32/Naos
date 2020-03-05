@@ -7,7 +7,7 @@
 
     public static class HttpRequestExtensions
     {
-        public static Uri Uri(this HttpRequest source, bool hostOnly = false)
+        public static Uri GetUri(this HttpRequest source, bool hostOnly = false)
         {
             if (source == null)
             {

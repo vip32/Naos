@@ -61,7 +61,7 @@
                 context.GetRouteData()?.Values.TryGetValue("Action", out action);
                 context.GetRouteData()?.Values.TryGetValue("Controller", out controller);
 
-                this.logger.LogJournal(LogKeys.InboundRequest, $"[{requestId}] {LogTraceNames.Http} {context.Request.Method.ToLowerInvariant()} {{Url:l}} (endpoint={$"{action ?? context.Request.Method.ToLowerInvariant()} {(controller != null ? controller.ToString().Singularize() ?? controller : context.Request.Uri().AbsolutePath)}"}, size={contentLength.Bytes():#.##})", LogPropertyKeys.TrackInboundRequest, args: new object[] { new Uri(context.Request.GetDisplayUrl()) });
+                this.logger.LogJournal(LogKeys.InboundRequest, $"[{requestId}] {LogTraceNames.Http} {context.Request.Method.ToLowerInvariant()} {{Url:l}} (endpoint={$"{action ?? context.Request.Method.ToLowerInvariant()} {(controller != null ? controller.ToString().Singularize() ?? controller : context.Request.GetUri().AbsolutePath)}"}, size={contentLength.Bytes():#.##})", LogPropertyKeys.TrackInboundRequest, args: new object[] { new Uri(context.Request.GetDisplayUrl()) });
                 //this.logger.LogTrace(LogKeys.InboundRequest, requestId, context.Request.Path, LogTraceNames.Http); // TODO: obsolete
                 //if (context.HasServiceName())
                 //{

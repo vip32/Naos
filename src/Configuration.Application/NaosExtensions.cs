@@ -4,6 +4,7 @@
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Naos.Configuration.Application;
     using Naos.Foundation;
@@ -39,6 +40,9 @@
         {
             Console.WriteLine("--- naos service start", System.Drawing.Color.LimeGreen);
             EnsureArg.IsNotNull(services, nameof(services));
+
+            services.AddMediatr();
+            services.Configure<ConsoleLifetimeOptions>(opts => opts.SuppressStatusMessages = true); // https://andrewlock.net/new-in-aspnetcore-3-structured-logging-for-startup-messages/
 
             var naosConfiguration = configuration?.GetSection(section).Get<NaosConfiguration>();
             var context = new NaosBuilderContext

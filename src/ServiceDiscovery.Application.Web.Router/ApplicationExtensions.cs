@@ -69,7 +69,7 @@
                 // TODO: how is api/registrations NOT forwarded? based on missing router headers?
                 // TODO: round robin https://github.com/damianh/ProxyKit/blob/master/src/Recipes/05_RoundRobin.cs
                 var upstreamHost = new Uri($"{registration.Address}:{registration.Port}");
-                logger.LogInformation($"{{LogKey:l}} router {{Url}} >> {{Host}} (service={{ServiceName}}, tag={serviceTag})", LogKeys.ServiceDiscovery, context.Request.Uri(), upstreamHost, registration.Name);
+                logger.LogInformation($"{{LogKey:l}} router {{Url}} >> {{Host}} (service={{ServiceName}}, tag={serviceTag})", LogKeys.ServiceDiscovery, context.Request.GetUri(), upstreamHost, registration.Name);
                 return await context
                     .ForwardTo(upstreamHost)
                     .Log(logger)

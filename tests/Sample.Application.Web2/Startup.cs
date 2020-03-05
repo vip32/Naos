@@ -1,14 +1,11 @@
 namespace Naos.Sample.Application.Web
 {
-    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Net;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc.Infrastructure;
-    using Microsoft.AspNetCore.Mvc.Routing;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
@@ -17,7 +14,6 @@ namespace Naos.Sample.Application.Web
     using Naos.Commands.Application;
     using Naos.Commands.Infrastructure.FileStorage;
     using Naos.FileStorage.Infrastructure;
-    using Naos.JobScheduling.Domain;
     using Naos.Messaging.Domain;
     using Naos.Queueing.Domain;
     using Naos.Sample.Catalogs.Application;
@@ -39,31 +35,9 @@ namespace Naos.Sample.Application.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<ConsoleLifetimeOptions>(opts => opts.SuppressStatusMessages = true); // https://andrewlock.net/new-in-aspnetcore-3-structured-logging-for-startup-messages/
-
-            //services.AddControllers();
-
             services
-                //.AddMiddlewareAnalysis()
                 .AddHttpContextAccessor()
-                .AddSingleton<IActionContextAccessor, ActionContextAccessor>() // needed for GetUrlHelper (IUrlHelperFactory below)
-                .AddScoped(sp =>
-                {
-                    var actionContext = sp.GetRequiredService<IActionContextAccessor>()?.ActionContext;
-                    if (actionContext == null)
-                    {
-                        throw new ArgumentException("UrlHelper needs an ActionContext, which is usually available in MVC components (Controller/PageModel/ViewComponent)");
-                    }
-
-                    var factory = sp.GetRequiredService<IUrlHelperFactory>();
-                    return factory?.GetUrlHelper(actionContext);
-                })
-                .AddMediatr()
-                .AddMvc(o =>
-                {
-                    //o.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build())); // https://tahirnaushad.com/2017/08/28/asp-net-core-2-0-mvc-filters/ or use controller attribute (Authorize)
-                })
-                    // naos mvc configuration
+                .AddMvc()
                     .AddNaos(o =>
                     {
                         // Countries repository is exposed with a dedicated controller, no need to register here

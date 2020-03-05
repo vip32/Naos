@@ -1,9 +1,16 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
     using EnsureThat;
+    using MediatR;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyModel;
     using Microsoft.Extensions.Options;
+    using Naos.Foundation;
 
     /// <summary>
     /// <see cref="IServiceCollection"/> extension methods.
@@ -108,6 +115,36 @@
                 .ValidateDataAnnotations()
                 .Validate(validation, failureMessage);
             return services.AddSingleton(x => x.GetRequiredService<IOptions<TOptions>>().Value);
+        }
+
+        public static IServiceCollection AddMediatr(
+            this IServiceCollection services,
+            IEnumerable<string> assemblyBlackListPatterns = null)
+        {
+            if (services == null)
+            {
+                return services;
+            }
+
+            if (assemblyBlackListPatterns.IsNullOrEmpty())
+            {
+                assemblyBlackListPatterns = new[]
+                {
+                    "Microsoft.*",
+                    "System.*",
+                    "Naos.Foundation*"
+                };
+            }
+
+            // find all assembly references (including unloaded), so mediatr can inspect all available assemblies
+            var assemblies = DependencyContext.Default.RuntimeLibraries
+                .SelectMany(l => l.GetDefaultAssemblyNames(DependencyContext.Default))
+                .Where(a => !a.Name.EqualsPatternAny(assemblyBlackListPatterns))
+                .Select(Assembly.Load)
+                .Where(a => !a.GlobalAssemblyCache)
+                .ToArray();
+
+            return services.AddMediatR(assemblies);
         }
     }
 }

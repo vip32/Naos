@@ -41,6 +41,7 @@
         [OpenApiTag("Naos Info")]
         public async Task<ActionResult<ServiceDescriptor>> Get()
         {
+            var baseUrl = this.Request.GetUri(true);
             foreach (var feature in this.features.Safe())
             {
                 if (!feature.EchoRoute.IsNullOrEmpty() && !feature.EchoRoute.StartsWith("http", System.StringComparison.OrdinalIgnoreCase))

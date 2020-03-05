@@ -7,7 +7,6 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Naos.Authentication.Application.Web;
-    using Naos.Configuration.Application;
     using Naos.Foundation;
     using Naos.Foundation.Application;
     using NSwag.Generation.Processors;
@@ -23,12 +22,27 @@
             var options = new NaosMvcOptions();
             optionsAction?.Invoke(options);
 
+            //mvcBuilder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>(); // needed for GetUrlHelper (IUrlHelperFactory below)
+            //mvcBuilder.Services.AddScoped(sp =>
+            //{
+            //    // enables usage of IUrlHelper https://benfoster.io/blog/injecting-urlhelper-in-aspnet-core-mvc
+            //    var actionContext = sp.GetRequiredService<IActionContextAccessor>()?.ActionContext;
+            //    if (actionContext == null)
+            //    {
+            //        throw new ArgumentException("UrlHelper needs an ActionContext, which is usually available in MVC components (Controller/PageModel/ViewComponent)");
+            //    }
+
+            //    var factory = sp.GetRequiredService<IUrlHelperFactory>();
+            //    return factory?.GetUrlHelper(actionContext);
+            //});
+
             // add the generic repo controllers for all registrations
             if (!options.ControllerRegistrations.IsNullOrEmpty())
             {
                 mvcBuilder
                     .AddMvcOptions(o =>
                     {
+                        //o.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build())); // https://tahirnaushad.com/2017/08/28/asp-net-core-2-0-mvc-filters/ or use controller attribute (Authorize)
                         o.Filters.Add<OperationCancelledExceptionFilterAttribute>();
                         o.Conventions.Add(new GeneratedControllerRouteConvention());
                     })

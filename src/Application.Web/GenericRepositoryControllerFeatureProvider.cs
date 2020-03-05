@@ -34,7 +34,6 @@
         public void PopulateFeature(IEnumerable<ApplicationPart> parts, ControllerFeature feature)
         {
             // https://www.strathweb.com/2018/04/generic-and-dynamically-generated-controllers-in-asp-net-core-mvc/
-
             foreach (var information in this.informations.Safe())
             {
                 if (information.EntityType == null)

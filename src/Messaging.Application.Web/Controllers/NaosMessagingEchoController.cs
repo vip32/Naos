@@ -34,13 +34,16 @@
         [OpenApiTag("Naos Echo")]
         public ActionResult<IEnumerable<SubscriptionDetails>> Get()
         {
-            this.messageBroker.Publish(new EchoMessage
+            var message = new EchoMessage
             {
                 CorrelationId = this.HttpContext.GetCorrelationId(),
                 Text = $"echo ({this.HttpContext.GetRequestId()})"
-            });
+            };
 
-            return this.Ok(this.subscriptionMap?.GetAll());
+            this.messageBroker.Publish(message);
+
+            return this.Ok(message);
+            //return this.Ok(this.subscriptionMap?.GetAll());
         }
     }
 }

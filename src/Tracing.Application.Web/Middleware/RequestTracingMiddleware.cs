@@ -40,7 +40,7 @@
             }
             else
             {
-                var uri = context.Request.Uri();
+                var uri = context.Request.GetUri();
                 object action = null;
                 object controller = null;
                 context.GetRouteData()?.Values.TryGetValue("Action", out action);

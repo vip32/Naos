@@ -131,8 +131,7 @@
         /// <returns>An <see cref="IUrlHelper"/> instance for the current request.</returns>
         public static IUrlHelper GetUrlHelper(this HttpContext source)
         {
-            return source.RequestServices
-                .GetRequiredService<IUrlHelper>();
+            return source.RequestServices.GetRequiredService<IUrlHelper>();
         }
 
         /// <summary>
