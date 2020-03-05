@@ -7,7 +7,6 @@
     using System.Threading.Tasks;
     using EnsureThat;
     using Microsoft.Extensions.Logging;
-    using Naos.FileStorage.Domain;
     using Naos.Foundation;
     using Naos.KeyValueStorage.Domain;
 

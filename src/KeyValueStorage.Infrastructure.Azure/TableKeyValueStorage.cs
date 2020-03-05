@@ -1,4 +1,4 @@
-﻿namespace Naos.KeyValueStorage.Infrastructure.Azure
+﻿namespace Naos.KeyValueStorage.Infrastructure
 {
     using System;
     using System.Collections.Concurrent;
