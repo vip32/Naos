@@ -32,14 +32,14 @@
     <ProjectReference Include="..\Foundation.ContentTypes\ContentTypes.csproj" />
     <ProjectReference Include="..\Foundation.Application.Web.Startup\Application.Web.Startup.csproj" />
     <ProjectReference Include="..\Foundation.Utilities.Web\Utilities.Web.csproj" />
-    <ProjectReference Include="..\Queueing.Infrastructure.Azure\Queueing.Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\Commands.Domain\Commands.Domain.csproj" />
+    <ProjectReference Include="..\Queueing\Queueing.csproj" />
+    <ProjectReference Include="..\Queueing.Infrastructure.Azure\Queueing.Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\Configuration.Application.Web\Configuration.Application.Web.csproj" />
     <ProjectReference Include="..\Configuration.Application\Configuration.Application.csproj" />
     <ProjectReference Include="..\FileStorage.Infrastructure.Azure\FileStorage.Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\FileStorage.Infrastructure.FileSystem\FileStorage.Infrastructure.FileSystem.csproj" />
     <ProjectReference Include="..\FileStorage\FileStorage.csproj" />
-    <ProjectReference Include="..\Queueing\Queueing.csproj" />
     <ProjectReference Include="..\Tracing.Domain\Tracing.Domain.csproj" />
   </ItemGroup>
 

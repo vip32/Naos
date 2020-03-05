@@ -349,30 +349,6 @@
             return options;
         }
 
-        public static CommandRequestOptions UseAzureBlobStorage(
-            this CommandRequestOptions options, string connectionString = null, string containerName = "commandrequests")
-        {
-            options.Context.Services.AddSingleton(sp => new CommandRequestStore(
-                new FileStorageLoggingDecorator(
-                    sp.GetRequiredService<ILoggerFactory>(),
-                    new AzureBlobFileStorage(o => o
-                        .ConnectionString(connectionString.EmptyToNull() ?? options.Context.Configuration["naos:commands:azureBlobStorage:connectionString"])
-                        .ContainerName($"{containerName}-{HashAlgorithm.ComputeMd5Hash(options.Context.Descriptor.Name)}")))));
-
-            return options;
-        }
-
-        public static CommandRequestOptions UseAzureBlobStorage(
-            this CommandRequestOptions options, Builder<AzureBlobFileStorageOptionsBuilder, AzureBlobFileStorageOptions> optionsBuilder)
-        {
-            options.Context.Services.AddSingleton(sp => new CommandRequestStore(
-                new FileStorageLoggingDecorator(
-                    sp.GetRequiredService<ILoggerFactory>(),
-                    new AzureBlobFileStorage(optionsBuilder))));
-
-            return options;
-        }
-
         public static CommandRequestOptions UseInMemoryQueue(
             this CommandRequestOptions options)
         {
@@ -392,29 +368,6 @@
         {
             options.Context.Services.AddSingleton<IQueue<CommandRequestWrapper>>(sp =>
                 new InMemoryQueue<CommandRequestWrapper>(optionsBuilder));
-
-            return options;
-        }
-
-        public static CommandRequestOptions UseAzureStorageQueue(
-            this CommandRequestOptions options, string connectionString = null, string name = "commandrequests")
-        {
-            options.Context.Services.AddSingleton<IQueue<CommandRequestWrapper>>(sp =>
-                new AzureStorageQueue<CommandRequestWrapper>(o => o
-                        .Mediator(sp.GetRequiredService<IMediator>())
-                        .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
-                        .ConnectionString(connectionString.EmptyToNull() ?? options.Context.Configuration["naos:commands:azureStorageQueue:connectionString"])
-                        .Serializer(new JsonNetSerializer(TypedJsonSerializerSettings.Create())) // needs type information in json to deserialize correctly (which is needed for mediator.send)
-                        .QueueName($"{name}-{HashAlgorithm.ComputeMd5Hash(options.Context.Descriptor.Name)}")));
-
-            return options;
-        }
-
-        public static CommandRequestOptions UseAzureStorageQueue(
-            this CommandRequestOptions options, Builder<AzureStorageQueueOptionsBuilder, AzureStorageQueueOptions> optionsBuilder)
-        {
-            options.Context.Services.AddSingleton<IQueue<CommandRequestWrapper>>(sp =>
-                new AzureStorageQueue<CommandRequestWrapper>(optionsBuilder));
 
             return options;
         }

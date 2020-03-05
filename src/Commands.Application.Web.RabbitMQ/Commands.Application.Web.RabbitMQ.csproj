@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Naos.Commands.Application.Web.RabbitMQ</AssemblyName>
+    <RootNamespace>Naos.Commands.Application.Web</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Commands.Application.Web\Commands.Application.Web.csproj" />
+    <ProjectReference Include="..\Foundation.Infrastructure.RabbitMQ\Infrastructure.RabbitMQ.csproj" />
+    <ProjectReference Include="..\Queueing.Infrastructure.RabbitMQ\Queueing.Infrastructure.RabbitMQ.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -27,6 +27,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Authentication.Application.Web\Authentication.Application.Web.csproj" />
     <ProjectReference Include="..\Commands.Application.Web\Commands.Application.Web.csproj" />
+    <ProjectReference Include="..\Commands.Application.Web.Azure\Commands.Application.Web.Azure.csproj" />
+    <ProjectReference Include="..\Commands.Application.Web.RabbitMQ\Commands.Application.Web.RabbitMQ.csproj" />
     <ProjectReference Include="..\Configuration.Application.Web\Configuration.Application.Web.csproj" />
     <ProjectReference Include="..\Correlation.Application\RequestCorrelation.Application.csproj" />
     <ProjectReference Include="..\Exceptions.Application.Web\Exceptions.Application.Web.csproj" />

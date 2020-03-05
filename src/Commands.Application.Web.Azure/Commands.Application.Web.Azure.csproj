@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Naos.Commands.Application.Web.Azure</AssemblyName>
+    <RootNamespace>Naos.Commands.Application.Web</RootNamespace>
+  </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Commands.Application.Web\Commands.Application.Web.csproj" />
+      <ProjectReference Include="..\Queueing.Infrastructure.Azure\Queueing.Infrastructure.Azure.csproj" />
+    </ItemGroup>
+
+</Project>
