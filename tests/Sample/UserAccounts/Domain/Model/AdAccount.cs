@@ -7,6 +7,10 @@
 
     public class AdAccount : ValueObject
     {
+        private AdAccount()
+        {
+        }
+
         private AdAccount(string domain, string name)
         {
             this.Domain = domain;
