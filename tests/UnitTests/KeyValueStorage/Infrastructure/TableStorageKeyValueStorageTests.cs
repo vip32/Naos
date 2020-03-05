@@ -3,7 +3,7 @@
     using System.Threading.Tasks;
     using Naos.Foundation;
     using Naos.KeyValueStorage.Domain;
-    using Naos.KeyValueStorage.Infrastructure.Azure;
+    using Naos.KeyValueStorage.Infrastructure;
     using Xunit;
 
     public class TableStorageKeyValueStorageTests : KeyValueStorageBaseTests

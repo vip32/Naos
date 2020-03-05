@@ -46,6 +46,8 @@ TODO:
 req/res are correlated by TrackId
 logevent contains timestamp, duration, overall correlationid, (track)id , servicename/product/capability
 
+Domain.Repositories.Documents (DocSet) alternative yesSQL https://github.com/sebastienros/yessql
+
 [DONE] NetCore 3.0 upgrade (preview)
 https://asp.net-hacker.rocks/2019/08/05/aspnetcore30-generic-hosting-environment.html
 https://www.talkingdotnet.com/asp-net-core-3-0-app-with-net-core-3-preview-2-and-visual-studio-2019/

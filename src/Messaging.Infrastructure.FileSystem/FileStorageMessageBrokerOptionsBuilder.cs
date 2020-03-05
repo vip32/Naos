@@ -56,5 +56,11 @@
             this.Target.ProcessDelay = processDelay;
             return this;
         }
+
+        public FileStorageMessageBrokerOptionsBuilder Folder(string folder)
+        {
+            this.Target.Folder = folder;
+            return this;
+        }
     }
 }

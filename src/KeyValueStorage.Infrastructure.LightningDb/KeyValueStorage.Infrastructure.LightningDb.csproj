@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="LightningDB" Version="0.11.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Foundation.Criteria\Criteria.csproj" />
     <ProjectReference Include="..\KeyValueStorage\KeyValueStorage.csproj" />
   </ItemGroup>

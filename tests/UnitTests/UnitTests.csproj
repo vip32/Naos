@@ -99,6 +99,7 @@
     <ProjectReference Include="..\..\src\JobScheduling\JobScheduling.csproj" />
     <ProjectReference Include="..\..\src\KeyValueStorage.Infrastructure.Azure\KeyValueStorage.Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\..\src\KeyValueStorage.Infrastructure.FileStorage\KeyValueStorage.Infrastructure.FileStorage.csproj" />
+    <ProjectReference Include="..\..\src\KeyValueStorage.Infrastructure.LightningDb\KeyValueStorage.Infrastructure.LightningDb.csproj" />
     <ProjectReference Include="..\..\src\KeyValueStorage\KeyValueStorage.csproj" />
     <ProjectReference Include="..\..\src\Messaging.Application.Azure.SignalR\Messaging.Application.Azure.SignalR.csproj" />
     <ProjectReference Include="..\..\src\Messaging.Application.Azure\Messaging.Application.Azure.csproj" />
