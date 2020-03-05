@@ -72,8 +72,7 @@
             EnsureArg.IsNotNull(source, nameof(source));
             EnsureArg.IsNotNull(operation, nameof(operation));
 
-            var strategy = source.Database.CreateExecutionStrategy();
-            await strategy.ExecuteAsync(async () =>
+            await source.Database.CreateExecutionStrategy().ExecuteAsync(async () =>
             {
                 using (var transaction = new TransactionScope())
                 {
