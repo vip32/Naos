@@ -6,8 +6,6 @@
     using EnsureThat;
     using Microsoft.Azure.Cosmos.Table;
     using Naos.Foundation;
-    //using Microsoft.WindowsAzure.Storage;
-    //using Microsoft.WindowsAzure.Storage.Table;
     using Naos.KeyValueStorage.Domain;
 
     public class EntityAdapter : ITableEntity
