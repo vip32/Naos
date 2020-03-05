@@ -83,13 +83,13 @@ namespace Naos.Sample.Application.Web
                             .Get<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>(
                                 "api/commands/customers/active",
                                 groupName: "Customers")
-                            .UseAzureBlobStorage() // *
                             //.UseInMemoryStorage()
+                            .UseAzureBlobStorage() // *
                             //.UseFolderStorage()
+                            //.UseInMemoryQueue()
                             .UseAzureStorageQueue() // *
                             //.UseAzureServiceBusQueue()
                             //.UseRabbitMQQueue()
-                            //.UseInMemoryQueue()
                             .GetQueued<PingCommand>("api/commands/queue/ping")
                             .GetQueued<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>(
                                 "api/commands/queue/customers/active",
