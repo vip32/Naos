@@ -190,6 +190,10 @@
             // assert
             result.ShouldNotBeNull();
             result.Id.ShouldBe(entities.FirstOrDefault()?.Id);
+            result.DeliveryPeriod.ShouldNotBeNull();
+            result.DeliveryPeriod.StartDate.ShouldNotBeNull();
+            result.ReturnPeriod.ShouldNotBeNull();
+            result.ReturnPeriod.StartDate.ShouldNotBeNull();
             //result.State.ShouldNotBeNull();
             //result.State.CreatedDescription.ShouldNotBeNull(); // EntityInsertDomainEventHandler
             //result.State.CreatedBy.ShouldNotBeNull(); // EntityInsertDomainEventHandler
