@@ -171,6 +171,54 @@
             return null;
         }
 
+        public static string ToExpressionString(this Expression<Func<bool>> source)
+        {
+            if (source != null)
+            {
+                var result = source.ToString();
+                var name = result.SliceTill(" =>"); // strip the parameter from the expression
+                return result.Replace($"{name}.", string.Empty).SliceFrom("=> ");
+            }
+
+            return null;
+        }
+
+        public static string ToExpressionString(this Expression<Func<string>> source)
+        {
+            if (source != null)
+            {
+                var result = source.ToString();
+                var name = result.SliceTill(" =>"); // strip the parameter from the expression
+                return result.Replace($"{name}.", string.Empty).SliceFrom("=> ");
+            }
+
+            return null;
+        }
+
+        public static string ToExpressionString(this Expression<Func<double>> source)
+        {
+            if (source != null)
+            {
+                var result = source.ToString();
+                var name = result.SliceTill(" =>"); // strip the parameter from the expression
+                return result.Replace($"{name}.", string.Empty).SliceFrom("=> ");
+            }
+
+            return null;
+        }
+
+        public static string ToExpressionString(this Expression<Func<object>> source)
+        {
+            if (source != null)
+            {
+                var result = source.ToString();
+                var name = result.SliceTill(" =>"); // strip the parameter from the expression
+                return result.Replace($"{name}.", string.Empty).SliceFrom("=> ");
+            }
+
+            return null;
+        }
+
         public static Expression<Func<T, bool>> FromExpressionString<T>(string expression)
         {
             // Param_0 = T

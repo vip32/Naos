@@ -7,14 +7,14 @@
     public class SpecificationTests
     {
         [Fact]
-        public void ToString_Test()
+        public void Generic_ToString_Test()
         {
             new Specification<StubEntity>(e => e.FirstName == "John").ToString()
                 .ShouldBe("(FirstName == \"John\")");
         }
 
         [Fact]
-        public void ExpressionCtorIsSatisfiedBy_Test()
+        public void Generic_ExpressionCtorIsSatisfiedBy_Test()
         {
             new Specification<StubEntity>(e => e.FirstName == "John")
                 .IsSatisfiedBy(new StubEntity { FirstName = "John" })
@@ -26,7 +26,7 @@
         }
 
         [Fact]
-        public void StringCtorIsSatisfiedBy_Test()
+        public void Generic_StringCtorIsSatisfiedBy_Test()
         {
             // name less parsing is supported
             new Specification<StubEntity>("(FirstName == \"John\")")
@@ -49,11 +49,37 @@
         }
 
         [Fact]
-        public void IsNotSatisfiedBy_Test()
+        public void Generic_IsNotSatisfiedBy_Test()
         {
             new Specification<StubEntity>(e => e.FirstName == "John")
                 .IsSatisfiedBy(new StubEntity { FirstName = "Johny" })
                 .ShouldBe(false);
+        }
+
+        [Fact]
+        public void Generic_IsSatisfiedBy_Test()
+        {
+            var entity = new StubEntity
+            {
+                FirstName = "John"
+            };
+
+            new Specification<StubEntity>(e => e.FirstName == "John").IsSatisfiedBy(entity)
+                .ShouldBeTrue();
+        }
+
+        [Fact]
+        public void IsSatisfied_Test()
+        {
+            new Specification(() => true == true).IsSatisfied()
+                .ShouldBeTrue();
+        }
+
+        [Fact]
+        public void IsNotSatisfied_Test()
+        {
+            new Specification(() => true == false).IsSatisfied()
+                .ShouldBeFalse();
         }
 
         public class StubEntity

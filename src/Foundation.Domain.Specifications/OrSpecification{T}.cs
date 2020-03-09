@@ -5,12 +5,12 @@
     using System.Linq.Expressions;
     using EnsureThat;
 
-    public class OrSpecification : Specification
+    public class OrSpecification<T> : Specification<T>
     {
-        private readonly ISpecification leftSpecification;
-        private readonly ISpecification rightSpecification;
+        private readonly ISpecification<T> leftSpecification;
+        private readonly ISpecification<T> rightSpecification;
 
-        public OrSpecification(ISpecification leftSpecification, ISpecification rightSpecification)
+        public OrSpecification(ISpecification<T> leftSpecification, ISpecification<T> rightSpecification)
         {
             EnsureArg.IsNotNull(leftSpecification);
             EnsureArg.IsNotNull(rightSpecification);
@@ -19,7 +19,7 @@
             this.leftSpecification = leftSpecification;
         }
 
-        public override Expression<Func<bool>> ToExpression()
+        public override Expression<Func<T, bool>> ToExpression()
         {
             var leftExpression = this.leftSpecification.ToExpression();
             var rightExpression = this.rightSpecification.ToExpression();
@@ -30,7 +30,7 @@
                 Expression.Invoke(rightExpression, leftExpression.Parameters.Single()));
 
             //return Expression.Lambda<Func<T, bool>>(orExpression, leftExpression.Parameters.Single());
-            return Expression.Lambda<Func<bool>>(orExpression, leftExpression.Parameters);
+            return Expression.Lambda<Func<T, bool>>(orExpression, leftExpression.Parameters);
         }
 
         public override string ToString()

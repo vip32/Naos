@@ -5,23 +5,23 @@
     using System.Linq.Expressions;
     using EnsureThat;
 
-    public class NotSpecification : Specification
+    public class NotSpecification<T> : Specification<T>
     {
-        private readonly ISpecification specification;
+        private readonly ISpecification<T> specification;
 
-        public NotSpecification(ISpecification specification)
+        public NotSpecification(ISpecification<T> specification)
         {
             EnsureArg.IsNotNull(specification);
 
             this.specification = specification;
         }
 
-        public override Expression<Func<bool>> ToExpression()
+        public override Expression<Func<T, bool>> ToExpression()
         {
             var expression = this.specification.ToExpression();
 
             var notepression = Expression.Not(expression.Body);
-            return Expression.Lambda<Func<bool>>(notepression, expression.Parameters.Single());
+            return Expression.Lambda<Func<T, bool>>(notepression, expression.Parameters.Single());
         }
 
         public override string ToString()
