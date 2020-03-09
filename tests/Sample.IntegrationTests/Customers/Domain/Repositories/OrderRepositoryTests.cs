@@ -23,7 +23,7 @@
         {
             this.sut = this.ServiceProvider.GetService<IOrderRepository>();
             this.entityFaker = new Faker<Order>() //https://github.com/bchavez/Bogus
-                .RuleFor(u => u.CustomerNumber, f => f.Random.Replace("??-#####"))
+                //.RuleFor(u => u.CustomerNumber, f => f.Random.Replace("??-#####"))
                 .RuleFor(u => u.OrderNumber, f => f.Random.AlphaNumeric(8))
                 .RuleFor(u => u.FirstName, (f, u) => f.Name.FirstName())
                 .RuleFor(u => u.LastName, (f, u) => f.Name.LastName())
@@ -32,6 +32,7 @@
                 .RuleFor(u => u.TenantId, (f, u) => this.tenantId)
                 .FinishWith((f, u) =>
                 {
+                    u.SetCustomerNumber();
                     u.SetNormalDelivery();
                     u.SetReturnPeriod(DateTime.UtcNow.AddDays(3));
                 });
@@ -190,6 +191,7 @@
             // assert
             result.ShouldNotBeNull();
             result.Id.ShouldBe(entities.FirstOrDefault()?.Id);
+            result.CustomerNumber.ShouldNotBeNullOrEmpty();
             result.DeliveryPeriod.ShouldNotBeNull();
             result.DeliveryPeriod.StartDate.ShouldNotBeNull();
             result.ReturnPeriod.ShouldNotBeNull();
