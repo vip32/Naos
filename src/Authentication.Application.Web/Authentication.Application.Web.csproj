@@ -23,7 +23,7 @@
     <PackageReference Include="NSwag.Annotations" Version="13.2.3" />
     <PackageReference Include="NSwag.AspNetCore" Version="13.2.3" />
     <PackageReference Include="NSwag.Core" Version="13.2.3" />
-    <PackageReference Include="NSwag.Generation" Version="13.2.3" />
+    <PackageReference Include="NSwag.Generation" Version="13.2.5" />
     <PackageReference Include="NJsonSchema" Version="10.1.5" />
   </ItemGroup>
 
