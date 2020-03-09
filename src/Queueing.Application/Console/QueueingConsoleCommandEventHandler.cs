@@ -37,7 +37,7 @@
 
         public void Dispose()
         {
-            if(this.queue?.GetType() == typeof(InMemoryQueue<EchoQueueEventData>))
+            if (this.queue?.GetType() == typeof(InMemoryQueue<EchoQueueEventData>))
             {
                 this.queue.Dispose();
             }

@@ -31,7 +31,7 @@
             foreach (var specification in specifications.Safe())
             {
                 var result = source.CheckAndReturn(specification);
-                if(result != null)
+                if (result != null)
                 {
                     yield return result;
                 }
@@ -51,7 +51,7 @@
         {
             foreach (var specification in specifications.Safe())
             {
-                if(!source.Check(specification))
+                if (!source.Check(specification))
                 {
                     return false;
                 }

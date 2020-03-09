@@ -91,7 +91,7 @@
                     properties.Type = messageName;
                     properties.MessageId = id;
                     properties.CorrelationId = correlationId;
-                    if(this.Options.Expiration.HasValue && this.Options.Expiration.Value.Milliseconds > 0)
+                    if (this.Options.Expiration.HasValue && this.Options.Expiration.Value.Milliseconds > 0)
                     {
                         properties.Expiration = this.Options.Expiration.Value.Milliseconds.ToString(); // https://www.rabbitmq.com/ttl.html
                     }
@@ -175,7 +175,7 @@
             }
 
             var tag = item.Properties.GetValueOrDefault<ulong>("DeliveryTag");
-            if(tag > 0)
+            if (tag > 0)
             {
                 this.channel.BasicAck(tag, false);
                 Interlocked.Increment(ref this.completedCount);

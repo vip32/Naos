@@ -51,7 +51,7 @@
         /// <param name="type">The type.</param>
         public object Deserialize(Stream input, Type type)
         {
-            if(input == null)
+            if (input == null)
             {
                 return null;
             }

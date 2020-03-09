@@ -174,8 +174,8 @@
                 .Inherit(typeof(Entity<>))
                 .And()
                 .DoNotInherit(typeof(Command<>)).GetTypes(); // ???? somehow Commands are selected as Entities
-                //.And()
-                //.DoNotInherit(typeof(AggregateRoot<>)).GetTypes();
+                                                             //.And()
+                                                             //.DoNotInherit(typeof(AggregateRoot<>)).GetTypes();
 
             var aggregateRoots = Types.InNamespace(this.baseNamespace)
                 .That()

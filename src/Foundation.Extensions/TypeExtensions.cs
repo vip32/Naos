@@ -27,7 +27,7 @@
 
         public static string PrettyName(this Type source, bool useAngleBrackets = true)
         {
-            if(source == null)
+            if (source == null)
             {
                 return string.Empty;
             }

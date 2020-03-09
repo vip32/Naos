@@ -88,11 +88,11 @@ namespace Naos.Sample.Application.Web
                                 groupName: "Customers")
                             //.UseInMemoryStorage()
                             .UseAzureBlobStorage() // *
-                            //.UseFolderStorage()
-                            //.UseInMemoryQueue()
+                                                   //.UseFolderStorage()
+                                                   //.UseInMemoryQueue()
                             .UseAzureStorageQueue() // *
-                            //.UseAzureServiceBusQueue()
-                            //.UseRabbitMQQueue()
+                                                    //.UseAzureServiceBusQueue()
+                                                    //.UseRabbitMQQueue()
                             .GetQueued<PingCommand>("api/commands/queue/ping")
                             .GetQueued<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>(
                                 "api/commands/queue/customers/active",
@@ -118,15 +118,15 @@ namespace Naos.Sample.Application.Web
                     //.AddQueries()
                     //.AddSwaggerDocument() // s.Description = Product.Capability\
                     //.AddJobScheduling(o => o
-                        //.SetEnabled(true)
-                        //.Register<EchoJob>("echojob1", Cron.MinuteInterval(10), (j) => j.EchoAsync("+++ hello from echojob1 +++", CancellationToken.None))
-                        //.Register<EchoJob>("manualjob1", Cron.Never(), (j) => j.EchoAsync("+++ hello from manualjob1 +++", CancellationToken.None))
-                        //.Register<CountriesImportJob>("countriesimport", Cron.MinuteInterval(5))
-                        //.Register<CountriesExportJob>("countriesexport", Cron.MinuteInterval(2))) // Enqueue
-                                                                                                  //.Register("anonymousjob2", Cron.Minutely(), (j) => Console.WriteLine("+++ hello from anonymousjob2 " + j))
-                                                                                                  //.Register("jobevent1", Cron.Minutely(), () => new EchoJobEventData { Text = "+++ hello from jobevent1 +++" }))
-                                                                                                  //.Register<EchoJob>("echojob2", Cron.MinuteInterval(2), j => j.EchoAsync("+++ hello from echojob2 +++", CancellationToken.None, true), enabled: false)
-                                                                                                  //.Register<EchoJob>("testlongjob4", Cron.Minutely(), j => j.EchoLongAsync("+++ hello from testlongjob4 +++", CancellationToken.None)))
+                    //.SetEnabled(true)
+                    //.Register<EchoJob>("echojob1", Cron.MinuteInterval(10), (j) => j.EchoAsync("+++ hello from echojob1 +++", CancellationToken.None))
+                    //.Register<EchoJob>("manualjob1", Cron.Never(), (j) => j.EchoAsync("+++ hello from manualjob1 +++", CancellationToken.None))
+                    //.Register<CountriesImportJob>("countriesimport", Cron.MinuteInterval(5))
+                    //.Register<CountriesExportJob>("countriesexport", Cron.MinuteInterval(2))) // Enqueue
+                    //.Register("anonymousjob2", Cron.Minutely(), (j) => Console.WriteLine("+++ hello from anonymousjob2 " + j))
+                    //.Register("jobevent1", Cron.Minutely(), () => new EchoJobEventData { Text = "+++ hello from jobevent1 +++" }))
+                    //.Register<EchoJob>("echojob2", Cron.MinuteInterval(2), j => j.EchoAsync("+++ hello from echojob2 +++", CancellationToken.None, true), enabled: false)
+                    //.Register<EchoJob>("testlongjob4", Cron.Minutely(), j => j.EchoLongAsync("+++ hello from testlongjob4 +++", CancellationToken.None)))
                     .AddServiceClient() // do IMPLICIT! XXXXX
                     .AddQueueing(o => o
                         //.UseAzureStorageQueue<EchoQueueEventData>(o => o

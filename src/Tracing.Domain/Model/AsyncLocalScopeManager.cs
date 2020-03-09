@@ -40,7 +40,7 @@
 
         private bool IsSampled(ISpan span)
         {
-            if(span == null)
+            if (span == null)
             {
                 return false;
             }

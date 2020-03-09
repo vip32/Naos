@@ -74,7 +74,7 @@
 
         public static object GetValue(Expression expression, Type resultType)
         {
-            if(expression == null)
+            if (expression == null)
             {
                 return null;
             }

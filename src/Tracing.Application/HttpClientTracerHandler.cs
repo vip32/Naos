@@ -29,7 +29,7 @@
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            if(this.httpContextAccessor?.HttpContext == null)
+            if (this.httpContextAccessor?.HttpContext == null)
             {
                 // TODO: get current scoped tracer in here! only happens in out of httpcontext request, for example inside a dequeued message handler.
                 //       all fine within a httpcontext, also the with commands+handlers (only inside queued commands+handlers its an issue)

@@ -12,7 +12,7 @@
                 return default;
             }
 
-            if(source.LastOrDefault().Equals(item)) // stop at last item
+            if (source.LastOrDefault().Equals(item)) // stop at last item
             {
                 return default;
             }

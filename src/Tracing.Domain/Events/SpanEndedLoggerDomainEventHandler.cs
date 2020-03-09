@@ -33,7 +33,7 @@
             if (notification?.Span != null)
             {
                 var duration = TimeSpan.Zero;
-                if(notification.Span.EndTime.HasValue && notification.Span.StartTime.HasValue)
+                if (notification.Span.EndTime.HasValue && notification.Span.StartTime.HasValue)
                 {
                     duration = notification.Span.EndTime.Value - notification.Span.StartTime.Value;
                 }

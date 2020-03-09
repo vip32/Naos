@@ -43,7 +43,7 @@
         }
 
 #if NETCOREAPP3_1
-        public static NaosApplicationContextOptions UseOperationsHealth (
+        public static NaosApplicationContextOptions UseOperationsHealth(
             this NaosApplicationContextOptions naosOptions)
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));

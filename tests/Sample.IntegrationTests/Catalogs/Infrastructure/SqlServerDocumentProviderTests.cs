@@ -103,7 +103,7 @@
             // assert
             var count = 0;
             results.ShouldNotBeNull();
-            await foreach(var val in results)
+            await foreach (var val in results)
             {
                 count++;
             }

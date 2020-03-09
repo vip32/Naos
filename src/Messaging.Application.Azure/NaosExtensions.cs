@@ -63,25 +63,25 @@
                     }
                     catch (MessagingEntityNotFoundException)
                     {
-                    // do nothing, default rule not found
-                }
+                        // do nothing, default rule not found
+                    }
 
                     client.RegisterMessageHandler(
                         async (m, t) =>
                         {
-                        //this.logger.LogInformation("message received (id={MessageId}, name={MessageName})", message.MessageId, message.Label);
-                        if (await ServiceBusMessageBroker.ProcessMessage(
-                                logger,
-                                (ITracer)sp.CreateScope().ServiceProvider.GetService(typeof(ITracer)),
-                                sp.GetRequiredService<ISubscriptionMap>(),
-                                new ServiceProviderMessageHandlerFactory(sp),
-                                DefaultSerializer.Create,
-                                subscriptionName,
-                                (IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)),
-                                m).AnyContext())
+                            //this.logger.LogInformation("message received (id={MessageId}, name={MessageName})", message.MessageId, message.Label);
+                            if (await ServiceBusMessageBroker.ProcessMessage(
+                                    logger,
+                                    (ITracer)sp.CreateScope().ServiceProvider.GetService(typeof(ITracer)),
+                                    sp.GetRequiredService<ISubscriptionMap>(),
+                                    new ServiceProviderMessageHandlerFactory(sp),
+                                    DefaultSerializer.Create,
+                                    subscriptionName,
+                                    (IMediator)sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)),
+                                    m).AnyContext())
                             {
-                            // complete message so it is not received again
-                            await client.CompleteAsync(m.SystemProperties.LockToken).AnyContext();
+                                // complete message so it is not received again
+                                await client.CompleteAsync(m.SystemProperties.LockToken).AnyContext();
                             }
                         },
                         new MessageHandlerOptions(args =>
@@ -110,7 +110,7 @@
                         .HandlerFactory(new ServiceProviderMessageHandlerFactory(sp))
                         .Subscriptions(sp.GetRequiredService<ISubscriptionMap>()) // singleton
                         .SubscriptionName(subscriptionName) //AppDomain.CurrentDomain.FriendlyName, // PRODUCT.CAPABILITY
-                        //.MessageScope(options.Context.Descriptor.Name)
+                                                            //.MessageScope(options.Context.Descriptor.Name)
                         .Retries(retries)
                         .Expiration(expiration)
                         .FilterScope(Environment.GetEnvironmentVariable(EnvironmentKeys.IsLocal).ToBool()

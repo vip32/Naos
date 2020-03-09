@@ -75,14 +75,14 @@
         {
             if (!specifications.IsNullOrEmpty())
             {
-                if(specifications.Count() == 1)
+                if (specifications.Count() == 1)
                 {
                     return this.And(specifications.First());
                 }
 
                 var result = specifications.First();
 
-                foreach(var specification in specifications.Skip(1))
+                foreach (var specification in specifications.Skip(1))
                 {
                     result = result.And(specification);
                 }
