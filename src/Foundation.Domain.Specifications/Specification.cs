@@ -47,7 +47,7 @@
             return this.ToExpression()?.Compile(); // replace wit CompileFast()? https://github.com/dadhi/FastExpressionCompiler
         }
 
-        public bool IsSatisfiedBy(T entity)
+        public virtual bool IsSatisfiedBy(T entity)
         {
             if (entity == default)
             {
@@ -187,7 +187,7 @@
             return this.ToExpression()?.Compile(); // replace wit CompileFast()? https://github.com/dadhi/FastExpressionCompiler
         }
 
-        public bool IsSatisfied()
+        public virtual bool IsSatisfied()
         {
             var predicate = this.ToPredicate();
             return predicate();
