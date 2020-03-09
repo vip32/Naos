@@ -10,7 +10,7 @@
         public static readonly UserAccountStatus Active = new UserAccountStatus(UserAccountStatusType.Active);
         public static readonly UserAccountStatus Inactive = new UserAccountStatus(UserAccountStatusType.Inactive);
 
-        public UserAccountStatus(string value)
+        private UserAccountStatus(string value)
         {
             Enum.TryParse(typeof(UserAccountStatusType), value, out var result);
 
@@ -23,11 +23,16 @@
             this.Value = value;
         }
 
-        public UserAccountStatusType Value { get; private set; }
+        public UserAccountStatusType Value { get; }
 
-        public static implicit operator string(UserAccountStatus value) => value.ToString();
+        //public static implicit operator string(UserAccountStatus value) => value.ToString();
 
-        public static explicit operator UserAccountStatus(string value) => For(value);
+        //public static explicit operator UserAccountStatus(string value) => For(value);
+
+        public static UserAccountStatus For(UserAccountStatusType value)
+        {
+            return new UserAccountStatus(value);
+        }
 
         public static UserAccountStatus For(string value)
         {
