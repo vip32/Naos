@@ -8,6 +8,7 @@
     using Naos.Foundation;
     using Naos.Foundation.Domain;
     using Naos.Sample.Customers.Domain;
+    using NSubstitute;
     using Shouldly;
     using Xunit;
 
@@ -28,7 +29,12 @@
                 .RuleFor(u => u.LastName, (f, u) => f.Name.LastName())
                 .RuleFor(u => u.Total, (f, u) => f.Random.Decimal())
                 .RuleFor(u => u.Region, (f, u) => f.PickRandom(new[] { "East", "West" }))
-                .RuleFor(u => u.TenantId, (f, u) => this.tenantId);
+                .RuleFor(u => u.TenantId, (f, u) => this.tenantId)
+                .FinishWith((f, u) =>
+                {
+                    u.SetNormalDelivery();
+                    u.SetReturnPeriod(DateTime.UtcNow.AddDays(3));
+                });
         }
 
         [Fact]

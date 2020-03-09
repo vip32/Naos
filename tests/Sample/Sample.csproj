@@ -10,10 +10,13 @@
   <ItemGroup>
     <Compile Remove="Countries\App.Commands\**" />
     <Compile Remove="Countries\App.Queries\**" />
+    <Compile Remove="Customers\Application.Queries\**" />
     <EmbeddedResource Remove="Countries\App.Commands\**" />
     <EmbeddedResource Remove="Countries\App.Queries\**" />
+    <EmbeddedResource Remove="Customers\Application.Queries\**" />
     <None Remove="Countries\App.Commands\**" />
     <None Remove="Countries\App.Queries\**" />
+    <None Remove="Customers\Application.Queries\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,7 +30,6 @@
 
   <ItemGroup>
     <Folder Include="Customers\Domain\Repositories\Decorators\" />
-    <Folder Include="Customers\Application.Queries\" />
     <Folder Include="UserAccounts\App.Commands\" />
     <Folder Include="UserAccounts\App.Queries\" />
   </ItemGroup>

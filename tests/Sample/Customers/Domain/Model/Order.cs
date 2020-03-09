@@ -6,7 +6,7 @@
 
     public class Order : AggregateRoot<string>, ITenantEntity
     {
-        public string CustomerNumber { get; set; }
+        public string CustomerNumber { get; private set; }
 
         public string OrderNumber { get; set; }
 

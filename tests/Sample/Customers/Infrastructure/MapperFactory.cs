@@ -22,6 +22,10 @@
                     .ForMember(d => d.LastName, o => o.MapFrom(s => s.LastName))
                     .ForMember(d => d.Location, o => o.MapFrom(s => s.Region))
                     .ForMember(d => d.Total, o => o.MapFrom(s => s.Total))
+                    .ForMember(d => d.DeliveryStartDate, o => o.MapFrom(s => s.DeliveryPeriod != null ? s.DeliveryPeriod.StartDate : null))
+                    .ForMember(d => d.DeliveryEndDate, o => o.MapFrom(s => s.DeliveryPeriod != null ? s.DeliveryPeriod.EndDate : null))
+                    .ForMember(d => d.ReturnStartDate, o => o.MapFrom(s => s.ReturnPeriod != null ? s.ReturnPeriod.StartDate : null))
+                    .ForMember(d => d.ReturnEndDate, o => o.MapFrom(s => s.ReturnPeriod != null ? s.ReturnPeriod.EndDate : null))
                     .ForMember(d => d.TenantId, o => o.MapFrom(s => s.TenantId))
                     .ForMember(d => d.State, o => o.Ignore());
 
@@ -32,6 +36,8 @@
                     .ForMember(d => d.FirstName, o => o.MapFrom(s => s.FirstName))
                     .ForMember(d => d.LastName, o => o.MapFrom(s => s.LastName))
                     .ForMember(d => d.Region, o => o.MapFrom(s => s.Location))
+                    .ForMember(d => d.DeliveryPeriod, o => o.MapFrom(s => Period.Create(s.DeliveryStartDate, s.DeliveryEndDate)))
+                    .ForMember(d => d.ReturnPeriod, o => o.MapFrom(s => Period.Create(s.ReturnStartDate, s.ReturnEndDate)))
                     .ForMember(d => d.TenantId, o => o.MapFrom(s => s.TenantId))
                     .ForMember(d => d.Total, o => o.MapFrom(s => s.Total));
             });

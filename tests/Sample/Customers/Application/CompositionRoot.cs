@@ -42,14 +42,14 @@
                                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                                     .Mediator(sp.GetRequiredService<IMediator>())
                                     .Provider(sp.GetRequiredService<ICosmosSqlProvider<Customer>>())))))); // v3
-                                                                                                           //.Provider(new CosmosDbSqlProviderV2<Customer>( // v2
-                                                                                                           //    logger: sp.GetRequiredService<ILogger<CosmosDbSqlProviderV2<Customer>>>(),
-                                                                                                           //    client: CosmosDbClientV2.Create(cosmosDbConfiguration.ServiceEndpointUri, cosmosDbConfiguration.AuthKeyOrResourceToken),
-                                                                                                           //    databaseId: cosmosDbConfiguration.DatabaseId,
-                                                                                                           //    collectionIdFactory: () => cosmosDbConfiguration.CollectionId,
-                                                                                                           //    partitionKeyPath: cosmosDbConfiguration.CollectionPartitionKey,
-                                                                                                           //    throughput: cosmosDbConfiguration.CollectionOfferThroughput,
-                                                                                                           //    isMasterCollection: cosmosDbConfiguration.IsMasterCollection)))))));
+                                    //.Provider(new CosmosDbSqlProviderV2<Customer>( // v2
+                                    //    logger: sp.GetRequiredService<ILogger<CosmosDbSqlProviderV2<Customer>>>(),
+                                    //    client: CosmosDbClientV2.Create(cosmosDbConfiguration.ServiceEndpointUri, cosmosDbConfiguration.AuthKeyOrResourceToken),
+                                    //    databaseId: cosmosDbConfiguration.DatabaseId,
+                                    //    collectionIdFactory: () => cosmosDbConfiguration.CollectionId,
+                                    //    partitionKeyPath: cosmosDbConfiguration.CollectionPartitionKey,
+                                    //    throughput: cosmosDbConfiguration.CollectionOfferThroughput,
+                                    //    isMasterCollection: cosmosDbConfiguration.IsMasterCollection)))))));
             }).AddScoped<ICosmosSqlProvider<Customer>>(sp =>
             {
                 return new CosmosSqlProviderV3<Customer>(o => o
