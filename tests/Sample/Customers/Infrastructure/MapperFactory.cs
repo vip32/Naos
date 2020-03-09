@@ -31,13 +31,13 @@
 
                 c.CreateMap<DtoOrder, Order>()
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
-                    .ForMember(d => d.CustomerNumber, o => o.MapFrom(s => s.Customer))
+                    .ForMember(d => d.CustomerNumber, o => o.MapFrom(s => s.Customer)) // can map to private set
                     .ForMember(d => d.OrderNumber, o => o.MapFrom(s => s.Order))
                     .ForMember(d => d.FirstName, o => o.MapFrom(s => s.FirstName))
                     .ForMember(d => d.LastName, o => o.MapFrom(s => s.LastName))
                     .ForMember(d => d.Region, o => o.MapFrom(s => s.Location))
-                    .ForMember(d => d.DeliveryPeriod, o => o.MapFrom(s => Period.Create(s.DeliveryStartDate, s.DeliveryEndDate)))
-                    .ForMember(d => d.ReturnPeriod, o => o.MapFrom(s => Period.Create(s.ReturnStartDate, s.ReturnEndDate)))
+                    .ForMember(d => d.DeliveryPeriod, o => o.MapFrom(s => Period.Create(s.DeliveryStartDate, s.DeliveryEndDate))) // can map to private set
+                    .ForMember(d => d.ReturnPeriod, o => o.MapFrom(s => Period.Create(s.ReturnStartDate, s.ReturnEndDate))) // can map to private set
                     .ForMember(d => d.TenantId, o => o.MapFrom(s => s.TenantId))
                     .ForMember(d => d.Total, o => o.MapFrom(s => s.Total));
             });
