@@ -2,7 +2,6 @@
 {
     using System;
     using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.Configuration.AzureAppConfiguration;
     using Microsoft.Extensions.Hosting;
     using Naos.Foundation;
     using Naos.Foundation.Infrastructure;

@@ -4,7 +4,6 @@
     using MediatR;
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Azure.ServiceBus.Management;
-    using Naos.Foundation;
     using Naos.Queueing.Domain;
 
     public class AzureServiceBusQueueOptions : QueueOptionsBase

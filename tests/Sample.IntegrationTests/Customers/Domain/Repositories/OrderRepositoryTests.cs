@@ -8,7 +8,6 @@
     using Naos.Foundation;
     using Naos.Foundation.Domain;
     using Naos.Sample.Customers.Domain;
-    using NSubstitute;
     using Shouldly;
     using Xunit;
 

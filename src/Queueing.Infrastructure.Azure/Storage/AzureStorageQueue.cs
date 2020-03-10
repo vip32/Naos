@@ -5,7 +5,6 @@
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
-    using Microsoft.Azure.Amqp.Framing;
     using Microsoft.Extensions.Logging;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Queue;

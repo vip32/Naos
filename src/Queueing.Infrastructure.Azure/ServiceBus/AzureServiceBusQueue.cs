@@ -14,7 +14,6 @@
     using Naos.Foundation.Domain;
     using Naos.Queueing.Domain;
     using Naos.Tracing.Domain;
-    using Polly;
 
     public class AzureServiceBusQueue<TData> : QueueBase<TData, AzureServiceBusQueueOptions>
          where TData : class

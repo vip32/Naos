@@ -18,7 +18,6 @@
     using Naos.Foundation;
     using Naos.Queueing;
     using Naos.Queueing.Domain;
-    using Naos.Queueing.Infrastructure.Azure;
 
     [ExcludeFromCodeCoverage]
     public static class CommandRequestOptionsExtensions

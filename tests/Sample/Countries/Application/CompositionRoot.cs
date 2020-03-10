@@ -7,12 +7,7 @@
     using MediatR;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    using Naos.Foundation.Application;
     using Naos.Foundation.Domain;
-    using Naos.Queueing;
-    using Naos.Queueing.Domain;
-    using Naos.Queueing.Infrastructure.Azure;
-    using Naos.Sample.Countries.Application;
     using Naos.Sample.Countries.Domain;
     using Naos.Sample.Countries.Infrastructure;
     using Naos.Tracing.Domain;

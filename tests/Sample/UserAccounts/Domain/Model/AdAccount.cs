@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using EnsureThat;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Naos.Foundation;
     using Naos.Foundation.Domain;
 

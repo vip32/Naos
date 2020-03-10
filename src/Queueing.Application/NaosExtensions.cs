@@ -1,7 +1,6 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
-    using System.Collections;
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
     using MediatR;

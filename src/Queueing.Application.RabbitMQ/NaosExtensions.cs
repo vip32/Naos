@@ -4,7 +4,6 @@
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
     using MediatR;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
