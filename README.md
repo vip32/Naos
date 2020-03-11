@@ -201,6 +201,7 @@ application's modularity.
 ### Design Principles
 
 - High cohesion
+- Low coupling
 - Autonomous
 - Domain centric
 - Resiliency
