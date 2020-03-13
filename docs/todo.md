@@ -37,6 +37,8 @@ Marketing
 
 TODO:
 
+switch to Azure AppConfiguration https://github.com/Azure/AppConfiguration/issues/45
+
 [DONE] Drop .Core from the namespace (net5!)
   - Naos.Foundation + Naos.XYZ
 
