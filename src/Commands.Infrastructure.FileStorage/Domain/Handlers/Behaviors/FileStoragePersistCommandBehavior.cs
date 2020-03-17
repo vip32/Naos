@@ -1,9 +1,11 @@
 ﻿namespace Naos.Commands.Infrastructure.FileStorage
 {
+    using System.IO;
     using System.Threading.Tasks;
     using EnsureThat;
     using Naos.Commands.Application;
     using Naos.FileStorage.Domain;
+    using Naos.FileStorage.Infrastructure;
     using Naos.Foundation;
 
     public class FileStoragePersistCommandBehavior : ICommandBehavior
@@ -18,9 +20,9 @@
             ISerializer serializer = null,
             string pathTemplate = "{id}-{type}.json")
         {
-            EnsureArg.IsNotNull(storage, nameof(storage));
-
-            this.storage = storage;
+            //EnsureArg.IsNotNull(storage, nameof(storage));
+            this.storage = storage ??= new FolderFileStorage(o => o
+                .Folder(Path.Combine(Path.GetTempPath(), "naos_commands", "journal")));
             this.serializer = serializer ?? new JsonNetSerializer(DefaultJsonSerializerSettings.Create());
             this.pathTemplate = pathTemplate ?? "{id}-{type}";
         }

@@ -1,7 +1,6 @@
 namespace Naos.Sample.Application.Web
 {
     using System.Collections.Generic;
-    using System.IO;
     using System.Net;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -13,7 +12,6 @@ namespace Naos.Sample.Application.Web
     using Naos.Application.Web;
     using Naos.Commands.Application;
     using Naos.Commands.Infrastructure.FileStorage;
-    using Naos.FileStorage.Infrastructure;
     using Naos.JobScheduling.Domain;
     using Naos.Messaging.Domain;
     using Naos.Queueing.Domain;
@@ -37,19 +35,6 @@ namespace Naos.Sample.Application.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddHttpContextAccessor()
-                .AddMvc()
-                    .AddNaos(o =>
-                    {
-                        // Countries repository is exposed with a dedicated controller, no need to register here
-                        o.AddEndpoint<Customers.Domain.Customer, Customers.Domain.ICustomerRepository>();
-                        o.AddEndpoint<Inventory.Domain.ProductInventory, Inventory.Domain.IInventoryRepository>();
-                        o.AddEndpoint<Inventory.Domain.ProductReplenishment, Inventory.Domain.IReplenishmentRepository>();
-                        o.AddEndpoint<UserAccounts.Domain.UserAccount>(); // =implicit IRepository<UserAccount>
-                        o.AddEndpoint<UserAccounts.Domain.UserVisit>(); // =implicit IRepository<UserVisit>
-                    });
-
-            services
                 .AddNaos(this.Configuration, "Product", "Capability", new[] { "All" }, n => n
                     //.AddModule<CustomersModule>()>> INaosModule
                     //.AddModule(m => m { m.Context.Services.AddScoped<....>()}, "customers")
@@ -68,13 +53,20 @@ namespace Naos.Sample.Application.Web
                     .AddRequestCorrelation() // do IMPLICIT!
                     .AddRequestFiltering() // do IMPLICIT! XXXX
                     .AddServiceExceptions() // do IMPLICIT! XXXX
+                    .AddWebApi(o =>
+                    {
+                        // Countries repository is exposed with a dedicated controller, no need to register here
+                        o.AddEndpoint<Customers.Domain.Customer, Customers.Domain.ICustomerRepository>();
+                        o.AddEndpoint<Inventory.Domain.ProductInventory, Inventory.Domain.IInventoryRepository>();
+                        o.AddEndpoint<Inventory.Domain.ProductReplenishment, Inventory.Domain.IReplenishmentRepository>();
+                        o.AddEndpoint<UserAccounts.Domain.UserAccount>(); // =implicit IRepository<UserAccount>
+                        o.AddEndpoint<UserAccounts.Domain.UserVisit>(); // =implicit IRepository<UserVisit>
+                    })
                     .AddCommands(o => o
                         .AddBehavior<TracerCommandBehavior>()
                         .AddBehavior<ValidateCommandBehavior>()
                         .AddBehavior<JournalCommandBehavior>()
-                        .AddBehavior(sp => new FileStoragePersistCommandBehavior(
-                            new FolderFileStorage(o => o
-                                .Folder(Path.Combine(Path.GetTempPath(), "naos_commands", "journal")))))
+                        .AddBehavior<FileStoragePersistCommandBehavior>()
                         .AddEndpoints(o => o
                             .Post<CreateCustomerCommand>(
                                 "api/commands/customers/create",
@@ -89,11 +81,11 @@ namespace Naos.Sample.Application.Web
                                 groupName: "Customers")
                             //.UseInMemoryStorage()
                             .UseAzureBlobStorage() // *
-                                                   //.UseFolderStorage()
-                                                   //.UseInMemoryQueue()
+                            //.UseFolderStorage()
+                            //.UseInMemoryQueue()
                             .UseAzureStorageQueue() // *
-                                                    //.UseAzureServiceBusQueue()
-                                                    //.UseRabbitMQQueue()
+                            //.UseAzureServiceBusQueue()
+                            //.UseRabbitMQQueue()
                             .GetQueued<PingCommand>("api/commands/queue/ping")
                             .GetQueued<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>(
                                 "api/commands/queue/customers/active",
