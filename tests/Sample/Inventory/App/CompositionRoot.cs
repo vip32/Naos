@@ -16,7 +16,7 @@
 
     public static partial class CompositionRoot
     {
-        public static ModuleOptions InventoryModule(
+        public static ModuleOptions AddInventoryModule(
             this ModuleOptions options,
             string section = "naos:sample:inventory")
         {
