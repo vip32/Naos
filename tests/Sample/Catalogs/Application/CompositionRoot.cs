@@ -11,7 +11,7 @@
 
     public static partial class CompositionRoot
     {
-        public static ModuleOptions AddCatalogsModule(
+        public static ModuleOptions CatalogsModule(
             this ModuleOptions options,
             string section = "naos:sample:catalogs")
         {

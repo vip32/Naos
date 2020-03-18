@@ -6,7 +6,7 @@
     {
         public void Configure(ModuleOptions options, string section = "naos:sample:customers")
         {
-            CompositionRoot.AddCustomersModule(options, section);
+            CompositionRoot.CustomersModule(options, section);
         }
     }
 }

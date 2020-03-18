@@ -40,11 +40,11 @@ namespace Naos.Sample.Application.Web
                     //.AddModule(m => m { m.Context.Services.AddScoped<....>()}, "customers")
                     //.AddModules() >> discover INaosModule!
                     .AddModules(m => m
-                        .AddCountriesModule()
-                        .AddCustomersModule()
-                        .AddUserAccountsModule()
-                        .AddCatalogsModule()
-                        .AddInventoryModule())
+                        .CountriesModule()
+                        .CustomersModule()
+                        .UserAccountsModule()
+                        .CatalogsModule()
+                        .InventoryModule())
                     .AddSwaggerDocumentation() // do IMPLICIT! XXXX
                     .AddServiceContext() // do IMPLICIT! XXXX
                     .AddOidcAuthentication()

@@ -17,7 +17,7 @@
 
     public static partial class CompositionRoot
     {
-        public static ModuleOptions AddCustomersModule(
+        public static ModuleOptions CustomersModule(
             this ModuleOptions options,
             string section = "naos:sample:customers")
         {

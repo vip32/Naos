@@ -15,7 +15,7 @@
     [ExcludeFromCodeCoverage]
     public static partial class CompositionRoot
     {
-        public static ModuleOptions AddCountriesModule(
+        public static ModuleOptions CountriesModule(
             this ModuleOptions options)
         {
             EnsureArg.IsNotNull(options, nameof(options));

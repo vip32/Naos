@@ -19,7 +19,7 @@
     /// </summary>
     public static partial class CompositionRoot
     {
-        public static ModuleOptions AddUserAccountsModule(
+        public static ModuleOptions UserAccountsModule(
             this ModuleOptions options,
             string connectionString = null,
             string section = "naos:sample:userAccounts:entityFramework",
