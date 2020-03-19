@@ -46,8 +46,13 @@
                 //od.ToTable("EntityStates");
             });
 
-            modelBuilder.Entity<UserAccount>().OwnsOne(e => e.AdAccount, od =>
-                od.ToTable("AdAccounts")); // map valueobject to own table
+            //modelBuilder.Entity<UserAccount>().OwnsOne(e => e.AdAccount, od => // map valueobject to own table
+            //    od.ToTable("AdAccounts"));
+            modelBuilder.Entity<UserAccount>().OwnsOne(e => e.AdAccount, od => // map valueobject to same table
+            {
+                od.Property(p => p.Name).HasColumnName("AdName");
+                od.Property(p => p.Domain).HasColumnName("AdDomain");
+            });
 
             modelBuilder.Entity<UserAccount>().OwnsOne(e => e.Status)
                 .Property(b => b.Value)

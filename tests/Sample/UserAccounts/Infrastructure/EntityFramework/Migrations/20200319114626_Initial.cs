@@ -45,6 +45,8 @@
                     LastVisitDate = table.Column<DateTimeOffset>(nullable: true),
                     RegisterDate = table.Column<DateTimeOffset>(nullable: true),
                     TenantId = table.Column<string>(nullable: true),
+                    AdDomain = table.Column<string>(nullable: true),
+                    AdName = table.Column<string>(nullable: true),
                     Status = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -91,41 +93,16 @@
                 {
                     table.PrimaryKey("PK_UserVisits", x => x.Id);
                 });
-
-            migrationBuilder.CreateTable(
-                name: "AdAccounts",
-                schema: "useraccounts",
-                columns: table => new
-                {
-                    UserAccountId = table.Column<Guid>(nullable: false),
-                    Domain = table.Column<string>(nullable: true),
-                    Name = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AdAccounts", x => x.UserAccountId);
-                    table.ForeignKey(
-                        name: "FK_AdAccounts_UserAccounts_UserAccountId",
-                        column: x => x.UserAccountId,
-                        principalSchema: "useraccounts",
-                        principalTable: "UserAccounts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AdAccounts",
+                name: "UserAccounts",
                 schema: "useraccounts");
 
             migrationBuilder.DropTable(
                 name: "UserVisits",
-                schema: "useraccounts");
-
-            migrationBuilder.DropTable(
-                name: "UserAccounts",
                 schema: "useraccounts");
         }
     }

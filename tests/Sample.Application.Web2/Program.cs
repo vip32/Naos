@@ -16,10 +16,7 @@ namespace Naos.Sample.Application.Web
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 //.ConfigureAppConfiguration((ctx, cfg) => cfg.AddNaos(ctx))
-                .ConfigureWebHostDefaults(builder =>
-                {
-                    builder.UseStartup<Startup>();
-                })
+                .ConfigureWebHostDefaults(builder => builder.UseStartup<Startup>())
                 .UseDefaultServiceProvider((ctx, opt) => // https://andrewlock.net/new-in-asp-net-core-3-service-provider-validation/
                 {
                     //options.ValidateScopes = context.HostingEnvironment.IsDevelopment();

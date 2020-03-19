@@ -45,13 +45,15 @@
                         sp.GetService<ITracer>(),
                         new RepositoryLoggingDecorator<UserAccount>(
                             sp.GetRequiredService<ILogger<UserAccountRepository>>(),
-                            new RepositoryTenantDecorator<UserAccount>(
-                                "naos_sample_test", // TODO: resolve from runtime context
-                                new RepositorySoftDeleteDecorator<UserAccount>(
+                                    //new RepositoryTenantDecorator<UserAccount>(
+                                    //"naos_sample_test", // TODO: resolve from runtime context
+                                    //new RepositorySoftDeleteDecorator<UserAccount>(
+#pragma warning disable SA1137 // Elements should have the same indentation
                                     new EntityFrameworkRepository<UserAccount>(o => o
+#pragma warning restore SA1137 // Elements should have the same indentation
                                         .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                                         .Mediator(sp.GetRequiredService<IMediator>())
-                                        .DbContext(sp.GetRequiredService<UserAccountsDbContext>())))))));
+                                        .DbContext(sp.GetRequiredService<UserAccountsDbContext>())))));
             });
 
             options.Context.Services.AddScoped<IGenericRepository<UserVisit>>(sp =>
@@ -86,9 +88,9 @@
             options.Context.Services.AddStartupTask<EchoStartupTask>(new TimeSpan(0, 0, 3));
             options.Context.Services.AddSeederStartupTask<UserAccountsDbContext, UserAccount>(new[]
             {
-                new UserAccount() { Id = Guid.Parse("100fb10f-2ad4-4bd1-9b33-6410a5ce7b25"), Email = "admin@naos.com", TenantId = "naos_sample_test", Status = UserAccountStatus.Active },
-                new UserAccount() { Id = Guid.Parse("100fb10f-2ad4-4bd1-9b33-6410a5ce7b26"), Email = "test26@unknown.com", TenantId = "naos_sample_test", Status = UserAccountStatus.Active },
-                new UserAccount() { Id = Guid.Parse("100fb10f-2ad4-4bd1-9b33-6410a5ce7b27"), Email = "test27@unknown.com", TenantId = "naos_sample_test", Status = UserAccountStatus.Active },
+                new UserAccount() { Id = Guid.Parse("100fb10f-2ad4-4bd1-9b33-6410a5ce7b25"), Email = "admin@naos.com", TenantId = "naos_sample_test", AdAccount = AdAccount.For("East\\admin"), Status = UserAccountStatus.Active },
+                new UserAccount() { Id = Guid.Parse("100fb10f-2ad4-4bd1-9b33-6410a5ce7b26"), Email = "test26@unknown.com", TenantId = "naos_sample_test", AdAccount = AdAccount.For("East\\test26"), Status = UserAccountStatus.Active },
+                new UserAccount() { Id = Guid.Parse("100fb10f-2ad4-4bd1-9b33-6410a5ce7b27"), Email = "test27@unknown.com", TenantId = "naos_sample_test", AdAccount = AdAccount.For("East\\test27"), Status = UserAccountStatus.Active },
             }, delay: new TimeSpan(0, 0, 10));
             //options.Context.Services.AddStartupTask(sp =>
             //    new SeederStartupTask(
