@@ -116,10 +116,12 @@
                 _ = queue.EnqueueAsync(new Customer()).Result;
                 _ = queue.EnqueueAsync(new Customer()).Result;
                 return queue;
-            }).AddHealthChecks()
-                .AddAzureQueueStorage(
-                    queueStorageConfiguration.ConnectionString,
-                    name: "Customers-azurequeuestorage");
+            });
+
+            options.Context.Services.AddHealthChecks()
+              .AddAzureQueueStorage(
+                  queueStorageConfiguration.ConnectionString,
+                  name: "Customers-azurequeuestorage");
 
             //options.Context.Services.AddSingleton<IValidator<CreateCustomerCommand>>(new CreateCustomerCommandValidator());
             options.Context.Messages.Add("naos services builder: customers service added");
