@@ -9,10 +9,8 @@
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Commands.Application;
     using Naos.Commands.Infrastructure.FileStorage;
-    using Naos.Configuration.Application;
     using Naos.FileStorage.Infrastructure;
     using Naos.Foundation;
-    using Naos.Foundation.Infrastructure;
     using Naos.Sample.Catalogs.Application;
     using Naos.Sample.Customers.Application;
     using Naos.Sample.Inventory.Application;

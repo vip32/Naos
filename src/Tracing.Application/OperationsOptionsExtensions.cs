@@ -4,7 +4,6 @@
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
     using MediatR;
-    using Microsoft.Extensions.Logging;
     using Naos.Operations;
     using Naos.Tracing.Application;
     using Naos.Tracing.Domain;

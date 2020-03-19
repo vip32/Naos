@@ -2,7 +2,6 @@
 {
     using System;
     using EnsureThat;
-    using Microsoft.Extensions.Logging;
     using Naos.ServiceDiscovery.Application;
 
     public static class NaosExtensions

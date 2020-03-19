@@ -2,7 +2,6 @@
 {
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
-    using Naos.Configuration.Application;
     using Naos.Foundation;
     using Naos.Operations.Domain;
     using Shouldly;

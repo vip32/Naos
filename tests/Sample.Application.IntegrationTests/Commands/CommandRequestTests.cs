@@ -9,7 +9,6 @@
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Commands.Application;
     using Naos.Commands.Infrastructure.FileStorage;
-    using Naos.Configuration.Application;
     using Naos.FileStorage.Infrastructure;
     using Naos.Foundation;
     using Shouldly;

@@ -6,7 +6,6 @@
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
     using Naos.Authentication.Application.Web;
     using Naos.Foundation;
     using Naos.Foundation.Application;

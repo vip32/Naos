@@ -3,7 +3,6 @@
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
     using Microsoft.Extensions.Diagnostics.HealthChecks;
-    using Microsoft.Extensions.Logging;
     using Naos.Configuration.Application;
     using Naos.Foundation;
     using Naos.ServiceContext.Application.Web;

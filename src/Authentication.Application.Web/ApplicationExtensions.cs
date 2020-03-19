@@ -3,7 +3,6 @@
     using EnsureThat;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Naos.Authentication.Application.Web;
 

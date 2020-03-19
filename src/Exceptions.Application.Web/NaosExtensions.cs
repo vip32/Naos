@@ -1,10 +1,8 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
-    using System;
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Logging;
     using Naos.Configuration.Application;
     using Naos.Foundation;
     using Naos.ServiceExceptions.Application.Web;

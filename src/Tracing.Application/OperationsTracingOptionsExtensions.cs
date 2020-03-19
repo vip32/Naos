@@ -2,7 +2,6 @@
 {
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
-    using Microsoft.Extensions.Logging;
     using Naos.Tracing.Application;
     using Naos.Tracing.Domain;
 
