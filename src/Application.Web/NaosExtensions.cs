@@ -198,7 +198,7 @@
                     }
                 });
 
-            naosOptions.Context.Messages.Add($"naos services builder: swagger documentation added");
+            naosOptions.Context.Messages.Add("naos services builder: swagger documentation added");
             //naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Swagger", Description = "Documentation", EchoRoute = "naos/swagger/echo" });
 
             return naosOptions;

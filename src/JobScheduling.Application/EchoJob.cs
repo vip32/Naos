@@ -66,7 +66,7 @@
             {
                 if (cancellationToken.IsCancellationRequested)
                 {
-                    this.logger.LogInformation($"{{LogKey:l}} job cancelled", LogKeys.JobScheduling);
+                    this.logger.LogInformation("{LogKey:l} job cancelled", LogKeys.JobScheduling);
                     return; //Task.FromCanceled(cancellationToken);
                 }
 

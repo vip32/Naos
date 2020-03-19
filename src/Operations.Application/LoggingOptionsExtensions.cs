@@ -70,7 +70,7 @@
                     //outputTemplate: "[{Timestamp:HH:mm:ss.fff} {Level:u3}] {CorrelationId}|{Service}|{SourceContext}: {Message:lj}{NewLine}{Exception}");
                     outputTemplate: "[{Timestamp:HH:mm:ss.fff} {Level:u3}] {Message:lj}{NewLine}{Exception}");
 
-                options.Context.Messages.Add($"naos services builder: logging console sink added");
+                options.Context.Messages.Add("naos services builder: logging console sink added");
             }
 
             return options;

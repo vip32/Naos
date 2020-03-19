@@ -101,7 +101,7 @@
             options.Context.Services.AddHealthChecks() // https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks?view=aspnetcore-3.1#entity-framework-core-dbcontext-probe
                 .AddDbContextCheck<UserAccountsDbContext>(name: "UserAccounts-dbcontext");
 
-            options.Context.Messages.Add($"naos services builder: useraccounts service added");
+            options.Context.Messages.Add("naos services builder: useraccounts service added");
 
             return options;
         }

@@ -40,7 +40,7 @@
             }
 
             naosOptions.Context.Application.UseMiddleware<RequestCorrelationMiddleware>(Options.Create(options));
-            naosOptions.Context.Messages.Add($"naos application builder: request correlation added");
+            naosOptions.Context.Messages.Add("naos application builder: request correlation added");
             return naosOptions;
         }
     }

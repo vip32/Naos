@@ -35,11 +35,11 @@
 
             if (naosOptions.Context.Application.ApplicationServices.GetService(typeof(IFilterContextFactory)) == null)
             {
-                throw new InvalidOperationException($"Unable to find the required services. You must call the AddRequestFiltering method in ConfigureServices in the application startup code.");
+                throw new InvalidOperationException("Unable to find the required services. You must call the AddRequestFiltering method in ConfigureServices in the application startup code.");
             }
 
             naosOptions.Context.Application.UseMiddleware<RequestFilterMiddleware>(Options.Create(options));
-            naosOptions.Context.Messages.Add($"naos application builder: request filtering added");
+            naosOptions.Context.Messages.Add("naos application builder: request filtering added");
             return naosOptions;
         }
     }

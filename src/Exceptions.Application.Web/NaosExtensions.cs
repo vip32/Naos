@@ -40,7 +40,7 @@
                     o.SuppressModelStateInvalidFilter = true;
                 });
 
-            naosOptions.Context.Messages.Add($"naos services builder: service exceptions added");
+            naosOptions.Context.Messages.Add("naos services builder: service exceptions added");
             naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceExceptions" });
 
             return naosOptions;

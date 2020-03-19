@@ -34,7 +34,7 @@
 
             optionsAction?.Invoke(new QueueingOptions(naosOptions.Context));
 
-            naosOptions.Context.Messages.Add($"naos services builder: queueing added"); // TODO: list available commands/handlers
+            naosOptions.Context.Messages.Add("naos services builder: queueing added"); // TODO: list available commands/handlers
             naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Queueing", EchoRoute = "naos/queueing/echo" });
 
             return naosOptions;

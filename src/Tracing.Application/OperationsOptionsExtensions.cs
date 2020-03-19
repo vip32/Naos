@@ -19,7 +19,7 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            options.Context.Messages.Add($"naos services builder: tracing added");
+            options.Context.Messages.Add("naos services builder: tracing added");
             options.Context.Services.AddScoped<ITracer>(sp =>
             {
                 return new Tracer(

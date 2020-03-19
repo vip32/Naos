@@ -75,7 +75,7 @@
                 new Country { Code = "us", LanguageCodes = new[] {"en-us" }, Name = "United States", TenantId = "naos_sample_test", Id = "us" },
             }, delay: new TimeSpan(0, 0, 3));
 
-            options.Context.Messages.Add($"naos services builder: countries service added");
+            options.Context.Messages.Add("naos services builder: countries service added");
 
             return options;
         }

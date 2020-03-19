@@ -23,7 +23,7 @@
 
             naosOptions.Context.Services.AddScoped<ILogEventService, LogEventService>();
 
-            naosOptions.Context.Messages.Add($"naos services builder: operations added");
+            naosOptions.Context.Messages.Add("naos services builder: operations added");
             naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Operations" });
 
             return naosOptions;

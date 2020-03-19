@@ -64,7 +64,7 @@
             }
             catch (IOException ex)
             {
-                this.logger.LogCritical(ex, $"{{LogKey:l}} ex.Message", LogKeys.AppMessaging);
+                this.logger.LogCritical(ex, "{LogKey:l} ex.Message", LogKeys.AppMessaging);
             }
         }
 

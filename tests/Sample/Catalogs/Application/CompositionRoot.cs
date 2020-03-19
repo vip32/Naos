@@ -60,7 +60,7 @@
             //        .AddIndex(p => p.Price)
             //        .AddIndex(p => p.HasStock).Build()));
 
-            options.Context.Messages.Add($"naos services builder: catalogs service added");
+            options.Context.Messages.Add("naos services builder: catalogs service added");
 
             return options;
         }
