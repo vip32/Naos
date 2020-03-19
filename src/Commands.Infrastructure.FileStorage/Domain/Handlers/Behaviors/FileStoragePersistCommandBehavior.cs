@@ -16,7 +16,7 @@
         private ICommandBehavior next;
 
         public FileStoragePersistCommandBehavior(
-            IFileStorage storage,
+            IFileStorage storage = null,
             ISerializer serializer = null,
             string pathTemplate = "{id}-{type}.json")
         {
