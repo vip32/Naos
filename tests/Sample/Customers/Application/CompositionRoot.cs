@@ -1,5 +1,6 @@
 ﻿namespace Naos.Sample.Customers.Application
 {
+    using System;
     using EnsureThat;
     using Humanizer;
     using MediatR;
@@ -42,14 +43,14 @@
                                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                                     .Mediator(sp.GetRequiredService<IMediator>())
                                     .Provider(sp.GetRequiredService<ICosmosSqlProvider<Customer>>())))))); // v3
-                                    //.Provider(new CosmosDbSqlProviderV2<Customer>( // v2
-                                    //    logger: sp.GetRequiredService<ILogger<CosmosDbSqlProviderV2<Customer>>>(),
-                                    //    client: CosmosDbClientV2.Create(cosmosDbConfiguration.ServiceEndpointUri, cosmosDbConfiguration.AuthKeyOrResourceToken),
-                                    //    databaseId: cosmosDbConfiguration.DatabaseId,
-                                    //    collectionIdFactory: () => cosmosDbConfiguration.CollectionId,
-                                    //    partitionKeyPath: cosmosDbConfiguration.CollectionPartitionKey,
-                                    //    throughput: cosmosDbConfiguration.CollectionOfferThroughput,
-                                    //    isMasterCollection: cosmosDbConfiguration.IsMasterCollection)))))));
+                                                                                                           //.Provider(new CosmosDbSqlProviderV2<Customer>( // v2
+                                                                                                           //    logger: sp.GetRequiredService<ILogger<CosmosDbSqlProviderV2<Customer>>>(),
+                                                                                                           //    client: CosmosDbClientV2.Create(cosmosDbConfiguration.ServiceEndpointUri, cosmosDbConfiguration.AuthKeyOrResourceToken),
+                                                                                                           //    databaseId: cosmosDbConfiguration.DatabaseId,
+                                                                                                           //    collectionIdFactory: () => cosmosDbConfiguration.CollectionId,
+                                                                                                           //    partitionKeyPath: cosmosDbConfiguration.CollectionPartitionKey,
+                                                                                                           //    throughput: cosmosDbConfiguration.CollectionOfferThroughput,
+                                                                                                           //    isMasterCollection: cosmosDbConfiguration.IsMasterCollection)))))));
             }).AddScoped<ICosmosSqlProvider<Customer>>(sp =>
             {
                 return new CosmosSqlProviderV3<Customer>(o => o
@@ -94,7 +95,14 @@
                     s.UriEndpoint = configuration.ServiceEndpointUri;
                     s.PrimaryKey = configuration.AuthKeyOrResourceToken;
                 },
-                    name: $"{typeof(Order).Name.Pluralize()}-cosmosdb");
+                name: $"{typeof(Order).Name.Pluralize()}-cosmosdb");
+
+            options.Context.Services.AddSeederStartupTask<ICustomerRepository, Customer>(new[]
+            {
+                new Customer() { Id = "100fb10f-2ad4-4bd1-9b33-6410a5ce1b25", Email = "test10@unknown.com", TenantId = "naos_sample_test", Gender = "Male", CustomerNumber = "AB-10010", FirstName = "John", LastName = "Doe", Region = "East" },
+                new Customer() { Id = "100fb10f-2ad4-4bd1-9b33-6410a5ce1b26", Email = "test20@unknown.com", TenantId = "naos_sample_test", Gender = "Female", CustomerNumber = "AB-10020", FirstName = "Lisa", LastName = "Doe", Region = "West" },
+                new Customer() { Id = "100fb10f-2ad4-4bd1-9b33-6410a5ce1b27", Email = "test30@unknown.com", TenantId = "naos_sample_test", Gender = "Male", CustomerNumber = "AB-10030", FirstName = "Paul", LastName = "Doe", Region = "East" },
+            }, delay: new TimeSpan(0, 0, 10));
 
             var queueStorageConfiguration = options.Context.Configuration?.GetSection($"{section}:queueStorage").Get<QueueStorageConfiguration>();
             options.Context.Services.AddSingleton<IQueue<Customer>>(sp =>
