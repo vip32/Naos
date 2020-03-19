@@ -26,7 +26,7 @@
 
             // needed for mediator
             naosOptions.Context.Services.Scan(scan => scan
-                .FromApplicationDependencies(a => !a.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) && !a.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase))
+                .FromApplicationDependencies(a => !a.FullName.StartsWithAny(new[] { "Microsoft", "System", "Scrutor", "Consul" }))
                 .AddClasses(classes => classes.Where(c => c.Name.EndsWith("QueueEventHandler", StringComparison.OrdinalIgnoreCase)))
                 //.FromAssembliesOf(typeof(QueueEventHandler<>))
                 //.AddClasses()

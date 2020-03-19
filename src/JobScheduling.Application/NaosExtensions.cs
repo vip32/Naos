@@ -7,6 +7,7 @@
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Naos.Configuration.Application;
+    using Naos.Foundation;
     using Naos.JobScheduling;
     using Naos.JobScheduling.Application;
     using Naos.JobScheduling.Domain;
@@ -25,7 +26,7 @@
 
             // needed for mediator
             naosOptions.Context.Services.Scan(scan => scan
-                .FromApplicationDependencies(a => !a.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) && !a.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase))
+                .FromApplicationDependencies(a => !a.FullName.StartsWithAny(new[] { "Microsoft", "System", "Scrutor", "Consul" }))
                 .AddClasses(classes => classes.Where(c => c.Name.EndsWith("JobEventHandler", StringComparison.OrdinalIgnoreCase)))
                 //.FromAssembliesOf(typeof(JobEventHandler<>))
                 //.AddClasses()
@@ -36,7 +37,7 @@
                 var options = new JobSchedulerOptions(
                     sp.GetRequiredService<ILoggerFactory>(),
                     sp.CreateScope().ServiceProvider.GetService(typeof(IMediator)) as IMediator,
-                    new ServiceProviderJobFactory(sp));
+                    new ServiceProviderJobFactory(sp.CreateScope().ServiceProvider));
                 optionsAction?.Invoke(options);
 
                 return new JobScheduler(

@@ -63,7 +63,7 @@
 
                 // needed for mediator, register console commands + handlers
                 options.Context.Services.Scan(scan => scan
-                    .FromApplicationDependencies(a => !a.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) && !a.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase))
+                    .FromApplicationDependencies(a => !a.FullName.StartsWithAny(new[] { "Microsoft", "System", "Scrutor", "Consul" }))
                     .AddClasses(classes => classes.Where(c => c.Name.EndsWith("ConsoleCommand", StringComparison.OrdinalIgnoreCase) || c.Name.EndsWith("ConsoleCommandEventHandler", StringComparison.OrdinalIgnoreCase)))
                     .AsImplementedInterfaces());
 

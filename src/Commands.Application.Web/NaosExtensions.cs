@@ -6,6 +6,7 @@
     using Microsoft.Extensions.Logging;
     using Naos.Commands.Application;
     using Naos.Commands.Application.Web;
+    using Naos.Foundation;
     using NSwag.Generation.Processors;
 
     [ExcludeFromCodeCoverage]
@@ -39,7 +40,7 @@
             options.Context.Services
                 .Scan(scan => scan // https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/
                     .FromExecutingAssembly()
-                    .FromApplicationDependencies(a => !a.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) && !a.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase))
+                    .FromApplicationDependencies(a => !a.FullName.StartsWithAny(new[] { "Microsoft", "System", "Scrutor", "Consul" }))
                     .AddClasses(classes => classes.AssignableTo(typeof(ICommandRequestExtension)), true));
 
             options.Context.Messages.Add("naos services builder: command request dispatcher added"); // TODO: list available command + routes

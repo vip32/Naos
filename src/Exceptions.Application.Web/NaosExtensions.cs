@@ -6,6 +6,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Naos.Configuration.Application;
+    using Naos.Foundation;
     using Naos.ServiceExceptions.Application.Web;
 
     [ExcludeFromCodeCoverage]
@@ -29,7 +30,7 @@
                 .AddSingleton(options ?? new ExceptionHandlerMiddlewareOptions() { HideDetails = hideDetails })
                 .Scan(scan => scan // https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/
                     .FromExecutingAssembly()
-                    .FromApplicationDependencies(a => !a.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) && !a.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase))
+                    .FromApplicationDependencies(a => !a.FullName.StartsWithAny(new[] { "Microsoft", "System", "Scrutor", "Consul" }))
                     .AddClasses(classes => classes.AssignableTo(typeof(IExceptionResponseHandler)), true)
                         .AsSelfWithInterfaces()
                         .WithSingletonLifetime())

@@ -6,6 +6,7 @@
     using Microsoft.Extensions.Logging;
     using Naos.Commands.Application;
     using Naos.Configuration.Application;
+    using Naos.Foundation;
 
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions
@@ -26,13 +27,13 @@
             naosOptions.Context.Services
                 .Scan(scan => scan // https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/
                     .FromExecutingAssembly()
-                    .FromApplicationDependencies(a => !a.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) && !a.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase))
+                    .FromApplicationDependencies(a => !a.FullName.StartsWithAny(new[] { "Microsoft", "System", "Scrutor", "Consul" }))
                     .AddClasses(classes => classes.AssignableTo(typeof(ICommandBehavior)), true));
 
             // needed for mediator, register all commands + handlers
             naosOptions.Context.Services
                 .Scan(scan => scan
-                    .FromApplicationDependencies(a => !a.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) && !a.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase))
+                    .FromApplicationDependencies(a => !a.FullName.StartsWithAny(new[] { "Microsoft", "System", "Scrutor", "Consul" }))
                     .AddClasses(classes => classes.Where(c =>
                         (c.Name.EndsWith("Command", StringComparison.OrdinalIgnoreCase) || c.Name.EndsWith("CommandHandler", StringComparison.OrdinalIgnoreCase)
                         || c.Name.EndsWith("Query", StringComparison.OrdinalIgnoreCase) || c.Name.EndsWith("QueryHandler", StringComparison.OrdinalIgnoreCase))

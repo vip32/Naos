@@ -5,6 +5,7 @@
     using EnsureThat;
     using Microsoft.Extensions.Logging;
     using Naos.Configuration.Application;
+    using Naos.Foundation;
     using Naos.Messaging;
     using Naos.Messaging.Application;
     using Naos.Messaging.Domain;
@@ -21,7 +22,7 @@
 
             naosOptions.Context.Services.Scan(scan => scan // https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/
                 .FromExecutingAssembly()
-                .FromApplicationDependencies(a => !a.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) && !a.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase))
+                .FromApplicationDependencies(a => !a.FullName.StartsWithAny(new[] { "Microsoft", "System", "Scrutor", "Consul" }))
                 .AddClasses(classes => classes.AssignableTo(typeof(IMessageHandler<>)), true));
 
             naosOptions.Context.Services.AddSingleton<Hosting.IHostedService>(sp =>

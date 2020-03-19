@@ -1,17 +1,21 @@
 namespace Naos.Sample.Application.Web
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Net;
+    using Colorful;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Naos.Application.Web;
     using Naos.Commands.Application;
     using Naos.Commands.Infrastructure.FileStorage;
+    using Naos.Foundation;
     using Naos.JobScheduling.Domain;
     using Naos.Messaging.Domain;
     using Naos.Queueing.Domain;
@@ -136,6 +140,18 @@ namespace Naos.Sample.Application.Web
                     //.UseRouterClientRegistry())
                     .AddServiceDiscoveryRouter(o => o
                         .UseFileSystemRegistry()));
+
+            // TODO: remove some offending DI registrations
+            //var sds = services.Where(s => s.ServiceType.FullName.EndsWithAny(new[] { "Exception", "Consul.IPreparedQueryEndpoint" }, System.StringComparison.OrdinalIgnoreCase)).ToList();
+            //foreach (var sd in sds)
+            //{
+            //    services.Remove(sd);
+            //}
+
+            //foreach (var s in services.Where(o => o.ServiceType.FullName.StartsWith("Naos", System.StringComparison.OrdinalIgnoreCase)).OrderBy(o => o.ServiceType.FullName))
+            //{
+            //    Console.WriteLine($"SP: [{s.Lifetime}] {s.ServiceType.FullName} >> {s.ImplementationType?.FullName}");
+            //}
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
