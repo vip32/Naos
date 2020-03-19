@@ -45,7 +45,6 @@ namespace Naos.Sample.Application.Web
                         .AddUserAccountsModule()
                         .AddCatalogsModule()
                         .AddInventoryModule())
-                    .AddSwaggerDocumentation() // do IMPLICIT! XXXX
                     .AddServiceContext() // do IMPLICIT! XXXX
                     .AddOidcAuthentication()
                     //.AddAuthenticationApiKeyStatic()
@@ -53,6 +52,7 @@ namespace Naos.Sample.Application.Web
                     .AddRequestCorrelation() // do IMPLICIT!
                     .AddRequestFiltering() // do IMPLICIT! XXXX
                     .AddServiceExceptions() // do IMPLICIT! XXXX
+                    .AddSwaggerDocumentation() // do IMPLICIT! XXXX
                     .AddWebApi(o =>
                     {
                         // Countries repository is exposed with a dedicated controller, no need to register here
