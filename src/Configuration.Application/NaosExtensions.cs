@@ -21,7 +21,6 @@
         /// Adds required services to support the Discovery functionality.
         /// </summary>
         /// <param name="services"></param>
-        /// <param name="configuration"></param>
         /// <param name="product"></param>
         /// <param name="capability"></param>
         /// <param name="tags"></param>
@@ -29,18 +28,21 @@
         /// <param name="environment"></param>
         /// <param name="section"></param>
         public static INaosBuilderContext AddNaos(
-            this IServiceCollection services,
-            IConfiguration configuration,
-            string product = null,
-            string capability = null,
-            string[] tags = null,
-            Action<NaosServicesContextOptions> optionsAction = null,
-            string environment = null,
-            string section = "naos")
+        this IServiceCollection services,
+        string product = null,
+        string capability = null,
+        string[] tags = null,
+        Action<NaosServicesContextOptions> optionsAction = null,
+        string environment = null,
+        string section = "naos")
         {
             Console.WriteLine("--- naos service start", System.Drawing.Color.LimeGreen);
             EnsureArg.IsNotNull(services, nameof(services));
 
+            //using var serviceProvider = services.BuildServiceProvider();
+            var configuration = /*serviceProvider.GetService<IConfiguration>() ??*/ NaosConfigurationFactory.Create();
+
+            services.AddSingleton(configuration);
             services.AddMediatr();
             services.Configure<ConsoleLifetimeOptions>(opts => opts.SuppressStatusMessages = true); // https://andrewlock.net/new-in-aspnetcore-3-structured-logging-for-startup-messages/
 
@@ -55,7 +57,13 @@
                     capability ?? naosConfiguration.Product,
                     tags: tags ?? naosConfiguration.Tags),
             };
-            context.Messages.Add($"{LogKeys.Startup} naos services builder: naos services added");
+
+            foreach(var provider in configuration?.Providers.Safe())
+            {
+                context.Messages.Add($"naos services builder: configuration provider added (type={provider.GetType().Name})");
+            }
+
+            context.Messages.Add("naos services builder: naos services added");
             //context.Services.AddSingleton(new NaosFeatureInformation { Name = "Naos", EchoRoute = "naos/servicecontext/echo" });
 
             // TODO: optional or provide own settings?
@@ -107,11 +115,11 @@
         {
             try
             {
-                var logger = services.BuildServiceProvider().GetRequiredService<ILoggerFactory>().CreateLogger("Naos");
-                logger.LogInformation($"{{LogKey:l}} service descriptor: {context.Descriptor} [{context.Descriptor.Tags.ToString("|")}]", LogKeys.Startup);
+                var logger = services.BuildServiceProvider().GetService<ILoggerFactory>().CreateLogger("Naos");
+                logger?.LogInformation($"{{LogKey:l}} service descriptor: {context.Descriptor} [{context.Descriptor.Tags.ToString("|")}]", LogKeys.Startup);
                 foreach (var message in context.Messages.Safe())
                 {
-                    logger.LogDebug(message);
+                    logger?.LogDebug($"{{LogKey:l}} {message.Replace("{", string.Empty, StringComparison.OrdinalIgnoreCase).Replace("}", string.Empty, StringComparison.OrdinalIgnoreCase):l}", LogKeys.Startup);
                 }
             }
             catch (InvalidOperationException)

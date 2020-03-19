@@ -38,7 +38,7 @@
                         configuration,
                         token?.AccessToken);
                 });
-                context.Messages.Add($"{LogKeys.Startup} naos services builder: logging azure loganalytics repository added (name={logName}_CL, workspace={configuration.WorkspaceId})");
+                context.Messages.Add($"naos services builder: logging azure loganalytics repository added (name={logName}_CL, workspace={configuration.WorkspaceId})");
             }
 
             return context;

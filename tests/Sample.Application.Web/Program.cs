@@ -16,7 +16,7 @@ namespace Naos.Sample.Application.Web
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration((ctx, cfg) => cfg.AddNaos(ctx))
+                //.ConfigureAppConfiguration((ctx, cfg) => cfg.AddNaos(ctx))
                 .ConfigureWebHostDefaults(builder =>
                 {
                     builder.UseStartup<Startup>();

@@ -114,7 +114,7 @@
                     name: "Customers-azurequeuestorage");
 
             //options.Context.Services.AddSingleton<IValidator<CreateCustomerCommand>>(new CreateCustomerCommandValidator());
-            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: customers service added");
+            options.Context.Messages.Add($"naos services builder: customers service added");
 
             return options;
         }

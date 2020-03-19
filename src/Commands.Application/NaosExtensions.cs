@@ -39,7 +39,7 @@
                         && !c.Name.Contains("ConsoleCommand")))
                     .AsImplementedInterfaces().WithScopedLifetime());
 
-            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos services builder: commands added"); // TODO: list available commands/handlers
+            naosOptions.Context.Messages.Add($"naos services builder: commands added"); // TODO: list available commands/handlers
 
             optionsAction?.Invoke(new CommandsOptions(naosOptions.Context));
             //naosOptions.Context.Services
@@ -63,7 +63,7 @@
 
             options.Context.Services.AddScoped<ICommandBehavior, TBehavior>();
 
-            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: commands behavior added (type={typeof(TBehavior).Name})"); // TODO: list available commands/handlers
+            options.Context.Messages.Add($"naos services builder: commands behavior added (type={typeof(TBehavior).Name})"); // TODO: list available commands/handlers
 
             return options;
         }
@@ -79,7 +79,7 @@
 
             options.Context.Services.AddScoped(behavior);
 
-            //options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: commands behavior added (type={typeof(TBehavior).Name})"); // TODO: list available commands/handlers
+            //options.Context.Messages.Add($"naos services builder: commands behavior added (type={typeof(TBehavior).Name})"); // TODO: list available commands/handlers
 
             return options;
         }

@@ -53,7 +53,7 @@
                 if (provider.GetDefaultChallengeSchemeAsync().Result?.Name == Authentication.OpenIdConnect.OpenIdConnectDefaults.AuthenticationScheme)
                 {
                     naosOptions.Context.Application.UseMiddleware<OidcAuthenticationChallengeMiddleware>(Options.Create(options));
-                    naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: authentication challenge");
+                    naosOptions.Context.Messages.Add($"naos application builder: authentication challenge");
                 }
 
                 // TODO: register other middleware for different authentication schemes (easyauth?)
@@ -73,7 +73,7 @@
                 if (provider.GetDefaultChallengeSchemeAsync().Result?.Name == AuthenticationKeys.OidcScheme)
                 {
                     builder.UseMiddleware<OidcAuthenticationChallengeMiddleware>(Options.Create(options));
-                    //naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: authentication challenge");
+                    //naosOptions.Context.Messages.Add($"naos application builder: authentication challenge");
                 }
 
                 // TODO: register other middleware for different authentication schemes (easyauth?)

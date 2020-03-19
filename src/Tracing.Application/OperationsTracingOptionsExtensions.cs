@@ -18,7 +18,7 @@
 
             options.Context.Services.AddSingleton<ISampler, T>();
 
-            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: tracing sampler used (type={typeof(T).Name})");
+            options.Context.Messages.Add($"naos services builder: tracing sampler used (type={typeof(T).Name})");
 
             return options;
         }
@@ -32,7 +32,7 @@
 
             options.Context.Services.AddSingleton(sampler);
 
-            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: tracing sampler used (type={sampler.GetType().Name})");
+            options.Context.Messages.Add($"naos services builder: tracing sampler used (type={sampler.GetType().Name})");
 
             return options;
         }
@@ -46,7 +46,7 @@
 
             options.Context.Services.AddSingleton<ISpanExporter, T>();
 
-            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: tracing exporter used (type={typeof(T).Name})");
+            options.Context.Messages.Add($"naos services builder: tracing exporter used (type={typeof(T).Name})");
 
             return options;
         }
@@ -60,7 +60,7 @@
 
             options.Context.Services.AddSingleton(exporter);
 
-            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: tracing exporter used (type={exporter.GetType().Name})");
+            options.Context.Messages.Add($"naos services builder: tracing exporter used (type={exporter.GetType().Name})");
 
             return options;
         }

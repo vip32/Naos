@@ -87,7 +87,7 @@
             options.Context.Services.AddHealthChecks()
                 .AddMongoDb(configuration.ConnectionString, name: "Inventory-mongodb");
 
-            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: inventory service added");
+            options.Context.Messages.Add($"naos services builder: inventory service added");
 
             return options;
         }

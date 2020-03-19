@@ -42,7 +42,7 @@
                     .FromApplicationDependencies(a => !a.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) && !a.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase))
                     .AddClasses(classes => classes.AssignableTo(typeof(ICommandRequestExtension)), true));
 
-            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: command request dispatcher added"); // TODO: list available command + routes
+            options.Context.Messages.Add($"naos services builder: command request dispatcher added"); // TODO: list available command + routes
 
             return options;
         }

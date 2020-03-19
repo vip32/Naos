@@ -66,7 +66,7 @@
                 options.Context.Services.AddHealthChecks()
                     .AddRabbitMQ(sp => connectionFactory, $"queueing-provider-rabbitmq-{queueName}", tags: new[] { "naos" });
 
-                options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: queueing provider added (provider={nameof(RabbitMQQueue<TData>)}, queue={queueName})");
+                options.Context.Messages.Add($"naos services builder: queueing provider added (provider={nameof(RabbitMQQueue<TData>)}, queue={queueName})");
             }
             else
             {

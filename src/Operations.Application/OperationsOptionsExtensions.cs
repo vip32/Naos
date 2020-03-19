@@ -30,7 +30,7 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: logging added");
+            options.Context.Messages.Add($"naos services builder: logging added");
             internalCorrelationId = correlationId;
 
             var loggingOptions = new LoggingOptions(

@@ -16,8 +16,6 @@
     {
         public HttpClientTests()
         {
-            var configuration = NaosConfigurationFactory.Create();
-
             this.Services.AddTransient<HttpClientCorrelationHandler>();
             this.Services.AddTransient<HttpClientLogHandler>();
 
@@ -28,7 +26,7 @@
             this.Services.Replace(Microsoft.Extensions.DependencyInjection.ServiceDescriptor.Singleton<IHttpMessageHandlerBuilderFilter, HttpClientLogHandlerBuilderFilter>());
 
             this.Services
-                .AddNaos(configuration, "Product", "Capability", new[] { "All" }, n => n
+                .AddNaos("Product", "Capability", new[] { "All" }, n => n
                     .AddRequestCorrelation()
                     .AddOperations(o => o
                         .AddLogging(correlationId: $"TEST{IdGenerator.Instance.Next}")));

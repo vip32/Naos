@@ -31,7 +31,7 @@
                         Registration = registration,
                         RouteMatcher = routeMatcher
                     }));
-                naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: command requests added (route={registration.Route}, method={registration.RequestMethod}, type={registration.CommandType.PrettyName()})");
+                naosOptions.Context.Messages.Add($"naos application builder: command requests added (route={registration.Route}, method={registration.RequestMethod}, type={registration.CommandType.PrettyName()})");
             }
 
             return naosOptions;

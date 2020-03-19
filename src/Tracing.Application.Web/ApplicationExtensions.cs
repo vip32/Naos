@@ -35,7 +35,7 @@
             //naosOptions.Context.Application.UseEndpointRouting(); // needed by middleware to get action/controller https://www.stevejgordon.co.uk/asp-net-core-first-look-at-global-routing-dispatcher
             naosOptions.Context.Application.UseMiddleware<RequestTracingMiddleware>(
                     Options.Create(requestTracingMiddlewareOptions ?? naosOptions.Context.Application.ApplicationServices.GetService<RequestTracingMiddlewareOptions>() ?? new RequestTracingMiddlewareOptions()));
-            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: operations request tracing added");
+            naosOptions.Context.Messages.Add($"naos application builder: operations request tracing added");
 
             return naosOptions;
         }

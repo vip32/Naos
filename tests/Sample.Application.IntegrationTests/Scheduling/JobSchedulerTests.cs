@@ -16,10 +16,8 @@
 
         public JobSchedulerTests()
         {
-            var configuration = NaosConfigurationFactory.Create();
-
             this.Services
-                .AddNaos(configuration, "Product", "Capability", new[] { "All" }, n => n
+                .AddNaos("Product", "Capability", new[] { "All" }, n => n
                     .AddOperations(o => o
                         .AddLogging(correlationId: $"TEST{IdGenerator.Instance.Next}"))
                     .AddJobScheduling());

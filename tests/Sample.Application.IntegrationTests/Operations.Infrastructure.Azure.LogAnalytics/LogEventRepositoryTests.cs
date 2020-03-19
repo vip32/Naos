@@ -14,10 +14,8 @@
 
         public LogEventRepositoryTests()
         {
-            var configuration = NaosConfigurationFactory.Create();
-
             this.Services
-                .AddNaos(configuration, "Product", "Capability", new[] { "All" }, n => n
+                .AddNaos("Product", "Capability", new[] { "All" }, n => n
                     .AddOperations(o => o
                         .AddLogging(
                             l => l.UseAzureLogAnalytics(), // registers loganalytics sink

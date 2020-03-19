@@ -30,7 +30,7 @@
 #endif
             };
 
-            context.Messages.Add($"{LogKeys.Startup} naos application builder: naos application added (environment={context.Environment.EnvironmentName})");
+            context.Messages.Add($"naos application builder: naos application added (environment={context.Environment.EnvironmentName})");
 
             optionsAction?.Invoke(new NaosApplicationContextOptions(context));
 
@@ -39,7 +39,7 @@
                 var logger = app.ApplicationServices.GetService<ILoggerFactory>().CreateLogger("Naos");
                 foreach (var message in context.Messages.Safe())
                 {
-                    logger?.LogDebug(message);
+                    logger?.LogDebug($"{{LogKey:l}} {message.Replace("{", string.Empty, StringComparison.OrdinalIgnoreCase).Replace("}", string.Empty, StringComparison.OrdinalIgnoreCase):l}", LogKeys.Startup);
                 }
             }
             catch (InvalidOperationException)

@@ -33,7 +33,7 @@
                 options.Context.Services.AddHealthChecks()
                     .AddUrlGroup(new Uri($"{configuration.Host.TrimEnd('/')}/health"), "tracing-exporter-zipkin", tags: new[] { "naos" });
 
-                options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: tracing exporter used (type={typeof(ZipkinSpanExporter).Name})");
+                options.Context.Messages.Add($"naos services builder: tracing exporter used (type={typeof(ZipkinSpanExporter).Name})");
             }
 
             // health endpoint

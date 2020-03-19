@@ -25,17 +25,10 @@ namespace Naos.Sample.Application.Web
 
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            this.Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
-
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddNaos(this.Configuration, "Product", "Capability", new[] { "All" }, n => n
+                .AddNaos("Product", "Capability", new[] { "All" }, n => n
                     //.AddModule<CustomersModule>()>> INaosModule
                     //.AddModule(m => m { m.Context.Services.AddScoped<....>()}, "customers")
                     //.AddModules() >> discover INaosModule!

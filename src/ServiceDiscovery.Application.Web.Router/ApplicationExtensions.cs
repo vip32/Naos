@@ -79,7 +79,7 @@
             });
 #pragma warning restore CS0618 // Type or member is obsolete
 
-            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: job scheduling added"); // TODO: list available commands/handlers
+            naosOptions.Context.Messages.Add($"naos application builder: job scheduling added"); // TODO: list available commands/handlers
 
             //return app.UseMiddleware<ServiceDiscoveryRouterMiddleware>(Options.Create(options));
             return naosOptions;
