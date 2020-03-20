@@ -69,7 +69,7 @@ namespace Naos.Sample.Application.Web
                                 "api/commands/customers/active",
                                 groupName: "Customers")
                             .Get<GetCustomerByIdQuery, Customers.Domain.Customer>(
-                                "api/commands/customer/{CustomerId}", // TODO: swagger ui has a problem creating the correct tryout url for the actual customerid
+                                "api/commands/customer/{customerId}", // TODO: swagger ui has a problem creating the correct tryout url for the actual customerid
                                 groupName: "Customers")
                             //.UseInMemoryStorage()
                             .UseAzureBlobStorage() // *
