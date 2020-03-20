@@ -75,10 +75,10 @@ namespace Naos.Sample.Application.Web
                                 "api/commands/customers/{customerId}", // TODO: swagger ui has a problem creating the correct tryout url for the actual customerid
                                 groupName: "Customers")
                             //.UseInMemoryStorage()
-                            .UseAzureBlobStorage() // *
+                            .UseAzureBlobStorage()
                             //.UseFolderStorage()
                             //.UseInMemoryQueue()
-                            .UseAzureStorageQueue() // *
+                            .UseAzureStorageQueue()
                             //.UseAzureServiceBusQueue()
                             //.UseRabbitMQQueue()
                             .GetQueued<PingCommand>("api/commands/queue/ping")
