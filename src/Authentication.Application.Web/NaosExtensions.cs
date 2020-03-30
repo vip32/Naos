@@ -13,7 +13,7 @@
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions
     {
-        public static NaosServicesContextOptions AddAuthenticationApiKeyStatic(
+        public static NaosServicesContextOptions AddApiKeyStaticAuthentication(
             this NaosServicesContextOptions naosOptions,
             Action<AuthenticationHandlerOptions> options = null,
             string section = "naos:authentication:apikey:static")
@@ -33,7 +33,7 @@
             return naosOptions;
         }
 
-        public static NaosServicesContextOptions AddAuthenticationBasicStatic(
+        public static NaosServicesContextOptions AddBasicStaticAuthentication(
             this NaosServicesContextOptions naosOptions,
             Action<AuthenticationHandlerOptions> options = null,
             string section = "naos:authentication:basic:static")

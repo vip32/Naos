@@ -42,7 +42,7 @@ namespace Naos.Sample.Application.Web
                         .AddInventoryModule())
                     .AddServiceContext() // do IMPLICIT! XXXX
                     .AddOidcAuthentication()
-                    //.AddAuthenticationApiKeyStatic()
+                    //.AddApiKeyStaticAuthentication()
                     //.AddEasyAuthentication(/*o => o.Provider = EasyAuthProviders.AzureActiveDirectory*/)
                     .AddRequestCorrelation() // do IMPLICIT!
                     .AddRequestFiltering() // do IMPLICIT! XXXX

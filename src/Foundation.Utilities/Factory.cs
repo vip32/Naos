@@ -94,6 +94,18 @@
         ///  Creates an instance of the specified type <typeparamref name="T"/> using the serviceprovider to
         ///  get instances for the constructor.
         /// </summary>
+        /// <param name="serviceProvider"></param>
+        public static T Create(IServiceProvider serviceProvider, params object[] parameters)
+        {
+            EnsureArg.IsNotNull(serviceProvider, nameof(serviceProvider));
+
+            return ActivatorUtilities.CreateInstance<T>(serviceProvider, parameters);
+        }
+
+        /// <summary>
+        ///  Creates an instance of the specified type <typeparamref name="T"/> using the serviceprovider to
+        ///  get instances for the constructor.
+        /// </summary>
         /// <param name="properties"></param>
         /// <param name="serviceProvider"></param>
         public static T Create(IDictionary<string, object> properties, IServiceProvider serviceProvider)
@@ -101,6 +113,22 @@
             EnsureArg.IsNotNull(serviceProvider, nameof(serviceProvider));
 
             var instance = ActivatorUtilities.CreateInstance<T>(serviceProvider);
+            SetProperties(instance, properties);
+            return instance;
+        }
+
+        /// <summary>
+        ///  Creates an instance of the specified type <typeparamref name="T"/> using the serviceprovider to
+        ///  get instances for the constructor.
+        /// </summary>
+        /// <param name="properties"></param>
+        /// <param name="serviceProvider"></param>
+        /// <param name="parameters"></param>
+        public static T Create(IDictionary<string, object> properties, IServiceProvider serviceProvider, params object[] parameters)
+        {
+            EnsureArg.IsNotNull(serviceProvider, nameof(serviceProvider));
+
+            var instance = ActivatorUtilities.CreateInstance<T>(serviceProvider, parameters);
             SetProperties(instance, properties);
             return instance;
         }
