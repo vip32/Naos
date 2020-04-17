@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AspNetCore.HealthChecks.AzureServiceBus" Version="3.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.AzureServiceBus" Version="3.1.0" />
     <PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="3.0.1" />
   </ItemGroup>
 
