@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="RabbitMQ.Client" Version="5.1.2" />
+    <PackageReference Include="RabbitMQ.Client" Version="5.2.0" />
     <PackageReference Include="AspNetCore.HealthChecks.RabbitMQ" Version="3.0.5" />
   </ItemGroup>
 

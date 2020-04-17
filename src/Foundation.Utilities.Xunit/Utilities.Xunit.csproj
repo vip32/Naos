@@ -11,7 +11,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="xunit.abstractions" Version="2.0.3" />
     <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="NetArchTest.Rules" Version="1.2.4" />
+    <PackageReference Include="NetArchTest.Rules" Version="1.2.5" />
   </ItemGroup>
 
   <ItemGroup>
