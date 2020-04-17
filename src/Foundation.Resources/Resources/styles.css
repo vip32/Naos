@@ -13,11 +13,11 @@ a {
     color: gray;
 }
 
-    a:link {
-    }
+    /*a:link {
+    }*/
 
-    a:visited {
-    }
+    /*a:visited {
+    }*/
 
     a:hover {
         color: #E2D46A;
