@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{09D80029-71E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D54F7975-DC18-481A-824F-DF0FD37370C3}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "global", "global", "{FCBA001C-2530-41E7-B122-66E996367F10}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{FCBA001C-2530-41E7-B122-66E996367F10}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		docs\ascii.md = docs\ascii.md
@@ -272,9 +272,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeyValueStorage.Infrastructure.LightningDb", "src\KeyValueStorage.Infrastructure.LightningDb\KeyValueStorage.Infrastructure.LightningDb.csproj", "{D75DBA03-EEEB-4944-952E-054ABB88E78B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Commands.Application.Web.Azure", "src\Commands.Application.Web.Azure\Commands.Application.Web.Azure.csproj", "{ED978DCC-86B2-4161-9720-2CA7BB4A47C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commands.Application.Web.Azure", "src\Commands.Application.Web.Azure\Commands.Application.Web.Azure.csproj", "{ED978DCC-86B2-4161-9720-2CA7BB4A47C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Commands.Application.Web.RabbitMQ", "src\Commands.Application.Web.RabbitMQ\Commands.Application.Web.RabbitMQ.csproj", "{659DA92C-BC4F-4D27-B94B-C4691F0D2B28}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commands.Application.Web.RabbitMQ", "src\Commands.Application.Web.RabbitMQ\Commands.Application.Web.RabbitMQ.csproj", "{659DA92C-BC4F-4D27-B94B-C4691F0D2B28}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -49,7 +49,7 @@
 
         public virtual bool IsSatisfiedBy(T entity)
         {
-            if (entity == default)
+            if (entity == null)
             {
                 return false;
             }
