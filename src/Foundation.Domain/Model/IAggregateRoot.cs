@@ -1,7 +1,5 @@
 ﻿namespace Naos.Foundation.Domain
 {
-    using Newtonsoft.Json;
-
     /// <summary>
     /// <para>
     /// An aggregate root is an entity which works as an entry point to our aggregate.
@@ -29,7 +27,8 @@
     /// </summary>
     public interface IAggregateRoot
     {
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         DomainEvents DomainEvents { get; }
     }
 }

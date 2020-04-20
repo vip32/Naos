@@ -21,7 +21,7 @@
         {
             get
             {
-                return configuration ?? (configuration = NaosConfigurationFactory.Create());
+                return configuration ??= NaosConfigurationFactory.Create();
             }
         }
 
