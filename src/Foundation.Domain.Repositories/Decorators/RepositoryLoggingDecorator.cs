@@ -113,21 +113,21 @@
 
         public async Task<TEntity> InsertAsync(TEntity entity)
         {
-            this.logger.LogInformation($"{{LogKey:l}} insert {typeof(TEntity).PrettyName()}", LogKeys.DomainRepository);
+            this.logger.LogInformation($"{{LogKey:l}} insert {typeof(TEntity).PrettyName()}, id: {entity?.Id}", LogKeys.DomainRepository);
 
             return await this.decoratee.InsertAsync(entity).AnyContext();
         }
 
         public async Task<TEntity> UpdateAsync(TEntity entity)
         {
-            this.logger.LogInformation($"{{LogKey:l}} update {typeof(TEntity).PrettyName()}", LogKeys.DomainRepository);
+            this.logger.LogInformation($"{{LogKey:l}} update {typeof(TEntity).PrettyName()}, id: {entity?.Id}", LogKeys.DomainRepository);
 
             return await this.decoratee.UpdateAsync(entity).AnyContext();
         }
 
         public async Task<(TEntity entity, RepositoryActionResult action)> UpsertAsync(TEntity entity)
         {
-            this.logger.LogInformation($"{{LogKey:l}} upsert {typeof(TEntity).PrettyName()}", LogKeys.DomainRepository);
+            this.logger.LogInformation($"{{LogKey:l}} upsert {typeof(TEntity).PrettyName()}, id: {entity?.Id}", LogKeys.DomainRepository);
 
             return await this.decoratee.UpsertAsync(entity).AnyContext();
         }
