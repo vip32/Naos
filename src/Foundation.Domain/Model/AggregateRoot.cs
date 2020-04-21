@@ -30,8 +30,13 @@
     [DebuggerDisplay("Type={GetType().Name}, Id={Id}")]
     public abstract class AggregateRoot<TId> : Entity<TId>, IAggregateRoot
     {
+        protected AggregateRoot()
+        {
+            this.DomainEvents = new DomainEvents();
+        }
+
         [Newtonsoft.Json.JsonIgnore]
         [System.Text.Json.Serialization.JsonIgnore]
-        public DomainEvents DomainEvents => new DomainEvents();
+        public DomainEvents DomainEvents { get; }
     }
 }
