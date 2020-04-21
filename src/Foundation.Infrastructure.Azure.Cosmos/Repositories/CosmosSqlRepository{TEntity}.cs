@@ -105,11 +105,11 @@
         /// Insert or updates the provided entity.
         /// </summary>
         /// <param name="entity">The entity to insert or update.</param>
-        public async Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
+        public async Task<(TEntity entity, RepositoryActionResult action)> UpsertAsync(TEntity entity)
         {
             if (entity == null)
             {
-                return (default, ActionResult.None);
+                return (default, RepositoryActionResult.None);
             }
 
             var isNew = entity.Id.IsDefault() || !await this.ExistsAsync(entity.Id).AnyContext();
@@ -160,14 +160,14 @@
                 }
             }
 
-            return isNew ? (result, ActionResult.Inserted) : (result, ActionResult.Updated);
+            return isNew ? (result, RepositoryActionResult.Inserted) : (result, RepositoryActionResult.Updated);
         }
 
-        public async Task<ActionResult> DeleteAsync(object id)
+        public async Task<RepositoryActionResult> DeleteAsync(object id)
         {
             if (id.IsDefault())
             {
-                return ActionResult.None;
+                return RepositoryActionResult.None;
             }
 
             var entity = await this.FindOneAsync(id).AnyContext();
@@ -176,14 +176,14 @@
                 return await this.DeleteAsync(entity).AnyContext();
             }
 
-            return ActionResult.None;
+            return RepositoryActionResult.None;
         }
 
-        public async Task<ActionResult> DeleteAsync(TEntity entity)
+        public async Task<RepositoryActionResult> DeleteAsync(TEntity entity)
         {
             if (entity?.Id.IsDefault() == true)
             {
-                return ActionResult.None;
+                return RepositoryActionResult.None;
             }
 
             if (this.Options.PublishEvents && this.Options.Mediator != null)
@@ -201,10 +201,10 @@
                     await this.Options.Mediator.Publish(new EntityDeletedDomainEvent(entity)).AnyContext();
                 }
 
-                return ActionResult.Deleted;
+                return RepositoryActionResult.Deleted;
             }
 
-            return ActionResult.None;
+            return RepositoryActionResult.None;
         }
     }
 }

@@ -30,27 +30,27 @@
 
         public ILogger<DocumentRepository<TEntity>> Logger { get; }
 
-        public async Task<ActionResult> DeleteAsync(object id)
+        public async Task<RepositoryActionResult> DeleteAsync(object id)
         {
             if (id.IsDefault())
             {
-                return ActionResult.None;
+                return RepositoryActionResult.None;
             }
 
             var result = await this.options.Provider.DeleteAsync(id).AnyContext();
             if (result == ProviderAction.Deleted)
             {
-                return ActionResult.Deleted;
+                return RepositoryActionResult.Deleted;
             }
 
-            return ActionResult.None;
+            return RepositoryActionResult.None;
         }
 
-        public async Task<ActionResult> DeleteAsync(TEntity entity)
+        public async Task<RepositoryActionResult> DeleteAsync(TEntity entity)
         {
             if (entity == null)
             {
-                return ActionResult.None;
+                return RepositoryActionResult.None;
             }
 
             return await this.DeleteAsync(entity.Id).AnyContext();
@@ -131,11 +131,11 @@
             return (await this.UpsertAsync(entity).AnyContext()).entity;
         }
 
-        public async Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
+        public async Task<(TEntity entity, RepositoryActionResult action)> UpsertAsync(TEntity entity)
         {
             if (entity == null)
             {
-                return (null, ActionResult.None);
+                return (null, RepositoryActionResult.None);
             }
 
             var isNew = entity.Id.IsDefault() || !await this.ExistsAsync(entity.Id).AnyContext();
@@ -182,9 +182,9 @@
 
             return result switch
             {
-                ProviderAction.Inserted => (entity, ActionResult.Inserted),
-                ProviderAction.Updated => (entity, ActionResult.Updated),
-                _ => (entity, ActionResult.None)
+                ProviderAction.Inserted => (entity, RepositoryActionResult.Inserted),
+                ProviderAction.Updated => (entity, RepositoryActionResult.Updated),
+                _ => (entity, RepositoryActionResult.None)
             };
         }
     }

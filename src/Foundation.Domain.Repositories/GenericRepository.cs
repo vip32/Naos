@@ -25,7 +25,7 @@
         /// Delete entity by id.
         /// </summary>
         /// <param name="id">The entity identifier.</param>
-        public virtual async Task<ActionResult> DeleteAsync(object id)
+        public virtual async Task<RepositoryActionResult> DeleteAsync(object id)
         {
             return await this.decoratee.DeleteAsync(id).AnyContext();
         }
@@ -34,7 +34,7 @@
         /// Delete the entity.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        public virtual async Task<ActionResult> DeleteAsync(TEntity entity)
+        public virtual async Task<RepositoryActionResult> DeleteAsync(TEntity entity)
         {
             return await this.decoratee.DeleteAsync(entity).AnyContext();
         }
@@ -111,7 +111,7 @@
         /// Insert or updates the provided entity.
         /// </summary>
         /// <param name="entity">The entity to insert or update.</param>
-        public virtual async Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
+        public virtual async Task<(TEntity entity, RepositoryActionResult action)> UpsertAsync(TEntity entity)
         {
             return await this.decoratee.UpsertAsync(entity).AnyContext();
         }

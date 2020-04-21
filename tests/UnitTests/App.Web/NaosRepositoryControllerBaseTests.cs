@@ -50,12 +50,12 @@
 
         public class StubEntityRepository : IGenericRepository<StubEntity>
         {
-            public Task<ActionResult> DeleteAsync(object id)
+            public Task<RepositoryActionResult> DeleteAsync(object id)
             {
                 throw new NotImplementedException();
             }
 
-            public Task<ActionResult> DeleteAsync(StubEntity entity)
+            public Task<RepositoryActionResult> DeleteAsync(StubEntity entity)
             {
                 throw new NotImplementedException();
             }
@@ -95,7 +95,7 @@
                 throw new NotImplementedException();
             }
 
-            public Task<(StubEntity entity, ActionResult action)> UpsertAsync(StubEntity entity)
+            public Task<(StubEntity entity, RepositoryActionResult action)> UpsertAsync(StubEntity entity)
             {
                 throw new NotImplementedException();
             }

@@ -162,11 +162,11 @@
             return entity;
         }
 
-        public async Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
+        public async Task<(TEntity entity, RepositoryActionResult action)> UpsertAsync(TEntity entity)
         {
             if (entity == null)
             {
-                return (null, ActionResult.None);
+                return (null, RepositoryActionResult.None);
             }
 
             var isNew = entity.Id.IsDefault() || !await this.ExistsAsync(entity.Id).AnyContext();
@@ -217,15 +217,15 @@
 
             //this.logger.LogInformation($"{{LogKey:l}} upserted entity: {entity.GetType().PrettyName()}, id: {entity.Id}, isNew: {isNew}", LogEventKeys.DomainRepository);
 #pragma warning disable SA1008 // Opening parenthesis must be spaced correctly
-            return isNew ? (entity, ActionResult.Inserted) : (entity, ActionResult.Updated);
+            return isNew ? (entity, RepositoryActionResult.Inserted) : (entity, RepositoryActionResult.Updated);
 #pragma warning restore SA1008 // Opening parenthesis must be spaced correctly
         }
 
-        public async Task<ActionResult> DeleteAsync(object id)
+        public async Task<RepositoryActionResult> DeleteAsync(object id)
         {
             if (id.IsDefault())
             {
-                return ActionResult.None;
+                return RepositoryActionResult.None;
             }
 
             DeleteResult result;
@@ -238,14 +238,14 @@
                 result = await this.Collection.DeleteOneAsync(e => e.Id == id).AnyContext();
             }
 
-            return result.DeletedCount > 0 ? ActionResult.Deleted : ActionResult.None;
+            return result.DeletedCount > 0 ? RepositoryActionResult.Deleted : RepositoryActionResult.None;
         }
 
-        public async Task<ActionResult> DeleteAsync(TEntity entity)
+        public async Task<RepositoryActionResult> DeleteAsync(TEntity entity)
         {
             if (entity == null)
             {
-                return ActionResult.None;
+                return RepositoryActionResult.None;
             }
 
             return await this.DeleteAsync(entity.Id).AnyContext();

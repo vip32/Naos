@@ -46,12 +46,12 @@
             this.decoratee = decoratee;
         }
 
-        public async Task<ActionResult> DeleteAsync(object id)
+        public async Task<RepositoryActionResult> DeleteAsync(object id)
         {
             return await this.decoratee.DeleteAsync(id).AnyContext();
         }
 
-        public async Task<ActionResult> DeleteAsync(TEntity entity)
+        public async Task<RepositoryActionResult> DeleteAsync(TEntity entity)
         {
             return await this.decoratee.DeleteAsync(entity).AnyContext();
         }
@@ -94,7 +94,7 @@
             return await this.decoratee.UpdateAsync(entity).AnyContext();
         }
 
-        public async Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
+        public async Task<(TEntity entity, RepositoryActionResult action)> UpsertAsync(TEntity entity)
         {
             return await this.decoratee.UpsertAsync(entity).AnyContext();
         }

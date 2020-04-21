@@ -233,7 +233,7 @@
             var result = await this.sut.DeleteAsync(entity).AnyContext();
 
             // assert
-            result.ShouldBe(ActionResult.Deleted);
+            result.ShouldBe(RepositoryActionResult.Deleted);
             (await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).AnyContext()).ShouldBeNull();
         }
 
@@ -257,7 +257,7 @@
                 var result = await this.sut.UpsertAsync(this.entityFaker.Generate()).AnyContext();
 
                 // assert
-                result.action.ShouldNotBe(ActionResult.None);
+                result.action.ShouldNotBe(RepositoryActionResult.None);
                 result.entity.ShouldNotBeNull();
                 result.entity.Id.ShouldNotBeNull();
                 result.entity.IdentifierHash.ShouldNotBeNull(); // EntityInsertDomainEventHandler

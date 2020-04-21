@@ -37,14 +37,14 @@
             this.name = typeof(TEntity).PrettyName().ToLowerInvariant();
         }
 
-        public async Task<ActionResult> DeleteAsync(object id)
+        public async Task<RepositoryActionResult> DeleteAsync(object id)
         {
             this.logger.LogInformation($"{{LogKey:l}} delete {typeof(TEntity).PrettyName()}, id: {id}", LogKeys.DomainRepository);
 
             return await this.decoratee.DeleteAsync(id).AnyContext();
         }
 
-        public async Task<ActionResult> DeleteAsync(TEntity entity)
+        public async Task<RepositoryActionResult> DeleteAsync(TEntity entity)
         {
             this.logger.LogInformation($"{{LogKey:l}} delete {typeof(TEntity).PrettyName()}, id: {entity?.Id}", LogKeys.DomainRepository);
 
@@ -125,7 +125,7 @@
             return await this.decoratee.UpdateAsync(entity).AnyContext();
         }
 
-        public async Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
+        public async Task<(TEntity entity, RepositoryActionResult action)> UpsertAsync(TEntity entity)
         {
             var result = await this.decoratee.UpsertAsync(entity).AnyContext();
             this.logger.LogInformation($"{{LogKey:l}} upserted {result.GetType().PrettyName()}, id: {result.entity.Id}, action: {result.action.ToDescription()}", LogKeys.DomainRepository);
