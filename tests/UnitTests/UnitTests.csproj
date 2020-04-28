@@ -59,7 +59,7 @@
     <ProjectReference Include="..\..\src\Foundation.Console\Console.csproj" />
     <ProjectReference Include="..\..\src\Foundation.ContentTypes\ContentTypes.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Criteria\Criteria.csproj" />
-    <ProjectReference Include="..\..\src\Foundation.Domain.Events\Domain.EventSourcing.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Domain.EventSourcing\Domain.EventSourcing.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Domain.Repositories.AutoMapper\Domain.Repositories.AutoMapper.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Domain.Repositories\Domain.Repositories.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Domain.Specifications\Domain.Specifications.csproj" />

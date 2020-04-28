@@ -51,6 +51,7 @@
     <ProjectReference Include="..\..\src\Foundation.Application.Web.Startup.Repositories\Application.Web.Startup.Repositories.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Console\Console.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Application.Web.Startup\Application.Web.Startup.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Domain.EventSourcing\Domain.EventSourcing.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Domain.Repositories.AutoMapper\Domain.Repositories.AutoMapper.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Domain.Repositories.Documents\Domain.Repositories.Documents.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Domain.Repositories\Domain.Repositories.csproj" />
