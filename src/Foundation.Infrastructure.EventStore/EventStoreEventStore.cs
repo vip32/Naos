@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Text;
     using System.Threading.Tasks;
+    using EnsureThat;
     using global::EventStore.ClientAPI;
     using global::EventStore.ClientAPI.Exceptions;
     using Naos.Foundation;
@@ -17,6 +18,8 @@
 
         public EventStoreEventStore(IEventStoreConnection connection)
         {
+            EnsureArg.IsNotNull(connection, nameof(connection));
+
             this.connection = connection;
         }
 
@@ -25,7 +28,7 @@
         {
             try
             {
-                var ret = new List<Event<TId>>();
+                var result = new List<Event<TId>>();
                 StreamEventsSlice currentSlice;
                 long nextSliceStart = StreamPosition.Start;
 
@@ -40,12 +43,12 @@
                     nextSliceStart = currentSlice.NextEventNumber;
                     foreach (var resolvedEvent in currentSlice.Events)
                     {
-                        ret.Add(new Event<TId>(this.Deserialize<TId>(resolvedEvent.Event.EventType, resolvedEvent.Event.Data), resolvedEvent.Event.EventNumber));
+                        result.Add(new Event<TId>(this.Deserialize<TId>(resolvedEvent.Event.EventType, resolvedEvent.Event.Data), resolvedEvent.Event.EventNumber));
                     }
                 }
                 while (!currentSlice.IsEndOfStream);
 
-                return ret;
+                return result;
             }
             catch (EventStoreConnectionException ex)
             {
@@ -56,6 +59,8 @@
         public async Task<AppendResult> AppendEventAsync<TId>(IDomainEvent<TId> @event)
             //where TId : IAggregateId
         {
+            EnsureArg.IsNotNull(@event, nameof(@event));
+
             try
             {
                 var eventData = new EventData(
@@ -63,7 +68,7 @@
                     @event.GetType().AssemblyQualifiedName,
                     true,
                     this.Serialize(@event),
-                    Encoding.UTF8.GetBytes("{}")); // TODO: CorrelationId as metadata
+                    Encoding.UTF8.GetBytes("{}")); // TODO: CorrelationId as metadata?
 
                 var writeResult = await this.connection.AppendToStreamAsync(
                     @event.AggregateId.ToString(),
@@ -80,12 +85,14 @@
 
         private IDomainEvent<TAggregateId> Deserialize<TAggregateId>(string eventType, byte[] data)
         {
+            // TODO: replace with ISerializer
             var settings = new JsonSerializerSettings { ContractResolver = new PrivateSetterContractResolver() };
             return (IDomainEvent<TAggregateId>)JsonConvert.DeserializeObject(Encoding.UTF8.GetString(data), Type.GetType(eventType), settings);
         }
 
         private byte[] Serialize<TAggregateId>(IDomainEvent<TAggregateId> @event)
         {
+            // TODO: replace with ISerializer
             return Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(@event));
         }
     }

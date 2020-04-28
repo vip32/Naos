@@ -14,7 +14,7 @@
 
         public EventStoreTest()
         {
-            this.connection = EventStoreConnection.Create(new Uri("tcp://localhost:1113"));
+            this.connection = EventStoreConnection.Create(new Uri("tcp://localhost:1113"), "naos.test");
             this.connection.ConnectAsync().Wait();
             this.stream = Guid.NewGuid().ToString();
         }
