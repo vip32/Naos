@@ -4,9 +4,7 @@
     using System.Linq;
 
 #pragma warning disable CA1033 // Interface methods should be callable by child types
-#pragma warning disable SA1402 // File may only contain a single type
     public abstract class EventSourcingAggregateRoot<TId> : Entity<TId>, IEventSourcingAggregate<TId>
-#pragma warning restore SA1402 // File may only contain a single type
     {
         public const long NewAggregateVersion = -1;
 
