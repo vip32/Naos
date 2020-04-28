@@ -49,7 +49,7 @@
                 .That()
                 .ImplementInterface(typeof(IDomainEvent))
                 .Or()
-                .Inherit(typeof(DomainEvent)).GetTypes();
+                .Inherit(typeof(DomainEventBase)).GetTypes();
 
             AssertAreImmutable(types);
         }

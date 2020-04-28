@@ -6,54 +6,29 @@
     using Microsoft.Extensions.Logging;
 
     public abstract class EntityUpdateDomainEventHandler
-        : IDomainEventHandler<EntityUpdateDomainEvent>
+        : DomainEventHandlerBase<EntityUpdateDomainEvent>
     {
-        private readonly ILogger<EntityUpdateDomainEventHandler> logger;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EntityUpdateDomainEventHandler"/> class.
-        /// </summary>
-        /// <param name="logger">The logger.</param>
-        protected EntityUpdateDomainEventHandler(ILogger<EntityUpdateDomainEventHandler> logger)
+        protected EntityUpdateDomainEventHandler(ILoggerFactory loggerFactory)
+            : base(loggerFactory)
         {
-            EnsureArg.IsNotNull(logger, nameof(logger));
-
-            this.logger = logger;
         }
 
-        /// <summary>
-        /// Determines whether this instance can handle the specified notification.
-        /// </summary>
-        /// <param name="notification">The notification.</param>
-        /// <returns>
-        /// <c>true</c> if this instance can handle the specified notification; otherwise, <c>false</c>.
-        /// </returns>
-        public abstract bool CanHandle(EntityUpdateDomainEvent notification);
-
-        /// <summary>
-        /// Handles the specified notification.
-        /// </summary>
-        /// <param name="notification">The notification.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        public virtual async Task Handle(EntityUpdateDomainEvent notification, CancellationToken cancellationToken)
+        public override async Task Process(EntityUpdateDomainEvent notification, CancellationToken cancellationToken)
         {
             await Task.Run(() =>
             {
-                if (this.CanHandle(notification))
+                this.Logger.LogInformation($"{{LogKey:l}} [{notification.EventId}] handle {notification.GetType().Name.SliceTill("DomainEvent")} (entity={notification.Entity.GetType().PrettyName()}, handler={this.GetType().PrettyName()})", LogKeys.DomainEvent);
+
+                if (notification?.Entity.Is<IStateEntity>() == true)
                 {
-                    this.logger.LogInformation($"{{LogKey:l}} [{notification.EventId}] handle {notification.GetType().Name.SliceTill("DomainEvent")} (entity={notification.Entity.GetType().PrettyName()}, handler={this.GetType().PrettyName()})", LogKeys.DomainEvent);
+                    var entity = notification.Entity.As<IStateEntity>();
+                    entity.State?.SetUpdated("[IDENTITY]", "domainevent"); // TODO: use current identity
+                }
 
-                    if (notification?.Entity.Is<IStateEntity>() == true)
-                    {
-                        var entity = notification.Entity.As<IStateEntity>();
-                        entity.State?.SetUpdated("[IDENTITY]", "domainevent"); // TODO: use current identity
-                    }
-
-                    if (notification?.Entity.Is<IIdentifiable>() == true)
-                    {
-                        var entity = notification.Entity.As<IIdentifiable>();
-                        entity.SetIdentifierHash();
-                    }
+                if (notification?.Entity.Is<IIdentifiable>() == true)
+                {
+                    var entity = notification.Entity.As<IIdentifiable>();
+                    entity.SetIdentifierHash();
                 }
             }).AnyContext();
         }

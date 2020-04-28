@@ -1,6 +1,6 @@
 ﻿namespace Naos.Foundation.Domain
 {
-    public class EntityDeletedDomainEvent : DomainEvent
+    public class EntityDeletedDomainEvent : DomainEventBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EntityDeletedDomainEvent"/> class.

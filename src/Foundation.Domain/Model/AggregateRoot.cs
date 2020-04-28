@@ -28,7 +28,7 @@
     /// </para>
     /// </summary>
     [DebuggerDisplay("Type={GetType().Name}, Id={Id}")]
-    public abstract class AggregateRoot<TId> : Entity<TId>, IAggregateRoot
+    public abstract class AggregateRoot<TId> : Entity<TId>, IAggregateRoot<TId>
     {
         protected AggregateRoot()
         {

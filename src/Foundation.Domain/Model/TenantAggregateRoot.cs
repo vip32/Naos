@@ -28,7 +28,7 @@
     /// </para>
     /// </summary>
     [DebuggerDisplay("Type={GetType().Name}, Id={Id}, Tenant={TenantId}")]
-    public abstract class TenantAggregateRoot<TId> : TenantEntity<TId>, IAggregateRoot
+    public abstract class TenantAggregateRoot<TId> : TenantEntity<TId>, IAggregateRoot<TId>
     {
         public DomainEvents DomainEvents => new DomainEvents();
     }

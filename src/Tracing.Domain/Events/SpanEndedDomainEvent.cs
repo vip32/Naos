@@ -2,7 +2,7 @@
 {
     using Naos.Foundation.Domain;
 
-    public class SpanEndedDomainEvent : DomainEvent
+    public class SpanEndedDomainEvent : DomainEventBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SpanEndedDomainEvent"/> class.

@@ -8,32 +8,24 @@
     using Naos.Foundation.Domain;
 
     public class UserAccountInsertedDomainEventHandler
-        : IDomainEventHandler<EntityInsertedDomainEvent>
+        : DomainEventHandlerBase<EntityInsertedDomainEvent>
     {
-        private readonly ILogger<UserAccountInsertedDomainEventHandler> logger;
-
-        public UserAccountInsertedDomainEventHandler(ILogger<UserAccountInsertedDomainEventHandler> logger)
+        protected UserAccountInsertedDomainEventHandler(ILoggerFactory loggerFactory)
+            : base(loggerFactory)
         {
-            EnsureArg.IsNotNull(logger, nameof(logger));
-
-            this.logger = logger;
         }
 
-        public bool CanHandle(EntityInsertedDomainEvent notification)
+        public override bool CanHandle(EntityInsertedDomainEvent notification)
         {
             return notification?.Entity.Is<UserAccount>() == true;
         }
 
-        public async Task Handle(EntityInsertedDomainEvent notification, CancellationToken cancellationToken)
+        public override async Task Process(EntityInsertedDomainEvent notification, CancellationToken cancellationToken)
         {
             await Task.Run(() =>
             {
-                if (this.CanHandle(notification))
-                {
-                    this.logger.LogInformation($"{{LogKey:l}} handle {notification.GetType().Name.SliceTill("DomainEvent")} (entity={notification.Entity.GetType().PrettyName()}, handler={this.GetType().PrettyName()})", LogKeys.DomainEvent);
-
-                    // TODO: do something, trigger message (integration)
-                }
+                this.Logger.LogInformation($"{{LogKey:l}} process {notification.GetType().Name.SliceTill("DomainEvent")} (entity={notification.Entity.GetType().PrettyName()}, handler={this.GetType().PrettyName()})", LogKeys.DomainEvent);
+                // TODO: do something, trigger message (integration)
             }).AnyContext();
         }
     }
