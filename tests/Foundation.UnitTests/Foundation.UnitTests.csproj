@@ -22,6 +22,7 @@
     </PackageReference>
     <PackageReference Include="MediatR" Version="8.0.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+    <PackageReference Include="Moq" Version="4.14.1" />
     <PackageReference Include="NBuilder" Version="6.1.0" />
     <PackageReference Include="NSubstitute" Version="4.2.1" />
     <PackageReference Include="Shouldly" Version="3.0.2" />
@@ -72,7 +73,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\EventSourcing\" />
     <Folder Include="Encoding\" />
     <Folder Include="Domain\Events\" />
     <Folder Include="Domain\Repositories\Extensions\" />

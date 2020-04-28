@@ -23,14 +23,10 @@
         }
 
         void IEventSourcingAggregate<TId>.ClearUncommittedEvents()
-        {
-            this.uncommittedEvents.Clear();
-        }
+            => this.uncommittedEvents.Clear();
 
         IEnumerable<IDomainEvent<TId>> IEventSourcingAggregate<TId>.GetUncommittedEvents()
-        {
-            return this.uncommittedEvents.AsEnumerable();
-        }
+            => this.uncommittedEvents.AsEnumerable();
 
         protected void RaiseEvent<TEvent>(TEvent @event)
             where TEvent : DomainEventBase<TId>
