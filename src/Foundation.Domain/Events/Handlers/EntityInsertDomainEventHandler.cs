@@ -8,7 +8,7 @@
     public abstract class EntityInsertDomainEventHandler
         : DomainEventHandlerBase<EntityInsertDomainEvent>
     {
-        protected EntityInsertDomainEventHandler(ILoggerFactory loggerFactory)
+        public EntityInsertDomainEventHandler(ILoggerFactory loggerFactory)
             : base(loggerFactory)
         {
         }

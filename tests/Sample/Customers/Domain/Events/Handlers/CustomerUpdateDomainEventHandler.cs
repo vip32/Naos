@@ -7,7 +7,7 @@
     public class CustomerUpdateDomainEventHandler
         : EntityUpdateDomainEventHandler
     {
-        protected CustomerUpdateDomainEventHandler(ILoggerFactory loggerFactory)
+        public CustomerUpdateDomainEventHandler(ILoggerFactory loggerFactory)
             : base(loggerFactory)
         {
         }

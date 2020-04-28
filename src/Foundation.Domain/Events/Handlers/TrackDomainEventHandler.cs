@@ -9,7 +9,7 @@
     public class TrackDomainEventHandler
         : DomainEventHandlerBase<IDomainEvent> // handles all domainevents
     {
-        protected TrackDomainEventHandler(ILoggerFactory loggerFactory)
+        public TrackDomainEventHandler(ILoggerFactory loggerFactory)
             : base(loggerFactory)
         {
         }

@@ -9,7 +9,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="DomainEventBase"/> class.
         /// </summary>
-        public DomainEventBase()
+        protected DomainEventBase()
         {
             this.EventId = IdGenerator.Instance.Next;
         }
@@ -19,7 +19,7 @@
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <param name="correlationId">The correlation identifier.</param>
-        public DomainEventBase(string id, string correlationId)
+        protected DomainEventBase(string id, string correlationId)
         {
             this.EventId = id ?? IdGenerator.Instance.Next;
             this.CorrelationId = correlationId;
@@ -50,14 +50,5 @@
         {
             return this.hashCode ?? (this.hashCode = this.EventId.GetHashCode() ^ 31).Value;
         }
-    }
-
-#pragma warning disable SA1402 // File may only contain a single type
-    public abstract class DomainEvent<TId> : DomainEventBase, IDomainEvent<TId>
-#pragma warning restore SA1402 // File may only contain a single type
-    {
-        public TId AggregateId { get; }
-
-        public long AggregateVersion { get; }
     }
 }

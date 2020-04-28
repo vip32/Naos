@@ -8,7 +8,7 @@
     public abstract class EntityUpdateDomainEventHandler
         : DomainEventHandlerBase<EntityUpdateDomainEvent>
     {
-        protected EntityUpdateDomainEventHandler(ILoggerFactory loggerFactory)
+        public EntityUpdateDomainEventHandler(ILoggerFactory loggerFactory)
             : base(loggerFactory)
         {
         }

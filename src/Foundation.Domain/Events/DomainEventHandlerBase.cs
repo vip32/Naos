@@ -10,7 +10,7 @@
     public abstract class DomainEventHandlerBase<TEvent> : IDomainEventHandler<TEvent>
         where TEvent : class, IDomainEvent
     {
-        protected DomainEventHandlerBase(ILoggerFactory loggerFactory)
+        public DomainEventHandlerBase(ILoggerFactory loggerFactory)
         {
             EnsureArg.IsNotNull(loggerFactory, nameof(loggerFactory));
 

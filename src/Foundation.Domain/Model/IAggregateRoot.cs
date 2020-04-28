@@ -33,15 +33,4 @@
         [System.Text.Json.Serialization.JsonIgnore]
         DomainEvents DomainEvents { get; }
     }
-
-    public interface IEventSourcingAggregate<TId>
-    {
-        long Version { get; }
-
-        void ApplyEvent(IDomainEvent<TId> @event, long version);
-
-        IEnumerable<IDomainEvent<TId>> GetUncommittedEvents();
-
-        void ClearUncommittedEvents();
-    }
 }

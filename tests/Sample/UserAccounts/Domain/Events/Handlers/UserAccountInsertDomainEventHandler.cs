@@ -7,7 +7,7 @@
     public class UserAccountInsertDomainEventHandler
         : EntityInsertDomainEventHandler
     {
-        protected UserAccountInsertDomainEventHandler(ILoggerFactory loggerFactory)
+        public UserAccountInsertDomainEventHandler(ILoggerFactory loggerFactory)
            : base(loggerFactory)
         {
         }

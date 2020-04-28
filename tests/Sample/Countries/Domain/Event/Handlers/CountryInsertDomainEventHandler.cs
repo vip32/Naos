@@ -7,7 +7,7 @@
     public class CountryInsertDomainEventHandler
         : EntityInsertDomainEventHandler
     {
-        protected CountryInsertDomainEventHandler(ILoggerFactory loggerFactory)
+        public CountryInsertDomainEventHandler(ILoggerFactory loggerFactory)
            : base(loggerFactory)
         {
         }

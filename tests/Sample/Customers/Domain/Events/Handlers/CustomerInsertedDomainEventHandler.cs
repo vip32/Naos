@@ -10,7 +10,7 @@
     public class CustomerInsertedDomainEventHandler
         : DomainEventHandlerBase<EntityInsertedDomainEvent>
     {
-        protected CustomerInsertedDomainEventHandler(ILoggerFactory loggerFactory)
+        public CustomerInsertedDomainEventHandler(ILoggerFactory loggerFactory)
             : base(loggerFactory)
         {
         }

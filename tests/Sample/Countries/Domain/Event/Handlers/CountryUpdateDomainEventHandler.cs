@@ -7,7 +7,7 @@
     public class CountryUpdateDomainEventHandler
         : EntityUpdateDomainEventHandler
     {
-        protected CountryUpdateDomainEventHandler(ILoggerFactory loggerFactory)
+        public CountryUpdateDomainEventHandler(ILoggerFactory loggerFactory)
            : base(loggerFactory)
         {
         }
