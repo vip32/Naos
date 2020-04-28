@@ -57,7 +57,7 @@
                     return broker;
                 });
 
-                options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: messaging added (broker={nameof(FileStorageMessageBroker)})");
+                options.Context.Messages.Add($"naos services builder: messaging added (broker={nameof(FileStorageMessageBroker)})");
             }
             else
             {

@@ -3,7 +3,6 @@
     using System;
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Naos.Commands.Correlation.Application.Web;
     using Naos.RequestCorrelation.Application;
@@ -40,7 +39,7 @@
             }
 
             naosOptions.Context.Application.UseMiddleware<RequestCorrelationMiddleware>(Options.Create(options));
-            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: request correlation added");
+            naosOptions.Context.Messages.Add("naos application builder: request correlation added");
             return naosOptions;
         }
     }

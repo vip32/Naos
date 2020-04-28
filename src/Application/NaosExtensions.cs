@@ -2,7 +2,6 @@
 {
     using System;
     using EnsureThat;
-    using Microsoft.Extensions.Logging;
     using Naos.ServiceDiscovery.Application;
 
     public static class NaosExtensions
@@ -34,7 +33,7 @@
         {
             EnsureArg.IsNotNull(context, nameof(context));
 
-            context.Messages.Add($"{LogKeys.Startup} naos services builder: typed service client added (type={typeof(TClient).Name})");
+            context.Messages.Add($"naos services builder: typed service client added (type={typeof(TClient).Name})");
 
             if (setupAction != null)
             {
@@ -60,7 +59,7 @@
             EnsureArg.IsNotNull(context, nameof(context));
             EnsureArg.IsNotNullOrEmpty(name, nameof(name));
 
-            context.Messages.Add($"{LogKeys.Startup} naos services builder: named service client added (name={name})");
+            context.Messages.Add($"naos services builder: named service client added (name={name})");
 
             if (setupAction != null)
             {

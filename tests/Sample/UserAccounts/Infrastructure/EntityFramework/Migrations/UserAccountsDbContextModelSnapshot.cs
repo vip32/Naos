@@ -16,7 +16,7 @@ namespace Naos.Sample.UserAccounts.Infrastructure.EntityFramework.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("useraccounts")
-                .HasAnnotation("ProductVersion", "3.1.1")
+                .HasAnnotation("ProductVersion", "3.1.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -165,14 +165,16 @@ namespace Naos.Sample.UserAccounts.Infrastructure.EntityFramework.Migrations
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Domain")
+                                .HasColumnName("AdDomain")
                                 .HasColumnType("nvarchar(max)");
 
                             b1.Property<string>("Name")
+                                .HasColumnName("AdName")
                                 .HasColumnType("nvarchar(max)");
 
                             b1.HasKey("UserAccountId");
 
-                            b1.ToTable("AdAccounts");
+                            b1.ToTable("UserAccounts");
 
                             b1.WithOwner()
                                 .HasForeignKey("UserAccountId");

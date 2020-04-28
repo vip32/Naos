@@ -38,7 +38,7 @@
                         .DatabaseName(configuration.DatabaseName)
                         .CollectionName(configuration.CollectionName));
                 });
-                context.Messages.Add($"{LogKeys.Startup} naos services builder: logging azure mongo repository added (collection={configuration.CollectionName})");
+                context.Messages.Add($"naos services builder: logging azure mongo repository added (collection={configuration.CollectionName})");
             }
 
             return context;

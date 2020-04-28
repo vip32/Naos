@@ -37,6 +37,8 @@ Marketing
 
 TODO:
 
+switch to Azure AppConfiguration https://github.com/Azure/AppConfiguration/issues/45
+
 [DONE] Drop .Core from the namespace (net5!)
   - Naos.Foundation + Naos.XYZ
 
@@ -130,6 +132,7 @@ c# script compile + run roslyn https://laurentkempe.com/2019/02/18/dynamically-c
 clearscript https://github.com/microsoft/ClearScript               
 pattern cqs https://www.dotnetcurry.com/patterns-practices/1461/command-query-separation-cqs
 cqrs https://github.com/OpenCQRS/OpenCQRS
+     https://www.codeproject.com/Articles/5264244/A-Fast-and-Lightweight-Solution-for-CQRS-and-Event
 eventstore https://github.com/NEventStore
 crs https://github.com/gautema/CQRSlite (eventstore)
 api 404s https://www.strathweb.com/2018/10/convert-null-valued-results-to-404-in-asp-net-core-mvc/

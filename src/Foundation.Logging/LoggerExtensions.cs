@@ -61,39 +61,39 @@
         //    IDictionary<string, object> properties = null,
         //    params object[] args)
         //{
-            // REPLACED with SPAN/TRACER
-            //if(!message.IsNullOrEmpty())
-            //{
-            //    duration ??= TimeSpan.Zero;
-            //    using(source.BeginScope(new Dictionary<string, object>(properties.Safe())
-            //    {
-            //        [LogPropertyKeys.TrackType] = LogTrackTypeValues.Trace,
-            //        [LogPropertyKeys.TrackId] = span,
-            //        [LogPropertyKeys.TrackName] = name,
-            //        [LogPropertyKeys.TrackDuration] = duration.Value.Milliseconds,
-            //        [LogPropertyKeys.TrackTimestamp] = DateTimeOffset.UtcNow,
-            //        [LogPropertyKeys.LogKey] = logKey
-            //    }))
-            //    {
-            //        try
-            //        {
-            //            source.Log(LogLevel.Information, $"{{LogKey:l}} {message:l}", args.Insert(logKey).ToArray());
-            //        }
-            //        catch(AggregateException ex) // IndexOutOfRangeException
-            //        {
-            //            if(ex.InnerException is IndexOutOfRangeException)
-            //            {
-            //                source.Log(LogLevel.Warning, $"{{LogKey:l}} {message:l}");
-            //            }
-            //            else
-            //            {
-            //                throw;
-            //            }
-            //        }
-            //    }
-            //}
+        // REPLACED with SPAN/TRACER
+        //if(!message.IsNullOrEmpty())
+        //{
+        //    duration ??= TimeSpan.Zero;
+        //    using(source.BeginScope(new Dictionary<string, object>(properties.Safe())
+        //    {
+        //        [LogPropertyKeys.TrackType] = LogTrackTypeValues.Trace,
+        //        [LogPropertyKeys.TrackId] = span,
+        //        [LogPropertyKeys.TrackName] = name,
+        //        [LogPropertyKeys.TrackDuration] = duration.Value.Milliseconds,
+        //        [LogPropertyKeys.TrackTimestamp] = DateTimeOffset.UtcNow,
+        //        [LogPropertyKeys.LogKey] = logKey
+        //    }))
+        //    {
+        //        try
+        //        {
+        //            source.Log(LogLevel.Information, $"{{LogKey:l}} {message:l}", args.Insert(logKey).ToArray());
+        //        }
+        //        catch(AggregateException ex) // IndexOutOfRangeException
+        //        {
+        //            if(ex.InnerException is IndexOutOfRangeException)
+        //            {
+        //                source.Log(LogLevel.Warning, $"{{LogKey:l}} {message:l}");
+        //            }
+        //            else
+        //            {
+        //                throw;
+        //            }
+        //        }
+        //    }
+        //}
 
-            // TODO: publish tracing notification (so other tracers can pick it up?), mediator publish
+        // TODO: publish tracing notification (so other tracers can pick it up?), mediator publish
 
         //    return source;
         //}

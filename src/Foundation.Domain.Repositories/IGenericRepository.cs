@@ -21,18 +21,18 @@
         /// Insert or updates the provided entity.
         /// </summary>
         /// <param name="entity">The entity to insert or update.</param>
-        Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity);
+        Task<(TEntity entity, RepositoryActionResult action)> UpsertAsync(TEntity entity);
 
         /// <summary>
         /// Delete entity by id.
         /// </summary>
         /// <param name="id">The entity identifier.</param>
-        Task<ActionResult> DeleteAsync(object id);
+        Task<RepositoryActionResult> DeleteAsync(object id);
 
         /// <summary>
         /// Delete the entity.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        Task<ActionResult> DeleteAsync(TEntity entity);
+        Task<RepositoryActionResult> DeleteAsync(TEntity entity);
     }
 }

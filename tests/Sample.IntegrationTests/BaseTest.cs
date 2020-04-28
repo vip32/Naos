@@ -9,10 +9,8 @@
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Commands.Application;
     using Naos.Commands.Infrastructure.FileStorage;
-    using Naos.Configuration.Application;
     using Naos.FileStorage.Infrastructure;
     using Naos.Foundation;
-    using Naos.Foundation.Infrastructure;
     using Naos.Sample.Catalogs.Application;
     using Naos.Sample.Customers.Application;
     using Naos.Sample.Inventory.Application;
@@ -22,19 +20,17 @@
 
     public abstract class BaseTest
     {
-        private static IConfigurationRoot configuration;
-
         protected BaseTest()
         {
             Environment.SetEnvironmentVariable(EnvironmentKeys.Environment, "Development");
             Environment.SetEnvironmentVariable(EnvironmentKeys.IsLocal, "True");
 
-            var entityFrameworkConfiguration = Configuration.GetSection("naos:sample:userAccounts:entityFramework").Get<EntityFrameworkConfiguration>();
+            //var entityFrameworkConfiguration = Configuration.GetSection("naos:sample:userAccounts:entityFramework").Get<EntityFrameworkConfiguration>();
 
             // naos core registrations
             this.Services
                 .AddMediatR(AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.GetName().Name.StartsWith("Microsoft.", StringComparison.OrdinalIgnoreCase)).ToArray())
-                .AddNaos(configuration, "Product", "Capability", new[] { "All" }, n => n
+                .AddNaos("Product", "Capability", new[] { "All" }, n => n
                     .AddModules(o => o
                         .AddCountriesModule()
                         .AddCustomersModule()
@@ -66,14 +62,6 @@
             //this.services.AddSingleton<ICommandBehavior, PersistCommandBehavior>();
 
             this.ServiceProvider = this.Services.BuildServiceProvider();
-        }
-
-        protected static IConfiguration Configuration
-        {
-            get
-            {
-                return configuration ?? (configuration = NaosConfigurationFactory.Create());
-            }
         }
 
         protected ServiceProvider ServiceProvider { get; }

@@ -2,7 +2,6 @@
 {
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
-    using Naos.Configuration.Application;
     using Naos.Foundation;
     using Naos.Operations.Domain;
     using Shouldly;
@@ -14,10 +13,8 @@
 
         public LogEventRepositoryTests()
         {
-            var configuration = NaosConfigurationFactory.Create();
-
             this.Services
-                .AddNaos(configuration, "Product", "Capability", new[] { "All" }, n => n
+                .AddNaos("Product", "Capability", new[] { "All" }, n => n
                     .AddOperations(o => o
                         .AddLogging(
                             l => l.UseAzureLogAnalytics(), // registers loganalytics sink

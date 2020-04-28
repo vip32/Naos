@@ -7,8 +7,8 @@
     public class CustomerUpdateDomainEventHandler
         : EntityUpdateDomainEventHandler
     {
-        public CustomerUpdateDomainEventHandler(ILogger<EntityUpdateDomainEventHandler> logger)
-            : base(logger)
+        public CustomerUpdateDomainEventHandler(ILoggerFactory loggerFactory)
+            : base(loggerFactory)
         {
         }
 

@@ -31,8 +31,8 @@
         public void JoinGroup(string groupName)
         {
             // business rule examples
-            this.CheckAndThrow(new PersonShouldNotBePartOfGroupSpecification(groupName));
-            this.CheckAndThrow(new PersonCannotBeExpiredSpecification());
+            Check.Throw(this, new PersonShouldNotBePartOfGroupSpecification(groupName));
+            Check.Throw(this, new PersonCannotBeExpiredSpecification());
 
             this.groups.Add(groupName);
         }
@@ -40,7 +40,7 @@
         public void LeaveGroup(string groupName)
         {
             // business rule examples
-            if (this.Check(new PersonCannotBeExpiredSpecification()))
+            if (Check.Return(this, new PersonCannotBeExpiredSpecification()))
             {
                 this.groups.Remove(groupName);
             }

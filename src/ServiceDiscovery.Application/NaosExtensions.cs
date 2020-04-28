@@ -38,7 +38,7 @@
 
             optionsAction?.Invoke(new ServiceDiscoveryOptions(naosOptions.Context));
 
-            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos services builder: service discovery added (enabled={registryConfiguration.Enabled})");
+            naosOptions.Context.Messages.Add($"naos services builder: service discovery added (enabled={registryConfiguration.Enabled})");
 
             return naosOptions;
         }
@@ -67,7 +67,7 @@
                     sp.GetRequiredService<ILogger<FileSystemServiceRegistry>>(),
                     registryConfiguration));
 
-            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: service discovery registry added (type={nameof(FileSystemServiceRegistry)}, folder={registryConfiguration.Folder})");
+            options.Context.Messages.Add($"naos services builder: service discovery registry added (type={nameof(FileSystemServiceRegistry)}, folder={registryConfiguration.Folder})");
             options.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceDiscovery", Description = "FileSystemClientRegistry", EchoRoute = "naos/servicediscovery/echo" });
 
             return options;
@@ -104,7 +104,7 @@
                     return configuration;
                 });
 
-            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: service discovery registry added (type={nameof(RouterServiceRegistry)})");
+            options.Context.Messages.Add($"naos services builder: service discovery registry added (type={nameof(RouterServiceRegistry)})");
             options.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceDiscovery", Description = "RouterClientRegistry", EchoRoute = "naos/servicediscovery/echo" });
 
             return options;

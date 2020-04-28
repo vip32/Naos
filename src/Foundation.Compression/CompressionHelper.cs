@@ -12,7 +12,7 @@
 
         public static byte[] Compress(byte[] source)
         {
-            if(source == null)
+            if (source == null)
             {
                 return null;
             }

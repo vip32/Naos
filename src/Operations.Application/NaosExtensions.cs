@@ -3,7 +3,6 @@
     using System;
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
-    using Microsoft.Extensions.Logging;
     using Naos.Configuration.Application;
     using Naos.Operations;
     using Naos.Operations.Application;
@@ -23,7 +22,7 @@
 
             naosOptions.Context.Services.AddScoped<ILogEventService, LogEventService>();
 
-            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos services builder: operations added");
+            naosOptions.Context.Messages.Add("naos services builder: operations added");
             naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Operations" });
 
             return naosOptions;

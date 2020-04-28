@@ -20,7 +20,7 @@
 
         public static JObject MapJsonReport(HealthReport report)
         {
-            if(report == null)
+            if (report == null)
             {
                 return new JObject();
             }
@@ -57,9 +57,9 @@
                 Entries = new Dictionary<string, NaosHealthReportEntry>()
             };
 
-            foreach(var entry in report.Entries.Safe())
+            foreach (var entry in report.Entries.Safe())
             {
-                if(entry.Key == null)
+                if (entry.Key == null)
                 {
                     continue;
                 }

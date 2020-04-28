@@ -1,6 +1,6 @@
 ﻿namespace Naos.Foundation.Domain
 {
-    public class EntityInsertDomainEvent : DomainEvent
+    public class EntityInsertDomainEvent : DomainEventBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EntityInsertDomainEvent"/> class.

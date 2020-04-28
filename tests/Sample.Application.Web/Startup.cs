@@ -1,7 +1,7 @@
 namespace Naos.Sample.Application.Web
 {
     using System.Collections.Generic;
-    using System.IO;
+    using System.Linq;
     using System.Net;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -13,7 +13,7 @@ namespace Naos.Sample.Application.Web
     using Naos.Application.Web;
     using Naos.Commands.Application;
     using Naos.Commands.Infrastructure.FileStorage;
-    using Naos.FileStorage.Infrastructure;
+    using Naos.Foundation;
     using Naos.JobScheduling.Domain;
     using Naos.Messaging.Domain;
     using Naos.Queueing.Domain;
@@ -27,30 +27,10 @@ namespace Naos.Sample.Application.Web
 
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            this.Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
-
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddHttpContextAccessor()
-                .AddMvc()
-                    .AddNaos(o =>
-                    {
-                        // Countries repository is exposed with a dedicated controller, no need to register here
-                        o.AddEndpoint<Customers.Domain.Customer, Customers.Domain.ICustomerRepository>();
-                        o.AddEndpoint<Inventory.Domain.ProductInventory, Inventory.Domain.IInventoryRepository>();
-                        o.AddEndpoint<Inventory.Domain.ProductReplenishment, Inventory.Domain.IReplenishmentRepository>();
-                        o.AddEndpoint<UserAccounts.Domain.UserAccount>(); // =implicit IRepository<UserAccount>
-                        o.AddEndpoint<UserAccounts.Domain.UserVisit>(); // =implicit IRepository<UserVisit>
-                    });
-
-            services
-                .AddNaos(this.Configuration, "Product", "Capability", new[] { "All" }, n => n
+                .AddNaos("Product", "Capability", new[] { "All" }, n => n
                     //.AddModule<CustomersModule>()>> INaosModule
                     //.AddModule(m => m { m.Context.Services.AddScoped<....>()}, "customers")
                     //.AddModules() >> discover INaosModule!
@@ -60,21 +40,28 @@ namespace Naos.Sample.Application.Web
                         .AddUserAccountsModule()
                         .AddCatalogsModule()
                         .AddInventoryModule())
-                    .AddSwaggerDocumentation() // do IMPLICIT! XXXX
                     .AddServiceContext() // do IMPLICIT! XXXX
                     .AddOidcAuthentication()
-                    //.AddAuthenticationApiKeyStatic()
+                    //.AddApiKeyStaticAuthentication()
                     //.AddEasyAuthentication(/*o => o.Provider = EasyAuthProviders.AzureActiveDirectory*/)
                     .AddRequestCorrelation() // do IMPLICIT!
                     .AddRequestFiltering() // do IMPLICIT! XXXX
                     .AddServiceExceptions() // do IMPLICIT! XXXX
+                    .AddSwaggerDocumentation() // do IMPLICIT! XXXX
+                    .AddWebApi(o =>
+                    {
+                        // Countries repository is exposed with a dedicated controller, no need to register here
+                        o.AddEndpoint<Customers.Domain.Customer, Customers.Domain.ICustomerRepository>();
+                        o.AddEndpoint<Inventory.Domain.ProductInventory, Inventory.Domain.IInventoryRepository>();
+                        o.AddEndpoint<Inventory.Domain.ProductReplenishment, Inventory.Domain.IReplenishmentRepository>();
+                        o.AddEndpoint<UserAccounts.Domain.UserAccount>(); // =implicit IRepository<UserAccount>
+                        o.AddEndpoint<UserAccounts.Domain.UserVisit>(); // =implicit IRepository<UserVisit>
+                    })
                     .AddCommands(o => o
                         .AddBehavior<TracerCommandBehavior>()
                         .AddBehavior<ValidateCommandBehavior>()
                         .AddBehavior<JournalCommandBehavior>()
-                        .AddBehavior(sp => new FileStoragePersistCommandBehavior(
-                            new FolderFileStorage(o => o
-                                .Folder(Path.Combine(Path.GetTempPath(), "naos_commands", "journal")))))
+                        .AddBehavior<FileStoragePersistCommandBehavior>()
                         .AddEndpoints(o => o
                             .Post<CreateCustomerCommand>(
                                 "api/commands/customers/create",
@@ -88,10 +75,10 @@ namespace Naos.Sample.Application.Web
                                 "api/commands/customers/{CustomerId}", // TODO: swagger ui has a problem creating the correct tryout url for the actual customerid
                                 groupName: "Customers")
                             //.UseInMemoryStorage()
-                            .UseAzureBlobStorage() // *
+                            .UseAzureBlobStorage()
                             //.UseFolderStorage()
                             //.UseInMemoryQueue()
-                            .UseAzureStorageQueue() // *
+                            .UseAzureStorageQueue()
                             //.UseAzureServiceBusQueue()
                             //.UseRabbitMQQueue()
                             .GetQueued<PingCommand>("api/commands/queue/ping")
@@ -151,6 +138,18 @@ namespace Naos.Sample.Application.Web
                     //.UseRouterClientRegistry())
                     .AddServiceDiscoveryRouter(o => o
                         .UseFileSystemRegistry()));
+
+            // TODO: remove some offending DI registrations
+            var sds = services.Where(s => s.ServiceType.FullName.StartsWithAny(new[] { "Scrutor" }, System.StringComparison.OrdinalIgnoreCase)).ToList();
+            foreach (var sd in sds)
+            {
+                services.Remove(sd);
+            }
+
+            //foreach (var s in services.Where(o => o.ServiceType.FullName.StartsWith("Naos", System.StringComparison.OrdinalIgnoreCase)).OrderBy(o => o.ServiceType.FullName))
+            //{
+            //    Console.WriteLine($"SP: [{s.Lifetime}] {s.ServiceType.FullName} >> {s.ImplementationType?.FullName}");
+            //}
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -190,10 +189,10 @@ namespace Naos.Sample.Application.Web
                        // redirect https://localhost:5001/swagger/oauth2-redirect.html
                    };
                    //a.OAuth2Client.AdditionalQueryStringParameters
-                    //.AddOrUpdate("response_type", "token") // code?
-                    //.AddOrUpdate("scope", "openid profile email claims")
-                    //.AddOrUpdate("nonce", "swagger");
-                    //.AddOrUpdate("response_mode", "post");
+                   //.AddOrUpdate("response_type", "token") // code?
+                   //.AddOrUpdate("scope", "openid profile email claims")
+                   //.AddOrUpdate("nonce", "swagger");
+                   //.AddOrUpdate("response_mode", "post");
                }); // https://cpratt.co/customizing-swagger-ui-in-asp-net-core/
 
             app.UseRouting();

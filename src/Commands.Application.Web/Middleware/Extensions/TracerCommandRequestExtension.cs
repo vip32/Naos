@@ -44,7 +44,7 @@
             CommandRequestRegistration<TCommand> registration,
             HttpContext context)
         {
-            if(this.tracer == null)
+            if (this.tracer == null)
             {
                 // continue with next extension
                 await base.InvokeAsync(command, registration, context).AnyContext();

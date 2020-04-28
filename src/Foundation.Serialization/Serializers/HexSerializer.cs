@@ -26,12 +26,12 @@
         /// <param name="output">The output.</param>
         public void Serialize(object value, Stream output)
         {
-            if(value == null)
+            if (value == null)
             {
                 return;
             }
 
-            if(output == null)
+            if (output == null)
             {
                 return;
             }

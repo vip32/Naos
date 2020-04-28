@@ -1,5 +1,6 @@
 ﻿namespace Naos.Sample.Customers.Application
 {
+    using System;
     using EnsureThat;
     using Humanizer;
     using MediatR;
@@ -94,7 +95,14 @@
                     s.UriEndpoint = configuration.ServiceEndpointUri;
                     s.PrimaryKey = configuration.AuthKeyOrResourceToken;
                 },
-                    name: $"{typeof(Order).Name.Pluralize()}-cosmosdb");
+                name: $"{typeof(Order).Name.Pluralize()}-cosmosdb");
+
+            options.Context.Services.AddSeederStartupTask<ICustomerRepository, Customer>(new[]
+            {
+                new Customer() { Id = "100fb10f-2ad4-4bd1-9b33-6410a5ce1b25", Email = "test10@unknown.com", TenantId = "naos_sample_test", Gender = "Male", CustomerNumber = "AB-10010", FirstName = "John", LastName = "Doe", Region = "East" },
+                new Customer() { Id = "100fb10f-2ad4-4bd1-9b33-6410a5ce1b26", Email = "test20@unknown.com", TenantId = "naos_sample_test", Gender = "Female", CustomerNumber = "AB-10020", FirstName = "Lisa", LastName = "Doe", Region = "West" },
+                new Customer() { Id = "100fb10f-2ad4-4bd1-9b33-6410a5ce1b27", Email = "test30@unknown.com", TenantId = "naos_sample_test", Gender = "Male", CustomerNumber = "AB-10030", FirstName = "Paul", LastName = "Doe", Region = "East" },
+            }, delay: new TimeSpan(0, 0, 10));
 
             var queueStorageConfiguration = options.Context.Configuration?.GetSection($"{section}:queueStorage").Get<QueueStorageConfiguration>();
             options.Context.Services.AddSingleton<IQueue<Customer>>(sp =>
@@ -108,13 +116,15 @@
                 _ = queue.EnqueueAsync(new Customer()).Result;
                 _ = queue.EnqueueAsync(new Customer()).Result;
                 return queue;
-            }).AddHealthChecks()
-                .AddAzureQueueStorage(
-                    queueStorageConfiguration.ConnectionString,
-                    name: "Customers-azurequeuestorage");
+            });
+
+            options.Context.Services.AddHealthChecks()
+              .AddAzureQueueStorage(
+                  queueStorageConfiguration.ConnectionString,
+                  name: "Customers-azurequeuestorage");
 
             //options.Context.Services.AddSingleton<IValidator<CreateCustomerCommand>>(new CreateCustomerCommandValidator());
-            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: customers service added");
+            options.Context.Messages.Add("naos services builder: customers service added");
 
             return options;
         }

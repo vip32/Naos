@@ -4,7 +4,6 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
-    using Naos.Configuration.Application;
     using Naos.Foundation;
     using Naos.JobScheduling.Domain;
     using Shouldly;
@@ -16,10 +15,8 @@
 
         public JobSchedulerTests()
         {
-            var configuration = NaosConfigurationFactory.Create();
-
             this.Services
-                .AddNaos(configuration, "Product", "Capability", new[] { "All" }, n => n
+                .AddNaos("Product", "Capability", new[] { "All" }, n => n
                     .AddOperations(o => o
                         .AddLogging(correlationId: $"TEST{IdGenerator.Instance.Next}"))
                     .AddJobScheduling());

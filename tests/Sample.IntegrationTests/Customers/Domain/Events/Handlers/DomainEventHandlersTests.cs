@@ -30,7 +30,7 @@
             domainEvent.Properties.ShouldContainKey(typeof(SecondStubDomainEventHandler).Name);
         }
 
-        public class StubDomainEvent : DomainEvent
+        public class StubDomainEvent : DomainEventBase
         {
             public string Name { get; set; }
 

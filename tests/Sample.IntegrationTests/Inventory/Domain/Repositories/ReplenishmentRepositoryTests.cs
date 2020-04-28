@@ -24,7 +24,7 @@
             this.sut = this.ServiceProvider.GetRequiredService<IReplenishmentRepository>();
             var domains = new[] { "East", "West" };
             this.entityFaker = new Faker<ProductReplenishment>() //https://github.com/bchavez/Bogus
-                //.RuleFor(u => u.Id, f => Guid.NewGuid().ToString())
+                                                                 //.RuleFor(u => u.Id, f => Guid.NewGuid().ToString())
                 .RuleFor(u => u.Number, f => f.Random.Replace("??-#####"))
                 .RuleFor(u => u.Region, (f, u) => f.PickRandom(new[] { "East", "West" }))
                 .RuleFor(u => u.Quantity, f => f.Random.Int(0, 999))
@@ -214,7 +214,7 @@
             var result = await this.sut.DeleteAsync(entity).AnyContext();
 
             // assert
-            result.ShouldBe(ActionResult.Deleted);
+            result.ShouldBe(RepositoryActionResult.Deleted);
             (await this.sut.FindOneAsync(entities.FirstOrDefault()?.Id).AnyContext()).ShouldBeNull();
         }
 
@@ -238,7 +238,7 @@
                 var result = await this.sut.UpsertAsync(this.entityFaker.Generate()).AnyContext();
 
                 // assert
-                result.action.ShouldNotBe(ActionResult.None);
+                result.action.ShouldNotBe(RepositoryActionResult.None);
                 result.entity.ShouldNotBeNull();
                 result.entity.Id.ShouldNotBeNull();
                 //result.entity.IdentifierHash.ShouldNotBeNull(); // EntityInsertDomainEventHandler

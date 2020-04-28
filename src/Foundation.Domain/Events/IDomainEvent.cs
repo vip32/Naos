@@ -4,8 +4,14 @@
 
     public interface IDomainEvent : INotification
     {
-        string Id { get; set; }
+        /// <summary>
+        /// The identifier of the event
+        /// </summary>
+        string EventId { get; set; }
 
+        /// <summary>
+        /// The correlation id of the event
+        /// </summary>
         string CorrelationId { get; set; }
     }
 }

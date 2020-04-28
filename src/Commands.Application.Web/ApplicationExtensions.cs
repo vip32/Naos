@@ -3,7 +3,6 @@
     using System.Linq;
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Naos.Commands.Application.Web;
     using Naos.Foundation;
@@ -31,7 +30,7 @@
                         Registration = registration,
                         RouteMatcher = routeMatcher
                     }));
-                naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: command requests added (route={registration.Route}, method={registration.RequestMethod}, type={registration.CommandType.PrettyName()})");
+                naosOptions.Context.Messages.Add($"naos application builder: command requests added (route={registration.Route}, method={registration.RequestMethod}, type={registration.CommandType.PrettyName()})");
             }
 
             return naosOptions;

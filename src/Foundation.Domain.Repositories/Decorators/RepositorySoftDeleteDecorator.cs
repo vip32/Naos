@@ -32,11 +32,11 @@
             this.specification = new Specification<TEntity>(e => e.State.Deleted != true);
         }
 
-        public async Task<ActionResult> DeleteAsync(object id)
+        public async Task<RepositoryActionResult> DeleteAsync(object id)
         {
             if (id.IsDefault())
             {
-                return ActionResult.None;
+                return RepositoryActionResult.None;
             }
 
             var entity = await this.FindOneAsync(id).AnyContext();
@@ -44,20 +44,20 @@
             {
                 entity.State.SetDeleted();
                 var result = (await this.UpsertAsync(entity).AnyContext()).action;
-                if (result == ActionResult.Updated)
+                if (result == RepositoryActionResult.Updated)
                 {
-                    return ActionResult.Deleted;
+                    return RepositoryActionResult.Deleted;
                 }
             }
 
-            return ActionResult.None;
+            return RepositoryActionResult.None;
         }
 
-        public async Task<ActionResult> DeleteAsync(TEntity entity)
+        public async Task<RepositoryActionResult> DeleteAsync(TEntity entity)
         {
             if (entity?.Id.IsDefault() != false)
             {
-                return ActionResult.None;
+                return RepositoryActionResult.None;
             }
 
             return await this.DeleteAsync(entity.Id).AnyContext();
@@ -101,7 +101,7 @@
             return await this.decoratee.UpdateAsync(entity).AnyContext();
         }
 
-        public async Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
+        public async Task<(TEntity entity, RepositoryActionResult action)> UpsertAsync(TEntity entity)
         {
             return await this.decoratee.UpsertAsync(entity).AnyContext();
         }

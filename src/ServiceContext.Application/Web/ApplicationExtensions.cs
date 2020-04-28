@@ -3,7 +3,6 @@
     using System;
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Naos.ServiceContext.Application.Web;
 
@@ -39,7 +38,7 @@
             }
 
             naosOptions.Context.Application.UseMiddleware<ServiceContextMiddleware>(Options.Create(options));
-            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: service context added");
+            naosOptions.Context.Messages.Add("naos application builder: service context added");
             return naosOptions;
         }
 
@@ -65,7 +64,7 @@
             EnsureArg.IsNotNull(options, nameof(options));
 
             naosOptions.Context.Application.UseMiddleware<ServicePoweredByMiddleware>(Options.Create(options));
-            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: powered by added");
+            naosOptions.Context.Messages.Add("naos application builder: powered by added");
             return naosOptions;
         }
     }

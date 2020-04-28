@@ -29,11 +29,11 @@
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            if(this.httpContextAccessor?.HttpContext == null)
+            if (this.httpContextAccessor?.HttpContext == null)
             {
                 // TODO: get current scoped tracer in here! only happens in out of httpcontext request, for example inside a dequeued message handler.
                 //       all fine within a httpcontext, also the with commands+handlers (only inside queued commands+handlers its an issue)
-                this.logger.LogWarning($"{{LogKey:l}} no httpcontext available, cannot get current tracer (with parent span). this client http request will not be traced.", LogKeys.Tracing);
+                this.logger.LogWarning("{LogKey:l} no httpcontext available, cannot get current tracer (with parent span). this client http request will not be traced.", LogKeys.Tracing);
             }
 
             var tracer = this.httpContextAccessor?.HttpContext?.RequestServices.GetService<ITracer>();  // scoped workaround

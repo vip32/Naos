@@ -9,7 +9,6 @@
     using Microsoft.Extensions.DependencyInjection;
     using Naos.Commands.Application;
     using Naos.Commands.Infrastructure.FileStorage;
-    using Naos.Configuration.Application;
     using Naos.FileStorage.Infrastructure;
     using Naos.Foundation;
     using Shouldly;
@@ -21,11 +20,9 @@
 
         public CommandRequestTests()
         {
-            var configuration = NaosConfigurationFactory.Create();
-
             this.Services
                 .AddMediatR(AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.GetName().Name.StartsWith("Microsoft.", StringComparison.OrdinalIgnoreCase)).ToArray())
-                .AddNaos(configuration, "Product", "Capability", new[] { "All" }, n => n
+                .AddNaos("Product", "Capability", new[] { "All" }, n => n
                     .AddOperations(o => o
                         .AddLogging(correlationId: $"TEST{RandomGenerator.GenerateString(9)}")
                         .AddTracing())

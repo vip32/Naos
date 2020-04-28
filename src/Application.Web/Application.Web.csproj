@@ -10,6 +10,7 @@
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <ProjectReference Include="..\Foundation.Application.Web.Startup.EntityFramework\Application.Web.Startup.EntityFramework.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.3" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
@@ -17,11 +18,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.2" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.3" />
     <PackageReference Include="MediatR" Version="8.0.1" />
-    <PackageReference Include="NSwag.Annotations" Version="13.2.3" />
-    <PackageReference Include="NSwag.Generation" Version="13.2.3" />
+    <PackageReference Include="NSwag.Annotations" Version="13.4.1" />
+    <PackageReference Include="NSwag.Generation" Version="13.4.1" />
   </ItemGroup>
 
   <ItemGroup>

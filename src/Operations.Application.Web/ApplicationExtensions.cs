@@ -34,7 +34,7 @@
                     Options.Create(requestLoggingMiddlewareOptions ?? naosOptions.Context.Application.ApplicationServices.GetService<RequestLoggingMiddlewareOptions>() ?? new RequestLoggingMiddlewareOptions()))
                 .UseMiddleware<RequestStorageMiddleware>(
                     Options.Create(requestStorageMiddlewareOptions ?? naosOptions.Context.Application.ApplicationServices.GetService<RequestStorageMiddlewareOptions>() ?? new RequestStorageMiddlewareOptions()));
-            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: operations request logging added");
+            naosOptions.Context.Messages.Add("naos application builder: operations request logging added");
 
             var diagnosticListener = naosOptions.Context.Application.ApplicationServices.GetService<DiagnosticListener>();
             diagnosticListener?.SubscribeWithAdapter(new NaosDiagnosticListener(naosOptions.Context.Application.ApplicationServices.GetService<ILoggerFactory>()));
@@ -43,7 +43,7 @@
         }
 
 #if NETCOREAPP3_1
-        public static NaosApplicationContextOptions UseOperationsHealth (
+        public static NaosApplicationContextOptions UseOperationsHealth(
             this NaosApplicationContextOptions naosOptions)
         {
             EnsureArg.IsNotNull(naosOptions, nameof(naosOptions));
@@ -74,7 +74,7 @@
                 ResponseWriter = HealthReportResponseWriter.Write // or use HealthChecks.UI.Client.UIResponseWriter.WriteHealthCheckUIResponse
             });
 
-            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: operations health added");
+            naosOptions.Context.Messages.Add("naos application builder: operations health added");
 
             return naosOptions;
         }

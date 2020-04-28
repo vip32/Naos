@@ -64,7 +64,7 @@
             }
             catch (IOException ex)
             {
-                this.logger.LogCritical(ex, $"{{LogKey:l}} ex.Message", LogKeys.AppMessaging);
+                this.logger.LogCritical(ex, "{LogKey:l} ex.Message", LogKeys.AppMessaging);
             }
         }
 
@@ -85,7 +85,7 @@
                 {
                     policy.Execute(() => this.connection = this.connectionFactory.CreateConnection(this.clientName));
                 }
-                catch(BrokerUnreachableException ex)
+                catch (BrokerUnreachableException ex)
                 {
                     this.logger.LogError(ex, $"{{LogKey:l}} connect rabbitmq client failed: {ex.Message}", LogKeys.AppMessaging);
                 }

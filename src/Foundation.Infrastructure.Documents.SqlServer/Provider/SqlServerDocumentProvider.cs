@@ -291,7 +291,7 @@
             Expression<Func<T, object>> orderExpression = null,
             bool orderDescending = false)
         {
-            await foreach(var value in
+            await foreach (var value in
                 this.LoadValuesAsync(null, expressions.AsEnumerable(), tags, skip, take, orderExpression, orderDescending))
             {
                 yield return value;

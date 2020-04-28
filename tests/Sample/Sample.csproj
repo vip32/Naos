@@ -10,16 +10,19 @@
   <ItemGroup>
     <Compile Remove="Countries\App.Commands\**" />
     <Compile Remove="Countries\App.Queries\**" />
+    <Compile Remove="Customers\Application.Queries\**" />
     <EmbeddedResource Remove="Countries\App.Commands\**" />
     <EmbeddedResource Remove="Countries\App.Queries\**" />
+    <EmbeddedResource Remove="Customers\Application.Queries\**" />
     <None Remove="Countries\App.Commands\**" />
     <None Remove="Countries\App.Queries\**" />
+    <None Remove="Customers\Application.Queries\**" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.MongoDb" Version="3.0.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.2">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -27,7 +30,6 @@
 
   <ItemGroup>
     <Folder Include="Customers\Domain\Repositories\Decorators\" />
-    <Folder Include="Customers\Application.Queries\" />
     <Folder Include="UserAccounts\App.Commands\" />
     <Folder Include="UserAccounts\App.Queries\" />
   </ItemGroup>
@@ -38,10 +40,10 @@
     <PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="3.0.1" />
     <PackageReference Include="AspNetCore.HealthChecks.DocumentDb" Version="3.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="3.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="3.1.2" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.2" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="3.1.2" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.3" />
   </ItemGroup>
 
   <ItemGroup>

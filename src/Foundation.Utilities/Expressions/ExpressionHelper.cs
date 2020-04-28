@@ -74,7 +74,7 @@
 
         public static object GetValue(Expression expression, Type resultType)
         {
-            if(expression == null)
+            if (expression == null)
             {
                 return null;
             }
@@ -160,6 +160,54 @@
         }
 
         public static string ToExpressionString<T>(this Expression<Func<T, object>> source)
+        {
+            if (source != null)
+            {
+                var result = source.ToString();
+                var name = result.SliceTill(" =>"); // strip the parameter from the expression
+                return result.Replace($"{name}.", string.Empty).SliceFrom("=> ");
+            }
+
+            return null;
+        }
+
+        public static string ToExpressionString(this Expression<Func<bool>> source)
+        {
+            if (source != null)
+            {
+                var result = source.ToString();
+                var name = result.SliceTill(" =>"); // strip the parameter from the expression
+                return result.Replace($"{name}.", string.Empty).SliceFrom("=> ");
+            }
+
+            return null;
+        }
+
+        public static string ToExpressionString(this Expression<Func<string>> source)
+        {
+            if (source != null)
+            {
+                var result = source.ToString();
+                var name = result.SliceTill(" =>"); // strip the parameter from the expression
+                return result.Replace($"{name}.", string.Empty).SliceFrom("=> ");
+            }
+
+            return null;
+        }
+
+        public static string ToExpressionString(this Expression<Func<double>> source)
+        {
+            if (source != null)
+            {
+                var result = source.ToString();
+                var name = result.SliceTill(" =>"); // strip the parameter from the expression
+                return result.Replace($"{name}.", string.Empty).SliceFrom("=> ");
+            }
+
+            return null;
+        }
+
+        public static string ToExpressionString(this Expression<Func<object>> source)
         {
             if (source != null)
             {

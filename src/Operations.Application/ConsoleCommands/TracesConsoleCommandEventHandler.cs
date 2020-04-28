@@ -31,7 +31,7 @@
                     filterContext.GetFindOptions<LogTrace>()).AnyContext();
                 var nodes = Node<LogTrace>.ToHierarchy(entities, l => l.SpanId, l => l.ParentSpanId, true);
 
-                if(request.Command.Count > 0)
+                if (request.Command.Count > 0)
                 {
                     nodes = nodes.Take(request.Command.Count);
                 }

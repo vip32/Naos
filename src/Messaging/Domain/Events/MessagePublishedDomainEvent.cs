@@ -2,7 +2,7 @@
 {
     using Naos.Foundation.Domain;
 
-    public class MessagePublishedDomainEvent : DomainEvent
+    public class MessagePublishedDomainEvent : DomainEventBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MessagePublishedDomainEvent"/> class.

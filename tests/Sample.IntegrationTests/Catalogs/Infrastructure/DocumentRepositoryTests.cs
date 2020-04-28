@@ -47,7 +47,7 @@
 
                 // assert
                 result.entity.ShouldNotBeNull();
-                result.action.ShouldBe(ActionResult.Inserted);
+                result.action.ShouldBe(RepositoryActionResult.Inserted);
             }
         }
 

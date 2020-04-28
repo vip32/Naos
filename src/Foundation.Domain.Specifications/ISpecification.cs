@@ -4,27 +4,27 @@
     using System.Collections.Generic;
     using System.Linq.Expressions;
 
-    public interface ISpecification<T>
+    public interface ISpecification
     {
         string Name { get; set; }
 
         string Description { get; set; }
 
-        Expression<Func<T, bool>> ToExpression();
+        Expression<Func<bool>> ToExpression();
 
-        Func<T, bool> ToPredicate();
+        Func<bool> ToPredicate();
 
-        bool IsSatisfiedBy(T entity);
+        bool IsSatisfied();
 
-        ISpecification<T> Or(ISpecification<T> specification);
+        ISpecification Or(ISpecification specification);
 
-        ISpecification<T> Or(IEnumerable<ISpecification<T>> specifications);
+        ISpecification Or(IEnumerable<ISpecification> specifications);
 
-        ISpecification<T> And(ISpecification<T> specification);
+        ISpecification And(ISpecification specification);
 
-        ISpecification<T> And(IEnumerable<ISpecification<T>> specifications);
+        ISpecification And(IEnumerable<ISpecification> specifications);
 
-        ISpecification<T> Not();
+        ISpecification Not();
 
         string ToString();
 

@@ -1,7 +1,6 @@
 namespace Naos.Sample.Application.Web
 {
     using System.Collections.Generic;
-    using System.IO;
     using System.Net;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -13,7 +12,6 @@ namespace Naos.Sample.Application.Web
     using Naos.Application.Web;
     using Naos.Commands.Application;
     using Naos.Commands.Infrastructure.FileStorage;
-    using Naos.FileStorage.Infrastructure;
     using Naos.Messaging.Domain;
     using Naos.Queueing.Domain;
     using Naos.Sample.Catalogs.Application;
@@ -26,30 +24,10 @@ namespace Naos.Sample.Application.Web
 
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            this.Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
-
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddHttpContextAccessor()
-                .AddMvc()
-                    .AddNaos(o =>
-                    {
-                        // Countries repository is exposed with a dedicated controller, no need to register here
-                        o.AddEndpoint<Customers.Domain.Customer, Customers.Domain.ICustomerRepository>();
-                        o.AddEndpoint<Inventory.Domain.ProductInventory, Inventory.Domain.IInventoryRepository>();
-                        o.AddEndpoint<Inventory.Domain.ProductReplenishment, Inventory.Domain.IReplenishmentRepository>();
-                        o.AddEndpoint<UserAccounts.Domain.UserAccount>(); // =implicit IRepository<UserAccount>
-                        o.AddEndpoint<UserAccounts.Domain.UserVisit>(); // =implicit IRepository<UserVisit>
-                    });
-
-            services
-                .AddNaos(this.Configuration, "Product", "Capability2", new[] { "All" }, n => n
+                .AddNaos("Product", "Capability2", new[] { "All" }, n => n
                     //.AddModule<CustomersModule>()>> INaosModule
                     //.AddModule(m => m { m.Context.Services.AddScoped<....>()}, "customers")
                     //.AddModules() >> discover INaosModule!
@@ -67,13 +45,20 @@ namespace Naos.Sample.Application.Web
                     .AddRequestCorrelation() // do IMPLICIT!
                     .AddRequestFiltering() // do IMPLICIT! XXXX
                     .AddServiceExceptions() // do IMPLICIT! XXXX
+                    .AddWebApi(o =>
+                    {
+                        // Countries repository is exposed with a dedicated controller, no need to register here
+                        o.AddEndpoint<Customers.Domain.Customer, Customers.Domain.ICustomerRepository>();
+                        o.AddEndpoint<Inventory.Domain.ProductInventory, Inventory.Domain.IInventoryRepository>();
+                        o.AddEndpoint<Inventory.Domain.ProductReplenishment, Inventory.Domain.IReplenishmentRepository>();
+                        o.AddEndpoint<UserAccounts.Domain.UserAccount>(); // =implicit IRepository<UserAccount>
+                        o.AddEndpoint<UserAccounts.Domain.UserVisit>(); // =implicit IRepository<UserVisit>
+                    })
                     .AddCommands(o => o
                         .AddBehavior<TracerCommandBehavior>()
                         .AddBehavior<ValidateCommandBehavior>()
                         .AddBehavior<JournalCommandBehavior>()
-                        .AddBehavior(sp => new FileStoragePersistCommandBehavior(
-                            new FolderFileStorage(o => o
-                                .Folder(Path.Combine(Path.GetTempPath(), "naos_commands", "journal")))))
+                        .AddBehavior<FileStoragePersistCommandBehavior>()
                         .AddEndpoints(o => o
                             .Post<CreateCustomerCommand>(
                                 "api/commands/customers/create",
@@ -84,13 +69,13 @@ namespace Naos.Sample.Application.Web
                                 "api/commands/customers/active",
                                 groupName: "Customers")
                             .Get<GetCustomerByIdQuery, Customers.Domain.Customer>(
-                                "api/commands/customer/{CustomerId}", // TODO: swagger ui has a problem creating the correct tryout url for the actual customerid
+                                "api/commands/customer/{customerId}", // TODO: swagger ui has a problem creating the correct tryout url for the actual customerid
                                 groupName: "Customers")
                             //.UseInMemoryStorage()
-                            .UseAzureBlobStorage() // *
+                            .UseAzureBlobStorage()
                             //.UseFolderStorage()
                             //.UseInMemoryQueue()
-                            .UseAzureStorageQueue() // *
+                            .UseAzureStorageQueue()
                             //.UseAzureServiceBusQueue()
                             //.UseRabbitMQQueue()
                             .GetQueued<PingCommand>("api/commands/queue/ping")
@@ -118,15 +103,15 @@ namespace Naos.Sample.Application.Web
                     //.AddQueries()
                     //.AddSwaggerDocument() // s.Description = Product.Capability\
                     //.AddJobScheduling(o => o
-                        //.SetEnabled(true)
-                        //.Register<EchoJob>("echojob1", Cron.MinuteInterval(10), (j) => j.EchoAsync("+++ hello from echojob1 +++", CancellationToken.None))
-                        //.Register<EchoJob>("manualjob1", Cron.Never(), (j) => j.EchoAsync("+++ hello from manualjob1 +++", CancellationToken.None))
-                        //.Register<CountriesImportJob>("countriesimport", Cron.MinuteInterval(5))
-                        //.Register<CountriesExportJob>("countriesexport", Cron.MinuteInterval(2))) // Enqueue
-                                                                                                  //.Register("anonymousjob2", Cron.Minutely(), (j) => Console.WriteLine("+++ hello from anonymousjob2 " + j))
-                                                                                                  //.Register("jobevent1", Cron.Minutely(), () => new EchoJobEventData { Text = "+++ hello from jobevent1 +++" }))
-                                                                                                  //.Register<EchoJob>("echojob2", Cron.MinuteInterval(2), j => j.EchoAsync("+++ hello from echojob2 +++", CancellationToken.None, true), enabled: false)
-                                                                                                  //.Register<EchoJob>("testlongjob4", Cron.Minutely(), j => j.EchoLongAsync("+++ hello from testlongjob4 +++", CancellationToken.None)))
+                    //.SetEnabled(true)
+                    //.Register<EchoJob>("echojob1", Cron.MinuteInterval(10), (j) => j.EchoAsync("+++ hello from echojob1 +++", CancellationToken.None))
+                    //.Register<EchoJob>("manualjob1", Cron.Never(), (j) => j.EchoAsync("+++ hello from manualjob1 +++", CancellationToken.None))
+                    //.Register<CountriesImportJob>("countriesimport", Cron.MinuteInterval(5))
+                    //.Register<CountriesExportJob>("countriesexport", Cron.MinuteInterval(2))) // Enqueue
+                    //.Register("anonymousjob2", Cron.Minutely(), (j) => Console.WriteLine("+++ hello from anonymousjob2 " + j))
+                    //.Register("jobevent1", Cron.Minutely(), () => new EchoJobEventData { Text = "+++ hello from jobevent1 +++" }))
+                    //.Register<EchoJob>("echojob2", Cron.MinuteInterval(2), j => j.EchoAsync("+++ hello from echojob2 +++", CancellationToken.None, true), enabled: false)
+                    //.Register<EchoJob>("testlongjob4", Cron.Minutely(), j => j.EchoLongAsync("+++ hello from testlongjob4 +++", CancellationToken.None)))
                     .AddServiceClient() // do IMPLICIT! XXXXX
                     .AddQueueing(o => o
                         //.UseAzureStorageQueue<EchoQueueEventData>(o => o

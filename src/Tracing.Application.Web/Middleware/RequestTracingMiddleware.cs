@@ -70,7 +70,7 @@
                 {
                     try
                     {
-                        if(scope.Span.IsSampled == false)
+                        if (scope.Span.IsSampled == false)
                         {
                             this.logger.LogDebug($"{{LogKey:l}} span not sampled (id={scope.Span.SpanId}, sampler={scope.Span.Tags.GetValueOrDefault(SpanTagKey.SamplerType)})", LogKeys.Tracing);
                         }

@@ -7,8 +7,8 @@
     public class CustomerInsertDomainEventHandler
         : EntityInsertDomainEventHandler
     {
-        public CustomerInsertDomainEventHandler(ILogger<EntityInsertDomainEventHandler> logger)
-            : base(logger)
+        public CustomerInsertDomainEventHandler(ILoggerFactory loggerFactory)
+            : base(loggerFactory)
         {
         }
 

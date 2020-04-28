@@ -15,8 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.12.0" />
-    <PackageReference Include="coverlet.msbuild" Version="2.8.0">
+    <PackageReference Include="BenchmarkDotNet" Version="0.12.1" />
+    <PackageReference Include="coverlet.msbuild" Version="2.8.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
@@ -40,7 +40,7 @@
     <ProjectReference Include="..\..\src\Foundation.Console\Console.csproj" />
     <ProjectReference Include="..\..\src\Foundation.ContentTypes\ContentTypes.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Criteria\Criteria.csproj" />
-    <ProjectReference Include="..\..\src\Foundation.Domain.Events\Domain.Events.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Domain.Events\Domain.EventSourcing.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Domain.Repositories.AutoMapper\Domain.Repositories.AutoMapper.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Domain.Repositories\Domain.Repositories.csproj" />
     <ProjectReference Include="..\..\src\Foundation.Domain.Specifications\Domain.Specifications.csproj" />

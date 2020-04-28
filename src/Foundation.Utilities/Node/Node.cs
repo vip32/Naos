@@ -169,7 +169,7 @@
         }
 
         public static IEnumerable<Node<T>> ToHierarchy<TId>(IEnumerable<T> values, Func<T, TId> idSelector, Func<T, TId/*?*/> parentIdSelector, bool ignoreOnMissingParent = false)
-            //where TId : struct
+        //where TId : struct
         {
             if (!values.SafeAny())
             {
@@ -185,7 +185,7 @@
         }
 
         public static IEnumerable<Node<T>> ToHierarchy<TId>(IEnumerable<Node<T>> rootNodes, Func<T, TId> idSelector, Func<T, TId/*?*/> parentIdSelector, bool ignoreOnMissingParent = false)
-            //where TId : struct
+        //where TId : struct
         {
             var result = rootNodes.ToList();
             if (result.Duplicates(n => n).Any())

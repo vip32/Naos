@@ -154,11 +154,11 @@
         /// Insert or updates the entity.
         /// </summary>
         /// <param name="entity">The entity to insert or update.</param>
-        public async Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
+        public async Task<(TEntity entity, RepositoryActionResult action)> UpsertAsync(TEntity entity)
         {
             if (entity == null)
             {
-                return (default, ActionResult.None);
+                return (default, RepositoryActionResult.None);
             }
 
             var isTransient = entity.Id.IsDefault();
@@ -224,7 +224,7 @@
             }
 
             //this.logger.LogInformation($"{{LogKey:l}} upserted entity: {entity.GetType().PrettyName()}, id: {entity.Id}, isNew: {isNew}", LogEventKeys.DomainRepository);
-            return isNew ? (entity, ActionResult.Inserted) : (entity, ActionResult.Updated);
+            return isNew ? (entity, RepositoryActionResult.Inserted) : (entity, RepositoryActionResult.Updated);
         }
 
         /// <summary>
@@ -232,11 +232,11 @@
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <exception cref="ArgumentOutOfRangeException">id.</exception>
-        public async Task<ActionResult> DeleteAsync(object id)
+        public async Task<RepositoryActionResult> DeleteAsync(object id)
         {
             if (id.IsDefault())
             {
-                return ActionResult.None;
+                return RepositoryActionResult.None;
             }
 
             var entity = this.Options.Context.Entities.FirstOrDefault(x => x.Id.Equals(id));
@@ -263,10 +263,10 @@
                     await this.Options.Mediator.Publish(new EntityDeletedDomainEvent(entity)).AnyContext();
                 }
 
-                return ActionResult.Deleted;
+                return RepositoryActionResult.Deleted;
             }
 
-            return ActionResult.None;
+            return RepositoryActionResult.None;
         }
 
         /// <summary>
@@ -274,11 +274,11 @@
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <exception cref="ArgumentOutOfRangeException">Id.</exception>
-        public async Task<ActionResult> DeleteAsync(TEntity entity)
+        public async Task<RepositoryActionResult> DeleteAsync(TEntity entity)
         {
             if (entity?.Id.IsDefault() != false)
             {
-                return ActionResult.None;
+                return RepositoryActionResult.None;
             }
 
             return await this.DeleteAsync(entity.Id).AnyContext();

@@ -3,7 +3,6 @@
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection.Extensions;
-    using Microsoft.Extensions.Logging;
     using Naos.Configuration.Application;
     using Naos.RequestCorrelation.Application;
     using Naos.RequestCorrelation.Application.Web;
@@ -28,7 +27,7 @@
             naosOptions.Context.Services.TryAddTransient<ICorrelationContextFactory, CorrelationContextFactory>();
             naosOptions.Context.Services.AddTransient<HttpClientCorrelationHandler>();
 
-            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos services builder: request correlation added");
+            naosOptions.Context.Messages.Add("naos services builder: request correlation added");
             naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "RequestCorrelation", EchoRoute = "naos/requestcorrelation/echo" });
 
             return naosOptions;

@@ -7,7 +7,7 @@
     {
         public static dynamic ToExpando<T>(this T instance)
         {
-            if(instance == null)
+            if (instance == null)
             {
                 return null;
             }

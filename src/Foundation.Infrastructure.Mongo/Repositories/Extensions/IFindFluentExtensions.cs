@@ -17,7 +17,7 @@
 
             foreach (var order in (options?.Orders ?? new List<OrderOption<TDocument>>()).Insert(options?.Order))
             {
-                if(order.Direction == OrderDirection.Ascending)
+                if (order.Direction == OrderDirection.Ascending)
                 {
                     source.SortBy(order.Expression);
                 }

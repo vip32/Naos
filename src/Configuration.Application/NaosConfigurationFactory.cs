@@ -1,6 +1,7 @@
 ﻿namespace Naos.Configuration.Application
 {
     using System;
+    using System.IO;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Configuration.AzureAppConfiguration;
     using Microsoft.Extensions.Hosting;
@@ -66,12 +67,12 @@
 
                 b.AddAzureAppConfiguration(options =>
                 {
+                    // howto use: https://microsoft.github.io/AzureTipsAndTricks/blog/tip222.html
                     options.Connect(configuration[ConfigurationKeys.AzureAppConfigurationConnectionString])
-                           .UseFeatureFlags();
-                           //.SetOfflineCache(new OfflineFileCache()); // https://github.com/Azure/AppConfiguration/issues/137
+                        .UseFeatureFlags()
+                        .SetOfflineCache(new OfflineFileCache(
+                            new OfflineFileCacheOptions() { Path = Path.Combine("%HOME%", "naos_configuration") })); // https://github.com/Azure/AppConfiguration/issues/137 + https://github.com/Azure/AppConfiguration/issues/45
                 });
-
-                // howto use: https://microsoft.github.io/AzureTipsAndTricks/blog/tip222.html
 
                 return b;
             });

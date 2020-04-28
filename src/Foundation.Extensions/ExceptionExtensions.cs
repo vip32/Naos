@@ -8,7 +8,7 @@
         [DebuggerStepThrough]
         public static string GetFullMessage(this Exception source)
         {
-            if(source == null)
+            if (source == null)
             {
                 return null;
             }

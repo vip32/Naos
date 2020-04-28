@@ -1,7 +1,6 @@
 ﻿namespace Microsoft.Extensions.DependencyInjection
 {
     using System;
-    using System.Collections;
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
     using MediatR;
@@ -27,7 +26,7 @@
 
             // needed for mediator
             naosOptions.Context.Services.Scan(scan => scan
-                .FromApplicationDependencies(a => !a.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase) && !a.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase))
+                .FromApplicationDependencies(a => !a.FullName.StartsWithAny(new[] { "Microsoft", "System", "Scrutor", "Consul" }))
                 .AddClasses(classes => classes.Where(c => c.Name.EndsWith("QueueEventHandler", StringComparison.OrdinalIgnoreCase)))
                 //.FromAssembliesOf(typeof(QueueEventHandler<>))
                 //.AddClasses()
@@ -35,7 +34,7 @@
 
             optionsAction?.Invoke(new QueueingOptions(naosOptions.Context));
 
-            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos services builder: queueing added"); // TODO: list available commands/handlers
+            naosOptions.Context.Messages.Add("naos services builder: queueing added"); // TODO: list available commands/handlers
             naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Queueing", EchoRoute = "naos/queueing/echo" });
 
             return naosOptions;
@@ -66,7 +65,7 @@
             optionsAction?.Invoke(
                 new QueueingProviderOptions<TData>(options.Context));
 
-            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: queueing provider added (provider={nameof(InMemoryQueue<TData>)}, queue={queueName})");
+            options.Context.Messages.Add($"naos services builder: queueing provider added (provider={nameof(InMemoryQueue<TData>)}, queue={queueName})");
 
             return options;
         }

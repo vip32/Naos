@@ -55,7 +55,7 @@
                 //options.Context.Services.AddHealthChecks()
                 //    .AddSignalRHub(configuration.ConnectionString.SliceFrom("Endpoint=").SliceTill(";"), "messaging-broker-signalr", tags: new[] { "naos" });
 
-                options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: messaging added (broker={nameof(SignalRServerlessMessageBroker)})");
+                options.Context.Messages.Add($"naos services builder: messaging added (broker={nameof(SignalRServerlessMessageBroker)})");
             }
             else
             {

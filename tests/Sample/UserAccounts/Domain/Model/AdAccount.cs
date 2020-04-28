@@ -28,7 +28,9 @@
         public static AdAccount For(string value)
         {
             EnsureArg.IsNotNullOrEmpty(value, nameof(value));
-            EnsureArg.IsTrue(value.Contains("\\", System.StringComparison.OrdinalIgnoreCase), nameof(value));
+
+            //EnsureArg.IsTrue(value.Contains("\\", System.StringComparison.OrdinalIgnoreCase), nameof(value));
+            Check.Throw(new AdAccountShouldBePartOfDomainSpecification(value));
 
             return new AdAccount(value.SliceTill("\\"), value.SliceFrom("\\"));
         }
@@ -39,6 +41,16 @@
         {
             yield return this.Domain;
             yield return this.Name;
+        }
+
+        public class AdAccountShouldBePartOfDomainSpecification : Specification // // business rule example
+        {
+            public AdAccountShouldBePartOfDomainSpecification(string value)
+                : base(() => value.Contains("\\", System.StringComparison.OrdinalIgnoreCase))
+            {
+            }
+
+            public override string Description => "AD Account should be part of a domain";
         }
     }
 }

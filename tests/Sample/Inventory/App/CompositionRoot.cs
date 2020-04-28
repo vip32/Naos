@@ -8,7 +8,6 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using MongoDB.Driver;
-    using Naos.Foundation.Application;
     using Naos.Foundation.Domain;
     using Naos.Foundation.Infrastructure;
     using Naos.Sample.Inventory.Domain;
@@ -88,7 +87,7 @@
             options.Context.Services.AddHealthChecks()
                 .AddMongoDb(configuration.ConnectionString, name: "Inventory-mongodb");
 
-            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: inventory service added");
+            options.Context.Messages.Add("naos services builder: inventory service added");
 
             return options;
         }

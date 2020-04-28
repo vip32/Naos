@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{09D80029-71E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D54F7975-DC18-481A-824F-DF0FD37370C3}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "global", "global", "{FCBA001C-2530-41E7-B122-66E996367F10}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{FCBA001C-2530-41E7-B122-66E996367F10}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		docs\ascii.md = docs\ascii.md
@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "global", "global", "{FCBA00
 		azure-pipelines.yml = azure-pipelines.yml
 		docs\Containerized Workflow.png = docs\Containerized Workflow.png
 		Directory.Build.props = Directory.Build.props
-		gitversion.yml = gitversion.yml
+		GitVersion.yml = GitVersion.yml
 		docs\Naos - Service Communication Overview.vsdx = docs\Naos - Service Communication Overview.vsdx
 		README.md = README.md
 		SAMPLE.md = SAMPLE.md
@@ -202,8 +202,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Web.Startup", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mapping.AutoMapper", "src\Foundation.Mapping.AutoMapper\Mapping.AutoMapper.csproj", "{F6625092-1B0C-48FB-BDDA-E3590918A9A9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Events", "src\Foundation.Domain.Events\Domain.Events.csproj", "{3F3F469C-CCF9-4D05-8BBC-B9CA5C78823F}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Encoding", "src\Foundation.Encoding\Encoding.csproj", "{5F80ACC4-1675-4966-902E-7B1ED7B7D49A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContentTypes", "src\Foundation.ContentTypes\ContentTypes.csproj", "{4F60C77C-DDE8-462A-8DFB-C35C4004C88E}"
@@ -272,9 +270,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeyValueStorage.Infrastructure.LightningDb", "src\KeyValueStorage.Infrastructure.LightningDb\KeyValueStorage.Infrastructure.LightningDb.csproj", "{D75DBA03-EEEB-4944-952E-054ABB88E78B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Commands.Application.Web.Azure", "src\Commands.Application.Web.Azure\Commands.Application.Web.Azure.csproj", "{ED978DCC-86B2-4161-9720-2CA7BB4A47C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commands.Application.Web.Azure", "src\Commands.Application.Web.Azure\Commands.Application.Web.Azure.csproj", "{ED978DCC-86B2-4161-9720-2CA7BB4A47C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Commands.Application.Web.RabbitMQ", "src\Commands.Application.Web.RabbitMQ\Commands.Application.Web.RabbitMQ.csproj", "{659DA92C-BC4F-4D27-B94B-C4691F0D2B28}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commands.Application.Web.RabbitMQ", "src\Commands.Application.Web.RabbitMQ\Commands.Application.Web.RabbitMQ.csproj", "{659DA92C-BC4F-4D27-B94B-C4691F0D2B28}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.EventSourcing", "src\Foundation.Domain.EventSourcing\Domain.EventSourcing.csproj", "{50DA3745-B1DD-4073-9C62-0F9AA16A436F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1150,18 +1150,6 @@ Global
 		{F6625092-1B0C-48FB-BDDA-E3590918A9A9}.Release|x64.Build.0 = Release|Any CPU
 		{F6625092-1B0C-48FB-BDDA-E3590918A9A9}.Release|x86.ActiveCfg = Release|Any CPU
 		{F6625092-1B0C-48FB-BDDA-E3590918A9A9}.Release|x86.Build.0 = Release|Any CPU
-		{3F3F469C-CCF9-4D05-8BBC-B9CA5C78823F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3F3F469C-CCF9-4D05-8BBC-B9CA5C78823F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3F3F469C-CCF9-4D05-8BBC-B9CA5C78823F}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{3F3F469C-CCF9-4D05-8BBC-B9CA5C78823F}.Debug|x64.Build.0 = Debug|Any CPU
-		{3F3F469C-CCF9-4D05-8BBC-B9CA5C78823F}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{3F3F469C-CCF9-4D05-8BBC-B9CA5C78823F}.Debug|x86.Build.0 = Debug|Any CPU
-		{3F3F469C-CCF9-4D05-8BBC-B9CA5C78823F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3F3F469C-CCF9-4D05-8BBC-B9CA5C78823F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3F3F469C-CCF9-4D05-8BBC-B9CA5C78823F}.Release|x64.ActiveCfg = Release|Any CPU
-		{3F3F469C-CCF9-4D05-8BBC-B9CA5C78823F}.Release|x64.Build.0 = Release|Any CPU
-		{3F3F469C-CCF9-4D05-8BBC-B9CA5C78823F}.Release|x86.ActiveCfg = Release|Any CPU
-		{3F3F469C-CCF9-4D05-8BBC-B9CA5C78823F}.Release|x86.Build.0 = Release|Any CPU
 		{5F80ACC4-1675-4966-902E-7B1ED7B7D49A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5F80ACC4-1675-4966-902E-7B1ED7B7D49A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F80ACC4-1675-4966-902E-7B1ED7B7D49A}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -1570,6 +1558,18 @@ Global
 		{659DA92C-BC4F-4D27-B94B-C4691F0D2B28}.Release|x64.Build.0 = Release|Any CPU
 		{659DA92C-BC4F-4D27-B94B-C4691F0D2B28}.Release|x86.ActiveCfg = Release|Any CPU
 		{659DA92C-BC4F-4D27-B94B-C4691F0D2B28}.Release|x86.Build.0 = Release|Any CPU
+		{50DA3745-B1DD-4073-9C62-0F9AA16A436F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50DA3745-B1DD-4073-9C62-0F9AA16A436F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50DA3745-B1DD-4073-9C62-0F9AA16A436F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{50DA3745-B1DD-4073-9C62-0F9AA16A436F}.Debug|x64.Build.0 = Debug|Any CPU
+		{50DA3745-B1DD-4073-9C62-0F9AA16A436F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{50DA3745-B1DD-4073-9C62-0F9AA16A436F}.Debug|x86.Build.0 = Debug|Any CPU
+		{50DA3745-B1DD-4073-9C62-0F9AA16A436F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50DA3745-B1DD-4073-9C62-0F9AA16A436F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50DA3745-B1DD-4073-9C62-0F9AA16A436F}.Release|x64.ActiveCfg = Release|Any CPU
+		{50DA3745-B1DD-4073-9C62-0F9AA16A436F}.Release|x64.Build.0 = Release|Any CPU
+		{50DA3745-B1DD-4073-9C62-0F9AA16A436F}.Release|x86.ActiveCfg = Release|Any CPU
+		{50DA3745-B1DD-4073-9C62-0F9AA16A436F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1665,7 +1665,6 @@ Global
 		{51822BFD-6551-48BB-8DFE-AFFB2DA39CB0} = {C441E12D-3F09-4E93-B490-6E77B8FB7CD5}
 		{6B1C7FE4-43FE-4E3B-AA85-7284F3F1EC4B} = {C441E12D-3F09-4E93-B490-6E77B8FB7CD5}
 		{F6625092-1B0C-48FB-BDDA-E3590918A9A9} = {C441E12D-3F09-4E93-B490-6E77B8FB7CD5}
-		{3F3F469C-CCF9-4D05-8BBC-B9CA5C78823F} = {C441E12D-3F09-4E93-B490-6E77B8FB7CD5}
 		{5F80ACC4-1675-4966-902E-7B1ED7B7D49A} = {C441E12D-3F09-4E93-B490-6E77B8FB7CD5}
 		{4F60C77C-DDE8-462A-8DFB-C35C4004C88E} = {C441E12D-3F09-4E93-B490-6E77B8FB7CD5}
 		{2863978A-AD57-476B-8F91-D7C4E7AF07A8} = {C441E12D-3F09-4E93-B490-6E77B8FB7CD5}
@@ -1702,6 +1701,7 @@ Global
 		{D75DBA03-EEEB-4944-952E-054ABB88E78B} = {DA64F0A2-4145-4163-B591-DB9374BEABBA}
 		{ED978DCC-86B2-4161-9720-2CA7BB4A47C4} = {9DBFA194-2C87-4C55-994C-AF8136169A7C}
 		{659DA92C-BC4F-4D27-B94B-C4691F0D2B28} = {9DBFA194-2C87-4C55-994C-AF8136169A7C}
+		{50DA3745-B1DD-4073-9C62-0F9AA16A436F} = {C441E12D-3F09-4E93-B490-6E77B8FB7CD5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BD699E0F-4BC9-41A9-93D5-E89FDDA8FC17}

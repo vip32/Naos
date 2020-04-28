@@ -39,7 +39,7 @@
             options.Context.Services.TryAddSingleton<IServiceRegistry>(sp => new ConsulServiceRegistry(
                 sp.GetRequiredService<ILogger<ConsulServiceRegistry>>(), sp.GetRequiredService<IConsulClient>()));
 
-            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: service discovery added (type={nameof(ConsulServiceRegistry)})");
+            options.Context.Messages.Add($"naos services builder: service discovery added (type={nameof(ConsulServiceRegistry)})");
             options.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "ServiceDiscovery", Description = "Consul" });
 
             return options;

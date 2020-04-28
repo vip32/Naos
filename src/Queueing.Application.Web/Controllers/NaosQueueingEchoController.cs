@@ -38,7 +38,7 @@
         {
             var result = new List<object>();
 
-            if(this.echoQueue != null)
+            if (this.echoQueue != null)
             {
                 for (var i = 1; i <= 1; i++)
                 {

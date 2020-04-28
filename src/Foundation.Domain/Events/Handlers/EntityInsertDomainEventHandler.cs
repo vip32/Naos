@@ -6,54 +6,29 @@
     using Microsoft.Extensions.Logging;
 
     public abstract class EntityInsertDomainEventHandler
-        : IDomainEventHandler<EntityInsertDomainEvent>
+        : DomainEventHandlerBase<EntityInsertDomainEvent>
     {
-        private readonly ILogger<EntityInsertDomainEventHandler> logger;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EntityInsertDomainEventHandler"/> class.
-        /// </summary>
-        /// <param name="logger">The logger.</param>
-        protected EntityInsertDomainEventHandler(ILogger<EntityInsertDomainEventHandler> logger)
+        public EntityInsertDomainEventHandler(ILoggerFactory loggerFactory)
+            : base(loggerFactory)
         {
-            EnsureArg.IsNotNull(logger, nameof(logger));
-
-            this.logger = logger;
         }
 
-        /// <summary>
-        /// Determines whether this instance can handle the specified notification.
-        /// </summary>
-        /// <param name="notification">The notification.</param>
-        /// <returns>
-        /// <c>true</c> if this instance can handle the specified notification; otherwise, <c>false</c>.
-        /// </returns>
-        public abstract bool CanHandle(EntityInsertDomainEvent notification);
-
-        /// <summary>
-        /// Handles the specified notification.
-        /// </summary>
-        /// <param name="notification">The notification.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        public virtual async Task Handle(EntityInsertDomainEvent notification, CancellationToken cancellationToken)
+        public override async Task Process(EntityInsertDomainEvent notification, CancellationToken cancellationToken)
         {
             await Task.Run(() =>
             {
-                if (this.CanHandle(notification))
+                this.Logger.LogInformation($"{{LogKey:l}} [{notification.EventId}] handle {notification.GetType().Name.SliceTill("DomainEvent")} (entity={notification.Entity.GetType().PrettyName()}, handler={this.GetType().PrettyName()})", LogKeys.DomainEvent);
+
+                if (notification?.Entity.Is<IStateEntity>() == true) // use pattern matching
                 {
-                    this.logger.LogInformation($"{{LogKey:l}} [{notification.Id}] handle {notification.GetType().Name.SliceTill("DomainEvent")} (entity={notification.Entity.GetType().PrettyName()}, handler={this.GetType().PrettyName()})", LogKeys.DomainEvent);
+                    var entity = notification.Entity.As<IStateEntity>();
+                    entity.State?.SetCreated("[IDENTITY]", "domainevent"); // TODO: use current identity
+                }
 
-                    if (notification?.Entity.Is<IStateEntity>() == true) // use pattern matching
-                    {
-                        var entity = notification.Entity.As<IStateEntity>();
-                        entity.State?.SetCreated("[IDENTITY]", "domainevent"); // TODO: use current identity
-                    }
-
-                    if (notification?.Entity.Is<IIdentifiable>() == true) // use pattern matching
-                    {
-                        var entity = notification.Entity.As<IIdentifiable>();
-                        entity.SetIdentifierHash();
-                    }
+                if (notification?.Entity.Is<IIdentifiable>() == true) // use pattern matching
+                {
+                    var entity = notification.Entity.As<IIdentifiable>();
+                    entity.SetIdentifierHash();
                 }
             }).AnyContext();
         }

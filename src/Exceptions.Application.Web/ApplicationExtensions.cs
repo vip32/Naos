@@ -2,7 +2,6 @@
 {
     using EnsureThat;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Naos.ServiceExceptions.Application.Web;
 
@@ -26,7 +25,7 @@
             EnsureArg.IsNotNull(options, nameof(options));
 
             naosOptions.Context.Application.UseMiddleware<ExceptionHandlerMiddleware>(Options.Create(options));
-            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos application builder: service exceptions added");
+            naosOptions.Context.Messages.Add("naos application builder: service exceptions added");
             return naosOptions;
         }
     }

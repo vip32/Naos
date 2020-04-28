@@ -52,7 +52,7 @@
         //[JsonIgnore] // so it will not appear in the swagger
         public string Id { get; private set; } // TODO: rename to CommandId
 
-       // [JsonIgnore] // so it will not appear in the swagger
+        // [JsonIgnore] // so it will not appear in the swagger
         public string Identifier { get; } // obsolete? just a short identifier
 
         //[JsonIgnore] // so it will not appear in the swagger

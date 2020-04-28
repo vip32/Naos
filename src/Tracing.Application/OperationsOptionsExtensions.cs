@@ -4,7 +4,6 @@
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
     using MediatR;
-    using Microsoft.Extensions.Logging;
     using Naos.Operations;
     using Naos.Tracing.Application;
     using Naos.Tracing.Domain;
@@ -19,7 +18,7 @@
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
 
-            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: tracing added");
+            options.Context.Messages.Add("naos services builder: tracing added");
             options.Context.Services.AddScoped<ITracer>(sp =>
             {
                 return new Tracer(

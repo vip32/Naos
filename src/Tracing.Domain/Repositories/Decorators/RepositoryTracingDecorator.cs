@@ -41,7 +41,7 @@
             this.name = typeof(TEntity).Name.ToLower();
         }
 
-        public async Task<ActionResult> DeleteAsync(object id)
+        public async Task<RepositoryActionResult> DeleteAsync(object id)
         {
             using (var scope = this.tracer?.BuildSpan($"delete {this.name}", LogKeys.DomainRepository)
                 .WithTag(SpanTagKey.DbType, "sql").Activate(this.logger))
@@ -50,7 +50,7 @@
             }
         }
 
-        public async Task<ActionResult> DeleteAsync(TEntity entity)
+        public async Task<RepositoryActionResult> DeleteAsync(TEntity entity)
         {
             using (var scope = this.tracer?.BuildSpan($"delete {this.name}", LogKeys.DomainRepository)
                 .WithTag(SpanTagKey.DbType, "sql").Activate(this.logger))
@@ -122,7 +122,7 @@
             }
         }
 
-        public async Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
+        public async Task<(TEntity entity, RepositoryActionResult action)> UpsertAsync(TEntity entity)
         {
             using (var scope = this.tracer?.BuildSpan($"upsert {this.name}", LogKeys.DomainRepository)
                 .WithTag(SpanTagKey.DbType, "sql").Activate(this.logger))

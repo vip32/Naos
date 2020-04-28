@@ -37,7 +37,7 @@
             orderBy ??= t => true == true;
             options ??= new ConsoleNodeRenderOptions();
 
-            foreach(var node in source.Safe()/*.OrderBy(n => orderBy(n.Value))*/)
+            foreach (var node in source.Safe()/*.OrderBy(n => orderBy(n.Value))*/)
             {
                 if (source.IndexOf(node) != 0)
                 {

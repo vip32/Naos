@@ -49,7 +49,7 @@
                     shared: configuration.Shared,
                     flushToDiskInterval: configuration.FlushToDiskIntervalSeconds.HasValue ? TimeSpan.FromSeconds(configuration.FlushToDiskIntervalSeconds.Value) : default(TimeSpan?));
 
-                options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: logging file sink added (path={path})");
+                options.Context.Messages.Add($"naos services builder: logging file sink added (path={path})");
             }
 
             return options;
@@ -70,7 +70,7 @@
                     //outputTemplate: "[{Timestamp:HH:mm:ss.fff} {Level:u3}] {CorrelationId}|{Service}|{SourceContext}: {Message:lj}{NewLine}{Exception}");
                     outputTemplate: "[{Timestamp:HH:mm:ss.fff} {Level:u3}] {Message:lj}{NewLine}{Exception}");
 
-                options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: logging console sink added");
+                options.Context.Messages.Add("naos services builder: logging console sink added");
             }
 
             return options;

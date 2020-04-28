@@ -4,24 +4,27 @@
     using System.Diagnostics.CodeAnalysis;
     using EnsureThat;
     using Microsoft.AspNetCore.Authentication;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
     using Naos.Authentication.Application.Web;
     using Naos.Foundation;
     using Naos.Foundation.Application;
+    using Newtonsoft.Json;
     using NSwag.Generation.Processors;
     using NSwag.Generation.Processors.Security;
 
     [ExcludeFromCodeCoverage]
     public static class NaosExtensions
     {
-        public static IMvcBuilder AddNaos(
-            this IMvcBuilder mvcBuilder,
-            Action<NaosMvcOptions> optionsAction = null)
+        public static NaosServicesContextOptions AddWebApi(
+            this NaosServicesContextOptions naosOptions,
+            Action<NaosMvcOptions> optionsAction = null,
+            Action<IMvcCoreBuilder> optionsMvc = null)
         {
             var options = new NaosMvcOptions();
             optionsAction?.Invoke(options);
 
+            naosOptions.Context.Services.AddHttpContextAccessor();
             //mvcBuilder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>(); // needed for GetUrlHelper (IUrlHelperFactory below)
             //mvcBuilder.Services.AddScoped(sp =>
             //{
@@ -36,7 +39,13 @@
             //    return factory?.GetUrlHelper(actionContext);
             //});
 
-            // add the generic repo controllers for all registrations
+            var mvcBuilder = naosOptions.Context.Services
+                //.AddLogging()
+                .AddMvcCore();
+
+            //jsonSerializer ??= JsonSerializer.Create(DefaultJsonSerializerSettings.Create());
+
+            // add the generic repository controllers for all registrations (AddEndpoint)
             if (!options.ControllerRegistrations.IsNullOrEmpty())
             {
                 mvcBuilder
@@ -53,11 +62,26 @@
 
                 mvcBuilder.Services.AddSingleton<IOperationProcessor>(new GenericRepositoryControllerOperationProcessor()); // needed for swagger generation (for each controller registration)
             }
+            else
+            {
+                mvcBuilder.AddMvcOptions(o => { });
+                    //.AddDataAnnotations()
+                    //.AddApiExplorer()
+                    //.AddAuthorization();
+            }
 
-            mvcBuilder.AddControllersAsServices(); // needed to resolve controllers through di https://andrewlock.net/controller-activation-and-dependency-injection-in-asp-net-core-mvc/
+            optionsMvc?.Invoke(mvcBuilder);
+
             //mvcBuilder.AddJsonOptions(o => o.AddDefaultJsonSerializerSettings(options.JsonSerializerSettings));
+            mvcBuilder.AddControllersAsServices(); // needed to resolve controllers through di https://andrewlock.net/controller-activation-and-dependency-injection-in-asp-net-core-mvc/
+#if NETCOREAPP3_1
+            var serializerSettings = DefaultJsonSerializerSettings.Create();
+            naosOptions.Context.Services.AddControllers().AddNewtonsoftJson(x => SetSerializerSettings(x, serializerSettings));
+            naosOptions.Context.Services.AddControllersWithViews().AddNewtonsoftJson(x => SetSerializerSettings(x, serializerSettings));
+            naosOptions.Context.Services.AddRazorPages().AddNewtonsoftJson(x => SetSerializerSettings(x, serializerSettings));
+#endif
 
-            return mvcBuilder;
+            return naosOptions;
         }
 
         public static NaosServicesContextOptions AddSwaggerDocumentation(
@@ -173,10 +197,22 @@
                     }
                 });
 
-            naosOptions.Context.Messages.Add($"{LogKeys.Startup} naos services builder: swagger documentation added");
+            naosOptions.Context.Messages.Add("naos services builder: swagger documentation added");
             //naosOptions.Context.Services.AddSingleton(new NaosFeatureInformation { Name = "Swagger", Description = "Documentation", EchoRoute = "naos/swagger/echo" });
 
             return naosOptions;
         }
+
+#if NETCOREAPP3_1
+        private static void SetSerializerSettings(MvcNewtonsoftJsonOptions o, JsonSerializerSettings jsonSettings)
+        {
+            o.SerializerSettings.DefaultValueHandling = jsonSettings.DefaultValueHandling;
+            o.SerializerSettings.NullValueHandling = jsonSettings.NullValueHandling;
+            o.SerializerSettings.ReferenceLoopHandling = jsonSettings.ReferenceLoopHandling;
+            o.SerializerSettings.ContractResolver = jsonSettings.ContractResolver;
+            o.SerializerSettings.TypeNameHandling = jsonSettings.TypeNameHandling;
+            o.SerializerSettings.Converters = jsonSettings.Converters;
+        }
+#endif
     }
 }

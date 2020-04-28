@@ -48,7 +48,7 @@
                 options.Context.Services.AddHealthChecks()
                     .AddMongoDb(connectionString, name: "logging-sink-mongodb", tags: new[] { "naos" });
 
-                options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: logging mongo sink added (collection={configuration.CollectionName})");
+                options.Context.Messages.Add($"naos services builder: logging mongo sink added (collection={configuration.CollectionName})");
 
                 if (dashboardEnabled) // registers the mongo repo which is used by the dashboard (NaosOperationsLogEventsController)
                 {

@@ -249,7 +249,7 @@ namespace Naos.Foundation.UnitTests.Domain
             var findResult = await sut.FindOneAsync("Id99").AnyContext();
 
             // assert
-            Assert.Equal(ActionResult.Inserted, result.action);
+            Assert.Equal(RepositoryActionResult.Inserted, result.action);
             Assert.False(result.entity.Id.IsNullOrEmpty());
             Assert.False(result.entity.Id.IsDefault());
             Assert.Equal("Id99", result.entity.Id);
@@ -277,7 +277,7 @@ namespace Naos.Foundation.UnitTests.Domain
             var findResult = await sut.FindOneAsync(result.entity.Id).AnyContext();
 
             // assert
-            Assert.Equal(ActionResult.Inserted, result.action);
+            Assert.Equal(RepositoryActionResult.Inserted, result.action);
             Assert.NotNull(result.entity);
             Assert.False(result.entity.Id.IsNullOrEmpty());
             Assert.False(result.entity.Id.IsDefault());
@@ -308,7 +308,7 @@ namespace Naos.Foundation.UnitTests.Domain
             var findResult = await sut.FindOneAsync("Id1").AnyContext();
 
             // assert
-            Assert.Equal(ActionResult.Updated, result.action);
+            Assert.Equal(RepositoryActionResult.Updated, result.action);
             Assert.NotNull(result.entity);
             Assert.False(result.entity.Id.IsNullOrEmpty());
             Assert.False(result.entity.Id.IsDefault());

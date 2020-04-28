@@ -7,12 +7,7 @@
     using MediatR;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    using Naos.Foundation.Application;
     using Naos.Foundation.Domain;
-    using Naos.Queueing;
-    using Naos.Queueing.Domain;
-    using Naos.Queueing.Infrastructure.Azure;
-    using Naos.Sample.Countries.Application;
     using Naos.Sample.Countries.Domain;
     using Naos.Sample.Countries.Infrastructure;
     using Naos.Tracing.Domain;
@@ -80,7 +75,7 @@
                 new Country { Code = "us", LanguageCodes = new[] {"en-us" }, Name = "United States", TenantId = "naos_sample_test", Id = "us" },
             }, delay: new TimeSpan(0, 0, 3));
 
-            options.Context.Messages.Add($"{LogKeys.Startup} naos services builder: countries service added");
+            options.Context.Messages.Add("naos services builder: countries service added");
 
             return options;
         }

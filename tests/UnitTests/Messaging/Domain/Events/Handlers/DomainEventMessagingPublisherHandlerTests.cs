@@ -29,7 +29,7 @@
             messageBroker.Received().Publish(Arg.Is<CustomerCreatedMessage>(m => m.FullName == "John Doe"));
         }
 
-        public class CustomerCreatedDomainEvent : DomainEvent // internal event
+        public class CustomerCreatedDomainEvent : DomainEventBase // internal event
         {
             public CustomerCreatedDomainEvent(StubEntity entity)
             {

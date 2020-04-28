@@ -93,13 +93,13 @@
                 return null;
             }
 
-//#if NETSTANDARD2_0
-//            return this.Options.Mapper.Map<TEntity>(await this.Options.DbContext.Set<TDestination>().FindAsync(this.TryParseGuid(id)).AnyContext());
-//#endif
+            //#if NETSTANDARD2_0
+            //            return this.Options.Mapper.Map<TEntity>(await this.Options.DbContext.Set<TDestination>().FindAsync(this.TryParseGuid(id)).AnyContext());
+            //#endif
 
-//#if NETSTANDARD2_1
+            //#if NETSTANDARD2_1
             return this.Options.Mapper.Map<TEntity>(await this.Options.DbContext.Set<TDestination>().FindAsync(this.ParseGuid(id)));
-//#endif
+            //#endif
         }
 
         public async Task<bool> ExistsAsync(object id)
@@ -136,11 +136,11 @@
         /// Insert or updates the provided entity.
         /// </summary>
         /// <param name="entity">The entity to insert or update.</param>
-        public async Task<(TEntity entity, ActionResult action)> UpsertAsync(TEntity entity)
+        public async Task<(TEntity entity, RepositoryActionResult action)> UpsertAsync(TEntity entity)
         {
             if (entity == null)
             {
-                return (null, ActionResult.None);
+                return (null, RepositoryActionResult.None);
             }
 
             var isNew = entity.Id.IsDefault() || !await this.ExistsAsync(entity.Id).AnyContext();
@@ -188,24 +188,24 @@
 
             //this.logger.LogInformation($"{{LogKey:l}} upserted entity: {entity.GetType().PrettyName()}, id: {entity.Id}, isNew: {isNew}", LogEventKeys.DomainRepository);
 #pragma warning disable SA1008 // Opening parenthesis must be spaced correctly
-            return isNew ? (entity, ActionResult.Inserted) : (entity, ActionResult.Updated);
+            return isNew ? (entity, RepositoryActionResult.Inserted) : (entity, RepositoryActionResult.Updated);
 #pragma warning restore SA1008 // Opening parenthesis must be spaced correctly
         }
 
-        public async Task<ActionResult> DeleteAsync(object id)
+        public async Task<RepositoryActionResult> DeleteAsync(object id)
         {
             if (id.IsDefault())
             {
-                return ActionResult.None;
+                return RepositoryActionResult.None;
             }
 
-//#if NETSTANDARD2_0
-//            var dEntity = await this.Options.DbContext.Set<TDestination>().FindAsync(this.TryParseGuid(id)).AnyContext();
-//#endif
+            //#if NETSTANDARD2_0
+            //            var dEntity = await this.Options.DbContext.Set<TDestination>().FindAsync(this.TryParseGuid(id)).AnyContext();
+            //#endif
 
-//#if NETSTANDARD2_1
+            //#if NETSTANDARD2_1
             var dEntity = await this.Options.DbContext.Set<TDestination>().FindAsync(this.ParseGuid(id));
-//#endif
+            //#endif
             if (dEntity != null)
             {
                 this.Logger.LogInformation($"{{LogKey:l}} delete entity: {dEntity.GetType().PrettyName()}, id: {id}", LogKeys.DomainRepository);
@@ -223,17 +223,17 @@
                     await this.Options.Mediator.Publish(new EntityDeletedDomainEvent(this.Options.Mapper.Map<TEntity>(dEntity))).AnyContext();
                 }
 
-                return ActionResult.Deleted;
+                return RepositoryActionResult.Deleted;
             }
 
-            return ActionResult.None;
+            return RepositoryActionResult.None;
         }
 
-        public async Task<ActionResult> DeleteAsync(TEntity entity)
+        public async Task<RepositoryActionResult> DeleteAsync(TEntity entity)
         {
             if (entity?.Id.IsDefault() != false)
             {
-                return ActionResult.None;
+                return RepositoryActionResult.None;
             }
 
             return await this.DeleteAsync(entity.Id).AnyContext();
