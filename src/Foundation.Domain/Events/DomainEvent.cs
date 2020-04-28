@@ -7,7 +7,7 @@
         /// </summary>
         public DomainEvent()
         {
-            this.Id = IdGenerator.Instance.Next;
+            this.EventId = IdGenerator.Instance.Next;
         }
 
         /// <summary>
@@ -17,7 +17,7 @@
         /// <param name="correlationId">The correlation identifier.</param>
         public DomainEvent(string id, string correlationId)
         {
-            this.Id = id ?? IdGenerator.Instance.Next;
+            this.EventId = id ?? IdGenerator.Instance.Next;
             this.CorrelationId = correlationId;
         }
 
@@ -27,7 +27,7 @@
         /// <value>
         /// The domain event identifier.
         /// </value>
-        public string Id { get; set; }
+        public string EventId { get; set; }
 
         /// <summary>
         /// Gets or sets the correlation identifier.

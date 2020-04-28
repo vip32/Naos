@@ -43,7 +43,7 @@
         public async Task Handle(IDomainEvent notification, CancellationToken cancellationToken)
         {
             await Task.Run(() =>
-                this.logger.LogJournal(LogKeys.DomainEvent, $"[{notification.Id}] send {notification.GetType().Name.SliceTill("DomainEvent")}", LogPropertyKeys.TrackSendDomainEvent)).AnyContext();
+                this.logger.LogJournal(LogKeys.DomainEvent, $"[{notification.EventId}] send {notification.GetType().Name.SliceTill("DomainEvent")}", LogPropertyKeys.TrackSendDomainEvent)).AnyContext();
         }
     }
 }
