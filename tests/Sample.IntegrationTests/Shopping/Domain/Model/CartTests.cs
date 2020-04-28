@@ -4,7 +4,6 @@
     using Naos.Sample.Shopping.Domain;
     using Xunit;
 
-    [Trait("Type", "Unit")]
     public class CartTests : GenericAggregateBaseTest<Cart, Guid>
     {
         private static readonly Guid DefaultCustomerId = Guid.NewGuid();

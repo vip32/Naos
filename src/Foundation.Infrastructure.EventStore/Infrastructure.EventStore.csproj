@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Naos.Foundation.Infrastructure.EventStore</AssemblyName>
+    <RootNamespace>Naos.Foundation.Infrastructure</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EventStore.ClientAPI.NetCore" Version="4.1.0.23" />
+    <PackageReference Include="MediatR" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Foundation.Domain.EventSourcing\Domain.EventSourcing.csproj" />
+    <ProjectReference Include="..\Foundation.Domain\Domain.csproj" />
+    <ProjectReference Include="..\Foundation.Extensions\Extensions.csproj" />
+  </ItemGroup>
+
+</Project>

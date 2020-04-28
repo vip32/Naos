@@ -11,7 +11,7 @@
         /// </summary>
         protected DomainEventBase()
         {
-            this.EventId = IdGenerator.Instance.Next;
+            this.EventId = Guid.NewGuid();
         }
 
         /// <summary>
@@ -19,9 +19,9 @@
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <param name="correlationId">The correlation identifier.</param>
-        protected DomainEventBase(string id, string correlationId)
+        protected DomainEventBase(Guid id, string correlationId)
         {
-            this.EventId = id ?? IdGenerator.Instance.Next;
+            this.EventId = id;
             this.CorrelationId = correlationId;
         }
 
@@ -31,7 +31,7 @@
         /// <value>
         /// The domain event identifier.
         /// </value>
-        public string EventId { get; set; }
+        public Guid EventId { get; set; }
 
         /// <summary>
         /// Gets or sets the correlation identifier.
@@ -43,7 +43,7 @@
 
         public bool Equals(DomainEventBase other)
         {
-            return other != null && this.EventId.Equals(other.EventId, StringComparison.OrdinalIgnoreCase);
+            return other != null && this.EventId.Equals(other.EventId);
         }
 
         public override int GetHashCode()

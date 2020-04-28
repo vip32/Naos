@@ -11,14 +11,14 @@
     using Xunit;
 
 #pragma warning disable SA1402 // File may only contain a single type
-    public class EventSourcingRepositoryTest
+    public class EventSourcingRepositoryTests
     {
         private static readonly Guid DefaultId = Guid.NewGuid();
         private readonly IEventSourcingRepository<TestAggregate, Guid> sut;
         private readonly Mock<IEventStore> eventStoreMock;
         private readonly Mock<IMediator> mediatorMock;
 
-        public EventSourcingRepositoryTest()
+        public EventSourcingRepositoryTests()
         {
             this.mediatorMock = new Mock<IMediator>();
             this.eventStoreMock = new Mock<IEventStore>();

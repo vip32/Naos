@@ -8,7 +8,7 @@
     {
         protected DomainEventBase()
         {
-            this.EventId = Guid.NewGuid().ToString();
+            this.EventId = Guid.NewGuid();
         }
 
         protected DomainEventBase(TId aggregateId)
