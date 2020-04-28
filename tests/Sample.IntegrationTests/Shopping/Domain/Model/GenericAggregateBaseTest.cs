@@ -6,34 +6,33 @@
     using Naos.Foundation.Domain;
     using Xunit;
 
-    public abstract class GenericAggregateBaseTest<TAggregate, TAggregateId>
-        where TAggregate : EventSourcingAggregateRoot<TAggregateId>, IEventSourcingAggregate<TAggregateId>
-        //where TAggregateId : IAggregateId
+    public abstract class GenericAggregateBaseTest<TAggregate, TId>
+        where TAggregate : EventSourcingAggregateRoot<TId>, IEventSourcingAggregate<TId>
     {
         protected void AssertSingleUncommittedEventOfType<TEvent>(TAggregate aggregate)
-            where TEvent : IDomainEvent<TAggregateId>
+            where TEvent : IDomainEvent<TId>
         {
-            var uncommittedEvents = this.GetUncommittedEventsOf(aggregate);
+            var events = this.GetUncommittedEventsOf(aggregate);
 
-            Assert.Single(uncommittedEvents);
-            Assert.IsType<TEvent>(uncommittedEvents.First());
+            Assert.Single(events);
+            Assert.IsType<TEvent>(events.First());
         }
 
         protected void AssertSingleUncommittedEvent<TEvent>(TAggregate aggregate, Action<TEvent> assertions)
-            where TEvent : IDomainEvent<TAggregateId>
+            where TEvent : IDomainEvent<TId>
         {
             this.AssertSingleUncommittedEventOfType<TEvent>(aggregate);
-            assertions((TEvent)((IEventSourcingAggregate<TAggregateId>)aggregate).GetUncommittedEvents().Single());
+            assertions((TEvent)aggregate.GetUncommittedEvents().Single());
         }
 
         protected void ClearUncommittedEvents(TAggregate aggregate)
         {
-            ((IEventSourcingAggregate<TAggregateId>)aggregate).ClearUncommittedEvents();
+            aggregate.ClearUncommittedEvents();
         }
 
-        protected IEnumerable<IDomainEvent<TAggregateId>> GetUncommittedEventsOf(TAggregate aggregate)
+        protected IEnumerable<IDomainEvent<TId>> GetUncommittedEventsOf(TAggregate aggregate)
         {
-            return ((IEventSourcingAggregate<TAggregateId>)aggregate).GetUncommittedEvents();
+            return aggregate.GetUncommittedEvents();
         }
     }
 }
