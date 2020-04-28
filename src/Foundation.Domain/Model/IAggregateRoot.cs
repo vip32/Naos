@@ -27,7 +27,7 @@
     ///
     /// </para>
     /// </summary>
-    public interface IAggregateRoot<TId>
+    public interface IAggregateRoot
     {
         [Newtonsoft.Json.JsonIgnore]
         [System.Text.Json.Serialization.JsonIgnore]

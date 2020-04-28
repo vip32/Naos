@@ -7,8 +7,8 @@
     public class InventoryInsertDomainEventHandler
         : EntityInsertDomainEventHandler
     {
-        public InventoryInsertDomainEventHandler(ILogger<EntityInsertDomainEventHandler> logger)
-            : base(logger)
+        protected InventoryInsertDomainEventHandler(ILoggerFactory loggerFactory)
+            : base(loggerFactory)
         {
         }
 

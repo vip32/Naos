@@ -7,8 +7,8 @@
     public class InventoryUpdateDomainEventHandler
         : EntityUpdateDomainEventHandler
     {
-        public InventoryUpdateDomainEventHandler(ILogger<EntityUpdateDomainEventHandler> logger)
-            : base(logger)
+        protected InventoryUpdateDomainEventHandler(ILoggerFactory loggerFactory)
+            : base(loggerFactory)
         {
         }
 
