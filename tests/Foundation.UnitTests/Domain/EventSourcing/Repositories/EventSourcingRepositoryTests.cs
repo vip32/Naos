@@ -31,7 +31,7 @@
         public async Task ShouldLoadAnAggregateAndApplyEventsAsync()
         {
             var domainEvent = new TestDomainEvent();
-            this.eventStoreMock.Setup(x => x.ReadEventsAsync(DefaultId, null, null))
+            this.eventStoreMock.Setup(x => x.ReadEventsAsync<Guid>($"TestAggregate-{DefaultId}", null, null))
                 .ReturnsAsync(new List<Event<Guid>>()
                 {
                     new Event<Guid>(domainEvent, 0)
@@ -50,27 +50,27 @@
             var @event = new TestDomainEvent();
             var aggregate = new TestAggregate(@event);
             this.mediatorMock.Setup(x => x.Publish(It.IsAny<TestDomainEvent>(), It.IsAny<CancellationToken>())).Returns(It.IsAny<Task>());
-            this.eventStoreMock.Setup(x => x.AppendEventAsync(@event)).ReturnsAsync(new AppendResult(1));
+            this.eventStoreMock.Setup(x => x.AppendEventAsync($"TestAggregate-{@event.AggregateId}", @event)).ReturnsAsync(new AppendResult(1));
 
             // act
             await this.sut.SaveAsync(aggregate).AnyContext();
 
             // assert
-            this.eventStoreMock.Verify(x => x.AppendEventAsync(It.IsAny<TestDomainEvent>()));
+            this.eventStoreMock.Verify(x => x.AppendEventAsync(It.IsAny<string>(), It.IsAny<TestDomainEvent>()));
             //this.mediatorMock.Verify(x => x.Publish(It.IsAny<TestDomainEvent>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
         public async Task ShouldReturnsNullWhenAggregateNotFoundOrDeletedAsync()
         {
-            this.eventStoreMock.Setup(x => x.ReadEventsAsync(DefaultId, null, null)).Throws<EventStoreAggregateNotFoundException>();
+            this.eventStoreMock.Setup(x => x.ReadEventsAsync<Guid>($"TestAggregate-{DefaultId}", null, null)).Throws<EventStoreAggregateNotFoundException>();
             Assert.Null(await this.sut.GetByIdAsync(DefaultId).AnyContext());
         }
 
         [Fact]
         public void ShouldThrowsExceptionWhenEventStoreHasCommunicationIssues()
         {
-            this.eventStoreMock.Setup(x => x.ReadEventsAsync(DefaultId, null, null)).Throws<EventStoreCommunicationException>();
+            this.eventStoreMock.Setup(x => x.ReadEventsAsync<Guid>($"TestAggregate-{DefaultId}", null, null)).Throws<EventStoreCommunicationException>();
             Assert.ThrowsAsync<EventSourcingRepositoryException>(async () => { await this.sut.GetByIdAsync(DefaultId).AnyContext(); });
         }
     }

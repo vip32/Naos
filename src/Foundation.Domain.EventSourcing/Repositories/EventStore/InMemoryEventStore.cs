@@ -8,14 +8,14 @@
     {
         private readonly List<object> events = new List<object>();
 
-        public Task<AppendResult> AppendEventAsync<TId>(IDomainEvent<TId> @event)
+        public Task<AppendResult> AppendEventAsync<TId>(string streamName, IDomainEvent<TId> @event)
         {
             this.events.Add(new Event<TId>(@event, 0));
 
             return Task.Run(() => new AppendResult(@event.AggregateVersion + 1));
         }
 
-        public Task<IEnumerable<Event<TId>>> ReadEventsAsync<TId>(TId id, long? fromVersion = null, long? toVersion = null)
+        public Task<IEnumerable<Event<TId>>> ReadEventsAsync<TId>(string streamName, long? fromVersion = null, long? toVersion = null)
         {
             fromVersion ??= -1;
             toVersion ??= long.MaxValue;
@@ -25,7 +25,7 @@
                     .Where(e => e != null
                             && e.DomainEvent.AggregateVersion > fromVersion
                             && e.DomainEvent.AggregateVersion < toVersion
-                            && e.DomainEvent.AggregateId.ToString() == id.ToString())
+                            && e.DomainEvent.AggregateId.ToString() == streamName.SliceFrom("-"))
                     .OrderBy(e => e.DomainEvent.AggregateVersion).AsEnumerable());
         }
     }

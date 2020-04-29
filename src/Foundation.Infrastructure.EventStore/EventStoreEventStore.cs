@@ -23,9 +23,10 @@
             this.connection = connection;
         }
 
-        public async Task<AppendResult> AppendEventAsync<TId>(IDomainEvent<TId> @event)
+        public async Task<AppendResult> AppendEventAsync<TId>(string streamName, IDomainEvent<TId> @event)
         //where TId : IAggregateId
         {
+            EnsureArg.IsNotNullOrEmpty(streamName, nameof(streamName));
             EnsureArg.IsNotNull(@event, nameof(@event));
 
             try
@@ -38,7 +39,7 @@
                     Encoding.UTF8.GetBytes("{}")); // TODO: CorrelationId as metadata?
 
                 var writeResult = await this.connection.AppendToStreamAsync(
-                    @event.AggregateId.ToString(),
+                    streamName,
                     @event.AggregateVersion == EventSourcedAggregateRoot<TId>.NewVersion ? ExpectedVersion.NoStream : @event.AggregateVersion,
                     eventData).AnyContext();
 
@@ -50,27 +51,31 @@
             }
         }
 
-        public async Task<IEnumerable<Event<TId>>> ReadEventsAsync<TId>(TId id, long? fromVersion = null, long? toVersion = null)
+        public async Task<IEnumerable<Event<TId>>> ReadEventsAsync<TId>(string streamName, long? fromVersion = null, long? toVersion = null)
             //where TAggregateId : IAggregateId
         {
+            EnsureArg.IsNotNullOrEmpty(streamName, nameof(streamName));
+
             try
             {
                 var result = new List<Event<TId>>();
                 StreamEventsSlice currentSlice;
-                long nextSliceStart = StreamPosition.Start;
+                var nextSliceStart = fromVersion ??= StreamPosition.Start;
+                // TODO: incorporate toVersion
 
                 do
                 {
-                    currentSlice = await this.connection.ReadStreamEventsForwardAsync(id.ToString(), nextSliceStart, 200, false).AnyContext();
+                    currentSlice = await this.connection.ReadStreamEventsForwardAsync(streamName, nextSliceStart, 200, false).AnyContext();
                     if (currentSlice.Status != SliceReadStatus.Success)
                     {
-                        throw new EventStoreAggregateNotFoundException($"aggregate {id} not found");
+                        throw new EventStoreAggregateNotFoundException($"stream {streamName} not found");
                     }
 
                     nextSliceStart = currentSlice.NextEventNumber;
                     foreach (var resolvedEvent in currentSlice.Events)
                     {
-                        result.Add(new Event<TId>(this.Deserialize<TId>(resolvedEvent.Event.EventType, resolvedEvent.Event.Data), resolvedEvent.Event.EventNumber));
+                        result.Add(new Event<TId>(
+                            this.Deserialize<TId>(resolvedEvent.Event.EventType, resolvedEvent.Event.Data), resolvedEvent.Event.EventNumber));
                         // TODO: yield return?
                     }
                 }
@@ -80,7 +85,7 @@
             }
             catch (EventStoreConnectionException ex)
             {
-                throw new EventStoreCommunicationException($"error while reading events for aggregate {id}", ex);
+                throw new EventStoreCommunicationException($"error while reading events for stream {streamName}", ex);
             }
         }
 

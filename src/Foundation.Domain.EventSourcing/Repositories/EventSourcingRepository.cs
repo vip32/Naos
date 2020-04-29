@@ -31,7 +31,7 @@
                 var aggregate = this.CreateEmptyAggregate();
                 IEventSourcedAggregateRoot<TId> aggregatePersistence = aggregate;
 
-                foreach (var @event in await this.eventStore.ReadEventsAsync(id).AnyContext())
+                foreach (var @event in await this.eventStore.ReadEventsAsync<TId>($"{typeof(TAggregate).Name}-{id}").AnyContext())
                 {
                     aggregatePersistence.ApplyEvent(@event.DomainEvent, @event.EventNumber);
                 }
@@ -58,7 +58,7 @@
 
                 foreach (var @event in aggregate/*Persistence*/.GetChanges())
                 {
-                    await this.eventStore.AppendEventAsync(@event).AnyContext();
+                    await this.eventStore.AppendEventAsync($"{typeof(TAggregate).Name}-{aggregate.Id}", @event).AnyContext();
                     await this.mediator.Publish(/*(dynamic)*/@event, CancellationToken.None).AnyContext();
                 }
 
