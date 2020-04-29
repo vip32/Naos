@@ -31,7 +31,7 @@
         public async Task ShouldLoadAnAggregateAndApplyEventsAsync()
         {
             var domainEvent = new TestDomainEvent();
-            this.eventStoreMock.Setup(x => x.ReadEventsAsync(DefaultId))
+            this.eventStoreMock.Setup(x => x.ReadEventsAsync(DefaultId, null, null))
                 .ReturnsAsync(new List<Event<Guid>>()
                 {
                     new Event<Guid>(domainEvent, 0)
@@ -63,19 +63,19 @@
         [Fact]
         public async Task ShouldReturnsNullWhenAggregateNotFoundOrDeletedAsync()
         {
-            this.eventStoreMock.Setup(x => x.ReadEventsAsync(DefaultId)).Throws<EventStoreAggregateNotFoundException>();
+            this.eventStoreMock.Setup(x => x.ReadEventsAsync(DefaultId, null, null)).Throws<EventStoreAggregateNotFoundException>();
             Assert.Null(await this.sut.GetByIdAsync(DefaultId).AnyContext());
         }
 
         [Fact]
         public void ShouldThrowsExceptionWhenEventStoreHasCommunicationIssues()
         {
-            this.eventStoreMock.Setup(x => x.ReadEventsAsync(DefaultId)).Throws<EventStoreCommunicationException>();
+            this.eventStoreMock.Setup(x => x.ReadEventsAsync(DefaultId, null, null)).Throws<EventStoreCommunicationException>();
             Assert.ThrowsAsync<EventSourcingRepositoryException>(async () => { await this.sut.GetByIdAsync(DefaultId).AnyContext(); });
         }
     }
 
-    public class TestAggregate : EventSourcingAggregateRoot<Guid>
+    public class TestAggregate : EventSourcedAggregateRoot<Guid>
     {
 #pragma warning disable CA1051 // Do not declare visible instance fields
         public readonly List<IDomainEvent<Guid>> AppliedEvents = new List<IDomainEvent<Guid>>();

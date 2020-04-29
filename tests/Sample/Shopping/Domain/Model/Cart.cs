@@ -6,7 +6,7 @@
     using EnsureThat;
     using Naos.Foundation.Domain;
 
-    public class Cart : EventSourcingAggregateRoot<Guid>
+    public class Cart : EventSourcedAggregateRoot<Guid>
     {
         public const int ProductQuantityThreshold = 50;
 

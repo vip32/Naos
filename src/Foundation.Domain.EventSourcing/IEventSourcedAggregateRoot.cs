@@ -2,14 +2,14 @@
 {
     using System.Collections.Generic;
 
-    public interface IEventSourcingAggregate<TId>
+    public interface IEventSourcedAggregateRoot<TId>
     {
         long Version { get; }
 
         void ApplyEvent(IDomainEvent<TId> @event, long version);
 
-        IEnumerable<IDomainEvent<TId>> GetUncommittedEvents();
+        IEnumerable<IDomainEvent<TId>> GetChanges();
 
-        void ClearUncommittedEvents();
+        void ClearChanges();
     }
 }

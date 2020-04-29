@@ -7,7 +7,7 @@
     using Xunit;
 
     public abstract class GenericAggregateBaseTest<TAggregate, TId>
-        where TAggregate : EventSourcingAggregateRoot<TId>, IEventSourcingAggregate<TId>
+        where TAggregate : EventSourcedAggregateRoot<TId>, IEventSourcedAggregateRoot<TId>
     {
         protected void AssertSingleUncommittedEventOfType<TEvent>(TAggregate aggregate)
             where TEvent : IDomainEvent<TId>
@@ -22,17 +22,17 @@
             where TEvent : IDomainEvent<TId>
         {
             this.AssertSingleUncommittedEventOfType<TEvent>(aggregate);
-            assertions((TEvent)aggregate.GetUncommittedEvents().Single());
+            assertions((TEvent)aggregate.GetChanges().Single());
         }
 
         protected void ClearUncommittedEvents(TAggregate aggregate)
         {
-            aggregate.ClearUncommittedEvents();
+            aggregate.ClearChanges();
         }
 
         protected IEnumerable<IDomainEvent<TId>> GetUncommittedEventsOf(TAggregate aggregate)
         {
-            return aggregate.GetUncommittedEvents();
+            return aggregate.GetChanges();
         }
     }
 }

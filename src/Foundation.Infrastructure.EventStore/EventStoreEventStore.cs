@@ -23,7 +23,34 @@
             this.connection = connection;
         }
 
-        public async Task<IEnumerable<Event<TId>>> ReadEventsAsync<TId>(TId id)
+        public async Task<AppendResult> AppendEventAsync<TId>(IDomainEvent<TId> @event)
+        //where TId : IAggregateId
+        {
+            EnsureArg.IsNotNull(@event, nameof(@event));
+
+            try
+            {
+                var eventData = new EventData(
+                    @event.EventId,
+                    @event.GetType().AssemblyQualifiedName,
+                    true,
+                    this.Serialize(@event),
+                    Encoding.UTF8.GetBytes("{}")); // TODO: CorrelationId as metadata?
+
+                var writeResult = await this.connection.AppendToStreamAsync(
+                    @event.AggregateId.ToString(),
+                    @event.AggregateVersion == EventSourcedAggregateRoot<TId>.NewVersion ? ExpectedVersion.NoStream : @event.AggregateVersion,
+                    eventData).AnyContext();
+
+                return new AppendResult(writeResult.NextExpectedVersion);
+            }
+            catch (EventStoreConnectionException ex)
+            {
+                throw new EventStoreCommunicationException($"error while appending event {@event.EventId} for aggregate {@event.AggregateId}", ex);
+            }
+        }
+
+        public async Task<IEnumerable<Event<TId>>> ReadEventsAsync<TId>(TId id, long? fromVersion = null, long? toVersion = null)
             //where TAggregateId : IAggregateId
         {
             try
@@ -57,41 +84,14 @@
             }
         }
 
-        public async Task<AppendResult> AppendEventAsync<TId>(IDomainEvent<TId> @event)
-            //where TId : IAggregateId
-        {
-            EnsureArg.IsNotNull(@event, nameof(@event));
-
-            try
-            {
-                var eventData = new EventData(
-                    @event.EventId,
-                    @event.GetType().AssemblyQualifiedName,
-                    true,
-                    this.Serialize(@event),
-                    Encoding.UTF8.GetBytes("{}")); // TODO: CorrelationId as metadata?
-
-                var writeResult = await this.connection.AppendToStreamAsync(
-                    @event.AggregateId.ToString(),
-                    @event.AggregateVersion == EventSourcingAggregateRoot<TId>.NewAggregateVersion ? ExpectedVersion.NoStream : @event.AggregateVersion,
-                    eventData).AnyContext();
-
-                return new AppendResult(writeResult.NextExpectedVersion);
-            }
-            catch (EventStoreConnectionException ex)
-            {
-                throw new EventStoreCommunicationException($"error while appending event {@event.EventId} for aggregate {@event.AggregateId}", ex);
-            }
-        }
-
-        private IDomainEvent<TAggregateId> Deserialize<TAggregateId>(string eventType, byte[] data)
+        private IDomainEvent<TId> Deserialize<TId>(string eventType, byte[] data)
         {
             // TODO: replace with ISerializer
             var settings = new JsonSerializerSettings { ContractResolver = new PrivateSetterContractResolver() };
-            return (IDomainEvent<TAggregateId>)JsonConvert.DeserializeObject(Encoding.UTF8.GetString(data), Type.GetType(eventType), settings);
+            return (IDomainEvent<TId>)JsonConvert.DeserializeObject(Encoding.UTF8.GetString(data), Type.GetType(eventType), settings);
         }
 
-        private byte[] Serialize<TAggregateId>(IDomainEvent<TAggregateId> @event)
+        private byte[] Serialize<TId>(IDomainEvent<TId> @event)
         {
             // TODO: replace with ISerializer
             return Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(@event));

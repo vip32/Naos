@@ -5,10 +5,10 @@
 
     public interface IEventStore
     {
-        Task<IEnumerable<Event<TId>>> ReadEventsAsync<TId>(TId id);
+        Task<AppendResult> AppendEventAsync<TId>(IDomainEvent<TId> @event);
             //where TAggregateId : IAggregateId;
 
-        Task<AppendResult> AppendEventAsync<TAggregateId>(IDomainEvent<TAggregateId> @event);
+        Task<IEnumerable<Event<TId>>> ReadEventsAsync<TId>(TId id, long? fromVersion = null, long? toVersion = null);
             //where TAggregateId : IAggregateId;
     }
 }

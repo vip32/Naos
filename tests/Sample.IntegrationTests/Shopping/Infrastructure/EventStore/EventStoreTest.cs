@@ -16,7 +16,7 @@
         {
             this.connection = EventStoreConnection.Create(new Uri("tcp://localhost:1113"), "naos.test");
             this.connection.ConnectAsync().Wait();
-            this.stream = Guid.NewGuid().ToString();
+            this.stream = "test-" + Guid.NewGuid().ToString();
         }
 
         [Fact]
@@ -41,7 +41,7 @@
         [Fact]
         public async Task TestPerformance()
         {
-            for (var i = 0; i < 100; i++)
+            for (var i = 0; i < 1000; i++)
             {
                 await this.connection.AppendToStreamAsync(this.stream, i - 1,
                     new EventData(Guid.NewGuid(), "test", true, Encoding.UTF8.GetBytes("{}"), StreamMetadata.Create().AsJsonBytes())).AnyContext();

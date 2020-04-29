@@ -9,7 +9,7 @@
     using Naos.Foundation.Domain.EventSourcing;
 
     public class EventSourcingRepository<TAggregate, TId> : IEventSourcingRepository<TAggregate, TId>
-        where TAggregate : EventSourcingAggregateRoot<TId>, IEventSourcingAggregate<TId>
+        where TAggregate : EventSourcedAggregateRoot<TId>, IEventSourcedAggregateRoot<TId>
         //where TId : IAggregateId
     {
         private readonly IEventStore eventStore;
@@ -29,7 +29,7 @@
             try
             {
                 var aggregate = this.CreateEmptyAggregate();
-                IEventSourcingAggregate<TId> aggregatePersistence = aggregate;
+                IEventSourcedAggregateRoot<TId> aggregatePersistence = aggregate;
 
                 foreach (var @event in await this.eventStore.ReadEventsAsync(id).AnyContext())
                 {
@@ -56,13 +56,13 @@
             {
                 //IEventSourcingAggregate<TId> aggregatePersistence = aggregate;
 
-                foreach (var @event in aggregate/*Persistence*/.GetUncommittedEvents())
+                foreach (var @event in aggregate/*Persistence*/.GetChanges())
                 {
                     await this.eventStore.AppendEventAsync(@event).AnyContext();
                     await this.mediator.Publish(/*(dynamic)*/@event, CancellationToken.None).AnyContext();
                 }
 
-                aggregate/*Persistence*/.ClearUncommittedEvents();
+                aggregate/*Persistence*/.ClearChanges();
             }
             catch (EventStoreCommunicationException ex)
             {
