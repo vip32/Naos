@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using EventStore.ClientAPI;
     using Naos.Foundation;
+    using Newtonsoft.Json;
     using Xunit;
 
     public class EventStoreTest : IDisposable
@@ -41,10 +42,11 @@
         [Fact]
         public async Task TestPerformance()
         {
+            var data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new TestData { FirstName = "John", LastName = "Doe" }));
             for (var i = 0; i < 1000; i++)
             {
                 await this.connection.AppendToStreamAsync(this.streamName, i - 1,
-                    new EventData(Guid.NewGuid(), "test", true, Encoding.UTF8.GetBytes("{}"), StreamMetadata.Create().AsJsonBytes())).AnyContext();
+                    new EventData(Guid.NewGuid(), this.streamName.SliceTill("-"), true, data/*Encoding.UTF8.GetBytes("{}")*/, StreamMetadata.Create().AsJsonBytes())).AnyContext();
             }
         }
 
@@ -59,5 +61,14 @@
             await this.connection.AppendToStreamAsync(this.streamName, ExpectedVersion.NoStream,
                 new EventData(Guid.NewGuid(), "test", true, Encoding.UTF8.GetBytes("{}"), StreamMetadata.Create().AsJsonBytes())).AnyContext();
         }
+    }
+
+#pragma warning disable SA1402 // File may only contain a single type
+    public class TestData
+#pragma warning restore SA1402 // File may only contain a single type
+    {
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
     }
 }
