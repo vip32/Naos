@@ -63,6 +63,7 @@
         }
 
         public T Deserialize<T>(Stream input)
+            where T : class
         {
             return ServiceStack.Text.CsvSerializer.DeserializeFromStream<T>(input);
         }
