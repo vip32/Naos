@@ -24,6 +24,7 @@
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="input">The input.</param>
-        T Deserialize<T>(Stream input);
+        T Deserialize<T>(Stream input)
+            where T : class;
     }
 }

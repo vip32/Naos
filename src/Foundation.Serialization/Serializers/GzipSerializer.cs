@@ -2,24 +2,23 @@
 {
     using System;
     using System.IO;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Bson;
+    using System.IO.Compression;
 
-    public class BsonDataSerializer : ISerializer
+    public class GzipSerializer : ISerializer
     {
-        private readonly JsonSerializer serializer;
+        private readonly ISerializer inner;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BsonDataSerializer"/> class.
+        /// Initializes a new instance of the <see cref="GzipSerializer"/> class.
         /// </summary>
         /// <param name="settings">The settings.</param>
-        public BsonDataSerializer(JsonSerializerSettings settings = null)
+        public GzipSerializer(ISerializer inner)
         {
-            this.serializer = JsonSerializer.Create(settings ?? DefaultJsonSerializerSettings.Create());
+            this.inner = inner;
         }
 
         /// <summary>
-        /// Serializes the specified object value.
+        /// Serializes the specified value.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <param name="output">The output.</param>
@@ -35,17 +34,14 @@
                 return;
             }
 
-            using (var writer = new BsonDataWriter(output))
+            using (var compress = new DeflateStream(output, CompressionMode.Compress, true))
             {
-                writer.AutoCompleteOnClose = false;
-                writer.CloseOutput = false;
-                this.serializer.Serialize(writer, value);
-                writer.Flush();
+                this.inner.Serialize(value, compress);
             }
         }
 
         /// <summary>
-        /// Deserializes the specified input stream.
+        /// Deserializes the specified input.
         /// </summary>
         /// <param name="input">The input.</param>
         /// <param name="type">The type.</param>
@@ -57,15 +53,14 @@
             }
 
             input.Position = 0;
-            using (var reader = new BsonDataReader(input))
+            using (var decompress = new DeflateStream(input, CompressionMode.Decompress, true))
             {
-                reader.CloseInput = false;
-                return this.serializer.Deserialize(reader, type);
+                return this.inner.Deserialize(decompress, type);
             }
         }
 
         /// <summary>
-        /// Deserializes the specified input stream.
+        /// Deserializes the specified input.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="input">The input.</param>
@@ -78,11 +73,9 @@
             }
 
             input.Position = 0;
-            using (var reader = new BsonDataReader(input))
+            using (var decompress = new DeflateStream(input, CompressionMode.Decompress, true))
             {
-                reader.CloseInput = false;
-                var serializer = new JsonSerializer();
-                return serializer.Deserialize<T>(reader);
+                return this.inner.Deserialize<T>(decompress);
             }
         }
     }

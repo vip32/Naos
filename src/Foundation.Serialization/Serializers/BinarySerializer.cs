@@ -2,24 +2,24 @@
 {
     using System;
     using System.IO;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Bson;
+    using System.Runtime.Serialization;
+    using System.Runtime.Serialization.Formatters.Binary;
 
-    public class BsonDataSerializer : ISerializer
+    public class BinarySerializer : ISerializer
     {
-        private readonly JsonSerializer serializer;
+        private readonly IFormatter formatter;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BsonDataSerializer"/> class.
+        /// Initializes a new instance of the <see cref="BinarySerializer"/> class.
         /// </summary>
         /// <param name="settings">The settings.</param>
-        public BsonDataSerializer(JsonSerializerSettings settings = null)
+        public BinarySerializer(IFormatter formatter = null)
         {
-            this.serializer = JsonSerializer.Create(settings ?? DefaultJsonSerializerSettings.Create());
+            this.formatter = formatter ?? new BinaryFormatter();
         }
 
         /// <summary>
-        /// Serializes the specified object value.
+        /// Serializes the specified value.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <param name="output">The output.</param>
@@ -35,17 +35,11 @@
                 return;
             }
 
-            using (var writer = new BsonDataWriter(output))
-            {
-                writer.AutoCompleteOnClose = false;
-                writer.CloseOutput = false;
-                this.serializer.Serialize(writer, value);
-                writer.Flush();
-            }
+            this.formatter.Serialize(output, value);
         }
 
         /// <summary>
-        /// Deserializes the specified input stream.
+        /// Deserializes the specified input.
         /// </summary>
         /// <param name="input">The input.</param>
         /// <param name="type">The type.</param>
@@ -57,15 +51,11 @@
             }
 
             input.Position = 0;
-            using (var reader = new BsonDataReader(input))
-            {
-                reader.CloseInput = false;
-                return this.serializer.Deserialize(reader, type);
-            }
+            return this.formatter.Deserialize(input);
         }
 
         /// <summary>
-        /// Deserializes the specified input stream.
+        /// Deserializes the specified input.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="input">The input.</param>
@@ -78,12 +68,7 @@
             }
 
             input.Position = 0;
-            using (var reader = new BsonDataReader(input))
-            {
-                reader.CloseInput = false;
-                var serializer = new JsonSerializer();
-                return serializer.Deserialize<T>(reader);
-            }
+            return (T)this.formatter.Deserialize(input) as T;
         }
     }
 }

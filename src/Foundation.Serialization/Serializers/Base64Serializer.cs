@@ -75,6 +75,7 @@
         /// <typeparam name="T"></typeparam>
         /// <param name="input">The input.</param>
         public T Deserialize<T>(Stream input)
+            where T : class
         {
             if (input == null || input.Length == 0)
             {
