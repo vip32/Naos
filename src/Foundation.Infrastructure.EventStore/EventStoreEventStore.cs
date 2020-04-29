@@ -44,6 +44,7 @@
                     foreach (var resolvedEvent in currentSlice.Events)
                     {
                         result.Add(new Event<TId>(this.Deserialize<TId>(resolvedEvent.Event.EventType, resolvedEvent.Event.Data), resolvedEvent.Event.EventNumber));
+                        // TODO: yield return?
                     }
                 }
                 while (!currentSlice.IsEndOfStream);
