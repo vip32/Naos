@@ -2,10 +2,10 @@
 {
     public class Event<TId>
     {
-        public Event(IDomainEvent<TId> domainEvent, long eventNumber)
+        public Event(IDomainEvent<TId> @event, long number)
         {
-            this.DomainEvent = domainEvent;
-            this.EventNumber = eventNumber;
+            this.DomainEvent = @event;
+            this.EventNumber = number;
         }
 
         public long EventNumber { get; }
