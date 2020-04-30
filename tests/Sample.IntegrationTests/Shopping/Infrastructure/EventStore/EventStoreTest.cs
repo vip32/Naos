@@ -46,7 +46,7 @@
             for (var i = 0; i < 1000; i++)
             {
                 await this.connection.AppendToStreamAsync(this.streamName, i - 1,
-                    new EventData(Guid.NewGuid(), this.streamName.SliceTill("-"), true, data/*Encoding.UTF8.GetBytes("{}")*/, StreamMetadata.Create().AsJsonBytes())).AnyContext();
+                    new EventData(Guid.NewGuid(), "TestEvent", true, data/*Encoding.UTF8.GetBytes("{}")*/, StreamMetadata.Create().AsJsonBytes())).AnyContext();
             }
         }
 
@@ -59,7 +59,7 @@
         private async Task AppendEventToStreamAsync()
         {
             await this.connection.AppendToStreamAsync(this.streamName, ExpectedVersion.NoStream,
-                new EventData(Guid.NewGuid(), "test", true, Encoding.UTF8.GetBytes("{}"), StreamMetadata.Create().AsJsonBytes())).AnyContext();
+                new EventData(Guid.NewGuid(), "TestEvent", true, Encoding.UTF8.GetBytes("{}"), StreamMetadata.Create().AsJsonBytes())).AnyContext();
         }
     }
 

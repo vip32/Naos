@@ -10,5 +10,7 @@
 
         Task<IEnumerable<Event<TId>>> ReadEventsAsync<TId>(string streamName, long? fromVersion = null, long? toVersion = null);
             //where TAggregateId : IAggregateId;
+
+        // TODO: snapshot methods
     }
 }
