@@ -5,7 +5,8 @@
     using Naos.Foundation.Domain;
     using Naos.Foundation.Domain.EventSourcing;
 
-    public class SqlServerEventStore : IEventStore // inspiration: https://github.com/bolicd/eventstore/blob/master/Infrastructure/Repositories/EventStoreRepository.cs
+    public class SqlEventStore : IEventStore // inspiration: https://github.com/bolicd/eventstore/blob/master/Infrastructure/Repositories/EventStoreRepository.cs
+                                             // or go with streamstore https://github.com/SQLStreamStore/SQLStreamStore
     {
         public Task<AppendResult> AppendEventAsync<TId>(string streamName, IDomainEvent<TId> @event)
         {
