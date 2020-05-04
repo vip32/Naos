@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Naos.Foundation.Infrastructure.EventStore</AssemblyName>
+    <AssemblyName>Naos.Foundation.Infrastructure.EventSourcing</AssemblyName>
     <RootNamespace>Naos.Foundation.Infrastructure</RootNamespace>
   </PropertyGroup>
 

@@ -1,4 +1,4 @@
-﻿namespace EventSourcingCQRS.Domain.EventStore
+﻿namespace Naos.Foundation.Infrastructure.EventSourcing
 {
     using System;
     using System.Collections.Generic;
@@ -52,7 +52,6 @@
         }
 
         public async Task<IEnumerable<Event<TId>>> ReadEventsAsync<TId>(string streamName, long? fromVersion = null, long? toVersion = null)
-            //where TAggregateId : IAggregateId
         {
             EnsureArg.IsNotNullOrEmpty(streamName, nameof(streamName));
 

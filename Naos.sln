@@ -276,7 +276,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commands.Application.Web.Ra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.EventSourcing", "src\Foundation.Domain.EventSourcing\Domain.EventSourcing.csproj", "{50DA3745-B1DD-4073-9C62-0F9AA16A436F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.EventStore", "src\Foundation.Infrastructure.EventStore\Infrastructure.EventStore.csproj", "{717D0D23-A80F-49A9-9C9E-16F659065E29}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.EventSourcing", "src\Foundation.Infrastructure.EventStore\Infrastructure.EventSourcing.csproj", "{717D0D23-A80F-49A9-9C9E-16F659065E29}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
