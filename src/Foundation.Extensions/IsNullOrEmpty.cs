@@ -33,15 +33,15 @@
 
         public static bool IsNullOrEmpty(this Guid value)
         {
-            return IsGuidNullOrEmpty(value);
+            return IsNullOrEmptyInternal(value);
         }
 
         public static bool IsNullOrEmpty(this Guid? value)
         {
-            return IsGuidNullOrEmpty(value);
+            return IsNullOrEmptyInternal(value);
         }
 
-        private static bool IsGuidNullOrEmpty(this Guid? value)
+        private static bool IsNullOrEmptyInternal(this Guid? value)
         {
             if (value == null)
             {
