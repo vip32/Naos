@@ -36,15 +36,19 @@ namespace Naos.Sample.IntegrationTests.Shopping.Infrastructure
             // arrange
             //var @event = new TestDomainEvent();
             var aggregate = new TestAggregate("John", "Doe");
+            ((IEventSourcedAggregateRoot<Guid>)aggregate).Version.ShouldBe(0);
 
             // act
             await this.sut.SaveAsync(aggregate).AnyContext();
+            ((IEventSourcedAggregateRoot<Guid>)aggregate).Version.ShouldBe(0);
             aggregate.ChangeName("Johny Doe01");
             aggregate.ChangeName("Johny Doe02");
+            ((IEventSourcedAggregateRoot<Guid>)aggregate).Version.ShouldBe(2);
             aggregate.ChangeName("Johny Doe03");
             ((IEventSourcedAggregateRoot<Guid>)aggregate).GetChanges().ShouldNotBeEmpty();
             await this.sut.SaveAsync(aggregate).AnyContext();
             ((IEventSourcedAggregateRoot<Guid>)aggregate).GetChanges().ShouldBeEmpty();
+            ((IEventSourcedAggregateRoot<Guid>)aggregate).Version.ShouldBe(3);
 
             // assert
             var persistedAggregate = await this.sut.GetByIdAsync(aggregate.Id).AnyContext();
