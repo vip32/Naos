@@ -36,6 +36,7 @@ namespace Naos.Sample.IntegrationTests.Shopping.Infrastructure
             // arrange
             //var @event = new TestDomainEvent();
             var aggregate = new TestAggregate("John", "Doe");
+            ((IEventSourcedAggregateRoot<Guid>)aggregate).GetChanges().ShouldNotBeEmpty(); // contains TestAggregateCreatedEvent
             ((IEventSourcedAggregateRoot<Guid>)aggregate).Version.ShouldBe(0);
 
             // act
