@@ -43,7 +43,7 @@
         public async Task TestPerformance()
         {
             var data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new TestData { FirstName = "John", LastName = "Doe" }));
-            for (var i = 0; i < 1000; i++)
+            for (var i = 0; i < 100; i++)
             {
                 await this.connection.AppendToStreamAsync(this.streamName, i - 1,
                     new EventData(Guid.NewGuid(), "TestEvent", true, data/*Encoding.UTF8.GetBytes("{}")*/, StreamMetadata.Create().AsJsonBytes())).AnyContext();

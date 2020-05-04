@@ -11,14 +11,14 @@
             this.CustomerId = customerId;
         }
 
-        private CartCreatedEvent()
-        {
-        }
-
         private CartCreatedEvent(Guid aggregateId, long aggregateVersion, Guid customerId)
             : base(aggregateId, aggregateVersion)
         {
             this.CustomerId = customerId;
+        }
+
+        private CartCreatedEvent()
+        {
         }
 
         public Guid CustomerId { get; private set; }

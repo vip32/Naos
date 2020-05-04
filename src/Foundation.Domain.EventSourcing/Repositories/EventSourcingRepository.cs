@@ -29,11 +29,11 @@
             try
             {
                 var aggregate = this.CreateEmptyAggregate();
-                IEventSourcedAggregateRoot<TId> aggregatePersistence = aggregate;
+                IEventSourcedAggregateRoot<TId> persistedAggregate = aggregate;
 
                 foreach (var @event in await this.eventStore.ReadEventsAsync<TId>(this.GetStreamName(aggregateId)).AnyContext())
                 {
-                    aggregatePersistence.ApplyEvent(@event.DomainEvent, @event.EventNumber);
+                    persistedAggregate.ApplyEvent(@event.DomainEvent, @event.EventNumber);
                 }
 
                 return aggregate;
@@ -72,10 +72,11 @@
 
         private TAggregate CreateEmptyAggregate()
         {
-            return (TAggregate)typeof(TAggregate)
-                    .GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public,
-                        null, Array.Empty<Type>(), Array.Empty<ParameterModifier>())
-                    .Invoke(Array.Empty<object>());
+            return Factory<TAggregate>.CreatePrivate();
+            //return (TAggregate)typeof(TAggregate)
+            //        .GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public,
+            //            null, Array.Empty<Type>(), Array.Empty<ParameterModifier>())
+            //        .Invoke(Array.Empty<object>());
         }
 
         private string GetStreamName(TId aggregateId)

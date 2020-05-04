@@ -19,7 +19,7 @@
             this.RaiseEvent(new CartCreatedEvent(cartId, customerId));
         }
 
-        //Needed for persistence purposes
+        //Needed ctor for persistence purposes
         private Cart()
         {
             this.Items = new List<CartItem>();
