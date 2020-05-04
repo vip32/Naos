@@ -1,5 +1,6 @@
 ﻿namespace Naos.Foundation
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
@@ -29,5 +30,35 @@
         //{
         //    return source == null || !source.Any();
         //}
+
+        public static bool IsNullOrEmpty(this Guid value)
+        {
+            return IsGuidNullOrEmpty(value);
+        }
+
+        public static bool IsNullOrEmpty(this Guid? value)
+        {
+            return IsGuidNullOrEmpty(value);
+        }
+
+        private static bool IsGuidNullOrEmpty(this Guid? value)
+        {
+            if (value == null)
+            {
+                return true;
+            }
+
+            if (value == default || value == Guid.Empty)
+            {
+                return true;
+            }
+
+            if (string.IsNullOrEmpty(value.ToString()))
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }
