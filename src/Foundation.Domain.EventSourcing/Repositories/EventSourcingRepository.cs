@@ -29,11 +29,9 @@
             try
             {
                 var aggregate = this.CreateEmptyAggregate();
-                IEventSourcedAggregateRoot<TId> persistedAggregate = aggregate;
-
                 foreach (var @event in await this.eventStore.ReadEventsAsync<TId>(this.GetStreamName(aggregateId)).AnyContext())
                 {
-                    persistedAggregate.ApplyEvent(@event.DomainEvent, @event.EventNumber);
+                    aggregate.ApplyEvent(@event.DomainEvent, @event.EventNumber);
                 }
 
                 return aggregate;
