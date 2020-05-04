@@ -5,7 +5,7 @@
     public interface IEventSourcingRepository<TAggregate, TId>
         where TAggregate : IEventSourcedAggregateRoot<TId>
     {
-        Task<TAggregate> GetByIdAsync(TId id);
+        Task<TAggregate> GetByIdAsync(TId aggregateId);
 
         Task SaveAsync(TAggregate aggregate);
     }

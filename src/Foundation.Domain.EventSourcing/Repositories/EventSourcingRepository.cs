@@ -24,14 +24,14 @@
             this.mediator = mediator;
         }
 
-        public async Task<TAggregate> GetByIdAsync(TId id)
+        public async Task<TAggregate> GetByIdAsync(TId aggregateId)
         {
             try
             {
                 var aggregate = this.CreateEmptyAggregate();
                 IEventSourcedAggregateRoot<TId> aggregatePersistence = aggregate;
 
-                foreach (var @event in await this.eventStore.ReadEventsAsync<TId>($"{typeof(TAggregate).Name}-{id}").AnyContext())
+                foreach (var @event in await this.eventStore.ReadEventsAsync<TId>(this.GetStreamName(aggregateId)).AnyContext())
                 {
                     aggregatePersistence.ApplyEvent(@event.DomainEvent, @event.EventNumber);
                 }
@@ -58,7 +58,7 @@
 
                 foreach (var @event in aggregate/*Persistence*/.GetChanges())
                 {
-                    await this.eventStore.AppendEventAsync($"{typeof(TAggregate).Name}-{aggregate.Id}", @event).AnyContext();
+                    await this.eventStore.AppendEventAsync(this.GetStreamName(aggregate.Id), @event).AnyContext();
                     await this.mediator.Publish(/*(dynamic)*/@event, CancellationToken.None).AnyContext();
                 }
 
@@ -76,6 +76,11 @@
                     .GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public,
                         null, Array.Empty<Type>(), Array.Empty<ParameterModifier>())
                     .Invoke(Array.Empty<object>());
+        }
+
+        private string GetStreamName(TId aggregateId)
+        {
+            return $"{typeof(TAggregate).Name}-{aggregateId}";
         }
     }
 }
