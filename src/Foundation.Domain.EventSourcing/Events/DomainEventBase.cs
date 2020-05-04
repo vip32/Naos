@@ -2,9 +2,7 @@
 {
     using System;
 
-#pragma warning disable SA1402 // File may only contain a single type
     public abstract class DomainEventBase<TId> : DomainEventBase, IDomainEvent<TId>
-#pragma warning restore SA1402 // File may only contain a single type
     {
         protected DomainEventBase()
         {
