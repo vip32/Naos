@@ -45,15 +45,13 @@
                         sp.GetService<ITracer>(),
                         new RepositoryLoggingDecorator<UserAccount>(
                             sp.GetRequiredService<ILogger<UserAccountRepository>>(),
-                                    //new RepositoryTenantDecorator<UserAccount>(
-                                    //"naos_sample_test", // TODO: resolve from runtime context
-                                    //new RepositorySoftDeleteDecorator<UserAccount>(
-#pragma warning disable SA1137 // Elements should have the same indentation
-                                    new EntityFrameworkRepository<UserAccount>(o => o
-#pragma warning restore SA1137 // Elements should have the same indentation
-                                        .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
-                                        .Mediator(sp.GetRequiredService<IMediator>())
-                                        .DbContext(sp.GetRequiredService<UserAccountsDbContext>())))));
+                            //new RepositoryTenantDecorator<UserAccount>(
+                            //"naos_sample_test", // TODO: resolve from runtime context
+                            //new RepositorySoftDeleteDecorator<UserAccount>(
+                            new EntityFrameworkRepository<UserAccount>(o => o
+                                .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
+                                .Mediator(sp.GetRequiredService<IMediator>())
+                                .DbContext(sp.GetRequiredService<UserAccountsDbContext>())))));
             });
 
             options.Context.Services.AddScoped<IGenericRepository<UserVisit>>(sp =>
