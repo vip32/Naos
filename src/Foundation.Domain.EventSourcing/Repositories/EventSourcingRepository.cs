@@ -28,7 +28,7 @@
         {
             try
             {
-                var aggregate = this.CreateEmptyAggregate();
+                var aggregate = Factory<TAggregate>.Create();
                 foreach (var @event in await this.eventStore.ReadEventsAsync<TId>(this.GetStreamName(aggregateId)).AnyContext())
                 {
                     aggregate.ApplyEvent(@event.DomainEvent, @event.EventNumber);
@@ -66,15 +66,6 @@
             {
                 throw new EventSourcingRepositoryException("unable to access persistence layer", ex);
             }
-        }
-
-        private TAggregate CreateEmptyAggregate()
-        {
-            return Factory<TAggregate>.CreatePrivate();
-            //return (TAggregate)typeof(TAggregate)
-            //        .GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public,
-            //            null, Array.Empty<Type>(), Array.Empty<ParameterModifier>())
-            //        .Invoke(Array.Empty<object>());
         }
 
         private string GetStreamName(TId aggregateId)

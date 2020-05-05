@@ -17,6 +17,7 @@
             this.CustomerId = customerId;
         }
 
+        //Needed ctor for persistence purposes > EventSourcingRepository.CreateEmptyAggregate
         private CartCreatedEvent()
         {
         }

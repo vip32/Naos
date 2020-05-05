@@ -39,14 +39,6 @@
             return instance;
         }
 
-        public static T CreatePrivate()
-        {
-            return (T)typeof(T)
-                    .GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public,
-                        null, Array.Empty<Type>(), Array.Empty<ParameterModifier>())
-                    .Invoke(Array.Empty<object>());
-        }
-
         //public static object Create(Type type) => Activator.CreateInstance(type);
 
         /// <summary>
