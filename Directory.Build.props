@@ -30,7 +30,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Net.Compilers" Version="3.5.0" />   <!--c#8 roslyn --> <!-- TODO: https://developercommunity.visualstudio.com/content/problem/842373/microsoftnetcompilers-is-only-supported-on-msbuild.html-->
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.5.0" />  <!--c#8 roslyn -->
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0" />
     <PackageReference Include="EnsureThatCore" Version="1.0.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>

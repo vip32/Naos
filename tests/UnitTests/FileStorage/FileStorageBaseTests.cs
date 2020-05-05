@@ -50,7 +50,7 @@
                 await storage.SaveFileContentsAsync(@"q\new.txt", "new");
                 await storage.SaveFileContentsAsync(@"long/path/in/here/1.hey.stuff-2.json", "archived");
 
-                Assert.Equal(3, (await Naos.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage)).Count());
+                Assert.Equal(3, (await Naos.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage)).Count);
                 Assert.Single(await storage.GetFileInformationsAsync(limit: 1));
                 Assert.Single(await storage.GetFileInformationsAsync(@"long\path\in\here\*stuff*.json"));
 
@@ -366,7 +366,7 @@
             {
                 await storage.SaveFileContentsAsync(@"x\hello.txt", "hello");
                 await storage.SaveFileContentsAsync(@"x\nested\world.csv", "nested world");
-                Assert.Equal(2, (await Naos.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage)).Count());
+                Assert.Equal(2, (await Naos.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage)).Count);
 
                 await storage.DeleteFilesAsync(@"x");
                 Assert.Empty(await Naos.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage));
@@ -387,9 +387,9 @@
             {
                 await storage.SaveFileContentsAsync(@"x\hello.txt", "hello");
                 await storage.SaveFileContentsAsync(@"x\nested\world.csv", "nested world");
-                Assert.Equal(2, (await Naos.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage)).Count());
+                Assert.Equal(2, (await Naos.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage)).Count);
                 Assert.Single(await storage.GetFileInformationsAsync(limit: 1));
-                Assert.Equal(2, (await storage.GetFileInformationsAsync(@"x\*")).Count());
+                Assert.Equal(2, (await storage.GetFileInformationsAsync(@"x\*")).Count);
                 Assert.Single(await storage.GetFileInformationsAsync(@"x\nested\*"));
 
                 await storage.DeleteFilesAsync(@"x\*");
@@ -413,11 +413,11 @@
                 await storage.SaveFileContentsAsync(@"x\hello.txt", "hello");
                 await storage.SaveFileContentsAsync(@"x\nested\world.csv", "nested world");
                 await storage.SaveFileContentsAsync(@"x\nested\hello.txt", "nested hello");
-                Assert.Equal(3, (await Naos.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage)).Count());
+                Assert.Equal(3, (await Naos.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage)).Count);
                 Assert.Single(await storage.GetFileInformationsAsync(limit: 1));
-                Assert.Equal(3, (await storage.GetFileInformationsAsync(@"x\*")).Count());
-                Assert.Equal(2, (await storage.GetFileInformationsAsync(@"x\nested\*")).Count());
-                Assert.Equal(2, (await storage.GetFileInformationsAsync(@"x\*.txt")).Count());
+                Assert.Equal(3, (await storage.GetFileInformationsAsync(@"x\*")).Count);
+                Assert.Equal(2, (await storage.GetFileInformationsAsync(@"x\nested\*")).Count);
+                Assert.Equal(2, (await storage.GetFileInformationsAsync(@"x\*.txt")).Count);
 
                 await storage.DeleteFilesAsync(@"x\*.txt");
 
@@ -443,11 +443,11 @@
                 await storage.SaveFileContentsAsync(@"x\hello.txt", "hello");
                 await storage.SaveFileContentsAsync(@"x\nested\world.csv", "nested world");
                 await storage.SaveFileContentsAsync(@"x\nested\hello.txt", "nested hello");
-                Assert.Equal(3, (await Naos.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage)).Count());
+                Assert.Equal(3, (await Naos.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage)).Count);
                 Assert.Single(await storage.GetFileInformationsAsync(limit: 1));
-                Assert.Equal(3, (await storage.GetFileInformationsAsync(@"x\*")).Count());
-                Assert.Equal(2, (await storage.GetFileInformationsAsync(@"x\nested\*")).Count());
-                Assert.Equal(2, (await storage.GetFileInformationsAsync(@"x\*.txt")).Count());
+                Assert.Equal(3, (await storage.GetFileInformationsAsync(@"x\*")).Count);
+                Assert.Equal(2, (await storage.GetFileInformationsAsync(@"x\nested\*")).Count);
+                Assert.Equal(2, (await storage.GetFileInformationsAsync(@"x\*.txt")).Count);
 
                 await storage.DeleteFilesAsync(@"x\nested");
 
@@ -475,15 +475,15 @@
                 await storage.SaveFileContentsAsync(@"x\nested\world.csv", "nested world");
                 await storage.SaveFileContentsAsync(@"x\nested\hello.txt", "nested hello");
                 await storage.SaveFileContentsAsync(@"x\nested\again.txt", "nested again");
-                Assert.Equal(5, (await Naos.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage)).Count());
+                Assert.Equal(5, (await Naos.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage)).Count);
                 Assert.Single(await storage.GetFileInformationsAsync(limit: 1));
-                Assert.Equal(5, (await storage.GetFileInformationsAsync(@"x\*")).Count());
-                Assert.Equal(3, (await storage.GetFileInformationsAsync(@"x\nested\*")).Count());
-                Assert.Equal(3, (await storage.GetFileInformationsAsync(@"x\*.txt")).Count());
+                Assert.Equal(5, (await storage.GetFileInformationsAsync(@"x\*")).Count);
+                Assert.Equal(3, (await storage.GetFileInformationsAsync(@"x\nested\*")).Count);
+                Assert.Equal(3, (await storage.GetFileInformationsAsync(@"x\*.txt")).Count);
 
                 await storage.DeleteFilesAsync(@"x\nested\*.txt");
 
-                Assert.Equal(3, (await Naos.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage)).Count());
+                Assert.Equal(3, (await Naos.FileStorage.Domain.FileStorageExtensions.GetFileInformationsAsync(storage)).Count);
                 Assert.True(await storage.ExistsAsync(@"x\hello.txt"));
                 Assert.True(await storage.ExistsAsync(@"x\world.csv"));
                 Assert.False(await storage.ExistsAsync(@"x\nested\hello.txt"));

@@ -3,7 +3,6 @@
     using System;
     using System.Collections;
     using System.IO;
-    using System.IO.Compression;
     using System.Security.Cryptography;
 
     public class RijndaelSerializer : ISerializer
@@ -200,6 +199,7 @@
 
         protected override void Dispose(bool disposing)
         {
+            base.Dispose(disposing);
             // no-op
         }
     }

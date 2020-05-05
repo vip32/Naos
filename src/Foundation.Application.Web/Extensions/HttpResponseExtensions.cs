@@ -35,7 +35,9 @@
                 }
             }
 
+#pragma warning disable CA2012 // Use ValueTasks correctly
             writer.DisposeAsync(); // mitigates 'Synchronous operations are disallowed' issue (netcore3) https://github.com/aspnet/Announcements/issues/342
+#pragma warning restore CA2012 // Use ValueTasks correctly
 #endif
 
 #if NETSTANDARD2_0
