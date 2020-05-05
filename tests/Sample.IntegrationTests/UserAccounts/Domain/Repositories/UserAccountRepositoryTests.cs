@@ -28,7 +28,7 @@
             var domains = new[] { "East", "West" };
             this.entityFaker = new Faker<UserAccount>() //https://github.com/bchavez/Bogus
                 .RuleFor(u => u.Email, (f, u) => f.Internet.Email())
-                .RuleFor(u => u.LastVisitDate, (f, u) => DateTime.UtcNow)
+                .RuleFor(u => u.LastVisitDate, (f, u) => DateTime.UtcNow.AddDays(-1))
                 .RuleFor(u => u.RegisterDate, (f, u) => DateTime.UtcNow.AddDays(-14))
                 .RuleFor(u => u.TenantId, (f, u) => this.tenantId)
                 .RuleFor(u => u.AdAccount, (f, u) => AdAccount.For(f.PickRandom(new[] { "East", "West" }) + $"\\{f.System.Random.AlphaNumeric(5)}"))
@@ -106,6 +106,30 @@
             // assert
             result.ShouldNotBeNull();
             result.ShouldNotBeEmpty(); // fails because of gender enum (=0 instead of Male)
+        }
+
+        [Fact]
+        public async Task FindAllAsync_WithLinqKitSpecification1_Test()
+        {
+            // arrange/act
+            var result = await this.sut.FindAllAsync(
+                new HasDomainsSpecification(new[] { "East", "West" })).AnyContext();
+
+            // assert
+            result.ShouldNotBeNull();
+            result.ShouldNotBeEmpty();
+        }
+
+        [Fact]
+        public async Task FindAllAsync_WithLinqKitSpecification2_Test()
+        {
+            // arrange/act
+            var result = await this.sut.FindAllAsync(
+                new IsActiveSpecification()).AnyContext();
+
+            // assert
+            result.ShouldNotBeNull();
+            result.ShouldNotBeEmpty();
         }
 
         [Fact]

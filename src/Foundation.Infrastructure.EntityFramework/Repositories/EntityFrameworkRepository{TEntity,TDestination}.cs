@@ -6,8 +6,10 @@
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
+    using LinqKit;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
+    using Naos.Foundation;
     using Naos.Foundation.Domain;
 
     public class EntityFrameworkRepository<TEntity, TDestination> : IGenericRepository<TEntity>
@@ -68,6 +70,7 @@
             if (options?.HasOrders() == true)
             {
                 return (await this.Options.DbContext.Set<TDestination>() // .AsAsyncEnumerable()
+                    .AsExpandable()
                     .WhereExpressions(expressions)
                     .SkipIf(options?.Skip)
                     .TakeIf(options?.Take)
@@ -78,6 +81,7 @@
             else
             {
                 return (await this.Options.DbContext.Set<TDestination>() // .AsAsyncEnumerable()
+                    .AsExpandable()
                     .WhereExpressions(expressions)
                     .SkipIf(options?.Skip)
                     .TakeIf(options?.Take)
@@ -98,7 +102,8 @@
             //#endif
 
             //#if NETSTANDARD2_1
-            return this.Options.Mapper.Map<TEntity>(await this.Options.DbContext.Set<TDestination>().FindAsync(this.ParseGuid(id)));
+            return this.Options.Mapper.Map<TEntity>(await this.Options.DbContext.Set<TDestination>()
+                .FindAsync(this.ParseGuid(id)).ConfigureAwait(false));
             //#endif
         }
 
@@ -204,7 +209,7 @@
             //#endif
 
             //#if NETSTANDARD2_1
-            var dEntity = await this.Options.DbContext.Set<TDestination>().FindAsync(this.ParseGuid(id));
+            var dEntity = await this.Options.DbContext.Set<TDestination>().FindAsync(this.ParseGuid(id)).ConfigureAwait(false);
             //#endif
             if (dEntity != null)
             {

@@ -6,6 +6,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using EnsureThat;
+    using LinqKit;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation.Domain;
@@ -67,6 +68,7 @@
             if (options?.HasOrders() == true)
             {
                 return await this.Options.DbContext.Set<TEntity>() // .AsAsyncEnumerable()
+                    .AsExpandable()
                     .WhereExpressions(expressions)
                     .SkipIf(options?.Skip)
                     .TakeIf(options?.Take)
@@ -75,6 +77,7 @@
             else
             {
                 return await this.Options.DbContext.Set<TEntity>() // .AsAsyncEnumerable()
+                    .AsExpandable()
                     .WhereExpressions(expressions)
                     .SkipIf(options?.Skip)
                     .TakeIf(options?.Take).ToListAsyncSafe(cancellationToken).AnyContext();
@@ -93,7 +96,7 @@
             //#endif
 
             //#if NETSTANDARD2_1
-            return await this.Options.DbContext.Set<TEntity>().FindAsync(this.ParseGuid(id));
+            return await this.Options.DbContext.Set<TEntity>().FindAsync(this.ParseGuid(id)).ConfigureAwait(false);
             //#endif
         }
 
