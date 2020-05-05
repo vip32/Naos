@@ -2,6 +2,7 @@
 {
     using System;
     using Naos.Sample.Shopping.Domain;
+    using Shouldly;
     using Xunit;
 
     public class CartTests : GenericAggregateBaseTest<Cart, Guid>
@@ -17,8 +18,8 @@
 
             this.AssertSingleUncommittedEvent<CartCreatedEvent>(cart, @event =>
             {
-                Assert.Equal(DefaultCartId, @event.AggregateId);
-                Assert.Equal(DefaultCustomerId, @event.CustomerId);
+                DefaultCartId.ShouldBe(@event.AggregateId);
+                DefaultCustomerId.ShouldBe(@event.CustomerId);
             });
         }
 
@@ -32,10 +33,10 @@
 
             this.AssertSingleUncommittedEvent<ProductAddedEvent>(cart, @event =>
             {
-                Assert.Equal(DefaultProductId, @event.ProductId);
-                Assert.Equal(2, @event.Quantity);
-                Assert.Equal(DefaultCartId, @event.AggregateId);
-                Assert.Equal(0, @event.AggregateVersion);
+                DefaultCartId.ShouldBe(@event.AggregateId);
+                DefaultProductId.ShouldBe(@event.ProductId);
+                @event.Quantity.ShouldBe(2);
+                @event.AggregateVersion.ShouldBe(0);
             });
         }
 
@@ -47,7 +48,7 @@
             cart.AddProduct(DefaultProductId, 2);
             this.ClearUncommittedEvents(cart);
 
-            Assert.Throws<CartException>(() => { cart.AddProduct(DefaultProductId, 1); });
+            Assert.Throws<CartException>(() => cart.AddProduct(DefaultProductId, 1));
             Assert.Empty(this.GetUncommittedEventsOf(cart));
         }
 
@@ -61,11 +62,11 @@
             cart.ChangeProductQuantity(DefaultProductId, 3);
             this.AssertSingleUncommittedEvent<ProductQuantityChangedEvent>(cart, @event =>
             {
-                Assert.Equal(DefaultProductId, @event.ProductId);
-                Assert.Equal(2, @event.OldQuantity);
-                Assert.Equal(3, @event.NewQuantity);
-                Assert.Equal(DefaultCartId, @event.AggregateId);
-                Assert.Equal(1, @event.AggregateVersion);
+                DefaultProductId.ShouldBe(@event.ProductId);
+                DefaultCartId.ShouldBe(@event.AggregateId);
+                @event.OldQuantity.ShouldBe(2);
+                @event.NewQuantity.ShouldBe(3);
+                @event.AggregateVersion.ShouldBe(1);
             });
         }
 
@@ -74,7 +75,8 @@
         {
             var cart = new Cart(DefaultCartId, DefaultCustomerId);
 
-            Assert.Throws<CartException>(() => { cart.ChangeProductQuantity(DefaultProductId, 3); });
+            ShouldThrowExtensions.ShouldThrow<CartException>(
+                () => cart.ChangeProductQuantity(DefaultProductId, 3));
         }
 
         [Fact]
@@ -82,7 +84,8 @@
         {
             var cart = new Cart(DefaultCartId, DefaultCustomerId);
 
-            Assert.Throws<CartException>(() => { cart.AddProduct(DefaultProductId, 51); });
+            ShouldThrowExtensions.ShouldThrow<CartException>(
+                () => cart.AddProduct(DefaultProductId, 51));
         }
 
         [Fact]
@@ -91,7 +94,8 @@
             var cart = new Cart(DefaultCartId, DefaultCustomerId);
 
             cart.AddProduct(DefaultProductId, 1);
-            Assert.Throws<CartException>(() => { cart.ChangeProductQuantity(DefaultProductId, 51); });
+            ShouldThrowExtensions.ShouldThrow<CartException>(
+                () => cart.ChangeProductQuantity(DefaultProductId, 51));
         }
     }
 }
