@@ -101,9 +101,9 @@
 
     public class TestDomainEvent : DomainEventBase<Guid>
     {
-        public override IDomainEvent<Guid> WithAggregate(Guid aggregateId, long aggregateVersion)
-        {
-            return this;
-        }
+        //public override IDomainEvent<Guid> WithAggregate(Guid aggregateId, long aggregateVersion)
+        //{
+        //    return this;
+        //}
     }
 }

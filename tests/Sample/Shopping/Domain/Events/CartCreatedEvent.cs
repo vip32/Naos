@@ -23,9 +23,9 @@
 
         public Guid CustomerId { get; private set; }
 
-        public override IDomainEvent<Guid> WithAggregate(Guid aggregateId, long aggregateVersion)
-        {
-            return new CartCreatedEvent(aggregateId, aggregateVersion, this.CustomerId);
-        }
+        //public override IDomainEvent<Guid> WithAggregate(Guid aggregateId, long aggregateVersion)
+        //{
+        //    return new CartCreatedEvent(aggregateId, aggregateVersion, this.CustomerId);
+        //}
     }
 }

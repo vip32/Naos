@@ -42,6 +42,7 @@
                     streamName,
                     @event.AggregateVersion == EventSourcedAggregateRoot<TId>.NewVersion ? ExpectedVersion.NoStream : @event.AggregateVersion,
                     eventData).AnyContext();
+                // https://eventstore.com/docs/dotnet-api/optimistic-concurrency-and-idempotence/index.html
 
                 return new AppendResult(writeResult.NextExpectedVersion);
             }

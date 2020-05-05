@@ -25,6 +25,12 @@
 
         public long AggregateVersion { get; private set; }
 
-        public abstract IDomainEvent<TId> WithAggregate(TId aggregateId, long aggregateVersion);
+        //public abstract IDomainEvent<TId> WithAggregate(TId aggregateId, long aggregateVersion);
+        public IDomainEvent<TId> WithAggregate(TId aggregateId, long aggregateVersion)
+        {
+            this.AggregateId = aggregateId;
+            this.AggregateVersion = aggregateVersion;
+            return this;
+        }
     }
 }

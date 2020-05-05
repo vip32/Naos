@@ -32,9 +32,9 @@
 
         public int NewQuantity { get; private set; }
 
-        public override IDomainEvent<Guid> WithAggregate(Guid aggregateId, long aggregateVersion)
-        {
-            return new ProductQuantityChangedEvent(aggregateId, aggregateVersion, this.ProductId, this.OldQuantity, this.NewQuantity);
-        }
+        //public override IDomainEvent<Guid> WithAggregate(Guid aggregateId, long aggregateVersion)
+        //{
+        //    return new ProductQuantityChangedEvent(aggregateId, aggregateVersion, this.ProductId, this.OldQuantity, this.NewQuantity);
+        //}
     }
 }

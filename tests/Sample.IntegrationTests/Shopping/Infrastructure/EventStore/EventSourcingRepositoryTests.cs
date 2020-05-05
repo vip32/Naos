@@ -137,10 +137,11 @@ namespace Naos.Sample.IntegrationTests.Shopping.Infrastructure
 
         public string LastName { get; private set; }
 
-        public override IDomainEvent<Guid> WithAggregate(Guid aggregateId, long aggregateVersion)
-        {
-            return new TestAggregateCreatedEvent(aggregateId, aggregateVersion, this.FirstName, this.LastName);
-        }
+        //public override IDomainEvent<Guid> WithAggregate(Guid aggregateId, long aggregateVersion)
+        //{
+        //    this.AggregateVersion = aggregateVersion;
+        //    return new TestAggregateCreatedEvent(aggregateId, aggregateVersion, this.FirstName, this.LastName);
+        //}
     }
 
     public class TestChangeNameEvent : DomainEventBase<Guid>
@@ -162,9 +163,9 @@ namespace Naos.Sample.IntegrationTests.Shopping.Infrastructure
 
         public string FullName { get; private set; }
 
-        public override IDomainEvent<Guid> WithAggregate(Guid aggregateId, long aggregateVersion)
-        {
-            return new TestChangeNameEvent(aggregateId, aggregateVersion, this.FullName);
-        }
+        //public override IDomainEvent<Guid> WithAggregate(Guid aggregateId, long aggregateVersion)
+        //{
+        //    return new TestChangeNameEvent(aggregateId, aggregateVersion, this.FullName);
+        //}
     }
 }

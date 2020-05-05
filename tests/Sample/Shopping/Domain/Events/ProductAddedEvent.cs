@@ -27,9 +27,9 @@
 
         public int Quantity { get; private set; }
 
-        public override IDomainEvent<Guid> WithAggregate(Guid aggregateId, long aggregateVersion)
-        {
-            return new ProductAddedEvent(aggregateId, aggregateVersion, this.ProductId, this.Quantity);
-        }
+        //public override IDomainEvent<Guid> WithAggregate(Guid aggregateId, long aggregateVersion)
+        //{
+        //    return new ProductAddedEvent(aggregateId, aggregateVersion, this.ProductId, this.Quantity);
+        //}
     }
 }
