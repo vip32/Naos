@@ -2,7 +2,6 @@
 namespace Naos.Sample.IntegrationTests.Shopping.Infrastructure
 {
     using System;
-    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
     using EventStore.ClientAPI;
@@ -15,14 +14,14 @@ namespace Naos.Sample.IntegrationTests.Shopping.Infrastructure
     using Xunit;
     using Xunit.Abstractions;
 
-    public class EventSourcingRepositoryTests : BaseTest, IDisposable
+    public class EventSourcingRepositoryWithEventStoreTests : BaseTest, IDisposable
     {
         private readonly IEventStoreConnection connection;
         private readonly EventSourcingRepository<TestAggregate, Guid> sut;
         private readonly Mock<IMediator> mediatorMock;
         private readonly ITestOutputHelper output;
 
-        public EventSourcingRepositoryTests(ITestOutputHelper output)
+        public EventSourcingRepositoryWithEventStoreTests(ITestOutputHelper output)
         {
             this.output = output;
             this.mediatorMock = new Mock<IMediator>();
