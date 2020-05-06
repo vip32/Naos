@@ -17,17 +17,13 @@
             Environment.SetEnvironmentVariable(EnvironmentKeys.IsLocal, "True");
         }
 
-        protected static IConfiguration Configuration
-        {
-            get
-            {
-                return configuration ?? (configuration = NaosConfigurationFactory.Create());
-            }
-        }
+        protected static IConfiguration Configuration => configuration ??= NaosConfigurationFactory.Create();
 
         protected long Benchmark(Action action, int iterations = 1, ITestOutputHelper output = null)
         {
+            // alternativ: https://github.com/microsoft/xunit-performance
             GC.Collect();
+            output?.WriteLine($"Execution with #{iterations} iterations started: \r\n  - Gen-0: {GC.CollectionCount(0)}, Gen-1: {GC.CollectionCount(1)}, Gen-2: {GC.CollectionCount(2)}");
             var sw = new Stopwatch();
             action(); // trigger jit before execution
 
@@ -38,6 +34,7 @@
             }
 
             sw.Stop();
+            GC.Collect();
             output?.WriteLine($"Execution with #{iterations} iterations took: {sw.Elapsed.TotalMilliseconds}ms\r\n  - Gen-0: {GC.CollectionCount(0)}, Gen-1: {GC.CollectionCount(1)}, Gen-2: {GC.CollectionCount(2)}", sw.ElapsedMilliseconds);
 
             return sw.ElapsedMilliseconds;
