@@ -2,6 +2,7 @@
 namespace Naos.Sample.IntegrationTests.Shopping.Infrastructure
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
     using EventStore.ClientAPI;
@@ -169,12 +170,12 @@ namespace Naos.Sample.IntegrationTests.Shopping.Infrastructure
             this.LastName = lastName;
         }
 
-        private TestAggregateCreatedEvent(Guid aggregateId, long aggregateVersion, string firstName, string lastName)
-            : base(aggregateId, aggregateVersion)
-        {
-            this.FirstName = firstName;
-            this.LastName = lastName;
-        }
+        //private TestAggregateCreatedEvent(Guid aggregateId, long aggregateVersion, string firstName, string lastName)
+        //    : base(aggregateId, aggregateVersion)
+        //{
+        //    this.FirstName = firstName;
+        //    this.LastName = lastName;
+        //}
 
         private TestAggregateCreatedEvent()
         {
@@ -198,11 +199,11 @@ namespace Naos.Sample.IntegrationTests.Shopping.Infrastructure
             this.FullName = fullName;
         }
 
-        private TestChangeNameEvent(Guid aggregateId, long aggregateVersion, string fullName)
-            : base(aggregateId, aggregateVersion)
-        {
-            this.FullName = fullName;
-        }
+        //private TestChangeNameEvent(Guid aggregateId, long aggregateVersion, string fullName)
+        //    : base(aggregateId, aggregateVersion)
+        //{
+        //    this.FullName = fullName;
+        //}
 
         private TestChangeNameEvent()
         {

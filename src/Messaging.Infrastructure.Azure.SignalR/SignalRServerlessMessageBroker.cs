@@ -11,6 +11,8 @@
     using Microsoft.AspNetCore.SignalR.Client;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
+    using Naos.Messaging;
+    using Naos.Messaging.Domain;
     using Naos.Tracing.Domain;
     using Newtonsoft.Json;
 

@@ -3,6 +3,8 @@
     using System.Net.Http;
     using MediatR;
     using Naos.Foundation;
+    using Naos.Messaging;
+    using Naos.Messaging.Domain;
     using Naos.Tracing.Domain;
 
     public class SignalRServerlessMessageBrokerOptionsBuilder :
