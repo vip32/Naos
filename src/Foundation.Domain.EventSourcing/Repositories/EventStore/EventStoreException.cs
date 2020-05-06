@@ -29,23 +29,23 @@
     }
 
     [Serializable]
-    public class EventStoreAggregateNotFoundException : EventStoreException
+    public class EventStoreStreamNotFoundException : EventStoreException
     {
-        public EventStoreAggregateNotFoundException()
+        public EventStoreStreamNotFoundException()
         {
         }
 
-        public EventStoreAggregateNotFoundException(string message)
+        public EventStoreStreamNotFoundException(string message)
             : base(message)
         {
         }
 
-        public EventStoreAggregateNotFoundException(string message, Exception inner)
+        public EventStoreStreamNotFoundException(string message, Exception inner)
             : base(message, inner)
         {
         }
 
-        protected EventStoreAggregateNotFoundException(
+        protected EventStoreStreamNotFoundException(
           System.Runtime.Serialization.SerializationInfo info,
           System.Runtime.Serialization.StreamingContext context)
             : base(info, context)

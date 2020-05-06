@@ -8,5 +8,9 @@
         Task<TAggregate> GetByIdAsync(TId aggregateId);
 
         Task SaveAsync(TAggregate aggregate);
+
+        Task<TAggregate> GetSnapshotByIdAsync(TId aggregateId);
+
+        Task SaveSnapshotAsync(TAggregate aggregate);
     }
 }

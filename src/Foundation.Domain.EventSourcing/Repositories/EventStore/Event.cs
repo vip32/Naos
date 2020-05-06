@@ -1,6 +1,6 @@
 ﻿namespace Naos.Foundation.Domain.EventSourcing
 {
-    public class Event<TId>
+    public class Event<TId> // wrapper
     {
         public Event(IDomainEvent<TId> @event, long number)
         {

@@ -1,8 +1,8 @@
 ﻿namespace Naos.Foundation.Domain.EventSourcing
 {
-    public class AppendResult
+    public class EventResult
     {
-        public AppendResult(long nextExpectedVersion)
+        public EventResult(long nextExpectedVersion)
         {
             this.NextExpectedVersion = nextExpectedVersion;
         }
