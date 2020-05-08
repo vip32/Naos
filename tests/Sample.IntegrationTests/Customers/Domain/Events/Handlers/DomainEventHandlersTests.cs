@@ -11,7 +11,7 @@
     using Shouldly;
     using Xunit;
 
-    public class DomainEventHandlersTests : BaseTest
+    public class DomainEventHandlersTests : BaseTests
     {
         // TODO: make this more like a real unit tests
         [Fact]

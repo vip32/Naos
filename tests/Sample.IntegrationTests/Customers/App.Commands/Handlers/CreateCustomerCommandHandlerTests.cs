@@ -10,7 +10,7 @@
     using Shouldly;
     using Xunit;
 
-    public class CreateCustomerCommandHandlerTests : BaseTest
+    public class CreateCustomerCommandHandlerTests : BaseTests
     {
         private readonly IMediator mediator;
         private readonly Faker<Customer> entityFaker;

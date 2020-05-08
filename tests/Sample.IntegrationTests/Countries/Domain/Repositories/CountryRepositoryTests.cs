@@ -10,7 +10,7 @@
     using Shouldly;
     using Xunit;
 
-    public class CountryRepositoryTests : BaseTest
+    public class CountryRepositoryTests : BaseTests
     {
         // https://xunit.github.io/docs/shared-context.html
         private readonly ICountryRepository sut;

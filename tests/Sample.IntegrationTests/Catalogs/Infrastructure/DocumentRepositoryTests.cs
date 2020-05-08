@@ -11,7 +11,7 @@
     using Shouldly;
     using Xunit;
 
-    public class DocumentRepositoryTests : BaseTest
+    public class DocumentRepositoryTests : BaseTests
     {
         private readonly IProductRepository sut;
         private readonly Faker<Product> entityFaker;

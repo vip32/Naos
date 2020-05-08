@@ -15,7 +15,7 @@ namespace Naos.Sample.IntegrationTests.Shopping.Infrastructure
     using Xunit;
     using Xunit.Abstractions;
 
-    public class EventSourcingRepositoryWithSqlServerTests : BaseTest, IDisposable
+    public class EventSourcingRepositoryWithSqlServerTests : BaseTests, IDisposable
     {
         private readonly IEventStoreConnection connection;
         private readonly EventSourcingRepository<TestAggregate, Guid> sut;

@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.Application.IntegrationTests.Messaging.Infrastructure.Azure
+﻿namespace Naos.IntegrationTests
 {
     using System.Net.Http;
     using System.Threading.Tasks;
@@ -11,7 +11,7 @@
     using Shouldly;
     using Xunit;
 
-    public class HttpClientTests : BaseTest
+    public class HttpClientTests : BaseTests
     {
         public HttpClientTests()
         {

@@ -9,7 +9,7 @@
     using Shouldly;
     using Xunit;
 
-    public class EntityUpdateDomainEventHandlersTests : BaseTest
+    public class EntityUpdateDomainEventHandlersTests : BaseTests
     {
         [Fact]
         public async Task DomainEvent_Update_Test()

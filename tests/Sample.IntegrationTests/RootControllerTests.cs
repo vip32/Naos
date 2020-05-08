@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.Application.IntegrationTests.Web
+﻿namespace Naos.Sample.IntegrationTests
 {
     using System.Threading.Tasks;
     using Alba;

@@ -18,9 +18,9 @@
     using Naos.Sample.UserAccounts.Infrastructure;
     using Xunit.Abstractions;
 
-    public abstract class BaseTest
+    public abstract class BaseTests
     {
-        protected BaseTest()
+        protected BaseTests()
         {
             Environment.SetEnvironmentVariable(EnvironmentKeys.Environment, "Development");
             Environment.SetEnvironmentVariable(EnvironmentKeys.IsLocal, "True");

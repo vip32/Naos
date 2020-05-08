@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.Application.IntegrationTests.Commands
+﻿namespace Naos.IntegrationTests.Commands
 {
     using System;
     using System.IO;
@@ -14,7 +14,7 @@
     using Shouldly;
     using Xunit;
 
-    public class CommandRequestTests : BaseTest
+    public class CommandRequestTests : BaseTests
     {
         private readonly IMediator mediator;
 

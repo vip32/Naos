@@ -10,7 +10,7 @@
     using Shouldly;
     using Xunit;
 
-    public class InventoryRepositoryTests : BaseTest
+    public class InventoryRepositoryTests : BaseTests
     {
         // https://xunit.github.io/docs/shared-context.html
         private readonly IGenericRepository<ProductInventory> sut;

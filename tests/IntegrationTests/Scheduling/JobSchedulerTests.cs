@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.Application.IntegrationTests.Scheduling
+﻿namespace Naos.IntegrationTests.Scheduling
 {
     using System;
     using System.Threading;
@@ -9,7 +9,7 @@
     using Shouldly;
     using Xunit;
 
-    public class JobSchedulerTests : BaseTest
+    public class JobSchedulerTests : BaseTests
     {
         private readonly IJobScheduler sut;
 

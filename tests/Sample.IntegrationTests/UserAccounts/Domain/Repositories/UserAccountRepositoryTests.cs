@@ -13,7 +13,7 @@
     using Shouldly;
     using Xunit;
 
-    public class UserAccountRepositoryTests : BaseTest
+    public class UserAccountRepositoryTests : BaseTests
     {
         // https://xunit.github.io/docs/shared-context.html
         private readonly IGenericRepository<UserAccount> sut;

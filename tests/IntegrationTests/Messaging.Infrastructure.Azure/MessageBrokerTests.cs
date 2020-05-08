@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.Application.IntegrationTests.Messaging.Infrastructure.Azure
+﻿namespace Naos.IntegrationTests.Messaging.Infrastructure.Azure
 {
     using System;
     using System.Linq;
@@ -10,7 +10,7 @@
     using Shouldly;
     using Xunit;
 
-    public class MessageBrokerTests : BaseTest
+    public class MessageBrokerTests : BaseTests
     {
         private readonly IMessageBroker sut;
 

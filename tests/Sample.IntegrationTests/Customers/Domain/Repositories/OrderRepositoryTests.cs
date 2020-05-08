@@ -11,7 +11,7 @@
     using Shouldly;
     using Xunit;
 
-    public class OrderRepositoryTests : BaseTest
+    public class OrderRepositoryTests : BaseTests
     {
         // https://xunit.github.io/docs/shared-context.html
         private readonly IOrderRepository sut;

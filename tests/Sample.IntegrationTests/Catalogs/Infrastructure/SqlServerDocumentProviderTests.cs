@@ -10,7 +10,7 @@
     using Shouldly;
     using Xunit;
 
-    public class SqlServerDocumentProviderTests : BaseTest
+    public class SqlServerDocumentProviderTests : BaseTests
     {
         private readonly IDocumentProvider<Product> sut;
         private readonly Faker<Product> entityFaker;

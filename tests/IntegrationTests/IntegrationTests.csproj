@@ -1,0 +1,132 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>Naos.IntegrationTests</AssemblyName>
+    <RootNamespace>Naos.IntegrationTests</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="..\..\appsettings.json" Link="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.12.1" />
+    <PackageReference Include="coverlet.msbuild" Version="2.8.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Alba" Version="3.1.1" />
+    <PackageReference Include="MediatR" Version="8.0.1" />
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+    <PackageReference Include="NBuilder" Version="6.1.0" />
+    <PackageReference Include="NSubstitute" Version="4.2.1" />
+    <PackageReference Include="Shouldly" Version="3.0.2" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Application\Application.csproj" />
+    <ProjectReference Include="..\..\src\Authentication.Application.Web\Authentication.Application.Web.csproj" />
+    <ProjectReference Include="..\..\src\Commands.Application\Commands.Application.csproj" />
+    <ProjectReference Include="..\..\src\Configuration.Application.Web\Configuration.Application.Web.csproj" />
+    <ProjectReference Include="..\..\src\Configuration.Application\Configuration.Application.csproj" />
+    <ProjectReference Include="..\..\src\Correlation.Application\RequestCorrelation.Application.csproj" />
+    <ProjectReference Include="..\..\src\Exceptions.Application.Web\Exceptions.Application.Web.csproj" />
+    <ProjectReference Include="..\..\src\Filtering.Application\RequestFiltering.Application.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Abstractions\Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Application.Web.Startup\Application.Web.Startup.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Application.Web\Application.Web.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Compression\Compression.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Console\Console.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.ContentTypes\ContentTypes.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Criteria\Criteria.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Domain.EventSourcing\Domain.EventSourcing.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Domain.Repositories.AutoMapper\Domain.Repositories.AutoMapper.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Domain.Repositories\Domain.Repositories.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Domain.Specifications\Domain.Specifications.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Domain\Domain.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Encoding\Encoding.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Extensions\Extensions.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure.Arm\Infrastructure.Azure.Arm.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure.Cosmos\Infrastructure.Azure.Cosmos.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure.KeyVault\Infrastructure.Azure.KeyVault.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure.LogAnalytics\Infrastructure.Azure.LogAnalytics.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure.ServiceBus\Infrastructure.Azure.ServiceBus.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure\Infrastructure.Azure.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Infrastructure.Documents.Sqlite\Infrastructure.Documents.Sqlite.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Infrastructure.Documents.SqlServer\Infrastructure.Documents.SqlServer.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Infrastructure.EventStore\Infrastructure.EventSourcing.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Infrastructure.Mongo\Infrastructure.Mongo.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Infrastructure.RabbitMQ\Infrastructure.RabbitMQ.csproj" />
+    <!--<ProjectReference Include="..\..\src\Foundation.Infrastructure.EntityFramework\Infrastructure.EntityFramework.csproj" />-->
+    <ProjectReference Include="..\..\src\Foundation.Logging\Logging.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Mapping.AutoMapper\Mapping.AutoMapper.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Mapping\Mapping.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Options\Options.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Resources\Resources.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Serialization.Csv\Serialization.Csv.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Serialization\Serialization.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Utilities.Xunit\Utilities.Xunit.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Utilities\Utilities.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure.Arm\Infrastructure.Azure.Arm.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure.KeyVault\Infrastructure.Azure.KeyVault.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure.ServiceBus\Infrastructure.Azure.ServiceBus.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Infrastructure.Azure\Infrastructure.Azure.csproj" />
+    <ProjectReference Include="..\..\src\Foundation.Infrastructure.EntityFramework\Infrastructure.EntityFramework.csproj" />
+    <ProjectReference Include="..\..\src\Application.Web\Application.Web.csproj" />
+    <ProjectReference Include="..\..\src\Commands.Domain\Commands.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Commands.Infrastructure.FileStorage\Commands.Infrastructure.FileStorage.csproj" />
+    <ProjectReference Include="..\..\src\FileStorage.Csv\FileStorage.Csv.csproj" />
+    <ProjectReference Include="..\..\src\FileStorage.Infrastructure.Azure\FileStorage.Infrastructure.Azure.csproj" />
+    <ProjectReference Include="..\..\src\FileStorage.Infrastructure.FileSystem\FileStorage.Infrastructure.FileSystem.csproj" />
+    <ProjectReference Include="..\..\src\FileStorage.Infrastructure.Ssh\FileStorage.Infrastructure.Ssh.csproj" />
+    <ProjectReference Include="..\..\src\FileStorage\FileStorage.csproj" />
+    <ProjectReference Include="..\..\src\JobScheduling.Application.Web\JobScheduling.Application.Web.csproj" />
+    <ProjectReference Include="..\..\src\JobScheduling.Application\JobScheduling.Application.csproj" />
+    <ProjectReference Include="..\..\src\JobScheduling\JobScheduling.csproj" />
+    <ProjectReference Include="..\..\src\KeyValueStorage.Infrastructure.Azure\KeyValueStorage.Infrastructure.Azure.csproj" />
+    <ProjectReference Include="..\..\src\KeyValueStorage.Infrastructure.FileStorage\KeyValueStorage.Infrastructure.FileStorage.csproj" />
+    <ProjectReference Include="..\..\src\KeyValueStorage.Infrastructure.LightningDb\KeyValueStorage.Infrastructure.LightningDb.csproj" />
+    <ProjectReference Include="..\..\src\KeyValueStorage\KeyValueStorage.csproj" />
+    <ProjectReference Include="..\..\src\Messaging.Application.Azure.SignalR\Messaging.Application.Azure.SignalR.csproj" />
+    <ProjectReference Include="..\..\src\Messaging.Application.Azure\Messaging.Application.Azure.csproj" />
+    <ProjectReference Include="..\..\src\Messaging.Application.FileSystem\Messaging.Application.FileStorage.csproj" />
+    <ProjectReference Include="..\..\src\Messaging.Application.RabbitMQ\Messaging.Application.RabbitMQ.csproj" />
+    <ProjectReference Include="..\..\src\Messaging.Application.Web\Messaging.Application.Web.csproj" />
+    <ProjectReference Include="..\..\src\Messaging.Application\Messaging.Application.csproj" />
+    <ProjectReference Include="..\..\src\Messaging.Infrastructure.Azure.SignalR\Messaging.Infrastructure.Azure.SignalR.csproj" />
+    <ProjectReference Include="..\..\src\Messaging.Infrastructure.Azure\Messaging.Infrastructure.Azure.csproj" />
+    <ProjectReference Include="..\..\src\Messaging.Infrastructure.FileSystem\Messaging.Infrastructure.FileStorage.csproj" />
+    <ProjectReference Include="..\..\src\Messaging.Infrastructure.RabbitMQ\Messaging.Infrastructure.RabbitMQ.csproj" />
+    <ProjectReference Include="..\..\src\Messaging\Messaging.csproj" />
+    <ProjectReference Include="..\..\src\Operations.Application.Web\Operations.Application.Web.csproj" />
+    <ProjectReference Include="..\..\src\Operations.Domain\Operations.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Operations.Infrastructure.Azure\Operations.Infrastructure.Azure.csproj" />
+    <ProjectReference Include="..\..\src\Operations.Infrastructure.Mongo\Operations.Infrastructure.Mongo.csproj" />
+    <ProjectReference Include="..\..\src\Queueing.Application.Web\Queueing.Application.Web.csproj" />
+    <ProjectReference Include="..\..\src\Queueing.Application\Queueing.Application.csproj" />
+    <ProjectReference Include="..\..\src\Queueing.Infrastructure.Azure\Queueing.Infrastructure.Azure.csproj" />
+    <ProjectReference Include="..\..\src\Queueing.Infrastructure.RabbitMQ\Queueing.Infrastructure.RabbitMQ.csproj" />
+    <ProjectReference Include="..\..\src\Queueing\Queueing.csproj" />
+    <ProjectReference Include="..\..\src\ServiceContext.Application\ServiceContext.Application.csproj" />
+    <ProjectReference Include="..\..\src\ServiceDiscovery.Application.Consul\ServiceDiscovery.Application.Consul.csproj" />
+    <ProjectReference Include="..\..\src\ServiceDiscovery.Application.Web.Router\ServiceDiscovery.Application.Web.Router.csproj" />
+    <ProjectReference Include="..\..\src\ServiceDiscovery.Application\ServiceDiscovery.Application.csproj" />
+    <ProjectReference Include="..\..\src\Tracing.Application\Tracing.Application.csproj" />
+    <ProjectReference Include="..\..\src\Tracing.Domain\Tracing.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Tracing.Infrastructure.Azure\Tracing.Infrastructure.Azure.csproj" />
+    <ProjectReference Include="..\..\src\Tracing.Infrastructure.Mongo\Tracing.Infrastructure.Mongo.csproj" />
+    <ProjectReference Include="..\..\src\Tracing.Infrastructure.Zipkin\Tracing.Infrastructure.Zipkin.csproj" />
+  </ItemGroup>
+
+</Project>

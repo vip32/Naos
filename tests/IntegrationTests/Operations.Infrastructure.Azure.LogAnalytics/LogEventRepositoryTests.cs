@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.Application.IntegrationTests.Operations.Infrastructure.Azure.LogAnalytics
+﻿namespace Naos.IntegrationTests.Operations.Infrastructure.Azure.LogAnalytics
 {
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
@@ -7,7 +7,7 @@
     using Shouldly;
     using Xunit;
 
-    public class LogEventRepositoryTests : BaseTest
+    public class LogEventRepositoryTests : BaseTests
     {
         private readonly ILogEventRepository sut;
 

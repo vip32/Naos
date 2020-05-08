@@ -11,7 +11,7 @@
     using Shouldly;
     using Xunit;
 
-    public class ReplenishmentRepositoryTests : BaseTest
+    public class ReplenishmentRepositoryTests : BaseTests
     {
         // https://xunit.github.io/docs/shared-context.html
         private readonly IGenericRepository<ProductReplenishment> sut;
