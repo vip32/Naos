@@ -98,7 +98,7 @@
                 //    });
 
                 options.Context.Services.AddHealthChecks()
-                    .AddRabbitMQ(sp => connectionFactory, "messaging-broker-rabbitmq", tags: new[] { "naos" });
+                    .AddRabbitMQ(configuration.AsConnectionString(), null, "messaging-broker-rabbitmq", tags: new[] { "naos" });
 
                 options.Context.Messages.Add($"naos services builder: messaging added (broker={nameof(RabbitMQMessageBroker)})");
             }
