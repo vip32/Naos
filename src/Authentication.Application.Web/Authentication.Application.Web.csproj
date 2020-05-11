@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NSwag.Annotations" Version="13.4.1" />
+    <PackageReference Include="NSwag.Annotations" Version="13.5.0" />
     <PackageReference Include="NSwag.AspNetCore" Version="13.4.1" />
     <PackageReference Include="NSwag.Core" Version="13.4.1" />
     <PackageReference Include="NSwag.Generation" Version="13.4.1" />
