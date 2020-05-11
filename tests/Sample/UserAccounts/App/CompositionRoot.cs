@@ -7,6 +7,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
+    using Naos.Foundation;
     using Naos.Foundation.Application;
     using Naos.Foundation.Domain;
     using Naos.Foundation.Infrastructure;
@@ -36,7 +37,6 @@
             }
 
             var configuration = options.Context.Configuration?.GetSection(section).Get<EntityFrameworkConfiguration>();
-
             options.Context.Services.AddScoped<IGenericRepository<UserAccount>>(sp =>
             {
                 return new UserAccountRepository(
@@ -73,8 +73,9 @@
             });
 
             options.Context.Services.AddDbContext<UserAccountsDbContext>(o => o
-                .UseSqlServer("Server=127.0.0.1;Database=naos_sample;User=sa;Password=Abcd1234!;Trusted_Connection=False;MultipleActiveResultSets=True;", o => o // docker
-                //.UseSqlServer(connectionString.EmptyToNull() ?? configuration.ConnectionString.EmptyToNull() ?? $"Server=(localdb)\\mssqllocaldb;Database={nameof(UserAccountsDbContext)};Trusted_Connection=True;MultipleActiveResultSets=True;", o => o
+                //.UseSqlServer("Server=127.0.0.1;Database=naos_sample;User=sa;Password=Abcd1234!;Trusted_Connection=False;MultipleActiveResultSets=True;", o => o // docker
+                //.UseSqlServer(configuration.ConnectionString.EmptyToNull() ?? $"Server=(localdb)\\mssqllocaldb;Database={nameof(UserAccountsDbContext)};Trusted_Connection=True;MultipleActiveResultSets=True;", o => o
+                .UseSqlServer(configuration.ConnectionString, o => o
                     .MigrationsHistoryTable("__MigrationsHistory", "useraccounts")
                     .EnableRetryOnFailure())
                 .UseLoggerFactory(options.Context.Services.BuildServiceProvider().GetRequiredService<ILoggerFactory>())

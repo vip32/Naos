@@ -5,6 +5,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
+    using Naos.Foundation;
     using Naos.Foundation.Domain;
     using Naos.Foundation.Infrastructure;
     using Naos.Sample.Catalogs.Domain;
@@ -21,14 +22,14 @@
             options.Context.AddTag("catalogs");
 
             var configuration = options.Context.Configuration?.GetSection($"{section}:sqlDocuments").Get<SqlDocumentsConfiguration>() ?? new SqlDocumentsConfiguration();
-
             options.Context.Services.AddSingleton<IDocumentProvider<Product>>(sp =>
                 new SqlServerDocumentProvider<Product>(o => o
                     .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                     .EnableSqlLogging()
-                    .ConnectionString("Server=127.0.0.1;Database=naos_sample;User=sa;Password=Abcd1234!;Trusted_Connection=False;MultipleActiveResultSets=True;") // docker
-                                                                                                                                                                  //.ConnectionString(configuration.ConnectionString ?? "Server=(localdb)\\mssqllocaldb;Database=naos_sample;Trusted_Connection=True;MultipleActiveResultSets=True;")
-                    .Schema(configuration.SchemaName ?? "catalogs")
+                    //.ConnectionString("Server=127.0.0.1;Database=naos_sample;User=sa;Password=Abcd1234!;Trusted_Connection=False;MultipleActiveResultSets=True;") // docker
+                    //.ConnectionString(configuration.ConnectionString ?? "Server=(localdb)\\mssqllocaldb;Database=naos_sample;Trusted_Connection=True;MultipleActiveResultSets=True;")
+                    .ConnectionString(configuration.ConnectionString)
+                    .Schema(configuration.SchemaName.EmptyToNull() ?? "catalogs")
                     .AddIndex(p => p.Name)
                     .AddIndex(p => p.Region)
                     .AddIndex(p => p.Price)
@@ -61,6 +62,9 @@
             //        .AddIndex(p => p.HasStock).Build()));
 
             options.Context.Messages.Add("naos services builder: catalogs service added");
+
+            options.Context.Services.AddHealthChecks()
+                .AddSqlServer(configuration.ConnectionString, name: "Catalogs-sqlserver");
 
             return options;
         }
