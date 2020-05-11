@@ -31,7 +31,7 @@
         protected void RaiseEvent<TEvent>(TEvent @event)
             where TEvent : DomainEventBase<TId>
         {
-            var eventWithAggregate = @event.WithAggregate(
+            var eventWithAggregate = @event.ForAggregate(
                 Equals(this.Id, default(TId)) ? @event.AggregateId : this.Id,
                 this.version);
 
