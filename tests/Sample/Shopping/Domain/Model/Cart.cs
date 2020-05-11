@@ -55,7 +55,7 @@
 
         public override string ToString()
         {
-            return $"{{ Id: \"{this.Id}\", CustomerId: \"{this.CustomerId.ToString()}\", Items: [{string.Join(", ", this.Items.Select(x => x.ToString()))}] }}";
+            return $"{{ Id: \"{this.Id}\", CustomerId: \"{this.CustomerId}\", Items: [{string.Join(", ", this.Items.Select(x => x.ToString()))}] }}";
         }
 
         public /*internal*/ void Apply(CartCreatedEvent @event)
