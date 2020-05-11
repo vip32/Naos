@@ -52,6 +52,7 @@ namespace Naos.Sample.Application.Web
                     {
                         // Countries repository is exposed with a dedicated controller, no need to register here
                         o.AddEndpoint<Customers.Domain.Customer, Customers.Domain.ICustomerRepository>();
+                        o.AddEndpoint<Catalogs.Domain.Product, Catalogs.Domain.IProductRepository>();
                         o.AddEndpoint<Inventory.Domain.ProductInventory, Inventory.Domain.IInventoryRepository>();
                         o.AddEndpoint<Inventory.Domain.ProductReplenishment, Inventory.Domain.IReplenishmentRepository>();
                         o.AddEndpoint<UserAccounts.Domain.UserAccount>(); // =implicit IRepository<UserAccount>
