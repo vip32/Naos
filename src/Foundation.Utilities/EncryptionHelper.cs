@@ -17,14 +17,14 @@
             aes.Key = Encoding.UTF8.GetBytes(key);
             var iv = Convert.ToBase64String(aes.IV);
             var transform = aes.CreateEncryptor(aes.Key, aes.IV);
-            using var memoryStream = new MemoryStream();
-            using var cryptoStream = new CryptoStream(memoryStream, transform, CryptoStreamMode.Write);
+            using var stream = new MemoryStream();
+            using var cryptoStream = new CryptoStream(stream, transform, CryptoStreamMode.Write);
             using (var streamWriter = new StreamWriter(cryptoStream))
             {
                 streamWriter.Write(data);
             }
 
-            return iv + Convert.ToBase64String(memoryStream.ToArray());
+            return iv + Convert.ToBase64String(stream.ToArray());
         }
 
         public static string Decrypt(string data, string key)
@@ -36,8 +36,8 @@
             aes.Key = Encoding.UTF8.GetBytes(key);
             aes.IV = Convert.FromBase64String(data.Substring(0, 24));
             var transform = aes.CreateDecryptor(aes.Key, aes.IV);
-            using var memoryStream = new MemoryStream(Convert.FromBase64String(data.Substring(24)));
-            using var cryptoStream = new CryptoStream(memoryStream, transform, CryptoStreamMode.Read);
+            using var stream = new MemoryStream(Convert.FromBase64String(data.Substring(24)));
+            using var cryptoStream = new CryptoStream(stream, transform, CryptoStreamMode.Read);
             using var streamReader = new StreamReader(cryptoStream);
 
             return streamReader.ReadToEnd();
@@ -56,14 +56,14 @@
             aes.Key = key;
             aes.IV = iv;
             var transform = aes.CreateEncryptor(aes.Key, aes.IV);
-            using var memoryStream = new MemoryStream();
-            using var cryptoStream = new CryptoStream(memoryStream, transform, CryptoStreamMode.Write);
+            using var stream = new MemoryStream();
+            using var cryptoStream = new CryptoStream(stream, transform, CryptoStreamMode.Write);
             using (var streamWriter = new StreamWriter(cryptoStream))
             {
                 streamWriter.Write(data);
             }
 
-            return memoryStream.ToArray();
+            return stream.ToArray();
         }
 
         public static byte[] Decrypt(byte[] data, byte[] iv, byte[] key)
@@ -79,12 +79,12 @@
             aes.Key = key;
             aes.IV = iv;
             var transform = aes.CreateDecryptor(aes.Key, aes.IV);
-            using var memoryStream = new MemoryStream(data);
-            using var cryptoStream = new CryptoStream(memoryStream, transform, CryptoStreamMode.Read);
+            using var stream = new MemoryStream(data);
+            using var cryptoStream = new CryptoStream(stream, transform, CryptoStreamMode.Read);
             cryptoStream.Write(data, 0, data.Length);
             cryptoStream.FlushFinalBlock();
 
-            return memoryStream.ToArray();
+            return stream.ToArray();
         }
     }
 }
