@@ -95,6 +95,8 @@
 
         private static void InitializeLogger(LoggingOptions loggingOptions)
         {
+            //Serilog.Debugging.SelfLog.Enable(msg => System.Diagnostics.Debug.WriteLine(msg));
+
             loggingOptions.LoggerConfiguration
                 .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)

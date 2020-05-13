@@ -76,6 +76,26 @@
             return options;
         }
 
+        public static LoggingOptions UseSeq(this LoggingOptions options, LogLevel logLevel = LogLevel.Information)
+        {
+            EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.Context, nameof(options.Context));
+
+            var configuration = options.Context.Configuration?.GetSection("naos:operations:logging:seq").Get<SeqLoggingConfiguration>();
+            if (configuration?.Enabled == true && !configuration.Endpoint.IsNullOrEmpty())
+            {
+                // configure the serilog sink
+                options.LoggerConfiguration?.WriteTo.Seq(
+                    configuration.Endpoint,
+                    apiKey: configuration.ApiKey,
+                    restrictedToMinimumLevel: MapLevel(logLevel));
+
+                options.Context.Messages.Add($"naos services builder: logging seq console sink added (endpoint={configuration.Endpoint})");
+            }
+
+            return options;
+        }
+
         public static LoggingOptions UseSink(this LoggingOptions options, Func<LoggerSinkConfiguration, LoggerConfiguration> action)
         {
             action?.Invoke(options.LoggerConfiguration.WriteTo);

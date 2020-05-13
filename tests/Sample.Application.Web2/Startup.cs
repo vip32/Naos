@@ -87,6 +87,7 @@ namespace Naos.Sample.Application.Web
                         .AddLogging(o => o
                             .UseConsole(LogLevel.Debug)
                             .UseFile()
+                            .UseSeq()
                             .UseMongo())
                         //.UseSink(w => w.LiterateConsole())
                         //.UseAzureBlobStorage()

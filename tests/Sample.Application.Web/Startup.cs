@@ -91,6 +91,7 @@ namespace Naos.Sample.Application.Web
                         .AddLogging(o => o
                             .UseConsole(LogLevel.Debug)
                             .UseFile()
+                            .UseSeq()
                             .UseMongo())
                         //.UseSink(w => w.LiterateConsole())
                         //.UseAzureBlobStorage()
@@ -112,10 +113,10 @@ namespace Naos.Sample.Application.Web
                         //.Register<EchoJob>("manualjob1", Cron.Never(), (j) => j.EchoAsync("+++ hello from manualjob1 +++", CancellationToken.None))
                         //.Register<CountriesImportJob>("countriesimport", Cron.MinuteInterval(5))
                         .Register<CountriesExportJob>("countriesexport", Cron.MinuteInterval(2))) // Enqueue
-                        //.Register("anonymousjob2", Cron.Minutely(), (j) => Console.WriteLine("+++ hello from anonymousjob2 " + j))
-                        //.Register("jobevent1", Cron.Minutely(), () => new EchoJobEventData { Text = "+++ hello from jobevent1 +++" }))
-                        //.Register<EchoJob>("echojob2", Cron.MinuteInterval(2), j => j.EchoAsync("+++ hello from echojob2 +++", CancellationToken.None, true), enabled: false)
-                        //.Register<EchoJob>("testlongjob4", Cron.Minutely(), j => j.EchoLongAsync("+++ hello from testlongjob4 +++", CancellationToken.None)))
+                                                                                                  //.Register("anonymousjob2", Cron.Minutely(), (j) => Console.WriteLine("+++ hello from anonymousjob2 " + j))
+                                                                                                  //.Register("jobevent1", Cron.Minutely(), () => new EchoJobEventData { Text = "+++ hello from jobevent1 +++" }))
+                                                                                                  //.Register<EchoJob>("echojob2", Cron.MinuteInterval(2), j => j.EchoAsync("+++ hello from echojob2 +++", CancellationToken.None, true), enabled: false)
+                                                                                                  //.Register<EchoJob>("testlongjob4", Cron.Minutely(), j => j.EchoLongAsync("+++ hello from testlongjob4 +++", CancellationToken.None)))
                     .AddServiceClient() // do IMPLICIT! XXXXX
                     .AddQueueing(o => o
                         //.UseAzureStorageQueue<EchoQueueEventData>(o => o // WARN: does not propagate tracing spanid (parent is lost when dequeueing)
