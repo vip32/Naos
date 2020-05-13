@@ -87,10 +87,9 @@
                 // configure the serilog sink
                 options.LoggerConfiguration?.WriteTo.Seq(
                     configuration.Endpoint,
-                    apiKey: configuration.ApiKey,
                     restrictedToMinimumLevel: MapLevel(logLevel));
 
-                options.Context.Messages.Add($"naos services builder: logging seq console sink added (endpoint={configuration.Endpoint})");
+                options.Context.Messages.Add($"naos services builder: logging seq sink added (endpoint={configuration.Endpoint})");
             }
 
             return options;
