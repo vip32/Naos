@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using System.Linq;
     using System.Security.Cryptography;
     using System.Text;
     using EnsureThat;
@@ -10,8 +11,12 @@
     {
         public static string Encrypt(string data, string key)
         {
-            EnsureArg.IsNotNullOrEmpty(data, nameof(data));
             EnsureArg.IsNotNullOrEmpty(key, nameof(key));
+
+            if (data.IsNullOrEmpty())
+            {
+                return null;
+            }
 
             using var aes = Aes.Create();
             aes.Key = Encoding.UTF8.GetBytes(key);
@@ -29,8 +34,12 @@
 
         public static string Decrypt(string data, string key)
         {
-            EnsureArg.IsNotNullOrEmpty(data, nameof(data));
             EnsureArg.IsNotNullOrEmpty(key, nameof(key));
+
+            if (data.IsNullOrEmpty())
+            {
+                return null;
+            }
 
             using var aes = Aes.Create();
             aes.Key = Encoding.UTF8.GetBytes(key);
@@ -45,12 +54,15 @@
 
         public static byte[] Encrypt(byte[] data, byte[] iv, byte[] key)
         {
-            EnsureArg.IsNotNull(data, nameof(data));
-            EnsureArg.HasItems(data, nameof(data));
             EnsureArg.IsNotNull(iv, nameof(iv));
             EnsureArg.HasItems(iv, nameof(iv));
             EnsureArg.IsNotNull(key, nameof(key));
             EnsureArg.HasItems(key, nameof(key));
+
+            if (data?.Any() == false)
+            {
+                return null;
+            }
 
             using var aes = Aes.Create();
             aes.Key = key;
@@ -68,12 +80,15 @@
 
         public static byte[] Decrypt(byte[] data, byte[] iv, byte[] key)
         {
-            EnsureArg.IsNotNull(data, nameof(data));
-            EnsureArg.HasItems(data, nameof(data));
             EnsureArg.IsNotNull(iv, nameof(iv));
             EnsureArg.HasItems(iv, nameof(iv));
             EnsureArg.IsNotNull(key, nameof(key));
             EnsureArg.HasItems(key, nameof(key));
+
+            if (data?.Any() == false)
+            {
+                return null;
+            }
 
             using var aes = Aes.Create();
             aes.Key = key;
