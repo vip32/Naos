@@ -57,6 +57,8 @@
 
         public object ETag { get; internal set; }
 
+        public bool Expired { get; set; }
+
         public string FullName { get; set; }
 
         public int YearOfBirth { get; set; }
@@ -167,6 +169,7 @@
                     .ForMember(d => d.Identifier, o => o.MapFrom(s => s.Id))
                     .ForMember(d => d.ETag, o => o.MapFrom(s => s.IdentifierHash))
                     .ForMember(d => d.Country, o => o.MapFrom(s => s.Country))
+                    .ForMember(d => d.Expired, o => o.MapFrom(s => s.Expired))
                     //.ForMember(d => d.FullName, o => o.ResolveUsing(new FullNameResolver()))
                     .ForMember(d => d.FullName, o => o.MapFrom(s => $"{s.FirstName} {s.LastName}"))
                     .ForMember(d => d.YearOfBirth, o => o.MapFrom(new YearOfBirthResolver()));
@@ -176,6 +179,7 @@
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.Identifier))
                     .ForMember(d => d.IdentifierHash, o => o.MapFrom(s => s.ETag))
                     .ForMember(d => d.Country, o => o.MapFrom(s => s.Country))
+                    .ForMember(d => d.Expired, o => o.MapFrom(s => s.Expired))
                     //.ForMember(d => d.FirstName, o => o.ResolveUsing(new FirstNameResolver()))
                     .ForMember(d => d.FirstName, o => o.MapFrom(s => s.FullName.Split(' ', StringSplitOptions.None).FirstOrDefault()))
                     //.ForMember(d => d.LastName, o => o.ResolveUsing(new LastNameResolver()))
