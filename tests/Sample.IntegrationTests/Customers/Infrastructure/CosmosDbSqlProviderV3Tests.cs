@@ -225,7 +225,7 @@
         }
 
         [Fact]
-        public async Task SkiptakeAsync_Test()
+        public async Task SkipTakeAsync_Test()
         {
             // arrange/act
             var result = await this.sut.WhereAsync(e => true == true, skip: 5, take: 2).AnyContext();

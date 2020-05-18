@@ -109,6 +109,19 @@
         }
 
         [Fact]
+        public async Task FindAllAsync_WithSpecificationAndSkipTake_Test()
+        {
+            // arrange/act
+            var result = await this.sut.FindAllAsync(
+                new HasDomainSpecification("East"), new FindOptions<UserAccount>(skip: 5, take: 2)).AnyContext();
+
+            // assert
+            result.ShouldNotBeNull();
+            result.ShouldNotBeEmpty();
+            result.Count().ShouldBe(2);
+        }
+
+        [Fact]
         public async Task FindAllAsync_WithLinqKitSpecification1_Test()
         {
             // arrange/act
