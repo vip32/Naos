@@ -117,9 +117,9 @@
             var result = new List<T>();
             var iterator = this.container.GetItemLinqQueryable<T>(requestOptions: options)
                 .WhereExpression(expression)
+                .OrderByIf(orderExpression, orderDescending)
                 .SkipIf(skip)
-                .TakeIf(take)
-                .OrderByIf(orderExpression, orderDescending).ToFeedIterator(); // https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.cosmos.container.getitemlinqqueryable?view=azure-dotnet
+                .TakeIf(take).ToFeedIterator(); // https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.cosmos.container.getitemlinqqueryable?view=azure-dotnet
 
             while (iterator.HasMoreResults)
             {
@@ -150,9 +150,9 @@
             var result = new List<T>();
             var iterator = this.container.GetItemLinqQueryable<T>(requestOptions: options)
                 .WhereExpressions(expressions)
+                .OrderByIf(orderExpression, orderDescending)
                 .SkipIf(skip)
-                .TakeIf(take)
-                .OrderByIf(orderExpression, orderDescending).ToFeedIterator(); // https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.cosmos.container.getitemlinqqueryable?view=azure-dotnet
+                .TakeIf(take).ToFeedIterator(); // https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.cosmos.container.getitemlinqqueryable?view=azure-dotnet
 
             while (iterator.HasMoreResults)
             {

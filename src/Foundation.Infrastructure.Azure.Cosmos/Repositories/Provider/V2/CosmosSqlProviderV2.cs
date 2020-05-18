@@ -178,8 +178,8 @@
                     new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned, PartitionKey = new PartitionKey(partitionKeyValue ?? this.partitionKeyValue) })
                     .WhereExpression(expression)
                     .WhereIf(e => e.Discriminator == typeof(T).FullName, this.isMasterCollection)
-                    .TakeIf(take)
                     .OrderByIf(orderExpression, orderDescending)
+                    .TakeIf(take)
                     .AsEnumerable();
             this.logger.LogInformation($"{{LogKey:l}} sql={query.ToString().Replace("{", string.Empty).Replace("}", string.Empty)}", LogKeys.DomainRepository);
             return await Task.FromResult(query).AnyContext();
@@ -200,8 +200,8 @@
                     new FeedOptions { MaxItemCount = take, EnableCrossPartitionQuery = this.isPartitioned, PartitionKey = new PartitionKey(partitionKeyValue ?? this.partitionKeyValue) })
                     .WhereExpressions(expressions)
                     .WhereIf(e => e.Discriminator == typeof(T).FullName, this.isMasterCollection)
-                    .TakeIf(take)
                     .OrderByIf(orderExpression, orderDescending)
+                    .TakeIf(take)
                     .AsEnumerable();
             this.logger.LogInformation($"{{LogKey:l}} sql={query.ToString().Replace("{", string.Empty).Replace("}", string.Empty)}", LogKeys.DomainRepository);
             return await Task.FromResult(query).AnyContext();
@@ -225,8 +225,8 @@
                     .WhereExpression(expression)
                     .WhereIf(e => e.Discriminator == typeof(T).FullName, this.isMasterCollection)
                     .Select(selector)
-                    .TakeIf(take)
                     .OrderByIf(orderExpression, orderDescending)
+                    .TakeIf(take)
                     .AsEnumerable();
             this.logger.LogInformation($"{{LogKey:l}} sql={query.ToString().Replace("{", string.Empty).Replace("}", string.Empty)}", LogKeys.DomainRepository);
             return await Task.FromResult(query).AnyContext();
