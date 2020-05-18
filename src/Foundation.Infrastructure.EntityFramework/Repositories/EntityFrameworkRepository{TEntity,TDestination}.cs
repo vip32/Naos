@@ -19,6 +19,7 @@
         public EntityFrameworkRepository(EntityFrameworkRepositoryOptions options)
         {
             EnsureArg.IsNotNull(options, nameof(options));
+            EnsureArg.IsNotNull(options.Mapper, nameof(options.Mapper));
             EnsureArg.IsNotNull(options.DbContext, nameof(options.DbContext));
 
             this.Options = options;
