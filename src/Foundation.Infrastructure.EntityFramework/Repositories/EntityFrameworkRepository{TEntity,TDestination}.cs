@@ -72,9 +72,9 @@
                 return (await this.Options.DbContext.Set<TDestination>() // .AsAsyncEnumerable()
                     .AsExpandable()
                     .WhereExpressions(expressions)
+                    .OrderByIf(options, this.Options.Mapper)
                     .SkipIf(options?.Skip)
                     .TakeIf(options?.Take)
-                    .OrderByIf(options, this.Options.Mapper)
                     .ToListAsyncSafe(cancellationToken).AnyContext())
                         .Select(d => this.Options.Mapper.Map<TEntity>(d));
             }

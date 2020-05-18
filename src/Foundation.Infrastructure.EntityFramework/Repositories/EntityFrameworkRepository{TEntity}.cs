@@ -70,9 +70,9 @@
                 return await this.Options.DbContext.Set<TEntity>() // .AsAsyncEnumerable()
                     .AsExpandable()
                     .WhereExpressions(expressions)
+                    .OrderByIf(options)
                     .SkipIf(options?.Skip)
-                    .TakeIf(options?.Take)
-                    .OrderByIf(options).ToListAsyncSafe(cancellationToken).AnyContext();
+                    .TakeIf(options?.Take).ToListAsyncSafe(cancellationToken).AnyContext();
             }
             else
             {
