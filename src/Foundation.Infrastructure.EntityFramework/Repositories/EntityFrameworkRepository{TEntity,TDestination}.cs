@@ -53,7 +53,9 @@
 
         protected EntityFrameworkRepositoryOptions Options { get; }
 
-        public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<TEntity>> FindAllAsync(
+            IFindOptions<TEntity> options = null,
+            CancellationToken cancellationToken = default)
         {
             return await this.FindAllAsync(Enumerable.Empty<ISpecification<TEntity>>(), options, cancellationToken).AnyContext();
         }
@@ -63,7 +65,10 @@
             return await this.FindAllAsync(new[] { specification }, options, cancellationToken).AnyContext();
         }
 
-        public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<TEntity>> FindAllAsync(
+            IEnumerable<ISpecification<TEntity>> specifications,
+            IFindOptions<TEntity> options = null,
+            CancellationToken cancellationToken = default)
         {
             var specificationsArray = specifications as ISpecification<TEntity>[] ?? specifications.ToArray();
             var expressions = specificationsArray.Safe().Select(s => this.Options.Mapper.MapSpecification<TEntity, TDestination>(s));
@@ -73,9 +78,9 @@
                 return (await this.Options.DbContext.Set<TDestination>() // .AsAsyncEnumerable()
                     .AsExpandable()
                     .WhereExpressions(expressions)
-                    .OrderByIf(options, this.Options.Mapper)
                     .SkipIf(options?.Skip)
                     .TakeIf(options?.Take)
+                    .OrderByIf(options, this.Options.Mapper)
                     .ToListAsyncSafe(cancellationToken).AnyContext())
                         .Select(d => this.Options.Mapper.Map<TEntity>(d));
             }
@@ -102,10 +107,8 @@
             //            return this.Options.Mapper.Map<TEntity>(await this.Options.DbContext.Set<TDestination>().FindAsync(this.TryParseGuid(id)).AnyContext());
             //#endif
 
-            //#if NETSTANDARD2_1
             return this.Options.Mapper.Map<TEntity>(await this.Options.DbContext.Set<TDestination>()
-                .FindAsync(this.ParseGuid(id)).ConfigureAwait(false));
-            //#endif
+                .FindAsync(this.TidyId(id)).ConfigureAwait(false));
         }
 
         public async Task<bool> ExistsAsync(object id)
@@ -149,7 +152,10 @@
                 return (null, RepositoryActionResult.None);
             }
 
-            var isNew = entity.Id.IsDefault() || !await this.ExistsAsync(entity.Id).AnyContext();
+            var isNew = entity.Id.IsDefault();
+            var existingEntity = isNew ? null : await this.Options.DbContext.Set<TDestination>()
+                .FindAsync(this.TidyId(entity.Id)).ConfigureAwait(false);
+            isNew = isNew || existingEntity == null;
 
             if (this.Options.PublishEvents && this.Options.Mediator != null)
             {
@@ -171,11 +177,18 @@
                     stateEntity.State.SetCreated();
                 }
 
-                this.Options.DbContext.Set<TDestination>().Add(this.Options.Mapper.Map<TDestination>(entity));
+                this.Options.DbContext.Set<TDestination>()
+                    .Add(this.Options.Mapper.Map<TDestination>(entity));
             }
-            else if (entity is IStateEntity stateEntity)
+            else
             {
-                stateEntity.State.SetUpdated();
+                this.Options.DbContext.Entry(existingEntity)
+                    .CurrentValues.SetValues(this.Options.Mapper.Map<TDestination>(entity));
+
+                if (entity is IStateEntity stateEntity)
+                {
+                    stateEntity.State.SetUpdated();
+                }
             }
 
             await this.Options.DbContext.SaveChangesAsync<TDestination>().AnyContext();
@@ -205,28 +218,24 @@
                 return RepositoryActionResult.None;
             }
 
-            //#if NETSTANDARD2_0
-            //            var dEntity = await this.Options.DbContext.Set<TDestination>().FindAsync(this.TryParseGuid(id)).AnyContext();
-            //#endif
+            var existingEntity = await this.Options.DbContext.Set<TDestination>()
+                .FindAsync(this.TidyId(id)).ConfigureAwait(false);
 
-            //#if NETSTANDARD2_1
-            var dEntity = await this.Options.DbContext.Set<TDestination>().FindAsync(this.ParseGuid(id)).ConfigureAwait(false);
-            //#endif
-            if (dEntity != null)
+            if (existingEntity != null)
             {
-                this.Logger.LogInformation($"{{LogKey:l}} delete entity: {dEntity.GetType().PrettyName()}, id: {id}", LogKeys.DomainRepository);
-                this.Options.DbContext.Remove(dEntity);
+                this.Logger.LogInformation($"{{LogKey:l}} delete entity: {existingEntity.GetType().PrettyName()}, id: {id}", LogKeys.DomainRepository);
+                this.Options.DbContext.Remove(existingEntity);
 
                 if (this.Options.PublishEvents && this.Options.Mediator != null)
                 {
-                    await this.Options.Mediator.Publish(new EntityDeleteDomainEvent(this.Options.Mapper.Map<TEntity>(dEntity))).AnyContext();
+                    await this.Options.Mediator.Publish(new EntityDeleteDomainEvent(this.Options.Mapper.Map<TEntity>(existingEntity))).AnyContext();
                 }
 
                 await this.Options.DbContext.SaveChangesAsync<TDestination>().AnyContext();
 
                 if (this.Options.PublishEvents && this.Options.Mediator != null)
                 {
-                    await this.Options.Mediator.Publish(new EntityDeletedDomainEvent(this.Options.Mapper.Map<TEntity>(dEntity))).AnyContext();
+                    await this.Options.Mediator.Publish(new EntityDeletedDomainEvent(this.Options.Mapper.Map<TEntity>(existingEntity))).AnyContext();
                 }
 
                 return RepositoryActionResult.Deleted;
@@ -245,7 +254,7 @@
             return await this.DeleteAsync(entity.Id).AnyContext();
         }
 
-        private object ParseGuid(object value)
+        private object TidyId(object value)
         {
             try
             {
