@@ -19,22 +19,42 @@
 
         public TDestination Map<TDestination>(object source)
         {
+            if (source == null)
+            {
+                return default;
+            }
+
             return this.mapper.Map<TDestination>(source);
         }
 
         public TDestination Map<TSource, TDestination>(TSource source)
         {
+            if (source == null)
+            {
+                return default;
+            }
+
             return this.mapper.Map<TDestination>(source);
         }
 
         public TDestination Map<TSource, TDestination>(TSource source, TDestination destination)
         {
+            if (source == null)
+            {
+                return default;
+            }
+
             return this.mapper.Map(source, destination);
         }
 
         public TDestination MapExpression<TDestination>(LambdaExpression expression)
             where TDestination : LambdaExpression
         {
+            if (expression == null)
+            {
+                return default;
+            }
+
             return this.mapper.MapExpression<TDestination>(expression);
         }
 
@@ -48,7 +68,10 @@
 
         public Expression<Func<TDestination, bool>> MapSpecification<TSource, TDestination>(ISpecification<TSource> specification)
         {
-            EnsureArg.IsNotNull(specification, nameof(specification));
+            if (specification == null)
+            {
+                return default;
+            }
 
             return this.mapper
                 .MapExpression<Expression<Func<TDestination, bool>>>(specification.ToExpression()); // replace wit CompileFast()? https://github.com/dadhi/FastExpressionCompiler
