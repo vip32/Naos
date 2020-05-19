@@ -93,7 +93,7 @@ stages:
     - task: DotNetCoreCLI@2
       displayName: Publish worker service
       enabled: true
-      condition: eq(variables['publishWorkerService'], 'true')
+      condition: and(succeeded(), eq(variables['publishWorkerService'], 'true'))
       inputs:
         command: publish
         publishWebProjects: False
@@ -105,7 +105,7 @@ stages:
     - task: DotNetCoreCLI@2
       displayName: Publish web app
       enabled: true
-      condition: eq(variables['publishWebApp'], 'true')
+      condition: and(succeeded(), eq(variables['publishWebApp'], 'true'))
       inputs:
         command: publish
         publishWebProjects: True
@@ -117,7 +117,7 @@ stages:
     - task: DotNetCoreCLI@2
       displayName: Publish function app
       enabled: true
-      condition: eq(variables['publishFunctionApp'], 'true')
+      condition: and(succeeded(), eq(variables['publishFunctionApp'], 'true'))
       inputs:
         command: publish
         publishWebProjects: False
@@ -129,7 +129,7 @@ stages:
     - task: PublishPipelineArtifact@0 # https://docs.microsoft.com/en-us/azure/devops/pipelines/artifacts/pipeline-artifacts?view=azure-devops&tabs=yaml
       displayName: Publish pipeline artifacts
       enabled: true
-      condition: eq(variables['publishArtifacts'], 'true')
+      condition: and(succeeded(), eq(variables['publishArtifacts'], 'true'))
       inputs:
         artifactName: 'artifacts'
         targetPath: '$(System.DefaultWorkingDirectory)/artifacts'
@@ -158,6 +158,7 @@ stages:
       condition: |
         and
         (
+           succeeded(),
            eq(variables['nuGetPush'], 'true'),
            eq(variables['Build.SourceBranch'], 'refs/heads/master')
         )
@@ -174,6 +175,7 @@ stages:
   condition: |
     and
     (
+        succeeded(),
         eq(variables['deployEnabled'], 'true'),
         eq(variables['Build.SourceBranch'], 'refs/heads/develop')
     )
@@ -192,6 +194,7 @@ stages:
   condition: |
     and
     (
+        succeeded(),
         eq(variables['deployEnabled'], 'true'),
         eq(variables['Build.SourceBranch'], 'refs/heads/master')
     )
@@ -210,6 +213,7 @@ stages:
   condition: |
     and
     (
+        succeeded(),
         eq(variables['deployEnabled'], 'true'),
         eq(variables['Build.SourceBranch'], 'refs/heads/master')
     )
