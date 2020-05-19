@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Naos.Foundation</AssemblyName>
+    <RootNamespace>Naos.Foundation</RootNamespace>
+    <Description>A mildly opiniated modern cloud service architecture blueprint + reference implementation. [Meta Package]</Description>
+  </PropertyGroup>
+
+</Project>
