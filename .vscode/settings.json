@@ -40,5 +40,9 @@
     "mq",
     "provider",
     "rabbit"
+  ],
+  "cSpell.words": [
+    "Shouldly",
+    "Xunit"
   ]
 }

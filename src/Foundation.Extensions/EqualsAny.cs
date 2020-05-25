@@ -12,7 +12,7 @@
             IEnumerable<string> values,
             StringComparison comp = StringComparison.OrdinalIgnoreCase)
         {
-            if (string.IsNullOrEmpty(source))
+            if (source.IsNullOrEmpty())
             {
                 return false;
             }
@@ -24,7 +24,7 @@
 
             foreach (var value in values)
             {
-                if (value == null)
+                if (value.IsNullOrEmpty())
                 {
                     continue;
                 }
