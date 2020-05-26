@@ -131,5 +131,40 @@
 
             return await this.decoratee.UpsertAsync(entity).AnyContext();
         }
+
+        /// <summary>
+        /// Counts all entities.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public async Task<int> CountAsync(CancellationToken cancellationToken = default)
+        {
+            this.logger.LogInformation($"{{LogKey:l}} count {typeof(TEntity).PrettyName()}", LogKeys.DomainRepository);
+
+            return await this.decoratee.CountAsync(cancellationToken).AnyContext();
+        }
+
+        /// <summary>
+        /// Counts all entities.
+        /// </summary>
+        /// <param name="specification">The specification.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public async Task<int> CountAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
+        {
+            this.logger.LogInformation($"{{LogKey:l}} count {typeof(TEntity).PrettyName()}", LogKeys.DomainRepository);
+
+            return await this.decoratee.CountAsync(specification, cancellationToken).AnyContext();
+        }
+
+        /// <summary>
+        /// Counts all entities.
+        /// </summary>
+        /// <param name="specifications">The specifications.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public async Task<int> CountAsync(IEnumerable<ISpecification<TEntity>> specifications, CancellationToken cancellationToken = default)
+        {
+            this.logger.LogInformation($"{{LogKey:l}} count {typeof(TEntity).PrettyName()}", LogKeys.DomainRepository);
+
+            return await this.decoratee.CountAsync(specifications, cancellationToken).AnyContext();
+        }
     }
 }

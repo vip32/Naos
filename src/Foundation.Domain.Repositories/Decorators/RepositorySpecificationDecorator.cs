@@ -87,5 +87,36 @@
         {
             return await this.decoratee.UpsertAsync(entity).AnyContext();
         }
+
+        /// <summary>
+        /// Counts all entities.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public async Task<int> CountAsync(CancellationToken cancellationToken = default)
+        {
+            return await this.CountAsync(new List<ISpecification<TEntity>>(), cancellationToken).AnyContext();
+        }
+
+        /// <summary>
+        /// Counts all entities.
+        /// </summary>
+        /// <param name="specification">The specification.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public async Task<int> CountAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
+        {
+            return await this.CountAsync(new List<ISpecification<TEntity>>(new[] { specification }), cancellationToken).AnyContext();
+        }
+
+        /// <summary>
+        /// Counts all entities.
+        /// </summary>
+        /// <param name="specifications">The specifications.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public async Task<int> CountAsync(IEnumerable<ISpecification<TEntity>> specifications, CancellationToken cancellationToken = default)
+        {
+            return await this.decoratee.CountAsync(
+                new[] { this.specification }.Concat(specifications.Safe()),
+                cancellationToken).AnyContext();
+        }
     }
 }

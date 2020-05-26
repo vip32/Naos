@@ -40,15 +40,6 @@
         }
 
         /// <summary>
-        /// Entity exists by id.
-        /// </summary>
-        /// <param name="id">The entity identifier.</param>
-        public virtual async Task<bool> ExistsAsync(object id)
-        {
-            return await this.decoratee.ExistsAsync(id).AnyContext();
-        }
-
-        /// <summary>
         /// Finds all entities.
         /// </summary>
         /// <param name="options">The options.</param>
@@ -114,6 +105,44 @@
         public virtual async Task<(TEntity entity, RepositoryActionResult action)> UpsertAsync(TEntity entity)
         {
             return await this.decoratee.UpsertAsync(entity).AnyContext();
+        }
+
+        /// <summary>
+        /// Entity exists by id.
+        /// </summary>
+        /// <param name="id">The entity identifier.</param>
+        public virtual async Task<bool> ExistsAsync(object id)
+        {
+            return await this.decoratee.ExistsAsync(id).AnyContext();
+        }
+
+        /// <summary>
+        /// Counts all entities.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public async Task<int> CountAsync(CancellationToken cancellationToken = default)
+        {
+            return await this.decoratee.CountAsync(cancellationToken).AnyContext();
+        }
+
+        /// <summary>
+        /// Counts all entities.
+        /// </summary>
+        /// <param name="specification">The specification.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public async Task<int> CountAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
+        {
+            return await this.decoratee.CountAsync(specification, cancellationToken).AnyContext();
+        }
+
+        /// <summary>
+        /// Counts all entities.
+        /// </summary>
+        /// <param name="specifications">The specifications.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public async Task<int> CountAsync(IEnumerable<ISpecification<TEntity>> specifications, CancellationToken cancellationToken = default)
+        {
+            return await this.decoratee.CountAsync(specifications, cancellationToken).AnyContext();
         }
     }
 }
