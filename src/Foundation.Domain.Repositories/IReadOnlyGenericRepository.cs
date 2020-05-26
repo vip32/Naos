@@ -51,5 +51,29 @@
         /// </summary>
         /// <param name="id">The entity identifier.</param>
         Task<bool> ExistsAsync(object id);
+
+        /// <summary>
+        /// Counts all entities.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        Task<long> CountAsync(CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Counts all entities.
+        /// </summary>
+        /// <param name="specification">The specification.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        Task<long> CountAsync(
+            ISpecification<TEntity> specification,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Counts all entities.
+        /// </summary>
+        /// <param name="specifications">The specifications.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        Task<long> CountAsync(
+            IEnumerable<ISpecification<TEntity>> specifications,
+            CancellationToken cancellationToken = default);
     }
 }
