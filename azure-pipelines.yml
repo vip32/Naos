@@ -22,6 +22,9 @@ variables:
 trigger:
 - master
 - develop
+- hotfix/*
+- release/*
+- feature/*
 - refs/tags/v*
 
 resources:
