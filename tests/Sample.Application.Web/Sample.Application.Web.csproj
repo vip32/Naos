@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <PackageReference Include="NSwag.AspNetCore" Version="13.5.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.3"> <!--needed for ef migrations-->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.4"> <!--needed for ef migrations-->
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

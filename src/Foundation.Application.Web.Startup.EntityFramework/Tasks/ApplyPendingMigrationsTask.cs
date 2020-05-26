@@ -34,7 +34,7 @@
                 {
                     await scope.ServiceProvider
                         .GetRequiredService<TDbContext>()
-                        .Database.MigrateAsync().AnyContext(); // add package Microsoft.EntityFrameworkCore.Relational 3.1.3
+                        .Database.MigrateAsync().AnyContext(); // add package Microsoft.EntityFrameworkCore.Relational 3.1.4
                 }
                 catch (Exception ex) // was SqlException
                 {

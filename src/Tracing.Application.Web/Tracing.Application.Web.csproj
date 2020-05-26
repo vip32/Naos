@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <PackageReference Include="MediatR" Version="8.0.1" />
-    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="4.7.0" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="4.7.1" />
   </ItemGroup>
 
   <ItemGroup>
