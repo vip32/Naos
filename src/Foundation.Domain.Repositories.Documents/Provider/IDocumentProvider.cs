@@ -8,11 +8,11 @@
 
     public interface IDocumentProvider<T>
     {
-        Task<long> CountAsync(
+        Task<int> CountAsync(
             Expression<Func<T, bool>> expression,
             IEnumerable<string> tags = null);
 
-        Task<long> CountAsync(
+        Task<int> CountAsync(
             IEnumerable<Expression<Func<T, bool>>> expressions = null,
             IEnumerable<string> tags = null/*, IEnumerable<Criteria> criterias = null*/);
 

@@ -54,14 +54,14 @@
             await this.InitializeAsync(true).AnyContext();
         }
 
-        public async Task<long> CountAsync(
+        public async Task<int> CountAsync(
             Expression<Func<T, bool>> expression,
             IEnumerable<string> tags = null)
         {
             return await this.CountAsync(new[] { expression }, tags).AnyContext();
         }
 
-        public async Task<long> CountAsync(
+        public async Task<int> CountAsync(
             IEnumerable<Expression<Func<T, bool>>> expressions = null,
             IEnumerable<string> tags = null)
         {

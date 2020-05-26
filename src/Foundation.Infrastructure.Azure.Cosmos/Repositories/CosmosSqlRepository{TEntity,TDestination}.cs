@@ -213,5 +213,25 @@
 
             return RepositoryActionResult.None;
         }
+
+        public async Task<int> CountAsync(CancellationToken cancellationToken = default)
+        {
+            return await this.CountAsync(Enumerable.Empty<ISpecification<TEntity>>(), cancellationToken).AnyContext();
+        }
+
+        public async Task<int> CountAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
+        {
+            return await this.CountAsync(new[] { specification }, cancellationToken).AnyContext();
+        }
+
+        public async Task<int> CountAsync(IEnumerable<ISpecification<TEntity>> specifications, CancellationToken cancellationToken = default)
+        {
+            var specificationsArray = specifications as ISpecification<TEntity>[] ?? specifications.ToArray();
+            var expressions = specificationsArray.Safe()
+                .Select(s => this.Options.Mapper.MapSpecification<TEntity, TDestination>(s).Expand()); // expand fixes Invoke in expression issue
+
+            return await this.Provider
+                .CountAsync(expressions: expressions).AnyContext();
+        }
     }
 }
