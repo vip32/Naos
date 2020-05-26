@@ -80,6 +80,21 @@
                 throw new NotImplementedException();
             }
 
+            public Task<int> CountAsync(CancellationToken cancellationToken = default)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task<int> CountAsync(ISpecification<StubEntity> specification, CancellationToken cancellationToken = default)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task<int> CountAsync(IEnumerable<ISpecification<StubEntity>> specifications, CancellationToken cancellationToken = default)
+            {
+                throw new NotImplementedException();
+            }
+
             public Task<StubEntity> FindOneAsync(object id)
             {
                 throw new NotImplementedException();

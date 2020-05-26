@@ -90,6 +90,21 @@
             return await this.FindAllAsync(query, cancellationToken).AnyContext();
         }
 
+        public Task<int> CountAsync(CancellationToken cancellationToken = default)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<int> CountAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<int> CountAsync(IEnumerable<ISpecification<TEntity>> specifications, CancellationToken cancellationToken = default)
+        {
+            throw new System.NotImplementedException();
+        }
+
         protected IEnumerable<string> BuildQueryWhereParts(IEnumerable<ISpecification<TEntity>> specifications)
         {
             var result = new List<string>
