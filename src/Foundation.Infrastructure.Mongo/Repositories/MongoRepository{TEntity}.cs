@@ -241,5 +241,28 @@
 
             return await this.DeleteAsync(entity.Id).AnyContext();
         }
+
+        public async Task<int> CountAsync(CancellationToken cancellationToken = default)
+        {
+            return await this.CountAsync(Enumerable.Empty<ISpecification<TEntity>>(), cancellationToken).AnyContext();
+        }
+
+        public async Task<int> CountAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
+        {
+            return await this.CountAsync(new[] { specification }, cancellationToken).AnyContext();
+        }
+
+        public async Task<int> CountAsync(IEnumerable<ISpecification<TEntity>> specifications, CancellationToken cancellationToken = default)
+        {
+            var specificationsArray = specifications as ISpecification<TEntity>[] ?? specifications.ToArray();
+            var expressions = specificationsArray.Safe().Select(s => s.ToExpression());
+
+            return await Task.Run(() =>
+            {
+                return this.Collection.AsQueryable()
+                        .WhereExpressions(expressions)
+                        .Count();
+            }).AnyContext();
+        }
     }
 }
