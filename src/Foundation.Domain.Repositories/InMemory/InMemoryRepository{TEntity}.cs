@@ -284,6 +284,21 @@
             return await this.DeleteAsync(entity.Id).AnyContext();
         }
 
+        public async Task<int> CountAsync(CancellationToken cancellationToken = default)
+        {
+            return await this.CountAsync(Enumerable.Empty<ISpecification<TEntity>>(), cancellationToken).AnyContext();
+        }
+
+        public async Task<int> CountAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
+        {
+            return await this.CountAsync(new[] { specification }, cancellationToken).AnyContext();
+        }
+
+        public async Task<int> CountAsync(IEnumerable<ISpecification<TEntity>> specifications, CancellationToken cancellationToken = default)
+        {
+            return (await this.FindAllAsync(specifications, null, cancellationToken).AnyContext()).Count();
+        }
+
         public void Dispose()
         {
             this.@lock?.Dispose();
