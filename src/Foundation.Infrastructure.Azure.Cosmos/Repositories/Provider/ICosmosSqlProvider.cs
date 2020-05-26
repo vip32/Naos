@@ -36,6 +36,10 @@
             bool orderDescending = false,
             object partitionKeyValue = null);
 
+        Task<int> CountAsync(
+            IEnumerable<Expression<Func<T, bool>>> expressions = null,
+            object partitionKeyValue = null);
+
         Task<bool> DeleteByIdAsync(string id, object partitionKeyValue = null);
     }
 }

@@ -180,6 +180,21 @@
             throw new NotImplementedException();
         }
 
+        public async Task<int> CountAsync(
+            IEnumerable<Expression<Func<T, bool>>> expressions = null,
+            object partitionKeyValue = null)
+        {
+            this.Initialize(this.options);
+            var options = this.EnsureRequestOptions(partitionKeyValue);
+
+            var response = await this.container.GetItemLinqQueryable<T>(requestOptions: options)
+                .WhereExpressions(expressions)
+                .CountAsync().AnyContext(); // https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.cosmos.container.getitemlinqqueryable?view=azure-dotnet
+
+            this.LogRequestCharge(response.RequestCharge);
+            return response;
+        }
+
         public async Task<bool> DeleteByIdAsync(string id, object partitionKeyValue = null)
         {
             this.Initialize(this.options);

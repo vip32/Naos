@@ -8,6 +8,7 @@
     using System.Net;
     using System.Threading.Tasks;
     using EnsureThat;
+    using Microsoft.Azure.Cosmos.Linq;
     using Microsoft.Azure.Documents;
     using Microsoft.Azure.Documents.Client;
     //using Microsoft.Azure.Documents.Linq;
@@ -228,6 +229,21 @@
                     .OrderByIf(orderExpression, orderDescending)
                     .TakeIf(take)
                     .AsEnumerable();
+            this.logger.LogInformation($"{{LogKey:l}} sql={query.ToString().Replace("{", string.Empty).Replace("}", string.Empty)}", LogKeys.DomainRepository);
+            return await Task.FromResult(query).AnyContext();
+        }
+
+        public async Task<int> CountAsync(
+            IEnumerable<Expression<Func<T, bool>>> expressions = null,
+            object partitionKeyValue = null)
+        {
+            var query = await this.client.CreateDocumentQuery<T>(
+                    UriFactory.CreateDocumentCollectionUri(this.databaseId, this.collectionId).ToString(),
+                    new FeedOptions { EnableCrossPartitionQuery = this.isPartitioned, PartitionKey = new PartitionKey(partitionKeyValue ?? this.partitionKeyValue) })
+                    .WhereExpressions(expressions)
+                    .WhereIf(e => e.Discriminator == typeof(T).FullName, this.isMasterCollection)
+                    .CountAsync().AnyContext();
+
             this.logger.LogInformation($"{{LogKey:l}} sql={query.ToString().Replace("{", string.Empty).Replace("}", string.Empty)}", LogKeys.DomainRepository);
             return await Task.FromResult(query).AnyContext();
         }
