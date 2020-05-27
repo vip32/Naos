@@ -7,7 +7,7 @@
 
     public class UserAccountsDbContext : DbContext
     {
-        public UserAccountsDbContext()
+        public UserAccountsDbContext() // needed for migrations
         {
         }
 
