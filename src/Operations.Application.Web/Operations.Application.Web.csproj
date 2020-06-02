@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Humanizer.Core" Version="2.8.11" />
+    <PackageReference Include="Humanizer.Core" Version="2.8.26" />
     <PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="3.2.0" />
     <PackageReference Include="Microsoft.Extensions.DiagnosticAdapter" Version="3.1.4" />
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="3.1.4" />
