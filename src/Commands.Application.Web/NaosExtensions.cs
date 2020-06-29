@@ -33,8 +33,6 @@
                     new CommandRequestRegistration<PingCommand> { Route = "naos/commands/ping", RequestMethod = "get" });
             }
 
-            optionsAction?.Invoke(new CommandRequestOptions(options.Context));
-
             if (addQueueProcessorStartupTask)
             {
                 options.Context.Services.AddStartupTask<CommandRequestQueueProcessor>(new TimeSpan(0, 0, 3));
@@ -44,6 +42,8 @@
             {
                 options.Context.Services.AddSingleton<IDocumentProcessor, CommandRequestDocumentProcessor>();
             }
+
+            optionsAction?.Invoke(new CommandRequestOptions(options.Context));
 
             // needed for request dispatcher extensions, so they can be used on the registrations
             options.Context.Services
