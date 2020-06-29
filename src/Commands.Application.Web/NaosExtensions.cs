@@ -14,7 +14,9 @@
         public static CommandsOptions AddEndpoints(
             this CommandsOptions options,
             Action<CommandRequestOptions> optionsAction = null,
-            bool addDefaultRequestCommands = true)
+            bool addDefaultRequestCommands = true,
+            bool addQueueProcessorStartupTask = true,
+            bool addSwaggerDocumentProcessor = true)
         {
             EnsureArg.IsNotNull(options, nameof(options));
             EnsureArg.IsNotNull(options.Context, nameof(options.Context));
@@ -32,8 +34,16 @@
             }
 
             optionsAction?.Invoke(new CommandRequestOptions(options.Context));
-            options.Context.Services.AddStartupTask<CommandRequestQueueProcessor>(new TimeSpan(0, 0, 3));
-            options.Context.Services.AddSingleton<IDocumentProcessor, CommandRequestDocumentProcessor>();
+
+            if (addQueueProcessorStartupTask)
+            {
+                options.Context.Services.AddStartupTask<CommandRequestQueueProcessor>(new TimeSpan(0, 0, 3));
+            }
+
+            if (addSwaggerDocumentProcessor)
+            {
+                options.Context.Services.AddSingleton<IDocumentProcessor, CommandRequestDocumentProcessor>();
+            }
 
             // needed for request dispatcher extensions, so they can be used on the registrations
             options.Context.Services
