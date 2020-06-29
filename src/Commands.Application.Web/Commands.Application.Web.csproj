@@ -22,7 +22,7 @@
     <PackageReference Include="NSwag.Annotations" Version="13.6.2" />
     <PackageReference Include="NSwag.Generation" Version="13.6.2" />
     <PackageReference Include="Scrutor" Version="3.2.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.4" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.5" />
     <PackageReference Include="System.Text.Json" Version="4.7.2" />
   </ItemGroup>
 
