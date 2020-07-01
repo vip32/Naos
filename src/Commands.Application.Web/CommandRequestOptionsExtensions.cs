@@ -22,11 +22,11 @@
     [ExcludeFromCodeCoverage]
     public static class CommandRequestOptionsExtensions
     {
-        public static CommandRequestOptions GetQueued<TCommand, TResponse>(
+        public static CommandRequestOptions MapGetQueued<TCommand, TResponse>(
             this CommandRequestOptions options, string route, string groupName = null, Func<TCommand, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null)
             where TCommand : Command<TResponse>
         {
-            return options.Get<TCommand, TResponse>(
+            return options.MapGet<TCommand, TResponse>(
                 route,
                 HttpStatusCode.Accepted,
                 groupName,
@@ -35,7 +35,7 @@
                 onRegistration: r => r.IsQueued = true);
         }
 
-        public static CommandRequestOptions Get<TCommand, TResponse>(
+        public static CommandRequestOptions MapGet<TCommand, TResponse>(
         this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.OK, string groupName = null, Func<TCommand, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null, Action<CommandRequestRegistration> onRegistration = null)
         where TCommand : Command<TResponse>
         {
@@ -62,11 +62,11 @@
             return options;
         }
 
-        public static CommandRequestOptions GetQueued<TCommand>(
+        public static CommandRequestOptions MapGetQueued<TCommand>(
             this CommandRequestOptions options, string route, string groupName = null, Func<TCommand, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null)
             where TCommand : Command<object>
         {
-            return options.Get<TCommand>(
+            return options.MapGet<TCommand>(
                 route,
                 HttpStatusCode.Accepted,
                 groupName,
@@ -75,7 +75,7 @@
                 onRegistration: r => r.IsQueued = true);
         }
 
-        public static CommandRequestOptions Get<TCommand>(
+        public static CommandRequestOptions MapGet<TCommand>(
             this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.OK, string groupName = null, Func<TCommand, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null, Action<CommandRequestRegistration> onRegistration = null)
             where TCommand : Command<object>
         {
@@ -102,11 +102,11 @@
             return options;
         }
 
-        public static CommandRequestOptions PostQueued<TCommand, TResponse>(
+        public static CommandRequestOptions MapPostQueued<TCommand, TResponse>(
             this CommandRequestOptions options, string route, Func<TCommand, HttpContext, Task> onSuccess = null, string groupName = null, IEnumerable<Type> extensions = null)
             where TCommand : Command<TResponse>
         {
-            return options.Post<TCommand, TResponse>(
+            return options.MapPost<TCommand, TResponse>(
                 route,
                 HttpStatusCode.Accepted,
                 groupName,
@@ -115,7 +115,7 @@
                 onRegistration: r => r.IsQueued = true);
         }
 
-        public static CommandRequestOptions Post<TCommand, TResponse>(
+        public static CommandRequestOptions MapPost<TCommand, TResponse>(
             this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.Accepted, string groupName = null, Func<TCommand, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null, Action<CommandRequestRegistration> onRegistration = null)
             where TCommand : Command<TResponse>
         {
@@ -142,11 +142,11 @@
             return options;
         }
 
-        public static CommandRequestOptions PostQueued<TCommand>(
+        public static CommandRequestOptions MapPostQueued<TCommand>(
             this CommandRequestOptions options, string route, Func<TCommand, HttpContext, Task> onSuccess = null, string groupName = null, IEnumerable<Type> extensions = null)
             where TCommand : Command<object>
         {
-            return options.Post<TCommand>(
+            return options.MapPost<TCommand>(
                 route,
                 HttpStatusCode.Accepted,
                 groupName,
@@ -155,7 +155,7 @@
                 onRegistration: r => r.IsQueued = true);
         }
 
-        public static CommandRequestOptions Post<TCommand>(
+        public static CommandRequestOptions MapPost<TCommand>(
             this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.Accepted, string groupName = null, Func<TCommand, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null, Action<CommandRequestRegistration> onRegistration = null)
             where TCommand : Command<object>
         {
@@ -182,11 +182,11 @@
             return options;
         }
 
-        public static CommandRequestOptions PutQueued<TCommand, TResponse>(
+        public static CommandRequestOptions MapPutQueued<TCommand, TResponse>(
             this CommandRequestOptions options, string route, Func<TCommand, HttpContext, Task> onSuccess = null, string groupName = null, IEnumerable<Type> extensions = null)
             where TCommand : Command<TResponse>
         {
-            return options.Put<TCommand, TResponse>(
+            return options.MapPut<TCommand, TResponse>(
                 route,
                 HttpStatusCode.Accepted,
                 groupName,
@@ -195,7 +195,7 @@
                 onRegistration: r => r.IsQueued = true);
         }
 
-        public static CommandRequestOptions Put<TCommand, TResponse>(
+        public static CommandRequestOptions MapPut<TCommand, TResponse>(
             this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.Accepted, string groupName = null, Func<TCommand, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null, Action<CommandRequestRegistration> onRegistration = null)
             where TCommand : Command<TResponse>
         {
@@ -222,11 +222,11 @@
             return options;
         }
 
-        public static CommandRequestOptions PutQueued<TCommand>(
+        public static CommandRequestOptions MapPutQueued<TCommand>(
             this CommandRequestOptions options, string route, Func<TCommand, HttpContext, Task> onSuccess = null, string groupName = null, IEnumerable<Type> extensions = null)
             where TCommand : Command<object>
         {
-            return options.Put<TCommand>(
+            return options.MapPut<TCommand>(
                 route,
                 HttpStatusCode.Accepted,
                 groupName,
@@ -235,7 +235,7 @@
                 onRegistration: r => r.IsQueued = true);
         }
 
-        public static CommandRequestOptions Put<TCommand>(
+        public static CommandRequestOptions MapPut<TCommand>(
             this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.Accepted, string groupName = null, Func<TCommand, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null, Action<CommandRequestRegistration> onRegistration = null)
             where TCommand : Command<object>
         {
@@ -262,11 +262,11 @@
             return options;
         }
 
-        public static CommandRequestOptions DeleteQueued<TCommand>(
+        public static CommandRequestOptions MapDeleteQueued<TCommand>(
             this CommandRequestOptions options, string route, Func<TCommand, HttpContext, Task> onSuccess = null, string groupName = null, IEnumerable<Type> extensions = null)
             where TCommand : Command<object>
         {
-            return options.Delete<TCommand>(
+            return options.MapDelete<TCommand>(
                 route,
                 HttpStatusCode.Accepted,
                 groupName,
@@ -275,7 +275,7 @@
                 onRegistration: r => r.IsQueued = true);
         }
 
-        public static CommandRequestOptions Delete<TCommand>(
+        public static CommandRequestOptions MapDelete<TCommand>(
             this CommandRequestOptions options, string route, HttpStatusCode onSuccessStatusCode = HttpStatusCode.NoContent, string groupName = null, Func<TCommand, HttpContext, Task> onSuccess = null, IEnumerable<Type> extensions = null, Action<CommandRequestRegistration> onRegistration = null)
             where TCommand : Command<object>
         {

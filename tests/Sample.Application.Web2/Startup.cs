@@ -60,15 +60,15 @@ namespace Naos.Sample.Application.Web
                         .AddBehavior<JournalCommandBehavior>()
                         .AddBehavior<FileStoragePersistCommandBehavior>()
                         .AddEndpoints(o => o
-                            .Post<CreateCustomerCommand>(
+                            .MapPost<CreateCustomerCommand>(
                                 "api/commands/customers/create",
                                 onSuccessStatusCode: HttpStatusCode.Created,
                                 groupName: "Customers",
                                 onSuccess: (cmd, ctx) => ctx.Response.Location($"api/customers/{cmd.Customer.Id}"))
-                            .Get<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>(
+                            .MapGet<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>(
                                 "api/commands/customers/active",
                                 groupName: "Customers")
-                            .Get<GetCustomerByIdQuery, Customers.Domain.Customer>(
+                            .MapGet<GetCustomerByIdQuery, Customers.Domain.Customer>(
                                 "api/commands/customer/{customerId}", // TODO: swagger ui has a problem creating the correct tryout url for the actual customerid
                                 groupName: "Customers")
                             //.UseInMemoryStorage()
@@ -78,8 +78,8 @@ namespace Naos.Sample.Application.Web
                             .UseAzureStorageQueue()
                             //.UseAzureServiceBusQueue()
                             //.UseRabbitMQQueue()
-                            .GetQueued<PingCommand>("api/commands/queue/ping")
-                            .GetQueued<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>(
+                            .MapGetQueued<PingCommand>("api/commands/queue/ping")
+                            .MapGetQueued<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>(
                                 "api/commands/queue/customers/active",
                                 groupName: "Customers")))
                     .AddOperations(o => o
