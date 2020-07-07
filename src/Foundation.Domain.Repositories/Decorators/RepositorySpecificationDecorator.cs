@@ -70,7 +70,8 @@
         {
             return await this.decoratee.FindAllAsync(
                 new[] { this.specification }.Concat(specifications.Safe()),
-                options, cancellationToken).AnyContext();
+                options, 
+                cancellationToken).AnyContext();
         }
 
         public async Task<TEntity> FindOneAsync(object id)
