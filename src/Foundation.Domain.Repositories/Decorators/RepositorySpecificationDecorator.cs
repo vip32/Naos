@@ -47,7 +47,8 @@
 
         public async Task<bool> ExistsAsync(object id)
         {
-            return await this.decoratee.ExistsAsync(id).AnyContext();
+            var entity = await this.FindOneAsync(id).AnyContext();
+            return entity != null && this.specification.IsSatisfiedBy(entity);
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
@@ -70,14 +71,14 @@
         {
             return await this.decoratee.FindAllAsync(
                 new[] { this.specification }.Concat(specifications.Safe()),
-                options, 
+                options,
                 cancellationToken).AnyContext();
         }
 
         public async Task<TEntity> FindOneAsync(object id)
         {
             var entity = await this.decoratee.FindOneAsync(id).AnyContext();
-            return this.specification.IsSatisfiedBy(entity) ? entity : null;
+            return entity != null && this.specification.IsSatisfiedBy(entity) ? entity : null;
         }
 
         public async Task<TEntity> InsertAsync(TEntity entity)
