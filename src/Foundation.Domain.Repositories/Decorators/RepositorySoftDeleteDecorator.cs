@@ -82,7 +82,8 @@
         {
             return await this.decoratee.FindAllAsync(
                 new[] { this.specification }.Concat(specifications.Safe()),
-                options, cancellationToken).AnyContext();
+                options,
+                cancellationToken).AnyContext();
         }
 
         public async Task<TEntity> FindOneAsync(object id)
@@ -112,7 +113,8 @@
         /// <param name="cancellationToken">The cancellation token.</param>
         public async Task<int> CountAsync(CancellationToken cancellationToken = default)
         {
-            return await this.decoratee.CountAsync(cancellationToken).AnyContext();
+            return await this.CountAsync(
+                new List<ISpecification<TEntity>>()).AnyContext();
         }
 
         /// <summary>
@@ -122,7 +124,9 @@
         /// <param name="cancellationToken">The cancellation token.</param>
         public async Task<int> CountAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
         {
-            return await this.decoratee.CountAsync(specification, cancellationToken).AnyContext();
+            return await this.CountAsync(
+                new List<ISpecification<TEntity>>(new[] { specification }),
+                cancellationToken).AnyContext();
         }
 
         /// <summary>
@@ -132,7 +136,9 @@
         /// <param name="cancellationToken">The cancellation token.</param>
         public async Task<int> CountAsync(IEnumerable<ISpecification<TEntity>> specifications, CancellationToken cancellationToken = default)
         {
-            return await this.decoratee.CountAsync(specifications, cancellationToken).AnyContext();
+            return await this.decoratee.CountAsync(
+                new[] { this.specification }.Concat(specifications.Safe()),
+                cancellationToken).AnyContext();
         }
     }
 }
