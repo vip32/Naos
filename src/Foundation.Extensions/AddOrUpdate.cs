@@ -16,7 +16,7 @@
             this IList<T> source,
             T item)
         {
-            if (source.IsNullOrEmpty() || item == null)
+            if (source == null || item == null)
             {
                 return;
             }
@@ -40,7 +40,7 @@
             this ICollection<T> source,
             T item)
         {
-            if (source.IsNullOrEmpty() || item == null)
+            if (source == null || item == null)
             {
                 return;
             }
