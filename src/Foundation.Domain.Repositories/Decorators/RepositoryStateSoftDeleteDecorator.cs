@@ -65,7 +65,7 @@
 
         public async Task<bool> ExistsAsync(object id)
         {
-            return await this.decoratee.ExistsAsync(id).AnyContext();
+            return await this.decoratee.ExistsAsync(id).AnyContext(); // TODO: take softdelete into account!
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
