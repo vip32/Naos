@@ -52,12 +52,18 @@
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            return await this.FindAllAsync(new List<ISpecification<TEntity>>(), options, cancellationToken).AnyContext();
+            return await this.FindAllAsync(
+                new List<ISpecification<TEntity>>(),
+                options,
+                cancellationToken).AnyContext();
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            return await this.FindAllAsync(new List<ISpecification<TEntity>>(new[] { specification }), options, cancellationToken).AnyContext();
+            return await this.FindAllAsync(
+                new List<ISpecification<TEntity>>(new[] { specification }),
+                options,
+                cancellationToken).AnyContext();
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
@@ -94,7 +100,9 @@
         /// <param name="cancellationToken">The cancellation token.</param>
         public async Task<int> CountAsync(CancellationToken cancellationToken = default)
         {
-            return await this.CountAsync(new List<ISpecification<TEntity>>(), cancellationToken).AnyContext();
+            return await this.CountAsync(
+                new List<ISpecification<TEntity>>(),
+                cancellationToken).AnyContext();
         }
 
         /// <summary>
@@ -104,7 +112,9 @@
         /// <param name="cancellationToken">The cancellation token.</param>
         public async Task<int> CountAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
         {
-            return await this.CountAsync(new List<ISpecification<TEntity>>(new[] { specification }), cancellationToken).AnyContext();
+            return await this.CountAsync(
+                new List<ISpecification<TEntity>>(new[] { specification }),
+                cancellationToken).AnyContext();
         }
 
         /// <summary>
