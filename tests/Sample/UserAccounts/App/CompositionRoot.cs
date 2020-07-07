@@ -64,7 +64,7 @@
                             sp.GetRequiredService<ILogger<UserVisitRepository>>(),
                             new RepositoryTenantDecorator<UserVisit>(
                                 "naos_sample_test", // TODO: resolve from runtime context
-                                new RepositorySoftDeleteDecorator<UserVisit>(
+                                new RepositoryStateSoftDeleteDecorator<UserVisit>(
                                     new EntityFrameworkRepository<UserVisit>(o => o
                                         .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                                         .Mediator(sp.GetRequiredService<IMediator>())

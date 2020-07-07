@@ -18,13 +18,13 @@
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
     /// <seealso cref="Repositories.IGenericRepository{TEntity}" />
-    public class RepositorySoftDeleteDecorator<TEntity> : IGenericRepository<TEntity>
+    public class RepositoryStateSoftDeleteDecorator<TEntity> : IGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot, IStateEntity
     {
         private readonly IGenericRepository<TEntity> decoratee;
         private readonly ISpecification<TEntity> specification;
 
-        public RepositorySoftDeleteDecorator(IGenericRepository<TEntity> decoratee)
+        public RepositoryStateSoftDeleteDecorator(IGenericRepository<TEntity> decoratee)
         {
             EnsureArg.IsNotNull(decoratee, nameof(decoratee));
 

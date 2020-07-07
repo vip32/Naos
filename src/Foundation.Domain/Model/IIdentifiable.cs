@@ -1,6 +1,5 @@
 ﻿namespace Naos.Foundation.Domain
 {
-
     public interface IIdentifiable
     {
         string IdentifierHash { get; }
