@@ -55,12 +55,7 @@
 
         public async Task<RepositoryActionResult> DeleteAsync(TEntity entity)
         {
-            if (entity?.Id.IsDefault() != false)
-            {
-                return RepositoryActionResult.None;
-            }
-
-            return await this.DeleteAsync(entity.Id).AnyContext();
+            return await this.DeleteAsync(entity?.Id).AnyContext();
         }
 
         public async Task<bool> ExistsAsync(object id)
