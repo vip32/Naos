@@ -8,17 +8,17 @@
     public abstract class GenericRepository<TEntity> : IGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
-        private readonly IGenericRepository<TEntity> decoratee;
+        private readonly IGenericRepository<TEntity> inner;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericRepository{TEntity}"/> class.
         /// </summary>
-        /// <param name="decoratee">The decoratee.</param>
-        protected GenericRepository(IGenericRepository<TEntity> decoratee)
+        /// <param name="inner">The decoratee.</param>
+        protected GenericRepository(IGenericRepository<TEntity> inner)
         {
-            EnsureArg.IsNotNull(decoratee, nameof(decoratee));
+            EnsureArg.IsNotNull(inner, nameof(inner));
 
-            this.decoratee = decoratee;
+            this.inner = inner;
         }
 
         /// <summary>
@@ -27,7 +27,7 @@
         /// <param name="id">The entity identifier.</param>
         public virtual async Task<RepositoryActionResult> DeleteAsync(object id)
         {
-            return await this.decoratee.DeleteAsync(id).AnyContext();
+            return await this.inner.DeleteAsync(id).AnyContext();
         }
 
         /// <summary>
@@ -36,7 +36,7 @@
         /// <param name="entity">The entity.</param>
         public virtual async Task<RepositoryActionResult> DeleteAsync(TEntity entity)
         {
-            return await this.decoratee.DeleteAsync(entity).AnyContext();
+            return await this.inner.DeleteAsync(entity).AnyContext();
         }
 
         /// <summary>
@@ -46,7 +46,7 @@
         /// <param name="cancellationToken">The cancellation token.</param>
         public virtual async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            return await this.decoratee.FindAllAsync(options, cancellationToken).AnyContext();
+            return await this.inner.FindAllAsync(options, cancellationToken).AnyContext();
         }
 
         /// <summary>
@@ -57,7 +57,7 @@
         /// <param name="cancellationToken">The cancellation token.</param>
         public virtual async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            return await this.decoratee.FindAllAsync(specification, options, cancellationToken).AnyContext();
+            return await this.inner.FindAllAsync(specification, options, cancellationToken).AnyContext();
         }
 
         /// <summary>
@@ -68,7 +68,7 @@
         /// <param name="cancellationToken">The cancellation token.</param>
         public virtual async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            return await this.decoratee.FindAllAsync(specifications, options, cancellationToken).AnyContext();
+            return await this.inner.FindAllAsync(specifications, options, cancellationToken).AnyContext();
         }
 
         /// <summary>
@@ -77,7 +77,7 @@
         /// <param name="id">The entity identifier.</param>
         public virtual async Task<TEntity> FindOneAsync(object id)
         {
-            return await this.decoratee.FindOneAsync(id).AnyContext();
+            return await this.inner.FindOneAsync(id).AnyContext();
         }
 
         /// <summary>
@@ -86,7 +86,7 @@
         /// <param name="entity">The entity to insert.</param>
         public virtual async Task<TEntity> InsertAsync(TEntity entity)
         {
-            return await this.decoratee.InsertAsync(entity).AnyContext();
+            return await this.inner.InsertAsync(entity).AnyContext();
         }
 
         /// <summary>
@@ -95,7 +95,7 @@
         /// <param name="entity">The entity to update.</param>
         public virtual async Task<TEntity> UpdateAsync(TEntity entity)
         {
-            return await this.decoratee.UpdateAsync(entity).AnyContext();
+            return await this.inner.UpdateAsync(entity).AnyContext();
         }
 
         /// <summary>
@@ -104,7 +104,7 @@
         /// <param name="entity">The entity to insert or update.</param>
         public virtual async Task<(TEntity entity, RepositoryActionResult action)> UpsertAsync(TEntity entity)
         {
-            return await this.decoratee.UpsertAsync(entity).AnyContext();
+            return await this.inner.UpsertAsync(entity).AnyContext();
         }
 
         /// <summary>
@@ -113,7 +113,7 @@
         /// <param name="id">The entity identifier.</param>
         public virtual async Task<bool> ExistsAsync(object id)
         {
-            return await this.decoratee.ExistsAsync(id).AnyContext();
+            return await this.inner.ExistsAsync(id).AnyContext();
         }
 
         /// <summary>
@@ -122,7 +122,7 @@
         /// <param name="cancellationToken">The cancellation token.</param>
         public async Task<int> CountAsync(CancellationToken cancellationToken = default)
         {
-            return await this.decoratee.CountAsync(cancellationToken).AnyContext();
+            return await this.inner.CountAsync(cancellationToken).AnyContext();
         }
 
         /// <summary>
@@ -132,7 +132,7 @@
         /// <param name="cancellationToken">The cancellation token.</param>
         public async Task<int> CountAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
         {
-            return await this.decoratee.CountAsync(specification, cancellationToken).AnyContext();
+            return await this.inner.CountAsync(specification, cancellationToken).AnyContext();
         }
 
         /// <summary>
@@ -142,7 +142,7 @@
         /// <param name="cancellationToken">The cancellation token.</param>
         public async Task<int> CountAsync(IEnumerable<ISpecification<TEntity>> specifications, CancellationToken cancellationToken = default)
         {
-            return await this.decoratee.CountAsync(specifications, cancellationToken).AnyContext();
+            return await this.inner.CountAsync(specifications, cancellationToken).AnyContext();
         }
     }
 }

@@ -17,25 +17,25 @@
     public class StartupTaskServerDecorator : IServer
     {
         private readonly IEnumerable<IStartupTask> tasks;
-        private readonly IServer decoratee;
+        private readonly IServer inner;
         private readonly ILogger<StartupTaskServerDecorator> logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StartupTaskServerDecorator"/> class.
         /// </summary>
         /// <param name="tasks">The tasks to execute on startup</param>
-        /// <param name="decoratee">The decorated server instance </param>
-        public StartupTaskServerDecorator(ILoggerFactory loggerFactory, IEnumerable<IStartupTask> tasks, IServer decoratee)
+        /// <param name="inner">The decorated server instance </param>
+        public StartupTaskServerDecorator(ILoggerFactory loggerFactory, IEnumerable<IStartupTask> tasks, IServer inner)
         {
-            EnsureArg.IsNotNull(decoratee, nameof(decoratee));
+            EnsureArg.IsNotNull(inner, nameof(inner));
 
             this.tasks = tasks.Safe();
-            this.decoratee = decoratee;
             this.logger = loggerFactory.CreateLogger<StartupTaskServerDecorator>();
+            this.inner = inner;
         }
 
         /// <inheritdoc />
-        public IFeatureCollection Features => this.decoratee.Features;
+        public IFeatureCollection Features => this.inner.Features;
 
         /// <inheritdoc />
         public async Task StartAsync<TContext>(IHttpApplication<TContext> application, CancellationToken cancellationToken)
@@ -57,16 +57,16 @@
                 }
             }
 
-            await this.decoratee.StartAsync(application, cancellationToken).AnyContext();
+            await this.inner.StartAsync(application, cancellationToken).AnyContext();
         }
 
         /// <inheritdoc />
-        public void Dispose() => this.decoratee.Dispose();
+        public void Dispose() => this.inner.Dispose();
 
         /// <inheritdoc />
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            await this.decoratee.StopAsync(cancellationToken).AnyContext();
+            await this.inner.StopAsync(cancellationToken).AnyContext();
 
             foreach (var task in this.tasks)
             {
