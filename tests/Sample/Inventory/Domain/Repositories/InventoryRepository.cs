@@ -12,7 +12,7 @@
         {
         }
 
-        public async Task<IEnumerable<ProductInventory>> FindOneOutOfStock()
+        public async Task<IEnumerable<ProductInventory>> FindOutOfStock()
             => await this.FindAllAsync(new OutOfStockSpecification()).AnyContext();
     }
 }
