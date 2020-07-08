@@ -13,12 +13,12 @@
     public class CountryRepositoryTests : BaseTests
     {
         // https://xunit.github.io/docs/shared-context.html
-        private readonly ICountryRepository sut;
+        private readonly IGenericRepository<Country> sut;
         private readonly string tenantId = "naos_sample_test";
 
         public CountryRepositoryTests()
         {
-            this.sut = this.ServiceProvider.GetService<ICountryRepository>();
+            this.sut = this.ServiceProvider.GetService<IGenericRepository<Country>>();
         }
 
         [Fact]
@@ -166,7 +166,7 @@
 
             using (var scope = this.ServiceProvider.CreateScope())
             {
-                var sut2 = scope.ServiceProvider.GetService<ICountryRepository>();
+                var sut2 = scope.ServiceProvider.GetService<IGenericRepository<Country>>();
                 var entity = await sut2.FindOneAsync("fr").AnyContext();
 
                 entity.ShouldNotBeNull();

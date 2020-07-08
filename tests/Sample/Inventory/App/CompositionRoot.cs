@@ -64,7 +64,7 @@
                                 .CollectionName("ProductReplenishments")))));
             });
 
-            options.Context.Services.AddSeederStartupTask<IInventoryRepository, ProductInventory>(new[]
+            options.Context.Services.AddSeederStartupTask<ProductInventory, IInventoryRepository>(new[]
             {
                 new ProductInventory
                 {
