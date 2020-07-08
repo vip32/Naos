@@ -11,11 +11,11 @@
     using Naos.Commands.Infrastructure.FileStorage;
     using Naos.FileStorage.Infrastructure;
     using Naos.Foundation;
-    using Naos.Sample.Catalogs.Application;
-    using Naos.Sample.Customers.Application;
-    using Naos.Sample.Inventory.Application;
-    using Naos.Sample.UserAccounts.Application;
+    using Naos.Sample.Catalogs.Presentation;
+    using Naos.Sample.Customers.Presentation;
+    using Naos.Sample.Inventory.Presentation;
     using Naos.Sample.UserAccounts.Infrastructure;
+    using Naos.Sample.UserAccounts.Presentation;
     using Xunit.Abstractions;
 
     public abstract class BaseTests

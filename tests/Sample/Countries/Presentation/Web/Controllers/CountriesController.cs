@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.Countries.Application.Web
+﻿namespace Naos.Sample.Countries.Presentation.Web
 {
     using System.ComponentModel;
     using System.Net;

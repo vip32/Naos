@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.Customers.Application
+﻿namespace Naos.Sample.Customers.Presentation
 {
     using System;
     using EnsureThat;
@@ -11,7 +11,7 @@
     using Naos.Foundation.Infrastructure;
     using Naos.Queueing.Domain;
     using Naos.Queueing.Infrastructure.Azure;
-    using Naos.Sample.Customers.Application.Client;
+    using Naos.Sample.Customers.Application;
     using Naos.Sample.Customers.Domain;
     using Naos.Sample.Customers.Infrastructure;
     using Naos.Tracing.Domain;

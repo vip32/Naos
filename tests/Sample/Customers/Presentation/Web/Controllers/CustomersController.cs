@@ -1,4 +1,4 @@
-﻿//namespace Naos.Sample.Customers.Application.Web
+﻿//namespace Naos.Sample.Customers.Presentation.Web
 //{
 //    using EnsureThat;
 //    using Naos.Sample.Customers.Application.Client;

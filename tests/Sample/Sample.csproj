@@ -50,4 +50,8 @@
     <ProjectReference Include="..\..\src\Tracing.Domain\Tracing.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Catalogs\Application\" />
+  </ItemGroup>
+
 </Project>

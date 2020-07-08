@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.Inventory.Application
+﻿namespace Naos.Sample.Inventory.Presentation
 {
     using System;
     using System.Linq;
