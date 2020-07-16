@@ -5,6 +5,7 @@
     using EnsureThat;
 
     public class OrderOption<TEntity>
+        where TEntity : class, IEntity, IAggregateRoot
     {
         public OrderOption(
             Expression<Func<TEntity, object>> expression,

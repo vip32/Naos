@@ -103,7 +103,7 @@
         public async Task<int> CountAsync(CancellationToken cancellationToken = default)
         {
             return await this.CountAsync(
-                new List<ISpecification<TEntity>>(),
+                Enumerable.Empty<ISpecification<TEntity>>(),
                 cancellationToken).AnyContext();
         }
 
@@ -115,7 +115,7 @@
         public async Task<int> CountAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
         {
             return await this.CountAsync(
-                new List<ISpecification<TEntity>>(new[] { specification }),
+                new[] { specification },
                 cancellationToken).AnyContext();
         }
 

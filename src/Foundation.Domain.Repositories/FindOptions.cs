@@ -7,9 +7,10 @@
     /// <summary>
     /// Various options to specify the <see cref="IGenericRepository{T}" /> find operations.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="TEntity"></typeparam>
     /// <seealso cref="Domain.IFindOptions{TEntity}" />
-    public class FindOptions<T> : IFindOptions<T>
+    public class FindOptions<TEntity> : IFindOptions<TEntity>
+        where TEntity : class, IEntity, IAggregateRoot
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FindOptions{T}"/> class.
@@ -26,11 +27,11 @@
         /// <param name="order">The order option.</param>
         /// <param name="orderExpression">the order expresion.</param>
         /// <param name="orders">The order options.</param>
-        public FindOptions(int? skip = null, int? take = null, OrderOption<T> order = null, Expression<Func<T, object>> orderExpression = null, IEnumerable<OrderOption<T>> orders = null)
+        public FindOptions(int? skip = null, int? take = null, OrderOption<TEntity> order = null, Expression<Func<TEntity, object>> orderExpression = null, IEnumerable<OrderOption<TEntity>> orders = null)
         {
             this.Take = take;
             this.Skip = skip;
-            this.Order = orderExpression != null ? new OrderOption<T>(orderExpression) : order;
+            this.Order = orderExpression != null ? new OrderOption<TEntity>(orderExpression) : order;
             this.Orders = orders;
         }
 
@@ -56,7 +57,7 @@
         /// <value>
         /// The order.
         /// </value>
-        public OrderOption<T> Order { get; set; }
+        public OrderOption<TEntity> Order { get; set; }
 
         /// <summary>
         /// Gets or sets the orders.
@@ -64,7 +65,7 @@
         /// <value>
         /// The orders.
         /// </value>
-        public IEnumerable<OrderOption<T>> Orders { get; set; }
+        public IEnumerable<OrderOption<TEntity>> Orders { get; set; }
 
         /// <summary>
         /// Gets or sets the includes.
@@ -72,7 +73,7 @@
         /// <value>
         /// The includes.
         /// </value>
-        public IEnumerable<Expression<Func<T, object>>> Includes { get; set; }
+        public IEnumerable<Expression<Func<TEntity, object>>> Includes { get; set; }
 
         /// <summary>
         /// Determines whether this instance has orders.

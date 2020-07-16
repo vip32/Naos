@@ -14,6 +14,7 @@
         public static IOrderedQueryable<TEntity> OrderByIf<TEntity>(
             this IQueryable<TEntity> source,
             IFindOptions<TEntity> options)
+            where TEntity : class, IEntity, IAggregateRoot
         {
             if (options?.Order == null && options?.Orders.IsNullOrEmpty() == true)
             {
@@ -39,6 +40,7 @@
             this IQueryable<TDestination> source,
             IFindOptions<TEntity> options,
             IEntityMapper mapper)
+            where TEntity : class, IEntity, IAggregateRoot
         {
             if (options?.Order == null && options?.Orders.IsNullOrEmpty() == true)
             {
