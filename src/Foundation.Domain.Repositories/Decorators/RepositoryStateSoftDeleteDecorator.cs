@@ -25,10 +25,15 @@
         private readonly ISpecification<TEntity> specification;
 
         public RepositoryStateSoftDeleteDecorator(IGenericRepository<TEntity> inner)
+            : this(inner, true)
+        {
+        }
+
+        public RepositoryStateSoftDeleteDecorator(IGenericRepository<TEntity> inner, bool excludeDeleted)
         {
             EnsureArg.IsNotNull(inner, nameof(inner));
 
-            this.specification = new Specification<TEntity>(e => e.State.Deleted != true);
+            this.specification = excludeDeleted ? new Specification<TEntity>(e => e.State.Deleted != true) : null;
             this.inner = inner;
         }
 
