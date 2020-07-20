@@ -234,7 +234,7 @@
                 {
                     var propertyType = Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType;
 
-                    if (item.Key.SafeEquals(propertyInfo.Name) && item.Value != null)
+                    if (item.Key.SafeEquals(propertyInfo.Name) && item.Value != null && propertyInfo.CanWrite)
                     {
                         propertyInfo.SetValue(instance, item.Value.To(propertyType), null);
                     }
