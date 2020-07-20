@@ -81,9 +81,10 @@
                             .Mapper(new AutoMapperEntityMapper(MapperFactory.Create())), // singleton
                             e => e.Identifier);
                 })
-                .Decorate<IGenericRepository<Country>>((inner, sp) => new RepositoryTenantDecorator<Country>("naos_sample_test", inner))
-                .Decorate<IGenericRepository<Country>, RepositoryLoggingDecorator<Country>>()
                 .Decorate<IGenericRepository<Country>, RepositoryTracingDecorator<Country>>()
+                .Decorate<IGenericRepository<Country>, RepositoryLoggingDecorator<Country>>()
+                .Decorate<IGenericRepository<Country>>((inner, sp) => new RepositoryTenantDecorator<Country>("naos_sample_test", inner))
+                .Decorate<IGenericRepository<Country>>((inner, sp) => new RepositoryOrderDecorator<Country>(i => i.Name, inner))
 
                 .AddSingleton(sp => new InMemoryContext<Country>(new[]
                 {
