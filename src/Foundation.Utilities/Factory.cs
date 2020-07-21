@@ -226,17 +226,17 @@
             return instance;
         }
 
-        private static void SetProperties(object instance, IDictionary<string, object> properties)
+        private static void SetProperties(object instance, IDictionary<string, object> propertyItems)
         {
             foreach (var propertyInfo in instance.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
-                foreach (var item in properties.Safe())
+                foreach (var propertyItem in propertyItems.Safe())
                 {
                     var propertyType = Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType;
 
-                    if (item.Key.SafeEquals(propertyInfo.Name) && item.Value != null && propertyInfo.CanWrite)
+                    if (propertyItem.Key.SafeEquals(propertyInfo.Name) && propertyItem.Value != null && propertyInfo.CanWrite)
                     {
-                        propertyInfo.SetValue(instance, item.Value.To(propertyType), null);
+                        propertyInfo.SetValue(instance, propertyItem.Value.To(propertyType), null);
                     }
                 }
             }
