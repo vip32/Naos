@@ -44,6 +44,11 @@
         IEnumerable<OrderOption<TEntity>> Orders { get; set; }
 
         /// <summary>
+        /// Gets or sets if the internal change tracker should track changes.
+        /// </summary>
+        bool TrackChanges { get; set; }
+
+        /// <summary>
         /// Gets or sets the includes.
         /// </summary>
         /// <value>

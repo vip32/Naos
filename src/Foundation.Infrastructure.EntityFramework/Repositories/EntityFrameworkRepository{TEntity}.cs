@@ -76,6 +76,7 @@
             if (options?.HasOrders() == true)
             {
                 return await this.Options.DbContext.Set<TEntity>() // .AsAsyncEnumerable()
+                    .TrackChangesIf(options.TrackChanges)
                     .AsExpandable()
                     .WhereExpressions(expressions)
                     .SkipIf(options?.Skip)
@@ -85,6 +86,7 @@
             else
             {
                 return await this.Options.DbContext.Set<TEntity>() // .AsAsyncEnumerable()
+                    .TrackChangesIf(options.TrackChanges)
                     .AsExpandable()
                     .WhereExpressions(expressions)
                     .SkipIf(options?.Skip)

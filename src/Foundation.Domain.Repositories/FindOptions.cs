@@ -17,6 +17,7 @@
         /// </summary>
         public FindOptions()
         {
+            this.TrackChanges = true;
         }
 
         /// <summary>
@@ -27,12 +28,13 @@
         /// <param name="order">The order option.</param>
         /// <param name="orderExpression">the order expresion.</param>
         /// <param name="orders">The order options.</param>
-        public FindOptions(int? skip = null, int? take = null, OrderOption<TEntity> order = null, Expression<Func<TEntity, object>> orderExpression = null, IEnumerable<OrderOption<TEntity>> orders = null)
+        public FindOptions(int? skip = null, int? take = null, OrderOption<TEntity> order = null, Expression<Func<TEntity, object>> orderExpression = null, IEnumerable<OrderOption<TEntity>> orders = null, bool trackChanges = true)
         {
             this.Take = take;
             this.Skip = skip;
             this.Order = orderExpression != null ? new OrderOption<TEntity>(orderExpression) : order;
             this.Orders = orders;
+            this.TrackChanges = trackChanges;
         }
 
         /// <summary>
@@ -74,6 +76,11 @@
         /// The includes.
         /// </value>
         public IEnumerable<Expression<Func<TEntity, object>>> Includes { get; set; }
+
+        /// <summary>
+        /// Gets or sets if the internal change tracker should track changes.
+        /// </summary>
+        public bool TrackChanges { get; set; }
 
         /// <summary>
         /// Determines whether this instance has orders.
