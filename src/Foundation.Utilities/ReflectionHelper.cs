@@ -8,6 +8,12 @@
     {
         public static void SetProperties(object instance, IDictionary<string, object> propertyItems)
         {
+            if (instance == null || propertyItems.IsNullOrEmpty())
+            {
+                return;
+            }
+
+            // or use https://github.com/ekonbenefits/dynamitey/wiki/UsageReallyLateBinding dynamic InvokeSetAll(object target, ...) =CASESENSITIVE
             foreach (var propertyInfo in instance.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 foreach (var propertyItem in propertyItems.Safe())
