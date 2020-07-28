@@ -30,8 +30,8 @@
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //modelBuilder.HasDefaultSchema("Development"); // TODO: this is too static, as the migration contains the environment (fixed)
-            //modelBuilder.Entity<UserAccount>().Ignore(e => e.State); // TODO: map the state
 
+            // all about owned entities: https://docs.microsoft.com/en-us/ef/core/modeling/owned-entities
             modelBuilder.HasDefaultSchema("useraccounts");
             modelBuilder.Entity<UserAccount>().OwnsOne(e => e.State, od =>
             {
@@ -46,12 +46,11 @@
                 //od.ToTable("EntityStates");
             });
 
-            //modelBuilder.Entity<UserAccount>().OwnsOne(e => e.AdAccount, od => // map valueobject to own table
-            //    od.ToTable("AdAccounts"));
             modelBuilder.Entity<UserAccount>().OwnsOne(e => e.AdAccount, od => // map valueobject to same table
             {
                 od.Property(p => p.Name).HasColumnName("AdName");
                 od.Property(p => p.Domain).HasColumnName("AdDomain");
+                //od.ToTable("AdAccounts"));
             });
 
             modelBuilder.Entity<UserAccount>().OwnsOne(e => e.Status)
@@ -59,6 +58,7 @@
                 .HasColumnName(nameof(UserAccount.Status)) // map valueobject to single column
                 .HasConversion(new EnumToStringConverter<UserAccountStatusType>());
 
+            //modelBuilder.Entity<UserAccount>().Ignore(e => e.State);
             modelBuilder.Entity<UserVisit>().OwnsOne(e => e.State, od =>
             {
                 od.Property(p => p.DeactivatedReasons)
