@@ -18,11 +18,11 @@
     <PackageReference Include="MediatR" Version="8.0.1" />
     <PackageReference Include="Humanizer.Core" Version="2.8.26" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="NJsonSchema" Version="10.1.17" />
-    <PackageReference Include="NSwag.Annotations" Version="13.6.0" />
-    <PackageReference Include="NSwag.Generation" Version="13.5.0" />
+    <PackageReference Include="NJsonSchema" Version="10.1.23" />
+    <PackageReference Include="NSwag.Annotations" Version="13.6.2" />
+    <PackageReference Include="NSwag.Generation" Version="13.6.2" />
     <PackageReference Include="Scrutor" Version="3.2.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.4" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.5" />
     <PackageReference Include="System.Text.Json" Version="4.7.2" />
   </ItemGroup>
 

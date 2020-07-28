@@ -36,9 +36,10 @@
         //// </summary>
         //// <typeparam name="T">The type of the entity.</typeparam>
         //// <returns></returns>
-        public IFindOptions<T> GetFindOptions<T>()
+        public IFindOptions<TEntity> GetFindOptions<TEntity>()
+            where TEntity : class, IEntity, IAggregateRoot
         {
-            return FindOptionsFactory.Create<T>(this);
+            return FindOptionsFactory.Create<TEntity>(this);
         }
     }
 }

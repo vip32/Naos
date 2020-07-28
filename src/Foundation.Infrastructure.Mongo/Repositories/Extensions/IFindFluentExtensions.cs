@@ -6,16 +6,17 @@
 
     public static class IFindFluentExtensions
     {
-        public static IFindFluent<TDocument, TProjection> Sort<TDocument, TProjection>(
-            this IFindFluent<TDocument, TProjection> source,
-            IFindOptions<TDocument> options)
+        public static IFindFluent<TEntity, TProjection> Sort<TEntity, TProjection>(
+            this IFindFluent<TEntity, TProjection> source,
+            IFindOptions<TEntity> options)
+            where TEntity : class, IEntity, IAggregateRoot
         {
             if (options?.Order == null && options?.Orders.IsNullOrEmpty() == true)
             {
                 return source;
             }
 
-            foreach (var order in (options?.Orders ?? new List<OrderOption<TDocument>>()).Insert(options?.Order))
+            foreach (var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
             {
                 if (order.Direction == OrderDirection.Ascending)
                 {

@@ -133,22 +133,12 @@
 
                 return source;
             }
-            catch (FormatException)
+            catch (FormatException) when (!throws)
             {
-                if (throws)
-                {
-                    throw;
-                }
-
                 return defaultValue;
             }
-            catch (InvalidCastException)
+            catch (InvalidCastException) when (!throws)
             {
-                if (throws)
-                {
-                    throw;
-                }
-
                 return defaultValue;
             }
         }

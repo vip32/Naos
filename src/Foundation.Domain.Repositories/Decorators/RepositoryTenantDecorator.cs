@@ -17,8 +17,8 @@
     {
         public RepositoryTenantDecorator(
             string tenantId,
-            IGenericRepository<TEntity> decoratee)
-            : base(new Specification<TEntity>(t => t.TenantId == tenantId), decoratee)
+            IGenericRepository<TEntity> inner)
+            : base(new Specification<TEntity>(t => t.TenantId == tenantId), inner)
         {
         }
     }

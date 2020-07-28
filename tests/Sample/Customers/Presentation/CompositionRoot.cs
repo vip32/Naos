@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.Customers.Application
+﻿namespace Naos.Sample.Customers.Presentation
 {
     using System;
     using EnsureThat;
@@ -11,7 +11,7 @@
     using Naos.Foundation.Infrastructure;
     using Naos.Queueing.Domain;
     using Naos.Queueing.Infrastructure.Azure;
-    using Naos.Sample.Customers.Application.Client;
+    using Naos.Sample.Customers.Application;
     using Naos.Sample.Customers.Domain;
     using Naos.Sample.Customers.Infrastructure;
     using Naos.Tracing.Domain;
@@ -97,7 +97,7 @@
                 },
                 name: $"{typeof(Order).Name.Pluralize()}-cosmosdb");
 
-            options.Context.Services.AddSeederStartupTask<ICustomerRepository, Customer>(new[]
+            options.Context.Services.AddSeederStartupTask<Customer, ICustomerRepository>(new[]
             {
                 new Customer() { Id = "100fb10f-2ad4-4bd1-9b33-6410a5ce1b25", Email = "test10@unknown.com", TenantId = "naos_sample_test", Gender = "Male", CustomerNumber = "AB-10010", FirstName = "John", LastName = "Doe", Region = "East" },
                 new Customer() { Id = "100fb10f-2ad4-4bd1-9b33-6410a5ce1b26", Email = "test20@unknown.com", TenantId = "naos_sample_test", Gender = "Female", CustomerNumber = "AB-10020", FirstName = "Lisa", LastName = "Doe", Region = "West" },

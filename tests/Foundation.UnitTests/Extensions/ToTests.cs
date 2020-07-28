@@ -30,6 +30,7 @@
             "ABC".To(defaultValue: true).ShouldBeOfType<bool>().ShouldBe(true);
             "2260afec-bbfd-42d4-a91a-dcb11e09b17f".To<Guid>().ShouldBeOfType<Guid>().ShouldBe(new Guid("2260afec-bbfd-42d4-a91a-dcb11e09b17f"));
             "2260afec-bbfd-42d4-a91a-dcb11e09b17f".To(typeof(Guid)).ShouldBeOfType<Guid>().ShouldBe(new Guid("2260afec-bbfd-42d4-a91a-dcb11e09b17f"));
+            "ABC".To<Guid>().ShouldBeOfType<Guid>().ShouldBe(Guid.Empty);
             s.To<Guid>().ShouldBeOfType<Guid>().ShouldBe(Guid.Empty);
             s.To(typeof(Guid)).ShouldBeOfType<Guid>().ShouldBe(Guid.Empty);
             "Reptile".To<StubEnums>().ShouldBe(StubEnums.Reptile);

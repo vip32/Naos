@@ -6,6 +6,7 @@
     using EnsureThat;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
+    using Naos.Foundation.Domain;
     using Naos.JobScheduling.Domain;
     using Naos.Sample.Countries.Domain;
     using Naos.Tracing.Domain;
@@ -14,13 +15,13 @@
     {
         private const string LogKey = "IMPORT";
         private readonly ILogger<CountriesImportJob> logger;
-        private readonly ICountryRepository repository;
+        private readonly IGenericRepository<Country> repository;
         private readonly ITracer tracer;
 
         public CountriesImportJob(
             ILogger<CountriesImportJob> logger,
             ITracer tracer,
-            ICountryRepository repository)
+            IGenericRepository<Country> repository)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));
             EnsureArg.IsNotNull(tracer, nameof(tracer));

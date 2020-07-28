@@ -192,7 +192,7 @@
         }
 
         /// <summary>
-        ///     Sets the updated information.
+        /// Sets the updated information.
         /// </summary>
         /// <param name="by">Name of the account of the updater.</param>
         /// <param name="reason">The reason of the update.</param>
@@ -220,7 +220,7 @@
         }
 
         /// <summary>
-        ///     Sets the deleted information.
+        /// Sets the deleted information.
         /// </summary>
         /// <param name="by">Name of the deleter.</param>
         /// <param name="reason">The reason.</param>

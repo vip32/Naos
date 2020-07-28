@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.Catalogs.Application
+﻿namespace Naos.Sample.Catalogs.Presentation
 {
     using EnsureThat;
     using MediatR;

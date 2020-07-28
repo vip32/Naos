@@ -31,29 +31,31 @@
         //    return source == null || !source.Any();
         //}
 
-        public static bool IsNullOrEmpty(this Guid value)
+        [DebuggerStepThrough]
+        public static bool IsNullOrEmpty(this Guid source)
         {
-            return IsNullOrEmptyInternal(value);
+            return IsNullOrEmptyInternal(source);
         }
 
-        public static bool IsNullOrEmpty(this Guid? value)
+        [DebuggerStepThrough]
+        public static bool IsNullOrEmpty(this Guid? source)
         {
-            return IsNullOrEmptyInternal(value);
+            return IsNullOrEmptyInternal(source);
         }
 
-        private static bool IsNullOrEmptyInternal(this Guid? value)
+        private static bool IsNullOrEmptyInternal(this Guid? source)
         {
-            if (value == null)
+            if (source == null)
             {
                 return true;
             }
 
-            if (value == default || value == Guid.Empty)
+            if (source == default || source == Guid.Empty)
             {
                 return true;
             }
 
-            if (string.IsNullOrEmpty(value.ToString()))
+            if (string.IsNullOrEmpty(source.ToString()))
             {
                 return true;
             }

@@ -6,6 +6,6 @@
 
     public interface IInventoryRepository : IGenericRepository<ProductInventory>
     {
-        Task<IEnumerable<ProductInventory>> FindOneOutOfStock();
+        Task<IEnumerable<ProductInventory>> FindOutOfStock();
     }
 }

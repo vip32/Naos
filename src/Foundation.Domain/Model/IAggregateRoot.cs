@@ -1,7 +1,5 @@
 ﻿namespace Naos.Foundation.Domain
 {
-    using System.Collections.Generic;
-
     /// <summary>
     /// <para>
     /// An aggregate root is an entity which works as an entry point to our aggregate.

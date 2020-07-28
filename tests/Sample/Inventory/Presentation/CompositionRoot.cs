@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.Inventory.Application
+﻿namespace Naos.Sample.Inventory.Presentation
 {
     using System;
     using System.Linq;
@@ -64,7 +64,7 @@
                                 .CollectionName("ProductReplenishments")))));
             });
 
-            options.Context.Services.AddSeederStartupTask<IInventoryRepository, ProductInventory>(new[]
+            options.Context.Services.AddSeederStartupTask<ProductInventory, IInventoryRepository>(new[]
             {
                 new ProductInventory
                 {

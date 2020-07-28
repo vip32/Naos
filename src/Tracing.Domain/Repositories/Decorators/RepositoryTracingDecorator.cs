@@ -25,20 +25,20 @@
     {
         private readonly ITracer tracer;
         private readonly ILogger<IGenericRepository<TEntity>> logger;
-        private readonly IGenericRepository<TEntity> decoratee;
+        private readonly IGenericRepository<TEntity> inner;
         private readonly string name;
 
         public RepositoryTracingDecorator(
             ILogger<IGenericRepository<TEntity>> logger,
             ITracer tracer,
-            IGenericRepository<TEntity> decoratee)
+            IGenericRepository<TEntity> inner)
         {
-            EnsureArg.IsNotNull(decoratee, nameof(decoratee));
+            EnsureArg.IsNotNull(inner, nameof(inner));
 
             this.tracer = tracer;
             this.logger = logger;
-            this.decoratee = decoratee;
             this.name = typeof(TEntity).Name.ToLower();
+            this.inner = inner;
         }
 
         public async Task<RepositoryActionResult> DeleteAsync(object id)
@@ -46,7 +46,7 @@
             using (var scope = this.tracer?.BuildSpan($"delete {this.name}", LogKeys.DomainRepository)
                 .WithTag(SpanTagKey.DbType, "sql").Activate(this.logger))
             {
-                return await this.decoratee.DeleteAsync(id).AnyContext();
+                return await this.inner.DeleteAsync(id).AnyContext();
             }
         }
 
@@ -55,7 +55,7 @@
             using (var scope = this.tracer?.BuildSpan($"delete {this.name}", LogKeys.DomainRepository)
                 .WithTag(SpanTagKey.DbType, "sql").Activate(this.logger))
             {
-                return await this.decoratee.DeleteAsync(entity).AnyContext();
+                return await this.inner.DeleteAsync(entity).AnyContext();
             }
         }
 
@@ -64,7 +64,7 @@
             using (var scope = this.tracer?.BuildSpan($"exists {this.name}", LogKeys.DomainRepository)
                 .WithTag(SpanTagKey.DbType, "sql").Activate(this.logger))
             {
-                return await this.decoratee.ExistsAsync(id).AnyContext();
+                return await this.inner.ExistsAsync(id).AnyContext();
             }
         }
 
@@ -73,7 +73,7 @@
             using (var scope = this.tracer?.BuildSpan($"findall {this.name}", LogKeys.DomainRepository)
                 .WithTag(SpanTagKey.DbType, "sql").Activate(this.logger))
             {
-                return await this.decoratee.FindAllAsync(options, cancellationToken).AnyContext();
+                return await this.inner.FindAllAsync(options, cancellationToken).AnyContext();
             }
         }
 
@@ -82,7 +82,7 @@
             using (var scope = this.tracer?.BuildSpan($"findall {this.name}", LogKeys.DomainRepository)
                 .WithTag(SpanTagKey.DbType, "sql").Activate(this.logger))
             {
-                return await this.decoratee.FindAllAsync(specification, options, cancellationToken).AnyContext();
+                return await this.inner.FindAllAsync(specification, options, cancellationToken).AnyContext();
             }
         }
 
@@ -91,7 +91,7 @@
             using (var scope = this.tracer?.BuildSpan($"findall {this.name}", LogKeys.DomainRepository)
                 .WithTag(SpanTagKey.DbType, "sql").Activate(this.logger))
             {
-                return await this.decoratee.FindAllAsync(specifications, options, cancellationToken).AnyContext();
+                return await this.inner.FindAllAsync(specifications, options, cancellationToken).AnyContext();
             }
         }
 
@@ -100,7 +100,7 @@
             using (var scope = this.tracer?.BuildSpan($"findone {this.name}", LogKeys.DomainRepository)
                 .WithTag(SpanTagKey.DbType, "sql").Activate(this.logger))
             {
-                return await this.decoratee.FindOneAsync(id).AnyContext();
+                return await this.inner.FindOneAsync(id).AnyContext();
             }
         }
 
@@ -109,7 +109,7 @@
             using (var scope = this.tracer?.BuildSpan($"insert {this.name}", LogKeys.DomainRepository)
                 .WithTag(SpanTagKey.DbType, "sql").Activate(this.logger))
             {
-                return await this.decoratee.InsertAsync(entity).AnyContext();
+                return await this.inner.InsertAsync(entity).AnyContext();
             }
         }
 
@@ -118,7 +118,7 @@
             using (var scope = this.tracer?.BuildSpan($"update {this.name}", LogKeys.DomainRepository)
                 .WithTag(SpanTagKey.DbType, "sql").Activate(this.logger))
             {
-                return await this.decoratee.UpdateAsync(entity).AnyContext();
+                return await this.inner.UpdateAsync(entity).AnyContext();
             }
         }
 
@@ -127,7 +127,7 @@
             using (var scope = this.tracer?.BuildSpan($"upsert {this.name}", LogKeys.DomainRepository)
                 .WithTag(SpanTagKey.DbType, "sql").Activate(this.logger))
             {
-                return await this.decoratee.UpsertAsync(entity).AnyContext();
+                return await this.inner.UpsertAsync(entity).AnyContext();
             }
         }
 
@@ -140,7 +140,7 @@
             using (var scope = this.tracer?.BuildSpan($"count {this.name}", LogKeys.DomainRepository)
                 .WithTag(SpanTagKey.DbType, "sql").Activate(this.logger))
             {
-                return await this.decoratee.CountAsync(cancellationToken).AnyContext();
+                return await this.inner.CountAsync(cancellationToken).AnyContext();
             }
         }
 
@@ -154,7 +154,7 @@
             using (var scope = this.tracer?.BuildSpan($"count {this.name}", LogKeys.DomainRepository)
                 .WithTag(SpanTagKey.DbType, "sql").Activate(this.logger))
             {
-                return await this.decoratee.CountAsync(specification, cancellationToken).AnyContext();
+                return await this.inner.CountAsync(specification, cancellationToken).AnyContext();
             }
         }
 
@@ -168,7 +168,7 @@
             using (var scope = this.tracer?.BuildSpan($"count {this.name}", LogKeys.DomainRepository)
                 .WithTag(SpanTagKey.DbType, "sql").Activate(this.logger))
             {
-                return await this.decoratee.CountAsync(specifications, cancellationToken).AnyContext();
+                return await this.inner.CountAsync(specifications, cancellationToken).AnyContext();
             }
         }
     }

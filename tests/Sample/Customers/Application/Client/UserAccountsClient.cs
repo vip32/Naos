@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.Customers.Application.Client
+﻿namespace Naos.Sample.Customers.Application
 {
     using System.Net.Http;
     using Microsoft.Extensions.Logging;

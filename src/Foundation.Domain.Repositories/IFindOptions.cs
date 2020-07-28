@@ -7,8 +7,9 @@
     /// <summary>
     /// Various options to specify the <see cref="IGenericRepository{TEntity}"/> find operations.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public interface IFindOptions<T>
+    /// <typeparam name="TEntity"></typeparam>
+    public interface IFindOptions<TEntity>
+        where TEntity : class, IEntity, IAggregateRoot
     {
         /// <summary>
         /// Gets or sets the skip amount.
@@ -32,7 +33,7 @@
         /// <value>
         /// The ordering.
         /// </value>
-        OrderOption<T> Order { get; set; }
+        OrderOption<TEntity> Order { get; set; }
 
         /// <summary>
         /// Gets or sets the ordersings.
@@ -40,7 +41,12 @@
         /// <value>
         /// The ordersings.
         /// </value>
-        IEnumerable<OrderOption<T>> Orders { get; set; }
+        IEnumerable<OrderOption<TEntity>> Orders { get; set; }
+
+        /// <summary>
+        /// Gets or sets if the internal change tracker should track changes.
+        /// </summary>
+        bool TrackChanges { get; set; }
 
         /// <summary>
         /// Gets or sets the includes.
@@ -48,7 +54,7 @@
         /// <value>
         /// The includes.
         /// </value>
-        IEnumerable<Expression<Func<T, object>>> Includes { get; set; }
+        IEnumerable<Expression<Func<TEntity, object>>> Includes { get; set; }
 
         /// <summary>
         /// Determines whether this instance has orderings.

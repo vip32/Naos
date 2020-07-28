@@ -114,8 +114,6 @@
                     //        Type = NSwag.OpenApiSecuritySchemeType.ApiKey // Oauth2/OIDC?
                     //    }));
 
-                    //c.DocumentProcessors.Add(new RequestCommandRegistrationDocumentProcessor(sp.GetServices<RequestCommandRegistration>()));
-                    //c.OperationProcessors.Add(new GenericRepositoryControllerOperationProcessor());
                     c.OperationProcessors.Add(new ApiVersionProcessor());
                     c.PostProcess = document =>
                     {
