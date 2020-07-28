@@ -31,7 +31,7 @@
                 HttpStatusCode.Accepted,
                 groupName,
                 onSuccess,
-                extensions: new[] { typeof(QueueDispatcherCommandRequestExtension) }.Insert(extensions),
+                extensions: new[] { typeof(QueueDispatcherCommandRequestExtension) }.InsertRange(extensions),
                 onRegistration: r => r.IsQueued = true);
         }
 
@@ -71,7 +71,7 @@
                 HttpStatusCode.Accepted,
                 groupName,
                 onSuccess,
-                extensions: new[] { typeof(QueueDispatcherCommandRequestExtension) }.Insert(extensions),
+                extensions: new[] { typeof(QueueDispatcherCommandRequestExtension) }.InsertRange(extensions),
                 onRegistration: r => r.IsQueued = true);
         }
 
@@ -111,7 +111,7 @@
                 HttpStatusCode.Accepted,
                 groupName,
                 onSuccess,
-                extensions: new[] { typeof(QueueDispatcherCommandRequestExtension) }.Insert(extensions),
+                extensions: new[] { typeof(QueueDispatcherCommandRequestExtension) }.InsertRange(extensions),
                 onRegistration: r => r.IsQueued = true);
         }
 
@@ -151,7 +151,7 @@
                 HttpStatusCode.Accepted,
                 groupName,
                 onSuccess,
-                extensions: new[] { typeof(QueueDispatcherCommandRequestExtension) }.Insert(extensions),
+                extensions: new[] { typeof(QueueDispatcherCommandRequestExtension) }.InsertRange(extensions),
                 onRegistration: r => r.IsQueued = true);
         }
 
@@ -191,7 +191,7 @@
                 HttpStatusCode.Accepted,
                 groupName,
                 onSuccess,
-                extensions: new[] { typeof(QueueDispatcherCommandRequestExtension) }.Insert(extensions),
+                extensions: new[] { typeof(QueueDispatcherCommandRequestExtension) }.InsertRange(extensions),
                 onRegistration: r => r.IsQueued = true);
         }
 
@@ -231,7 +231,7 @@
                 HttpStatusCode.Accepted,
                 groupName,
                 onSuccess,
-                extensions: new[] { typeof(QueueDispatcherCommandRequestExtension) }.Insert(extensions),
+                extensions: new[] { typeof(QueueDispatcherCommandRequestExtension) }.InsertRange(extensions),
                 onRegistration: r => r.IsQueued = true);
         }
 
@@ -271,7 +271,7 @@
                 HttpStatusCode.Accepted,
                 groupName,
                 onSuccess,
-                extensions: new[] { typeof(QueueDispatcherCommandRequestExtension) }.Insert(extensions),
+                extensions: new[] { typeof(QueueDispatcherCommandRequestExtension) }.InsertRange(extensions),
                 onRegistration: r => r.IsQueued = true);
         }
 

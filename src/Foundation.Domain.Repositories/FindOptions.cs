@@ -28,12 +28,23 @@
         /// <param name="order">The order option.</param>
         /// <param name="orderExpression">the order expresion.</param>
         /// <param name="orders">The order options.</param>
-        public FindOptions(int? skip = null, int? take = null, OrderOption<TEntity> order = null, Expression<Func<TEntity, object>> orderExpression = null, IEnumerable<OrderOption<TEntity>> orders = null, bool trackChanges = true)
+        public FindOptions(
+            int? skip = null,
+            int? take = null,
+            OrderOption<TEntity> order = null,
+            Expression<Func<TEntity, object>> orderExpression = null,
+            IEnumerable<OrderOption<TEntity>> orders = null,
+            IncludeOption<TEntity> include = null,
+            Expression<Func<TEntity, object>> includeExpression = null,
+            IEnumerable<IncludeOption<TEntity>> includes = null,
+            bool trackChanges = true)
         {
             this.Take = take;
             this.Skip = skip;
             this.Order = orderExpression != null ? new OrderOption<TEntity>(orderExpression) : order;
             this.Orders = orders;
+            this.Include = includeExpression != null ? new IncludeOption<TEntity>(includeExpression) : include;
+            this.Includes = includes;
             this.TrackChanges = trackChanges;
         }
 
@@ -70,12 +81,20 @@
         public IEnumerable<OrderOption<TEntity>> Orders { get; set; }
 
         /// <summary>
+        /// Gets or sets the include.
+        /// </summary>
+        /// <value>
+        /// The order.
+        /// </value>
+        public IncludeOption<TEntity> Include { get; set; }
+
+        /// <summary>
         /// Gets or sets the includes.
         /// </summary>
         /// <value>
         /// The includes.
         /// </value>
-        public IEnumerable<Expression<Func<TEntity, object>>> Includes { get; set; }
+        public IEnumerable<IncludeOption<TEntity>> Includes { get; set; }
 
         /// <summary>
         /// Gets or sets if the internal change tracker should track changes.
@@ -89,5 +108,13 @@
         ///   <c>true</c> if this instance has orders; otherwise, <c>false</c>.
         /// </returns>
         public bool HasOrders() => this.Order != null || this.Orders.SafeAny();
+
+        /// <summary>
+        /// Determines whether this instance has includes.
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> if this instance has includes; otherwise, <c>false</c>.
+        /// </returns>
+        public bool HasIncludes() => this.Include != null || this.Includes.SafeAny();
     }
 }

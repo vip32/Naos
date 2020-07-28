@@ -79,6 +79,7 @@
                     .TrackChangesIf(options.TrackChanges)
                     .AsExpandable()
                     .WhereExpressions(expressions)
+                    .IncludeIf(options)
                     .SkipIf(options?.Skip)
                     .TakeIf(options?.Take)
                     .OrderByIf(options).ToListAsyncSafe(cancellationToken).AnyContext();
@@ -89,6 +90,7 @@
                     .TrackChangesIf(options.TrackChanges)
                     .AsExpandable()
                     .WhereExpressions(expressions)
+                    .IncludeIf(options)
                     .SkipIf(options?.Skip)
                     .TakeIf(options?.Take).ToListAsyncSafe(cancellationToken).AnyContext();
             }

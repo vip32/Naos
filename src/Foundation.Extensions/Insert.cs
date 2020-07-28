@@ -46,14 +46,14 @@
         /// <summary>
         /// Also adds the items to the result list.
         /// </summary>
-        /// <typeparam name="TItem">the source.</typeparam>
+        /// <typeparam name="T">the source.</typeparam>
         /// <param name="source">the source collection.</param>
         /// <param name="items">The items to add to the result.</param>
         /// <param name="index">the index at which the item should inserted.</param>
         /// <returns></returns>
-        public static IEnumerable<TItem> Insert<TItem>(
-            this IEnumerable<TItem> source,
-            IEnumerable<TItem> items,
+        public static IEnumerable<T> InsertRange<T>(
+            this IEnumerable<T> source,
+            IEnumerable<T> items,
             int index = 0)
         {
             if (items == null)
@@ -63,10 +63,10 @@
 
             if (source == null)
             {
-                return new List<TItem>(items);
+                return new List<T>(items);
             }
 
-            var result = new List<TItem>(source);
+            var result = new List<T>(source);
             if (index >= 0)
             {
                 result.InsertRange(index, items);

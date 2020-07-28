@@ -49,12 +49,20 @@
         bool TrackChanges { get; set; }
 
         /// <summary>
+        /// Gets or sets the include.
+        /// </summary>
+        /// <value>
+        /// The order.
+        /// </value>
+        IncludeOption<TEntity> Include { get; set; }
+
+        /// <summary>
         /// Gets or sets the includes.
         /// </summary>
         /// <value>
         /// The includes.
         /// </value>
-        IEnumerable<Expression<Func<TEntity, object>>> Includes { get; set; }
+        IEnumerable<IncludeOption<TEntity>> Includes { get; set; }
 
         /// <summary>
         /// Determines whether this instance has orderings.
@@ -63,5 +71,13 @@
         ///   <c>true</c> if this instance has orderings; otherwise, <c>false</c>.
         /// </returns>
         bool HasOrders();
+
+        /// <summary>
+        /// Determines whether this instance has includes.
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> if this instance has includes; otherwise, <c>false</c>.
+        /// </returns>
+        bool HasIncludes();
     }
 }
