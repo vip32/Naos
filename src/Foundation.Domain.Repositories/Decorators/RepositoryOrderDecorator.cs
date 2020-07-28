@@ -135,7 +135,7 @@
                 options = new FindOptions<TEntity>();
             }
 
-            options.Order = new OrderOption<TEntity>(this.orderExpression, this.orderDirection);
+            options.Orders = options.Orders.Insert(new OrderOption<TEntity>(this.expression, this.direction));
             return options;
         }
     }
