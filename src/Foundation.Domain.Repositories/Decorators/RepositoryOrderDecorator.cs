@@ -22,27 +22,27 @@
     public class RepositoryOrderDecorator<TEntity> : IGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
-        private readonly Expression<Func<TEntity, object>> orderExpression;
-        private readonly OrderDirection orderDirection;
+        private readonly Expression<Func<TEntity, object>> expression;
+        private readonly OrderDirection direction;
         private readonly IGenericRepository<TEntity> inner;
 
         public RepositoryOrderDecorator(
-            Expression<Func<TEntity, object>> orderByExpression, // TODO: accept a proper OrderByOption collection
+            Expression<Func<TEntity, object>> expression, // TODO: accept a proper OrderByOption collection
             IGenericRepository<TEntity> inner)
-            : this(orderByExpression, OrderDirection.Ascending, inner)
+            : this(expression, OrderDirection.Ascending, inner)
         {
         }
 
         public RepositoryOrderDecorator(
-            Expression<Func<TEntity, object>> orderExpression, // TODO: accept a proper OrderByOption collection
-            OrderDirection orderDirection,
+            Expression<Func<TEntity, object>> expression, // TODO: accept a proper OrderByOption collection
+            OrderDirection direction,
             IGenericRepository<TEntity> inner)
         {
-            EnsureArg.IsNotNull(orderExpression, nameof(orderExpression));
+            EnsureArg.IsNotNull(expression, nameof(expression));
             EnsureArg.IsNotNull(inner, nameof(inner));
 
-            this.orderExpression = orderExpression;
-            this.orderDirection = orderDirection;
+            this.expression = expression;
+            this.direction = direction;
             this.inner = inner;
         }
 
