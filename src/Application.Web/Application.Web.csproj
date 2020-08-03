@@ -21,7 +21,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.5" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.5" />
-    <PackageReference Include="MediatR" Version="8.0.1" />
+    <PackageReference Include="MediatR" Version="8.1.0" />
     <PackageReference Include="NSwag.Annotations" Version="13.6.2" />
     <PackageReference Include="NSwag.Generation" Version="13.6.2" />
   </ItemGroup>
