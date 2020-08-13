@@ -21,7 +21,7 @@
         private readonly ServiceDescriptor serviceDescriptor;
         private string serviceAddress;
         private CancellationTokenSource cts;
-        private bool registered = false;
+        private bool registered;
         private List<string> registrationIds = new List<string>();
 
         public ServiceDiscoveryHostedService(

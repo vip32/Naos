@@ -9,7 +9,7 @@
 
         public string[] ServiceAddresses { get; set; }
 
-        public bool RouterEnabled { get; set; } = false;
+        public bool RouterEnabled { get; set; }
 
         public string RouterAddress { get; set; } // optional router address
 

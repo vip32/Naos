@@ -44,7 +44,7 @@
                     foreach (var entity in this.Entities.Safe().Where(e => e.Id != null))
                     {
                         // insert only
-                        if (await dbContext.Set<TEntity>().FindAsync(entity.Id).ConfigureAwait(false) == null)
+                        if (await dbContext.Set<TEntity>().FindAsync(new[] { entity.Id }, cancellationToken).ConfigureAwait(false) == null)
                         {
                             if (entity is IStateEntity stateEntity)
                             {

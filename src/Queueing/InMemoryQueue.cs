@@ -258,21 +258,21 @@
 
         protected override async Task<IQueueItem<TData>> DequeueWithIntervalAsync(CancellationToken cancellationToken)
         {
-            await this.EnsureQueueAsync().AnyContext();
+            await this.EnsureQueueAsync(cancellationToken).AnyContext();
             this.Logger.LogDebug($"{{LogKey:l}} queue item dequeue (queue={this.Options.QueueName}, count={this.queue.Count})", LogKeys.Queueing);
 
-            if (this.queue.Count == 0)
+            if (this.queue.IsEmpty)
             {
                 this.Logger.LogDebug($"{{LogKey:l}} no queue items, waiting (name={this.Options.QueueName})", LogKeys.Queueing);
 
-                while (this.queue.Count == 0
+                while (this.queue.IsEmpty
                     && !cancellationToken.IsCancellationRequested)
                 {
-                    Task.Delay(this.Options.DequeueInterval).Wait();
+                    Task.Delay(this.Options.DequeueInterval, cancellationToken).Wait(cancellationToken);
                 }
             }
 
-            if (this.queue.Count == 0)
+            if (this.queue.IsEmpty)
             {
                 return null;
             }
@@ -313,6 +313,7 @@
 #pragma warning restore IDE0067 // Dispose objects before losing scope
 #pragma warning restore CA2000 // Dispose objects before losing scope
 
+#pragma warning disable CA2016 // Forward the 'CancellationToken' parameter to methods that take one
             Task.Run(async () =>
             {
                 this.Logger.LogInformation($"{{LogKey:l}} processing started (queue={this.Options.QueueName}, type={this.GetType().PrettyName()})", args: new[] { LogKeys.Queueing });
@@ -364,6 +365,7 @@
 
                 this.Logger.LogDebug($"{{LogKey:l}} queue processing exiting (name={this.Options.QueueName}, cancellation={linkedCancellationToken.IsCancellationRequested})", LogKeys.Queueing);
             }, linkedCancellationToken.Token).ContinueWith(t => linkedCancellationToken.Dispose());
+#pragma warning restore CA2016 // Forward the 'CancellationToken' parameter to methods that take one
         }
 
         private TimeSpan GetRetryDelay(int attempts)

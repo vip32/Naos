@@ -26,7 +26,7 @@
             {
                 this.Logger.LogInformation($"{{LogKey:l}} handle {notification.GetType().Name.SliceTill("DomainEvent")} (entity={notification.Entity.GetType().PrettyName()}, handler={this.GetType().PrettyName()})", LogKeys.DomainEvent);
                 // TODO: do something, trigger message (integration)
-            }).AnyContext();
+            }, cancellationToken).AnyContext();
         }
     }
 }

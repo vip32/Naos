@@ -38,7 +38,7 @@
         {
             Console.WriteLine("\r\n--- naos interactive console start", Color.LimeGreen);
 
-            Task.Run(() => this.Run());
+            Task.Run(() => this.Run(), cancellationToken);
             return Task.CompletedTask;
         }
 

@@ -36,11 +36,11 @@
 
             if (this.handler != null)
             {
-                await this.queue.ProcessItemsAsync(this.handler).AnyContext();
+                await this.queue.ProcessItemsAsync(this.handler, cancellationToken: cancellationToken).AnyContext();
             }
             else
             {
-                await this.queue.ProcessItemsAsync(true, CancellationToken.None).AnyContext();
+                await this.queue.ProcessItemsAsync(true, cancellationToken).AnyContext();
             }
         }
 

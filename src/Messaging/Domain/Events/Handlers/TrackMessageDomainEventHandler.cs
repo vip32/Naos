@@ -39,7 +39,7 @@
                 }
 
                 this.logger.LogJournal(LogKeys.AppMessaging, $"[{notification.Message?.Identifier}] message published: {notification.Message?.GetType().PrettyName()} (id={notification.Message?.Id}, origin={notification.Message?.Origin})", LogPropertyKeys.TrackPublishMessage);
-            }).AnyContext();
+            }, cancellationToken).AnyContext();
         }
 
         public async Task Handle(MessageHandledDomainEvent notification, CancellationToken cancellationToken)
@@ -52,7 +52,7 @@
                 }
 
                 this.logger.LogJournal(LogKeys.AppMessaging, $"[{notification.Message?.Identifier}] message handled : {notification.Message?.GetType().PrettyName()} (id={notification.Message?.Id}, service={notification.MessageScope}, origin={notification.Message?.Origin})", LogPropertyKeys.TrackReceiveMessage);
-            }).AnyContext();
+            }, cancellationToken).AnyContext();
         }
     }
 }

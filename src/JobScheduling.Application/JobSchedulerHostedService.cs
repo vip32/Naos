@@ -57,7 +57,7 @@
 
             while (this.scheduler.IsRunning && !cancellationToken.IsCancellationRequested)
             {
-                await Task.Delay(50).AnyContext(); // TODO: try to cancel the running jobs
+                await Task.Delay(50, cancellationToken).AnyContext(); // TODO: try to cancel the running jobs
             }
         }
 

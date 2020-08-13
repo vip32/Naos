@@ -111,9 +111,9 @@
                 using (var ms = new MemoryStream())
                 {
                     int read;
-                    while ((read = await stream.ReadAsync(buffer, 0, buffer.Length).AnyContext()) > 0)
+                    while ((read = await stream.ReadAsync(buffer, 0, buffer.Length, cancellationToken).AnyContext()) > 0)
                     {
-                        await ms.WriteAsync(buffer, 0, read).AnyContext();
+                        await ms.WriteAsync(buffer, 0, read, cancellationToken).AnyContext();
                     }
 
                     return ms.ToArray();

@@ -49,11 +49,11 @@
 #pragma warning disable IDE0067 // Dispose objects before losing scope
 #pragma warning disable CA2000 // Dispose objects before losing scope
             var client = this.httpClientFactory.CreateClient("default");
-            await client.GetAsync("https://enjkefte1b0qq.x.pipedream.net/").AnyContext();
+            await client.GetAsync("https://enjkefte1b0qq.x.pipedream.net/", cancellationToken).AnyContext();
 
             return new CommandResponse<IEnumerable<Customer>>
             {
-                Result = await this.repository.FindAllAsync().AnyContext()
+                Result = await this.repository.FindAllAsync(cancellationToken: cancellationToken).AnyContext()
             };
         }
     }

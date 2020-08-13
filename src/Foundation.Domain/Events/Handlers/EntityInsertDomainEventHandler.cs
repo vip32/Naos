@@ -30,7 +30,7 @@
                     var entity = notification.Entity.As<IIdentifiable>();
                     entity.SetIdentifierHash();
                 }
-            }).AnyContext();
+            }, cancellationToken).AnyContext();
         }
     }
 }

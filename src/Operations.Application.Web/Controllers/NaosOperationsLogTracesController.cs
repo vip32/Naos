@@ -156,11 +156,11 @@
             if (entity.Message?.Length > 5 && entity.Message.Take(6).All(char.IsUpper))
             {
                 sb.Append($"<span style='color: #37CAEC;'>{entity.Message.Slice(0, 6)}</span>");
-                sb.Append(entity.Message.Slice(6)).Append(" (").Append(entity.SpanId).Append("/").Append(entity.ParentSpanId).Append(")&nbsp;");
+                sb.Append(entity.Message.Slice(6)).Append(" (").Append(entity.SpanId).Append('/').Append(entity.ParentSpanId).Append(")&nbsp;");
             }
             else
             {
-                sb.Append(entity.Message).Append(" (").Append(entity.SpanId).Append("/").Append(entity.ParentSpanId).Append(")&nbsp;");
+                sb.Append(entity.Message).Append(" (").Append(entity.SpanId).Append('/').Append(entity.ParentSpanId).Append(")&nbsp;");
             }
 
             sb.Append("<a target='blank' href='/naos/operations/logtraces/").Append(entity.Id).Append("'>*</a> ");

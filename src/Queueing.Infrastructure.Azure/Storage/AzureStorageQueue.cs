@@ -260,22 +260,22 @@
 
         protected override async Task<IQueueItem<TData>> DequeueWithIntervalAsync(CancellationToken cancellationToken)
         {
-            await this.EnsureQueueAsync().AnyContext();
+            await this.EnsureQueueAsync(cancellationToken).AnyContext();
             this.Logger.LogDebug($"{{LogKey:l}} queue item dequeue (queue={this.Options.QueueName})", LogKeys.Queueing);
 
-            var message = await this.queue.GetMessageAsync(this.Options.ProcessInterval, null, null).AnyContext();
+            var message = await this.queue.GetMessageAsync(this.Options.ProcessInterval, null, null, cancellationToken).AnyContext();
             if (message == null)
             {
                 while (message == null && !cancellationToken.IsCancellationRequested)
                 {
                     if (!cancellationToken.IsCancellationRequested)
                     {
-                        Task.Delay(this.Options.DequeueInterval, cancellationToken).Wait();
+                        Task.Delay(this.Options.DequeueInterval, cancellationToken).Wait(cancellationToken);
                     }
 
                     //try
                     //{
-                    message = await this.queue.GetMessageAsync(this.Options.ProcessInterval, null, null).AnyContext();
+                    message = await this.queue.GetMessageAsync(this.Options.ProcessInterval, null, null, cancellationToken).AnyContext();
                     //}
                     //catch (Exception ex)
                     //{
@@ -297,6 +297,7 @@
             EnsureArg.IsNotNull(handler, nameof(handler));
             var linkedCancellationToken = this.CreateLinkedTokenSource(cancellationToken);
 
+#pragma warning disable CA2016 // Forward the 'CancellationToken' parameter to methods that take one
             Task.Run(async () =>
             {
                 this.Logger.LogInformation($"{{LogKey:l}} processing started (queue={this.Options.QueueName}, type={this.GetType().PrettyName()})", args: new[] { LogKeys.Queueing });
@@ -349,6 +350,7 @@
                 this.Logger.LogDebug($"{{LogKey:l}} queue processing exiting (name={this.Options.QueueName}, cancellation={linkedCancellationToken.IsCancellationRequested})", LogKeys.Queueing);
             }, linkedCancellationToken.Token)
                 .ContinueWith(t => linkedCancellationToken.Dispose());
+#pragma warning restore CA2016 // Forward the 'CancellationToken' parameter to methods that take one
         }
 
         private IQueueItem<TData> HandleDequeue(CloudQueueMessage message)

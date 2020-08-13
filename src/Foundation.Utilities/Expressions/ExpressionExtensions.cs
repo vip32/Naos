@@ -21,7 +21,7 @@
 
         private sealed class ExpressionExpander : ExpressionVisitor
         {
-            private readonly Dictionary<ParameterExpression, Expression> replacementParams = null;
+            private readonly Dictionary<ParameterExpression, Expression> replacementParams;
 
             internal ExpressionExpander()
             {

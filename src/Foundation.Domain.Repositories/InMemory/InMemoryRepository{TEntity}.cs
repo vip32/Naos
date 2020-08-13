@@ -91,7 +91,7 @@
             CancellationToken cancellationToken = default)
         {
             return specification == null
-                ? await this.FindAllAsync(specifications: null, options: options).AnyContext()
+                ? await this.FindAllAsync(specifications: null, options: options, cancellationToken).AnyContext()
                 : await this.FindAllAsync(new[] { specification }, options, cancellationToken).AnyContext();
         }
 

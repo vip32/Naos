@@ -298,7 +298,7 @@
 
             try
             {
-                await this.managementClient.CreateQueueAsync(this.Options.AsQueueDescription()).AnyContext();
+                await this.managementClient.CreateQueueAsync(this.Options.AsQueueDescription(), cancellationToken).AnyContext();
             }
             catch (MessagingEntityAlreadyExistsException)
             {

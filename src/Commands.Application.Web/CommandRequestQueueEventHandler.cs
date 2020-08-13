@@ -54,7 +54,7 @@
                             await this.StoreCommand(request).AnyContext();
 
                             // TODO: use for new tracer scope request.Item.Data.ParentSpanId
-                            var response = await mediator.Send(request.Item.Data.Command).AnyContext(); // handler will be scoped too
+                            var response = await mediator.Send(request.Item.Data.Command, cancellationToken).AnyContext(); // handler will be scoped too
 
                             request.Item.Data.Completed = DateTimeOffset.UtcNow;
                             request.Item.Data.Status = CommandRequestStatus.Finished;

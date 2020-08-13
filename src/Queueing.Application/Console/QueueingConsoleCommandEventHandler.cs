@@ -47,7 +47,7 @@
         {
             if (request.Command.Echo)
             {
-                await this.queue.ProcessItemsAsync(true).AnyContext();
+                await this.queue.ProcessItemsAsync(true, cancellationToken).AnyContext();
 
                 for (var i = 1; i <= 5; i++)
                 {

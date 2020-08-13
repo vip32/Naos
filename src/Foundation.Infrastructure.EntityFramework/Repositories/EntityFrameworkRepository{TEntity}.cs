@@ -267,7 +267,7 @@
             return await this.Options.DbContext.Set<TEntity>()
                     .AsExpandable()
                     .WhereExpressions(expressions)
-                    .CountAsync().AnyContext();
+                    .CountAsync(cancellationToken).AnyContext();
         }
 
         private object TidyId(object value)

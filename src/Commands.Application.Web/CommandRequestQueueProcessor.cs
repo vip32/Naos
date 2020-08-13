@@ -28,7 +28,7 @@
         public async Task StartAsync(CancellationToken cancellationToken = default)
         {
             //this.logger.LogInformation("{LogKey:l} +++ hello from request command queue startup task", LogKeys.AppCommand);
-            await this.queue.ProcessItemsAsync(true).AnyContext(); // dequeue items > item is send with mediator > then handled by CommandRequestQueueEventHandler
+            await this.queue.ProcessItemsAsync(true, cancellationToken).AnyContext(); // dequeue items > item is send with mediator > then handled by CommandRequestQueueEventHandler
         }
 
         public Task ShutdownAsync(CancellationToken cancellationToken = default)

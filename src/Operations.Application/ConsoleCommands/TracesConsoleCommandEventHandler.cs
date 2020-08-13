@@ -28,7 +28,8 @@
 
                 var entities = await this.repository.FindAllAsync(
                     filterContext.GetSpecifications<LogTrace>().Insert(new Specification<LogTrace>(t => t.TrackType == "trace")),
-                    filterContext.GetFindOptions<LogTrace>()).AnyContext();
+                    filterContext.GetFindOptions<LogTrace>(),
+                    cancellationToken).AnyContext();
                 var nodes = Node<LogTrace>.ToHierarchy(entities, l => l.SpanId, l => l.ParentSpanId, true);
 
                 if (request.Command.Count > 0)

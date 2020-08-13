@@ -25,11 +25,11 @@
 
         public long? FileSizeLimitBytes { get; set; } //= 1000000; // 1000000 = 1 MB
 
-        public bool RollOnFileSizeLimit { get; set; } = false;
+        public bool RollOnFileSizeLimit { get; set; }
 
         public string RollingInterval { get; set; } = "Infinite"; // Year, Month, Day, Hour, Minute, Infinite
 
-        public bool Shared { get; set; } = false; // prevent multiple log files, true means slower due to write locks
+        public bool Shared { get; set; } // prevent multiple log files, true means slower due to write locks
 
         public int? FlushToDiskIntervalSeconds { get; set; }
     }

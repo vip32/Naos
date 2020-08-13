@@ -29,7 +29,8 @@
         public override async Task Process(IDomainEvent notification, CancellationToken cancellationToken)
         {
             await Task.Run(() =>
-            this.Logger.LogJournal(LogKeys.DomainEvent, $"[{notification.EventId}] send {notification.GetType().Name.SliceTill("DomainEvent")}", LogPropertyKeys.TrackSendDomainEvent)).AnyContext();
+                this.Logger.LogJournal(LogKeys.DomainEvent, $"[{notification.EventId}] send {notification.GetType().Name.SliceTill("DomainEvent")}", LogPropertyKeys.TrackSendDomainEvent),
+                cancellationToken).AnyContext();
         }
     }
 }

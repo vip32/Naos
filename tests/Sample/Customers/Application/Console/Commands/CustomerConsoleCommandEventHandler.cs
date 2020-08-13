@@ -31,7 +31,7 @@
                         Region = "West"
                     });
 
-                var response = await this.mediator.Send(command).AnyContext();
+                await this.mediator.Send(command, cancellationToken).AnyContext();
             }
 
             return true;
