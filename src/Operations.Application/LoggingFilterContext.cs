@@ -90,7 +90,7 @@
                     }
 
                     context.Criterias = context.Criterias.Where(c => !c.Name.SafeEquals("Epoch")); // filter epoch
-                    context.Criterias = context.Criterias.Insert(criterias);
+                    context.Criterias = context.Criterias.InsertRange(criterias);
                 }
             }
 

@@ -11,19 +11,19 @@
     using Naos.Foundation;
     using Naos.Foundation.Domain;
 
-    public class SeederStartupTask<TRepository, TEntity> : IStartupTask
+    public class SeederStartupTask<TEntity, TRepository> : IStartupTask
         where TRepository : IGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot
     {
         private readonly IServiceProvider serviceProvider;
-        private readonly ILogger<SeederStartupTask<TRepository, TEntity>> logger;
+        private readonly ILogger<SeederStartupTask<TEntity, TRepository>> logger;
 
         public SeederStartupTask(ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
         {
             EnsureArg.IsNotNull(serviceProvider, nameof(serviceProvider));
 
             this.serviceProvider = serviceProvider;
-            this.logger = loggerFactory.CreateLogger<SeederStartupTask<TRepository, TEntity>>();
+            this.logger = loggerFactory.CreateLogger<SeederStartupTask<TEntity, TRepository>>();
         }
 
         public TimeSpan? Delay { get; set; }

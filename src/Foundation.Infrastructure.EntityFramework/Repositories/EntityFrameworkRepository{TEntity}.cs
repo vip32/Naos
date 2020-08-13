@@ -76,8 +76,10 @@
             if (options?.HasOrders() == true)
             {
                 return await this.Options.DbContext.Set<TEntity>() // .AsAsyncEnumerable()
+                    .TrackChangesIf(options.TrackChanges)
                     .AsExpandable()
                     .WhereExpressions(expressions)
+                    .IncludeIf(options)
                     .SkipIf(options?.Skip)
                     .TakeIf(options?.Take)
                     .OrderByIf(options).ToListAsyncSafe(cancellationToken).AnyContext();
@@ -85,8 +87,10 @@
             else
             {
                 return await this.Options.DbContext.Set<TEntity>() // .AsAsyncEnumerable()
+                    .TrackChangesIf(options.TrackChanges)
                     .AsExpandable()
                     .WhereExpressions(expressions)
+                    .IncludeIf(options)
                     .SkipIf(options?.Skip)
                     .TakeIf(options?.Take).ToListAsyncSafe(cancellationToken).AnyContext();
             }

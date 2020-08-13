@@ -32,10 +32,10 @@
         /// Creates an instance of type <typeparamref name="T"/> by calling it's parameterless constructor.
         /// </summary>
         /// <returns>An instance of type <typeparamref name="T"/>.</returns>
-        public static T Create(IDictionary<string, object> properties)
+        public static T Create(IDictionary<string, object> propertyItems)
         {
             var instance = CreateFunc(); // without ctor, fast
-            SetProperties(instance, properties);
+            ReflectionHelper.SetProperties(instance, propertyItems);
             return instance;
         }
 
@@ -62,14 +62,14 @@
         ///  Creates an instance of the specified type <typeparamref name="T"/> using the constructor that best matches
         ///  the specified parameters.
         /// </summary>
-        /// <param name="properties"></param>
+        /// <param name="propertyItems"></param>
         /// <param name="parameters"></param>
-        public static T Create(IDictionary<string, object> properties, params object[] parameters)
+        public static T Create(IDictionary<string, object> propertyItems, params object[] parameters)
         {
             try
             {
                 var instance = Activator.CreateInstance(typeof(T), parameters) as T;
-                SetProperties(instance, properties);
+                ReflectionHelper.SetProperties(instance, propertyItems);
                 return instance;
             }
             catch (MissingMethodException)
@@ -106,14 +106,14 @@
         ///  Creates an instance of the specified type <typeparamref name="T"/> using the serviceprovider to
         ///  get instances for the constructor.
         /// </summary>
-        /// <param name="properties"></param>
+        /// <param name="propertyItems"></param>
         /// <param name="serviceProvider"></param>
-        public static T Create(IDictionary<string, object> properties, IServiceProvider serviceProvider)
+        public static T Create(IDictionary<string, object> propertyItems, IServiceProvider serviceProvider)
         {
             EnsureArg.IsNotNull(serviceProvider, nameof(serviceProvider));
 
             var instance = ActivatorUtilities.CreateInstance<T>(serviceProvider);
-            SetProperties(instance, properties);
+            ReflectionHelper.SetProperties(instance, propertyItems);
             return instance;
         }
 
@@ -121,32 +121,16 @@
         ///  Creates an instance of the specified type <typeparamref name="T"/> using the serviceprovider to
         ///  get instances for the constructor.
         /// </summary>
-        /// <param name="properties"></param>
+        /// <param name="propertyItems"></param>
         /// <param name="serviceProvider"></param>
         /// <param name="parameters"></param>
-        public static T Create(IDictionary<string, object> properties, IServiceProvider serviceProvider, params object[] parameters)
+        public static T Create(IDictionary<string, object> propertyItems, IServiceProvider serviceProvider, params object[] parameters)
         {
             EnsureArg.IsNotNull(serviceProvider, nameof(serviceProvider));
 
             var instance = ActivatorUtilities.CreateInstance<T>(serviceProvider, parameters);
-            SetProperties(instance, properties);
+            ReflectionHelper.SetProperties(instance, propertyItems);
             return instance;
-        }
-
-        private static void SetProperties(object instance, IDictionary<string, object> properties)
-        {
-            foreach (var propertyInfo in instance.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
-            {
-                foreach (var item in properties.Safe())
-                {
-                    var propertyType = Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType;
-
-                    if (item.Key.SafeEquals(propertyInfo.Name) && item.Value != null)
-                    {
-                        propertyInfo.SetValue(instance, item.Value.To(propertyType), null);
-                    }
-                }
-            }
         }
     }
 
@@ -177,16 +161,16 @@
         ///  the specified parameters.
         /// </summary>
         /// <param name="type"></param>
-        /// <param name="properties"></param>
+        /// <param name="propertyItems"></param>
         /// <param name="parameters"></param>
-        public static object Create(Type type, IDictionary<string, object> properties, params object[] parameters)
+        public static object Create(Type type, IDictionary<string, object> propertyItems, params object[] parameters)
         {
             EnsureArg.IsNotNull(type, nameof(type));
 
             try
             {
                 var instance = Activator.CreateInstance(type, parameters);
-                SetProperties(instance, properties);
+                ReflectionHelper.SetProperties(instance, propertyItems);
                 return instance;
             }
             catch (MissingMethodException)
@@ -214,32 +198,16 @@
         ///  get instances for the constructor.
         /// </summary>
         /// <param name="type"></param>
-        /// <param name="properties"></param>
+        /// <param name="propertyItems"></param>
         /// <param name="serviceProvider"></param>
-        public static object Create(Type type, IDictionary<string, object> properties, IServiceProvider serviceProvider)
+        public static object Create(Type type, IDictionary<string, object> propertyItems, IServiceProvider serviceProvider)
         {
             EnsureArg.IsNotNull(type, nameof(type));
             EnsureArg.IsNotNull(serviceProvider, nameof(serviceProvider));
 
             var instance = ActivatorUtilities.CreateInstance(serviceProvider, type);
-            SetProperties(instance, properties);
+            ReflectionHelper.SetProperties(instance, propertyItems);
             return instance;
-        }
-
-        private static void SetProperties(object instance, IDictionary<string, object> properties)
-        {
-            foreach (var propertyInfo in instance.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
-            {
-                foreach (var item in properties.Safe())
-                {
-                    var propertyType = Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType;
-
-                    if (item.Key.SafeEquals(propertyInfo.Name) && item.Value != null)
-                    {
-                        propertyInfo.SetValue(instance, item.Value.To(propertyType), null);
-                    }
-                }
-            }
         }
     }
 #pragma warning restore SA1402 // File may only contain a single class

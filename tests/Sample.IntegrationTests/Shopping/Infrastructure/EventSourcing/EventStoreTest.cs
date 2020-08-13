@@ -1,6 +1,7 @@
 ﻿namespace Naos.Sample.IntegrationTests.Shopping.Infrastructure
 {
     using System;
+    using System.Net;
     using System.Text;
     using System.Threading.Tasks;
     using EventStore.ClientAPI;
@@ -15,7 +16,14 @@
 
         public EventStoreTest()
         {
-            this.connection = EventStoreConnection.Create(new Uri("tcp://localhost:1113"), "naos.test");
+            this.connection = EventStoreConnection.Create(
+                ConnectionSettings.Create()
+                .EnableVerboseLogging()
+                .UseConsoleLogger()
+                .DisableTls()
+                .Build(),
+                new IPEndPoint(IPAddress.Loopback, 1113),
+                "naos.test");
             this.connection.ConnectAsync().Wait();
             this.streamName = $"TestAggregate-{Guid.NewGuid()}";
         }

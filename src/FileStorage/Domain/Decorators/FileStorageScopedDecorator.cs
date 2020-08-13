@@ -11,11 +11,11 @@
     {
         private readonly string pathPrefix;
 
-        public FileStorageScopedDecorator(string scope, IFileStorage decoratee)
+        public FileStorageScopedDecorator(string scope, IFileStorage inner)
         {
-            EnsureArg.IsNotNull(decoratee, nameof(decoratee));
+            EnsureArg.IsNotNull(inner, nameof(inner));
 
-            this.Decoratee = decoratee;
+            this.Inner = inner;
             this.Scope = scope?.Trim();
             this.pathPrefix = this.Scope != null ? string.Concat(this.Scope, "/") : string.Empty;
 
@@ -23,9 +23,9 @@
                 .Replace("{environment}", Environment.GetEnvironmentVariable(EnvironmentKeys.Environment)?.ToLower());
         }
 
-        public ISerializer Serializer => this.Decoratee.Serializer;
+        public ISerializer Serializer => this.Inner.Serializer;
 
-        private IFileStorage Decoratee { get; }
+        private IFileStorage Inner { get; }
 
         private string Scope { get; }
 
@@ -33,14 +33,14 @@
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
-            return this.Decoratee.GetFileStreamAsync(string.Concat(this.UpdatePathPrefix(this.pathPrefix), path), cancellationToken);
+            return this.Inner.GetFileStreamAsync(string.Concat(this.UpdatePathPrefix(this.pathPrefix), path), cancellationToken);
         }
 
         public async Task<FileInformation> GetFileInformationAsync(string path)
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
-            var file = await this.Decoratee.GetFileInformationAsync(string.Concat(this.UpdatePathPrefix(this.pathPrefix), path)).AnyContext();
+            var file = await this.Inner.GetFileInformationAsync(string.Concat(this.UpdatePathPrefix(this.pathPrefix), path)).AnyContext();
             if (file != null)
             {
                 file.Path = file.Path.Substring(this.pathPrefix.Length);
@@ -53,7 +53,7 @@
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
-            return this.Decoratee.ExistsAsync(string.Concat(this.pathPrefix, path));
+            return this.Inner.ExistsAsync(string.Concat(this.pathPrefix, path));
         }
 
         public Task<bool> SaveFileAsync(string path, Stream stream, CancellationToken cancellationToken = default)
@@ -61,7 +61,7 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
             EnsureArg.IsNotNull(stream, nameof(stream));
 
-            return this.Decoratee.SaveFileAsync(string.Concat(this.UpdatePathPrefix(this.pathPrefix), path), stream, cancellationToken);
+            return this.Inner.SaveFileAsync(string.Concat(this.UpdatePathPrefix(this.pathPrefix), path), stream, cancellationToken);
         }
 
         public Task<bool> RenameFileAsync(string path, string newPath, CancellationToken cancellationToken = default)
@@ -69,7 +69,7 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
             EnsureArg.IsNotNullOrEmpty(newPath, nameof(newPath));
 
-            return this.Decoratee.RenameFileAsync(string.Concat(this.UpdatePathPrefix(this.pathPrefix), path), string.Concat(this.pathPrefix, newPath), cancellationToken);
+            return this.Inner.RenameFileAsync(string.Concat(this.UpdatePathPrefix(this.pathPrefix), path), string.Concat(this.pathPrefix, newPath), cancellationToken);
         }
 
         public Task<bool> CopyFileAsync(string path, string targetPath, CancellationToken cancellationToken = default)
@@ -77,19 +77,19 @@
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
             EnsureArg.IsNotNullOrEmpty(targetPath, nameof(targetPath));
 
-            return this.Decoratee.CopyFileAsync(string.Concat(this.UpdatePathPrefix(this.pathPrefix), path), string.Concat(this.pathPrefix, targetPath), cancellationToken);
+            return this.Inner.CopyFileAsync(string.Concat(this.UpdatePathPrefix(this.pathPrefix), path), string.Concat(this.pathPrefix, targetPath), cancellationToken);
         }
 
         public Task<bool> DeleteFileAsync(string path, CancellationToken cancellationToken = default)
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
-            return this.Decoratee.DeleteFileAsync(string.Concat(this.UpdatePathPrefix(this.pathPrefix), path), cancellationToken);
+            return this.Inner.DeleteFileAsync(string.Concat(this.UpdatePathPrefix(this.pathPrefix), path), cancellationToken);
         }
 
         public Task<int> DeleteFilesAsync(string searchPattern = null, CancellationToken cancellationToken = default)
         {
-            return this.Decoratee.DeleteFilesAsync(string.Concat(this.UpdatePathPrefix(this.pathPrefix), searchPattern), cancellationToken);
+            return this.Inner.DeleteFilesAsync(string.Concat(this.UpdatePathPrefix(this.pathPrefix), searchPattern), cancellationToken);
         }
 
         public async Task<PagedResults> GetFileInformationsAsync(int pageSize = 100, string searchPattern = null, CancellationToken cancellationToken = default)
@@ -99,7 +99,7 @@
                 return PagedResults.EmptyResults;
             }
 
-            var unscopedResult = await this.Decoratee.GetFileInformationsAsync(pageSize, string.Concat(this.UpdatePathPrefix(this.pathPrefix), searchPattern), cancellationToken).AnyContext();
+            var unscopedResult = await this.Inner.GetFileInformationsAsync(pageSize, string.Concat(this.UpdatePathPrefix(this.pathPrefix), searchPattern), cancellationToken).AnyContext();
             foreach (var file in unscopedResult.Files)
             {
                 file.Path = file.Path.Substring(this.UpdatePathPrefix(this.pathPrefix).Length);
@@ -110,7 +110,7 @@
 
         public void Dispose()
         {
-            this.Decoratee?.Dispose();
+            this.Inner?.Dispose();
         }
 
         private async Task<NextPageResult> NextPage(PagedResults result)

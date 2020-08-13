@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.Customers.Application
+﻿namespace Naos.Sample.Customers.Presentation
 {
     using Microsoft.Extensions.DependencyInjection;
 

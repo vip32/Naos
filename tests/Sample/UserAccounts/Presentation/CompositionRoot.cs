@@ -1,4 +1,4 @@
-﻿namespace Naos.Sample.UserAccounts.Application
+﻿namespace Naos.Sample.UserAccounts.Presentation
 {
     using System;
     using EnsureThat;
@@ -7,7 +7,6 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    using Naos.Foundation;
     using Naos.Foundation.Application;
     using Naos.Foundation.Domain;
     using Naos.Foundation.Infrastructure;
@@ -64,7 +63,7 @@
                             sp.GetRequiredService<ILogger<UserVisitRepository>>(),
                             new RepositoryTenantDecorator<UserVisit>(
                                 "naos_sample_test", // TODO: resolve from runtime context
-                                new RepositorySoftDeleteDecorator<UserVisit>(
+                                new RepositoryStateSoftDeleteDecorator<UserVisit>(
                                     new EntityFrameworkRepository<UserVisit>(o => o
                                         .LoggerFactory(sp.GetRequiredService<ILoggerFactory>())
                                         .Mediator(sp.GetRequiredService<IMediator>())

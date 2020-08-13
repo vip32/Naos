@@ -2,7 +2,7 @@
 namespace Naos.Sample.IntegrationTests.Shopping.Infrastructure
 {
     using System;
-    using System.Collections.Generic;
+    using System.Net;
     using System.Threading;
     using System.Threading.Tasks;
     using EventStore.ClientAPI;
@@ -27,7 +27,14 @@ namespace Naos.Sample.IntegrationTests.Shopping.Infrastructure
             this.output = output;
             this.mediatorMock = new Mock<IMediator>();
             this.mediatorMock.Setup(x => x.Publish(It.IsAny<DomainEventBase<Guid>>(), It.IsAny<CancellationToken>())).Returns(It.IsAny<Task>());
-            this.connection = EventStoreConnection.Create(new Uri("tcp://localhost:1113"), "naos.test");
+            this.connection = EventStoreConnection.Create(
+                ConnectionSettings.Create()
+                .EnableVerboseLogging()
+                .UseConsoleLogger()
+                .DisableTls()
+                .Build(),
+                new IPEndPoint(IPAddress.Loopback, 1113),
+                "naos.test");
             this.connection.ConnectAsync().Wait();
             var eventStore = new EventStoreEventStore(this.connection);
             this.sut = new EventSourcingRepository<TestAggregate, Guid>(eventStore, this.mediatorMock.Object);

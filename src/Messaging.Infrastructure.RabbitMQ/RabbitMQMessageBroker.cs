@@ -159,7 +159,7 @@
                 {
                     var rabbitMQMessage = this.serializer.SerializeToBytes(message);
 
-                    this.logger.LogJournal(LogKeys.AppMessaging, $"message publish: {messageName} (id={{MessageId}}, origin={{MessageOrigin}}, size={rabbitMQMessage.Length.Bytes():#.##})", LogPropertyKeys.TrackPublishMessage, args: new[] { message.Id, message.Origin });
+                    this.logger.LogJournal(LogKeys.AppMessaging, $"message publish: {messageName} (id={{MessageId}}, origin={{MessageOrigin}}, size={rabbitMQMessage.Length.Bytes().ToString("#.##")})", LogPropertyKeys.TrackPublishMessage, args: new[] { message.Id, message.Origin });
                     this.logger.LogTrace(LogKeys.AppMessaging, message.Id, messageName, LogTraceNames.Message);
 
                     channel.ExchangeDeclare(exchange: this.options.ExchangeName, type: "direct");
@@ -365,7 +365,7 @@
 
                         message.Origin ??= eventArgs.BasicProperties.AppId;
 
-                        this.logger.LogJournal(LogKeys.AppMessaging, $"message processed: {eventArgs.BasicProperties.Type} (id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}}, size={eventArgs.Body.Length.Bytes():#.##})",
+                        this.logger.LogJournal(LogKeys.AppMessaging, $"message processed: {eventArgs.BasicProperties.Type} (id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}}, size={eventArgs.Body.Length.Bytes().ToString("#.##")})",
                             LogPropertyKeys.TrackReceiveMessage, args: new[] { message?.Id, message.Origin, message.Origin });
                         //this.logger.LogTrace(LogKeys.Messaging, message.Id, eventArgs.BasicProperties.Type, LogTraceNames.Message);
 

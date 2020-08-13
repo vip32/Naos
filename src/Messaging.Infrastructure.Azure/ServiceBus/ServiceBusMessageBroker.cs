@@ -135,7 +135,7 @@
                     serviceBusMessage.UserProperties.AddOrUpdate("SpanId", scope.Span.SpanId);
                 }
 
-                this.logger.LogJournal(LogKeys.AppMessaging, $"message publish: {messageName} (id={{MessageId}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes():#.##})", LogPropertyKeys.TrackPublishMessage, args: new[] { message.Id, message.Origin });
+                this.logger.LogJournal(LogKeys.AppMessaging, $"message publish: {messageName} (id={{MessageId}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes().ToString("#.##")})", LogPropertyKeys.TrackPublishMessage, args: new[] { message.Id, message.Origin });
                 this.logger.LogTrace(LogKeys.AppMessaging, message.Id, messageName, LogTraceNames.Message);
 
                 var policy = Policy.Handle<Exception>()
@@ -265,7 +265,7 @@
                             message.Origin = serviceBusMessage.UserProperties.ContainsKey("Origin") ? serviceBusMessage.UserProperties["Origin"] as string : string.Empty;
                         }
 
-                        logger.LogJournal(LogKeys.AppMessaging, $"message processed: {serviceBusMessage.Label} (id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes():#.##})",
+                        logger.LogJournal(LogKeys.AppMessaging, $"message processed: {serviceBusMessage.Label} (id={{MessageId}}, service={{Service}}, origin={{MessageOrigin}}, size={serviceBusMessage.Body.Length.Bytes().ToString("#.##")})",
                             LogPropertyKeys.TrackReceiveMessage, args: new[] { message?.Id, messageScope, message.Origin });
                         logger.LogTrace(LogKeys.AppMessaging, message.Id, serviceBusMessage.Label, LogTraceNames.Message);
 

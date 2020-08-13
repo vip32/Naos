@@ -6,6 +6,7 @@
     using EnsureThat;
     using Microsoft.Extensions.Logging;
     using Naos.Foundation;
+    using Naos.Foundation.Domain;
     using Naos.JobScheduling.Domain;
     using Naos.Queueing.Domain;
     using Naos.Sample.Countries.Domain;
@@ -15,14 +16,14 @@
     {
         private const string LogKey = "EXPORT";
         private readonly ILogger<CountriesExportJob> logger;
-        private readonly ICountryRepository repository;
+        private readonly IGenericRepository<Country> repository;
         private readonly IQueue<CountriesExportData> queue;
         private readonly ITracer tracer;
 
         public CountriesExportJob(
             ILogger<CountriesExportJob> logger,
             ITracer tracer,
-            ICountryRepository repository,
+            IGenericRepository<Country> repository,
             IQueue<CountriesExportData> queue)
         {
             EnsureArg.IsNotNull(logger, nameof(logger));

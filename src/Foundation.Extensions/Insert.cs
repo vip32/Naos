@@ -44,23 +44,39 @@
         }
 
         /// <summary>
-        /// Adds the items to the result list at the given index (pos).
+        /// Also adds the items to the result list.
         /// </summary>
         /// <typeparam name="T">the source.</typeparam>
         /// <param name="source">the source collection.</param>
         /// <param name="items">The items to add to the result.</param>
         /// <param name="index">the index at which the item should inserted.</param>
-        public static IEnumerable<T> Insert<T>(
+        /// <returns></returns>
+        public static IEnumerable<T> InsertRange<T>(
             this IEnumerable<T> source,
             IEnumerable<T> items,
             int index = 0)
         {
-            foreach (var item in items.Safe().Reverse())
+            if (items == null)
             {
-                source = source.Insert(item, index);
+                return source;
             }
 
-            return source;
+            if (source == null)
+            {
+                return new List<T>(items);
+            }
+
+            var result = new List<T>(source);
+            if (index >= 0)
+            {
+                result.InsertRange(index, items);
+            }
+            else
+            {
+                result.AddRange(items);
+            }
+
+            return result;
         }
     }
 }

@@ -17,11 +17,12 @@ namespace Naos.Sample.Application.Web
     using Naos.JobScheduling.Domain;
     using Naos.Messaging.Domain;
     using Naos.Queueing.Domain;
-    using Naos.Sample.Catalogs.Application;
+    using Naos.Sample.Catalogs.Presentation;
     using Naos.Sample.Countries.Application;
     using Naos.Sample.Customers.Application;
-    using Naos.Sample.Inventory.Application;
-    using Naos.Sample.UserAccounts.Application;
+    using Naos.Sample.Customers.Presentation;
+    using Naos.Sample.Inventory.Presentation;
+    using Naos.Sample.UserAccounts.Presentation;
     using Naos.Tracing.Domain;
     using NSwag.AspNetCore;
 
@@ -64,16 +65,16 @@ namespace Naos.Sample.Application.Web
                         .AddBehavior<JournalCommandBehavior>()
                         .AddBehavior<FileStoragePersistCommandBehavior>()
                         .AddEndpoints(o => o
-                            .Post<CreateCustomerCommand>(
+                            .MapPost<CreateCustomerCommand>(
                                 "api/commands/customers/create",
                                 onSuccessStatusCode: HttpStatusCode.Created,
                                 groupName: "Customers",
                                 onSuccess: (cmd, ctx) => ctx.Response.Location($"api/customers/{cmd.Customer.Id}"))
-                            .Get<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>(
+                            .MapGet<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>(
                                 "api/commands/customers/active",
                                 groupName: "Customers")
-                            .Get<GetCustomerByIdQuery, Customers.Domain.Customer>(
-                                "api/commands/customers/{CustomerId}", // TODO: swagger ui has a problem creating the correct tryout url for the actual customerid
+                            .MapGet<GetCustomerByIdQuery, Customers.Domain.Customer>(
+                                "api/commands/customers/{CustomerId}", // TODO: swagger ui has a problem creating the correct try it out url for the actual customerid
                                 groupName: "Customers")
                             //.UseInMemoryStorage()
                             .UseAzureBlobStorage()
@@ -82,8 +83,8 @@ namespace Naos.Sample.Application.Web
                             .UseAzureStorageQueue()
                             //.UseAzureServiceBusQueue()
                             //.UseRabbitMQQueue()
-                            .GetQueued<PingCommand>("api/commands/queue/ping")
-                            .GetQueued<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>(
+                            .MapGetQueued<PingCommand>("api/commands/queue/ping")
+                            .MapGetQueued<GetActiveCustomersQuery, IEnumerable<Customers.Domain.Customer>>(
                                 "api/commands/queue/customers/active",
                                 groupName: "Customers")))
                     .AddOperations(o => o

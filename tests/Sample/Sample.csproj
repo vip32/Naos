@@ -8,21 +8,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Humanizer.Core" Version="2.8.11" />
+    <PackageReference Include="Humanizer.Core" Version="2.8.26" />
     <PackageReference Include="FluentValidation" Version="8.6.2" />
     <PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="3.2.0" />
     <PackageReference Include="AspNetCore.HealthChecks.DocumentDb" Version="3.1.1" />
     <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="3.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="3.1.4" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.4" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="3.1.4" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.4" />
-    <PackageReference Include="AspNetCore.HealthChecks.MongoDb" Version="3.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.4">
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="3.1.5" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.5" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="3.1.5" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.5" />
+    <PackageReference Include="AspNetCore.HealthChecks.MongoDb" Version="3.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Scrutor" Version="3.2.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,6 +48,10 @@
     <ProjectReference Include="..\..\src\ServiceContext.Application\ServiceContext.Application.csproj" />
     <ProjectReference Include="..\..\src\ServiceDiscovery.Application\ServiceDiscovery.Application.csproj" />
     <ProjectReference Include="..\..\src\Tracing.Domain\Tracing.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Catalogs\Application\" />
   </ItemGroup>
 
 </Project>

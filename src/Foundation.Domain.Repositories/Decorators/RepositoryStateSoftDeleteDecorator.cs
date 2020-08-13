@@ -18,18 +18,23 @@
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
     /// <seealso cref="Repositories.IGenericRepository{TEntity}" />
-    public class RepositorySoftDeleteDecorator<TEntity> : IGenericRepository<TEntity>
+    public class RepositoryStateSoftDeleteDecorator<TEntity> : IGenericRepository<TEntity>
         where TEntity : class, IEntity, IAggregateRoot, IStateEntity
     {
-        private readonly IGenericRepository<TEntity> decoratee;
+        private readonly IGenericRepository<TEntity> inner;
         private readonly ISpecification<TEntity> specification;
 
-        public RepositorySoftDeleteDecorator(IGenericRepository<TEntity> decoratee)
+        public RepositoryStateSoftDeleteDecorator(IGenericRepository<TEntity> inner)
+            : this(inner, true)
         {
-            EnsureArg.IsNotNull(decoratee, nameof(decoratee));
+        }
 
-            this.decoratee = decoratee;
-            this.specification = new Specification<TEntity>(e => e.State.Deleted != true);
+        public RepositoryStateSoftDeleteDecorator(IGenericRepository<TEntity> inner, bool excludeDeleted)
+        {
+            EnsureArg.IsNotNull(inner, nameof(inner));
+
+            this.specification = excludeDeleted ? new Specification<TEntity>(e => e.State.Deleted != true) : null;
+            this.inner = inner;
         }
 
         public async Task<RepositoryActionResult> DeleteAsync(object id)
@@ -55,55 +60,58 @@
 
         public async Task<RepositoryActionResult> DeleteAsync(TEntity entity)
         {
-            if (entity?.Id.IsDefault() != false)
-            {
-                return RepositoryActionResult.None;
-            }
-
-            return await this.DeleteAsync(entity.Id).AnyContext();
+            return await this.DeleteAsync(entity?.Id).AnyContext();
         }
 
         public async Task<bool> ExistsAsync(object id)
         {
-            return await this.decoratee.ExistsAsync(id).AnyContext();
+            var entity = await this.FindOneAsync(id).AnyContext();
+            return entity != null && this.specification.IsSatisfiedBy(entity);
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            return await this.FindAllAsync(new List<ISpecification<TEntity>>(), options, cancellationToken).AnyContext();
+            return await this.FindAllAsync(
+                new List<ISpecification<TEntity>>(),
+                options,
+                cancellationToken).AnyContext();
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            return await this.FindAllAsync(new List<ISpecification<TEntity>>(new[] { specification }), options, cancellationToken).AnyContext();
+            return await this.FindAllAsync(
+                new List<ISpecification<TEntity>>(new[] { specification }),
+                options,
+                cancellationToken).AnyContext();
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
-            return await this.decoratee.FindAllAsync(
+            return await this.inner.FindAllAsync(
                 new[] { this.specification }.Concat(specifications.Safe()),
-                options, cancellationToken).AnyContext();
+                options,
+                cancellationToken).AnyContext();
         }
 
         public async Task<TEntity> FindOneAsync(object id)
         {
-            var entity = await this.decoratee.FindOneAsync(id).AnyContext();
-            return this.specification.IsSatisfiedBy(entity) ? entity : null;
+            var entity = await this.inner.FindOneAsync(id).AnyContext();
+            return entity != null && this.specification.IsSatisfiedBy(entity) ? entity : null;
         }
 
         public async Task<TEntity> InsertAsync(TEntity entity)
         {
-            return await this.decoratee.InsertAsync(entity).AnyContext();
+            return await this.inner.InsertAsync(entity).AnyContext();
         }
 
         public async Task<TEntity> UpdateAsync(TEntity entity)
         {
-            return await this.decoratee.UpdateAsync(entity).AnyContext();
+            return await this.inner.UpdateAsync(entity).AnyContext();
         }
 
         public async Task<(TEntity entity, RepositoryActionResult action)> UpsertAsync(TEntity entity)
         {
-            return await this.decoratee.UpsertAsync(entity).AnyContext();
+            return await this.inner.UpsertAsync(entity).AnyContext();
         }
 
         /// <summary>
@@ -112,7 +120,9 @@
         /// <param name="cancellationToken">The cancellation token.</param>
         public async Task<int> CountAsync(CancellationToken cancellationToken = default)
         {
-            return await this.decoratee.CountAsync(cancellationToken).AnyContext();
+            return await this.CountAsync(
+                Enumerable.Empty<ISpecification<TEntity>>(),
+                cancellationToken).AnyContext();
         }
 
         /// <summary>
@@ -122,7 +132,9 @@
         /// <param name="cancellationToken">The cancellation token.</param>
         public async Task<int> CountAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
         {
-            return await this.decoratee.CountAsync(specification, cancellationToken).AnyContext();
+            return await this.CountAsync(
+                new[] { specification },
+                cancellationToken).AnyContext();
         }
 
         /// <summary>
@@ -132,7 +144,9 @@
         /// <param name="cancellationToken">The cancellation token.</param>
         public async Task<int> CountAsync(IEnumerable<ISpecification<TEntity>> specifications, CancellationToken cancellationToken = default)
         {
-            return await this.decoratee.CountAsync(specifications, cancellationToken).AnyContext();
+            return await this.inner.CountAsync(
+                new[] { this.specification }.Concat(specifications.Safe()),
+                cancellationToken).AnyContext();
         }
     }
 }
