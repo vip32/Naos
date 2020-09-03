@@ -2,7 +2,6 @@
 {
     using System;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.DependencyInjection;
     using Naos.Foundation.Infrastructure;
 
     public static class ServiceCollectionExtensions
@@ -13,25 +12,25 @@
         /// <typeparam name="TContext">The instance of <see cref="DbContext"/> to register.</typeparam>
         /// <param name="services">The instance of the <see cref="IServiceCollection"/>.</param>
         /// <param name="options">Optional access to the <see cref="DbContextOptions{TContext}"/>.</param>
-        /// <param name="contextAndOptionsLifetime">Set the <see cref="ServiceLifetime"/> of the factory and options.</param>
+        /// <param name="lifetime">Set the <see cref="ServiceLifetime"/> of the factory and options.</param>
         /// <returns>The registered <see cref="IServiceCollection"/>.</returns>
         public static IServiceCollection AddDbContextFactory<TContext>(
             this IServiceCollection services,
             Action<DbContextOptionsBuilder> options = null,
-            ServiceLifetime contextAndOptionsLifetime = ServiceLifetime.Singleton)
+            ServiceLifetime lifetime = ServiceLifetime.Singleton)
             where TContext : DbContext
         {
             // instantiate with the correctly scoped provider
             services.Add(new ServiceDescriptor(
                 typeof(IDbContextFactory<TContext>),
                 sp => new DbContextFactory<TContext>(sp),
-                contextAndOptionsLifetime));
+                lifetime));
 
             // dynamically run the builder on each request
             services.Add(new ServiceDescriptor(
                 typeof(DbContextOptions<TContext>),
                 sp => GetOptions<TContext>(options, sp),
-                contextAndOptionsLifetime));
+                lifetime));
 
             return services;
         }
