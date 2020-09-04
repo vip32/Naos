@@ -63,7 +63,7 @@
                     // default handler for exception
                     var details = new ProblemDetails
                     {
-                        Title = "An unhandled error occurred while processing the request",
+                        Title = "An unhandled error has occurred while processing the request",
                         Status = 500,
                         Instance = instance,
                         Detail = this.options.HideDetails ? null : ex.Demystify().ToString(),
