@@ -8,6 +8,8 @@
     <Copyright>Copyright 2020 (c) vip32. All rights reserved.</Copyright>
     <PackageProjectUrl>https://github.com/vip32/Naos</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <DebugType>embedded</DebugType>
+    <EmbedAllSources>true</EmbedAllSources>
 
     <!--sourcelink https://github.com/dotnet/sourcelink -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
