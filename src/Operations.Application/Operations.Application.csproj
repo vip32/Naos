@@ -20,7 +20,7 @@
     <PackageReference Include="Serilog.Sinks.Seq" Version="4.0.0" />
     <PackageReference Include="Ben.Demystifier" Version="0.1.6" />
     <PackageReference Include="Scrutor" Version="3.2.1" />
-    <PackageReference Include="MediatR" Version="8.0.1" />
+    <PackageReference Include="MediatR" Version="9.0.0" />
  </ItemGroup>
 
   <ItemGroup>
