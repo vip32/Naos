@@ -44,8 +44,6 @@
         /// <param name="context">The <see cref="HttpContext"/> for the current request.</param>
         public async Task Invoke(HttpContext context, IServiceProvider serviceProvider)
         {
-#if NETCOREAPP3_1
-
             if (context.User?.Identity?.IsAuthenticated == false
                 && !context.Request.Path.ToString().EqualsPatternAny(this.options.PathBlackListPatterns))
             {
@@ -55,9 +53,6 @@
             {
                 await this.next(context).AnyContext();
             }
-#else
-            await this.next(context).AnyContext();
-#endif
         }
     }
 }

@@ -2,9 +2,7 @@
 {
     using System.Diagnostics;
     using EnsureThat;
-#if NETCOREAPP3_1
     using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-#endif
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
@@ -42,7 +40,6 @@
             return naosOptions;
         }
 
-#if NETCOREAPP3_1
         public static NaosApplicationContextOptions UseOperationsHealth(
             this NaosApplicationContextOptions naosOptions)
         {
@@ -78,6 +75,5 @@
 
             return naosOptions;
         }
-#endif
     }
 }

@@ -74,12 +74,10 @@
 
             //mvcBuilder.AddJsonOptions(o => o.AddDefaultJsonSerializerSettings(options.JsonSerializerSettings));
             mvcBuilder.AddControllersAsServices(); // needed to resolve controllers through di https://andrewlock.net/controller-activation-and-dependency-injection-in-asp-net-core-mvc/
-#if NETCOREAPP3_1
             var serializerSettings = DefaultJsonSerializerSettings.Create();
             naosOptions.Context.Services.AddControllers().AddNewtonsoftJson(x => SetSerializerSettings(x, serializerSettings));
             naosOptions.Context.Services.AddControllersWithViews().AddNewtonsoftJson(x => SetSerializerSettings(x, serializerSettings));
             naosOptions.Context.Services.AddRazorPages().AddNewtonsoftJson(x => SetSerializerSettings(x, serializerSettings));
-#endif
 
             return naosOptions;
         }
@@ -201,7 +199,6 @@
             return naosOptions;
         }
 
-#if NETCOREAPP3_1
         private static void SetSerializerSettings(MvcNewtonsoftJsonOptions o, JsonSerializerSettings jsonSettings)
         {
             o.SerializerSettings.DefaultValueHandling = jsonSettings.DefaultValueHandling;
@@ -211,6 +208,5 @@
             o.SerializerSettings.TypeNameHandling = jsonSettings.TypeNameHandling;
             o.SerializerSettings.Converters = jsonSettings.Converters;
         }
-#endif
     }
 }

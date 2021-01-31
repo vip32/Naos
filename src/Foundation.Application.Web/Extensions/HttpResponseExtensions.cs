@@ -18,7 +18,6 @@
         {
             response.ContentType = contentType.ToValue();
 
-#if NETCOREAPP3_1
             var writer = new HttpResponseStreamWriter(response.Body, Encoding.UTF8);
             using (var jsonWriter = new JsonTextWriter(writer))
             {
@@ -38,27 +37,6 @@
 #pragma warning disable CA2012 // Use ValueTasks correctly
             writer.DisposeAsync(); // mitigates 'Synchronous operations are disallowed' issue (netcore3) https://github.com/aspnet/Announcements/issues/342
 #pragma warning restore CA2012 // Use ValueTasks correctly
-#endif
-
-#if NETSTANDARD2_0
-            using (var writer = new HttpResponseStreamWriter(response.Body, Encoding.UTF8))
-            {
-                using (var jsonWriter = new JsonTextWriter(writer))
-                {
-                    jsonWriter.CloseOutput = false;
-                    jsonWriter.AutoCompleteOnClose = false;
-
-                    if (settings == null)
-                    {
-                        DefaultSerializer.Serialize(jsonWriter, content);
-                    }
-                    else
-                    {
-                        JsonSerializer.Create(DefaultJsonSerializerSettings.Create()).Serialize(jsonWriter, content);
-                    }
-                }
-            }
-#endif
         }
 
         public static Task Location(this HttpResponse source, string location = null)

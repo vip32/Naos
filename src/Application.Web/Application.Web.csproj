@@ -7,26 +7,20 @@
     <Description>A mildly opiniated modern cloud service architecture blueprint + reference implementation. [Meta Package]</Description>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <ProjectReference Include="..\Foundation.Application.Web.Startup.EntityFramework\Application.Web.Startup.EntityFramework.csproj" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.11" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
-  </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.11" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.11" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.2" />
+    <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />-->
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
     <PackageReference Include="MediatR" Version="9.0.0" />
     <PackageReference Include="NSwag.Annotations" Version="13.10.1" />
     <PackageReference Include="NSwag.Generation" Version="13.10.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Foundation.Application.Web.Startup.EntityFramework\Application.Web.Startup.EntityFramework.csproj" />
     <ProjectReference Include="..\Authentication.Application.Web\Authentication.Application.Web.csproj" />
     <ProjectReference Include="..\Commands.Application.Web\Commands.Application.Web.csproj" />
     <ProjectReference Include="..\Commands.Application.Web.Azure\Commands.Application.Web.Azure.csproj" />

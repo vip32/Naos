@@ -22,7 +22,7 @@
         {
             // instantiate with the correctly scoped provider
             services.Add(new ServiceDescriptor(
-                typeof(IDbContextFactory<TContext>),
+                typeof(Naos.Foundation.Infrastructure.IDbContextFactory<TContext>), // TODO: or user Microsoft.EntityFrameworkCore.IDbContextFactory
                 sp => new DbContextFactory<TContext>(sp),
                 lifetime));
 

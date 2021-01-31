@@ -6,24 +6,19 @@
     <RootNamespace>Naos.ServiceDiscovery.Application</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+  <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
-  </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="AspNetCore.HealthChecks.Uris" Version="3.1.2" />
-    <PackageReference Include="microsoft.Extensions.Configuration.Binder" Version="3.1.11" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.11" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="3.1.11" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.11" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.11" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.11" />
+    <PackageReference Include="AspNetCore.HealthChecks.Uris" Version="5.0.1" />
+    <PackageReference Include="microsoft.Extensions.Configuration.Binder" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="5.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
     <PackageReference Include="NSwag.Annotations" Version="13.10.1" />
-    <!--<PackageReference Include="Microsoft.Extensions.Options" Version="2.2.0" />-->
   </ItemGroup>
 
   <ItemGroup>

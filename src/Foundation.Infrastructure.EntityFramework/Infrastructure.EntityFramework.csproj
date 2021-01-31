@@ -6,22 +6,13 @@
     <RootNamespace>Naos.Foundation.Infrastructure</RootNamespace>
   </PropertyGroup>
 
-  <!--<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.2.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="2.2.6" />
-  </ItemGroup>-->
-
-  <!--<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">-->
   <ItemGroup>
-    <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="3.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.11" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.11" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.11" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="3.1.11" />
+    <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="5.0.22" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="5.0.2" />
   </ItemGroup>
-  <!--</ItemGroup>-->
 
   <ItemGroup>
     <ProjectReference Include="..\Foundation.Domain.Repositories\Domain.Repositories.csproj" />

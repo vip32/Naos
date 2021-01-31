@@ -35,7 +35,9 @@
                 return;
             }
 
+#pragma warning disable SYSLIB0011 // Type or member is obsolete
             this.formatter.Serialize(output, value);
+#pragma warning restore SYSLIB0011 // Type or member is obsolete
         }
 
         /// <summary>
@@ -51,7 +53,9 @@
             }
 
             input.Position = 0;
+#pragma warning disable SYSLIB0011 // Type or member is obsolete
             return this.formatter.Deserialize(input);
+#pragma warning restore SYSLIB0011 // Type or member is obsolete
         }
 
         /// <summary>
@@ -68,7 +72,9 @@
             }
 
             input.Position = 0;
+#pragma warning disable SYSLIB0011 // Type or member is obsolete
             return (T)this.formatter.Deserialize(input) as T;
+#pragma warning restore SYSLIB0011 // Type or member is obsolete
         }
     }
 }

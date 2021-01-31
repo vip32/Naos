@@ -6,17 +6,12 @@
     <RootNamespace>Naos.Application.Exceptions.Web</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+  <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Core" Version="2.2.0" />
-  </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="9.4.0" />
+    <PackageReference Include="FluentValidation" Version="9.5.0" />
     <PackageReference Include="Ben.Demystifier" Version="0.3.0" />
     <PackageReference Include="Scrutor" Version="3.3.0" />
   </ItemGroup>

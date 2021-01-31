@@ -127,7 +127,9 @@
             {
                 var serializer = new BinaryFormatter();
                 ms = new MemoryStream(buffer);
+#pragma warning disable SYSLIB0011 // Type or member is obsolete
                 instance = serializer.Deserialize(ms);
+#pragma warning restore SYSLIB0011 // Type or member is obsolete
             }
             catch when (!throwExceptions)
             {

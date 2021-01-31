@@ -107,10 +107,6 @@
                 return null;
             }
 
-            //#if NETSTANDARD2_0
-            //            return this.Options.Mapper.Map<TEntity>(await this.Options.DbContext.Set<TDestination>().FindAsync(this.TryParseGuid(id)).AnyContext());
-            //#endif
-
             return this.Options.Mapper.Map<TEntity>(await this.Options.DbContext.Set<TDestination>()
                 .FindAsync(this.TidyId(id)).ConfigureAwait(false));
         }
