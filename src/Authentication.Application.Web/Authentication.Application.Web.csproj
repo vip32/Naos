@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
+    <TargetFramework>net5.0</TargetFramework>
     <AssemblyName>Naos.Authentication.Application.Web</AssemblyName>
     <RootNamespace>Naos.Authentication.Application.Web</RootNamespace>
   </PropertyGroup>
