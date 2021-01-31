@@ -16,9 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="8.6.2" />
-    <PackageReference Include="Ben.Demystifier" Version="0.1.6" />
-    <PackageReference Include="Scrutor" Version="3.2.1" />
+    <PackageReference Include="FluentValidation" Version="9.4.0" />
+    <PackageReference Include="Ben.Demystifier" Version="0.3.0" />
+    <PackageReference Include="Scrutor" Version="3.3.0" />
   </ItemGroup>
 
   <ItemGroup>

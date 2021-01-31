@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EventStore.Client" Version="20.6.0" />
-    <PackageReference Include="MediatR" Version="8.0.1" />
+    <PackageReference Include="EventStore.Client" Version="20.10.0" />
+    <PackageReference Include="MediatR" Version="9.0.0" />
     <PackageReference Include="SqlStreamStore.MsSql" Version="1.2.0" />
   </ItemGroup>
 
