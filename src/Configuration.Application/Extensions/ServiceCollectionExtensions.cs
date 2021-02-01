@@ -140,7 +140,7 @@
                 .SelectMany(l => l.GetDefaultAssemblyNames(DependencyContext.Default))
                 .Where(a => !a.Name.EqualsPatternAny(assemblyBlackListPatterns))
                 .Select(Assembly.Load)
-                .Where(a => !a.GlobalAssemblyCache)
+                //.Where(a => !a.GlobalAssemblyCache)
                 .ToArray();
 
             return services.AddMediatR(assemblies);

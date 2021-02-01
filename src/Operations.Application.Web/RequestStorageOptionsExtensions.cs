@@ -64,7 +64,7 @@
 
                 options.Context.Services
                     .AddHealthChecks()
-                        .AddAzureBlobStorage(connectionString, containerName, "operations-requeststorage-blobstorage", tags: new[] { "naos" });
+                        .AddAzureBlobStorage(connectionString, containerName, name: "operations-requeststorage-blobstorage", tags: new[] { "naos" });
             }
 
             return options;
