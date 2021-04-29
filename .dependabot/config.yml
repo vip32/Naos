@@ -1,7 +1,0 @@
-# https://dependabot.com/docs/config-file/
-version: 1
-update_configs:
-  - package_manager: "dotnet:nuget"
-    directory: "/"
-    update_schedule: "weekly"
-    target_branch: "develop"
