@@ -14,7 +14,7 @@
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="5.0.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
-    <PackageReference Include="NSwag.Annotations" Version="13.10.1" />
+    <PackageReference Include="NSwag.Annotations" Version="13.11.1" />
   </ItemGroup>
 
   <ItemGroup>
