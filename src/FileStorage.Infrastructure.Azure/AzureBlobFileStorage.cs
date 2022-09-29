@@ -70,18 +70,17 @@
             }
             catch (Exception)
             {
-                // TODO: log?
-                return null;
+                return null; // TODO: log?
             }
         }
 
-        public Task<bool> ExistsAsync(string path)
+        public async Task<bool> ExistsAsync(string path)
         {
             EnsureArg.IsNotNullOrEmpty(path, nameof(path));
 
             this.Initialize();
             var blockBlob = this.container.GetBlockBlobReference(path);
-            return blockBlob.ExistsAsync();
+            return await blockBlob.ExistsAsync().AnyContext();
         }
 
         public async Task<bool> SaveFileAsync(string path, Stream stream, CancellationToken cancellationToken = default)

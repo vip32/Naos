@@ -28,11 +28,10 @@
     "statusBarItem.hoverBackground": "#2f7c47",
     "statusBar.foreground": "#e7e7e7",
     "activityBar.activeBackground": "#2f7c47",
-    "editorGroup.border": "#2f7c47",
-    "panel.border": "#2f7c47",
-    "sideBar.border": "#2f7c47",
-    "statusBar.border": "#215732",
-    "titleBar.border": "#215732"
+    "commandCenter.border": "#e7e7e799",
+    "sash.hoverBorder": "#2f7c47",
+    "statusBarItem.remoteBackground": "#215732",
+    "statusBarItem.remoteForeground": "#e7e7e7"
   },
   "peacock.color": "#215732",
   "cSpell.ignoreWords": [
@@ -44,5 +43,6 @@
   "cSpell.words": [
     "Shouldly",
     "Xunit"
-  ]
+  ],
+  "sarif-viewer.connectToGithubCodeScanning": "off"
 }
