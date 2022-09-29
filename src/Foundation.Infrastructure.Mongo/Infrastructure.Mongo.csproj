@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <AssemblyName>Naos.Foundation.Infrastructure.Mongo</AssemblyName>
     <RootNamespace>Naos.Foundation.Infrastructure</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Humanizer.Core" Version="2.8.26" />
-    <PackageReference Include="MediatR" Version="8.0.1" />
-    <PackageReference Include="MongoDB.Driver" Version="2.10.4" />
+    <PackageReference Include="MediatR" Version="9.0.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.11.6" />
   </ItemGroup>
 
   <ItemGroup>

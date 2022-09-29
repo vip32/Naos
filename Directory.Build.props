@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>9.0</LangVersion>
     <!--package-->
     <Authors>vip32</Authors>
     <Description>A mildly opiniated modern cloud service architecture blueprint + reference implementation.</Description>
@@ -28,19 +28,24 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors></WarningsAsErrors>
     <CodeAnalysisRuleSet></CodeAnalysisRuleSet>
-    <UseSharedCompilation>true</UseSharedCompilation>   <!--roslyn build speed-->
+    <UseSharedCompilation>true</UseSharedCompilation> <!--roslyn build speed-->
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Net.Compilers" Version="3.7.0" />  <!--c#8 roslyn --> <!-- TODO: https://developercommunity.visualstudio.com/content/problem/842373/microsoftnetcompilers-is-only-supported-on-msbuild.html-->
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.7.0" />  <!--c#8 roslyn -->
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" >
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3" >
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="EnsureThatCore" Version="1.0.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SecurityCodeScan" Version="3.5.3" PrivateAssets="all" />     <!--https://security-code-scan.github.io/-->
+    <PackageReference Include="SecurityCodeScan" Version="3.5.3" PrivateAssets="all" > <!--https://security-code-scan.github.io/-->
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <!--<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-19351-01" PrivateAssets="All"/>-->
     <!--<PackageReference Include="Microsoft.SourceLink.Vsts.Git" Version="1.0.0-beta2-19351-01" PrivateAssets="All"/>-->
   </ItemGroup>

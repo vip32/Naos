@@ -71,7 +71,7 @@
 
             optionsAction?.Invoke(new NaosServicesContextOptions(context));
 
-            AddConfigurationHealthChecks(services, configuration);
+            //AddConfigurationHealthChecks(services, configuration);
             LogStartupMessages(services, context);
 
             return context;
@@ -129,20 +129,20 @@
             }
         }
 
-        private static void AddConfigurationHealthChecks(IServiceCollection services, IConfiguration configuration)
-        {
-            if (configuration[ConfigurationKeys.AzureKeyVaultEnabled].ToBool()
-                && !configuration[ConfigurationKeys.AzureKeyVaultName].IsNullOrEmpty()
-                && !configuration[ConfigurationKeys.AzureKeyVaultClientId].IsNullOrEmpty()
-                && !configuration[ConfigurationKeys.AzureKeyVaultClientSecret].IsNullOrEmpty())
-            {
-                services.AddHealthChecks()
-                    .AddAzureKeyVault(s => s
-                        .UseClientSecrets(configuration[ConfigurationKeys.AzureKeyVaultClientId], configuration[ConfigurationKeys.AzureKeyVaultClientSecret])
-                        .UseKeyVaultUrl($"https://{configuration[ConfigurationKeys.AzureKeyVaultName]}.vault.azure.net/"), "configuration-keyvault", tags: new[] { "naos" });
-            }
+        //private static void AddConfigurationHealthChecks(IServiceCollection services, IConfiguration configuration)
+        //{
+        //    if (configuration[ConfigurationKeys.AzureKeyVaultEnabled].ToBool()
+        //        && !configuration[ConfigurationKeys.AzureKeyVaultName].IsNullOrEmpty()
+        //        && !configuration[ConfigurationKeys.AzureKeyVaultClientId].IsNullOrEmpty()
+        //        && !configuration[ConfigurationKeys.AzureKeyVaultClientSecret].IsNullOrEmpty())
+        //    {
+        //        services.AddHealthChecks()
+        //            .AddAzureKeyVault(s => s
+        //                .UseClientSecrets(configuration[ConfigurationKeys.AzureKeyVaultClientId], configuration[ConfigurationKeys.AzureKeyVaultClientSecret])
+        //                .UseKeyVaultUrl($"https://{configuration[ConfigurationKeys.AzureKeyVaultName]}.vault.azure.net/"), "configuration-keyvault", tags: new[] { "naos" });
+        //    }
 
-            // TODO: check other configuration providers here
-        }
+        //    // TODO: check other configuration providers here
+        //}
     }
 }

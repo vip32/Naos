@@ -103,10 +103,6 @@
                 return null;
             }
 
-            //#if NETSTANDARD2_0
-            //            return await this.Options.DbContext.Set<TEntity>().FindAsync(this.TryParseGuid(id)).AnyContext();
-            //#endif
-
             return await this.Options.DbContext.Set<TEntity>()
                 .FindAsync(this.TidyId(id)).ConfigureAwait(false);
         }

@@ -61,11 +61,7 @@
         public async Task<IEnumerable<TEntity>> FindAllAsync(IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
             this.logger.LogInformation($"{{LogKey:l}} findall {typeof(TEntity).PrettyName()}", LogKeys.DomainRepository);
-
-            foreach (var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
-            {
-                this.logger.LogDebug($"{LogKeys.DomainRepository} order: {order.Expression.ToExpressionString()}");
-            }
+            this.LogOptions(options);
 
             return await this.inner.FindAllAsync(options, cancellationToken).AnyContext();
         }
@@ -73,15 +69,11 @@
         public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
             this.logger.LogInformation($"{{LogKey:l}} findall {typeof(TEntity).PrettyName()}", LogKeys.DomainRepository);
+            this.LogOptions(options);
 
             if (specification != null)
             {
-                this.logger.LogDebug($"{LogKeys.DomainRepository} specification: {specification}");
-            }
-
-            foreach (var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
-            {
-                this.logger.LogDebug($"{LogKeys.DomainRepository} order: {order.Expression.ToExpressionString()}");
+                this.logger.LogInformation($"{LogKeys.DomainRepository} specification: {specification}");
             }
 
             return await this.inner.FindAllAsync(specification, options, cancellationToken).AnyContext();
@@ -90,15 +82,11 @@
         public async Task<IEnumerable<TEntity>> FindAllAsync(IEnumerable<ISpecification<TEntity>> specifications, IFindOptions<TEntity> options = null, CancellationToken cancellationToken = default)
         {
             this.logger.LogInformation($"{{LogKey:l}} findall {typeof(TEntity).PrettyName()}", LogKeys.DomainRepository);
+            this.LogOptions(options);
 
             foreach (var specification in specifications.Safe())
             {
-                this.logger.LogDebug($"{LogKeys.DomainRepository} specification: {specification}");
-            }
-
-            foreach (var order in (options?.Orders ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
-            {
-                this.logger.LogDebug($"{LogKeys.DomainRepository} order: {order.Expression.ToExpressionString()}");
+                this.logger.LogInformation($"{LogKeys.DomainRepository} specification: {specification}");
             }
 
             return await this.inner.FindAllAsync(specifications, options, cancellationToken).AnyContext();
@@ -165,6 +153,37 @@
             this.logger.LogInformation($"{{LogKey:l}} count {typeof(TEntity).PrettyName()}", LogKeys.DomainRepository);
 
             return await this.inner.CountAsync(specifications, cancellationToken).AnyContext();
+        }
+
+        private void LogOptions(IFindOptions<TEntity> options)
+        {
+            foreach (var order in (options?.Orders.EmptyToNull() ?? new List<OrderOption<TEntity>>()).Insert(options?.Order))
+            {
+                this.logger.LogInformation($"order: {order.Expression}");
+            }
+
+            foreach (var include in (options?.Includes.EmptyToNull() ?? new List<IncludeOption<TEntity>>()).Insert(options?.Include))
+            {
+                if (include.Expression != null)
+                {
+                    this.logger.LogInformation($"include: {include.Expression}");
+                }
+
+                if (include.Path != null)
+                {
+                    this.logger.LogInformation($"include: {include.Path}");
+                }
+            }
+
+            if (options?.Skip.HasValue == true)
+            {
+                this.logger.LogInformation($"skip: {options.Skip.Value}");
+            }
+
+            if (options?.Take.HasValue == true)
+            {
+                this.logger.LogInformation($"take: {options.Take.Value}");
+            }
         }
     }
 }

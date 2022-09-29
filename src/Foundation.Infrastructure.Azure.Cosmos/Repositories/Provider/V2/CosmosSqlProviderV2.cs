@@ -83,7 +83,7 @@
                         new IncludedPath
                         {
                             Path = "/*",
-                            Indexes = new Collection<Index>()
+                            Indexes = new Collection<Microsoft.Azure.Documents.Index>()
                             {
                                 new RangeIndex(DataType.Number) { Precision = -1 },
                                 new RangeIndex(DataType.String) { Precision = -1 } // needed for orderby on strings

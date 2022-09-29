@@ -102,7 +102,7 @@
         }
 
         /// <summary>
-        /// Cretes expression for specific property.
+        /// Creates expression for specific property.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="propertyName">Name of the property.</param>

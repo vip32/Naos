@@ -15,21 +15,21 @@
             IFindOptions<TEntity> options)
             where TEntity : class, IEntity, IAggregateRoot
         {
-            if (options?.Include == null && options?.Includes == null)
+            if (options == null || options?.HasIncludes() == false)
             {
                 return source;
             }
 
-            foreach (var include in (options?.Includes ?? new List<IncludeOption<TEntity>>()).Insert(options?.Include))
+            foreach (var include in (options.Includes ?? new List<IncludeOption<TEntity>>()).Insert(options.Include))
             {
                 if (include.Expression != null)
                 {
-                    source.Include(include.Expression);
+                    source = source.Include(include.Expression);
                 }
 
                 if (!include.Path.IsNullOrEmpty())
                 {
-                    source.Include(include.Path);
+                    source = source.Include(include.Path);
                 }
             }
 
@@ -45,22 +45,22 @@
         {
             EnsureArg.IsNotNull(mapper, nameof(mapper));
 
-            if (options?.Include == null && options?.Includes == null)
+            if (options == null || options?.HasIncludes() == false)
             {
                 return source;
             }
 
-            foreach (var include in (options?.Includes ?? new List<IncludeOption<TEntity>>()).Insert(options?.Include))
+            foreach (var include in (options.Includes ?? new List<IncludeOption<TEntity>>()).Insert(options.Include))
             {
                 if (include.Expression != null)
                 {
-                    source.Include(
+                    source = source.Include(
                         mapper.MapExpression<Expression<Func<TDestination, object>>>(include.Expression));
                 }
 
                 if (!include.Path.IsNullOrEmpty())
                 {
-                    source.Include(include.Path);
+                    source = source.Include(include.Path);
                 }
             }
 

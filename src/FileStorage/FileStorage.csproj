@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <AssemblyName>Naos.FileStorage</AssemblyName>
     <RootNamespace>Naos.FileStorage</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Humanizer.Core" Version="2.8.26" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="3.1.5" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>

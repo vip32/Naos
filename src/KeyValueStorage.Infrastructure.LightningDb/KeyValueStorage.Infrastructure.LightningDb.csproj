@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <AssemblyName>Naos.KeyValueStorage.Infrastructure.LightningDb</AssemblyName>
     <RootNamespace>Naos.KeyValueStorage.Infrastructure</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="LightningDB" Version="0.11.0" />
+    <PackageReference Include="LightningDB" Version="0.13.0" />
   </ItemGroup>
 
   <ItemGroup>

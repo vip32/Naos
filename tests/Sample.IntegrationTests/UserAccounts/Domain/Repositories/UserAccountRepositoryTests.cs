@@ -282,7 +282,7 @@
 
             // assert
             result.ShouldNotBeNull();
-            result.Id.ShouldNotBeNull();
+            //result.Id.ShouldNotBeNull();
         }
 
         [Fact]
@@ -296,7 +296,7 @@
                 // assert
                 result.action.ShouldNotBe(RepositoryActionResult.None);
                 result.entity.ShouldNotBeNull();
-                result.entity.Id.ShouldNotBeNull();
+                //result.entity.Id.ShouldNotBeNull();
                 result.entity.IdentifierHash.ShouldNotBeNull(); // EntityInsertDomainEventHandler
                 result.entity.State.ShouldNotBeNull();
                 result.entity.State.CreatedDescription.ShouldNotBeNull(); // EntityInsertDomainEventHandler

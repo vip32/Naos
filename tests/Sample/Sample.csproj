@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1</TargetFrameworks>
+    <TargetFramework>net5.0</TargetFramework>
     <AssemblyName>Naos.Sample</AssemblyName>
     <RootNamespace>Naos.Sample</RootNamespace>
     <IsPackable>false</IsPackable>
@@ -9,21 +9,20 @@
 
   <ItemGroup>
     <PackageReference Include="Humanizer.Core" Version="2.8.26" />
-    <PackageReference Include="FluentValidation" Version="8.6.2" />
-    <PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="3.2.0" />
-    <PackageReference Include="AspNetCore.HealthChecks.DocumentDb" Version="3.1.1" />
-    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="3.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="3.1.5" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.5" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="3.1.5" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.5" />
-    <PackageReference Include="AspNetCore.HealthChecks.MongoDb" Version="3.1.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.5">
+    <PackageReference Include="FluentValidation" Version="9.5.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="5.0.1" />
+    <PackageReference Include="AspNetCore.HealthChecks.DocumentDb" Version="5.0.1" />
+    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="5.0.2" />
+    <PackageReference Include="AspNetCore.HealthChecks.MongoDb" Version="5.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="5.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="5.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Scrutor" Version="3.2.1" />
+    <PackageReference Include="Scrutor" Version="3.3.0" />
   </ItemGroup>
 
   <ItemGroup>

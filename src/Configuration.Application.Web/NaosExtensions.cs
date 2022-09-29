@@ -21,13 +21,7 @@
             var context = new NaosApplicationContext
             {
                 Application = app,
-#if NETCOREAPP3_1
                 Environment = app.ApplicationServices.GetRequiredService<IWebHostEnvironment>()
-#endif
-
-#if NETSTANDARD2_0
-                Environment = app.ApplicationServices.GetRequiredService<IHostingEnvironment>()
-#endif
             };
 
             context.Messages.Add($"naos application builder: naos application added (environment={context.Environment.EnvironmentName})");

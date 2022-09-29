@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <AssemblyName>Naos.Foundation.Infrastructure.EventSourcing</AssemblyName>
     <RootNamespace>Naos.Foundation.Infrastructure</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EventStore.Client" Version="20.6.0" />
-    <PackageReference Include="MediatR" Version="8.0.1" />
+    <PackageReference Include="EventStore.Client" Version="20.10.0" />
+    <PackageReference Include="MediatR" Version="9.0.0" />
     <PackageReference Include="SqlStreamStore.MsSql" Version="1.2.0" />
   </ItemGroup>
 

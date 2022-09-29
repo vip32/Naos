@@ -11,8 +11,6 @@
     /// </summary>
     public static class ApplicationExtensions
     {
-#if NETCOREAPP3_1
-
         /// <summary>
         /// Force authentication for all endpoints (mvc + custom middleware)
         /// </summary>
@@ -80,6 +78,5 @@
 
             return builder;
         }
-#endif
     }
 }

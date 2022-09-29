@@ -1,24 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
+    <TargetFramework>net5.0</TargetFramework>
     <AssemblyName>Naos.Application.Exceptions.Web</AssemblyName>
     <RootNamespace>Naos.Application.Exceptions.Web</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+  <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Core" Version="2.2.0" />
-  </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="8.6.2" />
-    <PackageReference Include="Ben.Demystifier" Version="0.1.6" />
-    <PackageReference Include="Scrutor" Version="3.2.1" />
+    <PackageReference Include="FluentValidation" Version="9.5.0" />
+    <PackageReference Include="Ben.Demystifier" Version="0.3.0" />
+    <PackageReference Include="Scrutor" Version="3.3.0" />
   </ItemGroup>
 
   <ItemGroup>

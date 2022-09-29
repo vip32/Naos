@@ -8,13 +8,7 @@
     {
         IApplicationBuilder Application { get; set; }
 
-#if NETCOREAPP3_1
         IWebHostEnvironment Environment { get; set; }
-#endif
-
-#if NETSTANDARD2_0
-        IHostingEnvironment Environment { get; set; }
-#endif
 
         List<string> Messages { get; set; }
     }

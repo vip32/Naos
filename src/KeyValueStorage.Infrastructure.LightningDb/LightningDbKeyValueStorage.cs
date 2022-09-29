@@ -83,7 +83,7 @@
             using (var db = tx.OpenDatabase(tableName, new DatabaseConfiguration { Flags = DatabaseOpenFlags.Create }))
             {
                 var value = tx.Get(db, Encoding.UTF8.GetBytes($"{key.PartitionKey}-{key.RowKey}"));
-                var result = SerializationHelper.BsonByteDeserialize<Value>(value);
+                var result = SerializationHelper.BsonByteDeserialize<Value>(value.value.CopyToNewArray());
                 result.PartitionKey = key.PartitionKey;
                 result.RowKey = key.RowKey;
 

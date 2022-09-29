@@ -16,7 +16,9 @@
 
             var formatter = new BinaryFormatter();
             using var stream = new MemoryStream();
+#pragma warning disable SYSLIB0011 // Type or member is obsolete
             formatter.Serialize(stream, data);
+#pragma warning restore SYSLIB0011 // Type or member is obsolete
             var signature = Sign(stream.ToArray(), certificate);
 
             return BitConverter.ToString(signature).Replace("-", string.Empty);
@@ -30,7 +32,9 @@
 
             var formatter = new BinaryFormatter();
             using var stream = new MemoryStream();
+#pragma warning disable SYSLIB0011 // Type or member is obsolete
             formatter.Serialize(stream, data);
+#pragma warning restore SYSLIB0011 // Type or member is obsolete
 
             return Verify(stream.ToArray(), certificate, ToByteArray(signature), throwException);
         }

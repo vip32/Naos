@@ -20,12 +20,12 @@
 
         public bool CanHandle(Exception exception)
         {
-            return exception is BadHttpRequestException;
+            return exception is Microsoft.AspNetCore.Http.BadHttpRequestException;
         }
 
         public void Handle(HttpContext context, Exception exception, string instance, string requestId, bool hideDetails = false, bool jsonResponse = true)
         {
-            if (exception is BadHttpRequestException badHttpRequestException)
+            if (exception is Microsoft.AspNetCore.Http.BadHttpRequestException badHttpRequestException)
             {
                 if (jsonResponse)
                 {
@@ -33,7 +33,7 @@
                     var details = new ProblemDetails
                     {
                         Title = "Invalid request",
-                        Status = (int)typeof(BadHttpRequestException).GetProperty("StatusCode", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(exception),
+                        Status = (int)typeof(Microsoft.AspNetCore.Http.BadHttpRequestException).GetProperty("StatusCode", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(exception),
                         Instance = instance,
                         Detail = hideDetails ? null : badHttpRequestException.Demystify().ToString(),
                         Type = hideDetails ? null : badHttpRequestException.GetType().FullPrettyName()

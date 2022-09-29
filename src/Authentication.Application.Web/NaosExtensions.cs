@@ -78,7 +78,6 @@
             return naosOptions;
         }
 
-#if NETCOREAPP3_1
         public static NaosServicesContextOptions AddOidcAuthentication(
             this NaosServicesContextOptions naosOptions,
             Action<AuthenticationHandlerOptions> options = null,
@@ -136,6 +135,5 @@
 
             return naosOptions;
         }
-#endif
     }
 }

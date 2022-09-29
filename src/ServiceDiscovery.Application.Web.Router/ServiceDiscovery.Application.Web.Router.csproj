@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <AssemblyName>Naos.ServiceDiscovery.Application.Web.Router</AssemblyName>
     <RootNamespace>Naos.ServiceDiscovery.Application.Web.Router</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ProxyKit" Version="2.3.3" />
+    <PackageReference Include="ProxyKit" Version="2.3.4" />
   </ItemGroup>
 
   <ItemGroup>
